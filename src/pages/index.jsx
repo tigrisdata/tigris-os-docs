@@ -22,8 +22,12 @@ export default function Homepage() {
             <p>
               Tigris is a globally distributed S3-compatible object storage
               service that provides low latency anywhere in the world. Tigris
-              enables developers to quickly and easily store and access any
-              amount of data for a wide range of use cases.
+              enables you to quickly and easily store and access any amount of
+              data for a wide range of use cases. Tigris automatically
+              distributes your data close to the users, and removes the
+              complexities of data replication, and caching. As Tigris supports
+              the S3 API, you can use the wide range of available S3 tools,
+              libraries, and extensions.
             </p>
           </div>
 

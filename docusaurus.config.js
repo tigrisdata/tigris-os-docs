@@ -20,7 +20,7 @@ const config = {
   baseUrl: "/docs/",
   favicon: "img/favicon.ico",
   organizationName: "tigrisdata",
-  projectName: "tigris-docs",
+  projectName: "tigris-os-docs",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "throw",
   trailingSlash: true,

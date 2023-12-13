@@ -1,5 +1,5 @@
 const defaultImg =
-  "https://vercel-og-tigris.vercel.app/api/param?title=Serverless%20NoSQL%20Database%20and%20Search%20Platform";
+  "https://vercel-og-tigris.vercel.app/api/param?title=Globally%20Distributed%20S3%20Compatible%20Object%20Storage%20Service";
 
 // getImage returns the share image URL for a page/blog post. Order of evaluation is:
 // the `image` attribute in the document front-matter, the `shareText` attribute in the

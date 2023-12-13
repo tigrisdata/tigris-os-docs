@@ -1,0 +1,69 @@
+import {
+  HomepageCard as Card,
+  HomepageSection as Section,
+} from "@site/src/components/HomepageComponents.jsx";
+
+import {
+  GoIcon,
+  PhpIcon,
+  DotNetIcon,
+  TerminalIcon,
+  PythonIcon,
+  JSIcon,
+  RubyIcon,
+} from "@site/src/icons";
+
+# AWS S3 SDKs
+
+Tigris is a S3-compatible object storage service. This means that you can
+continue using the standard AWS S3 SDKs and libraries as usual. The
+S3-compatible API allows you to access the wide range of available S3 tools,
+libraries, and extensions.
+
+Below you can find examples of how to use Tigris with the most popular S3 SDKs
+and CLIs.
+
+<Section title="SDKs" id="sdks">
+  <Card
+    title="AWS CLI"
+    description="Use Tigris with AWS CLI"
+    to="/sdks/s3/aws-cli/"
+    icon={<TerminalIcon />}
+  />
+  <Card
+    title="JavaScript"
+    description="Integrate Tigris in your JavaScript App"
+    to="/sdks/s3/aws-js-sdk/"
+    icon={<JSIcon />}
+  />
+  <Card
+    title="Golang"
+    description="Integrate Tigris in your Golang App"
+    to="/sdks/s3/aws-go-sdk/"
+    icon={<GoIcon />}
+  />
+  <Card
+    title="Python"
+    description="Integrate Tigris in your Python App"
+    to="/sdks/s3/aws-python-sdk/"
+    icon={<PythonIcon />}
+  />
+  <Card
+    title="PHP"
+    description="Integrate Tigris in your PHP App"
+    to="/sdks/s3/aws-php-sdk/"
+    icon={<PhpIcon />}
+  />
+  <Card
+    title="Ruby"
+    description="Integrate Tigris in your Ruby App"
+    to="/sdks/s3/aws-ruby-sdk/"
+    icon={<RubyIcon />}
+  />
+  <Card
+    title=".NET"
+    description="Integrate Tigris in your .NET App"
+    to="/sdks/s3/aws-net-sdk/"
+    icon={<DotNetIcon />}
+  />
+</Section>

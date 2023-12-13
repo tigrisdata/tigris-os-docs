@@ -1,0 +1,19 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://www.tigrisdata.com/docs/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*/",
+      "destination": "https://www.tigrisdata.com/docs/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "destination": "https://www.tigrisdata.com/docs/",
+      "permanent": true
+    }
+  ]
+}

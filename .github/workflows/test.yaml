@@ -1,0 +1,26 @@
+name: test
+on:
+  - pull_request
+
+env:
+  NEXT_ALGOLIA_APPID: dummy_for_testing
+  NEXT_ALGOLIA_APIKEY: dummy_for_testing
+  NEXT_PUBLIC_POSTHOG_APIKEY: dummy_for_testing
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Check types + linting + build
+        run: |
+          npm install
+          npx prettier --check .
+          npx eslint .
+          npm run build

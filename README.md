@@ -61,9 +61,6 @@ For VSCode you can enable
 [format on save](https://github.com/prettier/prettier-vscode#format-on-save)
 within the Prettier VSCode extension.
 
-Ensure that any files you edited are formatted with Prettier's default
-formating.
-
 ### Linting with ESLint
 
 We use [ESlink](https://eslint.org/) for static code analysis.

@@ -52,7 +52,7 @@ export default function Homepage() {
             />
             <Card
               title="Fast Small Object Retrieval"
-              description="SAccess small objects at close to Redis speed, ensuring swift, efficient retrieval."
+              description="Access small objects at close to Redis speed, ensuring swift, efficient retrieval."
               to="/concepts/overview/#fast-small-object-retrieval"
               icon={<GreenStar />}
             />

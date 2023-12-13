@@ -31,13 +31,13 @@ export default function Homepage() {
             <Card
               title="Single Global Endpoint"
               description="Seamless global access to object storage with our single global endpoint."
-              to="/concepts/features/#single-global-endpoint"
+              to="/concepts/overview/#single-global-endpoint"
               icon={<GreenStar />}
             />
             <Card
               title="Store Data Near Users"
               description="Data stored close to the users automatically ensuring low latency everywhere."
-              to="/concepts/features/#store-data-near-users"
+              to="/concepts/overview/#store-data-near-users"
               icon={<GreenStar />}
             />
             <Card
@@ -49,7 +49,7 @@ export default function Homepage() {
             <Card
               title="Fast Small Object Retrieval"
               description="SAccess small objects at close to Redis speed, ensuring swift, efficient retrieval."
-              to="/concepts/features/#fast-small-object-retrieval"
+              to="/concepts/overview/#fast-small-object-retrieval"
               icon={<GreenStar />}
             />
           </Section>
@@ -63,7 +63,7 @@ export default function Homepage() {
             <Card
               title="Concepts"
               description="Learn about the core Tigris concepts"
-              to="/concepts/features/"
+              to="/concepts/overview/"
             />
           </Section>
           <SDKCards />

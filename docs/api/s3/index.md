@@ -86,5 +86,5 @@ status within Tigris.
 
 ## Next steps
 
-Check out the [language specific guides](/docs/sdks/s3/) on how to use the AWS
+Check out the [language specific guides](../../sdks/s3/) on how to use the AWS
 S3 SDKs with Tigris.

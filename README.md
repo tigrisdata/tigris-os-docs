@@ -11,7 +11,6 @@ static website generator.
   be checked by running node -v).
 - [Python](https://www.python.org/downloads/)
 - [pip](https://pip.pypa.io/en/stable/installation/)
-- [go](https://go.dev/doc/install)
 
 ## Installation
 
@@ -75,23 +74,3 @@ We use [pre-commit](https://pre-commit.com/index.html) to automatically setup
 and run git hooks.
 
 On every `git commit` we check the code quality using Prettier and ESlint.
-
-### Markdown links
-
-Prefer markdown links that link to files including the file extension (e.g.
-`[Filter](./docs/database/database.md)`) over absolute links.
-
-Also, be mindful that the Tigris docs Docusaurus has `trailingSlash` set to
-`true` so links are always from a directory.
-
-```any
-└── database
-    ├── architecture.md
-    └── filters.md
-```
-
-In the above scenario, a link from `/docs/database/filters` to
-`/docs/database/architecture` would need to be `../architecture` when not
-linking using a file extension. This is another reason why it is better and
-simpler to have links that include a file extension (e.g. this in the above case
-the link is simply `architecture.md`).

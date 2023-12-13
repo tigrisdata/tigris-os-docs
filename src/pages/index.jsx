@@ -5,7 +5,7 @@ import {
   HomepageCard as Card,
   HomepageSection as Section,
 } from "../components/HomepageComponents";
-import { YellowStar, GreenStar } from "../icons";
+import { GreenStar } from "../icons";
 
 import SDKCards from "../components/SDKCards";
 
@@ -30,25 +30,25 @@ export default function Homepage() {
           <Section title="Features" id="features" HeadingTag="h2">
             <Card
               title="Single Global Endpoint"
-              description="No need to think about regions or perform any operations to make data available close to the users. Tigris automatically stores the data close to the users and distributes it to regions based on the request pattern."
+              description="Seamless global access to object storage with our single global endpoint."
               to="/concepts/features/#single-global-endpoint"
-              icon={<YellowStar />}
+              icon={<GreenStar />}
             />
             <Card
               title="Store Data Near Users"
-              description="No need to implement caching or data replication from one region to another. Tigris automatically caches frequently accessed data close to the users ensuring low latency anywhere."
+              description="Data stored close to the users automatically ensuring low latency everywhere."
               to="/concepts/features/#store-data-near-users"
               icon={<GreenStar />}
             />
             <Card
               title="S3 Compatible API"
-              description="Continue using the standard AWS S3 SDKs and libraries as usual. The S3-compatible API allows you to access the wide range of available S3 tools, libraries, and extensions."
+              description="Global and fast object storage with familiar AWS S3 tools, libraries, and extensions."
               to="/api/s3/"
-              icon={<YellowStar />}
+              icon={<GreenStar />}
             />
             <Card
               title="Fast Small Object Retrieval"
-              description="Significantly lower latency for small object as compared to S3. Tigris allows you to use the same data storage for both small and large objects."
+              description="SAccess small objects at close to Redis speed, ensuring swift, efficient retrieval."
               to="/concepts/features/#fast-small-object-retrieval"
               icon={<GreenStar />}
             />

@@ -108,7 +108,7 @@ const config = {
           },
           {
             label: "Concepts",
-            to: "/concepts/features/",
+            to: "/concepts/overview/",
             position: "left",
           },
           {

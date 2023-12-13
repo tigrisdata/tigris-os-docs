@@ -1,71 +1,23 @@
 [![Code Style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-# docs.tigrisdata.com
+# Tigris Documentation
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern
+This website is built using [Docusaurus 3](https://docusaurus.io/), a modern
 static website generator.
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/en/download/) version >= 14 or above (which can
+- [Node.js](https://nodejs.org/en/download/) version >= 18 or above (which can
   be checked by running node -v).
 - [Python](https://www.python.org/downloads/)
 - [pip](https://pip.pypa.io/en/stable/installation/)
 - [go](https://go.dev/doc/install)
 
-### Protocol Buffer Compiler
-
-Install protoc.
-
-#### Mac OS
-
-```shell
-brew install protobuf
-```
-
-#### Windows
-
-- Download the latest version of Protobuf for Windows from the
-  [official GitHub repository](https://github.com/protocolbuffers/protobuf/releases/latest)
-  **_(Maybe hidden under "Show all XX assets")_**
-- Extract the downloaded file to a location of your choice, such as
-  `C:\protobuf`.
-- Navigate to the folder in a Windows Terminal, then to the `bin` folder (e.g
-  `cd C:\protobuf\bin`)
-- Run `./protoc.exe --version`, you should see a similar output to
-
-  ```powershell
-  ❯ ./protoc.exe --version
-  libprotoc 22.2
-  ```
-
-- Add the Protobuf bin directory to your system's PATH environment variable to
-  be able to access the protoc command from anywhere in the Command Prompt.
-  - To do this, open the Start Menu and search for **"Environment Variables"**.
-  - Select **"Edit the system environment variables"**, then click the
-    **"Environment Variables"** button.
-  - In the **"System Variables"** section, scroll down to the **"Path"**
-    variable and click the **"Edit"** button.
-  - Click the **"New"** button and add the full path to the bin directory of the
-    extracted Protobuf folder (e.g. `C:\protobuf\bin`).
-  - Click **"OK"** to save your changes.
-- If everything went okay, you should be able to open up a new terminal window
-  and type `protoc --version` and see the same output as before.
-
-Install protoc-gen-doc. This depends on golang.
-
-```shell
-go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
-```
-
 ## Installation
 
 ```shell
 npm install
-git submodule update --init --recursive
 ```
-
-**_Note: On Windows post install may error, if so this is okay._**
 
 ## Configuration
 
@@ -78,7 +30,7 @@ cp .env.local.example .env.local
 ## Local development
 
 ```shell
-npm run start
+npm run dev
 ```
 
 This command starts a local development server and opens up a browser window.
@@ -143,16 +95,3 @@ In the above scenario, a link from `/docs/database/filters` to
 linking using a file extension. This is another reason why it is better and
 simpler to have links that include a file extension (e.g. this in the above case
 the link is simply `architecture.md`).
-
-### Updating API documentation
-
-[tigris-api](https://github.com/tigrisdata/tigris-api) is included as a
-submodule. After updating the submodule to pull in new proto changes, the
-documentation can be updated using the following steps:
-
-```bash
-npm run generate
-```
-
-Move `Services` section before `Messages` section in
-protodocs/server/v1/api.proto.mdx

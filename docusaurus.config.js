@@ -124,11 +124,11 @@ const config = {
             rel: "",
             className: "disable-external-icon",
           },
-          {
-            href: tigrisConfig.discordUrl,
-            className: "pseudo-icon discord-icon",
-            position: "right",
-          },
+          // {
+          //   href: tigrisConfig.discordUrl,
+          //   className: "pseudo-icon discord-icon",
+          //   position: "right",
+          // },
           {
             href: "https://twitter.com/TigrisData",
             className: "pseudo-icon twitter-icon",
@@ -218,10 +218,10 @@ const config = {
               //   label: "Videos",
               //   href: "https://www.youtube.com/channel/UCsCQ5Nl3JOh71UNCCNZ3q2g",
               // },
-              {
-                label: "Community",
-                href: tigrisConfig.discordUrl,
-              },
+              // {
+              //   label: "Community",
+              //   href: tigrisConfig.discordUrl,
+              // },
             ],
           },
         ],

@@ -57,19 +57,6 @@ const sidebars = {
       ],
     },
   ],
-  concepts: [],
-  community: [
-    {
-      type: "doc",
-      label: "Community",
-      id: "community/index",
-    },
-    {
-      type: "doc",
-      label: "Code of Conduct",
-      id: "community/code-of-conduct",
-    },
-  ],
 };
 
 module.exports = sidebars;

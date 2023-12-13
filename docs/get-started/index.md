@@ -42,4 +42,4 @@ need to set the endpoint to `https://fly.storage.tigris.dev`.
 :::
 
 Take a look at examples of how to use Tigris with the most popular S3 SDKs and
-CLIs [here](/docs/get-started/s3/).
+CLIs [here](/docs/sdks/s3/).

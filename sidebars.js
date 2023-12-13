@@ -30,11 +30,11 @@ const sidebars = {
       label: "Concepts",
       link: {
         type: "doc",
-        id: "concepts/features",
+        id: "concepts/overview/index",
       },
       collapsed: false,
       items: [
-        "concepts/features",
+        "concepts/overview/index",
         "concepts/architecture/index",
         "api/s3/index",
       ],

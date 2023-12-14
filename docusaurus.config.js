@@ -200,7 +200,7 @@ const config = {
               },
               {
                 label: "Contact Us",
-                href: "mailto:support@tigrisdata.com",
+                href: "mailto:connect@tigrisdata.com",
               },
             ],
           },

@@ -11,6 +11,7 @@ import {
   PythonIcon,
   JSIcon,
   RubyIcon,
+  ElixirIcon,
 } from "../../icons";
 
 export default function SDKCards() {
@@ -45,6 +46,12 @@ export default function SDKCards() {
         description="Integrate Tigris in your PHP App"
         to="/sdks/s3/aws-php-sdk/"
         icon={<PhpIcon />}
+      />
+      <Card
+        title="Elixir"
+        description="Integrate Tigris in your Elixir App"
+        to="/sdks/s3/aws-elixir-sdk/"
+        icon={<ElixirIcon />}
       />
       <Card
         title="Ruby"

@@ -230,7 +230,14 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
-        additionalLanguages: ["java", "scala", "php", "csharp", "ruby"],
+        additionalLanguages: [
+          "java",
+          "scala",
+          "php",
+          "csharp",
+          "ruby",
+          "elixir",
+        ],
       },
       liveCodeBlock: {
         playgroundPosition: "bottom",

@@ -52,6 +52,7 @@ const sidebars = {
         "sdks/s3/aws-go-sdk",
         "sdks/s3/aws-python-sdk",
         "sdks/s3/aws-php-sdk",
+        "sdks/s3/aws-elixir-sdk",
         "sdks/s3/aws-ruby-sdk",
         "sdks/s3/aws-net-sdk",
       ],

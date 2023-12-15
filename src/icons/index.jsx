@@ -14,3 +14,4 @@ export { default as PythonIcon } from "./PythonIcon";
 export { default as PhpIcon } from "./PhpIcon";
 export { default as JSIcon } from "./JSIcon";
 export { default as RubyIcon } from "./RubyIcon";
+export { default as ElixirIcon } from "./ElixirIcon";

@@ -10,7 +10,9 @@ endpoint set to `https://fly.storage.tigris.dev`.
 This example reads the credentials from the environment variables
 `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 
-### ExAWS configuration
+## ExAWS configuration
+
+### Dependencies
 
 Add the dependencies to your `mix.exs` file:
 
@@ -29,11 +31,14 @@ Add the dependencies to your `mix.exs` file:
 
 ```
 
-Now setup the configuration for ex_aws and ex_aws_s3 in your `config.exs` file:
+### Development configuration
+
+Now setup the configuration for ex_aws and ex_aws_s3 in your `dev.exs` file:
 
 ```elixir
 import Config
 
+# Configure S3 client for access to Tigris
 config :ex_aws,
   debug_requests: true,
   json_codec: Jason,
@@ -53,7 +58,32 @@ to access Tigris.
 
 Then we configure the S3 API endpoint, which is "fly.storage.tigris.dev".
 
-### Example
+### Runtime configuration
+
+Now similar to above, let's add the configuration in `runtime.exs` file:
+
+```elixir
+import Config
+
+if config_env() == :prod do
+
+  # ....
+  # Configure S3 client for access to Tigris
+  config :ex_aws,
+    debug_requests: true,
+    json_codec: Jason,
+    access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
+    secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
+
+  config :ex_aws, :s3,
+    scheme: "https://",
+    host: "fly.storage.tigris.dev",
+    region: "auto"
+
+end
+```
+
+## Example
 
 ```elixir
 

@@ -1,7 +1,8 @@
 # AWS CLI
 
-Before you can use the AWS cli with Tigris, you need to generate an access key.
-You can do that at [console.tigris.dev](https://console.tigris.dev/).
+This guide assumes that you have followed the steps in the
+[Getting Started](/docs/get-started/index.md) guide, and have the access keys
+available.
 
 Once you have your access key, you can configure the AWS CLI with the following
 command:

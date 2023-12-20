@@ -1,8 +1,8 @@
 # ExAWS Elixir SDK
 
-Before you can use the [ExAWS SDK](https://github.com/ex-aws/ex_aws) with
-Tigris, you need to generate an access key. You can do that at
-[console.tigris.dev](https://console.tigris.dev/).
+This guide assumes that you have followed the steps in the
+[Getting Started](/docs/get-started/index.md) guide, and have the access keys
+available.
 
 You may continue to use the ExAWS SDK as you normally would, but with the
 endpoint set to `https://fly.storage.tigris.dev`.

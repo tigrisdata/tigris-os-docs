@@ -29,13 +29,13 @@ To create a bucket for one of your Fly apps, run the following command in the
 directory where your Fly app is located:
 
 ```bash
-fly ext tigris create
+fly storage create
 ```
 
 This will create a bucket and set the required environment variables for you.
 
-```bash
-$ fly ext tigris create
+```text
+$ fly storage create
 ? Choose a name, use the default, or leave blank to generate one: demo-bucket
 Your  project (demo-bucket) is ready. See details and next steps with:
 
@@ -51,8 +51,8 @@ Secrets are staged for the first deployment
 If you want to create a bucket that is not associated with a Fly app, you can
 run the same command outside of a Fly app directory.
 
-```bash
-$ fly ext tigris create
+```text
+$ fly storage create
 ? Select Organization: Ovais Tariq (personal)
 ? Choose a name, use the default, or leave blank to generate one:
 Your  project (polished-thunder-5646) is ready. See details and next steps with:
@@ -74,13 +74,9 @@ retrieve objects.
 :::info
 
 Tigris provides a single global endpoint. When using the AWS S3 SDKs, all you
-need to set the endpoint to `https://fly.storage.tigris.dev`.
+need is to set the endpoint to `https://fly.storage.tigris.dev`.
 
 :::
 
 Take a look at examples of how to use Tigris with the most popular S3 SDKs and
 CLIs [here](../sdks/s3/).
-
-```
-
-```

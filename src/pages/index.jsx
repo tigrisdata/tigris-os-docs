@@ -31,6 +31,24 @@ export default function Homepage() {
             </p>
           </div>
 
+          <Section title="Get to know Tigris" HeadingTag="h2">
+            <Card
+              title="Get Started"
+              description="Essential guide to get you up and running quickly"
+              to="/get-started/"
+            />
+            <Card
+              title="Overview"
+              description="Learn about the core Tigris concepts"
+              to="/overview/"
+            />
+            <Card
+              title="About"
+              description="Learn about Tigris' founding story"
+              to="/about/"
+            />
+          </Section>
+
           <Section title="Features" id="features" HeadingTag="h2">
             <Card
               title="Single Global Endpoint"
@@ -58,18 +76,6 @@ export default function Homepage() {
             />
           </Section>
 
-          <Section title="Get to know Tigris" HeadingTag="h2">
-            <Card
-              title="Get Started"
-              description="Essential guide to get you up and running quickly"
-              to="/get-started/"
-            />
-            <Card
-              title="Concepts"
-              description="Learn about the core Tigris concepts"
-              to="/concepts/overview/"
-            />
-          </Section>
           <SDKCards />
         </div>
       </div>

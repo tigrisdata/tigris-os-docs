@@ -22,22 +22,24 @@ const sidebars = {
   quickstarts: [
     {
       type: "doc",
+      label: "Overview",
+      id: "overview/index",
+    },
+    {
+      type: "doc",
+      label: "About",
+      id: "about/index",
+    },
+    {
+      type: "doc",
       label: "Get Started",
       id: "get-started/index",
     },
     {
       type: "category",
       label: "Concepts",
-      link: {
-        type: "doc",
-        id: "concepts/overview/index",
-      },
       collapsed: false,
-      items: [
-        "concepts/overview/index",
-        "concepts/architecture/index",
-        "api/s3/index",
-      ],
+      items: ["concepts/architecture/index", "api/s3/index"],
     },
     {
       type: "category",

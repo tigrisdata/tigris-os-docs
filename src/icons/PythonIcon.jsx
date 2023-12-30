@@ -28,7 +28,7 @@ export default function PythonIcon(props) {
           y2="88.429%"
           id="b"
         >
-          <stop stopClor="#FFE052" offset="0%" />
+          <stop stopColor="#FFE052" offset="0%" />
           <stop stopColor="#FFC331" offset="100%" />
         </linearGradient>
       </defs>

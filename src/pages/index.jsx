@@ -31,17 +31,35 @@ export default function Homepage() {
             </p>
           </div>
 
+          <Section title="Get to know Tigris" HeadingTag="h2">
+            <Card
+              title="Get Started"
+              description="Essential guide to get you up and running quickly"
+              to="/get-started/"
+            />
+            <Card
+              title="Overview"
+              description="Learn about the core Tigris concepts"
+              to="/overview/"
+            />
+            <Card
+              title="About"
+              description="Learn about Tigris' founding story"
+              to="/about/"
+            />
+          </Section>
+
           <Section title="Features" id="features" HeadingTag="h2">
             <Card
               title="Single Global Endpoint"
               description="Seamless global access to object storage with our single global endpoint."
-              to="/concepts/overview/#single-global-endpoint"
+              to="/overview/#single-global-endpoint"
               icon={<GreenStar />}
             />
             <Card
               title="Store Data Near Users"
               description="Data stored close to the users automatically ensuring low latency everywhere."
-              to="/concepts/overview/#store-data-near-users"
+              to="/overview/#store-data-near-users"
               icon={<GreenStar />}
             />
             <Card
@@ -53,23 +71,11 @@ export default function Homepage() {
             <Card
               title="Fast Small Object Retrieval"
               description="Access small objects at close to Redis speed, ensuring swift, efficient retrieval."
-              to="/concepts/overview/#fast-small-object-retrieval"
+              to="/overview/#fast-small-object-retrieval"
               icon={<GreenStar />}
             />
           </Section>
 
-          <Section title="Get to know Tigris" HeadingTag="h2">
-            <Card
-              title="Get Started"
-              description="Essential guide to get you up and running quickly"
-              to="/get-started/"
-            />
-            <Card
-              title="Concepts"
-              description="Learn about the core Tigris concepts"
-              to="/concepts/overview/"
-            />
-          </Section>
           <SDKCards />
         </div>
       </div>

@@ -102,13 +102,18 @@ const config = {
             position: "left",
           },
           {
-            label: "Get Started",
-            to: "/get-started/",
+            label: "Overview",
+            to: "/overview/",
             position: "left",
           },
           {
-            label: "Concepts",
-            to: "/concepts/overview/",
+            label: "About",
+            to: "/about/",
+            position: "left",
+          },
+          {
+            label: "Get Started",
+            to: "/get-started/",
             position: "left",
           },
           {
@@ -178,8 +183,8 @@ const config = {
             title: "Company",
             items: [
               {
-                label: "About Us",
-                href: tigrisConfig.websiteUrl,
+                label: "About",
+                href: "/about/",
                 target: "_self",
                 rel: "",
                 className: "footer__link-item disable-external-icon",

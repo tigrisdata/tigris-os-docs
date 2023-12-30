@@ -53,13 +53,13 @@ export default function Homepage() {
             <Card
               title="Single Global Endpoint"
               description="Seamless global access to object storage with our single global endpoint."
-              to="/concepts/overview/#single-global-endpoint"
+              to="/overview/#single-global-endpoint"
               icon={<GreenStar />}
             />
             <Card
               title="Store Data Near Users"
               description="Data stored close to the users automatically ensuring low latency everywhere."
-              to="/concepts/overview/#store-data-near-users"
+              to="/overview/#store-data-near-users"
               icon={<GreenStar />}
             />
             <Card
@@ -71,7 +71,7 @@ export default function Homepage() {
             <Card
               title="Fast Small Object Retrieval"
               description="Access small objects at close to Redis speed, ensuring swift, efficient retrieval."
-              to="/concepts/overview/#fast-small-object-retrieval"
+              to="/overview/#fast-small-object-retrieval"
               icon={<GreenStar />}
             />
           </Section>

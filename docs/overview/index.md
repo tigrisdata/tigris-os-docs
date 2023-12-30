@@ -55,8 +55,8 @@ Eventually the data gets moved to the region where the user is accessing it.
 
 Tigris provides an S3-compatible API which allows you to access the wide range
 of available S3 tools, libraries, and extensions. See the
-[S3 API Compatibility](../../api/s3/) section for more details. We also have
-[language specific guides](../../sdks/s3/) on how to use the AWS S3 SDKs with
+[S3 API Compatibility](../api/s3/) section for more details. We also have
+[language specific guides](../sdks/s3/) on how to use the AWS S3 SDKs with
 Tigris.
 
 ### Fast Small Object Retrieval

@@ -7,7 +7,7 @@ describes the file. A bucket is a container for objects.
 To store your data in Tigris, you first create a bucket and specify a bucket
 name. Then, you upload your data to that bucket as objects in Tigris. Each
 object has a key, which is the unique identifier for the object within the
-bucket. Buckets are global, and Tigris automatically store the data close to
+bucket. Buckets are global, and Tigris automatically stores the data close to
 your users. If your users move to a different region, the data moves with them.
 
 Buckets and the objects in them are private and can be accessed only via access

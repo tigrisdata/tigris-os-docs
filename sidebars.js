@@ -43,6 +43,11 @@ const sidebars = {
     },
     {
       type: "category",
+      label: "Buckets",
+      items: ["buckets/create-bucket", "buckets/public-bucket"],
+    },
+    {
+      type: "category",
       label: "AWS S3 SDKs",
       link: {
         type: "doc",

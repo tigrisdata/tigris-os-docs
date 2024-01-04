@@ -74,6 +74,12 @@ export default function Homepage() {
               to="/overview/#fast-small-object-retrieval"
               icon={<GreenStar />}
             />
+            <Card
+              title="Public Buckets"
+              description="Public buckets allow you to share data with anyone, anywhere."
+              to="/buckets/public-bucket/"
+              icon={<GreenStar />}
+            />
           </Section>
 
           <SDKCards />

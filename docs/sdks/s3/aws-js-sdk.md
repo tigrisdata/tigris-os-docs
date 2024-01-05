@@ -20,11 +20,12 @@ import {
   GetObjectCommand,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { Upload } from "@aws-sdk/lib-storage";
+import fs from "fs";
 
 const S3 = new S3Client({
   region: "auto",
   endpoint: `https://fly.storage.tigris.dev`,
-  forcePathStyle: true,
 });
 
 console.log(await S3.send(new ListBucketsCommand("")));
@@ -39,4 +40,24 @@ console.log(
     { expiresIn: 3600 }
   )
 );
+
+// Upload a large file using multipart upload
+const fileStream = fs.createReadStream("Docker.dmg");
+(async () => {
+  const upload = new Upload({
+    params: {
+      Bucket: "foo-bucket",
+      Key: "Docker-100.dmg",
+      Body: fileStream,
+    },
+    client: S3,
+    queueSize: 3,
+  });
+
+  upload.on("httpUploadProgress", (progress) => {
+    console.log(progress);
+  });
+
+  await upload.done();
+})();
 ```

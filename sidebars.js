@@ -64,6 +64,11 @@ const sidebars = {
         "sdks/s3/aws-net-sdk",
       ],
     },
+    {
+      type: "doc",
+      label: "Pricing",
+      id: "pricing/index",
+    },
   ],
 };
 

@@ -9,6 +9,8 @@ import { GreenStar } from "../icons";
 
 import SDKCards from "../components/SDKCards";
 
+import HeroImgUrl from "@site/static/img/hero.png";
+
 export default function Homepage() {
   return (
     <Layout
@@ -18,7 +20,7 @@ export default function Homepage() {
       <div className="pad">
         <div className="center homepage-content">
           <div id="hero">
-            <h1>Tigris Documentation</h1>
+            <h1>Tigris Developer Documentation</h1>
             <p>
               Tigris is a globally distributed S3-compatible object storage
               service that provides low latency anywhere in the world. Tigris
@@ -29,6 +31,14 @@ export default function Homepage() {
               the S3 API, you can use the wide range of available S3 tools,
               libraries, and extensions.
             </p>
+
+            <div style={{ display: "flex" }}>
+              <img
+                src={HeroImgUrl}
+                alt="Tigris Hero"
+                style={{ alignSelf: "center" }}
+              />
+            </div>
           </div>
 
           <Section title="Get to know Tigris" HeadingTag="h2">

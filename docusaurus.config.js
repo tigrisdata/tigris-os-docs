@@ -129,6 +129,11 @@ const config = {
             rel: "",
             className: "disable-external-icon",
           },
+          {
+            label: "Pricing",
+            to: "/pricing/",
+            position: "left",
+          },
           // {
           //   href: tigrisConfig.discordUrl,
           //   className: "pseudo-icon discord-icon",
@@ -166,19 +171,6 @@ const config = {
           height: "26px",
         },
         links: [
-          // {
-          //   title: "Product",
-          //   items: [
-          //     {
-          //       label: "Documentation",
-          //       href: "/docs/",
-          //     },
-          //     {
-          //       label: "Cloud Console",
-          //       href: tigrisConfig.consoleUrl,
-          //     },
-          //   ],
-          // },
           {
             title: "Company",
             items: [
@@ -213,11 +205,23 @@ const config = {
             title: "Resources",
             items: [
               {
+                label: "Docs",
+                to: "/",
+              },
+              {
                 label: "Blog",
                 href: tigrisConfig.blogUrl,
                 target: "_self",
                 rel: "",
                 className: "footer__link-item disable-external-icon",
+              },
+              {
+                label: "Early Access",
+                href: tigrisConfig.earlyAccessUrl,
+              },
+              {
+                label: "Pricing",
+                to: "/pricing/",
               },
               // {
               //   label: "Videos",

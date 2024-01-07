@@ -16,23 +16,23 @@ and reads the default credentials file or the environment variables
 import boto3
 
 # Create S3 service client
-s3 = boto3.client('s3', endpoint_url='https://fly.storage.tigris.dev')
+svc = boto3.client('s3', endpoint_url='https://fly.storage.tigris.dev')
 
 # List buckets
-response = s3.list_buckets()
+response = svc.list_buckets()
 
 for bucket in response['Buckets']:
     print(f'  {bucket["Name"]}')
 
 # List objects
-response = s3.list_objects_v2(Bucket='foo-bucket')
+response = svc.list_objects_v2(Bucket='foo-bucket')
 
 for obj in response['Contents']:
     print(f'  {obj["Key"]}')
 
 # Upload file
-response = s3.upload_file('bar.txt', 'foo-bucket', 'bar.txt')
+response = svc.upload_file('bar.txt', 'foo-bucket', 'bar.txt')
 
 # Download file
-response = s3.download_file('foo-bucket', 'bar.txt', 'bar-downloaded.txt')
+response = svc.download_file('foo-bucket', 'bar.txt', 'bar-downloaded.txt')
 ```

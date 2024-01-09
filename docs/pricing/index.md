@@ -13,11 +13,11 @@ Tigris pricing is based on the following components:
 
 ## Pricing table
 
-| Component                           | Price                  |
-| ----------------------------------- | ---------------------- |
-| Data Storage                        | $0.02/GB/month         |
-| PUT, COPY, POST, LIST Requests      | $0.005/1000 requests   |
-| GET, SELECT, and all other Requests | $0.00035/1000 requests |
+| Component                           | Price                 |
+| ----------------------------------- | --------------------- |
+| Data Storage                        | $0.02/GB/month        |
+| PUT, COPY, POST, LIST Requests      | $0.005/1000 requests  |
+| GET, SELECT, and all other Requests | $0.0005/1000 requests |
 
 ### Note on data transfer pricing
 
@@ -25,7 +25,7 @@ You will notice that the pricing table above does not include the data transfer
 costs. This is because we haven't finalized the pricing for data transfer yet.
 There are several aspects of Tigris that involve data transfer from one region
 to another, such as when data is replicated to another region for redundancy, or
-when data is moved to a region clos to the user, etc. We want to make sure that
+when data is moved to a region close to the user, etc. We want to make sure that
 pricing for data transfer is fair and transparent, and as we will work through
 the beta, we will finalize the pricing for data transfer and update this page.
 
@@ -62,8 +62,8 @@ will be charged as follows:
   $1.90
 - PUT Requests: 10,000 x $0/1000 requests (free allowance) + 90,000 x
   $0.005/1000 requests = $0.45
-- GET Requests: 100,000 x $0/1000 requests + 900,000 x $0.00035/1000 requests =
-  $0.315
+- GET Requests: 100,000 x $0/1000 requests + 900,000 x $0.0005/1000 requests =
+  $0.45
 - Data Transfer: 100GB (free allowance) + 900GB (zero-rated until pricing
   finalized) = $0
 

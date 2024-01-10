@@ -17,7 +17,7 @@ const config = {
   title: "Tigris Object Storage Documentation",
   tagline: "Globally Distributed S3-Compatible Object Storage",
   url: "https://www.tigrisdata.com",
-  baseUrl: "/dev/",
+  baseUrl: "/docs/",
   favicon: "img/favicon.ico",
   organizationName: "tigrisdata",
   projectName: "tigris-os-docs",

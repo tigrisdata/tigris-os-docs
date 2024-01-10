@@ -2,17 +2,17 @@
   "redirects": [
     {
       "source": "/:path*",
-      "destination": "https://www.tigrisdata.com/dev/:path*",
+      "destination": "https://www.tigrisdata.com/docs/:path*",
       "permanent": true
     },
     {
       "source": "/:path*/",
-      "destination": "https://www.tigrisdata.com/dev/:path*",
+      "destination": "https://www.tigrisdata.com/docs/:path*",
       "permanent": true
     },
     {
       "source": "/",
-      "destination": "https://www.tigrisdata.com/dev/",
+      "destination": "https://www.tigrisdata.com/docs/",
       "permanent": true
     }
   ]

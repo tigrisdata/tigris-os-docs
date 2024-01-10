@@ -176,24 +176,15 @@ const config = {
             items: [
               {
                 label: "About",
-                href: "/about/",
-                target: "_self",
-                rel: "",
-                className: "footer__link-item disable-external-icon",
+                to: "/about/",
               },
               {
                 label: "Terms of Service",
-                href: `${tigrisConfig.websiteUrl}/service-terms`,
-                target: "_self",
-                rel: "",
-                className: "footer__link-item disable-external-icon",
+                to: "/legal/service-terms/",
               },
               {
                 label: "Privacy Policy",
-                href: `${tigrisConfig.websiteUrl}/privacy-policy`,
-                target: "_self",
-                rel: "",
-                className: "footer__link-item disable-external-icon",
+                to: "/legal/privacy-policy/",
               },
               {
                 label: "Contact Us",

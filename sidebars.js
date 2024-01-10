@@ -69,6 +69,11 @@ const sidebars = {
       label: "Pricing",
       id: "pricing/index",
     },
+    {
+      type: "category",
+      label: "Legal",
+      items: ["legal/privacy-policy", "legal/service-terms"],
+    },
   ],
 };
 

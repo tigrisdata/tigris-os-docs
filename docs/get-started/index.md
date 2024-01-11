@@ -17,9 +17,10 @@ keys that you explicitly grant access permissions to.
 
 ### 1. Signup for early access
 
-To use Tigris you need to have your account setup. If you don't have one, you
-can [signup for the waitlist](https://hello.tigrisdata.com/forms/early-access/)
-and we will reach out to you as soon as possible.
+To use Tigris you need a [Fly.io](https://fly.io/). If you don't have one, you
+can get yourself one [here](https://fly.io/app/sign-up). Then
+[signup for the waitlist](https://hello.tigrisdata.com/forms/early-access/) and
+we will reach out to you as soon as possible.
 
 ### 2. Create a bucket
 

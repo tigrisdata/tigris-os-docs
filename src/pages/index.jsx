@@ -5,7 +5,7 @@ import {
   HomepageCard as Card,
   HomepageSection as Section,
 } from "../components/HomepageComponents";
-import { GreenStar } from "../icons";
+import { GreenStar, YellowStar } from "../icons";
 
 import SDKCards from "../components/SDKCards";
 
@@ -89,6 +89,21 @@ export default function Homepage() {
               description="Public buckets allow you to share data with anyone, anywhere."
               to="/buckets/public-bucket/"
               icon={<GreenStar />}
+            />
+          </Section>
+
+          <Section title="More" id="features" HeadingTag="h2">
+            <Card
+              title="Data Migration"
+              description="Migrate data from an existing S3-compatible bucket to Tigris without downtime and without incuring egress costs."
+              to="/migration/"
+              icon={<YellowStar />}
+            />
+            <Card
+              title="Fly.io Integration"
+              description="Natively integrated with Fly.io. Tigris runs on Fly.io hardware and is fully integrated with flyctl."
+              to="/sdks/fly/"
+              icon={<YellowStar />}
             />
           </Section>
 

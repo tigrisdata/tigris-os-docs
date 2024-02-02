@@ -117,8 +117,18 @@ const config = {
             position: "left",
           },
           {
+            label: "Fly.io",
+            to: "/sdks/fly/",
+            position: "left",
+          },
+          {
             label: "AWS S3 SDKs",
             to: "/sdks/s3/",
+            position: "left",
+          },
+          {
+            label: "Migration",
+            to: "/migration/",
             position: "left",
           },
           {
@@ -179,16 +189,11 @@ const config = {
                 to: "/about/",
               },
               {
-                label: "Terms of Service",
-                to: "/legal/service-terms/",
-              },
-              {
-                label: "Privacy Policy",
-                to: "/legal/privacy-policy/",
-              },
-              {
-                label: "Contact Us",
-                href: "mailto:connect@tigrisdata.com",
+                label: "Blog",
+                href: tigrisConfig.blogUrl,
+                target: "_self",
+                rel: "",
+                className: "footer__link-item disable-external-icon",
               },
             ],
           },
@@ -196,23 +201,41 @@ const config = {
             title: "Resources",
             items: [
               {
+                label: "Pricing",
+                to: "/pricing/",
+              },
+              {
+                label: "Terms of Service",
+                to: "/legal/service-terms/",
+              },
+              {
+                label: "Privacy Policy",
+                to: "/legal/privacy-policy/",
+              },
+              // {
+              //   label: "Videos",
+              //   href: "https://www.youtube.com/channel/UCsCQ5Nl3JOh71UNCCNZ3q2g",
+              // },
+              // {
+              //   label: "Community",
+              //   href: tigrisConfig.discordUrl,
+              // },
+            ],
+          },
+          {
+            title: "Developers",
+            items: [
+              {
                 label: "Docs",
                 to: "/",
               },
               {
-                label: "Blog",
-                href: tigrisConfig.blogUrl,
-                target: "_self",
-                rel: "",
-                className: "footer__link-item disable-external-icon",
+                label: "Status",
+                href: tigrisConfig.statusPageUrl,
               },
               {
-                label: "Early Access",
-                href: tigrisConfig.earlyAccessUrl,
-              },
-              {
-                label: "Pricing",
-                to: "/pricing/",
+                label: "Support",
+                href: "mailto:help@tigrisdata.com",
               },
               // {
               //   label: "Videos",

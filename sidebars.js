@@ -48,6 +48,16 @@ const sidebars = {
     },
     {
       type: "category",
+      label: "Data Migration",
+      items: ["migration/index"],
+    },
+    {
+      type: "category",
+      label: "Fly.io",
+      items: ["sdks/fly/index"],
+    },
+    {
+      type: "category",
       label: "AWS S3 SDKs",
       link: {
         type: "doc",

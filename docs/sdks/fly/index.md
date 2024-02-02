@@ -1,30 +1,22 @@
-# Object Storage
+# Bucket Management with Flyctl
 
-Tigris is a globally distributed S3-compatible object storage service that
-stores data as objects within buckets. An object is a file and any metadata that
-describes the file. A bucket is a container for objects.
-
-To store your data in Tigris, you first create a bucket and specify a bucket
-name. Then, you upload your data to that bucket as objects in Tigris. Each
-object has a key, which is the unique identifier for the object within the
-bucket. Buckets are global, and Tigris automatically stores the data close to
-your users. If your users move to a different region, the data moves with them.
-
-Buckets and the objects in them are private and can be accessed only via access
-keys that you explicitly grant access permissions to.
+Tigris is a globally distributed S3-compatible object storage service natively
+integrated with [Fly.io](https://fly.io/). Tigris runs on
+[Fly.io](https://fly.io/) hardware and is fully integrated with flyctl.
 
 ## Getting Started
-
-### 1. Signup for early access
 
 To use Tigris you need a [Fly.io](https://fly.io/) account. If you don't have
 one, you can get yourself one [here](https://fly.io/app/sign-up). Then
 [signup for the waitlist](https://hello.tigrisdata.com/forms/early-access/) and
 we will reach out to you as soon as possible.
 
-### 2. Create a bucket
+Once your account is activated, you can use the `fly storage` command to create
+and manage Tigris buckets.
 
-Before you can store data in Tigris, you have to create a bucket.
+## Creating and managing a bucket
+
+### Creating a bucket associated with a Fly app
 
 To create a bucket for one of your Fly apps, run the following command in the
 directory where your Fly app is located:
@@ -49,6 +41,8 @@ AWS_ENDPOINT_URL_S3
 Secrets are staged for the first deployment
 ```
 
+### Creating a bucket not associated with a Fly app
+
 If you want to create a bucket that is not associated with a Fly app, you can
 run the same command outside of a Fly app directory.
 
@@ -65,19 +59,43 @@ AWS_SECRET_ACCESS_KEY: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 BUCKET_NAME: polished-thunder-5646
 ```
 
-### 3. Start building
+### Creating a public bucket
 
-Now that you have a bucket, you can start storing objects in it. An object can
-be any kind of file: a text file, a photo, a video, or anything else. As Tigris
-is S3-compatible, you can use standard AWS S3 SDKs and libraries to store and
-retrieve objects.
+By default, buckets are private. You can create a public bucket by passing the
+`--public` flag to the `fly storage create` command:
 
-:::info
+```bash
+fly storage create --public
+```
 
-Tigris provides a single global endpoint. When using the AWS S3 SDKs, all you
-need is to set the endpoint to `https://fly.storage.tigris.dev`.
+### Updating bucket public access
 
-:::
+You can make a private bucket public or a public bucket private by using the
+`fly storage update` command:
 
-Take a look at examples of how to use Tigris with the most popular S3 SDKs and
-CLIs [here](../sdks/s3/).
+```bash
+fly storage update bucket-name --public
+```
+
+Or,
+
+```bash
+fly storage update bucket-name --private
+```
+
+## Listing buckets
+
+To list all the buckets associated with your Fly account, run the following
+command:
+
+```bash
+fly storage list
+```
+
+## Deleting a bucket
+
+To delete a bucket, run the following command:
+
+```bash
+fly storage destroy bucket-name
+```

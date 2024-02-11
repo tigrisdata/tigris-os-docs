@@ -39,7 +39,11 @@ const sidebars = {
       type: "category",
       label: "Concepts",
       collapsed: false,
-      items: ["concepts/architecture/index", "api/s3/index"],
+      items: [
+        "concepts/architecture/index",
+        "concepts/authnz/index",
+        "api/s3/index",
+      ],
     },
     {
       type: "category",

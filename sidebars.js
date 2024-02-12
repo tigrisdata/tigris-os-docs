@@ -52,6 +52,11 @@ const sidebars = {
     },
     {
       type: "category",
+      label: "Caching",
+      items: ["caching/index"],
+    },
+    {
+      type: "category",
       label: "Data Migration",
       items: ["migration/index"],
     },

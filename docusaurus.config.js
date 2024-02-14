@@ -159,7 +159,7 @@ const config = {
             position: "right",
           },
           {
-            label: "Early Access",
+            label: "Signup",
             href: tigrisConfig.earlyAccessUrl,
             position: "right",
             className: "wc-portal-signup wc-portal-link",

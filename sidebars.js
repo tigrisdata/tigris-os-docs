@@ -89,6 +89,11 @@ const sidebars = {
       id: "pricing/index",
     },
     {
+      type: "doc",
+      label: "Support",
+      id: "support/index",
+    },
+    {
       type: "category",
       label: "Legal",
       items: ["legal/privacy-policy", "legal/service-terms"],

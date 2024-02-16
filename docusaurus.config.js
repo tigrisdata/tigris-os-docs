@@ -36,6 +36,7 @@ const config = {
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
           breadcrumbs: false,
+          editUrl: "https://github.com/tigrisdata/tigris-os-docs/blob/main",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
         },
@@ -230,12 +231,12 @@ const config = {
                 to: "/",
               },
               {
-                label: "Status",
-                href: tigrisConfig.statusPageUrl,
+                label: "Support",
+                to: "/support/",
               },
               {
-                label: "Support",
-                href: "mailto:help@tigrisdata.com",
+                label: "Status",
+                href: tigrisConfig.statusPageUrl,
               },
               // {
               //   label: "Videos",

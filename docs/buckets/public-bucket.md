@@ -71,3 +71,58 @@ So for the object we just uploaded, the virtual-hosted–style URL would be:
 $ wget https://foo-public-bucket.fly.storage.tigris.dev/bar.txt -O- -q
 bar
 ```
+
+### CORS with public bucket
+
+CORS, or Cross-Origin Resource Sharing, is a web security mechanism enforced by
+modern browsers. It permits servers to specify which origins can access their
+resources, enhancing security by preventing unauthorized access from scripts or
+sites outside the defined origin. CORS facilitates safe sharing of resources
+across different domains.
+
+You can learn more about
+[CORS here](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+
+Tigris allows owner's of the public bucket specify their CORS configuration.
+Let's take an example of public bucket `public-scripts`. Consider as the owner
+of this bucket you want to restrict the access (via HTTP methods `PUT`, `POST`
+and `DELETE`) to objects of this bucket from origins `https://www.example.com`.
+and for http `GET` access you want to allow it from all the origins. You can
+specify this rule. Tigris will serve the CORS headers instructing modern web
+browsers to adhere security practices. Note: CORS is just the protection layer
+added in modern web browsers. It only enforces the security for
+[these types of requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#what_requests_use_cors)
+from modern web browsers.
+
+```json
+{
+  "CORSRules": [
+    {
+      "AllowedOrigins": ["https://www.example.com"],
+      "AllowedHeaders": ["*"],
+      "AllowedMethods": ["PUT", "POST", "DELETE"],
+      "MaxAgeSeconds": 3000
+    },
+    {
+      "AllowedOrigins": ["*"],
+      "AllowedHeaders": ["*"],
+      "AllowedMethods": ["GET"],
+      "MaxAgeSeconds": 3000
+    }
+  ]
+}
+```
+
+Tigris evaluates CORS in the order specified within the configuration array:
+
+- Initially, it checks if the origin matches any allowed origins; if so, it
+  proceeds to further inspection.
+- Next, it compares the requested method (or the method specified by the
+  `Access-Control-Request-Method` header for pre-flight requests) with the
+  allowed methods.
+- For pre-flight requests, it compares the allowed headers with those specified
+  by the `Access-Control-Request-Headers` header.
+- If all conditions are met, Tigris serves the CORS headers generated from the
+  corresponding CORS rule.
+
+You can use `PutBucketCors`, `GetBucketCors`, `DeleteBucketCors` s3 operations.

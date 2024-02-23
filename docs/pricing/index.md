@@ -18,17 +18,23 @@ Tigris pricing is based on the following components:
 | Data Storage                                   | $0.02/GB/month        |
 | PUT, COPY, POST, LIST Requests                 | $0.005/1000 requests  |
 | GET, SELECT, and all other Requests            | $0.0005/1000 requests |
-| Data Transfer to Machine(s) in the same region | $0/GB                 |
+| Data Transfer to Machine(s) in the same region | $0.00/GB              |
+| Data Transfer to Internet                      | $0.00/GB              |
 
 ### Note on data transfer pricing
 
-Apart from same-region data transfers, we haven't finalized the pricing for data
-transfer completely. There are several aspects of Tigris that involve data
-transfer from one region to another, such as when data is replicated to another
-region for redundancy, or when data is moved to a region close to the user, etc.
-We want to make sure that pricing for data transfer is fair and transparent, and
-as we will work through the beta, we will finalize the pricing for data transfer
-and update this page.
+We have finalized most of the pricing for data transfer. You don't pay for data
+transfer in the following cases:
+
+- Data transfer out to the internet is free.
+- Data transfer in from the internet is free.
+- Data transfer to machines in the same region is free.
+
+Apart from the cases listed above there are other aspects of Tigris that involve
+data transfer from one region to another, such as when data is replicated to
+another region for redundancy, or when data is moved to a region close to the
+user, etc. As we work through the beta, we will finalize the pricing for these
+cases of multi-region data transfer and update this page.
 
 ## Free allowance
 
@@ -37,7 +43,6 @@ We offer a free allowance as follows:
 - 5GB of data storage per month
 - 10,000 PUT, COPY, POST, LIST requests per month
 - 100,000 GET, SELECT, and all other requests per month
-- 100GB of data transfer per month
 
 ## Example pricing
 
@@ -51,7 +56,7 @@ be charged as follows:
   $0.10
 - PUT Requests: 10,000 x $0/1000 requests (free allowance) = $0
 - GET Requests: 100,000 x $0/1000 requests (free allowance) = $0
-- Data Transfer: 100GB (free allowance) = $0
+- Data Transfer: $0
 
 ### Example 2
 
@@ -65,11 +70,8 @@ will be charged as follows:
   $0.005/1000 requests = $0.45
 - GET Requests: 100,000 x $0/1000 requests + 900,000 x $0.0005/1000 requests =
   $0.45
-- Data Transfer: 100GB (free allowance) + 900GB (zero-rated until pricing
-  finalized) = $0
+- Data Transfer: $0
 
 ## Pricing during beta
 
-During the period of the beta, we will not charge for any usage. We will also
-not charge you for any data transfer costs. We will update this page with the
-pricing for data transfer before the beta ends.
+During the period of the beta, we will not charge for any usage.

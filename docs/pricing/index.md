@@ -18,17 +18,23 @@ Tigris pricing is based on the following components:
 | Data Storage                                   | $0.02/GB/month        |
 | PUT, COPY, POST, LIST Requests                 | $0.005/1000 requests  |
 | GET, SELECT, and all other Requests            | $0.0005/1000 requests |
-| Data Transfer to Machine(s) in the same region | $0/GB                 |
+| Data Transfer to Machine(s) in the same region | $0.00/GB              |
+| Data Transfer to Internet                      | $0.00/GB              |
 
 ### Note on data transfer pricing
 
-Apart from same-region data transfers, we haven't finalized the pricing for data
-transfer completely. There are several aspects of Tigris that involve data
-transfer from one region to another, such as when data is replicated to another
-region for redundancy, or when data is moved to a region close to the user, etc.
-We want to make sure that pricing for data transfer is fair and transparent, and
-as we will work through the beta, we will finalize the pricing for data transfer
-and update this page.
+We have finalized most of the pricing for data transfer. You don't pay for data
+transfer in the following cases:
+
+- Data transfer out to the internet is free.
+- Data transfer in from the internet is free.
+- Data transfer to machines in the same region is free.
+
+Apart from the cases listed above there are other aspects of Tigris that involve
+data transfer from one region to another, such as when data is replicated to
+another region for redundancy, or when data is moved to a region close to the
+user, etc. As we work through the beta, we will finalize the pricing for
+multi-region data transfer and update this page.
 
 ## Free allowance
 

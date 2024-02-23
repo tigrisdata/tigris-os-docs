@@ -33,8 +33,8 @@ transfer in the following cases:
 Apart from the cases listed above there are other aspects of Tigris that involve
 data transfer from one region to another, such as when data is replicated to
 another region for redundancy, or when data is moved to a region close to the
-user, etc. As we work through the beta, we will finalize the pricing for
-multi-region data transfer and update this page.
+user, etc. As we work through the beta, we will finalize the pricing for these
+cases of multi-region data transfer and update this page.
 
 ## Free allowance
 

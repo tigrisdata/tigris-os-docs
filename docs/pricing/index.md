@@ -43,7 +43,6 @@ We offer a free allowance as follows:
 - 5GB of data storage per month
 - 10,000 PUT, COPY, POST, LIST requests per month
 - 100,000 GET, SELECT, and all other requests per month
-- 100GB of data transfer per month
 
 ## Example pricing
 
@@ -57,7 +56,7 @@ be charged as follows:
   $0.10
 - PUT Requests: 10,000 x $0/1000 requests (free allowance) = $0
 - GET Requests: 100,000 x $0/1000 requests (free allowance) = $0
-- Data Transfer: 100GB (free allowance) = $0
+- Data Transfer: $0
 
 ### Example 2
 
@@ -71,11 +70,8 @@ will be charged as follows:
   $0.005/1000 requests = $0.45
 - GET Requests: 100,000 x $0/1000 requests + 900,000 x $0.0005/1000 requests =
   $0.45
-- Data Transfer: 100GB (free allowance) + 900GB (zero-rated until pricing
-  finalized) = $0
+- Data Transfer: $0
 
 ## Pricing during beta
 
-During the period of the beta, we will not charge for any usage. We will also
-not charge you for any data transfer costs. We will update this page with the
-pricing for data transfer before the beta ends.
+During the period of the beta, we will not charge for any usage.

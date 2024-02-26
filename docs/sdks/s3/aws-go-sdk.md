@@ -107,20 +107,20 @@ func IfMatch(value string) func(*s3.Options) {
 }
 
 func main() {
-    cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("us-east-1"), config.WithClientLogMode(aws.LogRequestWithBody))
-    if err != nil {
-        log.Fatalf("unable to load SDK confil: %v", err)
-    }
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("us-east-1"), config.WithClientLogMode(aws.LogRequestWithBody))
+	if err != nil {
+		log.Fatalf("unable to load SDK confil: %v", err)
+	}
 
-    client := s3.NewFromConfig(cfg)
+	client := s3.NewFromConfig(cfg)
 
 	// read
 	out, err := client.GetObject(context.TODO(),
-        &s3.GetObjectInput{
-		    Bucket: aws.String("myBucket"),
-		    Key:    aws.String("myKey"),
-        },
-    )
+		&s3.GetObjectInput{
+			Bucket: aws.String("myBucket"),
+			Key:    aws.String("myKey"),
+		},
+	)
 	if err != nil {
 		log.Fatalf("unable to read object: %v", err)
 	}
@@ -133,13 +133,13 @@ func main() {
 	// modify
 
 	// write
-    out1, err := client.PutObject(context.TODO(),
-        &s3.PutObjectInput{
-            Bucket: aws.String("myBucket"),
-		    Key:    aws.String("myKey"),
-        },
+	out1, err := client.PutObject(context.TODO(),
+		&s3.PutObjectInput{
+			Bucket: aws.String("myBucket"),
+			Key:    aws.String("myKey"),
+		},
 		Body: bytes.NewBuffer(body),
-        IfMatch(out.ETag),  // guarantees that object hasn't been modified since we read it
+		IfMatch(out.ETag),  // guarantees that object hasn't been modified since we read it
     )
 	if err != nil {
 		log.Fatalf("unable to put object, %v", err)

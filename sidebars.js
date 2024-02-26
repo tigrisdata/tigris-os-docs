@@ -52,8 +52,8 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "Caching",
-      items: ["caching/index"],
+      label: "Objects",
+      items: ["objects/caching", "objects/conditionals"],
     },
     {
       type: "category",

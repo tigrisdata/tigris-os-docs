@@ -36,3 +36,26 @@ assets:
 | Videos                   | Any Content-Type matching video/\*                              |
 | Audio                    | Any Content-Type matching audio/\*                              |
 | Formatted document types | application/pdf and application/postscript                      |
+
+## Caching on PUT (Eager Caching)
+
+In addition to the default caching behavior, Tigris provides a way to eagerly
+cache objects on write. This is useful when you know that an object will be
+frequently accessed from a region different from the region where the object is
+written.
+
+:::note
+
+We have found Cache-on-Read to be sufficient for most of the use cases and the
+most cost-effective, but Cache-on-Write is available for use cases that need it.
+
+:::
+
+The AWS CLI and SDKs can be used to enable eager caching on write. The following
+example shows how to enable eager caching on write using the AWS CLI
+
+```sh
+aws s3api put-bucket-accelerate-configuration \
+	--bucket foo-bucket \
+	--accelerate-configuration Status=Enabled
+```

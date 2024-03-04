@@ -5,7 +5,7 @@ Unlike traditional CDNs, though, it handles dynamic data in a way that provides
 strong guarantees around freshness of data.
 
 Tigris transparently caches the objects close to the user to provide low-latency
-access. The region choosen for caching the objects depends on the request
+access. The region chosen for caching the objects depends on the request
 pattern from the users. Objects stored in San Jose but requested frequently from
 Sydney will result in getting cached in the Sydney region. Caching is provided
 through a distributed global caching layer with cache nodes deployed in regions

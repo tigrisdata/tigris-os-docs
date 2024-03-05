@@ -94,4 +94,30 @@ the bucket is pulled if the user is the owner of the bucket.
 With this information, Tigris evaluates the access and grants or denies access
 to the operation.
 
+By default, users within the Tigris system are categorized into two main groups:
+
+1. Human Users: These users authenticate and access the Tigris dashboard. They
+   have the capability to generate access keys, which are subsequently utilized
+   by API consumers such as SDKs and CLIs.
+
+2. Access Keys: These keys are created by human users and used by API consumers
+   like SDKs and CLIs.
+
+For human users accessing Tigris, the system aligns with Fly org's roles and
+offers a pre-configured permission system. Within Fly org, there exist two
+primary roles:
+
+- Admin: Granted full permissions within their designated namespace.
+- Member: Permitted to execute read and write operations.
+
+During the creation of access keys, human users have the option to assign
+bucket-level roles to these keys. At a higher level, two roles are available:
+`Editor` and `ReadOnly`. These roles serve as simplified versions of IAM
+policies, providing read-write access for `Editor` and read-only access for
+`ReadOnly`. This simplification aims to streamline permission management.
+
+Furthermore, Tigris supports the customization of IAM policies. Admin users
+possess the capability to create custom IAM policies and associate them with
+specific users, offering further flexibility in permission management.
+
 ![Authorization](/img/auth/authorization.png)

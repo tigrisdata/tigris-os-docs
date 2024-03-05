@@ -103,6 +103,7 @@ By default, users within the Tigris system are categorized into two main groups:
 2. Access Keys: These keys are created by human users and used by API consumers
    like SDKs and CLIs.
 
+#### Human users
 For human users accessing Tigris, the system aligns with Fly org's roles and
 offers a pre-configured permission system. Within Fly org, there exist two
 primary roles:
@@ -110,12 +111,15 @@ primary roles:
 - Admin: Granted full permissions within their designated namespace.
 - Member: Permitted to execute read and write operations.
 
+#### Access keys
 During the creation of access keys, human users have the option to assign
 bucket-level roles to these keys. At a higher level, two roles are available:
 `Editor` and `ReadOnly`. These roles serve as simplified versions of IAM
 policies, providing read-write access for `Editor` and read-only access for
 `ReadOnly`. This simplification aims to streamline permission management.
 
+
+#### Customization of IAM policies
 Furthermore, Tigris supports the customization of IAM policies. Admin users
 possess the capability to create custom IAM policies and associate them with
 specific users, offering further flexibility in permission management.

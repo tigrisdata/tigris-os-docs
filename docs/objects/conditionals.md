@@ -1,8 +1,18 @@
 # Conditional Operations (preconditions)
 
-Conditional operations provide a way to avoid race conditions during objects
-write or read request. Request can only proceed if provided condition is
-satisfied.
+When conditions are specified, the request will only proceed if the condition is
+satisfied. Conditional checks ensure that the object is in the expected state,
+allowing you to perform safe read-modify-write operations.
+
+Conditional operations are often used to prevent race conditions during object
+mutations such as uploads, deletes, or metadata updates. Race conditions can
+occur when multiple clients are trying to modify the same object at the same
+time, or when the same request is being sent repeatedly.
+
+Conditions are also often used to implement optimistic concurrency control. This
+is a strategy where the client assumes that the object has not been modified
+since it was last read, and proceeds with the operation only if the assumption
+holds true.
 
 Conditions is provided through request headers.
 

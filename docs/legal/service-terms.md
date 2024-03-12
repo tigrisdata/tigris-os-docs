@@ -1,4 +1,4 @@
-# Tigris Terms of Service
+# Tigris Service Agreement
 
 _Last updated: December 13, 2023_
 

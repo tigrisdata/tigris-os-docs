@@ -469,7 +469,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
 
     a. **For Convenience.** User may terminate User’s account and this Agreement
     for any reason by removing all Customer Content from the Tigris Object
-    Storage Service or contacting customer service at support@tigrisdata.com. We
+    Storage Service or contacting customer service at help@tigrisdata.com. We
     may terminate this Agreement for any reason by providing User at least 30
     days’ advance notice.
 
@@ -893,7 +893,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     22.10 **Contact Information.** The Tigris Object Storage Service is offered
     by Tigris Data Inc., located at 1250 Borregas Ave, #87, Sunnyvale, CA 94089.
     You may contact us by sending correspondence to that address or by emailing
-    us at support@tigrisdata.com.
+    us at help@tigrisdata.com.
 
     22.11 **Notice to California Residents.** If you are a California resident,
     then under California Civil Code Section 1789.3, you may contact the

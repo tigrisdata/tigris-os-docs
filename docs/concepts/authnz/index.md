@@ -96,8 +96,8 @@ with a role. This role is mapped to a bucket. Following is the permission model.
 | ListObjectsV1                      | ✅             | ✅     | ✅       |
 | ListObjectsV2                      | ✅             | ✅     | ✅       |
 | NewMultipartUpload                 | ✅             | ✅     | ❌       |
-| OpGetBucketAccelerateConfiguration | ✅             | ✅     | ✅       |
-| OpGetBucketOwnershipControls       | ✅             | ✅     | ✅       |
+| GetBucketAccelerateConfiguration | ✅             | ✅     | ✅       |
+| GetBucketOwnershipControls       | ✅             | ✅     | ✅       |
 | PostPolicy                         | ✅             | ✅     | ❌       |
 | PutBucket                          | ✅             | ✅     | ❌       |
 | PutBucketACL                       | ✅             | ✅     | ❌       |

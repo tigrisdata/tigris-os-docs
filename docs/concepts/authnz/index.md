@@ -53,7 +53,89 @@ issuer, audience, and expiration.
 
 ## Authorization
 
-Tigris supports AWS’s IAM policies mechanism as the authorization system.
+Tigris supports Role-Based-Access-Control (RBAC) and AWS's IAM policies
+mechanism for the authorization system.
+
+When you create an access key, you can assign a role to it. This role is mapped
+to a bucket. This role is a simplified version of IAM policies. This role is
+used to determine the access level of the key.
+
+### Role-Based-Access-Control (RBAC)
+
+The table below shows the operations that can be performed by the access key
+based on the role assigned to the it.
+
+| Operation                          | Admin | Editor | ReadOnly |
+| ---------------------------------- | ----- | ------ | -------- |
+| AbortMultipartUpload               | ✅    | ✅     | ❌       |
+| CompleteMultipartUpload            | ✅    | ✅     | ❌       |
+| CopyObject                         | ✅    | ✅     | ❌       |
+| CopyObjectPart                     | ✅    | ✅     | ❌       |
+| DeleteBucket                       | ✅    | ✅     | ❌       |
+| DeleteBucketCors                   | ✅    | ✅     | ❌       |
+| DeleteBucketLifecycleConfiguration | ✅    | ✅     | ❌       |
+| DeleteBucketOwnershipControls      | ✅    | ✅     | ❌       |
+| DeleteBucketPolicy                 | ✅    | ✅     | ❌       |
+| DeleteBucketTagging                | ✅    | ✅     | ❌       |
+| DeleteMultipleObjects              | ✅    | ✅     | ❌       |
+| DeleteObject                       | ✅    | ✅     | ❌       |
+| DeleteObjectTagging                | ✅    | ✅     | ❌       |
+| GetAccessKey                       | ✅    | ✅     | ✅       |
+| GetBucketACL                       | ✅    | ✅     | ❌       |
+| GetBucketAccelerateConfiguration   | ✅    | ✅     | ❌       |
+| GetBucketCors                      | ✅    | ✅     | ❌       |
+| GetBucketLifecycleConfiguration    | ✅    | ✅     | ❌       |
+| GetBucketLocation                  | ✅    | ✅     | ✅       |
+| GetBucketOwnershipControls         | ✅    | ✅     | ❌       |
+| GetBucketPolicy                    | ✅    | ✅     | ❌       |
+| GetBucketPolicyStatus              | ✅    | ✅     | ✅       |
+| GetBucketRequestPayment            | ✅    | ✅     | ❌       |
+| GetBucketTagging                   | ✅    | ✅     | ✅       |
+| GetBucketVersioning                | ✅    | ✅     | ✅       |
+| GetObject                          | ✅    | ✅     | ✅       |
+| GetObjectACL                       | ✅    | ✅     | ❌       |
+| GetObjectTagging                   | ✅    | ✅     | ✅       |
+| HeadBucket                         | ✅    | ✅     | ✅       |
+| HeadObject                         | ✅    | ✅     | ✅       |
+| ListAccessKeys                     | ✅    | ✅     | ✅       |
+| ListBuckets                        | ✅    | ✅     | ✅       |
+| ListMultipartUploads               | ✅    | ✅     | ✅       |
+| ListObjectParts                    | ✅    | ✅     | ❌       |
+| ListObjectsV1                      | ✅    | ✅     | ✅       |
+| ListObjectsV2                      | ✅    | ✅     | ✅       |
+| NewMultipartUpload                 | ✅    | ✅     | ❌       |
+| GetBucketAccelerateConfiguration   | ✅    | ✅     | ✅       |
+| GetBucketOwnershipControls         | ✅    | ✅     | ✅       |
+| PostPolicy                         | ✅    | ✅     | ❌       |
+| PutBucket                          | ✅    | ✅     | ❌       |
+| PutBucketACL                       | ✅    | ✅     | ❌       |
+| PutBucketAccelerateConfiguration   | ✅    | ✅     | ❌       |
+| PutBucketCors                      | ✅    | ✅     | ❌       |
+| PutBucketLifecycleConfiguration    | ✅    | ✅     | ❌       |
+| PutBucketOwnershipControls         | ✅    | ✅     | ❌       |
+| PutBucketPolicy                    | ✅    | ✅     | ❌       |
+| PutBucketTagging                   | ✅    | ✅     | ❌       |
+| PutObject                          | ✅    | ✅     | ❌       |
+| PutObjectACL                       | ✅    | ✅     | ❌       |
+| PutObjectLegalHold                 | ✅    | ✅     | ❌       |
+| PutObjectLockConfiguration         | ✅    | ✅     | ❌       |
+| PutObjectRetention                 | ✅    | ✅     | ❌       |
+| PutObjectTagging                   | ✅    | ✅     | ❌       |
+| UploadObjectPart                   | ✅    | ✅     | ❌       |
+| IAM:CreatePolicy                   | ✅    | ❌     | ❌       |
+| IAM:ListPolicies                   | ✅    | ❌     | ❌       |
+| IAM:ListUserPolicies               | ✅    | ❌     | ❌       |
+| IAM:AttachUserPolicy               | ✅    | ❌     | ❌       |
+
+The bucket owner is allowed to perform all the operations on their own bucket.
+
+### IAM Policies
+
+In addition to the role, Admin users can also further customize the access by
+crafting IAM policies.
+
+IAM policies are used to define the access level of the user. The user can be a
+human user or an access key.
 
 Here is an example of the IAM policy
 

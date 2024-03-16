@@ -53,9 +53,17 @@ issuer, audience, and expiration.
 
 ## Authorization
 
-Tigris supports Role-Based-Access-Control (RBAC) & AWS’s IAM policies mechanism
-as the authorization system. Tigris dashboard allows users to create access key
-with a role. This role is mapped to a bucket. Following is the permission model.
+Tigris supports Role-Based-Access-Control (RBAC) and AWS's IAM policies
+mechanism for the authorization system.
+
+When you create an access key, you can assign a role to it. This role is mapped
+to a bucket. This role is a simplified version of IAM policies. This role is
+used to determine the access level of the key.
+
+### Role-Based-Access-Control (RBAC)
+
+The table below shows the operations that can be performed by the access key
+based on the role assigned to the it.
 
 | Operation                          | Admin | Editor | ReadOnly |
 | ---------------------------------- | ----- | ------ | -------- |
@@ -119,17 +127,15 @@ with a role. This role is mapped to a bucket. Following is the permission model.
 | IAM:ListUserPolicies               | ✅    | ❌     | ❌       |
 | IAM:AttachUserPolicy               | ✅    | ❌     | ❌       |
 
-Note:
+The bucket owner is allowed to perform all the operations on their own bucket.
 
-- In addition to S3, Tigris offers specific custom APIs. Tigris will seamlessly
-  incorporate newly added methods into appropriate roles without causing
-  disruptions.
-
-- In addition to above, bucket owner is allowed to perform all the operations on
-  their own bucket.
+### IAM Policies
 
 In addition to the role, Admin users can also further customize the access by
-crafting IAM policy.
+crafting IAM policies.
+
+IAM policies are used to define the access level of the user. The user can be a
+human user or an access key.
 
 Here is an example of the IAM policy
 

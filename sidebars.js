@@ -53,7 +53,7 @@ const sidebars = {
     {
       type: "category",
       label: "Objects",
-      items: ["objects/caching", "objects/conditionals"],
+      items: ["objects/caching", "objects/conditionals", "objects/presigned"],
     },
     {
       type: "category",

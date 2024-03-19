@@ -7,6 +7,8 @@ available.
 You may continue to use the AWS PHP SDK as you normally would, but with the
 endpoint set to `https://fly.storage.tigris.dev`.
 
+## Getting started
+
 This example uses the
 [AWS PHP SDK v3](https://packagist.org/packages/aws/aws-sdk-php) and reads the
 default credentials file or the environment variables `AWS_ACCESS_KEY_ID` and
@@ -76,3 +78,44 @@ default credentials file or the environment variables `AWS_ACCESS_KEY_ID` and
     }
 ?>
 ```
+
+## Using presigned URLs
+
+Presigned URLs can be used with the AWS PHP SDK as follows:
+
+```php
+<?php
+    require 'vendor/autoload.php';
+
+    $bucket_name = 'foo-bucket';
+
+    $s3 = new Aws\S3\S3Client([
+        'region' => 'auto',
+        'endpoint' => 'https://fly.storage.tigris.dev',
+        'version' => 'latest',
+    ]);
+
+    # Generate a presigned URL to download an object
+    $command = $s3->getCommand('GetObject', [
+        'Bucket' => $bucket_name,
+        'Key' => 'bar.txt',
+    ]);
+
+    $request = $s3->createPresignedRequest($command, '+20 minutes');
+
+    echo "Presigned URL to download an object: " . (string) $request->getUri() . "\n";
+
+    # Generate a presigned URL to upload an object
+    $command = $s3->getCommand('PutObject', [
+        'Bucket' => $bucket_name,
+        'Key' => 'bar.txt',
+    ]);
+
+    $request = $s3->createPresignedRequest($command, '+20 minutes');
+
+    echo "Presigned URL to upload an object: " . (string) $request->getUri() . "\n";
+?>
+```
+
+You can now use the URL returned by the `$request->getUri()` to upload or
+download objects.

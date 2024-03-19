@@ -48,7 +48,7 @@ const sidebars = {
     {
       type: "category",
       label: "Buckets",
-      items: ["buckets/create-bucket", "buckets/public-bucket"],
+      items: ["buckets/create-bucket", "buckets/public-bucket", "buckets/cors"],
     },
     {
       type: "category",

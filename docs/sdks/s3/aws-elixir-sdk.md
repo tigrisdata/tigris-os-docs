@@ -234,3 +234,22 @@ iex(3)> ExAws.S3.Upload.stream_file("Docker.dmg") |> ExAws.S3.upload("foo-bucket
   status_code: 200
 }
 ```
+
+## Using presigned URLs
+
+Presigned URLs can be used with the ExAWS SDK as follows:
+
+```elixir
+
+# Generate a presigned URL to download an object
+iex(9)> ExAws.Config.new(:s3) \
+...(9)> |> ExAws.S3.presigned_url(:get, "foo-bucket", "bar.txt", [expires_in: 300])
+{:ok,
+ "https://fly.storage.tigris.dev/foo-bucket/bar.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...&X-Amz-Date=20240319T014302Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=..."}
+
+# Generate a presigned URL to upload an object
+iex(10)> ExAws.Config.new(:s3) \
+...(10)> |> ExAws.S3.presigned_url(:put, "foo-bucket", "bar.txt", [expires_in: 300])
+{:ok,
+ "https://fly.storage.tigris.dev/foo-bucket/bar.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...&X-Amz-Date=20240319T014302Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=..."}
+```

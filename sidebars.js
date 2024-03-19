@@ -48,12 +48,12 @@ const sidebars = {
     {
       type: "category",
       label: "Buckets",
-      items: ["buckets/create-bucket", "buckets/public-bucket"],
+      items: ["buckets/create-bucket", "buckets/public-bucket", "buckets/cors"],
     },
     {
       type: "category",
       label: "Objects",
-      items: ["objects/caching", "objects/conditionals"],
+      items: ["objects/caching", "objects/conditionals", "objects/presigned"],
     },
     {
       type: "category",

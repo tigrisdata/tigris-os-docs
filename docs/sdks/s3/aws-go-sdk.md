@@ -107,12 +107,17 @@ func IfMatch(value string) func(*s3.Options) {
 }
 
 func main() {
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("us-east-1"), config.WithClientLogMode(aws.LogRequestWithBody))
+	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
-		log.Fatalf("unable to load SDK confil: %v", err)
+		log.Printf("Couldn't load default configuration. Here's why: %v\n", err)
+		return
 	}
 
-	client := s3.NewFromConfig(cfg)
+	// Create S3 service client
+	client := s3.NewFromConfig(sdkConfig, func(o *s3.Options) {
+		o.BaseEndpoint = aws.String("https://fly.storage.tigris.dev")
+		o.Region = "auto"
+	})
 
 	// read
 	out, err := client.GetObject(context.TODO(),
@@ -146,3 +151,109 @@ func main() {
 	}
 }
 ```
+
+## Using presigned URLs
+
+Presigned URLs can be used with the AWS Go SDK as follows:
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+)
+
+// Client encapsulates the S3 SDK presign client and provides methods to presign requests.
+type Client struct {
+	PresignClient *s3.PresignClient
+}
+
+// GetObject makes a presigned request that can be used to get an object from a bucket.
+func (p *Client) GetObject(
+	bucket string, key string, expireSecs int64,
+) (*v4.PresignedHTTPRequest, error) {
+	request, err := p.PresignClient.PresignGetObject(context.TODO(), &s3.GetObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+	}, func(opts *s3.PresignOptions) {
+		opts.Expires = time.Duration(expireSecs * int64(time.Second))
+	})
+	if err != nil {
+		log.Printf("Couldn't get a presigned request to get %v:%v. Here's why: %v\n",
+			bucket, key, err)
+	}
+	return request, err
+}
+
+// PutObject makes a presigned request that can be used to put an object in a bucket.
+func (p *Client) PutObject(
+	bucket string, object string, expireSecs int64,
+) (*v4.PresignedHTTPRequest, error) {
+	request, err := p.PresignClient.PresignPutObject(context.TODO(), &s3.PutObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(object),
+	}, func(opts *s3.PresignOptions) {
+		opts.Expires = time.Duration(expireSecs * int64(time.Second))
+	})
+	if err != nil {
+		log.Printf("Couldn't get a presigned request to put %v:%v. Here's why: %v\n",
+			bucket, object, err)
+	}
+	return request, err
+}
+
+// DeleteObject makes a presigned request that can be used to delete an object from a bucket.
+func (p *Client) DeleteObject(bucket string, object string) (*v4.PresignedHTTPRequest, error) {
+	request, err := p.PresignClient.PresignDeleteObject(context.TODO(), &s3.DeleteObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(object),
+	})
+	if err != nil {
+		log.Printf("Couldn't get a presigned request to delete object %v. Here's why: %v\n", object, err)
+	}
+	return request, err
+}
+
+func main() {
+	sdkConfig, err := config.LoadDefaultConfig(context.TODO())
+	if err != nil {
+		log.Printf("Couldn't load default configuration. Here's why: %v\n", err)
+		return
+	}
+
+	// Create S3 service client
+	svc := s3.NewFromConfig(sdkConfig, func(o *s3.Options) {
+		o.BaseEndpoint = aws.String("https://fly.storage.tigris.dev")
+		o.Region = "auto"
+	})
+
+	// Presigning a request
+	ps := s3.NewPresignClient(svc)
+	presigner := &Client{PresignClient: ps}
+
+	// Presigned URL to upload an object to the bucket
+	presignedPutReq, err := presigner.PutObject("foo-bucket", "bar.txt", 60)
+	if err != nil {
+		log.Printf("Couldn't get a presigned request to put bar.txt. Here's why: %v\n", err)
+	} else {
+		fmt.Printf("Presigned URL for PUT: %s\n", presignedPutReq.URL)
+	}
+
+	// Presigned URL to download an object from the bucket
+	presignedGetReq, err := presigner.GetObject("foo-bucket", "bar.txt", 60)
+	if err != nil {
+		log.Printf("Couldn't get a presigned request to get bar.txt. Here's why: %v\n", err)
+	} else {
+		fmt.Printf("Presigned URL for GET: %s\n", presignedGetReq.URL)
+	}
+}
+```
+
+You can now use the URL returned by the `presignedPutReq.URL` and
+`presignedGetReq.URL` to upload or download objects.

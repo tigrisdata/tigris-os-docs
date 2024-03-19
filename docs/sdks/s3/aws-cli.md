@@ -44,3 +44,15 @@ Once this is done, you can use the AWS CLI as you normally would (without the
 aws s3api list-buckets
 aws s3api list-objects-v2 --bucket foo-bucket
 ```
+
+## Using presigned URLs
+
+### Generating a presigned URL
+
+Presigned URLs can be generated using the AWS CLI as follows:
+
+```bash
+aws s3 presign s3://foo-bucket/bar-object --expires-in 604800
+```
+
+You can then use the generated URL to upload or download objects.

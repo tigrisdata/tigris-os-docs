@@ -37,11 +37,12 @@ new bucket with a shadow bucket:
 flyctl storage create -n some-bucket -o some-org \
     --shadow-access-key your_access_key --shadow-secret-key your_secret_key \
     --shadow-endpoint https://s3.us-east-1.amazonaws.com --shadow-region us-east-1 \
-    --shadow-write-through
+    --shadow-name some-s3-bucket --shadow-write-through
 ```
 
 This will create a new bucket `some-bucket` in the organization `some-org` and
-will migrate the data from the shadow bucket as the requests come in.
+will migrate the data from the S3 bucket `some-s3-bucket` as the requests come
+in.
 
 The endpoint and region are provider specific and should be set accordingly. You
 can find the endpoint and region for AWS S3 in the
@@ -50,14 +51,17 @@ can find the endpoint and region for AWS S3 in the
 ### Using an existing Tigris bucket as the migration target
 
 You can also migrate the data to an existing Tigris bucket. This is how you can
-update an existing bucket to use a shadow bucket:
+update an existing bucket to use the shadow bucket feature:
 
 ```bash
 flyctl storage update some-bucket \
     --shadow-access-key your_access_key --shadow-secret-key your_secret_key \
     --shadow-endpoint https://s3.us-east-1.amazonaws.com --shadow-region us-east-1 \
-    --shadow-write-through
+    --shadow-name some-s3-bucket --shadow-write-through
 ```
+
+This will update the bucket `some-bucket` settings so that Tigris will migrate
+the data from the S3 bucket `some-s3-bucket` as the requests come in.
 
 ## Finishing the migration
 

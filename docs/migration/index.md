@@ -27,6 +27,8 @@ This is how the process works:
 
 ## Starting the migration
 
+### Using a new Tigris bucket as the migration target
+
 When creating a new bucket, you can specify the bucket from where the data
 should be migrated. We call this the shadow bucket. This is how you can create a
 new bucket with a shadow bucket:
@@ -44,6 +46,18 @@ will migrate the data from the shadow bucket as the requests come in.
 The endpoint and region are provider specific and should be set accordingly. You
 can find the endpoint and region for AWS S3 in the
 [AWS documentation](https://docs.aws.amazon.com/general/latest/gr/s3.html).
+
+### Using an existing Tigris bucket as the migration target
+
+You can also migrate the data to an existing Tigris bucket. This is how you can
+update an existing bucket to use a shadow bucket:
+
+```bash
+flyctl storage update some-bucket \
+    --shadow-access-key your_access_key --shadow-secret-key your_secret_key \
+    --shadow-endpoint https://s3.us-east-1.amazonaws.com --shadow-region us-east-1 \
+    --shadow-write-through
+```
 
 ## Finishing the migration
 

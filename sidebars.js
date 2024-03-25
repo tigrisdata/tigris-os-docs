@@ -96,7 +96,12 @@ const sidebars = {
     {
       type: "category",
       label: "Legal",
-      items: ["legal/privacy-policy", "legal/service-terms", "legal/sla"],
+      items: [
+        "legal/privacy-policy",
+        "legal/service-terms",
+        "legal/data-processing",
+        "legal/sla",
+      ],
     },
   ],
 };

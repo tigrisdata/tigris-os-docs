@@ -52,7 +52,7 @@ const sidebars = {
         "buckets/create-bucket",
         "buckets/public-bucket",
         "buckets/cors",
-        "buckets/upload-via-html-form.md",
+        "buckets/upload-via-html-form",
       ],
     },
     {

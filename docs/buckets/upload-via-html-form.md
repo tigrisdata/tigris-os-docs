@@ -67,6 +67,8 @@ For illustrative purposes, let's utilize the following credentials:
   practices.
 - The credentials used to sign this policy have an access key ID of
   `tid_example_key_id`, and the date must match the expiration date.
+- Full
+  [detailed grammar of policy is documented here](https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html)
 
 ### Base64 encode this policy
 
@@ -161,9 +163,3 @@ fb2e5943b3146a9dfe1ea4bbe2ca059d5b4c2a6866f60ed39cc85a1eaa482775
 ```
 
 Note: post parameters are case-insensitive.
-
-## References
-
-- [Browser-Based Uploads Using POST (AWS Signature Version 4)](https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-UsingHTTPPOST.html)
-- [Post policy](https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html)
-- [Example](https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-post-example.html)

@@ -32,8 +32,9 @@ application accessed through web browsers.
 
 For illustrative purposes, let's utilize the following credentials:
 
-Access Key ID: `tid_example_key_id` Secret Access Key:
-`tsec_example_H3CYVqDGmFxdXGlruqb16mS22qj59Ag9H3CYVqDGmFxdXGlruqb16mS22qj59`
+| AccessKeyId          | SecretAccessKey                                                              |
+| -------------------- | ---------------------------------------------------------------------------- |
+| `tid_example_key_id` | `tsec_example_H3CYVqDGmFxdXGlruqb16mS22qj59Ag9H3CYVqDGmFxdXGlruqb16mS22qj59` |
 
 ### First step, define a policy
 

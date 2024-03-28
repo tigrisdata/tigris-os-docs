@@ -118,28 +118,45 @@ fb2e5943b3146a9dfe1ea4bbe2ca059d5b4c2a6866f60ed39cc85a1eaa482775
 ```html
 <html>
   <head>
-
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
   </head>
   <body>
-
-  <form action="https://my-user-images.fly.storage.tigris.dev/" method="post" enctype="multipart/form-data">
-    Key to upload:
-    <input type="input"     name="key" value="images1/${filename}" /><br />
-    <input type="hidden"    name="success_action_redirect" value="https://your-website.com/success.html" />
-    <input type="hidden"    name="Content-Type" value="image/jpeg" /><br />
-    <input type="hidden"    name="x-amz-meta-uuid" value="465888667" />
-    <input type="hidden"    name="X-Amz-Credential" value="tid_example_key_id/20240330/auto/s3/aws4_request" />
-    <input type="hidden"    name="X-Amz-Algorithm" value="AWS4-HMAC-SHA256" />
-    <input type="hidden"    name="X-Amz-Date" value="20240330T000000Z" />
-    <input type="hidden"    name="Policy" value="eyAKICAiZXhwaXJhdGlvbiI6ICIyMDI0LTAzLTMwVDEyOjAwOjAwLjAwMFoiLAogICJjb25kaXRpb25zIjogWwogICAgeyJidWNrZXQiOiAibXktdXNlci1pbWFnZXMifSwKICAgIFsic3RhcnRzLXdpdGgiLCAiJGtleSIsICJpbWFnZXMxLyJdLAogICAgeyJzdWNjZXNzX2FjdGlvbl9yZWRpcmVjdCI6ICJodHRwczovL3lvdXItd2Vic2l0ZS5jb20vc3VjY2Vzcy5odG1sIn0sCiAgICBbInN0YXJ0cy13aXRoIiwgIiRDb250ZW50LVR5cGUiLCAiaW1hZ2UvIl0sCiAgICB7IngtYW16LW1ldGEtdXVpZCI6ICI0NjU4ODg2NjcifSwKICAgIHsieC1hbXotY3JlZGVudGlhbCI6ICJ0aWRfZXhhbXBsZV9rZXlfaWQvMjAyNDAzMzAvYXV0by9zMy9hd3M0X3JlcXVlc3QifSwKICAgIHsieC1hbXotYWxnb3JpdGhtIjogIkFXUzQtSE1BQy1TSEEyNTYifSwKICAgIHsieC1hbXotZGF0ZSI6ICIyMDI0MDMzMFQwMDAwMDBaIiB9CiAgXQp9eyAKICAiZXhwaXJhdGlvbiI6ICIyMDI0LTAzLTMwVDEyOjAwOjAwLjAwMFoiLAogICJjb25kaXRpb25zIjogWwogICAgeyJidWNrZXQiOiAibXktdXNlci1pbWFnZXMifSwKICAgIFsic3RhcnRzLXdpdGgiLCAiJGtleSIsICJpbWFnZXMxLyJdLAogICAgeyJzdWNjZXNzX2FjdGlvbl9yZWRpcmVjdCI6ICJodHRwczovL3lvdXItd2Vic2l0ZS5jb20vc3VjY2Vzcy5odG1sIn0sCiAgICBbInN0YXJ0cy13aXRoIiwgIiRDb250ZW50LVR5cGUiLCAiaW1hZ2UvIl0sCiAgICB7IngtYW16LW1ldGEtdXVpZCI6ICI0NjU4ODg2NjcifSwKICAgIHsieC1hbXotY3JlZGVudGlhbCI6ICJ0aWRfZXhhbXBsZV9rZXlfaWQvMjAyNDAzMzAvYXV0by9zMy9hd3M0X3JlcXVlc3QifSwKICAgIHsieC1hbXotYWxnb3JpdGhtIjogIkFXUzQtSE1BQy1TSEEyNTYifSwKICAgIHsieC1hbXotZGF0ZSI6ICIyMDI0MDMzMFQwMDAwMDBaIiB9CiAgXQp9" />
-    <input type="hidden"    name="X-Amz-Signature" value="fb2e5943b3146a9dfe1ea4bbe2ca059d5b4c2a6866f60ed39cc85a1eaa482775" />
-    File:
-    <input type="file"   name="file" /> <br />
-    <input type="submit" name="submit" value="Upload to Tigris" />
-  </form>
-
+    <form
+      action="https://my-user-images.fly.storage.tigris.dev/"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      Key to upload:
+      <input type="input" name="key" value="images1/${filename}" /><br />
+      <input
+        type="hidden"
+        name="success_action_redirect"
+        value="https://your-website.com/success.html"
+      />
+      <input type="hidden" name="Content-Type" value="image/jpeg" /><br />
+      <input type="hidden" name="x-amz-meta-uuid" value="465888667" />
+      <input
+        type="hidden"
+        name="X-Amz-Credential"
+        value="tid_example_key_id/20240330/auto/s3/aws4_request"
+      />
+      <input type="hidden" name="X-Amz-Algorithm" value="AWS4-HMAC-SHA256" />
+      <input type="hidden" name="X-Amz-Date" value="20240330T000000Z" />
+      <input
+        type="hidden"
+        name="Policy"
+        value="eyAKICAiZXhwaXJhdGlvbiI6ICIyMDI0LTAzLTMwVDEyOjAwOjAwLjAwMFoiLAogICJjb25kaXRpb25zIjogWwogICAgeyJidWNrZXQiOiAibXktdXNlci1pbWFnZXMifSwKICAgIFsic3RhcnRzLXdpdGgiLCAiJGtleSIsICJpbWFnZXMxLyJdLAogICAgeyJzdWNjZXNzX2FjdGlvbl9yZWRpcmVjdCI6ICJodHRwczovL3lvdXItd2Vic2l0ZS5jb20vc3VjY2Vzcy5odG1sIn0sCiAgICBbInN0YXJ0cy13aXRoIiwgIiRDb250ZW50LVR5cGUiLCAiaW1hZ2UvIl0sCiAgICB7IngtYW16LW1ldGEtdXVpZCI6ICI0NjU4ODg2NjcifSwKICAgIHsieC1hbXotY3JlZGVudGlhbCI6ICJ0aWRfZXhhbXBsZV9rZXlfaWQvMjAyNDAzMzAvYXV0by9zMy9hd3M0X3JlcXVlc3QifSwKICAgIHsieC1hbXotYWxnb3JpdGhtIjogIkFXUzQtSE1BQy1TSEEyNTYifSwKICAgIHsieC1hbXotZGF0ZSI6ICIyMDI0MDMzMFQwMDAwMDBaIiB9CiAgXQp9eyAKICAiZXhwaXJhdGlvbiI6ICIyMDI0LTAzLTMwVDEyOjAwOjAwLjAwMFoiLAogICJjb25kaXRpb25zIjogWwogICAgeyJidWNrZXQiOiAibXktdXNlci1pbWFnZXMifSwKICAgIFsic3RhcnRzLXdpdGgiLCAiJGtleSIsICJpbWFnZXMxLyJdLAogICAgeyJzdWNjZXNzX2FjdGlvbl9yZWRpcmVjdCI6ICJodHRwczovL3lvdXItd2Vic2l0ZS5jb20vc3VjY2Vzcy5odG1sIn0sCiAgICBbInN0YXJ0cy13aXRoIiwgIiRDb250ZW50LVR5cGUiLCAiaW1hZ2UvIl0sCiAgICB7IngtYW16LW1ldGEtdXVpZCI6ICI0NjU4ODg2NjcifSwKICAgIHsieC1hbXotY3JlZGVudGlhbCI6ICJ0aWRfZXhhbXBsZV9rZXlfaWQvMjAyNDAzMzAvYXV0by9zMy9hd3M0X3JlcXVlc3QifSwKICAgIHsieC1hbXotYWxnb3JpdGhtIjogIkFXUzQtSE1BQy1TSEEyNTYifSwKICAgIHsieC1hbXotZGF0ZSI6ICIyMDI0MDMzMFQwMDAwMDBaIiB9CiAgXQp9"
+      />
+      <input
+        type="hidden"
+        name="X-Amz-Signature"
+        value="fb2e5943b3146a9dfe1ea4bbe2ca059d5b4c2a6866f60ed39cc85a1eaa482775"
+      />
+      File:
+      <input type="file" name="file" /> <br />
+      <input type="submit" name="submit" value="Upload to Tigris" />
+    </form>
+  </body>
 </html>
 ```
 

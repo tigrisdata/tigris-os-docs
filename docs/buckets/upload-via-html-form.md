@@ -85,19 +85,22 @@ policy as the `StringToSign`.
 
 ```
 Signature = Hex(
-                HMAC-SHA256(
-                    HMAC-SHA256(
-                        HMAC-SHA256(
-                            HMAC-SHA256(
-                                "AWS4"+<SecretAccessKey>",
-                                "<yyyymmdd>"
-                            ),
-                            "auto"
-                        ),
-                        "s3"
-                    ),
-                    "aws4_request"
-                )
+              HMAC-SHA256(
+                  HMAC-SHA256(
+                      HMAC-SHA256(
+                          HMAC-SHA256(
+                              HMAC-SHA256(
+                                  "AWS4"+<SecretAccessKey>",
+                                  "<yyyymmdd>"
+                              ),
+                              "auto"
+                          ),
+                          "s3"
+                      ),
+                      "aws4_request"
+                  ),
+                  StringToSign
+              )
           )
 ```
 

@@ -53,6 +53,7 @@ const sidebars = {
         "buckets/public-bucket",
         "buckets/cors",
         "buckets/upload-via-html-form",
+        "buckets/custom-domain",
       ],
     },
     {

@@ -59,3 +59,23 @@ aws s3api put-bucket-accelerate-configuration \
 	--bucket foo-bucket \
 	--accelerate-configuration Status=Enabled
 ```
+
+## Caching on List (Eager Caching)
+
+Tigris also supports eager caching while listing the objects. This can be
+achieved by setting a header `x-tigris-prefetch` during list API request. This
+indicates Tigris to initiate automatic caching of listed objects in proximity to
+the list request's region. Subsequent Get requests for these objects will then
+take advantage of the cache.
+
+### Prefetch Request Syntax
+
+```curl
+GET /?list-type=2&continuation-token=ContinuationToken&delimiter=Delimiter&encoding-type=EncodingType&fetch-owner=FetchOwner&max-keys=MaxKeys&prefix=Prefix&start-after=StartAfter HTTP/1.1
+Host: bucket.fly.storage.tigris.dev
+x-tigris-prefetch: true
+```
+
+The supported header is `x-tigris-prefetch`, applicable during both
+ListObjects/ListObjectsV2 API requests. The AWS SDKs can be used to use this
+feature as AWS SDKs supports passing custom headers.

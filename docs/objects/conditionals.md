@@ -66,6 +66,13 @@ since provided data.
 Multiple conditions can be specified in a single request. Request fails if any
 condition is not met.
 
+### CAS Reads (GET request)
+
+During reads, specifying `x-tigris-cas: true` header will indicate Tigris to
+skip the cache and read the object from its designated region. This ensures a
+consistent read, particularly when accessing the most recently written CAS
+object.
+
 ## Next steps
 
 - Check out the

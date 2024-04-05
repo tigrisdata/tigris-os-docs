@@ -87,7 +87,9 @@ since it was read.
 package main
 
 import (
+	"bytes"
 	"context"
+	"io"
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -114,7 +116,7 @@ func main() {
 	}
 
 	// Create S3 service client
-	client := s3.NewFromConfig(sdkConfig, func(o *s3.Options) {
+	client := s3.NewFromConfig(cfg, func(o *s3.Options) {
 		o.BaseEndpoint = aws.String("https://fly.storage.tigris.dev")
 		o.Region = "auto"
 	})
@@ -122,9 +124,10 @@ func main() {
 	// read
 	out, err := client.GetObject(context.TODO(),
 		&s3.GetObjectInput{
-			Bucket: aws.String("myBucket"),
-			Key:    aws.String("myKey"),
+			Bucket: aws.String("mybucket"),
+			Key:    aws.String("mykey"),
 		},
+		WithHeader("x-tigris-cas", "true"),
 	)
 	if err != nil {
 		log.Fatalf("unable to read object: %v", err)
@@ -140,15 +143,16 @@ func main() {
 	// write
 	out1, err := client.PutObject(context.TODO(),
 		&s3.PutObjectInput{
-			Bucket: aws.String("myBucket"),
-			Key:    aws.String("myKey"),
+			Bucket: aws.String("mybucket"),
+			Key:    aws.String("mykey"),
+			Body:   bytes.NewBuffer(body),
 		},
-		Body: bytes.NewBuffer(body),
-		IfMatch(out.ETag),  // guarantees that object hasn't been modified since we read it
-    )
+		IfMatch(*out.ETag),
+	)
 	if err != nil {
 		log.Fatalf("unable to put object, %v", err)
 	}
+	log.Printf("mykey etag is %s", *out1.ETag)
 }
 ```
 

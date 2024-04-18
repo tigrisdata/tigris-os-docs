@@ -72,6 +72,12 @@ will be charged as follows:
   $0.45
 - Data Transfer: $0
 
+## Unexpected traffic
+
+We are happy to discuss a refund if you experience unexpected traffic due to an
+attack that results in a surprisingly large bill. Please reach out to us at
+[help@tigrisdata.com](mailto:help@tigrisdata.com).
+
 ## Pricing during beta
 
 During the period of the beta, we will not charge for any usage.

@@ -13,7 +13,6 @@ are deployed in the following regions:
 | lhr       | London, United Kingdom     |
 | nrt       | Tokyo, Japan               |
 | ord       | Chicago, Illinois (US)     |
-| sin       | Singapore, Singapore       |
 | sjc       | San Jose, California (US)  |
 | syd       | Sydney, Australia          |
 

@@ -261,3 +261,77 @@ func main() {
 
 You can now use the URL returned by the `presignedPutReq.URL` and
 `presignedGetReq.URL` to upload or download objects.
+
+## Object Regions
+
+Below is an example of how to use the AWS Go SDK to restrict
+[object region](/docs/objects/object_regions) to Europe only(`fra` region).
+
+```go
+package main
+
+import (
+	"bytes"
+	"context"
+	"crypto/rand"
+	"io"
+	"log"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/smithy-go/transport/http"
+)
+
+func WithHeader(key, value string) func(*s3.Options) {
+	return func(options *s3.Options) {
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue(key, value))
+	}
+}
+
+func main() {
+	cfg, err := config.LoadDefaultConfig(context.TODO())
+	if err != nil {
+		log.Printf("Couldn't load default configuration. Here's why: %v\n", err)
+		return
+	}
+
+	// Create S3 service client
+	client := s3.NewFromConfig(cfg, func(o *s3.Options) {
+		o.BaseEndpoint = aws.String("https://fly.storage.tigris.dev")
+		o.Region = "auto"
+	})
+
+	randData := make([]byte, 16384)
+	_, _ = rand.Read(randData)
+	_, err = client.PutObject(context.TODO(),
+		&s3.PutObjectInput{
+			Bucket: aws.String("mybucket"),
+			Key:    aws.String("mykey"),
+			Body:   bytes.NewBuffer(randData),
+		},
+		// Restrict in Europe only
+		WithHeader("X-Tigris-Regions", "fra"),
+	)
+	if err != nil {
+		log.Fatalf("unable to write object: %v", err)
+	}
+
+	// read
+	out, err := client.GetObject(context.TODO(),
+		&s3.GetObjectInput{
+			Bucket: aws.String("mybucket"),
+			Key:    aws.String("mykey"),
+		},
+	)
+	if err != nil {
+		log.Fatalf("unable to read object: %v", err)
+	}
+
+	_, err = io.ReadAll(out.Body)
+	if err != nil {
+		log.Fatalf("unable to read object body: %v", err)
+	}
+}
+
+```

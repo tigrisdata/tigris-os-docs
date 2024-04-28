@@ -7,7 +7,7 @@ particularly useful when you need to grant access to multiple restricted files.
 At a high level, this is the process of how Signed Cookies operate:
 
 - The user generates an RSA private-public key pair.
-- The user associates the public key with the Tigris server.
+- The user associates the public key with the Tigris.
 - The user defines access policies using a predefined grammar, specifying what,
   where, and when access is permitted.
 - The user signs the cookie using the private key.
@@ -53,19 +53,32 @@ REHldcvu7lx2qpqZ1wclnFoTzpsN56H53aM81nrjGs+tHiVUTb4hsqoNbPIR0TBO
 
 Create bucket named `images.example.com` on Tigris.
 
+using Fly
+
+```shell
+fly storage create
+```
+
+or using AWS CLI
+
 ```shell
 aws s3api create-bucket --bucket=images.example.com
 ```
 
-Note: As we intend to utilize custom-domain functionality, select a subdomain of
-your owned domain."
+Note: Choose the bucket name to be the custom domain name that you intend to
+use.
 
 ## Setup custom domain
 
-Setup custom domain to access this bucket. See more
-[here](https://www.tigrisdata.com/docs/buckets/custom-domain/)
+Setup custom domain to access this bucket.
 
-## Register public-key on Tigris
+```shell
+flyctl storage update  images.example.com  --custom-domain images.example.com
+```
+
+See more [here](https://www.tigrisdata.com/docs/buckets/custom-domain/)
+
+## Register public-key with Tigris
 
 Let's proceed with registering the public key on Tigris.
 
@@ -83,8 +96,10 @@ Let's proceed with registering the public key on Tigris.
 
 Note: Replace the `EncodedKey` field with your own public key.
 
-Using your configured AWS CLI to interact with Tigris, execute the following
-command to register the public key:
+Using your
+[configured AWS CLI](https://www.tigrisdata.com/docs/sdks/s3/aws-cli/#configuring-aws-cli)
+to interact with Tigris, execute the following command to register the public
+key:
 
 ```shell
 aws cloudfront create-public-key --public-key-config file:///path/to/key.json
@@ -111,7 +126,7 @@ Notes:
 
 - The public key ID is generated on the Tigris side and returned for further
   reference.
-- Your key has to be Namespace level admin privileges to make calls to
+- Your access-key has to be Namespace level admin privileges to make calls to
   `CreatePublicKey`
 
 ## Put an object

@@ -1,6 +1,6 @@
 # Access objects via signed cookies
 
-"Tigris offers compatibility with CloudFront's signed cookies, empowering you to
+Tigris offers compatibility with CloudFront's signed cookies, empowering you to
 manage access to your content without altering existing URLs. This feature is
 particularly useful when you need to grant access to multiple restricted files.
 

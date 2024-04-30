@@ -55,7 +55,6 @@ const sidebars = {
         "buckets/cors",
         "buckets/upload-via-html-form",
         "buckets/custom-domain",
-        "buckets/access-objects-via-cookies",
       ],
     },
     {
@@ -66,6 +65,7 @@ const sidebars = {
         "objects/object_regions",
         "objects/conditionals",
         "objects/presigned",
+        "objects/access-objects-via-cookies",
       ],
     },
     {

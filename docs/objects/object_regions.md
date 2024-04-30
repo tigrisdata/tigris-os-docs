@@ -34,7 +34,7 @@ to always available.
 When Tigris stores multiple copies of data, the storage cost is calculated as
 the number of copies multiplied by the storage size. By default, this count is
 one. However, if you control the distibution of data and specify for example,
-two regions in the request header, the count will be considered as two. :::
+two regions in the request header, the count will be considered as two.
 
 :::
 

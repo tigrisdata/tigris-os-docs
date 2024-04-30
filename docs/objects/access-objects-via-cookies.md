@@ -49,35 +49,6 @@ REHldcvu7lx2qpqZ1wclnFoTzpsN56H53aM81nrjGs+tHiVUTb4hsqoNbPIR0TBO
 -----END PUBLIC KEY-----
 ```
 
-## Create bucket on Tigris
-
-Create bucket named `images.example.com` on Tigris.
-
-using Fly
-
-```shell
-fly storage create
-```
-
-or using AWS CLI
-
-```shell
-aws s3api create-bucket --bucket=images.example.com
-```
-
-Note: Choose the bucket name to be the custom domain name that you intend to
-use.
-
-## Setup custom domain
-
-Setup custom domain to access this bucket.
-
-```shell
-flyctl storage update  images.example.com  --custom-domain images.example.com
-```
-
-See more [here](https://www.tigrisdata.com/docs/buckets/custom-domain/)
-
 ## Register public-key with Tigris
 
 Let's proceed with registering the public key on Tigris.
@@ -126,16 +97,36 @@ Notes:
 
 - The public key ID is generated on the Tigris side and returned for further
   reference.
-- Your access-key has to be Namespace level admin privileges to make calls to
-  `CreatePublicKey`
+- Your access-key has to be admin privileges to make calls to `CreatePublicKey`
 
-## Put an object
+## Create bucket on Tigris
 
-Let's upload an image of a tiger.
+Create bucket named `images.example.com` on Tigris.
+
+using Fly
 
 ```shell
-aws s3api put-object --bucket images.example.com --key tiger.png --body /path/to/tiger.png
+fly storage create
 ```
+
+or using AWS CLI
+
+```shell
+aws s3api create-bucket --bucket=images.example.com
+```
+
+Note: Choose the bucket name to be the custom domain name that you intend to
+use.
+
+## Setup custom domain
+
+Setup custom domain to access this bucket.
+
+```shell
+flyctl storage update  images.example.com  --custom-domain images.example.com
+```
+
+See more [here](https://www.tigrisdata.com/docs/buckets/custom-domain/)
 
 ## Setup CORS
 
@@ -164,39 +155,14 @@ aws s3api put-bucket-cors --bucket images.example.com --cors-configuration file:
 
 Learn more [here](https://www.tigrisdata.com/docs/buckets/cors/)
 
-## Setup application
+## Example code to issue signed cookies
 
-For illustrative purposes, let's employ a Node.js Express application and
-integrate the AWS CloudFront SDK for Node.js.
-
-Client HTML:
-
-```html
-<html>
-  <body>
-    <a href="/get-cookie"><button name="get-cookie">get-cookie</button></a>
-    <img src="https://images.example.com/tiger.png" alt="Private resource" />
-  </body>
-</html>
-```
-
-Server Javascript:
+For illustrative purposes, below AWS CloudFront SDK for Node.js shows how server
+issues the CloudFront cookies
 
 ```javascript
 import express from "express";
 import { getSignedCookies } from "@aws-sdk/cloudfront-signer";
-
-const app = express();
-const port = 3000;
-
-app.get("/get-cookie", async (req, res) => {
-  issueCloudFrontCookies(req, res);
-});
-app.use(express.static("public"));
-
-app.listen(port, () => {
-  console.log(`Tigris Signed Cookie example app listening on port ${port}`);
-});
 
 // Function to issue CloudFront cookies
 function issueCloudFrontCookies(req, res) {
@@ -252,25 +218,5 @@ Note:
   [full grammar of the Policy](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-setting-signed-cookie-custom-policy.html)
 - Refer more about Node.js CloudFront SDK
   [here](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-cloudfront-signer/)
-
-When your user accesses the index.html for the first time, it will appear as
-follows:
-
-![Example index.html without cookie](/img/auth/signed-cookie-html-without-cookie-example.png)
-
-When you click on the button labeled get-cookies, the server will reply with
-Set-Cookie headers.
-
-![Set-Cookie response headers](/img/auth/set-cookie-response-headers.png)
-
-Now, the browser possesses a cookie issued from `example.com`. When a request is
-made to `images.example.com` via the browser, these cookies will be included.
-Returning to the index.html will now provide access to the restricted resource.
-Because cookies are configured that way.
-
-Read more about cookie
-[here](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie)
-
-![Index page with cookies present](/img/auth/index-page-with-cookies.png)
-
-As evident, the image loads successfully.
+- Read more about cookie
+  [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie)

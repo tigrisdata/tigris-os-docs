@@ -1,6 +1,6 @@
 # Pricing
 
-_Last updated: April 21, 2024_
+_Last updated: May 6, 2024_
 
 Tigris pricing is based on the following components:
 
@@ -40,6 +40,10 @@ We offer a free allowance as follows:
 We are happy to discuss a refund if you experience unexpected traffic due to an
 attack that results in a surprisingly large bill. Please reach out to us at
 [help@tigrisdata.com](mailto:help@tigrisdata.com).
+
+### Unauthorized access
+
+We do not charge for unauthorized requests to your buckets and objects.
 
 ## Example pricing
 

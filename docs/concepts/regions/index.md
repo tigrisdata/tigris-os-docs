@@ -11,7 +11,7 @@ are deployed in the following regions:
 | iad       | Ashburn, Virginia (US)     |
 | jnb       | Johannesburg, South Africa |
 | lhr       | London, United Kingdom     |
-| nrt       | Tokyo, Japan               |
+| sin       | Singapore, Singapore       |
 | ord       | Chicago, Illinois (US)     |
 | sjc       | San Jose, California (US)  |
 | syd       | Sydney, Australia          |

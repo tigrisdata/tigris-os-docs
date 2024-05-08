@@ -63,6 +63,7 @@ const sidebars = {
         "objects/caching",
         "objects/object_regions",
         "objects/conditionals",
+        "objects/query-metadata",
         "objects/presigned",
         "objects/upload-via-html-form",
         "objects/access-objects-via-cookies",

@@ -25,10 +25,10 @@ Tigris supports querying against the following fields:
 Tigris follows MySQL syntax. You can use the following comparison operators:
 
 1. `=`: Equal
-1. `!=`: Not Equal
-1. `>` and `<`: Greater than and less than
-1. `>=` and `<=`: Greater than or equal and less than or equal
-1. `AND`: Combine multiple conditions in a query.
+2. `!=`: Not Equal
+3. `>` and `<`: Greater than and less than
+4. `>=` and `<=`: Greater than or equal and less than or equal
+5. `AND`: Combine multiple conditions in a query.
 
 ## Order by
 
@@ -41,11 +41,11 @@ smaller than `64KB` ordered by `Content-Type`:
 
 Example queries that can be performed:
 
-1. `` `Content-Type` = "plain/text" ``
-1. `` `Content-Type`>= "text/c" and`Content-Type` < "text/j" ``
-1. `` `Content-Length` > 0 ORDER BY `Content-Length` ASC" ``
-1. `` `Content-Length` != 65536 and `Content-Type` = "text/plain" ``
-1. `` `Last-Modified` > 1715171786789 ``
+1. `` `Content-Type` = "text/plain" ``
+2. `` `Content-Type` >= "text/c" AND `Content-Type` < "text/j" ``
+3. `` `Content-Length` > 0 ORDER BY `Content-Length` ASC ``
+4. `` `Content-Length` != 65536 AND `Content-Type` = "text/plain" ``
+5. `` `Last-Modified` > 1715171786789 ``
 
 ## Next steps
 

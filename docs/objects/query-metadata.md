@@ -22,7 +22,7 @@ Tigris supports querying against the following fields:
 
 ## SQL Operations
 
-Tigris follows MySQL syntax. You can use the following comparison operators:
+Query supports following comparison operators:
 
 1. `=`: Equal
 2. `!=`: Not Equal

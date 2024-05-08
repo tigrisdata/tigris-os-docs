@@ -8,11 +8,14 @@ are deployed in the following regions:
 | --------- | -------------------------- |
 | fra       | Frankfurt, Germany         |
 | gru       | Sao Paulo, Brazil          |
+| hkg       | Hong Kong, Hong Kong       |
 | iad       | Ashburn, Virginia (US)     |
 | jnb       | Johannesburg, South Africa |
 | lhr       | London, United Kingdom     |
-| sin       | Singapore, Singapore       |
+| mad       | Madrid, Spain              |
+| nrt       | Tokyo, Japan               |
 | ord       | Chicago, Illinois (US)     |
+| sin       | Singapore, Singapore       |
 | sjc       | San Jose, California (US)  |
 | syd       | Sydney, Australia          |
 

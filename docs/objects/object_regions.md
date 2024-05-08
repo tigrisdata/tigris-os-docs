@@ -9,6 +9,12 @@ To achieve this, simply include the `X-Tigris-Regions` header in your PUT
 requests. Tigris will then write data only to the regions specified in this
 header, respecting your preferences and legal requirements.
 
+:::note
+
+The list of regions is available [here](/docs/concepts/regions/index.md).
+
+:::
+
 ## Tigris Region Header
 
 This header may include a single or comma-separated list of multiple Tigris

@@ -6,8 +6,8 @@ integrated with [Fly.io](https://fly.io/). Tigris runs on
 
 ## Getting Started
 
-To use Tigris you need a [Fly.io](https://fly.io/) account. If you don't have
-one, you can get yourself one [here](https://fly.io/app/sign-up).
+If you don't have an account, you can get yourself one
+[here](https://fly.io/app/sign-up/tigris).
 
 You can then use the `fly storage` command to create and manage Tigris buckets.
 

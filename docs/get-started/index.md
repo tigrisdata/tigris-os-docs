@@ -17,9 +17,8 @@ keys that you explicitly grant access permissions to.
 
 ### 1. Signup for an account
 
-To use Tigris you need a [Fly.io](https://fly.io/) account. If you don't have
-one, you can get yourself one [here](https://fly.io/app/sign-up). Then follow
-the steps below.
+If you don't have an account, you can get yourself one
+[here](https://fly.io/app/sign-up/tigris). Then follow the steps below.
 
 ### 2. Create a bucket
 

@@ -335,3 +335,62 @@ func main() {
 }
 
 ```
+
+## Metadata Querying
+
+Below is an example of how to use
+[metadata querying](/docs/objects/query-metadata) with the AWS Go SDK.
+
+```go
+package main
+
+import (
+	"bytes"
+	"context"
+	"crypto/rand"
+	"io"
+	"log"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/smithy-go/transport/http"
+)
+
+func WithHeader(key, value string) func(*s3.Options) {
+	return func(options *s3.Options) {
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue(key, value))
+	}
+}
+
+func main() {
+	ctx := context.TODO()
+	cfg, err := config.LoadDefaultConfig(ctx)
+	if err != nil {
+		log.Printf("Couldn't load default configuration. Here's why: %v\n", err)
+		return
+	}
+
+	// Create S3 service client
+	client := s3.NewFromConfig(cfg, func(o *s3.Options) {
+		o.BaseEndpoint = aws.String("https://fly.storage.tigris.dev")
+		o.Region = "auto"
+	})
+
+	contentType := "text/javascript"
+	resp, err := client.ListObjectsV2WithContext(ctx, &s3.ListObjectsV2Input{
+		Bucket: "bucket-name",
+	}, request.WithSetRequestHeaders(map[string]string{
+		"X-Tigris-Query": fmt.Sprintf("`Content-Type` = \"%s\"", contentType),
+	}))
+
+	if err != nil {
+		log.Fatalf("unable to write object: %v", err)
+	}
+
+	for _, doc := range resp.Contents {
+		log.Printf("Doc found %s \n", doc.Key)
+	}
+}
+
+```

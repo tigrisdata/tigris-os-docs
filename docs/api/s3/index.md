@@ -103,7 +103,7 @@ served at port `8009` for now.
 
 ## CloudFront APIs
 
-Below are the list of IAM APIs supported in Tigris.
+Below are the list of CloudFront APIs supported in Tigris.
 
 - [CreatePublicKey](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_CreatePublicKey.html)
 - [GetPublicKey](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_GetPublicKey.html)

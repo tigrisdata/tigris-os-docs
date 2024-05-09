@@ -88,7 +88,7 @@ status within Tigris.
 ## IAM APIs
 
 Below is the list of IAM APIs supported in Tigris. Note that IAM APIs are served
-at port `8009` for now.
+at `https://fly.storage.tigris.dev:8009` for now.
 
 - [CreateAccessKey](https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateAccessKey.html)
 - [ListAccessKeys](https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAccessKeys.html)

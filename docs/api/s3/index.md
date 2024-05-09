@@ -90,25 +90,27 @@ status within Tigris.
 Below is the list of IAM APIs supported in Tigris. Note that IAM APIs are served
 at `https://fly.storage.tigris.dev:8009` for now.
 
-- [CreateAccessKey](https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateAccessKey.html)
-- [ListAccessKeys](https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAccessKeys.html)
-- [UpdateAccessKey](https://docs.aws.amazon.com/IAM/latest/APIReference/API_UpdateAccessKey.html)
-- [DeleteAccessKey](https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeleteAccessKey.html)
-- [CreatePolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreatePolicy.html)
-- [ListPolicies](https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicies.html)
-- [GetPolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicy.html)
-- [AttachUserPolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_AttachUserPolicy.html)
-- [ListUserPolicies](https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUserPolicies.html)
-- [DeleteUserPolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeleteUserPolicy.html)
+| IAM API                                                                                             | Supported in Tigris |
+| --------------------------------------------------------------------------------------------------- | ------------------- |
+| - [CreateAccessKey](https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateAccessKey.html)   | Yes                 |
+| - [ListAccessKeys](https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAccessKeys.html)     | Yes                 |
+| - [UpdateAccessKey](https://docs.aws.amazon.com/IAM/latest/APIReference/API_UpdateAccessKey.html)   | Yes                 |
+| - [DeleteAccessKey](https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeleteAccessKey.html)   | Yes                 |
+| - [CreatePolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreatePolicy.html)         | Yes                 |
+| - [ListPolicies](https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicies.html)         | Yes                 |
+| - [GetPolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicy.html)               | Yes                 |
+| - [AttachUserPolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_AttachUserPolicy.html) | Yes                 |
+| - [ListUserPolicies](https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUserPolicies.html) | Yes                 |
+| - [DeleteUserPolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeleteUserPolicy.html) | Yes                 |
 
 ## CloudFront APIs
 
-Below is the list of CloudFront APIs supported in Tigris.
-
-- [CreatePublicKey](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_CreatePublicKey.html)
-- [GetPublicKey](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_GetPublicKey.html)
-- [DeletePublicKey](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_DeletePublicKey.html)
-- [ListPublicKeys](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ListPublicKeys.html)
+| CloudFront API                                                                                           | Supported in Tigris |
+| -------------------------------------------------------------------------------------------------------- | ------------------- |
+| - [CreatePublicKey](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_CreatePublicKey.html) | Yes                 |
+| - [GetPublicKey](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_GetPublicKey.html)       | Yes                 |
+| - [DeletePublicKey](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_DeletePublicKey.html) | Yes                 |
+| - [ListPublicKeys](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ListPublicKeys.html)   | Yes                 |
 
 ## Next steps
 

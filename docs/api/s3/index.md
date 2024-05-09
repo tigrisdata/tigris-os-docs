@@ -87,8 +87,7 @@ status within Tigris.
 
 ## IAM APIs
 
-Below is the list of IAM APIs supported in Tigris. Note that IAM APIs are served
-at `https://fly.storage.tigris.dev:8009` for now.
+Note: IAM APIs are served at `https://fly.storage.tigris.dev:8009` for now.
 
 | IAM API                                                                                           | Supported in Tigris |
 | ------------------------------------------------------------------------------------------------- | ------------------- |

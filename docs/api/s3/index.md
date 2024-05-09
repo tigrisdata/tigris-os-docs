@@ -85,6 +85,31 @@ status within Tigris.
 | [UploadPart](https://docs.aws.amazon.com/AmazonS3/latest/API/API_UploadPart.html)                                 | Yes                 |
 | [UploadPartCopy](https://docs.aws.amazon.com/AmazonS3/latest/API/API_UploadPartCopy.html)                         | Yes                 |
 
+## IAM APIs
+
+Below are the list of IAM APIs supported in Tigris. Note that IAM APIs are
+served at port `8009` for now.
+
+- [CreateAccessKey](https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateAccessKey.html)
+- [ListAccessKeys](https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAccessKeys.html)
+- [UpdateAccessKey](https://docs.aws.amazon.com/IAM/latest/APIReference/API_UpdateAccessKey.html)
+- [DeleteAccessKey](https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeleteAccessKey.html)
+- [CreatePolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreatePolicy.html)
+- [ListPolicies](https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicies.html)
+- [GetPolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicy.html)
+- [AttachUserPolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_AttachUserPolicy.html)
+- [ListUserPolicies](https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUserPolicies.html)
+- [DeleteUserPolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeleteUserPolicy.html)
+
+## CloudFront APIs
+
+Below are the list of IAM APIs supported in Tigris.
+
+- [CreatePublicKey](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_CreatePublicKey.html)
+- [GetPublicKey](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_GetPublicKey.html)
+- [DeletePublicKey](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_DeletePublicKey.html)
+- [ListPublicKeys](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ListPublicKeys.html)
+
 ## Next steps
 
 Check out the [language specific guides](../../sdks/s3/) on how to use the AWS

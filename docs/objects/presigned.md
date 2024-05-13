@@ -25,3 +25,10 @@ Refer to the following example to generate a presigned URL:
 - [AWS Javascript SDK](/docs/sdks/s3/aws-js-sdk/#using-presigned-urls)
 - [AWS PHP SDK](/docs/sdks/s3/aws-php-sdk/#using-presigned-urls)
 - [AWS Python SDK](/docs/sdks/s3/aws-python-sdk/#using-presigned-urls)
+
+## Security
+
+When utilizing a custom domain and sharing pre-signed URLs for uploading
+objects, be mindful that individuals could upload files like HTML, JS, SVG, or
+executable browser files. These could pose a risk of XSS (Cross-Site Scripting)
+on your domain. Proceed with caution in such scenarios.

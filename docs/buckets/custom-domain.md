@@ -21,3 +21,8 @@ To remove the custom domain, you can use the following command:
 ```bash
 flyctl storage update foo.example.com --clear-custom-domain
 ```
+
+# Security
+
+When providing objects that render in a browser and have access to your domain's
+cookies, ensure that objects are sanitized to prevent XSS vulnerabilities.

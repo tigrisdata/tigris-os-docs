@@ -166,3 +166,10 @@ fb2e5943b3146a9dfe1ea4bbe2ca059d5b4c2a6866f60ed39cc85a1eaa482775
 ```
 
 Note: post parameters are case-insensitive.
+
+### Security
+
+When employing a post policy, take care to restrict the types of content users
+can upload, particularly if you're utilizing a custom domain. Uploading files
+such as HTML, JS, SVG, or executable browser files could potentially result in
+XSS vulnerabilities on your domain.

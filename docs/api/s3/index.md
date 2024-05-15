@@ -85,6 +85,32 @@ status within Tigris.
 | [UploadPart](https://docs.aws.amazon.com/AmazonS3/latest/API/API_UploadPart.html)                                 | Yes                 |
 | [UploadPartCopy](https://docs.aws.amazon.com/AmazonS3/latest/API/API_UploadPartCopy.html)                         | Yes                 |
 
+## IAM APIs
+
+Note: IAM APIs are served at `https://fly.storage.tigris.dev:8009` for now.
+
+| IAM API                                                                                           | Supported in Tigris |
+| ------------------------------------------------------------------------------------------------- | ------------------- |
+| [CreateAccessKey](https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateAccessKey.html)   | Yes                 |
+| [ListAccessKeys](https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListAccessKeys.html)     | Yes                 |
+| [UpdateAccessKey](https://docs.aws.amazon.com/IAM/latest/APIReference/API_UpdateAccessKey.html)   | Yes                 |
+| [DeleteAccessKey](https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeleteAccessKey.html)   | Yes                 |
+| [CreatePolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreatePolicy.html)         | Yes                 |
+| [ListPolicies](https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListPolicies.html)         | Yes                 |
+| [GetPolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicy.html)               | Yes                 |
+| [AttachUserPolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_AttachUserPolicy.html) | Yes                 |
+| [ListUserPolicies](https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUserPolicies.html) | Yes                 |
+| [DeleteUserPolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeleteUserPolicy.html) | Yes                 |
+
+## CloudFront APIs
+
+| CloudFront API                                                                                         | Supported in Tigris |
+| ------------------------------------------------------------------------------------------------------ | ------------------- |
+| [CreatePublicKey](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_CreatePublicKey.html) | Yes                 |
+| [GetPublicKey](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_GetPublicKey.html)       | Yes                 |
+| [DeletePublicKey](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_DeletePublicKey.html) | Yes                 |
+| [ListPublicKeys](https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ListPublicKeys.html)   | Yes                 |
+
 ## Next steps
 
 Check out the [language specific guides](../../sdks/s3/) on how to use the AWS

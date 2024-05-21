@@ -3,7 +3,7 @@
 Tigris allows you to incrementally migrate the data from an existing S3 or a
 compatible bucket via the `fly storage` command. This allows you to
 transparently move your data from an existing S3-compatible storage to Tigris
-without any **downtime** and without incuring any **egress costs**.
+without any **downtime** and without incurring any **egress costs**.
 
 ## How it works
 
@@ -34,15 +34,15 @@ should be migrated. We call this the shadow bucket. This is how you can create a
 new bucket with a shadow bucket:
 
 ```bash
-flyctl storage create -n some-bucket -o some-org \
-    --shadow-access-key your_access_key --shadow-secret-key your_secret_key \
+flyctl storage create -n {{tigris-bucket-name}} -o {{your-fly-org}} \
+    --shadow-access-key {{s3_access_key}} --shadow-secret-key {{s3_secret_key}} \
     --shadow-endpoint https://s3.us-east-1.amazonaws.com --shadow-region us-east-1 \
-    --shadow-name some-s3-bucket --shadow-write-through
+    --shadow-name {{your-s3-bucket}} --shadow-write-through
 ```
 
-This will create a new bucket `some-bucket` in the organization `some-org` and
-will migrate the data from the S3 bucket `some-s3-bucket` as the requests come
-in.
+This will create a new bucket `tigris-bucket-name` in the organization
+`your-fly-org` and will migrate the data from the S3 bucket `your-s3-bucket` as
+the requests come in.
 
 The endpoint and region are provider specific and should be set accordingly. You
 can find the endpoint and region for AWS S3 in the
@@ -54,14 +54,14 @@ You can also migrate the data to an existing Tigris bucket. This is how you can
 update an existing bucket to use the shadow bucket feature:
 
 ```bash
-flyctl storage update some-bucket \
-    --shadow-access-key your_access_key --shadow-secret-key your_secret_key \
+flyctl storage update {{tigris-bucket-name}} \
+    --shadow-access-key {{s3_access_key}} --shadow-secret-key {{s3_secret_key}} \
     --shadow-endpoint https://s3.us-east-1.amazonaws.com --shadow-region us-east-1 \
-    --shadow-name some-s3-bucket --shadow-write-through
+    --shadow-name {{your-s3-bucket}} --shadow-write-through
 ```
 
-This will update the bucket `some-bucket` settings so that Tigris will migrate
-the data from the S3 bucket `some-s3-bucket` as the requests come in.
+This will update the bucket `tigris-bucket-name` settings so that Tigris will
+migrate the data from the S3 bucket `your-s3-bucket` as the requests come in.
 
 ## Finishing the migration
 
@@ -71,5 +71,54 @@ read from or written to the shadow bucket. Any subsequent requests will only
 read from and write to the Tigris bucket.
 
 ```bash
-flyctl storage update some-bucket --clear-shadow
+flyctl storage update {{tigris-bucket-name}} --clear-shadow
+```
+
+# Configuring GCS as a shadow bucket
+
+Google Cloud Storage (GCS) offers interoperability with the Amazon Simple
+Storage Service (S3) API, so GCS bucket can be configured as a shadow bucket.
+Information which needs to be gathered from Google Cloud Console is:
+
+- Endpoint
+- Region
+- Bucket name
+- Access key
+- Secret key
+
+## Endpoint
+
+Endpoint for GCS is fixed and it is:
+
+```
+https://storage.googleapis.com
+```
+
+## Region
+
+There is no distinction by region so it should always be set as `auto`.
+
+## Access key & Secret key
+
+Navigate to
+[Google Cloud Console interoperability](https://console.cloud.google.com/storage/settings;tab=interoperability)
+page. On that page create new service account and new HMAC key or create new
+HMAC key for the existing account. Make sure that account have permission to
+access the bucket.
+
+## Bucket name
+
+Use GCS bucket name which should be used to read object from and write if shadow
+bucket is configured `write-through`.
+
+## Create Tigris bucket and configure shadow
+
+Once information is gathered the following is complete command to run to enable
+shadow bucket on the Tigris bucket creation:
+
+```
+flyctl storage create -n {{to-be-create-tigris-bucket-name}} -o {{your-fly-org}} \
+--shadow-access-key {{gcs_access_key}} --shadow-secret-key {{gcs_secret_key}} \
+--shadow-endpoint https://storage.googleapis.com --shadow-region auto \
+--shadow-name {{gcs-bucket-name}} --shadow-write-through
 ```

@@ -115,14 +115,3 @@ Note: IAM APIs are served at `https://fly.storage.tigris.dev:8009` for now.
 
 Check out the [language specific guides](../../sdks/s3/) on how to use the AWS
 S3 SDKs with Tigris.
-
-## Tigris Custom APIs.
-
-Besides AWS S3, IAM, and CloudFront APIs, Tigris also offers its own custom
-APIs:
-
-Custom S3 [Custom-S3 openapi yaml](/api/custom-s3.yaml)
-
-IAM [Custom-IAM openapi yaml](/api/custom-iam.yaml)
-
-IAM [Management openapi yaml](/api/management.yaml)

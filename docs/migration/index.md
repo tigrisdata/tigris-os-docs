@@ -25,9 +25,11 @@ This is how the process works:
 - When you delete an object we delete it from the Tigris bucket, as well as the
   shadow bucket.
 
-## Starting the migration
+## Amazon S3
 
-### Using a new Tigris bucket as the migration target
+### Starting the migration
+
+#### Using a new Tigris bucket as the migration target
 
 When creating a new bucket, you can specify the bucket from where the data
 should be migrated. We call this the shadow bucket. This is how you can create a
@@ -48,7 +50,7 @@ The endpoint and region are provider specific and should be set accordingly. You
 can find the endpoint and region for AWS S3 in the
 [AWS documentation](https://docs.aws.amazon.com/general/latest/gr/s3.html).
 
-### Using an existing Tigris bucket as the migration target
+#### Using an existing Tigris bucket as the migration target
 
 You can also migrate the data to an existing Tigris bucket. This is how you can
 update an existing bucket to use the shadow bucket feature:
@@ -63,7 +65,7 @@ flyctl storage update {{tigris-bucket-name}} \
 This will update the bucket `tigris-bucket-name` settings so that Tigris will
 migrate the data from the S3 bucket `your-s3-bucket` as the requests come in.
 
-## Finishing the migration
+### Finishing the migration
 
 Once you are confident that all the objects have been migrated, you can stop the
 migration by removing the shadow bucket. This will stop the objects from being
@@ -74,7 +76,7 @@ read from and write to the Tigris bucket.
 flyctl storage update {{tigris-bucket-name}} --clear-shadow
 ```
 
-# Configuring GCS as a shadow bucket
+## Google Cloud Storage
 
 Google Cloud Storage (GCS) offers interoperability with the Amazon Simple
 Storage Service (S3) API, so GCS bucket can be configured as a shadow bucket.
@@ -86,7 +88,7 @@ Information which needs to be gathered from Google Cloud Console is:
 - Access key
 - Secret key
 
-## Endpoint
+### Endpoint
 
 Endpoint for GCS is fixed and it is:
 
@@ -94,11 +96,11 @@ Endpoint for GCS is fixed and it is:
 https://storage.googleapis.com
 ```
 
-## Region
+### Region
 
 There is no distinction by region so it should always be set as `auto`.
 
-## Access key & Secret key
+### Access key and Secret key
 
 Navigate to
 [Google Cloud Console interoperability](https://console.cloud.google.com/storage/settings;tab=interoperability)
@@ -106,19 +108,29 @@ page. On that page create new service account and new HMAC key or create new
 HMAC key for the existing account. Make sure that account have permission to
 access the bucket.
 
-## Bucket name
+### Bucket name
 
-Use GCS bucket name which should be used to read object from and write if shadow
-bucket is configured `write-through`.
+Use GCS bucket name which should be used to read object from and write.
 
-## Create Tigris bucket and configure shadow
+### Creating the Tigris bucket and starting the migration
 
 Once information is gathered the following is complete command to run to enable
 shadow bucket on the Tigris bucket creation:
 
-```
-flyctl storage create -n {{to-be-create-tigris-bucket-name}} -o {{your-fly-org}} \
+```bash
+flyctl storage create -n {{to-be-created-tigris-bucket-name}} -o {{your-fly-org}} \
 --shadow-access-key {{gcs_access_key}} --shadow-secret-key {{gcs_secret_key}} \
 --shadow-endpoint https://storage.googleapis.com --shadow-region auto \
 --shadow-name {{gcs-bucket-name}} --shadow-write-through
+```
+
+### Finishing the migration
+
+Once you are confident that all the objects have been migrated, you can stop the
+migration by removing the shadow bucket configuration. This will stop the
+objects from being read from or written to the shadow bucket. Any subsequent
+requests will only read from and write to the Tigris bucket.
+
+```bash
+flyctl storage update {{tigris-bucket-name}} --clear-shadow
 ```

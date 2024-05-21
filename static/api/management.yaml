@@ -1,0 +1,67 @@
+openapi: 3.0.0
+info:
+  title: Tigris Management APIs
+  version: 1.0.0
+  description: Tigris Management APIs
+servers:
+  - url: "https://fly.storage.tigris.dev:8086"
+paths:
+  /user-space/whoami:
+    get:
+      summary: Returns the information about the current user.
+      operationId: WhoAmI
+      responses:
+        "200":
+          description: Information about the current user.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WhoAmIResponse"
+  /user-space/get-org:
+    get:
+      summary: Returns the information about the current user's organization.
+      operationId: GetOrg
+      responses:
+        "200":
+          description: Information about the current user's organization.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Org"
+components:
+  schemas:
+    WhoAmIResponse:
+      type: object
+      properties:
+        UserId:
+          type: string
+        NamespaceId:
+          type: string
+    Org:
+      type: object
+      properties:
+        email:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+        agreed_to_tos:
+          type: boolean
+        userId:
+          type: string
+        user_name:
+          type: string
+        profile_picture_url:
+          type: string

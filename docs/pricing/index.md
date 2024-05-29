@@ -1,6 +1,6 @@
 # Pricing
 
-_Last updated: May 6, 2024_
+_Last updated: May 29, 2024_
 
 Tigris pricing is based on the following components:
 
@@ -14,10 +14,17 @@ Tigris pricing is based on the following components:
 
 | Component                           | Price                                  |
 | ----------------------------------- | -------------------------------------- |
-| Data Storage                        | $0.02/GB/month                         |
+| Data Storage                        | $0.02/GB/month[[1]](#storage-units)    |
 | PUT, COPY, POST, LIST Requests      | $0.005/1000 requests                   |
 | GET, SELECT, and all other Requests | $0.0005/1000 requests                  |
-| Data Transfer                       | $0.00/GB [[1]](#data-transfer-pricing) |
+| Data Transfer                       | $0.00/GB [[2]](#data-transfer-pricing) |
+
+### Storage units
+
+Tigris measures storage in binary gigabytes (GB), where 1 GB equals 2^30 bytes .
+This unit, also called a gibibyte (GiB), is defined by the International
+Electrotechnical Commission (IEC). In the same way, 1 TB is equivalent to 2^40
+bytes, or 1024 GB.
 
 ### Data transfer pricing
 

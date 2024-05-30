@@ -12,29 +12,48 @@ Tigris pricing is based on the following components:
 
 ## Pricing table
 
-| Component                           | Price                                  |
-| ----------------------------------- | -------------------------------------- |
-| Data Storage                        | $0.02/GB/month[[1]](#storage-units)    |
-| PUT, COPY, POST, LIST Requests      | $0.005/1000 requests                   |
-| GET, SELECT, and all other Requests | $0.0005/1000 requests                  |
-| Data Transfer                       | $0.00/GB [[2]](#data-transfer-pricing) |
+| Component                           | Price                                                                         |
+| ----------------------------------- | ----------------------------------------------------------------------------- |
+| Data Storage                        | $0.02/GB/month [[1]](#data-storage-unit) [[2]](#data-storage-multiple-copies) |
+| PUT, COPY, POST, LIST Requests      | $0.005/1000 requests                                                          |
+| GET, SELECT, and all other Requests | $0.0005/1000 requests                                                         |
+| Data Transfer                       | $0.00/GB [[3]](#data-transfer-pricing)                                        |
 
-### Storage units
+#### Data storage unit
 
 Tigris measures storage in binary gigabytes (GB), where 1 GB equals 2^30 bytes .
 This unit, also called a gibibyte (GiB), is defined by the International
 Electrotechnical Commission (IEC). In the same way, 1 TB is equivalent to 2^40
 bytes, or 1024 GB.
 
-### Data transfer pricing
+#### Data storage multiple copies
+
+Tigris, by default, manages the data distribution for you, ensuring data is
+stored close to the users to ensure low latency and high availability. However,
+as mentioned in the [Object Regions](/docs/objects/object_regions.md) section,
+you may choose to control the data distribution and store multiple copies of
+your data in different regions. In such cases, the storage cost is calculated
+based on the number of copies stored. For example, if you elect to store two
+copies of your data in two different regions, you will be charged twice for the
+storage.
+
+#### Data transfer pricing
 
 While other cloud providers tax you for each GB of data transferred, we don't.
 At Tigris, we don't charge for regional data transfer, region-to-region data
 transfer, or data transfer out to the internet (egress) in the majority of use
-cases. However, if your bandwidth requirement is extraordinary, we'd be happy to
-work with you on a flat bandwidth rate to cover your needs.
+cases. However, if your bandwidth requirements are extraordinary, please reach
+out to us at [sales@tigrisdata.com](mailto:sales@tigrisdata.com) to discuss your
+requirements.
 
-## Free allowance
+## Enterprise pricing
+
+For larger workloads we offer the ability to customize the pricing and service
+contract to best fit your needs. Please reach out to us at
+[sales@tigrisdata.com](mailto:sales@tigrisdata.com) to discuss your
+requirements.
+
+## Free allowances
 
 We offer a free allowance as follows:
 
@@ -79,7 +98,3 @@ will be charged as follows:
 - GET Requests: 100,000 x $0/1000 requests + 900,000 x $0.0005/1000 requests =
   $0.45
 - Data Transfer: $0
-
-## Pricing during beta
-
-During the period of the beta, we will not charge for any usage.

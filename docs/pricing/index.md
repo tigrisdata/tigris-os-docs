@@ -17,12 +17,12 @@ Tigris pricing is based on the following components:
 
 ## Pricing table
 
-| Component                           | Price                                                                         |
-| ----------------------------------- | ----------------------------------------------------------------------------- |
-| Data Storage                        | $0.02/GB/month [[1]](#data-storage-unit) [[2]](#data-storage-multiple-copies) |
-| PUT, COPY, POST, LIST Requests      | $0.005/1000 requests                                                          |
-| GET, SELECT, and all other Requests | $0.0005/1000 requests                                                         |
-| Data Transfer                       | $0.00/GB [[3]](#data-transfer-pricing)                                        |
+| Component                                     | Price                                                                         |
+| --------------------------------------------- | ----------------------------------------------------------------------------- |
+| Data Storage                                  | $0.02/GB/month [[1]](#data-storage-unit) [[2]](#data-storage-multiple-copies) |
+| Class A Requests: PUT, COPY, POST, LIST       | $0.005/1000 requests                                                          |
+| Class B Requests: GET, SELECT, and all others | $0.0005/1000 requests                                                         |
+| Data Transfer                                 | $0.00/GB [[3]](#data-transfer-pricing)                                        |
 
 #### Data storage unit
 

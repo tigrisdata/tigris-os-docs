@@ -163,7 +163,43 @@ Here is an example of the IAM policy
   of the resource to which the policy applies. In this example, it grants
   permission to all objects (`/_`) in the specified bucket (`images`).
 
-Note that we do not yet support `Condition` element of the IAM policy.
+#### Condition
+
+For `Condition` Tigris supports `IpAddress` and `NotIpAddress` clauses. Here is
+an example of policy applies if request is made from IP `1.2.3.4`.
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "IpRestrictedReads",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:ListObjects"],
+      "Resource": ["arn:aws:s3:::images/*"],
+      "Condition": { "IpAddress": { "aws:SourceIp": "1.2.3.4" } }
+    }
+  ]
+}
+```
+
+Similarly, here is an example of a policy that applies only if the request is
+not made from the IP address 1.2.3.4.
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "IpRestrictedReads",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:ListObjects"],
+      "Resource": ["arn:aws:s3:::images/*"],
+      "Condition": { "NotIpAddress": { "aws:SourceIp": "1.2.3.4" } }
+    }
+  ]
+}
+```
 
 These policies are standalone on their own. They need to be attached to the user
 in order to apply them.

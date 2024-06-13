@@ -24,41 +24,24 @@ If you don't have an account, you can get yourself one
 
 Before you can store data in Tigris, you have to create a bucket.
 
-To create a bucket for one of your Fly apps, run the following command in the
-directory where your Fly app is located:
+To create a bucket run the following command:
 
 ```bash
 fly storage create
 ```
 
-This will create a bucket and set the required environment variables for you.
+This will create a bucket, and either set the required environment variables for
+your Fly app or provide you with the secrets to set on your target app.
 
 ```text
 $ fly storage create
-? Choose a name, use the default, or leave blank to generate one: demo-bucket
-Your  project (demo-bucket) is ready. See details and next steps with:
-
-Setting the following secrets on ot-demo:
-AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY
-BUCKET_NAME
-AWS_ENDPOINT_URL_S3
-
-Secrets are staged for the first deployment
-```
-
-If you want to create a bucket that is not associated with a Fly app, you can
-run the same command outside of a Fly app directory.
-
-```text
-$ fly storage create
-? Select Organization: Ovais Tariq (personal)
 ? Choose a name, use the default, or leave blank to generate one:
 Your  project (polished-thunder-5646) is ready. See details and next steps with:
 
-Set one or more of the following secrets on your target app.
-AWS_ENDPOINT_URL_S3: https://fly.storage.tigris.dev
+Setting the following secrets on ot-demo:
 AWS_ACCESS_KEY_ID: xxxxxxxxxxxxxxxxxxxx
+AWS_ENDPOINT_URL_S3: https://fly.storage.tigris.dev
+AWS_REGION: auto
 AWS_SECRET_ACCESS_KEY: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 BUCKET_NAME: polished-thunder-5646
 ```

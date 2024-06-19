@@ -38,7 +38,7 @@ averaging the daily peak storage over a billing period (1 month). Example:
   as 1 GB/month
 - Storing 10 GB for 12 days in June, and then 20 GB for the rest 18 days will be
   charged as 16 GB/month
-  > **10 GB _ 12/30 + 20 GB _ 18/30 = 16 GB/month**
+  > **10 GB x 12/30 + 20 GB x 18/30 = 16 GB/month**
 
 #### Data storage multiple copies
 

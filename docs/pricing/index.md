@@ -20,9 +20,9 @@ Tigris pricing is based on the following components:
 | Component                                     | Price                                                                         |
 | --------------------------------------------- | ----------------------------------------------------------------------------- |
 | Data Storage                                  | $0.02/GB/month [[1]](#data-storage-unit) [[2]](#data-storage-multiple-copies) |
-| Class A Requests: PUT, COPY, POST, LIST       | $0.005/1000 requests                                                          |
-| Class B Requests: GET, SELECT, and all others | $0.0005/1000 requests                                                         |
-| Data Transfer                                 | $0.00/GB [[3]](#data-transfer-pricing)                                        |
+| Class A Requests: PUT, COPY, POST, LIST       | $0.005/1000 requests [[3]](#class-a-requests)                                 |
+| Class B Requests: GET, SELECT, and all others | $0.0005/1000 requests [[4]](#class-b-requests)                                |
+| Data Transfer                                 | $0.00/GB [[5]](#data-transfer-pricing)                                        |
 
 #### Data storage unit
 
@@ -30,6 +30,15 @@ Tigris measures storage in binary gigabytes (GB), where 1 GB equals 2^30 bytes .
 This unit, also called a gibibyte (GiB), is defined by the International
 Electrotechnical Commission (IEC). In the same way, 1 TB is equivalent to 2^40
 bytes, or 1024 GB.
+
+Storage costs are calulated using `GB/month`. A `GB/month` is determined by
+averaging the daily peak storage over a billing period (1 month). Example:
+
+- Storing 1 GB (1,073,741,824 bytes) constantly for whole month will be charged
+  as 1 GB/month
+- Storing 10 GB for 12 days in June, and then 20 GB for the rest 18 days will be
+  charged as 16 GB/month
+  > **10 GB _ 12/30 + 20 GB _ 18/30 = 16 GB/month**
 
 #### Data storage multiple copies
 
@@ -41,6 +50,23 @@ your data in different regions. In such cases, the storage cost is calculated
 based on the number of copies stored. For example, if you elect to store two
 copies of your data in two different regions, you will be charged twice for the
 storage.
+
+#### Class A Requests
+
+CreateBucket, CreateMultipartUpload, CopyObject, ListObjects, ListObjectsV2,
+ListMultipartUploads, ListBuckets, ListParts, PutBucketCors,
+PutBucketLifecycleConfiguration, PutObjectTagging, PutObjectAcl,
+PutObjectRetention, PutObjectLegalHold, PutObjectLockConfiguration,
+PutBucketAcl, PutBucketPolicy, PutBucketTagging,
+PutBucketAccelerateConfiguration, PutBucketOwnershipControls, PutObject
+
+#### Class B Requests
+
+GetBucketAccelerateConfiguration, GetBucketAcl, GetBucketCors,
+GetBucketLifecycleConfiguration, GetBucketLocation, GetBucketOwnershipControls,
+GetBucketPolicy, GetBucketPolicyStatus, GetBucketRequestPayment,
+GetBucketTagging, GetBucketVersioning, GetObject, GetObjectAcl,
+GetObjectTagging, HeadBucket, HeadObject
 
 #### Data transfer pricing
 

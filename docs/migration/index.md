@@ -3,7 +3,7 @@
 Tigris allows you to incrementally migrate the data from an existing S3 or a
 compatible bucket via the `fly storage` command. This allows you to
 transparently move your data from an existing S3-compatible storage to Tigris
-without any **downtime** and without incurring any **egress costs**.
+without any **downtime**.
 
 ## How it works
 

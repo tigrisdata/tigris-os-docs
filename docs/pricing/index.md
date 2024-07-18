@@ -1,12 +1,5 @@
 # Pricing
 
-:::tip
-
-We're enabling billing for Tigris in July. Read more about it in our
-[blog post](https://www.tigrisdata.com/blog/enabling-billing-for-tigris-in-july/).
-
-:::
-
 Tigris pricing is based on the following components:
 
 - Data Storage: the amount of data stored in your buckets.

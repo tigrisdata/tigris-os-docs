@@ -70,10 +70,21 @@ For illustrative purposes, let's utilize the following credentials:
 - Full
   [detailed grammar of policy is documented here](https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html)
 
+### Truncate space characters
+
+Removing spaces and newlines will make it easier to verify the results locally,
+eliminating any LF/CRLF confusion.
+
+The policy below has its double-quotes escaped as well.
+
+```shell
+{\"expiration\":\"2024-03-30T12:00:00.000Z\",\"conditions\":[{\"bucket\":\"my-user-images\"},[\"starts-with\",\"$key\",\"images1/\"],{\"success_action_redirect\":\"https://your-website.com/success.html\"},[\"starts-with\",\"$Content-Type\",\"image/\"],{\"x-amz-meta-uuid\":\"465888667\"},{\"x-amz-credential\":\"tid_example_key_id/20240330/auto/s3/aws4_request\"},{\"x-amz-algorithm\":\"AWS4-HMAC-SHA256\"},{\"x-amz-date\":\"20240330T000000Z\"}]}
+```
+
 ### Base64 encode this policy
 
 ```shell
-eyAKICAiZXhwaXJhdGlvbiI6ICIyMDI0LTAzLTMwVDEyOjAwOjAwLjAwMFoiLAogICJjb25kaXRpb25zIjogWwogICAgeyJidWNrZXQiOiAibXktdXNlci1pbWFnZXMifSwKICAgIFsic3RhcnRzLXdpdGgiLCAiJGtleSIsICJpbWFnZXMxLyJdLAogICAgeyJzdWNjZXNzX2FjdGlvbl9yZWRpcmVjdCI6ICJodHRwczovL3lvdXItd2Vic2l0ZS5jb20vc3VjY2Vzcy5odG1sIn0sCiAgICBbInN0YXJ0cy13aXRoIiwgIiRDb250ZW50LVR5cGUiLCAiaW1hZ2UvIl0sCiAgICB7IngtYW16LW1ldGEtdXVpZCI6ICI0NjU4ODg2NjcifSwKICAgIHsieC1hbXotY3JlZGVudGlhbCI6ICJ0aWRfZXhhbXBsZV9rZXlfaWQvMjAyNDAzMzAvYXV0by9zMy9hd3M0X3JlcXVlc3QifSwKICAgIHsieC1hbXotYWxnb3JpdGhtIjogIkFXUzQtSE1BQy1TSEEyNTYifSwKICAgIHsieC1hbXotZGF0ZSI6ICIyMDI0MDMzMFQwMDAwMDBaIiB9CiAgXQp9eyAKICAiZXhwaXJhdGlvbiI6ICIyMDI0LTAzLTMwVDEyOjAwOjAwLjAwMFoiLAogICJjb25kaXRpb25zIjogWwogICAgeyJidWNrZXQiOiAibXktdXNlci1pbWFnZXMifSwKICAgIFsic3RhcnRzLXdpdGgiLCAiJGtleSIsICJpbWFnZXMxLyJdLAogICAgeyJzdWNjZXNzX2FjdGlvbl9yZWRpcmVjdCI6ICJodHRwczovL3lvdXItd2Vic2l0ZS5jb20vc3VjY2Vzcy5odG1sIn0sCiAgICBbInN0YXJ0cy13aXRoIiwgIiRDb250ZW50LVR5cGUiLCAiaW1hZ2UvIl0sCiAgICB7IngtYW16LW1ldGEtdXVpZCI6ICI0NjU4ODg2NjcifSwKICAgIHsieC1hbXotY3JlZGVudGlhbCI6ICJ0aWRfZXhhbXBsZV9rZXlfaWQvMjAyNDAzMzAvYXV0by9zMy9hd3M0X3JlcXVlc3QifSwKICAgIHsieC1hbXotYWxnb3JpdGhtIjogIkFXUzQtSE1BQy1TSEEyNTYifSwKICAgIHsieC1hbXotZGF0ZSI6ICIyMDI0MDMzMFQwMDAwMDBaIiB9CiAgXQp9
+eyJleHBpcmF0aW9uIjoiMjAyNC0wMy0zMFQxMjowMDowMC4wMDBaIiwiY29uZGl0aW9ucyI6W3siYnVja2V0IjoibXktdXNlci1pbWFnZXMifSxbInN0YXJ0cy13aXRoIiwiJGtleSIsImltYWdlczEvIl0seyJzdWNjZXNzX2FjdGlvbl9yZWRpcmVjdCI6Imh0dHBzOi8veW91ci13ZWJzaXRlLmNvbS9zdWNjZXNzLmh0bWwifSxbInN0YXJ0cy13aXRoIiwiJENvbnRlbnQtVHlwZSIsImltYWdlLyJdLHsieC1hbXotbWV0YS11dWlkIjoiNDY1ODg4NjY3In0seyJ4LWFtei1jcmVkZW50aWFsIjoidGlkX2V4YW1wbGVfa2V5X2lkLzIwMjQwMzMwL2F1dG8vczMvYXdzNF9yZXF1ZXN0In0seyJ4LWFtei1hbGdvcml0aG0iOiJBV1M0LUhNQUMtU0hBMjU2In0seyJ4LWFtei1kYXRlIjoiMjAyNDAzMzBUMDAwMDAwWiJ9XX0=
 ```
 
 ### Sign the policy
@@ -115,7 +126,7 @@ Note:
 The signature of our example policy will be
 
 ```shell
-fb2e5943b3146a9dfe1ea4bbe2ca059d5b4c2a6866f60ed39cc85a1eaa482775
+5e1fd1320a7d0b001275718a680f7c6d74343b40aecf9af5c16fd6a532144584
 ```
 
 ### Generate the HTML form
@@ -150,12 +161,12 @@ fb2e5943b3146a9dfe1ea4bbe2ca059d5b4c2a6866f60ed39cc85a1eaa482775
       <input
         type="hidden"
         name="Policy"
-        value="eyAKICAiZXhwaXJhdGlvbiI6ICIyMDI0LTAzLTMwVDEyOjAwOjAwLjAwMFoiLAogICJjb25kaXRpb25zIjogWwogICAgeyJidWNrZXQiOiAibXktdXNlci1pbWFnZXMifSwKICAgIFsic3RhcnRzLXdpdGgiLCAiJGtleSIsICJpbWFnZXMxLyJdLAogICAgeyJzdWNjZXNzX2FjdGlvbl9yZWRpcmVjdCI6ICJodHRwczovL3lvdXItd2Vic2l0ZS5jb20vc3VjY2Vzcy5odG1sIn0sCiAgICBbInN0YXJ0cy13aXRoIiwgIiRDb250ZW50LVR5cGUiLCAiaW1hZ2UvIl0sCiAgICB7IngtYW16LW1ldGEtdXVpZCI6ICI0NjU4ODg2NjcifSwKICAgIHsieC1hbXotY3JlZGVudGlhbCI6ICJ0aWRfZXhhbXBsZV9rZXlfaWQvMjAyNDAzMzAvYXV0by9zMy9hd3M0X3JlcXVlc3QifSwKICAgIHsieC1hbXotYWxnb3JpdGhtIjogIkFXUzQtSE1BQy1TSEEyNTYifSwKICAgIHsieC1hbXotZGF0ZSI6ICIyMDI0MDMzMFQwMDAwMDBaIiB9CiAgXQp9eyAKICAiZXhwaXJhdGlvbiI6ICIyMDI0LTAzLTMwVDEyOjAwOjAwLjAwMFoiLAogICJjb25kaXRpb25zIjogWwogICAgeyJidWNrZXQiOiAibXktdXNlci1pbWFnZXMifSwKICAgIFsic3RhcnRzLXdpdGgiLCAiJGtleSIsICJpbWFnZXMxLyJdLAogICAgeyJzdWNjZXNzX2FjdGlvbl9yZWRpcmVjdCI6ICJodHRwczovL3lvdXItd2Vic2l0ZS5jb20vc3VjY2Vzcy5odG1sIn0sCiAgICBbInN0YXJ0cy13aXRoIiwgIiRDb250ZW50LVR5cGUiLCAiaW1hZ2UvIl0sCiAgICB7IngtYW16LW1ldGEtdXVpZCI6ICI0NjU4ODg2NjcifSwKICAgIHsieC1hbXotY3JlZGVudGlhbCI6ICJ0aWRfZXhhbXBsZV9rZXlfaWQvMjAyNDAzMzAvYXV0by9zMy9hd3M0X3JlcXVlc3QifSwKICAgIHsieC1hbXotYWxnb3JpdGhtIjogIkFXUzQtSE1BQy1TSEEyNTYifSwKICAgIHsieC1hbXotZGF0ZSI6ICIyMDI0MDMzMFQwMDAwMDBaIiB9CiAgXQp9"
+        value="eyJleHBpcmF0aW9uIjoiMjAyNC0wMy0zMFQxMjowMDowMC4wMDBaIiwiY29uZGl0aW9ucyI6W3siYnVja2V0IjoibXktdXNlci1pbWFnZXMifSxbInN0YXJ0cy13aXRoIiwiJGtleSIsImltYWdlczEvIl0seyJzdWNjZXNzX2FjdGlvbl9yZWRpcmVjdCI6Imh0dHBzOi8veW91ci13ZWJzaXRlLmNvbS9zdWNjZXNzLmh0bWwifSxbInN0YXJ0cy13aXRoIiwiJENvbnRlbnQtVHlwZSIsImltYWdlLyJdLHsieC1hbXotbWV0YS11dWlkIjoiNDY1ODg4NjY3In0seyJ4LWFtei1jcmVkZW50aWFsIjoidGlkX2V4YW1wbGVfa2V5X2lkLzIwMjQwMzMwL2F1dG8vczMvYXdzNF9yZXF1ZXN0In0seyJ4LWFtei1hbGdvcml0aG0iOiJBV1M0LUhNQUMtU0hBMjU2In0seyJ4LWFtei1kYXRlIjoiMjAyNDAzMzBUMDAwMDAwWiJ9XX0="
       />
       <input
         type="hidden"
         name="X-Amz-Signature"
-        value="fb2e5943b3146a9dfe1ea4bbe2ca059d5b4c2a6866f60ed39cc85a1eaa482775"
+        value="5e1fd1320a7d0b001275718a680f7c6d74343b40aecf9af5c16fd6a532144584"
       />
       File:
       <input type="file" name="file" /> <br />

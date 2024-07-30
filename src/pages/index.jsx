@@ -61,12 +61,6 @@ export default function Homepage() {
 
           <Section title="Features" id="features" HeadingTag="h2">
             <Card
-              title="Single Global Endpoint"
-              description="Seamless global access to object storage with our single global endpoint."
-              to="/overview/#single-global-endpoint"
-              icon={<GreenStar />}
-            />
-            <Card
               title="Store Data Near Users"
               description="Data stored close to the users automatically ensuring low latency everywhere."
               to="/overview/#store-data-near-users"
@@ -79,9 +73,21 @@ export default function Homepage() {
               icon={<GreenStar />}
             />
             <Card
+              title="Zero Egress Fees"
+              description="Free data egress ensures seamless and unrestricted access to your data whenever you need it."
+              to="/pricing/"
+              icon={<GreenStar />}
+            />
+            <Card
               title="Fast Small Object Retrieval"
               description="Access small objects at close to Redis speed, ensuring swift, efficient retrieval."
               to="/overview/#fast-small-object-retrieval"
+              icon={<GreenStar />}
+            />
+            <Card
+              title="Object Caching"
+              description="Get the benefits of Content Delivery Network (CDN) with no work on your part."
+              to="/objects/caching/"
               icon={<GreenStar />}
             />
             <Card

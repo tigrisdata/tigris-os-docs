@@ -11,11 +11,15 @@ only via granted access keys.
 
 To get started simply follow the following steps:
 
+:::note[Quickstart]
+
 1. [Install flyctl](https://fly.io/docs/flyctl/install/) - the
    [open source](https://github.com/superfly/flyctl) Fly.io CLI we will use to
    manage our buckets.
 2. Create an account with `fly auth signup` or log in with `fly auth login`.
 3. Run `fly storage create` to create a bucket.
+
+:::
 
 ## Start building
 

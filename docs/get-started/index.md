@@ -21,15 +21,15 @@ To get started simply follow the following steps:
 
 :::
 
-## Start building
+## Next Steps
 
 Now that you have a bucket, you can start storing objects in it. An object can
 be any kind of file: a text file, a photo, a video, or anything else. As Tigris
 is S3-compatible, you can use standard AWS S3 SDKs and libraries to store and
 retrieve objects.
 
-_Tigris provides a single global endpoint. When using the AWS S3 SDKs, all you
-need is to set the endpoint to `https://fly.storage.tigris.dev`._
-
 Take a look at examples of how to use Tigris with the most popular S3 SDKs and
 CLIs [here](../sdks/s3/).
+
+Or, check out the [Dashboard](https://console.tigris.dev/) to manage your
+buckets and objects.

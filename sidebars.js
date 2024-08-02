@@ -37,6 +37,11 @@ const sidebars = {
     },
     {
       type: "category",
+      label: "Quickstarts",
+      items: ["quickstarts/go", "quickstarts/node"],
+    },
+    {
+      type: "category",
       label: "Concepts",
       collapsed: false,
       items: [

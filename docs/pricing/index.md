@@ -17,13 +17,6 @@ Tigris pricing is based on the following components:
 | Class A Requests: PUT, COPY, POST, LIST       | $0.005/1000 requests  |
 | Class B Requests: GET, SELECT, and all others | $0.0005/1000 requests |
 
-## Enterprise pricing
-
-For larger workloads we offer the ability to customize the pricing and service
-contract to best fit your needs. Please reach out to us at
-[sales@tigrisdata.com](mailto:sales@tigrisdata.com) to discuss your
-requirements.
-
 ## Free allowances
 
 We offer a free allowance as follows:
@@ -31,6 +24,13 @@ We offer a free allowance as follows:
 - 5GB of data storage per month
 - 10,000 PUT, COPY, POST, LIST requests per month
 - 100,000 GET, SELECT, and all other requests per month
+
+## Enterprise pricing
+
+For larger workloads we offer the ability to customize the pricing and service
+contract to best fit your needs. Please reach out to us at
+[sales@tigrisdata.com](mailto:sales@tigrisdata.com) to discuss your
+requirements.
 
 ## Example pricing
 

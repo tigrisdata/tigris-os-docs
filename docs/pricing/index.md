@@ -100,6 +100,10 @@ GetBucketPolicy, GetBucketPolicyStatus, GetBucketRequestPayment,
 GetBucketTagging, GetBucketVersioning, GetObject, GetObjectAcl,
 GetObjectTagging, HeadBucket, HeadObject
 
+#### Free Requests
+
+All DELETE and CANCEL requests are free
+
 </details>
 
 <details>

@@ -103,6 +103,13 @@ GetObjectTagging, HeadBucket, HeadObject
 </details>
 
 <details>
+<summary>Would I be charged for deleting data?</summary>
+
+No, **DELETE** and **CANCEL** requests are free.
+
+</details>
+
+<details>
 <summary>Do you charge for data transfer?</summary>
 
 While other cloud providers tax you for each GB of data transferred, we don't.

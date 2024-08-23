@@ -9,9 +9,12 @@ only via granted access keys.
 
 ## Getting Started
 
-To get started simply follow the following steps:
+**If you prefer to use the UI, try out [storage.new](https://storage.new/),
+you’ll be up and running in a minute.**
 
-:::note[Quickstart]
+If you prefer the CLI, to get started simply follow the following steps:
+
+:::note[CLI Quickstart]
 
 1. [Install flyctl](https://fly.io/docs/flyctl/install/) - the
    [open source](https://github.com/superfly/flyctl) Fly.io CLI we will use to

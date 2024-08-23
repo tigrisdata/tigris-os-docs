@@ -13,7 +13,18 @@ Tigris allows owners of public buckets to specify their CORS configuration.
 Owners can define rules that specify which origins can access their resources,
 which HTTP methods are allowed, and which headers can be used in the request.
 
-## Specifying CORS rules
+## Specifying CORS rules via the Tigris Dashboard
+
+You can specify CORS rules for your bucket using the
+[Tigris Dashboard](https://console.tigris.dev/).
+
+Here's a short video that demonstrates how to specify CORS rules for a bucket:
+
+<a href="https://www.loom.com/share/716d35d4e1d14df58ecb356e7d874432" target="_blank">
+  <img src="https://cdn.loom.com/sessions/thumbnails/716d35d4e1d14df58ecb356e7d874432-99e694ad9c9bc229-full-play.gif" />
+</a>
+
+## Specifying CORS rules via AWS CLI
 
 Let's take an example of the public bucket `public-scripts`. Consider, as the
 owner of this bucket, you want to restrict access via HTTP methods `PUT`, `POST`

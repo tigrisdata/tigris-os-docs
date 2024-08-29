@@ -59,6 +59,7 @@ const sidebars = {
         "buckets/public-bucket",
         "buckets/cors",
         "buckets/custom-domain",
+        "buckets/objects-expiration",
       ],
     },
     {

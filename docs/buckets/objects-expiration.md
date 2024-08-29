@@ -43,7 +43,6 @@ Create a JSON file named `lifecycle.json` with the following content:
 {
   "Rules": [
     {
-      "ID": "Delete 30 days old objects",
       "Status": "Enabled",
       "Expiration": {
         "Days": 30
@@ -71,7 +70,6 @@ Create a JSON file named `lifecycle.json` with the following content:
 {
   "Rules": [
     {
-      "ID": "Delete objects on end of year",
       "Status": "Enabled",
       "Expiration": {
         "Date": "2024-12-31T00:00:00Z"

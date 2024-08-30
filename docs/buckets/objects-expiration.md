@@ -1,14 +1,13 @@
 # Object Expiration
 
 If you use Tigris to store objects that have a limited lifetime, you can now set
-up lifecycle configuration rules to automatically delete them after a specified
-period.
+up bucket lifecycle configuration rules to automatically delete them after a
+specified period.
 
 ## Configuring object expiration
 
-Tigris allows you to set up a Time-To-Live (TTL) configuration for objects in a
-bucket. This configuration can be used to automatically delete objects after a
-specified period.
+Tigris allows you to set up a expiration configuration for objects in a bucket
+through bucket lifecycle rules.
 
 The TTL can be set in two ways:
 
@@ -34,8 +33,8 @@ Below are some examples of how you can configure the expiration rules.
 
 #### Expire objects after 30 days
 
-Here's an example of a lifecycle configuration that expires objects after 30
-days.
+Here's an example of a bucket lifecycle configuration that expires objects after
+30 days.
 
 Create a JSON file named `lifecycle.json` with the following content:
 
@@ -61,8 +60,8 @@ aws s3api put-bucket-lifecycle-configuration --bucket my-bucket --lifecycle-conf
 
 #### Expire objects at the end of the year 2024
 
-Here's an example of a lifecycle configuration that expires objects at the end
-of the year 2024.
+Here's an example of a bucket lifecycle configuration that expires objects at
+the end of the year 2024.
 
 Create a JSON file named `lifecycle.json` with the following content:
 
@@ -90,6 +89,6 @@ aws s3api put-bucket-lifecycle-configuration --bucket my-bucket --lifecycle-conf
 
 - Tigris always rounds the TTL deletion time to UTC midnight for the scheduled
   date.
-- Only one expiration rule can be applied to a bucket at a time.
-- When using the AWS CLI to apply a lifecycle configuration, the JSON can only
-  contain the fields shown in the examples above.
+- Only one object expiration rule can be applied to a bucket at a time.
+- When using the AWS CLI to apply a bucket lifecycle configuration, the JSON can
+  only contain the fields shown in the examples above.

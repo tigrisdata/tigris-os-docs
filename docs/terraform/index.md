@@ -19,7 +19,7 @@ configuration.
 terraform {
   required_providers {
     tigris = {
-      source  = "https://github.com/tigrisdata/terraform-provider-tigris"
+      source  = "tigrisdata/tigris"
     }
   }
 }

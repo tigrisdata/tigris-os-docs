@@ -105,6 +105,11 @@ const sidebars = {
     },
     {
       type: "doc",
+      label: "Terraform",
+      id: "terraform/index",
+    },
+    {
+      type: "doc",
       label: "Pricing",
       id: "pricing/index",
     },

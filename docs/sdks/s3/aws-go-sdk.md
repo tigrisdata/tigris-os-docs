@@ -280,6 +280,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 	"github.com/aws/smithy-go/transport/http"
 )
 
@@ -287,6 +288,68 @@ func WithHeader(key, value string) func(*s3.Options) {
 	return func(options *s3.Options) {
 		options.APIOptions = append(options.APIOptions, http.AddHeaderValue(key, value))
 	}
+}
+
+func putObjectToMultipleRegions(ctx context.Context, client *s3.Client, bucket string, key string, data []byte) error {
+	_, err := client.PutObject(
+		ctx,
+		&s3.PutObjectInput{
+			Bucket:        aws.String(bucket),
+			Key:           aws.String(key),
+			Body:          bytes.NewReader(data),
+			ContentLength: aws.Int64(int64(len(data))),
+		},
+		// Restrict in Europe only
+		WithHeader("X-Tigris-Regions", "fra"),
+	)
+
+	return err
+}
+
+func putObjectUsingMultipartToMultipleRegions(ctx context.Context, client *s3.Client, bucket string, key string, data []byte) error {
+	co, err := client.CreateMultipartUpload(
+		ctx,
+		&s3.CreateMultipartUploadInput{
+			Bucket: aws.String(bucket),
+			Key:    aws.String(key),
+		},
+		// Restrict in Europe only
+		WithHeader("X-Tigris-Regions", "fra"),
+	)
+	if err != nil {
+		return err
+	}
+
+	uo, err := client.UploadPart(
+		ctx,
+		&s3.UploadPartInput{
+			Bucket:        aws.String(bucket),
+			Key:           aws.String(key),
+			Body:          bytes.NewReader(data),
+			UploadId:      co.UploadId,
+			PartNumber:    aws.Int32(1),
+			ContentLength: aws.Int64(int64(len(data))),
+		},
+	)
+	if err != nil {
+		return err
+	}
+
+	_, err = client.CompleteMultipartUpload(
+		ctx,
+		&s3.CompleteMultipartUploadInput{
+			Bucket:   aws.String(bucket),
+			Key:      aws.String(key),
+			UploadId: co.UploadId,
+			MultipartUpload: &types.CompletedMultipartUpload{
+				Parts: []types.CompletedPart{
+					{ETag: uo.ETag, PartNumber: aws.Int32(1)},
+				},
+			},
+		},
+	)
+
+	return err
 }
 
 func main() {
@@ -302,17 +365,24 @@ func main() {
 		o.Region = "auto"
 	})
 
-	randData := make([]byte, 16384)
-	_, _ = rand.Read(randData)
-	_, err = client.PutObject(context.TODO(),
-		&s3.PutObjectInput{
-			Bucket: aws.String("mybucket"),
-			Key:    aws.String("mykey"),
-			Body:   bytes.NewBuffer(randData),
-		},
-		// Restrict in Europe only
-		WithHeader("X-Tigris-Regions", "fra"),
+	var (
+		ctx      = context.TODO()
+		bucket   = "mybucket"
+		key      = "mykey"
+		randData = make([]byte, 16384)
 	)
+
+	_, _ = rand.Read(randData)
+
+	// example of multiple regions using put
+	err = putObjectToMultipleRegions(ctx, client, bucket, key, randData)
+	if err != nil {
+		log.Fatalf("unable to write object: %v", err)
+	}
+
+	_, _ = rand.Read(randData)
+	// example of multiple regions using multipart
+	err = putObjectUsingMultipartToMultipleRegions(ctx, client, bucket, key, randData)
 	if err != nil {
 		log.Fatalf("unable to write object: %v", err)
 	}
@@ -320,8 +390,8 @@ func main() {
 	// read
 	out, err := client.GetObject(context.TODO(),
 		&s3.GetObjectInput{
-			Bucket: aws.String("mybucket"),
-			Key:    aws.String("mykey"),
+			Bucket: aws.String(bucket),
+			Key:    aws.String(key),
 		},
 	)
 	if err != nil {
@@ -333,7 +403,6 @@ func main() {
 		log.Fatalf("unable to read object body: %v", err)
 	}
 }
-
 ```
 
 ## Metadata Querying

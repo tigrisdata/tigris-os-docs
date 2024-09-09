@@ -96,6 +96,7 @@ const sidebars = {
         "sdks/s3/aws-cli",
         "sdks/s3/aws-js-sdk",
         "sdks/s3/aws-go-sdk",
+        "sdks/s3/aws-java-sdk",
         "sdks/s3/aws-python-sdk",
         "sdks/s3/aws-php-sdk",
         "sdks/s3/aws-elixir-sdk",

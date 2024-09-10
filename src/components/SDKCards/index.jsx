@@ -12,6 +12,7 @@ import {
   JSIcon,
   RubyIcon,
   ElixirIcon,
+  JavaIcon,
 } from "../../icons";
 
 export default function SDKCards() {
@@ -34,6 +35,12 @@ export default function SDKCards() {
         description="Integrate Tigris in your Golang App"
         to="/sdks/s3/aws-go-sdk/"
         icon={<GoIcon />}
+      />
+      <Card
+        title="Java"
+        description="Integrate Tigris in your Java App"
+        to="/sdks/s3/aws-java-sdk/"
+        icon={<JavaIcon />}
       />
       <Card
         title="Python"

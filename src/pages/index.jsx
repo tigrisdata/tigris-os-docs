@@ -93,7 +93,7 @@ export default function Homepage() {
             <Card
               title="Public Buckets"
               description="Public buckets allow you to share data with anyone, anywhere."
-              to="/buckets/public-access/"
+              to="/buckets/public-bucket/"
               icon={<GreenStar />}
             />
           </Section>

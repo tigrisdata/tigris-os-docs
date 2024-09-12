@@ -30,6 +30,9 @@ settings.
     <img src="https://cdn.loom.com/sessions/thumbnails/747c12e19f524c97b88083355077de26-cb147c715a920c8d-full-play.gif" />
 </a>
 
+For the object ACLs migration rules see the
+[Copying objects ACLs](/docs/migration/index.md#copying-objects-acls)
+
 ## Applying ACLs to objects
 
 ### Publically readable objects in a private bucket

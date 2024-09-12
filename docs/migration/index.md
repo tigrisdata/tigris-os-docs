@@ -134,3 +134,20 @@ requests will only read from and write to the Tigris bucket.
 ```bash
 flyctl storage update {{tigris-bucket-name}} --clear-shadow
 ```
+
+## Copying objects ACLs
+
+By default, migrated objects inherit the access control settings of the bucket
+they are migrated too. However, if bucket is configured to
+[allow object ACLs](/docs/objects/acl.md#enabling-object-acls), migration
+process will copy object ACLs from the shadow S3 bucket to the Tigris bucket.
+The following rules apply:
+
+- Tigris bucket is private:
+  - Public S3 objects will be migrated as public and have explicit `puclic-read`
+    ACL set.
+  - Private S3 objects will be migrated as private and inherit bucket ACL.
+- Tigris bucket is public:
+  - Public S3 objects will be migrated as public and inherit bucket ACL.
+  - Private S3 objects will be copied as private and have explicit `private` ACL
+    set.

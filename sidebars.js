@@ -73,6 +73,7 @@ const sidebars = {
         "objects/presigned",
         "objects/upload-via-html-form",
         "objects/access-objects-via-cookies",
+        "objects/acl",
       ],
     },
     {

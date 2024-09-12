@@ -71,3 +71,13 @@ So for the object we just uploaded, the virtual-hosted–style URL would be:
 $ wget https://foo-public-bucket.fly.storage.tigris.dev/bar.txt -O- -q
 bar
 ```
+
+:::info
+
+You can have a mix of public and private objects in a public bucket. By default,
+all objects inherit the access control settings of the bucket they are in. If a
+bucket is `public-read`, all objects are publicly readable. If you want to make
+an object private, you can set the object ACL to `private`. See the
+[Object ACLs](../objects/acl.md) guide for more information.
+
+:::

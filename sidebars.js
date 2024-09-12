@@ -56,7 +56,7 @@ const sidebars = {
       label: "Buckets",
       items: [
         "buckets/create-bucket",
-        "buckets/public-access",
+        "buckets/public-bucket",
         "buckets/cors",
         "buckets/custom-domain",
         "buckets/objects-expiration",
@@ -73,6 +73,7 @@ const sidebars = {
         "objects/presigned",
         "objects/upload-via-html-form",
         "objects/access-objects-via-cookies",
+        "objects/acl",
       ],
     },
     {

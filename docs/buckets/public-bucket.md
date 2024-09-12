@@ -26,7 +26,8 @@ contents of the bucket `foo-public-bucket`.
 
 ## Accessing objects in a public bucket
 
-Objects in a public bucket can be accessed without any authentication.
+Objects in a public bucket (by default) can be read without any authentication.
+However, only those with access to the bucket can write objects.
 
 Let's upload a file to our public bucket:
 
@@ -37,7 +38,7 @@ $ aws s3api --endpoint-url https://fly.storage.tigris.dev put-object --bucket fo
 }
 ```
 
-Now, we can now access this file without any authentication.
+Now, anyone can read this file without authentication.
 
 ### Path-style request
 

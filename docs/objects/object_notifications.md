@@ -1,0 +1,118 @@
+# Object Notifications
+
+Tigris object notifications allow you to receive notifications via a webhook.
+These events allow you to keep track of when objects are created, updated, or
+deleted for a specific bucket.
+
+## Enable Object Notifications via Console (TODO)
+
+To enable object notifications, you need to set up a webhook in the Tigris
+Console.
+
+1. Go to the Tigris Console and select your project.
+2. Navigate to the "Settings" page.
+3. Scroll down to the "Webhooks" section.
+4. Click on the "Create Webhook" button.
+5. Fill in the required fields:
+   - **Name**: Give your webhook a name.
+
+## Webhook
+
+Object notifications are delivered via a webhook, and obey the following rules:
+
+- Tigris will make an HTTP POST post request to the webhook URL with the event
+  payload.
+- A `200` status code acknowledges the request was successful.
+- If a `200` status is not received, Tigris will retry for a maximum of 3 times
+  before giving up and marking the notifications as sent.
+- If a webhook request takes longer than 5 seconds the request will be aborted
+  and retried.
+
+## Webhook Authentication
+
+Tigris supports basic authentication and token authentication for webhooks. When
+configuring the webhook in the Tigris Console, you can choose the authentication
+type and provide the necessary credentials.
+
+For basic authentication, the header will set as follows:
+
+`Authorization: Basic <base64 encoded username:password>`
+
+For token authentication, the header will set as follows:
+
+`Authorization: Bearer <token>`
+
+## Notification Types
+
+Tigris currently supports the following notification types:
+
+- `OBJECT_CREATED_PUT`: When an object is created or updated.
+- `OBJECT_DELETED`: When an object is deleted.
+
+:::note Move events will be supported in the future. :::
+
+## Notification Format
+
+Each notification will be a JSON object with the following fields:
+
+| Property     | Type   | Description                                                  |
+| ------------ | ------ | ------------------------------------------------------------ |
+| Records      | Array  | An array of notification events                              |
+| eventVersion | String | Version of the event structure                               |
+| eventSource  | String | Source of the event                                          |
+| eventName    | String | Type of event (e.g., "OBJECT_CREATED_PUT", "OBJECT_DELETED") |
+| eventTime    | String | Timestamp of the event in RFC3339 format                     |
+| bucket       | String | Name of the bucket where the event occurred                  |
+| object       | Object | Details of the object involved in the event                  |
+| object.key   | String | The key (path) of the object within the bucket               |
+| object.size  | Number | Size of the object in bytes                                  |
+| object.eTag  | String | Entity tag (ETag) of the object, typically an MD5 hash       |
+
+An example notification payload is:
+
+```json
+{
+  "Records": [
+    {
+      "eventVersion": "1",
+      "eventSource": "tigris",
+      "eventName": "OBJECT_CREATED_PUT",
+      "eventTime": "2023-05-15T10:30:00.000Z",
+      "bucket": "my-bucket",
+      "object": {
+        "key": "path/to/myfile.txt",
+        "size": 1024,
+        "eTag": "d41d8cd98f00b204e9800998ecf8427e"
+      }
+    },
+    {
+      "eventVersion": "1",
+      "eventSource": "tigris",
+      "eventName": "OBJECT_DELETED",
+      "eventTime": "2023-05-15T11:45:00.000Z",
+      "bucket": "my-bucket",
+      "object": {
+        "key": "path/to/anotherfile.jpg",
+        "size": 2048,
+        "eTag": "c4ca4238a0b923820dcc509a6f75849b"
+      }
+    }
+  ]
+}
+```
+
+## Notification ordering guarantees and delivery
+
+Tigris Object Notifications are designed to be delivered at least once. This
+means that in rare cases, you might receive duplicate notifications for the same
+event. Aim to design your application to handle potential duplicates.
+
+Due to Tigris being a globally distributed object store, notifications can be
+sent out of order. This is due to objects being modified in multiple regions. A
+single region then collates those events and sends them to the webhook. The
+`Last-Modified` timestamp can be used to determine the order of the events.
+
+## Next steps
+
+- Check out the [Example Webhook](/docs/sdks/s3/aws-go-sdk.md#webhook) for more
+  details on how to use them in your application.

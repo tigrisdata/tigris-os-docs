@@ -463,3 +463,62 @@ func main() {
 }
 
 ```
+
+## Webhook
+
+TODO: Add authentication example
+
+Below is an example of how to use
+[webhook](/docs/objects/object_notifications.md) with the AWS Go SDK.
+
+```go
+type ObjectNotificationReq struct {
+	Records []*ObjectNotificationEvent `json:"Records"`
+}
+
+type ObjectNotificationEvent struct {
+	EventVersion string       `json:"eventVersion"`
+	EventSource  string       `json:"eventSource"`
+	EventName    string       `json:"eventName"`
+	EventTime    string       `json:"eventTime"`
+	Bucket       string       `json:"bucket"`
+	Object       *EventObject `json:"object"`
+}
+
+type EventObject struct {
+	Key  string `json:"key"`
+	Size int32  `json:"size"`
+	ETag string `json:"eTag"`
+}
+
+func noAuth(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Error reading request body", http.StatusInternalServerError)
+		return
+	}
+	defer r.Body.Close()
+
+	var req ObjectNotificationReq
+	err = json.Unmarshal(body, &req)
+	if err != nil {
+		http.Error(w, "Error unmarshalling request body", http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Println("Notification received:")
+	for _, record := range req.Records {
+		fmt.Printf("time: %v, event: %v, bucket: %v, key: %v\n", record.EventTime, record.EventName, record.Bucket, record.Object.Key)
+	}
+
+	fmt.Fprint(w, "OK")
+}
+
+func main() {
+	http.HandleFunc("/log", logEndpoint)
+	http.HandleFunc("/no-auth-webhook", noAuth)
+
+	log.Println("Server running on http://localhost:8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+```

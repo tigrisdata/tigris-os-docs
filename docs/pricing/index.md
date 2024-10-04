@@ -16,6 +16,7 @@ Tigris pricing is based on the following components:
 | Data Storage                                  | $0.02/GB/month        |
 | Class A Requests: PUT, COPY, POST, LIST       | $0.005/1000 requests  |
 | Class B Requests: GET, SELECT, and all others | $0.0005/1000 requests |
+| Object Notifications                          | $0.01/1000 events     |
 
 ## Free allowances
 

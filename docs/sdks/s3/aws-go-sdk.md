@@ -466,10 +466,8 @@ func main() {
 
 ## Webhook
 
-TODO: Add authentication example
-
 Below is an example of how to use
-[webhook](/docs/objects/object_notifications.md) with the AWS Go SDK.
+[webhook](/docs/buckets/object_notifications.md) with the AWS Go SDK.
 
 ```go
 type ObjectNotificationReq struct {
@@ -491,7 +489,7 @@ type EventObject struct {
 	ETag string `json:"eTag"`
 }
 
-func noAuth(w http.ResponseWriter, r *http.Request) {
+func eventReceiver(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Error reading request body", http.StatusInternalServerError)
@@ -506,17 +504,52 @@ func noAuth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("Notification received:")
+	fmt.Println("Events:")
 	for _, record := range req.Records {
 		fmt.Printf("time: %v, event: %v, bucket: %v, key: %v\n", record.EventTime, record.EventName, record.Bucket, record.Object.Key)
 	}
 
-	fmt.Fprint(w, "OK")
+	fmt.Fprint(w, "ok")
+}
+
+func basicAuth(next http.HandlerFunc, username, password string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		auth := r.Header.Get("Authorization")
+		if auth == "" {
+			w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		payload, _ := base64.StdEncoding.DecodeString(strings.TrimPrefix(auth, "Basic "))
+		pair := strings.SplitN(string(payload), ":", 2)
+
+		if len(pair) != 2 || subtle.ConstantTimeCompare([]byte(pair[0]), []byte(username)) != 1 || subtle.ConstantTimeCompare([]byte(pair[1]), []byte(password)) != 1 {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	}
+}
+
+func tokenAuth(next http.HandlerFunc, token string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		auth := r.Header.Get("Authorization")
+		if auth == "" || !strings.HasPrefix(auth, "Bearer ") || subtle.ConstantTimeCompare([]byte(strings.TrimPrefix(auth, "Bearer ")), []byte(token)) != 1 {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+		fmt.Println("token auth successful")
+
+		next.ServeHTTP(w, r)
+	}
 }
 
 func main() {
-	http.HandleFunc("/log", logEndpoint)
-	http.HandleFunc("/no-auth-webhook", noAuth)
+	http.HandleFunc("/no-auth", eventReceiver)
+	http.HandleFunc("/basic-auth", basicAuth(eventReceiver, "user", "pass"))
+	http.HandleFunc("/token-auth", tokenAuth(eventReceiver, "secret-token-pass"))
 
 	log.Println("Server running on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))

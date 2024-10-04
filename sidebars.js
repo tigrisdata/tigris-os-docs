@@ -60,6 +60,7 @@ const sidebars = {
         "buckets/cors",
         "buckets/custom-domain",
         "buckets/objects-expiration",
+        "buckets/object_notifications",
       ],
     },
     {
@@ -74,7 +75,6 @@ const sidebars = {
         "objects/upload-via-html-form",
         "objects/access-objects-via-cookies",
         "objects/acl",
-        "objects/object_notifications",
       ],
     },
     {

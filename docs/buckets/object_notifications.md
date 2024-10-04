@@ -101,6 +101,10 @@ An example notification payload is:
 }
 ```
 
+## Pricing
+
+See [Pricing](/docs/pricing/index.md) for how object notifications are charged.
+
 ## Notification ordering guarantees and delivery
 
 Tigris Object Notifications are designed to be delivered at least once. This

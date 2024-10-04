@@ -76,3 +76,10 @@ public static void Main(string[] args)
     }
 }
 ```
+
+:::note
+
+Tigris currently does not support chunk encoding. You must set
+`UseChunkEncoding` to `false` in the `PutObjectRequest`.
+
+:::

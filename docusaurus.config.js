@@ -36,7 +36,6 @@ const config = {
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
           breadcrumbs: false,
-          editUrl: "https://github.com/tigrisdata/tigris-os-docs/blob/main",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
         },

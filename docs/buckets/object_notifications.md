@@ -16,6 +16,12 @@ Console.
 5. Fill in the required fields:
    - **Name**: Give your webhook a name.
 
+Here's a short video demonstration on enabling object notifications:
+
+<a href="https://www.loom.com/share/37e407ecb5b64cada3aa418e3a2c1df6" target="_blank">
+  <img src="https://cdn.loom.com/sessions/thumbnails/37e407ecb5b64cada3aa418e3a2c1df6-f9556cf7889fc886-full-play.gif" />
+</a>
+
 ## Webhook
 
 Object notifications are delivered via a webhook, and obey the following rules:

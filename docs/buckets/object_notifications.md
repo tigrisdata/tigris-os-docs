@@ -7,14 +7,7 @@ deleted for a specific bucket.
 ## Enable Object Notifications via Console (TODO)
 
 To enable object notifications, you need to set up a webhook in the Tigris
-Console.
-
-1. Go to the Tigris Console and select your project.
-2. Navigate to the "Settings" page.
-3. Scroll down to the "Webhooks" section.
-4. Click on the "Create Webhook" button.
-5. Fill in the required fields:
-   - **Name**: Give your webhook a name.
+Console. This can be done in `Settings` for the bucket.
 
 Here's a short video demonstration on enabling object notifications:
 
@@ -55,7 +48,11 @@ Tigris currently supports the following notification types:
 - `OBJECT_CREATED_PUT`: When an object is created or updated.
 - `OBJECT_DELETED`: When an object is deleted.
 
-:::note Move events will be supported in the future. :::
+:::note
+
+More events will be supported in the future.
+
+:::
 
 ## Notification Format
 

@@ -10,12 +10,13 @@ Tigris pricing is based on the following components:
 
 ## Pricing table
 
-| Component                                     | Price                 |
-| --------------------------------------------- | --------------------- |
-| Data Transfer                                 | Free                  |
-| Data Storage                                  | $0.02/GB/month        |
-| Class A Requests: PUT, COPY, POST, LIST       | $0.005/1000 requests  |
-| Class B Requests: GET, SELECT, and all others | $0.0005/1000 requests |
+| Component                                     | Price                       |
+| --------------------------------------------- | --------------------------- |
+| Data Transfer                                 | Free                        |
+| Data Storage                                  | $0.02/GB/month              |
+| Class A Requests: PUT, COPY, POST, LIST       | $0.005/1000 requests        |
+| Class B Requests: GET, SELECT, and all others | $0.0005/1000 requests       |
+| Object Notifications                          | $0.01/1000 events published |
 
 ## Free allowances
 
@@ -153,5 +154,22 @@ your data in different regions. In such cases, the storage cost is calculated
 based on the number of copies stored. For example, if you elect to store two
 copies of your data in two different regions, you will be charged twice for the
 storage.
+
+</details>
+
+### Events
+
+<details>
+<summary>What is an event and how are they charged?</summary>
+
+An event in Tigris refers to a notification sent to a webhook for changes to
+objects in a bucket. Each webhook request can contain multiple events that
+occurred within a short time frame.
+
+Tigris charges for each individual event, not per webhook request. This means
+that if a single webhook request contains multiple events, you will be charged
+for each of those events separately.
+
+For specific pricing details on events, please refer to our pricing table above.
 
 </details>

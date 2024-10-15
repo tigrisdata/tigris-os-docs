@@ -106,6 +106,11 @@ const sidebars = {
       ],
     },
     {
+      type: "category",
+      label: "Blueprints",
+      items: ["blueprints/docker-registry"],
+    },
+    {
       type: "doc",
       label: "Terraform",
       id: "terraform/index",
@@ -119,13 +124,6 @@ const sidebars = {
       type: "doc",
       label: "Support",
       id: "support/index",
-    },
-    {
-      type: "category",
-      label: "Blueprints",
-      items: [
-        "blueprints/docker-registry",
-      ],
     },
     {
       type: "category",

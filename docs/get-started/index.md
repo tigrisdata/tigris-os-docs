@@ -9,18 +9,20 @@ only via granted access keys.
 
 ## Getting Started
 
-**If you prefer to use the UI, try out [storage.new](https://storage.new/),
-you’ll be up and running in a minute.**
+1. To get started, create an account at [storage.new](https://storage.new/).
+   You'll be up and running in a minute.
+2. Create a bucket with a unique name.
+3. Upload your data using any of the popular
+   [S3 tools, libraries, and extensions](../sdks/s3/) - Tigris is S3-compatible.
 
-If you prefer the CLI, to get started simply follow the following steps:
+:::note
 
-:::note[CLI Quickstart]
+At the moment, the signup process will involve creating or using a Fly.io
+account. We will soon be adding support for other identity providers such as
+GitHub, and Google.
 
-1. [Install flyctl](https://fly.io/docs/flyctl/install/) - the
-   [open source](https://github.com/superfly/flyctl) Fly.io CLI we will use to
-   manage our buckets.
-2. Create an account with `fly auth signup` or log in with `fly auth login`.
-3. Run `fly storage create` to create a bucket.
+Use of Tigris does not require your application to be hosted on Fly.io. Your
+application can be hosted anywhere.
 
 :::
 

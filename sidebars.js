@@ -122,6 +122,13 @@ const sidebars = {
     },
     {
       type: "category",
+      label: "Blueprints",
+      items: [
+        "blueprints/docker-registry",
+      ],
+    },
+    {
+      type: "category",
       label: "Legal",
       items: [
         "legal/privacy-policy",

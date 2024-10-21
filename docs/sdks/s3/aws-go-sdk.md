@@ -471,7 +471,7 @@ Below is an example of how to use
 
 ```go
 type ObjectNotificationReq struct {
-	Records []*ObjectNotificationEvent `json:"Records"`
+	Events []*ObjectNotificationEvent `json:"events"`
 }
 
 type ObjectNotificationEvent struct {
@@ -505,8 +505,8 @@ func eventReceiver(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println("Events:")
-	for _, record := range req.Records {
-		fmt.Printf("time: %v, event: %v, bucket: %v, key: %v\n", record.EventTime, record.EventName, record.Bucket, record.Object.Key)
+	for _, event := range req.Events {
+		fmt.Printf("time: %v, event: %v, bucket: %v, key: %v\n", event.EventTime, event.EventName, event.Bucket, event.Object.Key)
 	}
 
 	fmt.Fprint(w, "ok")

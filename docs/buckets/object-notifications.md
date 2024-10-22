@@ -4,7 +4,7 @@ Tigris object notifications allow you to receive notifications via a webhook.
 These events allow you to keep track of when objects are created, updated, or
 deleted for a specific bucket.
 
-## Enable Object Notifications via Console (TODO)
+## Enable Object Notifications via Tigris Dashboard
 
 To enable object notifications, you need to set up a webhook in the Tigris
 Console. This can be done in `Settings` for the bucket.
@@ -19,7 +19,7 @@ Here's a short video demonstration on enabling object notifications:
 
 Object notifications are delivered via a webhook, and obey the following rules:
 
-- Tigris will make an HTTP POST post request to the webhook URL with the event
+- Tigris will make an HTTP POST request to the webhook URL with the event
   payload.
 - A `200` status code acknowledges the request was successful.
 - If a `200` status is not received, Tigris will retry for a maximum of 3 times

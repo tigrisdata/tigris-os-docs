@@ -60,6 +60,7 @@ const sidebars = {
         "buckets/cors",
         "buckets/custom-domain",
         "buckets/objects-expiration",
+        "buckets/object_notifications",
       ],
     },
     {

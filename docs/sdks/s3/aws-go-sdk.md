@@ -467,7 +467,7 @@ func main() {
 ## Webhook
 
 Below is an example of how to use
-[webhook](/docs/buckets/object_notifications.md) with the AWS Go SDK.
+[webhook](/docs/buckets/object-notifications.md) with the AWS Go SDK.
 
 ```go
 type ObjectNotificationReq struct {

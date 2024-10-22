@@ -157,8 +157,6 @@ storage.
 
 </details>
 
-### Events
-
 <details>
 <summary>What is an event and how are they charged?</summary>
 

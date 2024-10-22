@@ -7,7 +7,7 @@ deleted for a specific bucket.
 ## Enable Object Notifications via Tigris Dashboard
 
 To enable object notifications, you need to set up a webhook in the Tigris
-Console. This can be done in `Settings` for the bucket.
+Dashboard. This can be done in `Settings` for the bucket.
 
 Here's a short video demonstration on enabling object notifications:
 

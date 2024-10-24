@@ -7,10 +7,18 @@ main [Storing Model Weights in Tigris](/blueprints/model-storage) blueprint.
 
 :::
 
-Insert something about needing a fly.io account, link to the hello/tigris page
-for some free capitalism dollars.
+[Fly.io](https://fly.io) is a modern public cloud with datacentres all over the
+world. Some datacentres include GPU machines. For more information about using
+GPUs on fly.io, check out
+[their documentation on how to do this](https://fly.io/docs/gpus/getting-started-gpus/).
 
-First, create a new app for this to live in:
+Coincidentally, all of the regions that Fly.io has GPUs in also have Tigris in
+them, so pulling models is very fast (network line rate fast in many cases). You
+can use [our discount code](https://fly.io/hello/tigris) to complete this
+blueprint on us.
+
+Every fly.io resource lives inside an "app". Create a new app for this to live
+in:
 
 ```text
 fly apps create your-app-name-here

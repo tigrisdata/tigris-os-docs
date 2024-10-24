@@ -1,4 +1,4 @@
-# Using model weights in Tigris on vast.ai
+# Using model weights in Tigris on Vast.ai
 
 :::note
 
@@ -7,11 +7,15 @@ main [Storing Model Weights in Tigris](/blueprints/model-storage) blueprint.
 
 :::
 
-Insert something about what vast.ai is/does.
+Vast.ai is a marketplace for buying and selling GPU compute time. You can
+request time on GPUs provided by the Vast.ai community and run them for cheap
+(typically pennies on the dollar in comparison to other cloud providers). There
+are tradeoffs in terms of data integrity and the GPUs available, but it is one
+of the best places to get GPU compute on consumer grade cards for cheap.
 
-Create an account on [Vast.ai](https://vast.ai) and load it with credit if you
-don't have one already. You should need at least $5 of credit to complete this
-blueprint.
+To get started, create an account on [Vast.ai](https://vast.ai) and load it with
+credit if you don't have one already. You should need at least $5 of credit to
+complete this blueprint.
 
 In your virtual environment that you used to optimize your model, install the
 `vastai` CLI tool:
@@ -27,7 +31,7 @@ Then you need to find an instance. This example requires a GPU with 80 GB of
 vram. Use this command to find a suitable host:
 
 ```text
-vastai search offers 'verified=true cuda_max_good>=12.1 gpu_ram>=64 num_gpus=1 inet_down>=850' -o 'dph+'
+vastai search offers 'verified=true cuda_max_good>=12.1 gpu_ram>=80 num_gpus=1 inet_down>=850' -o 'dph+'
 ```
 
 The first column is the instance ID for the launch command. You can use this to

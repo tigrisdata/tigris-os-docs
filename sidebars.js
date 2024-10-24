@@ -109,10 +109,7 @@ const sidebars = {
     {
       type: "category",
       label: "Blueprints",
-      items: [
-        "blueprints/docker-registry",
-        "blueprints/model-storage/index",
-      ],
+      items: ["blueprints/docker-registry", "blueprints/model-storage/index"],
     },
     {
       type: "doc",

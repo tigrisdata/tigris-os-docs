@@ -204,6 +204,35 @@ not made from the IP address 1.2.3.4.
 These policies are standalone on their own. They need to be attached to the user
 in order to apply them.
 
+#### Create IAM Policy
+
+- Admin users can create IAM policies using the `IAM:CreatePolicy` operation.
+
+Here is AWS CLI reference to create IAM policy
+
+```bash
+aws iam create-policy --policy-name org-level-unique-policy-name --policy-document file:///path/to/policy.json
+```
+
+:::note Tigris's IAM operations are available at URL
+`https://fly.iam.storage.tigris.dev`. So the CLI should be configured to use
+this URL. :::
+
+Policy creation has no impact on authorization until it is attached to a user.
+
+#### Attach IAM Policy
+
+- Admin users can attach IAM policies to users using the `IAM:AttachUserPolicy`
+  operation.
+
+Here is AWS CLI reference to attach IAM policy
+
+```bash
+aws iam attach-user-policy --policy-arn <generated_policy_arn_from_previous_step> --user-name <tid_>
+```
+
+Here `--user-name` can be either human user id or machine user id.
+
 After the user has been authenticated successfully, the system gets the context
 about the current user. This context includes metadata about users like user_id,
 user_role (namespace_owner, regular), machine users (access keys),

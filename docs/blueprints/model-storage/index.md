@@ -24,22 +24,22 @@ enabling your workloads to start quickly no matter where they are in the world.
 ## Getting Started
 
 For this example, we’ll set up
-[Flux.1 [schnell]](https://huggingface.co/black-forest-labs/FLUX.1-schnell) by
-Black Forest Labs for inference with the weights stored in Tigris.
+[SDXL Lightning](https://huggingface.co/ByteDance/SDXL-Lightning) by ByteDance
+for inference with the weights stored in Tigris.
 
 Create two new buckets:
 
-1. One bucket will be for generated flux images, it’ll be called
-   `generated-images` in this article
+1. One bucket will be for generated images, it’ll be called `generated-images`
+   in this article
 2. One bucket will be for storing models, it’ll be called `model-storage` in
    this article
 
 Both of these buckets should be private.
 
-Download the flux-in-tigris template from GitHub:
+Download the `sdxl-in-tigris` template from GitHub:
 
 ```text
-git clone https://github.com/tigrisdata-community/flux-in-tigris
+git clone https://github.com/tigrisdata-community/sdxl-in-tigris
 ```
 
 Enter the folder in a terminal window.
@@ -73,7 +73,7 @@ pip install -r requirements.txt
 Then run the script to upload a model:
 
 ```text
-python scripts/prepare_model.py black-forest-labs/FLUX.1-schnell model-storage
+python scripts/prepare_model.py ByteDance/SDXL-Lightning model-storage
 ```
 
 This will take a bit to run, depending on your internet connection speed, hard
@@ -99,8 +99,20 @@ variables:
   AWS_ENDPOINT_URL_S3=https://fly.storage.tigris.dev
   AWS_REGION=auto
   MODEL_BUCKET_NAME=model-storage
-  MODEL_PATH=black-forest-labs/FLUX.1-schnell
+  MODEL_PATH=ByteDance/SDXL-Lightning
 ```
+
+:::info
+
+Want differently styled images? Try finetunes like
+[Kohaku XL](https://huggingface.co/KBlueLeaf/Kohaku-XL-Zeta)! Pass the Hugging
+Face repo name to the `prepare_model` script like this:
+
+```text
+python scripts/prepare_model.py KBlueLeaf/Kohaku-XL-Zeta model-storage
+```
+
+:::
 
 ## Deploying it
 
@@ -108,11 +120,11 @@ In order to deploy this, you need to build the image with the cog tool. Log into
 a Docker registry and run this command to build and push it:
 
 ```text
-cog push your-docker-username/flux-tigris --use-cuda-base-image false
+cog push your-docker-username/sdxl-tigris --use-cuda-base-image false
 ```
 
 You can now use it with your GPU host of choice as long as it supports Cuda 12.1
-and has at least 80 GB of video memory.
+and has at least 12 GB of video memory.
 
 This example is configured with environment variables. Set the following
 environment variables in your deployments:
@@ -123,7 +135,7 @@ environment variables in your deployments:
 | `AWS_SECRET_ACCESS_KEY` | The secret access key from the runner keypair          |
 |   `AWS_ENDPOINT_URL_S3` | `https://fly.storage.tigris.dev`                       |
 |            `AWS_REGION` | `auto`                                                 |
-|            `MODEL_PATH` | `black-forest-labs/FLUX.1-schnell`                     |
+|            `MODEL_PATH` | `ByteDance/SDXL-Lightning`                             |
 |     `MODEL_BUCKET_NAME` | `model-storage` (replace with your own bucket name)    |
 |    `PUBLIC_BUCKET_NAME` | `generated-images` (replace with your own bucket name) |
 

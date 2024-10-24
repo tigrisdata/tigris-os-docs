@@ -27,11 +27,11 @@ pip install --upgrade vastai;
 Follow Vast.ai's instructions on
 [how to load your API key](https://cloud.vast.ai/cli/).
 
-Then you need to find an instance. This example requires a GPU with 80 GB of
+Then you need to find an instance. This example requires a GPU with 12 GB of
 vram. Use this command to find a suitable host:
 
 ```text
-vastai search offers 'verified=true cuda_max_good>=12.1 gpu_ram>=80 num_gpus=1 inet_down>=850' -o 'dph+'
+vastai search offers 'verified=true cuda_max_good>=12.1 gpu_ram>=12 num_gpus=1 inet_down>=850' -o 'dph+'
 ```
 
 The first column is the instance ID for the launch command. You can use this to
@@ -42,11 +42,24 @@ assemble your launch command. It will be made up out of the following:
 - A signal to the runtime that we need 48 GB of disk space to run this app
 - The onstart command telling the runtime to start the cog process
 
+As a reminder, this example is configured with environment variables. Set the
+following environment variables in your deployments:
+
+|             Envvar name | Value                                                  |
+| ----------------------: | :----------------------------------------------------- |
+|     `AWS_ACCESS_KEY_ID` | The access key ID from the runner keypair              |
+| `AWS_SECRET_ACCESS_KEY` | The secret access key from the runner keypair          |
+|   `AWS_ENDPOINT_URL_S3` | `https://fly.storage.tigris.dev`                       |
+|            `AWS_REGION` | `auto`                                                 |
+|            `MODEL_PATH` | `ByteDance/SDXL-Lightning`                             |
+|     `MODEL_BUCKET_NAME` | `model-storage` (replace with your own bucket name)    |
+|    `PUBLIC_BUCKET_NAME` | `generated-images` (replace with your own bucket name) |
+
 Format all of your environment variables as you would in a `docker run` command.
 EG:
 
 ```text
-"-p 5000:5000 -e AWS_ACCESS_KEY_ID=<runner-keypair-access-key-id> -e AWS_SECRET_ACCESS_KEY=<runner-keypair-secret-access-key> -e AWS_ENDPOINT_URL_S3=https://fly.storage.tigris.dev -e AWS_REGION=auto -e MODEL_BUCKET_NAME=model-storage -e MODEL_PATH=black-forest-labs/FLUX.1-schnell -e PUBLIC_BUCKET_NAME=generated-images"
+"-p 5000:5000 -e AWS_ACCESS_KEY_ID=<runner-keypair-access-key-id> -e AWS_SECRET_ACCESS_KEY=<runner-keypair-secret-access-key> -e AWS_ENDPOINT_URL_S3=https://fly.storage.tigris.dev -e AWS_REGION=auto -e MODEL_BUCKET_NAME=model-storage -e MODEL_PATH=ByteDance/SDXL-Lightning -e PUBLIC_BUCKET_NAME=generated-images"
 ```
 
 Then execute the launch command:
@@ -55,7 +68,7 @@ Then execute the launch command:
 vastai create instance \
   <id-from-search> \
   --image your-docker-username/flux-tigris:latest \
-  --env "-p 5000:5000 -e AWS_ACCESS_KEY_ID=<runner-keypair-access-key-id> -e AWS_SECRET_ACCESS_KEY=<runner-keypair-secret-access-key> -e AWS_ENDPOINT_URL_S3=https://fly.storage.tigris.dev -e AWS_REGION=auto -e MODEL_BUCKET_NAME=model-storage -e MODEL_PATH=black-forest-labs/FLUX.1-schnell -e PUBLIC_BUCKET_NAME=generated-images" \
+  --env "-p 5000:5000 -e AWS_ACCESS_KEY_ID=<runner-keypair-access-key-id> -e AWS_SECRET_ACCESS_KEY=<runner-keypair-secret-access-key> -e AWS_ENDPOINT_URL_S3=https://fly.storage.tigris.dev -e AWS_REGION=auto -e MODEL_BUCKET_NAME=model-storage -e MODEL_PATH=ByteDance/SDXL-Lightning -e PUBLIC_BUCKET_NAME=generated-images" \
   --disk 48 \
   --onstart-cmd "python -m cog.server.http"
 ```
@@ -95,10 +108,10 @@ curl "http://ip:port/predictions/$(uuidgen)" \
   -H "Content-Type: application/json" \
   --data-binary '{
     "input": {
-        "prompt": "The word 'success' in front of the Space Needle, anime depiction, best quality",
-        "aspect_ratio": "16:9",
+        "prompt": "The space needle in Seattle, best quality, masterpiece",
+        "aspect_ratio": "1:1",
         "guidance_scale": 3.5,
-        "num_inference_steps": 50,
+        "num_inference_steps": 4,
         "max_sequence_length": 512,
         "output_format": "png",
         "num_outputs": 1

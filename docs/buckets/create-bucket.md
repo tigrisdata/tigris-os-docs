@@ -12,6 +12,12 @@ to a bucket.
 Buckets and the objects in them are private and can be accessed only via access
 keys that you explicitly grant access permissions to.
 
+## Setting bucket tier
+
+When bucket created in the web console, you can set the default object tier for
+all objects uploaded to it. For more information, see the
+[Tiers](../objects/tiers.md) guide.
+
 ## Creating a bucket using flyctl
 
 To create a bucket for one of your Fly apps, run the following command in the

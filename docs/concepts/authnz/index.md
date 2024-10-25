@@ -214,9 +214,15 @@ Here is AWS CLI reference to create IAM policy
 aws iam create-policy --policy-name org-level-unique-policy-name --policy-document file:///path/to/policy.json
 ```
 
-:::note Tigris's IAM operations are available at URL
-`https://fly.iam.storage.tigris.dev`. So the CLI should be configured to use
-this URL. :::
+:::note
+
+- Tigris's IAM operations are available at URL
+  `https://fly.iam.storage.tigris.dev`.
+
+- You can use environment variable
+  `AWS_ENDPOINT_URL_IAM=https://fly.iam.storage.tigris.dev`
+
+:::
 
 Policy creation has no impact on authorization until it is attached to a user.
 

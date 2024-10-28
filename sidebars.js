@@ -108,8 +108,13 @@ const sidebars = {
     },
     {
       type: "category",
+      label: "Usage patterns",
+      items: ["usage-patterns/index"],
+    },
+    {
+      type: "category",
       label: "Blueprints",
-      items: ["blueprints/docker-registry"],
+      items: ["blueprints/docker-registry", "blueprints/geesefs-linux"],
     },
     {
       type: "doc",

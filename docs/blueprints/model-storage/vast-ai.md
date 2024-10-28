@@ -67,7 +67,7 @@ Then execute the launch command:
 ```text
 vastai create instance \
   <id-from-search> \
-  --image your-docker-username/flux-tigris:latest \
+  --image ghcr.io/tigrisdata-community/runner/sdxl:latest \
   --env "-p 5000:5000 -e AWS_ACCESS_KEY_ID=<runner-keypair-access-key-id> -e AWS_SECRET_ACCESS_KEY=<runner-keypair-secret-access-key> -e AWS_ENDPOINT_URL_S3=https://fly.storage.tigris.dev -e AWS_REGION=auto -e MODEL_BUCKET_NAME=model-storage -e MODEL_PATH=ByteDance/SDXL-Lightning -e PUBLIC_BUCKET_NAME=generated-images" \
   --disk 48 \
   --onstart-cmd "python -m cog.server.http"

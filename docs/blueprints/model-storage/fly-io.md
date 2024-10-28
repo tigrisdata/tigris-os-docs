@@ -52,7 +52,7 @@ fly machine run \
   -e MODEL_PATH=ByteDance/SDXL-Lightning \
   --vm-gpu-kind l40s \
   -r sea \
-  your-docker-username/sdxl-tigris:latest \
+  ghcr.io/tigrisdata-community/runner/sdxl:latest \
   -- python -m cog.server.http --host ::
 ```
 

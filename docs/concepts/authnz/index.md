@@ -134,8 +134,7 @@ The bucket owner is allowed to perform all the operations on their own bucket.
 In addition to the role, Admin users can also further customize the access by
 crafting IAM policies.
 
-IAM policies are used to define the access level of the user. The user can be a
-human user or an access key.
+IAM policies are used to define the access level of the user.
 
 Here is an example of the IAM policy
 
@@ -237,14 +236,14 @@ Here is AWS CLI reference to attach IAM policy
 aws iam attach-user-policy --policy-arn <generated_policy_arn_from_previous_step> --user-name <tid_>
 ```
 
-Here `--user-name` can be either human user id or machine user id.
+Here `--user-name` is access key id.
 
 After the user has been authenticated successfully, the system gets the context
 about the current user. This context includes metadata about users like user_id,
-user_role (namespace_owner, regular), machine users (access keys),
-human_user_id, and so on. Using these users’ metadata, Tigris pulls the attached
-IAM policies for this user from its IAM store. The user's context with regard to
-the bucket is pulled if the user is the owner of the bucket.
+user_role (namespace_owner, regular), machine users (access keys) and so on.
+Using these users’ metadata, Tigris pulls the attached IAM policies for this
+user from its IAM store. The user's context with regard to the bucket is pulled
+if the user is the owner of the bucket.
 
 With this information, Tigris evaluates the access and grants or denies access
 to the operation.

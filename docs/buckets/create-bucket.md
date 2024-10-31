@@ -24,6 +24,32 @@ uploaded to it. The default tier can be one of the following:
 The default tier can be overridden at the object level. For more information,
 see the [Storage Tiers](../objects/tiers.md) guide.
 
+## Creating a bucket using the Dashboard
+
+To create a bucket using the Tigris Dashboard, follow these steps:
+
+1. Go to [storage.new](https://storage.new/).
+2. Enter a unique bucket name.
+3. Choose the default tier for the bucket.
+
+![Create Tigris Bucket](/img/create-bucket.png)
+
+## Creating a bucket using the AWS CLI
+
+Assuming you have the AWS CLI configured as shown in the
+[AWS CLI guide](../sdks/s3/aws-cli.md), you can create a bucket as follows:
+
+```bash
+aws s3api --endpoint-url https://fly.storage.tigris.dev create-bucket --bucket foo-bucket
+```
+
+```text
+$ aws s3api --endpoint-url https://fly.storage.tigris.dev create-bucket --bucket foo-bucket
+{
+    "Location": "/foo-bucket"
+}
+```
+
 ## Creating a bucket using flyctl
 
 To create a bucket for one of your Fly apps, run the following command in the
@@ -63,20 +89,4 @@ AWS_ENDPOINT_URL_S3: https://fly.storage.tigris.dev
 AWS_ACCESS_KEY_ID: xxxxxxxxxxxxxxxxxxxx
 AWS_SECRET_ACCESS_KEY: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 BUCKET_NAME: polished-thunder-5646
-```
-
-## Creating a bucket using the AWS CLI
-
-Assuming you have the AWS CLI configured as shown in the
-[AWS CLI guide](../sdks/s3/aws-cli.md), you can create a bucket as follows:
-
-```bash
-aws s3api --endpoint-url https://fly.storage.tigris.dev create-bucket --bucket foo-bucket
-```
-
-```text
-$ aws s3api --endpoint-url https://fly.storage.tigris.dev create-bucket --bucket foo-bucket
-{
-    "Location": "/foo-bucket"
-}
 ```

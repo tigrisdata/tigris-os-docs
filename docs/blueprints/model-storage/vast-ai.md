@@ -47,8 +47,8 @@ following environment variables in your deployments:
 
 |             Envvar name | Value                                                  |
 | ----------------------: | :----------------------------------------------------- |
-|     `AWS_ACCESS_KEY_ID` | The access key ID from the runner keypair              |
-| `AWS_SECRET_ACCESS_KEY` | The secret access key from the runner keypair          |
+|     `AWS_ACCESS_KEY_ID` | The access key ID from the workload keypair            |
+| `AWS_SECRET_ACCESS_KEY` | The secret access key from the workload keypair        |
 |   `AWS_ENDPOINT_URL_S3` | `https://fly.storage.tigris.dev`                       |
 |            `AWS_REGION` | `auto`                                                 |
 |            `MODEL_PATH` | `ByteDance/SDXL-Lightning`                             |
@@ -59,7 +59,7 @@ Format all of your environment variables as you would in a `docker run` command.
 EG:
 
 ```text
-"-p 5000:5000 -e AWS_ACCESS_KEY_ID=<runner-keypair-access-key-id> -e AWS_SECRET_ACCESS_KEY=<runner-keypair-secret-access-key> -e AWS_ENDPOINT_URL_S3=https://fly.storage.tigris.dev -e AWS_REGION=auto -e MODEL_BUCKET_NAME=model-storage -e MODEL_PATH=ByteDance/SDXL-Lightning -e PUBLIC_BUCKET_NAME=generated-images"
+"-p 5000:5000 -e AWS_ACCESS_KEY_ID=<workload-keypair-access-key-id> -e AWS_SECRET_ACCESS_KEY=<workload-keypair-secret-access-key> -e AWS_ENDPOINT_URL_S3=https://fly.storage.tigris.dev -e AWS_REGION=auto -e MODEL_BUCKET_NAME=model-storage -e MODEL_PATH=ByteDance/SDXL-Lightning -e PUBLIC_BUCKET_NAME=generated-images"
 ```
 
 Then execute the launch command:
@@ -67,8 +67,8 @@ Then execute the launch command:
 ```text
 vastai create instance \
   <id-from-search> \
-  --image ghcr.io/tigrisdata-community/runner/sdxl:latest \
-  --env "-p 5000:5000 -e AWS_ACCESS_KEY_ID=<runner-keypair-access-key-id> -e AWS_SECRET_ACCESS_KEY=<runner-keypair-secret-access-key> -e AWS_ENDPOINT_URL_S3=https://fly.storage.tigris.dev -e AWS_REGION=auto -e MODEL_BUCKET_NAME=model-storage -e MODEL_PATH=ByteDance/SDXL-Lightning -e PUBLIC_BUCKET_NAME=generated-images" \
+  --image yasomimi/sdxl-tigris:latest:latest \
+  --env "-p 5000:5000 -e AWS_ACCESS_KEY_ID=<workload-keypair-access-key-id> -e AWS_SECRET_ACCESS_KEY=<workload-keypair-secret-access-key> -e AWS_ENDPOINT_URL_S3=https://fly.storage.tigris.dev -e AWS_REGION=auto -e MODEL_BUCKET_NAME=model-storage -e MODEL_PATH=ByteDance/SDXL-Lightning -e PUBLIC_BUCKET_NAME=generated-images" \
   --disk 48 \
   --onstart-cmd "python -m cog.server.http"
 ```

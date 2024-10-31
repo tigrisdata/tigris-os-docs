@@ -29,8 +29,8 @@ following environment variables in your deployments:
 
 |             Envvar name | Value                                                  |
 | ----------------------: | :----------------------------------------------------- |
-|     `AWS_ACCESS_KEY_ID` | The access key ID from the runner keypair              |
-| `AWS_SECRET_ACCESS_KEY` | The secret access key from the runner keypair          |
+|     `AWS_ACCESS_KEY_ID` | The access key ID from the workload keypair            |
+| `AWS_SECRET_ACCESS_KEY` | The secret access key from the workload keypair        |
 |   `AWS_ENDPOINT_URL_S3` | `https://fly.storage.tigris.dev`                       |
 |            `AWS_REGION` | `auto`                                                 |
 |            `MODEL_PATH` | `ByteDance/SDXL-Lightning`                             |
@@ -43,8 +43,8 @@ Then create a GPU machine with an l40s GPU in it in Seattle:
 fly machine run \
   -a your-app-name-here \
   --name sdxl-lightning \
-  -e AWS_ACCESS_KEY_ID=<runner-keypair-access-key-id> \
-  -e AWS_SECRET_ACCESS_KEY=<runner-keypair-secret-access-key> \
+  -e AWS_ACCESS_KEY_ID=<workload-keypair-access-key-id> \
+  -e AWS_SECRET_ACCESS_KEY=<workload-keypair-secret-access-key> \
   -e AWS_ENDPOINT_URL_S3=https://fly.storage.tigris.dev \
   -e AWS_REGION=auto \
   -e MODEL_BUCKET_NAME=model-storage \
@@ -52,7 +52,7 @@ fly machine run \
   -e MODEL_PATH=ByteDance/SDXL-Lightning \
   --vm-gpu-kind l40s \
   -r sea \
-  ghcr.io/tigrisdata-community/runner/sdxl:latest \
+  yasomimi/sdxl-tigris:latest:latest \
   -- python -m cog.server.http --host ::
 ```
 

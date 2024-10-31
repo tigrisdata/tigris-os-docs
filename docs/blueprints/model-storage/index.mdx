@@ -119,7 +119,7 @@ Tigris console and create a new access key. Don't assign any permissions to it.
 Copy the access key ID and secret access keys into either your notes or a
 password manager, you will not be able to see them again. These credentials will
 be used later to deploy your app in the cloud. This keypair will be referred to
-as the `runner-keypair` in this tutorial.
+as the `workload-keypair` in this tutorial.
 
 Open `iam/model-runner.json` in your text editor. Change all references for
 `model-storage` and `generated-images` to the buckets you created earlier.
@@ -147,7 +147,7 @@ Attach it to the token you just created:
 ```text
 aws iam attach-user-policy \
   --policy-arn arn:aws:iam::flyio_hunter2hunter2:policy/sdxl-runner \
-  --user-name tid_runner_keypair_access_key_id
+  --user-name tid_workload_keypair_access_key_id
 ```
 
 ### Running inference
@@ -172,8 +172,8 @@ environment variables in your deployments:
 
 |             Envvar name | Value                                                  |
 | ----------------------: | :----------------------------------------------------- |
-|     `AWS_ACCESS_KEY_ID` | The access key ID from the runner keypair              |
-| `AWS_SECRET_ACCESS_KEY` | The secret access key from the runner keypair          |
+|     `AWS_ACCESS_KEY_ID` | The access key ID from the workload keypair            |
+| `AWS_SECRET_ACCESS_KEY` | The secret access key from the workload keypair        |
 |   `AWS_ENDPOINT_URL_S3` | `https://fly.storage.tigris.dev`                       |
 |            `AWS_REGION` | `auto`                                                 |
 |            `MODEL_PATH` | `ByteDance/SDXL-Lightning`                             |
@@ -184,4 +184,5 @@ You can run this on any platform you want that has the right GPUs, however we
 have tutorials for a few platforms to try:
 
 - [Fly.io](./fly-io)
+- [Skypilot](./skypilot)
 - [Vast.ai](./vast-ai)

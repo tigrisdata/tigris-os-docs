@@ -2,7 +2,8 @@
 
 Tigris pricing is based on the following components:
 
-- Data Storage: the amount of data stored in your buckets.
+- Data Storage: the amount of data stored in your buckets and the storage tier
+  used.
 - Requests: the number of requests made to your buckets and objects. The request
   costs are based on the type of request and are calculated based on the
   quantity of requests.
@@ -10,19 +11,21 @@ Tigris pricing is based on the following components:
 
 ## Pricing table
 
-| Component                                     | Price                       |
-| --------------------------------------------- | --------------------------- |
-| Data Transfer                                 | Free                        |
-| Data Storage                                  | $0.02/GB/month              |
-| Class A Requests: PUT, COPY, POST, LIST       | $0.005/1000 requests        |
-| Class B Requests: GET, SELECT, and all others | $0.0005/1000 requests       |
-| Object Notifications                          | $0.01/1000 events published |
+| Component                                     | Standard Tier               | Infrequent Access Tier      | Archive Tier                |
+| --------------------------------------------- | --------------------------- | --------------------------- | --------------------------- |
+| Data Storage                                  | $0.02/GB/month              | $0.01/GB/month              | $0.004/GB/month             |
+| Class A Requests: PUT, COPY, POST, LIST       | $0.005/1000 requests        | $0.005/1000 requests        | $0.005/1000 requests        |
+| Class B Requests: GET, SELECT, and all others | $0.0005/1000 requests       | $0.0005/1000 requests       | $0.0005/1000 requests       |
+| Data Retrieval                                | Free                        | $0.01/GB                    | Free                        |
+| Minimum Storage Retention                     | -                           | 30 days                     | 90 days                     |
+| Object Notifications                          | $0.01/1000 events published | $0.01/1000 events published | $0.01/1000 events published |
+| Egress (Data Transfer to Internet)            | Free                        | Free                        | Free                        |
 
 ## Free allowances
 
 We offer a free allowance as follows:
 
-- 5GB of data storage per month
+- 5GB of data storage (standard tier) per month
 - 10,000 PUT, COPY, POST, LIST requests per month
 - 100,000 GET, SELECT, and all other requests per month
 
@@ -41,8 +44,8 @@ Let's say you have a bucket with 10GB of data with an average size of 1MB per
 object, and you make 100,000 GET requests to the objects in the bucket. You will
 be charged as follows:
 
-- Data Storage: 5GB x $0/GB/month (free allowance) + 5GB x $0.02/GB/month =
-  $0.10
+- Data Storage (standard tier): 5GB x $0/GB/month (free allowance) + 5GB x
+  $0.02/GB/month = $0.10
 - PUT Requests: 10,000 x $0/1000 requests (free allowance) = $0
 - GET Requests: 100,000 x $0/1000 requests (free allowance) = $0
 - Data Transfer: $0
@@ -53,8 +56,8 @@ Let's say you have a bucket with 100GB of data with an average size of 1MB per
 object, and you make 1,000,000 GET requests to the objects in the bucket. You
 will be charged as follows:
 
-- Data Storage: 5GB x $0/GB/month (free allowance) + 95GB x $0.02/GB/month =
-  $1.90
+- Data Storage (standard tier): 5GB x $0/GB/month (free allowance) + 95GB x
+  $0.02/GB/month = $1.90
 - PUT Requests: 10,000 x $0/1000 requests (free allowance) + 90,000 x
   $0.005/1000 requests = $0.45
 - GET Requests: 100,000 x $0/1000 requests + 900,000 x $0.0005/1000 requests =
@@ -140,6 +143,17 @@ averaging the daily peak storage over a billing period (1 month). Example:
 - Storing 10 GB for 12 days in June, and then 20 GB for the rest 18 days will be
   charged as 16 GB/month
   - 10 GB x 12/30 + 20 GB x 18/30 = 16 GB/month
+
+</details>
+
+<details>
+<summary>How am I charged when restoring data from archive tier?</summary>
+
+When you restore data from the Archive tier, the data is moved to the Standard
+tier for the duration you specify. You will be charged for the data storage in
+the Standard tier for the duration of the restoration. Once the restoration
+period is over, the data is moved back to the Archive tier, and you will be
+charged for the data storage in the Archive tier.
 
 </details>
 

@@ -67,6 +67,7 @@ const sidebars = {
       type: "category",
       label: "Objects",
       items: [
+        "objects/tiers",
         "objects/caching",
         "objects/object_regions",
         "objects/conditionals",

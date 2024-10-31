@@ -12,11 +12,17 @@ to a bucket.
 Buckets and the objects in them are private and can be accessed only via access
 keys that you explicitly grant access permissions to.
 
-## Setting bucket tier
+## Bucket tier
 
-When bucket created in the web console, you can set the default object tier for
-all objects uploaded to it. For more information, see the
-[Tiers](../objects/tiers.md) guide.
+When you create a bucket, you can set the default object tier for all objects
+uploaded to it. The default tier can be one of the following:
+
+- Standard
+- Infrequent Access
+- Archive
+
+The default tier can be overridden at the object level. For more information,
+see the [Storage Tiers](../objects/tiers.md) guide.
 
 ## Creating a bucket using flyctl
 

@@ -1,4 +1,4 @@
-# Object storage tiers
+# Storage Tiers
 
 Tigris offers object storage tiers to optimize storage costs based on the access
 patterns of your data. There are three storage tiers available:
@@ -9,7 +9,7 @@ patterns of your data. There are three storage tiers available:
 
 ## Standard tier
 
-The default storage class. It provides high durability, availability, and
+The default storage tier. It provides high durability, availability, and
 performance for frequently accessed data.
 
 ## Infrequent Access tier
@@ -19,28 +19,30 @@ access when needed.
 
 ## Archive tier
 
-Low-cost storage for data archiving. Long-term data archiving with infrequent
-access. The data is not immediately available for access and requires
-restoration before it can be accessed. Restoration time is about 1 hour.
+Low-cost storage for data archiving with infrequent access. The data is not
+immediately available for access and requires restoration before it can be
+accessed. Restoration time is typically around 1 hour.
 
 ## Setting object tier
 
-The default tier for all objects stored in a particular bucket can be specified
-in the [bucket configuration](../buckets/create-bucket.md#setting-bucket-tier)
-during bucket creation time. If no tier is provided at bucket creation time, it
+Tigris allows setting the storage tier at both the bucket and object level. The
+default tier for all objects stored in a particular bucket can be specified in
+the [bucket configuration](../buckets/create-bucket.md#bucket-tier) during
+bucket creation time. If no tier is provided at bucket creation time, it
 defaults to Standard.
 
-Object tier can also be set at the object creation time. This overrides the tier
-specified in the bucket configuration. To set the object tier, use the
-`--storage-class` flag with the `put-object` AWS CLI or corresponding field of
-PutObject, CreateMultipartUpload SDK APIs input. REST API users can set the
-`x-amz-storage-class` header.
+The object tier can also be set during PUT Object requests to override the
+bucket's default tier. To set the object tier:
+
+- use the `--storage-class` flag with the `put-object` AWS CLI or corresponding
+  field of PutObject, CreateMultipartUpload SDK APIs input, or
+- set the `x-amz-storage-class` header when using the REST API.
 
 Tigris accepts S3 compatible storage classes:
 
-- STANDARD - for standard
-- STANDARD_IA - for infrequent access
-- GLACIER - for archive
+- STANDARD: for Standard tier
+- STANDARD_IA: for Infrequent Access tier
+- GLACIER: for Archive tier
 
 ### Example with AWS CLI
 
@@ -83,9 +85,9 @@ Ongoing restore requests will have the `Restore: ongoing-request="true"` header
 in the response. Once the restore is complete, the `Restore` header will contain
 the expiry date when the object will be moved back to the Archive storage class:
 
-```bash
+```json
 {
-    "Restore": "ongoing-request=\"false\" expiry-date=\"Fri, 01 Nov 2024 02:00:00 GMT\"",
-    "StorageClass": "GLACIER"
+  "Restore": "ongoing-request=\"false\" expiry-date=\"Fri, 01 Nov 2024 02:00:00 GMT\"",
+  "StorageClass": "GLACIER"
 }
 ```

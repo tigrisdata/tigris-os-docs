@@ -1,6 +1,6 @@
 # Service Level Agreement
 
-_Last updated: May 29, 2024_
+_Last updated: Oct 31, 2024_
 
 The following Service Level Agreement between Tigris Data, Inc., a Delaware
 corporation ("Tigris Data," "we," or "us"), and Customer will apply to the
@@ -11,9 +11,10 @@ during the applicable Subscription Term.
 
 ### 1. Uptime Commitment
 
-Tigris Data will provide Actual Availability for the Service for at least 99.9%
-of the total time in each calendar month during the Subscription Term, as
-measured by Tigris Data (the "Uptime Commitment").
+Tigris Data will use commercially reasonable efforts to make the Service
+available with Actual Availability as described below in each calendar month
+during the Subscription Term, as measured by Tigris Data (the "Uptime
+Commitment").
 
 ### 2. Service Credits
 
@@ -28,12 +29,22 @@ Tigris Data for the affected Services for the relevant calendar month
 corresponding with the Actual Availability provided (as a percentage of total
 time) for the relevant calendar month, as set forth in the table below.
 
+For requests to Standrad tier, and Archive tier, the following table applies:
+
 | **Actual Availability**                            | **Credit Percentage** |
 | -------------------------------------------------- | --------------------- |
 | Less than 99.9% but greater than or equal to 99.0% | 10%                   |
 | Less than 99.0% but greater than or equal to 98.0% | 15%                   |
 | Less than 98.0% but greater than or equal to 96.0% | 20%                   |
 | Less than 96.0%                                    | 30%                   |
+
+For requests to Infrequent Access tier, the following table applies:
+
+| **Actual Availability**                            | **Credit Percentage** |
+| -------------------------------------------------- | --------------------- |
+| Less than 99.0% but greater than or equal to 98.0% | 10%                   |
+| Less than 98.0% but greater than or equal to 95.0% | 15%                   |
+| Less than 95.0%                                    | 30%                   |
 
 ### 3. Credit Requests and Payment
 

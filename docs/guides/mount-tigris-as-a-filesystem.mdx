@@ -1,8 +1,9 @@
-# Mount a Tigris bucket with geesefs
+# Mount Tigris as a Filesystem
 
-[geesefs](https://github.com/yandex-cloud/geesefs) lets you mount S3 buckets to
-your local Linux system. This tool works with Tigris too, letting you mount any
-Tigris bucket as if it was a normal Linux filesystem.
+For AI workloads, most runtimes assume data is accessible via a filesystem. By mounting a Tigris bucket as a filesystem, data is no longer limited by local storage nor memory capacity.
+
+Aftern testing filesystems for performance and reliability, we recommend [GeeseFS](https://github.com/yandex-cloud/geesefs). GeeseFS lets you mount S3 buckets to
+your local Linux system. Since Tigris is S3-compatible, you can use GeeseFS to mount any Tigris bucket as if it was a normal Linux filesystem.
 
 - Install geesefs
 - Configure credentials
@@ -30,41 +31,21 @@ bucket in each user's home directory.
 
 Download the latest release for your machine from
 [the list of geesefs releases](https://github.com/yandex-cloud/geesefs/releases)
-to `/usr/local/bin`:
+to `/usr/local/bin` and mark it as executable:
 
 <details>
 <summary>amd64 Linux</summary>
 
 ```text
 sudo wget -O /usr/local/bin/geesefs https://github.com/yandex-cloud/geesefs/releases/download/v0.42.0/geesefs-linux-amd64
-```
-
-</details>
-<details>
-<summary>arm64/aarch64 Linux</summary>
-
-```text
-sudo wget -O /usr/local/bin/geesefs https://github.com/yandex-cloud/geesefs/releases/download/v0.42.0/geesefs-linux-arm64
-```
-
-</details>
-
-Then mark it as executable:
-
-```
 sudo chmod +x /usr/local/bin/geesefs
 ```
 
+</details>
+
 ## Configure credentials
 
-Create a new access key with edit permissions on your target bucket. Edit
-`~/.aws/credentials` with a text editor:
-
-```
-[default]
-aws_access_key_id = <paste access key starting with tid_>
-aws_secret_access_key = <paste secret access key starting with tsec_>
-```
+Create a new access key with edit permissions on your target bucket as described in the guide [here](placeholder). Configure the aws-cli to utilize the credentials as described in the guide [here](https://www.tigrisdata.com/docs/sdks/s3/aws-cli/).
 
 ## Mount bucket on login with systemd
 
@@ -110,4 +91,4 @@ $ mount | grep geesefs
 mybucket on /home/opc/data type fuse.geesefs (rw,nosuid,nodev,relatime,user_id=1000,group_id=1000,default_permissions)
 ```
 
-You did it!
+You did it! You now have a performant filesystem backed by bottomless object storage.

@@ -109,7 +109,13 @@ const sidebars = {
     {
       type: "category",
       label: "Blueprints",
-      items: ["blueprints/docker-registry", "blueprints/model-storage/index"],
+      items: [
+        "blueprints/docker-registry",
+        "blueprints/limited-access-key",
+        "blueprints/model-storage/fly-io",
+        "blueprints/model-storage/skypilot",
+        "blueprints/model-storage/vast-ai",
+      ],
     },
     {
       type: "doc",

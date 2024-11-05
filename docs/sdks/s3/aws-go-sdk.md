@@ -109,7 +109,10 @@ func IfMatch(value string) func(*s3.Options) {
 }
 
 func main() {
-	cfg, err := config.LoadDefaultConfig(context.TODO())
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		log.Printf("Couldn't load default configuration. Here's why: %v\n", err)
 		return
@@ -122,7 +125,7 @@ func main() {
 	})
 
 	// read
-	out, err := client.GetObject(context.TODO(),
+	out, err := client.GetObject(ctx,
 		&s3.GetObjectInput{
 			Bucket: aws.String("mybucket"),
 			Key:    aws.String("mykey"),
@@ -138,10 +141,8 @@ func main() {
 		log.Fatalf("unable to read object body: %v", err)
 	}
 
-	// modify
-
 	// write
-	out1, err := client.PutObject(context.TODO(),
+	out1, err := client.PutObject(ctx,
 		&s3.PutObjectInput{
 			Bucket: aws.String("mybucket"),
 			Key:    aws.String("mykey"),
@@ -180,13 +181,16 @@ type Client struct {
 
 // GetObject makes a presigned request that can be used to get an object from a bucket.
 func (p *Client) GetObject(
-	bucket string, key string, expireSecs int64,
+	ctx context.Context,
+	bucket string,
+	key string,
+	expiry time.Duration,
 ) (*v4.PresignedHTTPRequest, error) {
-	request, err := p.PresignClient.PresignGetObject(context.TODO(), &s3.GetObjectInput{
+	request, err := p.PresignClient.PresignGetObject(ctx, &s3.GetObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	}, func(opts *s3.PresignOptions) {
-		opts.Expires = time.Duration(expireSecs * int64(time.Second))
+		opts.Expires = expiry
 	})
 	if err != nil {
 		log.Printf("Couldn't get a presigned request to get %v:%v. Here's why: %v\n",
@@ -197,13 +201,16 @@ func (p *Client) GetObject(
 
 // PutObject makes a presigned request that can be used to put an object in a bucket.
 func (p *Client) PutObject(
-	bucket string, object string, expireSecs int64,
+	ctx context.Context,
+	bucket string,
+	object string,
+	expiry time.Duration,
 ) (*v4.PresignedHTTPRequest, error) {
-	request, err := p.PresignClient.PresignPutObject(context.TODO(), &s3.PutObjectInput{
+	request, err := p.PresignClient.PresignPutObject(ctx, &s3.PutObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(object),
 	}, func(opts *s3.PresignOptions) {
-		opts.Expires = time.Duration(expireSecs * int64(time.Second))
+		opts.Expires = expiry
 	})
 	if err != nil {
 		log.Printf("Couldn't get a presigned request to put %v:%v. Here's why: %v\n",
@@ -213,8 +220,8 @@ func (p *Client) PutObject(
 }
 
 // DeleteObject makes a presigned request that can be used to delete an object from a bucket.
-func (p *Client) DeleteObject(bucket string, object string) (*v4.PresignedHTTPRequest, error) {
-	request, err := p.PresignClient.PresignDeleteObject(context.TODO(), &s3.DeleteObjectInput{
+func (p *Client) DeleteObject(ctx context.Context, bucket string, object string) (*v4.PresignedHTTPRequest, error) {
+	request, err := p.PresignClient.PresignDeleteObject(ctx, &s3.DeleteObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(object),
 	})
@@ -225,7 +232,10 @@ func (p *Client) DeleteObject(bucket string, object string) (*v4.PresignedHTTPRe
 }
 
 func main() {
-	sdkConfig, err := config.LoadDefaultConfig(context.TODO())
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	sdkConfig, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		log.Printf("Couldn't load default configuration. Here's why: %v\n", err)
 		return
@@ -265,7 +275,7 @@ You can now use the URL returned by the `presignedPutReq.URL` and
 ## Object Regions
 
 Below is an example of how to use the AWS Go SDK to restrict
-[object region](/docs/objects/object_regions) to Europe only(`fra` region).
+[object region](/docs/objects/object_regions) to Europe only (`fra` region).
 
 ```go
 package main
@@ -353,7 +363,10 @@ func putObjectUsingMultipartToMultipleRegions(ctx context.Context, client *s3.Cl
 }
 
 func main() {
-	cfg, err := config.LoadDefaultConfig(context.TODO())
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		log.Printf("Couldn't load default configuration. Here's why: %v\n", err)
 		return
@@ -366,7 +379,6 @@ func main() {
 	})
 
 	var (
-		ctx      = context.TODO()
 		bucket   = "mybucket"
 		key      = "mykey"
 		randData = make([]byte, 16384)
@@ -433,7 +445,9 @@ func WithHeader(key, value string) func(*s3.Options) {
 }
 
 func main() {
-	ctx := context.TODO()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		log.Printf("Couldn't load default configuration. Here's why: %v\n", err)

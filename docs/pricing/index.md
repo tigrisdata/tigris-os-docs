@@ -21,9 +21,8 @@ Tigris pricing is based on the following components:
 | Object Notifications                          | $0.01/1000 events published | $0.01/1000 events published | $0.01/1000 events published |
 | Egress (Data Transfer to Internet)            | Free                        | Free                        | Free                        |
 
-\*\* Data is not immediately available for access and requires restoration
-before it can be accessed. Read more about
-[Storage tiers](/docs/objects/tiers.md).
+_\*\* Data in Archive tier requires restoration before it can be accessed. Read
+more about [Storage tiers](/docs/objects/tiers.md)._
 
 ## Free allowances
 

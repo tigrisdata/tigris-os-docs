@@ -104,6 +104,24 @@ An example notification payload is:
 }
 ```
 
+## Filtering
+
+Object notifications support adding a SQL-like filter to only receive
+notifications that match the filter. The filter is configured in the Tigris
+Dashboard. The filtering can be used to send specific events or object keys that
+match a given prefix. The filtering uses the SQL-like syntax defined in given
+prefix. The filtering uses the SQL-like syntax defined in
+[Metadata Querying](/docs/objects/query-metadata.md).
+
+An example to only receive notifications for a key with a prefix of `images/`:
+
+For example, if you only want to receive notifications for objects in the
+"images" folder, you would use this filter:
+
+```sql
+WHERE key REGEXP "^images"
+```
+
 ## Pricing
 
 See [Pricing](/docs/pricing/index.md) for how object notifications are charged.

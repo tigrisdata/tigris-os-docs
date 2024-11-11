@@ -107,11 +107,9 @@ const sidebars = {
       ],
     },
     {
-      type: "category",
-      label: "Applications",
-      items: [
-        "apps/docker-registry",
-      ],
+      type: "doc",
+      label: "Self-hosted Docker Registry",
+      id: "apps/docker-registry",
     },
     {
       type: "category",

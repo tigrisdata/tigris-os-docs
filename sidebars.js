@@ -119,14 +119,12 @@ const sidebars = {
         "model-storage/fly-io",
         "model-storage/skypilot",
         "model-storage/vast-ai",
-      ]
+      ],
     },
     {
       type: "category",
       label: "IAM",
-      items: [
-        "iam/limited-access-key",
-      ]
+      items: ["iam/limited-access-key"],
     },
     {
       type: "doc",

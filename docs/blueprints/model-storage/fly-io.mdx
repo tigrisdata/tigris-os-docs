@@ -86,7 +86,11 @@ this article.
 aws s3 create-bucket --acl private generated-images
 ```
 
+<details>
+<summary>Optional: upload your own model</summary>
+
 If you want to upload your own models, create a bucket for this. It'll be
+referred to as `model-storage-demo` in this tutorial.
 
 Both of these buckets should be private.
 
@@ -98,14 +102,11 @@ pipenv shell --python 3.11
 pip install -r requirements.txt
 ```
 
-<details>
-<summary>Optional: upload your own model</summary>
-
 Run the `prepare_model` script to massage and upload a Stable Diffusion XL model
 or finetune to Tigris:
 
 ```text
-python scripts/prepare_model.py ByteDance/SDXL-Lightning model-storage
+python scripts/prepare_model.py ByteDance/SDXL-Lightning model-storage-demo
 ```
 
 :::info
@@ -115,7 +116,7 @@ Want differently styled images? Try finetunes like
 Face repo name to the `prepare_model` script like this:
 
 ```text
-python scripts/prepare_model.py KBlueLeaf/Kohaku-XL-Zeta model-storage
+python scripts/prepare_model.py KBlueLeaf/Kohaku-XL-Zeta model-storage-demo
 ```
 
 :::
@@ -133,7 +134,7 @@ be used later to deploy your app in the cloud. This keypair will be referred to
 as the `workload-keypair` in this tutorial.
 
 [Limit the scope of this access key](/docs/blueprints/limited-access-key) to
-only your `model-storage` and `generated-images` buckets.
+only your `model-storage-demo` and `generated-images` buckets.
 
 ## Deploying it to Fly.io
 
@@ -162,15 +163,15 @@ fly apps create your-app-name-here
 As a reminder, this example is configured with environment variables. Set the
 following environment variables in your deployments:
 
-|             Envvar name | Value                                                  |
-| ----------------------: | :----------------------------------------------------- |
-|     `AWS_ACCESS_KEY_ID` | The access key ID from the workload keypair            |
-| `AWS_SECRET_ACCESS_KEY` | The secret access key from the workload keypair        |
-|   `AWS_ENDPOINT_URL_S3` | `https://fly.storage.tigris.dev`                       |
-|            `AWS_REGION` | `auto`                                                 |
-|            `MODEL_PATH` | `ByteDance/SDXL-Lightning`                             |
-|     `MODEL_BUCKET_NAME` | `model-storage` (replace with your own bucket name)    |
-|    `PUBLIC_BUCKET_NAME` | `generated-images` (replace with your own bucket name) |
+|             Envvar name | Value                                                              |
+| ----------------------: | :----------------------------------------------------------------- |
+|     `AWS_ACCESS_KEY_ID` | The access key ID from the workload keypair                        |
+| `AWS_SECRET_ACCESS_KEY` | The secret access key from the workload keypair                    |
+|   `AWS_ENDPOINT_URL_S3` | `https://fly.storage.tigris.dev`                                   |
+|            `AWS_REGION` | `auto`                                                             |
+|            `MODEL_PATH` | `ByteDance/SDXL-Lightning`                                         |
+|     `MODEL_BUCKET_NAME` | `model-storage-demo` (Optional: replace with your own bucket name) |
+|    `PUBLIC_BUCKET_NAME` | `generated-images` (replace with your own bucket name)             |
 
 Then create a GPU machine with an l40s GPU in it in Seattle:
 
@@ -182,7 +183,7 @@ fly machine run \
   -e AWS_SECRET_ACCESS_KEY=<workload-keypair-secret-access-key> \
   -e AWS_ENDPOINT_URL_S3=https://fly.storage.tigris.dev \
   -e AWS_REGION=auto \
-  -e MODEL_BUCKET_NAME=model-storage \
+  -e MODEL_BUCKET_NAME=model-storage-demo \
   -e PUBLIC_BUCKET_NAME=generated-images \
   -e MODEL_PATH=ByteDance/SDXL-Lightning \
   --vm-gpu-kind l40s \

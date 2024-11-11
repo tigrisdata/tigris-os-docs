@@ -97,7 +97,11 @@ this article.
 aws s3 create-bucket --acl private generated-images
 ```
 
+<details>
+<summary>Optional: upload your own model</summary>
+
 If you want to upload your own models, create a bucket for this. It'll be
+referred to as `model-storage-demo` in this tutorial.
 
 Both of these buckets should be private.
 
@@ -108,9 +112,6 @@ dependencies for uploading a model:
 pipenv shell --python 3.11
 pip install -r requirements.txt
 ```
-
-<details>
-<summary>Optional: upload your own model</summary>
 
 Run the `prepare_model` script to massage and upload a Stable Diffusion XL model
 or finetune to Tigris:
@@ -160,22 +161,22 @@ envs:
   AWS_REGION: auto
 
   # Bucket names
-  MODEL_BUCKET_NAME: model-storage
+  MODEL_BUCKET_NAME: model-storage-demo
   PUBLIC_BUCKET_NAME: generated-images
 
   # Model to load
   MODEL_PATH: ByteDance/SDXL-Lightning
 ```
 
-|             Envvar name | Value                                                  |
-| ----------------------: | :----------------------------------------------------- |
-|     `AWS_ACCESS_KEY_ID` | The access key ID from the workload keypair            |
-| `AWS_SECRET_ACCESS_KEY` | The secret access key from the workload keypair        |
-|   `AWS_ENDPOINT_URL_S3` | `https://fly.storage.tigris.dev`                       |
-|            `AWS_REGION` | `auto`                                                 |
-|            `MODEL_PATH` | `ByteDance/SDXL-Lightning`                             |
-|     `MODEL_BUCKET_NAME` | `model-storage` (replace with your own bucket name)    |
-|    `PUBLIC_BUCKET_NAME` | `generated-images` (replace with your own bucket name) |
+|             Envvar name | Value                                                              |
+| ----------------------: | :----------------------------------------------------------------- |
+|     `AWS_ACCESS_KEY_ID` | The access key ID from the workload keypair                        |
+| `AWS_SECRET_ACCESS_KEY` | The secret access key from the workload keypair                    |
+|   `AWS_ENDPOINT_URL_S3` | `https://fly.storage.tigris.dev`                                   |
+|            `AWS_REGION` | `auto`                                                             |
+|            `MODEL_PATH` | `ByteDance/SDXL-Lightning`                                         |
+|     `MODEL_BUCKET_NAME` | `model-storage-demo` (Optional: replace with your own bucket name) |
+|    `PUBLIC_BUCKET_NAME` | `generated-images` (replace with your own bucket name)             |
 
 ## Launching it in a cloud
 

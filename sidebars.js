@@ -108,14 +108,27 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "Blueprints",
+      label: "Applications",
       items: [
-        "blueprints/docker-registry",
-        "blueprints/limited-access-key",
-        "blueprints/model-storage/fly-io",
-        "blueprints/model-storage/skypilot",
-        "blueprints/model-storage/vast-ai",
+        "apps/docker-registry",
       ],
+    },
+    {
+      type: "category",
+      label: "Model Storage",
+      items: [
+        "model-storage/beam-cloud",
+        "model-storage/fly-io",
+        "model-storage/skypilot",
+        "model-storage/vast-ai",
+      ]
+    },
+    {
+      type: "category",
+      label: "IAM",
+      items: [
+        "iam/limited-access-key",
+      ]
     },
     {
       type: "doc",

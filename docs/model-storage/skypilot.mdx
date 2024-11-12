@@ -1,4 +1,4 @@
-# Using model weights in Tigris anywhere with Skypilot
+# Using model weights in Tigris anywhere with SkyPilot
 
 The most common way to deploy AI models in production is by using “serverless”
 inference. This means that every time you get a request, you don’t know what
@@ -21,21 +21,21 @@ frequently changing infrastructure:
   99.99% availability with
   [public availability data](https://www.tigrisdata.com/blog/availability-metrics-public/).
 
-## Skypilot
+## SkyPilot
 
-[Skypilot](https://skypilot.readthedocs.io/en/latest/docs/index.html) is a tool
+[SkyPilot](https://skypilot.readthedocs.io/en/latest/docs/index.html) is a tool
 that lets you route GPU compute to the cheapest possible locale based on your
 requirements. The same configuration lets you control AWS, Azure, Google Cloud,
 Oracle Cloud, Kubernetes, Runpod, Fluidstack, or more. For more information
 about Skypilot, check out
 [their documentation](https://skypilot.readthedocs.io/en/latest/docs/index.html).
 
-To get started, you'll need to install Skypilot
+To get started, you'll need to install SkyPilot
 [following their directions](https://skypilot.readthedocs.io/en/latest/getting-started/installation.html).
 Be sure to have [Conda](https://anaconda.org/anaconda/conda) installed.
 
 You will need to configure your cloud of choice for this example. See
-[Skypilot's documentation](https://skypilot.readthedocs.io/en/latest/getting-started/installation.html#cloud-account-setup)
+[SkyPilot's documentation](https://skypilot.readthedocs.io/en/latest/getting-started/installation.html#cloud-account-setup)
 on how to do this. We have tested this against a few clouds:
 
 - [AWS](https://aws.amazon.com/)

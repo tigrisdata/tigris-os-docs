@@ -1,0 +1,216 @@
+# Using model weights in Tigris anywhere with Beam
+
+The most common way to deploy AI models in production is by using “serverless”
+inference. This means that every time you get a request, you don’t know what
+state the underlying hardware is in. You don’t know if you have your models
+cached, and in the worst case you need to do a cold start and download your
+model weights from scratch.
+
+A couple fixable problems arise when running your models on serverless or any
+frequently changing infrastructure:
+
+- Model distribution that's not optimized for latency causes needless GPU idle
+  time as the model weights are downloaded to the machine on cold start. Tigris
+  behaves like a content delivery network by default and is designed for low
+  latency, saving idle time on cold start.
+- Compliance restrictions like data sovereignty and GDPR increase complexity
+  quickly. Tigris makes regional restrictions a one-line configuration, guide
+  [here](https://www.tigrisdata.com/docs/objects/object_regions/).
+- Reliance on third party caches for distributing models creates an upstream
+  dependency and leaves your system vulnerable to downtime. Tigris guarantees
+  99.99% availability with
+  [public availability data](https://www.tigrisdata.com/blog/availability-metrics-public/).
+
+## Beam
+
+Defining HTTP endpoints for AI things is annoyingly complicated. There's a lot
+of opinionated frameworks and layers that get in the way of you just running the
+bit of code you need to get your app working. [Beam](https://www.beam.cloud) is
+all about simplifying down the experence so that all you need to do to get an
+endpoint working is define a single function:
+
+```python
+from beam import endpoint, Image
+
+
+@endpoint(
+    name="quickstart",
+    cpu=1,
+    memory="1Gi",
+    image=Image().add_python_packages(["numpy"]),
+)
+def predict(**inputs):
+    x = inputs.get("x", 256)
+    return {"result": x**2}
+```
+
+This lets you unify your code and configuration into the same file, allowing you
+to glance at a file and instantly understand what the endpoints are and do. They
+also [support GPU compute](https://docs.beam.cloud/v2/environment/gpu), allowing
+you to do scale-to-zero inference seamlessly.
+
+## Usecase
+
+You can put AI model weights into Tigris so that they are cached and fast no
+matter where you’re inferencing from. This allows you to have cold starts be
+faster and you can take advantage of Tigris'
+[globally distributed architecture](/docs/overview/), enabling your workloads to
+start quickly no matter where they are in the world.
+
+For this example, we’ll set up
+[SDXL Lightning](https://huggingface.co/ByteDance/SDXL-Lightning) by ByteDance
+for inference with the weights stored in Tigris.
+
+## Getting Started
+
+Download the `sdxl-in-tigris` template from GitHub:
+
+```text
+git clone https://github.com/tigrisdata-community/sdxl-in-tigris
+```
+
+<details>
+<summary>Prerequisite tools</summary>
+
+In order to run this example locally, you need these tools installed:
+
+- Python 3.11
+- pipenv
+- The AWS CLI
+
+Also be sure to configure the AWS CLI for use with Tigris:
+[Configuring the AWS CLI](/docs/sdks/s3/aws-cli/).
+
+To build a custom variant of the image, you need these tools installed:
+
+- Mac/Windows:
+  [Docker Desktop app](https://www.docker.com/products/docker-desktop/),
+  alternatives such as Podman Desktop will not work.
+- Linux: Docker daemon, alternatives such as Podman will not work.
+- [Replicate's cog tool](https://github.com/replicate/cog)
+- [jq](https://jqlang.github.io/jq/)
+
+To install all of the tool depedencies at once, clone the template repo and run
+`brew bundle`.
+
+</details>
+
+Create a new bucket for generated images, it’ll be called `generated-images` in
+this article.
+
+```text
+aws s3 create-bucket --acl private generated-images
+```
+
+<details>
+<summary>Optional: upload your own model</summary>
+
+If you want to upload your own models, create a bucket for this. It'll be called
+`model-storage` in this tutorial.
+
+Both of these buckets should be private.
+
+Then activate the virtual environment with `pipenv shell` and install the
+dependencies for uploading a model:
+
+```text
+pipenv shell --python 3.11
+pip install -r requirements.txt
+```
+
+Run the `prepare_model` script to massage and upload a Stable Diffusion XL model
+or finetune to Tigris:
+
+```text
+python scripts/prepare_model.py ByteDance/SDXL-Lightning model-storage
+```
+
+:::info
+
+Want differently styled images? Try finetunes like
+[Kohaku XL](https://huggingface.co/KBlueLeaf/Kohaku-XL-Zeta)! Pass the Hugging
+Face repo name to the `prepare_model` script like this:
+
+```text
+python scripts/prepare_model.py KBlueLeaf/Kohaku-XL-Zeta model-storage
+```
+
+:::
+
+</details>
+
+## Access keys
+
+Create a new access key in the [Tigris Dashboard](https://console.tigris.dev).
+Don't assign any permissions to it.
+
+Copy the access key ID and secret access keys into either your notes or a
+password manager, you will not be able to see them again. These credentials will
+be used later to deploy your app in the cloud. This keypair will be referred to
+as the `workload-keypair` in this tutorial.
+
+[Limit the scope of this access key](/docs/iam/limited-access-key) to only the
+`model-storage-demo` (or a custom bucket if you're uploading your own models)
+and `generated-images` buckets.
+
+## Deploying it to Beam
+
+Install the Beam SDK and CLI into your python environment
+[according to their directions](https://docs.beam.cloud/v2/getting-started/installation).
+Be sure to run `beam config create` to authenticate with an API key.
+
+As a reminder, this example is configured with environment variables. Set the
+following secrets in your deployments:
+
+|             Envvar name | Value                                                              |
+| ----------------------: | :----------------------------------------------------------------- |
+|     `AWS_ACCESS_KEY_ID` | The access key ID from the workload keypair                        |
+| `AWS_SECRET_ACCESS_KEY` | The secret access key from the workload keypair                    |
+|   `AWS_ENDPOINT_URL_S3` | `https://fly.storage.tigris.dev`                                   |
+|            `AWS_REGION` | `auto`                                                             |
+|            `MODEL_PATH` | `ByteDance/SDXL-Lightning`                                         |
+|     `MODEL_BUCKET_NAME` | `model-storage-demo` (Optional: replace with your own bucket name) |
+|    `PUBLIC_BUCKET_NAME` | `generated-images` (replace with your own bucket name)             |
+
+You will need to run the `beam secret create` command for each of these:
+
+```text
+beam secret create AWS_ENDPOINT_URL_S3 https://fly.storage.tigris.dev
+```
+
+Then deploy it with `beam deploy`:
+
+```text
+beam deploy beamcloud.py:generate
+```
+
+You'll get a URL back that you can use to generate images. Do a test generation
+with this curl command:
+
+```text
+curl "https://url-you-were-given-v1.app.beam-cloud" \
+  -X PUT \
+  -H "Content-Type: application/json" \
+  -H 'Authorization: Bearer put-your-beam-auth-token-here' \
+  --data-binary '{
+    "prompt": "The space needle in Seattle, best quality, masterpiece",
+    "aspect_ratio": "1:1",
+    "guidance_scale": 3.5,
+    "num_inference_steps": 4,
+    "max_sequence_length": 512,
+    "output_format": "png",
+    "num_outputs": 1
+}'
+```
+
+If all goes well, you should get an image like this:
+
+![The word 'success' in front of the Space Needle](./success.webp)
+
+Beam will automatically scale the deployment down when it's not in use. You can
+fully destroy your deployment with `beam deployment delete`:
+
+```
+beam deployment list # to find the UUID of the deployment
+beam deployment delete uuid-of-deployment
+```

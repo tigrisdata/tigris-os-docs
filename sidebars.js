@@ -108,9 +108,24 @@ const sidebars = {
       ],
     },
     {
+      type: "doc",
+      label: "Self-hosted Docker Registry",
+      id: "apps/docker-registry",
+    },
+    {
       type: "category",
-      label: "Blueprints",
-      items: ["blueprints/docker-registry"],
+      label: "Model Storage",
+      items: [
+        "model-storage/beam-cloud",
+        "model-storage/fly-io",
+        "model-storage/skypilot",
+        "model-storage/vast-ai",
+      ],
+    },
+    {
+      type: "category",
+      label: "IAM",
+      items: ["iam/limited-access-key"],
     },
     {
       type: "doc",

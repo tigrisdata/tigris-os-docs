@@ -67,3 +67,55 @@ url = svc.generate_presigned_url(
 
 print(f'Presigned URL to download an object: {url}')
 ```
+
+## Object Regions
+
+Below is an example of how to use the AWS Python SDK to restrict
+[object region](/docs/objects/object_regions) to Europe only (`fra` region).
+
+```python
+import boto3
+
+# Create S3 service client
+svc = boto3.client('s3', endpoint_url='https://fly.storage.tigris.dev')
+
+# Restrict data to Europe (Frankfurt) only
+def _limit_to_fra(request, **kwargs):
+    request.headers.add_header('X-Tigris-Regions', 'fra')
+
+# Register event into boto
+svc.meta.events.register(
+    "before-sign.s3.PutObject",
+    _limit_to_fra,
+)
+
+# Upload file to frankfurt
+response = svc.upload_file('bar.txt', 'foo-bucket', 'bar.txt')
+```
+
+## Object Metadata Querying
+
+Below is an example for querying for objects
+[based on their metadata](https://www.tigrisdata.com/docs/objects/query-metadata/):
+
+```python
+import boto3
+
+# Create S3 service client
+svc = boto3.client("s3", endpoint_url='https://fly.storage.tigris.dev')
+
+# build an object metadata query
+def _x_tigris_query(request, query):
+    request.headers.add_header('X-Tigris-Query', query.strip())
+
+# Register event into boto with custom query
+svc.meta.events.register(
+    "before-sign.s3.ListObjectsV2",
+    lambda request, **kwargs: _x_tigris_query(request, '`Content-Type` = "text/plain"'),
+)
+
+response = svc.list_objects_v2(Bucket="foo-bucket")
+
+for obj in response['Contents']:
+    print(f'  {obj["Key"]}')
+```

@@ -129,6 +129,11 @@ const sidebars = {
     },
     {
       type: "doc",
+      label: "Mount Tigris as a Filesystem",
+      id: "training/geesefs-linux",
+    },
+    {
+      type: "doc",
       label: "Terraform",
       id: "terraform/index",
     },

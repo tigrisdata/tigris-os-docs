@@ -39,6 +39,57 @@ response = svc.upload_file('bar.txt', 'foo-bucket', 'bar.txt')
 response = svc.download_file('foo-bucket', 'bar.txt', 'bar-downloaded.txt')
 ```
 
+## Using multiple AWS Profiles
+
+If you want to use Tigris alongside AWS, you'll need to differentiate your
+access keys. There are several options ranging from passing access keys as
+parameters when creating clients:
+
+```text
+import boto3
+
+client = boto3.client(
+    's3',
+    aws_access_key_id=ACCESS_KEY,
+    aws_secret_access_key=SECRET_KEY,
+    aws_session_token=SESSION_TOKEN,
+    endpoint_url='https://fly.storage.tigris.dev'
+)
+```
+
+Or you can add another profile to `~/.aws/credentials` directly:
+
+```text
+nano ~/.aws/credentials
+
+[aws-compute]
+aws_access_key_id=<access_key_id>
+aws_secret_access_key=<access_key_secret>
+
+[tigris]
+aws_access_key_id=<access_key_id>
+aws_secret_access_key=<access_key_secret>
+endpoint_url=https://fly.storage.tigris.dev
+```
+
+To switch profiles while using `boto3`, you can set the `profile` on the
+`session`:
+
+```text
+import boto3
+
+session = boto3.Session(profile_name='tigris')
+tigris_s3_client = session.client('s3')
+```
+
+To change the default `session` to use Tigris, you can configure boto3:
+
+```text
+import boto3
+
+boto3.setup_default_session(profile_name='tigris')
+```
+
 ## Using presigned URLs
 
 Presigned URLs can be used with the AWS Python (Boto3) SDK as follows:

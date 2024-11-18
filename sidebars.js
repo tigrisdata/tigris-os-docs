@@ -125,7 +125,7 @@ const sidebars = {
     {
       type: "category",
       label: "IAM",
-      items: ["iam/limited-access-key"],
+      items: ["iam/index", "iam/ip-restrictions", "iam/limited-access-key"],
     },
     {
       type: "doc",

@@ -20,6 +20,7 @@ uploaded to it. The default tier can be one of the following:
 - Standard
 - Infrequent Access
 - Archive
+- Archive instant retrieval
 
 The default tier can be overridden at the object level. For more information,
 see the [Storage Tiers](../objects/tiers.md) guide.

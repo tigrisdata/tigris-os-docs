@@ -11,15 +11,15 @@ Tigris pricing is based on the following components:
 
 ## Pricing table
 
-| Component                                     | Standard Tier               | Infrequent Access Tier      | Archive Tier \*\*           |
-| --------------------------------------------- | --------------------------- | --------------------------- | --------------------------- |
-| Data Storage                                  | $0.02/GB/month              | $0.01/GB/month              | $0.004/GB/month             |
-| Class A Requests: PUT, COPY, POST, LIST       | $0.005/1000 requests        | $0.005/1000 requests        | $0.005/1000 requests        |
-| Class B Requests: GET, SELECT, and all others | $0.0005/1000 requests       | $0.0005/1000 requests       | $0.0005/1000 requests       |
-| Data Retrieval                                | Free                        | $0.01/GB                    | Free                        |
-| Minimum Storage Retention                     | -                           | 30 days                     | 90 days                     |
-| Object Notifications                          | $0.01/1000 events published | $0.01/1000 events published | $0.01/1000 events published |
-| Egress (Data Transfer to Internet)            | Free                        | Free                        | Free                        |
+| Component                                     | Standard Tier               | Infrequent Access Tier      | Archive Tier \*\*           | Archive Instant Retrieval Tier |
+| --------------------------------------------- | --------------------------- | --------------------------- | --------------------------- | ------------------------------ |
+| Data Storage                                  | $0.02/GB/month              | $0.01/GB/month              | $0.004/GB/month             | $0.004/GB/month                |
+| Class A Requests: PUT, COPY, POST, LIST       | $0.005/1000 requests        | $0.005/1000 requests        | $0.005/1000 requests        | $0.005/1000 requests           |
+| Class B Requests: GET, SELECT, and all others | $0.0005/1000 requests       | $0.0005/1000 requests       | $0.0005/1000 requests       | $0.0005/1000 requests          |
+| Data Retrieval                                | Free                        | $0.01/GB                    | Free                        | $0.03/GB                       |
+| Minimum Storage Retention                     | -                           | 30 days                     | 90 days                     | 90 days                        |
+| Object Notifications                          | $0.01/1000 events published | $0.01/1000 events published | $0.01/1000 events published | $0.01/1000 events published    |
+| Egress (Data Transfer to Internet)            | Free                        | Free                        | Free                        | Free                           |
 
 _\*\* Data in Archive tier requires restoration before it can be accessed. Read
 more about [Storage tiers](/docs/objects/tiers.md)._

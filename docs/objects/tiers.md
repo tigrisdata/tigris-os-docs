@@ -23,6 +23,12 @@ Low-cost storage for data archiving with infrequent access. The data is not
 immediately available for access and requires restoration before it can be
 accessed. Restoration time is typically around 1 hour.
 
+## Archive with instant retrieval tier
+
+Low-cost storage for data archiving with infrequent access, offering rapid
+access when needed. The data is immediately available for access and does not
+need to go through a restoration step.
+
 ## Setting object tier
 
 Tigris allows setting the storage tier at both the bucket and object level. The
@@ -43,6 +49,7 @@ Tigris accepts S3 compatible storage classes:
 - STANDARD: for Standard tier
 - STANDARD_IA: for Infrequent Access tier
 - GLACIER: for Archive tier
+- GLACIER_IR: for Archive instant retrieval tier
 
 ### Example with AWS CLI
 

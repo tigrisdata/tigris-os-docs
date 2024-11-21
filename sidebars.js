@@ -129,9 +129,9 @@ const sidebars = {
       items: ["iam/index", "iam/ip-restrictions", "iam/limited-access-key"],
     },
     {
-      type: "doc",
-      label: "Mount Tigris as a Filesystem",
-      id: "training/geesefs-linux",
+      type: "category",
+      label: "Training models",
+      items: ["training/big-data-skypilot", "training/geesefs-linux"],
     },
     {
       type: "doc",

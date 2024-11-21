@@ -131,7 +131,7 @@ const sidebars = {
     {
       type: "category",
       label: "Training models",
-      items: ["training/big-data-skypilot", "training/geesefs-linux"],
+      items: ["training/big-data-skypilot/index", "training/geesefs-linux"],
     },
     {
       type: "doc",

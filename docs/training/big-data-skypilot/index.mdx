@@ -1,0 +1,249 @@
+# Training with Big Data on SkyPilot
+
+[SkyPilot](https://skypilot.readthedocs.io/en/latest/docs/index.html) simplifies
+multi-cloud deployments, offering unmatched flexibility for training large-scale
+data models across different cloud providers. Unlike custom solutions or complex
+tools like Terraform, SkyPilot provides an effortless way to deploy workloads
+seamlessly across clouds, eliminating the need for manual intervention.
+
+With SkyPilot, switching between cloud environments is as easy as updating your
+credentials. It abstracts away complexities like egress costs, performance
+tuning, and cloud-specific quirks, ensuring a consistent user experience no
+matter the provider. By focusing on ergonomic multi-cloud operations, SkyPilot
+empowers teams to concentrate on their data workloads instead of the
+infrastructure.
+
+In synergy with SkyPilot, Tigris enhances this experience by providing global
+object storage that performs consistently across any cloud. Whether handling
+large datasets or ensuring low-latency access, Tigris ensures uniform
+performance and reliability. Together, SkyPilot and Tigris create a seamless
+ecosystem for multi-cloud data operations, enabling fast, reliable storage and
+deployment for big data training.
+
+## Prerequisites
+
+- A Tigris account
+- [SkyPilot](https://skypilot.readthedocs.io/en/latest/getting-started/installation.html)
+  installed
+- A bucket you want to use for training and model data (`mybucket`)
+- Our
+  [demo training repository](https://github.com/tigrisdata-community/skypilot-training-demo)
+  cloned
+- Accounts with your desired cloud providers (AWS, Azure, GCP, etc; we'll use
+  AWS in this guide)
+
+## Setting up your enviroment variables
+
+Copy `.env.example` to `.env` in the root of the training repository.
+
+```text
+cp .env.example .env
+```
+
+Fill in the following variables:
+
+| Variable                | Description                                                                        | Example                  |
+| ----------------------- | ---------------------------------------------------------------------------------- | ------------------------ |
+| `AWS_ACCESS_KEY_ID`     | Your Tigris access key                                                             | `tid_*`                  |
+| `AWS_SECRET_ACCESS_KEY` | Your Tigris secret key                                                             | `tsec_*`                 |
+| `BUCKET_NAME`           | The name of the bucket you want to use for storing model weights and training data | `mybucket`               |
+| `DATASET_NAME`          | The name of the dataset you want to use for training                               | `mlabonne/FineTome-100k` |
+| `MODEL_NAME`            | The name of the model you want to train                                            | `Qwen/Qwen2.5-0.5B`      |
+
+## Performing training
+
+Kick off training with the following command:
+
+```text
+sky launch -n test allatonce.yaml --env-file .env --workdir . -i 15 --down
+```
+
+While that runs, here's what's going on:
+
+- A new cloud instance is being created somewhere with a GPU powerful enough to
+  train a LoRA adapter on the model you chose in your `.env` file.
+- The instance is being provisioned with the necessary software and dependencies
+  ([geesefs](https://github.com/yandex-cloud/geesefs) for model storage, the
+  `datasets` library in Python, and [Unsloth](https://docs.unsloth.ai/) for
+  training).
+- When the instance is ready, these steps happen:
+
+  :::note
+
+  The following steps are simplified for clarity. The actual scripts are more
+  complex. For one, assume these variables exist:
+
+  ```python
+  bucket_name = "mybucket"
+  dataset_name = "mlabonne/FineTome-100k"
+  model_name = "Qwen/Qwen2.5-0.5B"
+  storage_options = { secrets_from_getenv }
+  ```
+
+  :::
+
+  - `import-dataset.py`: The dataset is downloaded from Hugging Face and copied
+    to Tigris in shards of up to 5 million examples. Each shard is saved to
+    Tigris unmodified. Then each shard is standardized so that the model can
+    understand it.
+
+    ```python
+    # Load the dataset in streaming mode, this will download the dataset on demand
+    # instead of downloading it all and loading it in memory. This enables you to
+    # work with datasets that are larger than your memory capacity.
+    dataset = load_dataset(dataset_name, split="train", streaming=True)
+
+    # Keep track of the biggest shard id so that we can use it later for accounting,
+    # this is saved to the info.json file in the dataset folder later in the file.
+    biggest_shard_id = -1
+    for shard_id, shard in enumerate(dataset.iter(5_000_000)):
+        dataset = Dataset.from_dict(shard, features=dataset.features)
+
+        # Save the shard to Tigris unmodified in case you need to reprocess it later
+        ds.save_to_disk(f"s3://{bucket_name}/raw/{dataset_name}/{shard_id}", storage_options=storage_options)
+
+        # Standardize the dataset so that it can be understood by the model
+        ds = standardize_dataset(ds)
+
+        # Save the shard to Tigris
+        ds.save_to_disk(f"s3://{bucket_name}/standardized/{dataset_name}/{shard_id}", storage_options=storage_options)
+
+        # Keep track of the biggest shard id so that we can use it later for accounting
+        biggest_shard_id = shard_id
+    ```
+
+  - `import-model.py`: The model weights are downloaded from Hugging Face and
+    then copied to Tigris for permanent storage. This example uses
+    [geesefs](https://github.com/yandex-cloud/geesefs) to mount the bucket as a
+    filesystem on the instance at `$HOME/tigris`:
+
+    ```python
+    bucket_name = "mybucket"
+    model_name = "Qwen/Qwen2.5-0.5B"
+    storage_options = { secrets_from_getenv }
+
+    model, tokenizer = FastLanguageModel.from_pretrained(
+        model_name = model_name,
+        max_seq_length = 4096,
+        dtype = None, # auto detection
+        load_in_4bit = False, # If True, use 4bit quantization to reduce memory usage
+    )
+
+    # Applying the Qwen-2.5 template to the tokenizer, change this to the template
+    # you want to use if you're not using Qwen-2.5
+    tokenizer = get_chat_template(
+        tokenizer,
+        chat_template="qwen-2.5",
+    )
+
+    # Save the model to Tigris
+    model.save_pretrained(f"{home_dir}/tigris/models/{model_name}")
+    tokenizer.save_pretrained(f"{home_dir}/tigris/models/{model_name}")
+    ```
+
+  - `pretokenize.py`: Each shard of the dataset is loaded from Tigris and then
+    uses the model's tokenization formatting to pre-chew it for training. This
+    makes sure that all of the data is in the same format and can be understood
+    by the model.
+
+    ```python
+    # load the biggest shard id from the dataset info
+    biggest_shard_id = load_biggest_shard_id(bucket_name, dataset_name) # or die
+
+    # Load the model
+    model, tokenizer = FastLanguageModel.from_pretrained(...)
+
+    # Use the model's chat formatting function to pre-chew the dataset into a
+    # format that the model can understand.
+    def formatting_prompts_func(examples):
+        convos = examples["conversations"]
+        texts = [
+            tokenizer.apply_chat_template(
+                convo,
+                tokenize = False,
+                add_generation_prompt = False,
+            )
+            for convo
+            in convos
+        ]
+        return { "text" : texts, }
+
+    # For each shard
+    for i in range(biggest+1):
+        # Load the shard from Tigris
+        ds = load_from_disk(f"s3://{bucket_name}/standardized/{dataset_name}/{i}", storage_options=storage_options)
+
+        # Pre-chew the shard
+        ds = ds.map(formatting_prompts_func, batched=True,)
+
+        # Save the pre-chewed shard to Tigris
+        ds.save_to_disk(f"s3://{bucket_name}/model-ready/{model_name}/{dataset_name}/{i}", storage_options=storage_options)
+
+    # Write the biggest shard id to the model-ready info file
+    fs.write_text(f"/{bucket_name}/model-ready/{model_name}/{dataset_name}/info.json", json.dumps({"count": biggest}))
+    ```
+
+  - `dotrain.py`: The model is then trained on each shard of the dataset for one
+    epoch and the resulting weights are saved to Tigris.
+
+    ```python
+    # Make a LoRA model stacked on top of the base model, this is what we train and
+    # save for later use.
+    model = FastLanguageModel.get_peft_model(model, ...) # other generic LoRA parameters here
+
+    # For every dataset shard:
+    for dataset in shards_for(bucket_name, model_name, dataset_name):
+        # Load the Trainer instance for this shard
+        trainer = SFTTrainer(
+            model = model,
+            tokenizer = tokenizer,
+            train_dataset = dataset,
+            dataset_text_field = "text", # The pre-chewed text field from before
+            args = TrainingArguments(
+                num_train_epochs = 1, # Number of times to iterate over the dataset
+                ..., # other training arguments here
+            ),
+            ...,
+        )
+
+        # Train the model for one epoch
+        trainer_stats = trainer.train()
+        print(trainer_stats)
+
+    # Save the LoRA fused to the base model for inference with vllm
+    model.save_pretrained_merged(f"{home_dir}/tigris/done/{model_name}/{dataset_name}/fused", tokenizer, save_method="merged_16bit")
+    ```
+
+- Once all of that is done, the instance automatically shuts down after 15
+  minutes of inactivity. You can change this value with your argument to
+  [the `-i` flag](https://skypilot.readthedocs.io/en/latest/reference/auto-stop.html).
+
+Each of the scripts that run in the instance are designed to be idempotent and
+are intended to run in sequence, but `import-dataset.py` and `import-model.py`
+can be run in parallel.
+
+(Diagram here)
+
+## Next steps
+
+Once training is complete, you can use the model weights with
+[`sky serve`](https://skypilot.readthedocs.io/en/latest/serving/sky-serve.html):
+
+```text
+sky serve up -n mymodel service.yaml --env-file .env
+```
+
+It will give you a URL that you can use to interact with your model:
+
+```text
+curl 3.84.15.251:30001/v1/chat/completions \
+    -X POST \
+    -d '{"model": "/home/ubuntu/tigris/done/Qwen/Qwen2.5-0.5B/mlabonne/FineTome-100k/fused", "messages": [{"role": "user", "content": "Who are you?"}]}' \
+    -H 'Content-Type: application/json'
+```
+
+You can destroy this with `sky serve down`:
+
+```text
+sky serve down mymodel
+```

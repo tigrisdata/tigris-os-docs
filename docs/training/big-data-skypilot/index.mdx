@@ -211,11 +211,13 @@ formatting function to pre-chew the dataset, and then saving the results back to
 Tigris:
 
 ```python
-shard_id = -1
+biggest = -1
 for shard_id, shard in enumerate(shards_for(bucket_name, dataset_name, storage_options)):
     ds = ds.map(prechew, batched=True)
     ds.save_to_disk(f"s3://{bucket_name}/model-ready/{model_name}/{dataset_name}/{shard_id}", storage_options=storage_options)
     biggest = shard_id
+
+assert biggest != -1, "No examples were found in the dataset. Are you sure you imported the dataset correctly?"
 
 tigris.write_text(f"/{bucket_name}/model-ready/{model_name}/{dataset_name}/info.json", json.dumps({"count": shard_id}))
 ```
@@ -263,7 +265,17 @@ There are three r's in the word 'strawberry'.
 <|im_end|>
 ```
 
-This is what the model actually sees under the hood.
+This is what the model actually sees under the hood. Those `<|im_start|>` and
+`<|im_end|>` tokens are special tokens that the model and inference runtime use
+to know when a new message starts and ends.
+
+Without these tokens the model would go catastrophically off the rails and start
+spouting out nonsense that matches the word frequency patterns it was trained
+on. This is because the model doesn't actually understand language, it just
+knows how to predict the next word in a sequence of words. The `<|im_end|>`
+token also has special meaning to the inference runtime because it means that
+the model has finished generating a response and is ready to emit it to the
+user.
 
 ### Actually training the model
 

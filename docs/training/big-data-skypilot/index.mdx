@@ -54,171 +54,339 @@ Kick off training with the following command:
 sky launch -n test allatonce.yaml --env-file .env --workdir . -i 15 --down
 ```
 
-While that runs, here's what's going on:
+## What's happening under the hood?
 
-- A new cloud instance is being created somewhere with a GPU powerful enough to
-  train a LoRA adapter on the model you chose in your `.env` file.
-- The instance is being provisioned with the necessary software and dependencies
-  ([geesefs](https://github.com/yandex-cloud/geesefs) for model storage, the
-  `datasets` library in Python, and [Unsloth](https://docs.unsloth.ai/) for
-  training).
-- When the instance is ready, these steps happen:
+While that runs, here's what's going on. SkyPilot is spinning up a new GPU
+instance somewhere in the cloud, installing the necessary software and
+dependencies, and training a LoRA adapter on the model you chose in your `.env`
+file. Once training is complete, the instance automatically shuts down after 15
+minutes of inactivity.
 
-  :::note
+It does this by running a series of scripts in sequence:
 
-  The following steps are simplified for clarity. The actual scripts are more
-  complex. For one, assume these variables exist:
+1. `import-dataset.py`: Downloads the dataset from Hugging Face and copies it to
+   Tigris in shards of up to 5 million examples. Each shard is saved to Tigris
+   unmodified, then standardized so that the model can understand it.
+2. `import-model.py`: Downloads the model weights from Hugging Face and copies
+   them to Tigris for permanent storage.
+3. `pretokenize.py`: Loads each shard of the dataset from Tigris and uses the
+   model's tokenization formatting to pre-chew it for training.
+4. `dotrain.py`: Trains the model on each shard of the dataset for one epoch and
+   saves the resulting weights to Tigris.
 
-  ```python
-  bucket_name = "mybucket"
-  dataset_name = "mlabonne/FineTome-100k"
-  model_name = "Qwen/Qwen2.5-0.5B"
-  storage_options = { secrets_from_getenv }
-  ```
+Here's a diagram of the process:
 
-  :::
+![Training pipeline diagram](./overall-flow.webp)
 
-  - `import-dataset.py`: The dataset is downloaded from Hugging Face and copied
-    to Tigris in shards of up to 5 million examples. Each shard is saved to
-    Tigris unmodified. Then each shard is standardized so that the model can
-    understand it.
+This looks a lot more complicated than it is. Each script is designed to be run
+in sequence and everything adds up to a training run that takes about 15 minutes
+to complete from start to finish.
 
-    ```python
-    # Load the dataset in streaming mode, this will download the dataset on demand
-    # instead of downloading it all and loading it in memory. This enables you to
-    # work with datasets that are larger than your memory capacity.
-    dataset = load_dataset(dataset_name, split="train", streaming=True)
+Here's some of the most relevant code from each script. You can find the full
+scripts in the
+[example repo](https://github.com/tigrisdata-community/skypilot-training-demo),
+but for these snippets assume the following variables exist and have values that
+make sense as relevant:
 
-    # Keep track of the biggest shard id so that we can use it later for accounting,
-    # this is saved to the info.json file in the dataset folder later in the file.
-    biggest_shard_id = -1
-    for shard_id, shard in enumerate(dataset.iter(5_000_000)):
-        dataset = Dataset.from_dict(shard, features=dataset.features)
+```python
+bucket_name = "mybucket"
+dataset_name = "mlabonne/FineTome-100k"
+model_name = "Qwen/Qwen2.5-0.5B"
+storage_options = { secrets_from_getenv }
+```
 
-        # Save the shard to Tigris unmodified in case you need to reprocess it later
-        ds.save_to_disk(f"s3://{bucket_name}/raw/{dataset_name}/{shard_id}", storage_options=storage_options)
+### Importing and sharding the dataset
 
-        # Standardize the dataset so that it can be understood by the model
-        ds = standardize_dataset(ds)
+One of the biggest things that's hard with managing training data with AI stuff
+is dealing with data that is larger than ram. Most of the time when you load a
+dataset with the
+[`load_dataset` function](https://huggingface.co/docs/datasets/loading), it
+downloads all of the data files to the disk and then loads them directly into
+memory. This is generally useful for many things, but it means that your dataset
+has to be smaller than your memory capacity (minus what your OS needs to exist).
 
-        # Save the shard to Tigris
-        ds.save_to_disk(f"s3://{bucket_name}/standardized/{dataset_name}/{shard_id}", storage_options=storage_options)
+This example works around this problem by using the `streaming=True` option in
+`load_dataset`:
 
-        # Keep track of the biggest shard id so that we can use it later for accounting
-        biggest_shard_id = shard_id
-    ```
+```python
+dataset = load_dataset(dataset_name, split="train", streaming=True)
+```
 
-  - `import-model.py`: The model weights are downloaded from Hugging Face and
-    then copied to Tigris for permanent storage. This example uses
-    [geesefs](https://github.com/yandex-cloud/geesefs) to mount the bucket as a
-    filesystem on the instance at `$HOME/tigris`:
+However, doing this presents additional problems, because when you pass
+`streaming=True`, you don't get access to the `save_to_disk` method that you
+would normally use to save the dataset to disk. Instead, you have to iterate
+over the dataset in chunks and save each
+[shard](<https://en.wikipedia.org/wiki/Shard_(database_architecture)>) to disk
+manually:
 
-    ```python
-    bucket_name = "mybucket"
-    model_name = "Qwen/Qwen2.5-0.5B"
-    storage_options = { secrets_from_getenv }
+```python
+for shard in dataset.iter(5_000_000):
+    dataset = Dataset.from_dict(shard, features=dataset.features)
+    ds.save_to_disk(f"s3://{bucket_name}/raw/{dataset_name}/{shard_id}", storage_options=storage_options)
+```
 
-    model, tokenizer = FastLanguageModel.from_pretrained(
-        model_name = model_name,
-        max_seq_length = 4096,
-        dtype = None, # auto detection
-        load_in_4bit = False, # If True, use 4bit quantization to reduce memory usage
+It's worth noting that when you iterate through things like this, each `shard`
+value has all of the data for that shard in CPU ram. You may need to adjust the
+shard size to fit your memory capacity. Experimentation is required, but 5
+million examples is a good starting point.
+
+Once you have the dataset saved to disk, you have to standardize it because the
+data can and will come in whatever format the dataset author thought was
+reasonable:
+
+```python
+ds = standardize_dataset(ds)
+```
+
+After that, you can save the standardized dataset to Tigris:
+
+```python
+ds.save_to_disk(f"s3://{bucket_name}/standardized/{dataset_name}/{shard_id}", storage_options=storage_options)
+```
+
+There's some additional accounting that's done to keep track of the biggest
+shard ID, but that's the gist of it. You take a dataset that can be too big to
+fit into memory, break it into chunks that can fit into memory, save them to
+Tigris, standardize them, and then save the standardized form to Tigris.
+
+:::note
+
+In very large scale deployments, you may want to move the standardization step
+into another discrete stage of this pipeline. Refactoring this into the setup is
+therefore trivial and thus left as an exercise for the reader.
+
+:::
+
+### Importing the model
+
+Once all of the data is imported, the model weights are fetched from Hugging
+Face's CDN and then written to Tigris:
+
+```python
+model, tokenizer = FastLanguageModel.from_pretrained(
+    model_name = model_name,
+    max_seq_length = 4096,
+    dtype = None, # auto detection
+    load_in_4bit = False, # If True, use 4bit quantization to reduce memory usage
+)
+
+# Save the model to Tigris
+model.save_pretrained(f"{home_dir}/tigris/models/{model_name}")
+tokenizer.save_pretrained(f"{home_dir}/tigris/models/{model_name}")
+```
+
+You may be asking yourself something like "Wait, why are you saving it to the
+disk? I thought it was going to Tigris, Tigris isn't a filesystem, it's object
+storage". You're right. Tigris normally is not a filesystem, but S3 (the
+technology/API signature that Tigris is built upon) has many semantics that can
+somewhat-cleanly-if-you-squint-enough be mapped to the normal Unix filesystem
+calls. In order to fit the square peg of Tigris into the round hole of the POSIX
+filesystem interface, we use a tool called
+[geesefs](https://github.com/yandex-cloud/geesefs). GeeseFS uses the Linux
+Kernel's [FUSE](https://www.kernel.org/doc/html/latest/filesystems/fuse.html)
+(Filesystem in USErspace) subsystem to mount an S3 bucket as if it was a
+filesystem. This allows you to use the normal filesystem calls to interact with
+Tigris, which is very useful for AI workloads that assume data is accessible via
+a filesystem. We have to do this because the Hugging Face transformers library
+assumes that the model weights are on the filesystem, not in object storage.
+
+The model has two main components that we care about:
+
+- The floating-point model weights themselves, these are the weights that get
+  loaded into GPU ram and used to inference results based on input data.
+- The tokenizer model for that model in particular. This is used to convert text
+  into the format that the model understands beneath the hood. Among other
+  things, this also provides a string templating function that turns chat
+  messages into the raw token form that the model was trained on.
+
+Both of those are stored in Tigris for later use.
+
+### Pre-chewing the dataset
+
+Once the model is saved into Tigris, we have up to `n` shards of up to `m`
+examples per shard. All of these examples are in a standard-ish format, but
+still needs to be pre-chewed so that training can be super efficient. This is
+done by loading each shard from Tigris, using the model's chat tokenization
+formatting function to pre-chew the dataset, and then saving the results back to
+Tigris:
+
+```python
+shard_id = -1
+for shard_id, shard in enumerate(shards_for(bucket_name, dataset_name, storage_options)):
+    ds = ds.map(prechew, batched=True)
+    ds.save_to_disk(f"s3://{bucket_name}/model-ready/{model_name}/{dataset_name}/{shard_id}", storage_options=storage_options)
+    biggest = shard_id
+
+tigris.write_text(f"/{bucket_name}/model-ready/{model_name}/{dataset_name}/info.json", json.dumps({"count": shard_id}))
+```
+
+The `prechew` function is a simple wrapper around the model's tokenization
+formatting function:
+
+```python
+def prechew(examples):
+    convos = examples["conversations"]
+    texts = [tokenizer.apply_chat_template(convo, tokenize = False, add_generation_prompt = False) for convo in convos]
+    return { "text" : texts, }
+```
+
+It takes an example, extracts the conversation text from it, and then uses the
+model's tokenizer to convert that conversation text into the raw token form that
+the model was trained on. In essence, it goes from this:
+
+```json
+{
+  "conversations": [
+    {
+      "role": "user",
+      "content": "Hello, computer, how many r's are in the word 'strawberry'?"
+    },
+    {
+      "role": "assistant",
+      "content": "There are three r's in the word 'strawberry'."
+    }
+  ]
+}
+```
+
+And then turns them into something like this:
+
+```text
+<|im_start|>system
+You are a helpful assistant that will make sure that the user gets the correct answer to their question. You are an expert at counting letters in words.
+<|im_end|>
+<|im_start|>user
+Hello, computer, how many r's are in the word 'strawberry'?
+<|im_end|>
+<|im_start|>assistant
+There are three r's in the word 'strawberry'.
+<|im_end|>
+```
+
+This is what the model actually sees under the hood.
+
+### Actually training the model
+
+Once the dataset is pre-chewed and everything else is ready in Tigris, the real
+fun can begin. The model is loaded from Tigris:
+
+```python
+model = FastLanguageModel.from_pretrained(f"{home_folder}/tigris/models/{model_name}", ...)
+```
+
+And then we stack a new [LoRA](https://github.com/microsoft/LoRA) (Low-Rank
+Adaptation) model on top of it. We use a LoRA adapter here because this requires
+much less system resources to train than doing a full-blown finetuing run on the
+dataset. When you use a LoRA, you freeze most of the weights in the original
+model and only train a few weights that are stacked on top of the original
+model. This allows you to train models on much larger datasets without having to
+worry about running out of GPU memory or cloud credits.
+
+There are tradeoffs in using LoRA adapters instead of doing a full fine-tuning
+run, however in practice having LoRA models in the mix gives you more
+flexibility because you can freeze and ship the base model to your datacenters
+(or even cache it in a docker image) and then only have to worry about
+distributing the LoRA adapter weights. The full model weights can be in the tens
+of gigabytes, while the LoRA adapter weights are usually in the hundreds of
+megabytes at most.
+
+:::note
+
+This doesn't always matter with Tigris because
+[Tigris has no egress fees](https://www.tigrisdata.com/docs/pricing/), but
+depending on the unique facts and circumstances of your deployment, it may be
+ideal to have a smaller model to ship around on top of a known quantity. This
+can also make updates easier in some enviroments. Consult your local SRE for
+more life advice that may be helpful in your situation.
+
+:::
+
+```python
+# Make a LoRA model stacked on top of the base model, this is what we train and
+# save for later use.
+model = FastLanguageModel.get_peft_model(model, ...) # other generic LoRA parameters here
+```
+
+Finally, the LoRA adapter is trained on each shard of the dataset for one epoch
+and the resulting weights are saved to Tigris:
+
+```python
+# For every dataset shard:
+for dataset in shards_for(bucket_name, model_name, dataset_name):
+    # Load the Trainer instance for this shard
+    trainer = SFTTrainer(
+        model = model,
+        tokenizer = tokenizer,
+        train_dataset = dataset,
+        dataset_text_field = "text", # The pre-chewed text field from before
+        args = TrainingArguments(
+            num_train_epochs = 1, # Number of times to iterate over the dataset when training
+            ..., # other training arguments here, see dotrain.py for more details
+        ),
+        ...,
     )
 
-    # Applying the Qwen-2.5 template to the tokenizer, change this to the template
-    # you want to use if you're not using Qwen-2.5
-    tokenizer = get_chat_template(
-        tokenizer,
-        chat_template="qwen-2.5",
-    )
+    # Train the model for one epoch
+    trainer_stats = trainer.train()
+    print(trainer_stats)
+```
 
-    # Save the model to Tigris
-    model.save_pretrained(f"{home_dir}/tigris/models/{model_name}")
-    tokenizer.save_pretrained(f"{home_dir}/tigris/models/{model_name}")
-    ```
+Note that even though we're creating a new `SFTTrainer` instance each iteration
+in the loop, we're not starting over from scratch each time. The `SFTTrainer`
+will _mutate_ the LoRA adapter we're passing in the `model` parameter, so each
+iteration in the loop is progressively training the model on the dataset.
 
-  - `pretokenize.py`: Each shard of the dataset is loaded from Tigris and then
-    uses the model's tokenization formatting to pre-chew it for training. This
-    makes sure that all of the data is in the same format and can be understood
-    by the model.
+The `trainer.train()` method returns a dictionary of statistics about the
+training run, which we print out for debugging purposes. While the training run
+is going on, it will emit information about the loss function, the learning
+rate, and other things that are useful for debugging. Interpreting these
+statistics is a bit of an art (less than reading tea leaves, but more than
+reading tarot), but in general you want to see the loss function decreasing over
+time and the learning rate decreasing over time. Consult your local data
+scientist for more information and life advice as appropriate.
 
-    ```python
-    # load the biggest shard id from the dataset info
-    biggest_shard_id = load_biggest_shard_id(bucket_name, dataset_name) # or die
+In this example, we save two products:
 
-    # Load the model
-    model, tokenizer = FastLanguageModel.from_pretrained(...)
+- The LoRA weights themselves, which aren't useful without the base model
+- The LoRA weights fused with the base model, which is what you use for
+  inference with tools like [vllm](https://docs.vllm.ai/en/latest/)
 
-    # Use the model's chat formatting function to pre-chew the dataset into a
-    # format that the model can understand.
-    def formatting_prompts_func(examples):
-        convos = examples["conversations"]
-        texts = [
-            tokenizer.apply_chat_template(
-                convo,
-                tokenize = False,
-                add_generation_prompt = False,
-            )
-            for convo
-            in convos
-        ]
-        return { "text" : texts, }
+```python
+# Save the LoRA model for later use
+model.save_pretrained(f"{home_dir}/tigris/done/{model_name}/{dataset_name}/lora_model")
+tokenizer.save_pretrained(f"{home_dir}/tigris/done/{model_name}/{dataset_name}/lora_model")
 
-    # For each shard
-    for i in range(biggest+1):
-        # Load the shard from Tigris
-        ds = load_from_disk(f"s3://{bucket_name}/standardized/{dataset_name}/{i}", storage_options=storage_options)
+# Save the LoRA fused to the base model for inference with vllm
+model.save_pretrained_merged(f"{home_dir}/tigris/done/{model_name}/{dataset_name}/fused", tokenizer, save_method="merged_16bit")
+```
 
-        # Pre-chew the shard
-        ds = ds.map(formatting_prompts_func, batched=True,)
-
-        # Save the pre-chewed shard to Tigris
-        ds.save_to_disk(f"s3://{bucket_name}/model-ready/{model_name}/{dataset_name}/{i}", storage_options=storage_options)
-
-    # Write the biggest shard id to the model-ready info file
-    fs.write_text(f"/{bucket_name}/model-ready/{model_name}/{dataset_name}/info.json", json.dumps({"count": biggest}))
-    ```
-
-  - `dotrain.py`: The model is then trained on each shard of the dataset for one
-    epoch and the resulting weights are saved to Tigris.
-
-    ```python
-    # Make a LoRA model stacked on top of the base model, this is what we train and
-    # save for later use.
-    model = FastLanguageModel.get_peft_model(model, ...) # other generic LoRA parameters here
-
-    # For every dataset shard:
-    for dataset in shards_for(bucket_name, model_name, dataset_name):
-        # Load the Trainer instance for this shard
-        trainer = SFTTrainer(
-            model = model,
-            tokenizer = tokenizer,
-            train_dataset = dataset,
-            dataset_text_field = "text", # The pre-chewed text field from before
-            args = TrainingArguments(
-                num_train_epochs = 1, # Number of times to iterate over the dataset
-                ..., # other training arguments here
-            ),
-            ...,
-        )
-
-        # Train the model for one epoch
-        trainer_stats = trainer.train()
-        print(trainer_stats)
-
-    # Save the LoRA fused to the base model for inference with vllm
-    model.save_pretrained_merged(f"{home_dir}/tigris/done/{model_name}/{dataset_name}/fused", tokenizer, save_method="merged_16bit")
-    ```
-
-- Once all of that is done, the instance automatically shuts down after 15
-  minutes of inactivity. You can change this value with your argument to
-  [the `-i` flag](https://skypilot.readthedocs.io/en/latest/reference/auto-stop.html).
+### Other things to have in mind
 
 Each of the scripts that run in the instance are designed to be idempotent and
 are intended to run in sequence, but `import-dataset.py` and `import-model.py`
-can be run in parallel.
+can be run in parallel. This is because they don't depend on eachother and end
+up feeding into inputs at the prechewing and training steps.
 
-(Diagram here)
+Training this LoRA adapter on a dataset of 100k examples takes about 15 minutes
+including downloading the dataset, standardizing it, downloading the model,
+saving it to Tigris, loading the model, pre-chewing the dataset, and training
+the model. The instance will shut down automatically after 15 minutes of
+inactivity to save you money.
+
+In theory, this example can run on any nVidia GPU with at least 16 GB of vram
+and in an environment with the FUSE character device `/dev/fuse` usable. If you
+can't use FUSE for some reason, you will need to write custom python code to
+interact with Tigris directly. This is left as an exercise for the reader. Hint:
+use the `multiprocessing` module to parallelize the model weight loading and
+saving steps.
+
+:::note
+
+The FUSE concept in the Linux kernel is different than the concept of fusing a
+LoRA adapter to a base model. It is unfortunate that the two things are so
+similar, but such is life.
+
+:::
 
 ## Next steps
 

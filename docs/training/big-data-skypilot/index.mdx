@@ -1,24 +1,20 @@
 # Training with Big Data on SkyPilot
 
 [SkyPilot](https://skypilot.readthedocs.io/en/latest/docs/index.html) simplifies
-multi-cloud deployments, offering unmatched flexibility for training large-scale
-data models across different cloud providers. Unlike custom solutions or complex
-tools like Terraform, SkyPilot provides an effortless way to deploy workloads
-seamlessly across clouds, eliminating the need for manual intervention.
+multi-cloud deployments, offering flexibility for training large-scale data
+models across different cloud providers. Unlike custom solutions or more
+involved tools like Terraform, SkyPilot provides an effortless way to deploy
+workloads seamlessly across clouds, eliminating the need for manual
+intervention.
 
-With SkyPilot, switching between cloud environments is as easy as updating your
-credentials. It abstracts away complexities like egress costs, performance
-tuning, and cloud-specific quirks, ensuring a consistent user experience no
-matter the provider. By focusing on ergonomic multi-cloud operations, SkyPilot
-empowers teams to concentrate on their data workloads instead of the
-infrastructure.
+While multi-cloud tools like SkyPilot abstract away cloud provider specific
+quirks, underlying egress costs and bottlenecks in the storage layer can be
+roadblocks. Combining Tigris with SkyPilot ensures there are no cross-cloud
+egress costs, all while ensuring consistent performance and reliability in any
+region.
 
-In synergy with SkyPilot, Tigris enhances this experience by providing global
-object storage that performs consistently across any cloud. Whether handling
-large datasets or ensuring low-latency access, Tigris ensures uniform
-performance and reliability. Together, SkyPilot and Tigris create a seamless
-ecosystem for multi-cloud data operations, enabling fast, reliable storage and
-deployment for big data training.
+In this guide, you'll build a multi-cloud compatible model training job that
+leverages Tigris to store training data and SkyPilot to manage compute.
 
 ## Prerequisites
 

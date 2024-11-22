@@ -115,6 +115,11 @@ const sidebars = {
     },
     {
       type: "category",
+      label: "AI Guides",
+      items: ["training/big-data-skypilot/index", "training/geesefs-linux"],
+    },
+    {
+      type: "category",
       label: "Model Storage",
       items: [
         "model-storage/beam-cloud",
@@ -127,11 +132,6 @@ const sidebars = {
       type: "category",
       label: "IAM",
       items: ["iam/index", "iam/ip-restrictions", "iam/limited-access-key"],
-    },
-    {
-      type: "category",
-      label: "Training models",
-      items: ["training/big-data-skypilot/index", "training/geesefs-linux"],
     },
     {
       type: "doc",

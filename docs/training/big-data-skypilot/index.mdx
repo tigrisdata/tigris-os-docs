@@ -25,8 +25,8 @@ leverages Tigris to store training data and SkyPilot to manage compute.
 - Our
   [demo training repository](https://github.com/tigrisdata-community/skypilot-training-demo)
   cloned
-- Accounts with your desired cloud providers (AWS, Azure, GCP, etc; we'll use
-  AWS in this guide)
+- Accounts with your desired cloud providers (AWS, Lambda Labs, RunPod,
+  Fluidstack, etc; we'll use AWS in this guide)
 
 ## Setting up your enviroment variables
 
@@ -173,7 +173,8 @@ tokenizer.save_pretrained(f"{home_dir}/tigris/models/{model_name}")
 
 Note that the model weights are saved to Tigris using the `{home_dir}/tigris`
 folder. Tigris isn't normally a Linux filesystem, but this example uses
-[geesefs](https://github.com/yandex-cloud/geesefs) to mount Tigris as a
+[geesefs](https://github.com/yandex-cloud/geesefs) to
+[mount Tigris](https://www.tigrisdata.com/docs/training/geesefs-linux/) as a
 [FUSE](https://www.kernel.org/doc/html/latest/filesystems/fuse.html) (Filesystem
 in Userspace) filesystem. This allows you to use normal filesystem calls to
 interact with Tigris, which is useful for AI workloads that assume data is
@@ -397,8 +398,48 @@ curl 3.84.15.251:30001/v1/chat/completions \
     -H 'Content-Type: application/json'
 ```
 
+You can use this endpoint from any OpenAI compatible client, like the Python
+one:
+
+```python
+from openai import OpenAI
+client = OpenAI(
+    # URL from sky serve up, add /v1 to the end
+    base_url="http://3.84.15.251:30001/v1",
+    api_key="token-abc123", # not a real token
+)
+
+completion = client.chat.completions.create(
+  model="/home/ubuntu/tigris/done/Qwen/Qwen2.5-0.5B/mlabonne/FineTome-100k/fused",
+  messages=[
+    {"role": "user", "content": "Hello!"}
+  ]
+)
+
+print(completion.choices[0].message)
+```
+
 You can destroy this with `sky serve down`:
 
 ```text
 sky serve down mymodel
 ```
+
+## What you just built
+
+In this guide, you took
+[a dataset](https://huggingface.co/mlabonne/FineTome-100k), finetuned a LoRA
+adapter on top of [a model](https://huggingface.co/Qwen/Qwen2.5-0.5B), and then
+deployed the finetuned model with SkyPilot. You didn't have to install the
+nVidia drivers on the instances, you didn't need to worry about the Python
+setup, and you didn't even need to compare prices between cloud providers. You
+just ran a command and it worked.
+
+You also took that finetuned model and deployed it to an OpenAI-compatible
+endpoint with the `sky serve` command, so you can use it in your own projects.
+
+This is just the beginning. You can use this as a template for your own training
+workflows. Each component of this is designed to be very modular and easy to
+mess with, so you can swap out the dataset, the model, or the training
+parameters with ease. You may need to do experimentation to get the best
+results, but this is a good starting point.

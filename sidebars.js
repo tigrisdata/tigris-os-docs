@@ -109,11 +109,6 @@ const sidebars = {
       ],
     },
     {
-      type: "doc",
-      label: "Self-hosted Docker Registry",
-      id: "apps/docker-registry",
-    },
-    {
       type: "category",
       label: "AI Guides",
       items: ["training/big-data-skypilot/index", "training/geesefs-linux"],
@@ -132,6 +127,11 @@ const sidebars = {
       type: "category",
       label: "IAM",
       items: ["iam/index", "iam/ip-restrictions", "iam/limited-access-key"],
+    },
+    {
+      type: "doc",
+      label: "Docker Registry",
+      id: "apps/docker-registry",
     },
     {
       type: "doc",

@@ -109,9 +109,9 @@ const sidebars = {
       ],
     },
     {
-      type: "doc",
-      label: "Self-hosted Docker Registry",
-      id: "apps/docker-registry",
+      type: "category",
+      label: "AI Guides",
+      items: ["training/big-data-skypilot/index", "training/geesefs-linux"],
     },
     {
       type: "category",
@@ -130,8 +130,8 @@ const sidebars = {
     },
     {
       type: "doc",
-      label: "Mount Tigris as a Filesystem",
-      id: "training/geesefs-linux",
+      label: "Docker Registry",
+      id: "apps/docker-registry",
     },
     {
       type: "doc",

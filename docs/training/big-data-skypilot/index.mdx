@@ -58,9 +58,9 @@ sky launch -n test allatonce.yaml --env-file .env --workdir . -i 15 --down
 
 While that runs, here's what's going on. SkyPilot is spinning up a new GPU
 instance somewhere in the cloud, installing the necessary software and
-dependencies, and training a LoRA adapter on the model you chose in your `.env`
-file. Once training is complete, the instance automatically shuts down after 15
-minutes of inactivity.
+dependencies, and training a [LoRA](https://github.com/microsoft/LoRA) (Low-Rank
+Adaptation) adapter on the model you chose in your `.env` file. Once training is
+complete, the instance automatically shuts down after 15 minutes of inactivity.
 
 It does this by running a series of scripts in sequence:
 

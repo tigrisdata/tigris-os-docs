@@ -11,8 +11,8 @@ you need to do to get started:
 
 ## Create a bucket
 
-First, create a Tigris bucket by heading to https://storage.new. Give it a name such as
-mybucket and write it down in your notes.
+First, create a Tigris bucket by heading to https://storage.new. Give it a name
+such as mybucket and write it down in your notes.
 
 ## Create an access key
 

@@ -1,11 +1,12 @@
 # Storage Tiers
 
 Tigris offers object storage tiers to optimize storage costs based on the access
-patterns of your data. There are three storage tiers available:
+patterns of your data. The following storage tiers are available:
 
 - Standard
 - Infrequent Access
 - Archive
+- Archive Instant Retrieval
 
 ## Standard tier
 

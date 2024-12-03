@@ -11,7 +11,7 @@ you need to do to get started:
 
 ## Create a bucket
 
-First, create a bucket by heading to https://storage.new. Give it a name such as
+First, create a Tigris bucket by heading to https://storage.new. Give it a name such as
 mybucket and write it down in your notes.
 
 ## Create an access key
@@ -34,8 +34,8 @@ metadata:
   name: tigris-key-mybucket
 type: Opaque
 stringData:
-  AWS_ACCESS_KEY_ID: tid_...
-  AWS_SECRET_ACCESS_KEY: tsec_...
+  AWS_ACCESS_KEY_ID: tid_*
+  AWS_SECRET_ACCESS_KEY: tsec_*
   AWS_ENDPOINT_URL_S3: https://fly.storage.tigris.dev
   AWS_ENDPOINT_URL_IAM: https://fly.iam.storage.tigris.dev
   AWS_REGION: auto

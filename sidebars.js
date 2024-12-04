@@ -38,7 +38,7 @@ const sidebars = {
     {
       type: "category",
       label: "Quickstarts",
-      items: ["quickstarts/go", "quickstarts/node"],
+      items: ["quickstarts/go", "quickstarts/kubernetes", "quickstarts/node"],
     },
     {
       type: "category",

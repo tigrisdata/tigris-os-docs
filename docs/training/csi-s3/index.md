@@ -10,7 +10,7 @@ gap and expose Tigris buckets as if they were normal PersistentVolumes, it even
 supports the ReadWriteMany access mode so multiple Pods on multiple Nodes can
 modify the same bucket at the same time.
 
-Today, we’re gonna cover how to install csi-s3 and get access to bottomless
+Today, we’re going to cover how to install csi-s3 and get access to bottomless
 storage on your Kubernetes clusters.
 
 ## Installing csi-s3

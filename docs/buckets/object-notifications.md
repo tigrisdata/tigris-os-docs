@@ -104,6 +104,26 @@ An example notification payload is:
 }
 ```
 
+## Filtering
+
+Object notifications support adding a SQL-like query to filter the events that
+are sent to the webhook. The query is configured in the Tigris Dashboard. The
+filtering uses the SQL-like syntax defined in
+[Metadata Querying](/docs/objects/query-metadata.md). It also supports the extra
+`Event-Type` field to filter by event type.
+
+An example to only receive notifications for a key with a prefix of `images/`:
+
+```sql
+WHERE key REGEXP "^images"
+```
+
+Or to only receive notifications for delete events:
+
+```sql
+WHERE "Event-Type" = "OBJECT_DELETED"
+```
+
 ## Pricing
 
 See [Pricing](/docs/pricing/index.md) for how object notifications are charged.

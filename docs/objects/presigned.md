@@ -26,6 +26,41 @@ Refer to the following example to generate a presigned URL:
 - [AWS PHP SDK](/docs/sdks/s3/aws-php-sdk/#using-presigned-urls)
 - [AWS Python SDK](/docs/sdks/s3/aws-python-sdk/#using-presigned-urls)
 
+## Presigned URL with custom domain
+
+If you utilize a [custom domain with Tigris](../buckets/custom-domain.md), you
+can also generate the presigned URL with the custom domain. This allows you to
+have consistent branding and user experience. You can utilize any of the SDKs
+mentioned above to generate the presigned URL and do string manipulation to have
+your custom domain.
+
+For example:
+
+For my bucket `mybucket.mydomain.com` and object key `hello.txt`, AWS CLI
+command to generate a presigned URL would look like:
+
+```bash
+aws s3 presign s3://mybucket.mydomain.com/hello.txt
+```
+
+and generated URL would look like
+
+```bash
+https://fly.storage.tigris.dev/mybucket.mydomain.com/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=tid_<>%2F20241210%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=<>X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=<>
+```
+
+You can remove `fly.storage.tigris.dev/` and make it look like
+
+```bash
+https://mybucket.mydomain.com/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=tid_<>%2F20241210%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=<>X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=<>
+```
+
+Here is the bash one-liner to do the same:
+
+```bash
+aws s3 presign s3://mybucket.mydomain.com/hello.txt |  sed 's/fly.storage.tigris.dev\///'
+```
+
 ## Security
 
 When utilizing a custom domain and sharing pre-signed URLs for uploading

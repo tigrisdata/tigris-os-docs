@@ -111,7 +111,11 @@ const sidebars = {
     {
       type: "category",
       label: "AI Guides",
-      items: ["training/big-data-skypilot/index", "training/geesefs-linux"],
+      items: [
+        "training/big-data-skypilot/index",
+        "training/csi-s3/index",
+        "training/geesefs-linux",
+      ],
     },
     {
       type: "category",

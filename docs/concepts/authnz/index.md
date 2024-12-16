@@ -108,7 +108,7 @@ based on the role assigned to the it.
 | GetBucketOwnershipControls         | ✅    | ✅     | ✅       |
 | PostPolicy                         | ✅    | ✅     | ❌       |
 | PutBucket                          | ✅    | ✅     | ❌       |
-| PutBucketACL                       | ✅    | ✅     | ❌       |
+| PutBucketACL                       | ✅    | ❌     | ❌       |
 | PutBucketAccelerateConfiguration   | ✅    | ✅     | ❌       |
 | PutBucketCors                      | ✅    | ✅     | ❌       |
 | PutBucketLifecycleConfiguration    | ✅    | ✅     | ❌       |

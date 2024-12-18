@@ -6,13 +6,14 @@ are deployed in the following regions:
 
 | Region ID | Region Location            |
 | --------- | -------------------------- |
+| ams       | Amsterdam, Netherlands     |
+| dfw       | Dallas, Texas (US)         |
+| ewr       | Newark, New Jersey (US)    |
 | fra       | Frankfurt, Germany         |
 | gru       | Sao Paulo, Brazil          |
-| hkg       | Hong Kong, Hong Kong       |
 | iad       | Ashburn, Virginia (US)     |
 | jnb       | Johannesburg, South Africa |
 | lhr       | London, United Kingdom     |
-| mad       | Madrid, Spain              |
 | nrt       | Tokyo, Japan               |
 | ord       | Chicago, Illinois (US)     |
 | sin       | Singapore, Singapore       |

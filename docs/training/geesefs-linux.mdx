@@ -4,17 +4,22 @@ For AI workloads, most runtimes assume data is accessible via a filesystem. By
 mounting a Tigris bucket as a filesystem, data is no longer limited by local
 storage nor memory capacity.
 
-After testing filesystems for performance and reliability, we support
-[GeeseFS](https://github.com/yandex-cloud/geesefs). GeeseFS lets you mount S3
-buckets to your local Linux system. Since Tigris is S3-compatible, you can use
-GeeseFS to mount any Tigris bucket as if it was a normal Linux filesystem.
+After testing filesystems for performance and reliability, we recommend
+[GeeseFS](https://github.com/tigrisdata/geesefs). The is a fork of the original
+[yandex-cloud/geesefs](https://github.com/yandex-cloud/geesefs) project with
+optimizations for Tigris. GeeseFS is a FUSE-based filesystem that mounts
+S3-compatible storage as a local filesystem. You can use GeeseFS to mount any
+Tigris bucket as if it was a normal Linux filesystem.
 
-- Install geesefs
-- Configure credentials
-- systemd service to start geesefs on boot
-- Reboot test
+:::note
 
-Prerequisites:
+GeeseFS does not obfuscate the objects in the bucket (unlike JuiceFS). This
+means you can access the objects directly via the S3-compatible API using the
+standard S3 SDKs, tools, and libraries, as well as via the GeeseFS filesystem.
+
+:::
+
+## Prerequisites:
 
 - A Tigris account
 - A bucket you want to mount into your system (`mybucket`)
@@ -34,14 +39,14 @@ bucket in each user's home directory.
 ## Installing geesefs
 
 Download the latest release for your machine from
-[the list of geesefs releases](https://github.com/yandex-cloud/geesefs/releases)
+[the list of geesefs releases](https://github.com/tigrisdata/geesefs/releases)
 to `/usr/local/bin` and mark it as executable:
 
 <details>
 <summary>amd64 Linux</summary>
 
-```text
-sudo wget -O /usr/local/bin/geesefs https://github.com/yandex-cloud/geesefs/releases/download/v0.42.0/geesefs-linux-amd64
+```shell
+sudo wget -O /usr/local/bin/geesefs https://github.com/tigrisdata/geesefs/releases/download/v0.42.0-tigris1/geesefs-linux-amd64
 sudo chmod +x /usr/local/bin/geesefs
 ```
 
@@ -72,7 +77,7 @@ After=network.target
 [Service]
 Type=forking
 WorkingDirectory=%h
-ExecStart=/usr/local/bin/geesefs --endpoint https://fly.storage.tigris.dev mybucket %h/data
+ExecStart=/usr/local/bin/geesefs --endpoint https://fly.storage.tigris.dev --list-type=2 --disable-xattr --no-implicit-dir --no-dir-object mybucket %h/data
 
 [Install]
 WantedBy=default.target

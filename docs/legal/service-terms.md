@@ -12,19 +12,19 @@ definitions of certain capitalized terms used in this Agreement.
 
 PLEASE READ THE FOLLOWING TERMS CAREFULLY:
 
-**BY CLICKING “I ACCEPT,” OR BY ACCESSING OR USING THE TIGRIS OBJECT STORAGE
-SERVICE**, YOU (“User” or “you”) AGREE THAT YOU HAVE READ AND UNDERSTOOD, AND,
+**BY CLICKING "I ACCEPT," OR BY ACCESSING OR USING THE TIGRIS OBJECT STORAGE
+SERVICE**, YOU ("User" or "you") AGREE THAT YOU HAVE READ AND UNDERSTOOD, AND,
 AS A CONDITION TO YOUR USE OF THE TIGRIS OBJECT STORAGE SERVICE, YOU AGREE TO BE
-BOUND BY, THE TERMS OF THIS AGREEMENT AND TIGRIS DATA’S PRIVACY POLICY, WHICH IS
+BOUND BY, THE TERMS OF THIS AGREEMENT AND TIGRIS DATA'S PRIVACY POLICY, WHICH IS
 INCORPORATED HEREIN BY REFERENCE. IF AN INDIVIDUAL IS ACCEPTING THIS AGREEMENT
-ON BEHALF OF A COMPANY OR OTHER LEGAL ENTITY, SUCH INDIVIDUAL (AN “ENTERPRISE
-USER”) REPRESENTS THAT THEY HAVE THE AUTHORITY TO BIND SUCH ENTITY TO THE TERMS
-OF THIS AGREEMENT, AND THE TERMS “User” AND “you” AS USED IN THIS AGREEMENT WILL
+ON BEHALF OF A COMPANY OR OTHER LEGAL ENTITY, SUCH INDIVIDUAL (AN "ENTERPRISE
+USER") REPRESENTS THAT THEY HAVE THE AUTHORITY TO BIND SUCH ENTITY TO THE TERMS
+OF THIS AGREEMENT, AND THE TERMS "User" AND "you" AS USED IN THIS AGREEMENT WILL
 REFER TO SUCH ENTITY. IF THE INDIVIDUAL ACCEPTING THIS AGREEMENT IS NOT
 ELIGIBLE, DOES NOT AGREE TO THE TERMS OF THIS AGREEMENT, OR DOES NOT HAVE SUCH
 AUTHORITY, SUCH INDIVIDUAL MUST NOT ACCEPT THIS AGREEMENT AND USER MAY NOT USE
-THE TIGRIS OBJECT STORAGE SERVICE. USER’S USE OF THE TIGRIS OBJECT STORAGE
-SERVICE, AND TIGRIS DATA’S PROVISION OF THE TIGRIS OBJECT STORAGE SERVICE TO
+THE TIGRIS OBJECT STORAGE SERVICE. USER'S USE OF THE TIGRIS OBJECT STORAGE
+SERVICE, AND TIGRIS DATA'S PROVISION OF THE TIGRIS OBJECT STORAGE SERVICE TO
 USER, CONSTITUTES AN AGREEMENT BY TIGRIS DATA AND BY USER TO BE BOUND BY THIS
 AGREEMENT.
 
@@ -37,7 +37,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
 1.  **Tigris Object Storage Service Overview.** Tigris Data makes available a
     global object storage service that enables developers to quickly and easily
     store and access any amount of data for a wide range of use cases
-    (collectively, the “Tigris Object Storage Service”).
+    (collectively, the "Tigris Object Storage Service").
 
 2.  **Eligibility.** You must be at least 18 years old to use the Tigris Object
     Storage Service. By agreeing to this Agreement, you represent and warrant to
@@ -68,9 +68,9 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
 
 4.  **End Users.** Enterprise Users may be permitted to invite other users to
     register for accounts in order to access the Tigris Object Storage Service
-    and Customer Content (such other users, “End Users”). User is responsible
-    for each End User’s use of and access to the Tigris Object Storage Service
-    and the Customer Content and for each End User’s compliance with this
+    and Customer Content (such other users, "End Users"). User is responsible
+    for each End User's use of and access to the Tigris Object Storage Service
+    and the Customer Content and for each End User's compliance with this
     Agreement. If User becomes aware of any violation of this Agreement caused
     by an End User, User will immediately suspend access to the Tigris Object
     Storage Service and Customer Content by such End User.
@@ -82,16 +82,16 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     to Tigris Data within thirty (30) days of receipt of invoice. Tigris Data
     reserves the right (in addition to any other rights or remedies Tigris Data
     may have) to discontinue the Tigris Object Storage Service, in whole or in
-    part, and suspend all Authorized Users’ and Customer’s access to the Tigris
+    part, and suspend all Authorized Users' and Customer's access to the Tigris
     Object Storage Service, in whole or in part, if any Fees are more than
     thirty (30) days overdue until such amounts are paid in full.
 
 6.  Tigris Object Storage Service
 
-    6.1 **Permitted Use.** Subject to User’s complete and ongoing compliance
+    6.1 **Permitted Use.** Subject to User's complete and ongoing compliance
     with this Agreement, Tigris Data grants User a limited, non-exclusive,
     non-transferable, non-sublicensable, revocable license during the Term to
-    access and use the Tigris Object Storage Service only for User’s internal
+    access and use the Tigris Object Storage Service only for User's internal
     use in accordance with this Agreement.
 
     6.2 **Restrictions.** Except and solely to the extent such a restriction is
@@ -120,7 +120,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     6.3 **Feedback.** We respect and appreciate the thoughts and comments from
     our users. If User chooses to provide input and suggestions regarding
     existing functionalities, problems with or proposed modifications or
-    improvements to the Tigris Object Storage Service (“Feedback”), then User
+    improvements to the Tigris Object Storage Service ("Feedback"), then User
     hereby grants Tigris Data an unrestricted, perpetual, irrevocable,
     non-exclusive, fully-paid, royalty-free right and license to use the
     Feedback in any manner and for any purpose, including to improve the Tigris
@@ -129,12 +129,12 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     provides to us.
 
     6.4 **API.** The Tigris Object Storage Service includes the Tigris Data
-    application programming interface (“API”). To the extent you use the API,
+    application programming interface ("API"). To the extent you use the API,
     you will comply with our published API documentation and any other
     information or policies we make available from time to time. In addition to
     any restrictions or limitations set forth in such documentation (and without
     limiting this Agreement), you will not use the API in a manner that, in
-    Tigris Data’s discretion, exceeds specified call/query volumes, constitutes
+    Tigris Data's discretion, exceeds specified call/query volumes, constitutes
     abusive or excessive use, or otherwise fails to comply with or is
     inconsistent with this Agreement.
 
@@ -142,7 +142,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     owned and operated by Tigris Data. The visual interfaces, graphics, design,
     compilation, information, data, computer code (including source code or
     object code), products, software, services, and all other elements of the
-    Tigris Object Storage Service provided by Tigris Data (“Materials”) are
+    Tigris Object Storage Service provided by Tigris Data ("Materials") are
     protected by intellectual property and other laws. All Materials included in
     the Tigris Object Storage Service are the property of Tigris Data or its
     third-party licensors. Except as expressly authorized by Tigris Data, User
@@ -159,7 +159,11 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     Customer Content and User Data and treat such Customer Content and User Data
     as confidential information; provided that User is solely responsible for
     maintaining the security and operability of those systems and devices that
-    User uses to access the Tigris Object Storage Service.
+    User uses to access the Tigris Object Storage Service. Further, for the term
+    of this Agreement, Tigris will ensure that a full, accurate and complete
+    copy of all Customer Content and any data stored on the Tigris Object
+    Storage Service can be accessed, downloaded, replicated and transferred by
+    User if necessary.
 
 9.  **Third-Party Terms.**
 
@@ -170,8 +174,8 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     Service with an account on the third-party service. By using one of these
     tools, you hereby authorize Tigris Data to transfer your information and
     Customer Content to the applicable third-party service. Third-party services
-    are not under Tigris Data’s control, and, to the fullest extent permitted by
-    law, Tigris Data is not responsible for any third-party service’s use of
+    are not under Tigris Data's control, and, to the fullest extent permitted by
+    law, Tigris Data is not responsible for any third-party service's use of
     your exported information. Please be sure to review the terms of use and
     privacy policy of any third-party services before you share any Customer
     Content or information with such third-party services. Once sharing occurs,
@@ -180,7 +184,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     9.2 **Third-Party Software.** The Tigris Object Storage Service may include
     or incorporate third-party software components that are generally available
     free of charge under licenses granting recipients broad rights to copy,
-    modify, and distribute those components (“Third-Party Components”). Although
+    modify, and distribute those components ("Third-Party Components"). Although
     the Tigris Object Storage Service is provided to User subject to this
     Agreement, nothing in this Agreement prevents, restricts, or is intended to
     prevent or restrict you from obtaining Third-Party Components under the
@@ -190,9 +194,9 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
 10. **Customer Content**
 
     10.1 **Limited License.** Except as provided in this Section 10, Tigris Data
-    obtains no rights under this Agreement from User (or User’s licensors) to
+    obtains no rights under this Agreement from User (or User's licensors) to
     any Customer Content. By Transmitting Customer Content to Tigris Data or the
-    Tigris Object Storage Service, User consents to Tigris Data’s use of
+    Tigris Object Storage Service, User consents to Tigris Data's use of
     Customer Content to provide the Tigris Object Storage Service to User and
     hereby grant Tigris Data a worldwide, non-exclusive, irrevocable,
     royalty-free, fully paid right and license (with the right to sublicense
@@ -203,20 +207,20 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     necessary to comply with Laws or a binding order of a governmental body.
     Tigris Data will not disclose Customer Content to any government or third
     party except as necessary to comply with Laws or a binding order of a
-    governmental body. For clarity, Tigris Data’s Privacy Policy does not apply
+    governmental body. For clarity, Tigris Data's Privacy Policy does not apply
     to Customer Content.
 
     10.2 **Adequate Rights.** User represents and warrants to Tigris Data that:
-    (a) User or User’s licensors owns all right, title, and interest in and to
+    (a) User or User's licensors owns all right, title, and interest in and to
     Customer Content; (b) User has all rights in Customer Content necessary to
-    grant the rights contemplated by this Agreement; and (c) none of Customer’s
-    Content or User’s use of the Tigris Object Storage Service will violate the
+    grant the rights contemplated by this Agreement; and (c) none of Customer's
+    Content or User's use of the Tigris Object Storage Service will violate the
     terms of this Agreement.
 
     10.3 **Additional User Responsibilities.** User is responsible for all
     Customer Content, including its content and accuracy, and will comply with
     Laws and this Agreement when using the Tigris Object Storage Service. User
-    will ensure that all Customer Content and User’s use of all Customer Content
+    will ensure that all Customer Content and User's use of all Customer Content
     and the Tigris Object Storage Service will not violate any of the terms of
     this Agreement or any Law. User is responsible for properly using the Tigris
     Object Storage Service and represents and warrants that it has made all
@@ -297,7 +301,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     activity is expressly permitted by Law;
 
     13.6 interfere with the operation of the Tigris Object Storage Service or
-    any user’s enjoyment of the Tigris Object Storage Service, including by: (i)
+    any user's enjoyment of the Tigris Object Storage Service, including by: (i)
     uploading or otherwise disseminating any virus, adware, spyware, worm, or
     other malicious code; (ii) making any unsolicited offer or advertisement to
     another user of the Tigris Object Storage Service; (iii) collecting personal
@@ -343,7 +347,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     any content made available on or through the Tigris Object Storage Service
     has been used or exploited in a manner that infringes an intellectual
     property right you own or control, then please promptly send a written
-    “Notification of Claimed Infringement” to the Designated Agent identified
+    "Notification of Claimed Infringement" to the Designated Agent identified
     above containing the following information:
 
         a. an electronic or physical signature of the person authorized to act on behalf of the owner of the copyright or other right being infringed;
@@ -356,7 +360,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
 
         e. a statement by you that you have a good faith belief that the use of the materials on the Tigris Object Storage Service of which you are complaining is not authorized by the copyright or other intellectual property right owner, its agent, or Laws; and
 
-        f. a statement by you that the above information in your notice is accurate and that, under penalty of perjury, you are the copyright or other intellectual property right owner or authorized to act on the copyright or intellectual property owner’s behalf.
+        f. a statement by you that the above information in your notice is accurate and that, under penalty of perjury, you are the copyright or other intellectual property right owner or authorized to act on the copyright or intellectual property owner's behalf.
 
     Your Notification of Claimed Infringement may be shared by Tigris Data with
     the user alleged to have infringed a right you own or control as well as
@@ -366,14 +370,14 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     to confirm your obligations to provide a valid notice of claimed
     infringement.
 
-    14.4 **Repeat Infringers.** Tigris Data’s policy is to: (a) remove or
+    14.4 **Repeat Infringers.** Tigris Data's policy is to: (a) remove or
     disable access to material that Tigris Data believes in good faith, upon
     notice from an intellectual property rights owner or authorized agent, is
     infringing the intellectual property rights of a third party by being made
     available through the Tigris Object Storage Service; and (b) in appropriate
     circumstances, to terminate the accounts of and block access to the Tigris
     Object Storage Service by any user who repeatedly or egregiously infringes
-    other people’s copyright or other intellectual property rights. Tigris Data
+    other people's copyright or other intellectual property rights. Tigris Data
     will terminate the accounts of users that are determined by Tigris Data to
     be repeat infringers. Tigris Data reserves the right, however, to suspend or
     terminate accounts of users in our sole discretion.
@@ -382,8 +386,8 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     Data that material made available by you on or through the Tigris Object
     Storage Service has been the subject of a Notification of Claimed
     Infringement, then you will have the right to provide Tigris Data with what
-    is called a “Counter Notification.” To be effective, a Counter Notification
-    must be in writing, provided to Tigris Data’s Designated Agent through one
+    is called a "Counter Notification." To be effective, a Counter Notification
+    must be in writing, provided to Tigris Data's Designated Agent through one
     of the methods identified in Section 14.2 (DMCA Notification), and include
     substantially the following information:
 
@@ -396,7 +400,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
         d. your name, address, and telephone number, and a statement that you consent to the jurisdiction of Federal District Court for the judicial district in which the address is located, or if you are residing outside of the United States, then for any judicial district in which Tigris Data may be found, and that you will accept service of process from the person who provided notification under Section 14.2 (DMCA Notification) above or an agent of that person.
 
     A party submitting a Counter Notification should consult a lawyer or see 17
-    U.S.C. § 512 to confirm the party’s obligations to provide a valid counter
+    U.S.C. § 512 to confirm the party's obligations to provide a valid counter
     notification under the Copyright Act.
 
     14.6 **Reposting of Content Subject to a Counter Notification.** If you
@@ -407,48 +411,48 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     the removed Customer Content or cease disabling access to it in 10 business
     days, and Tigris Data will replace the removed Customer Content and cease
     disabling access to it not less than 10, nor more than 14, business days
-    following receipt of the Counter Notification, unless Tigris Data’s
+    following receipt of the Counter Notification, unless Tigris Data's
     Designated Agent receives notice from the party that submitted the
     Notification of Claimed Infringement that such person has filed an action
     seeking a court order to restrain the user from engaging in infringing
-    activity relating to the material on Tigris Data’s system or network.
+    activity relating to the material on Tigris Data's system or network.
 
     14.7 **False Notifications of Claimed Infringement or Counter
     Notifications.** The Copyright Act provides at 17 U.S.C. § 512(f) that:
-    “[a]ny person who knowingly materially misrepresents under [Section 512 of
+    "[a]ny person who knowingly materially misrepresents under [Section 512 of
     the Copyright Act (17 U.S.C. § 512)] (1) that material or activity is
     infringing, or (2) that material or activity was removed or disabled by
     mistake or misidentification, will be liable for any damages, including
-    costs and attorneys’ fees, incurred by the alleged infringer, by any
-    copyright owner or copyright owner’s authorized licensee, or by a service
+    costs and attorneys' fees, incurred by the alleged infringer, by any
+    copyright owner or copyright owner's authorized licensee, or by a service
     provider, who is injured by such misrepresentation, as the result of [Tigris
     Data] relying upon such misrepresentation in removing or disabling access to
     the material or activity claimed to be infringing, or in replacing the
-    removed material or ceasing to disable access to it.” Tigris Data reserves
+    removed material or ceasing to disable access to it." Tigris Data reserves
     the right to seek damages from any party that submits a Notification of
     Claimed Infringement or Counter Notification in violation of Laws.
 
 15. **Suspension**
 
-    15.1 **General.** Tigris Data may immediately suspend User’s (and its End
-    Users’) access to the Tigris Object Storage Service if Tigris Data
+    15.1 **General.** Tigris Data may immediately suspend User's (and its End
+    Users') access to the Tigris Object Storage Service if Tigris Data
     reasonably determines that: (a) User (or any End User) breaches any term of
     this Agreement; (b) changes to Law or new laws require that Tigris Data
     suspend the Tigris Object Storage Service (in whole or in part) or otherwise
-    may impose additional liability on the part of Tigris Data; or (c) User’s
-    (or its End Users’) actions or use of the Tigris Object Storage Service (i)
-    risk harm to any of Tigris Data’s other customers or the security,
+    may impose additional liability on the part of Tigris Data; or (c) User's
+    (or its End Users') actions or use of the Tigris Object Storage Service (i)
+    risk harm to any of Tigris Data's other customers or the security,
     availability, or integrity of the Tigris Object Storage Service; (ii) could
-    adversely impact Tigris Data’s systems, the Tigris Object Storage Service or
+    adversely impact Tigris Data's systems, the Tigris Object Storage Service or
     the systems or content of any other Tigris Object Storage Service user;
     (iii) could subject any Tigris Data Entity or any third party to liability;
     or (iv) could be fraudulent. Where practicable, Tigris Data will use
     reasonable efforts to provide User with prior notice of the suspension. If
-    in Tigris Data’s sole but reasonable discretion the issue that led to the
-    suspension is resolved, Tigris Data will restore User’s (and its End Users’)
+    in Tigris Data's sole but reasonable discretion the issue that led to the
+    suspension is resolved, Tigris Data will restore User's (and its End Users')
     access to the Tigris Object Storage Service.
 
-    15.2 **Effects.** If Tigris Data suspends User’s (or any End Users’) right
+    15.2 **Effects.** If Tigris Data suspends User's (or any End Users') right
     to access or use any portion or all of the Tigris Object Storage Service,
     (a) User will be responsible for all fees and charges you incur during the
     period of suspension that Tigris Data bills to Users.
@@ -457,15 +461,15 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
 
     16.1 **Term.** This Agreement is effective beginning when User accepts this
     Agreement or first accesses or uses the Tigris Object Storage Service and
-    ending when terminated as described in Section 16.2 (the “Term”).
+    ending when terminated as described in Section 16.2 (the "Term").
 
     16.2 **Termination.**
 
-    a. **For Convenience.** User may terminate User’s account and this Agreement
+    a. **For Convenience.** User may terminate User's account and this Agreement
     for any reason by removing all Customer Content from the Tigris Object
     Storage Service or contacting customer service at help@tigrisdata.com. We
     may terminate this Agreement for any reason by providing User at least 30
-    days’ advance notice.
+    days' advance notice.
 
     b. **For Cause.** Either party may terminate this Agreement if: (i) the
     other party fails to cure a material breach of this Agreement (including a
@@ -473,23 +477,23 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     close its account no later than the effective date of termination set forth
     in such notice); and (ii) upon notice to the other party if the other party
     (x) ceases operation without a successor; or (y) seeks protection under a
-    bankruptcy, receivership, trust deed, creditors’ arrangement, composition,
+    bankruptcy, receivership, trust deed, creditors' arrangement, composition,
     or comparable proceeding, or if such a proceeding is instituted against that
     party and not dismissed within 60 days. Tigris Data may also terminate this
     Agreement for cause immediately upon notice to User if Tigris Data has the
     right to suspend under Section 15 and the issue giving Tigris Data the right
     to suspend either is not capable of being remedied or has not been remedied
-    within 30 days of us suspending User’s (or any of its End User’s) access
+    within 30 days of us suspending User's (or any of its End User's) access
     under Section 15.
 
     16.3 **Effect of Termination.**
 
     a. **General.** Upon termination of this Agreement: (a) except as provided
-    in clause (d) below, all of User’s rights under this Agreement immediately
+    in clause (d) below, all of User's rights under this Agreement immediately
     terminate and User (and its End Users) must immediately cease all use of the
     Tigris Object Storage Service (and must uninstall any application
     programming interface made available by Tigris Data); (b) User (and its End
-    Users) will no longer be authorized to access User’s (or any End User’s)
+    Users) will no longer be authorized to access User's (or any End User's)
     account or the Tigris Object Storage Service; (c) User must pay Tigris Data
     any unpaid amount that was due prior to termination; and (d) all payment
     obligations accrued prior to termination and Sections 3.3, 4, 5, 6.3, 6.5,
@@ -514,7 +518,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     on the Tigris Object Storage Service; and (ii) all Customer Content
     Transmitted to the Tigris Object Storage Service, in each case since upon
     termination of your account, User (and its End Users) may lose access rights
-    to User’s (and its End Users’) account(s). If User’s account has been
+    to User's (and its End Users') account(s). If User's account has been
     terminated for a breach of this Agreement, then User is prohibited from
     creating a new account on the Tigris Object Storage Service using a
     different name, email address or other forms of account verification.
@@ -522,13 +526,13 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
 17. **Indemnification.**
 
     17.1 **General.** To the fullest extent permitted by law, User is
-    responsible for its (and its End Users’) use of and access to the Tigris
+    responsible for its (and its End Users') use of and access to the Tigris
     Object Storage Service, and User will defend and indemnify Tigris Data and
     each other Tigris Data Entity from and against any third-party claim, and
-    any related liability, damage, loss, and expense, including attorneys’ fees
-    and costs, arising out of or connected with: (a) User’s (and each End
-    User’s) use of the Tigris Object Storage Service (including any activities
-    under your or their account); (b) User’s (and any End User’s) violation of
+    any related liability, damage, loss, and expense, including attorneys' fees
+    and costs, arising out of or connected with: (a) User's (and each End
+    User's) use of the Tigris Object Storage Service (including any activities
+    under your or their account); (b) User's (and any End User's) violation of
     any portion of this Agreement, any representation, warranty, or agreement
     referenced in this Agreement, or any Law; (c) the Customer Content,
     including any allegation that User (or any End User) or any Customer Content
@@ -537,7 +541,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     other property, or privacy right; or (e) any dispute or issue between User
     and any End User. We reserve the right, at our own expense, to assume the
     exclusive defense and control of any matter otherwise subject to
-    indemnification by User (without limiting User’s indemnification obligations
+    indemnification by User (without limiting User's indemnification obligations
     with respect to that matter), and in that case, User agrees to cooperate
     with our defense of those claims.
 
@@ -545,16 +549,16 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     against any third-party claim to the extent alleging that the Tigris Object
     Storage Service as operated by Tigris Data, when used by User (and each End
     User) as permitted under this Agreement infringes or misappropriates a third
-    party’s U.S. patent, copyright, trademark, or trade secret, and will pay the
+    party's U.S. patent, copyright, trademark, or trade secret, and will pay the
     amount of any damages and costs awarded against User (including reasonable
-    attorneys’ fees) in a final judgement of, or agreed by Tigris Data in a
+    attorneys' fees) in a final judgement of, or agreed by Tigris Data in a
     settlement of, the claim; provided that Tigris Data will not have any
     obligations or liability under this Section 17.2 for (a) infringement or
     misappropriation resulting from use of the Tigris Object Storage Service in
     combination with products, services, software, data, content or other items
     not provided by Tigris Data; (b) unauthorized use of the Tigris Object
     Storage Service; or (c) if User settles or makes any admissions about a
-    claim without Tigris Data’s prior consent. For any claim covered by this
+    claim without Tigris Data's prior consent. For any claim covered by this
     Section 17.2, Tigris Data will, at its election, either: (i) procure the
     rights to use that portion of the Tigris Object Storage Service alleged to
     be infringing; (ii) replace the alleged infringing portion of the Tigris
@@ -562,17 +566,17 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     alleged infringing portion of the Tigris Object Storage Service to make it
     non-infringing; or (iv) terminate the allegedly infringing portion of the
     Tigris Object Storage Service or this Agreement. This Section 17.2 sets out
-    User’s exclusive remedy and Tigris Data’s entire liability regarding
+    User's exclusive remedy and Tigris Data's entire liability regarding
     infringement or misappropriation of third-party intellectual property
     rights.
 
-    17.3 **Procedure.** The indemnifying party’s obligations in this Section 17
+    17.3 **Procedure.** The indemnifying party's obligations in this Section 17
     are subject to it receiving: (a) prompt written notice of the claim; (b)
     except as set forth in Section 17.1, the exclusive right to control and
     direct the investigation, defense, and settlement of the claim; and (c) all
     reasonably necessary cooperation of the indemnified party, at the
-    indemnifying party’s expense for reasonable out-of-pocket costs. The
-    indemnifying party may not settle any claim without the indemnified party’s
+    indemnifying party's expense for reasonable out-of-pocket costs. The
+    indemnifying party may not settle any claim without the indemnified party's
     prior consent if settlement would require the indemnified party to admit
     fault or take or refrain from taking any action (other than relating to use
     of the Tigris Object Storage Service, when Tigris Data is the indemnifying
@@ -582,8 +586,8 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
 18. **Disclaimers; No Warranties by Tigris Data**
 
     18.1 THE TIGRIS OBJECT STORAGE SERVICE AND ALL MATERIALS AND CONTENT
-    AVAILABLE THROUGH THE TIGRIS OBJECT STORAGE SERVICE ARE PROVIDED “AS IS” AND
-    ON AN “AS AVAILABLE” BASIS. TIGRIS DATA DISCLAIMS ALL WARRANTIES OF ANY
+    AVAILABLE THROUGH THE TIGRIS OBJECT STORAGE SERVICE ARE PROVIDED "AS IS" AND
+    ON AN "AS AVAILABLE" BASIS. TIGRIS DATA DISCLAIMS ALL WARRANTIES OF ANY
     KIND, WHETHER EXPRESS OR IMPLIED, RELATING TO THE TIGRIS OBJECT STORAGE
     SERVICE AND ALL MATERIALS AND CONTENT AVAILABLE THROUGH THE TIGRIS OBJECT
     STORAGE SERVICE, INCLUDING: (a) ANY IMPLIED WARRANTY OF MERCHANTABILITY,
@@ -607,11 +611,11 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     WILL CREATE ANY WARRANTY REGARDING ANY OF THE TIGRIS DATA ENTITIES OR THE
     TIGRIS OBJECT STORAGE SERVICE THAT IS NOT EXPRESSLY STATED IN THIS
     AGREEMENT. TIGRIS DATA IS NOT RESPONSIBLE FOR ANY DAMAGE THAT MAY RESULT
-    FROM THE TIGRIS OBJECT STORAGE SERVICE OR USER’S (OR ANY END USER’S) DEALING
+    FROM THE TIGRIS OBJECT STORAGE SERVICE OR USER'S (OR ANY END USER'S) DEALING
     WITH ANY OTHER SERVICE USER. USER UNDERSTANDS AND AGREES THAT USER (AND ALL
-    END USERS) USE ANY PORTION OF THE TIGRIS OBJECT STORAGE SERVICE AT USER’S
+    END USERS) USE ANY PORTION OF THE TIGRIS OBJECT STORAGE SERVICE AT USER'S
     OWN DISCRETION AND RISK, AND THAT TIGRIS DATA IS NOT RESPONSIBLE FOR ANY
-    DAMAGE TO USER’S (OR ANY END USER’S) PROPERTY (INCLUDING YOUR COMPUTER
+    DAMAGE TO USER'S (OR ANY END USER'S) PROPERTY (INCLUDING YOUR COMPUTER
     SYSTEM OR MOBILE DEVICE USED IN CONNECTION WITH THE TIGRIS OBJECT STORAGE
     SERVICE) OR ANY LOSS OF DATA, MATERIALS OR INFORMATION, INCLUDING CUSTOMER
     CONTENT.
@@ -627,15 +631,15 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     DATA ENTITIES BE LIABLE TO USER FOR ANY INDIRECT, INCIDENTAL, SPECIAL,
     CONSEQUENTIAL OR PUNITIVE DAMAGES (INCLUDING DAMAGES FOR LOSS OF PROFITS,
     GOODWILL, OR ANY OTHER INTANGIBLE LOSS), OR FOR THE VALUE OF ANY CUSTOMER
-    CONTENT, ARISING OUT OF OR RELATING TO USER’S (OR ANY END USER’S) ACCESS TO
-    OR USE OF, OR USER’S (OR ANY END USER’S) INABILITY TO ACCESS OR USE, THE
+    CONTENT, ARISING OUT OF OR RELATING TO USER'S (OR ANY END USER'S) ACCESS TO
+    OR USE OF, OR USER'S (OR ANY END USER'S) INABILITY TO ACCESS OR USE, THE
     TIGRIS OBJECT STORAGE SERVICE OR ANY MATERIALS OR CONTENT (INCLUDING
     CUSTOMER CONTENT) ON THE TIGRIS OBJECT STORAGE SERVICE, WHETHER BASED ON
     WARRANTY, CONTRACT, TORT (INCLUDING NEGLIGENCE), STATUTE, OR ANY OTHER LEGAL
     THEORY, AND WHETHER OR NOT ANY TIGRIS DATA ENTITY HAS BEEN INFORMED OF THE
     POSSIBILITY OF DAMAGE.
 
-    19.2 EXCEPT FOR TIGRIS DATA’S OBLIGATIONS UNDER SECTION 17.2 AND AS PROVIDED
+    19.2 EXCEPT FOR TIGRIS DATA'S OBLIGATIONS UNDER SECTION 17.2 AND AS PROVIDED
     IN SECTIONS 20.5 AND 20.6, TO THE FULLEST EXTENT PERMITTED BY LAW THE
     AGGREGATE LIABILITY OF THE TIGRIS DATA ENTITIES FOR ALL CLAIMS ARISING OUT
     OF OR RELATING TO THE USE OF OR ANY INABILITY TO USE ANY PORTION OF THE
@@ -687,16 +691,16 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     Tigris Data Inc., Attention: Legal Department – Arbitration Opt-Out, 1250
     Borregas Ave, #87, Sunnyvale, CA 94089 that specifies: your full legal name,
     the email address associated with your account on the Tigris Object Storage
-    Service, and a statement that you wish to opt out of arbitration (“Opt-Out
-    Notice”). Once Tigris Data receives your Opt-Out Notice, this Section 20
+    Service, and a statement that you wish to opt out of arbitration ("Opt-Out
+    Notice"). Once Tigris Data receives your Opt-Out Notice, this Section 20
     will be void and any action arising out of this Agreement will be resolved
     as set forth in Section 22.2. The remaining provisions of this Agreement
     will not be affected by your Opt-Out Notice.
 
     20.4 **Arbitrator.** This arbitration agreement, and any arbitration between
     us, is subject the Federal Arbitration Act and will be administered by the
-    JAMS under the rules applicable to consumer disputes (collectively, “JAMS
-    Rules”) as modified by this Agreement. The JAMS Rules and filing forms are
+    JAMS under the rules applicable to consumer disputes (collectively, "JAMS
+    Rules") as modified by this Agreement. The JAMS Rules and filing forms are
     available online at www.jamsadr.org, by calling the JAMS at +1-800-352-5267
     or by contacting Tigris Data.
 
@@ -704,11 +708,11 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     first send a written notice of the dispute to the other party by certified
     U.S. Mail or by Federal Express (signature required) or, only if that other
     party has not provided a current physical address, then by electronic mail
-    (“Notice of Arbitration”). Tigris Data’s address for Notice is: Tigris Data
+    ("Notice of Arbitration"). Tigris Data's address for Notice is: Tigris Data
     Inc., 1250 Borregas Ave, #87, Sunnyvale, CA 94089. The Notice of Arbitration
     must: (a) identify the name or account number of the party making the claim;
     (b) describe the nature and basis of the claim or dispute; and (c) set forth
-    the specific relief sought (“Demand”). The parties will make good faith
+    the specific relief sought ("Demand"). The parties will make good faith
     efforts to resolve the claim directly, but if the parties do not reach an
     agreement to do so within 30 days after the Notice of Arbitration is
     received, you or Tigris Data may commence an arbitration proceeding. If you
@@ -743,25 +747,25 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     you an amount higher than the last written settlement amount offered by
     Tigris Data before an arbitrator was selected, Tigris Data will pay to you
     the higher of: (a) the amount awarded by the arbitrator and (b) US$10,000.
-    The arbitrator’s award shall be final and binding on all parties, except (1)
-    for judicial review expressly permitted by law or (2) if the arbitrator’s
+    The arbitrator's award shall be final and binding on all parties, except (1)
+    for judicial review expressly permitted by law or (2) if the arbitrator's
     award includes an award of injunctive relief against a party, in which case
     that party shall have the right to seek judicial review of the injunctive
     relief in a court of competent jurisdiction that shall not be bound by the
-    arbitrator’s application or conclusions of law. Judgment on the award may be
+    arbitrator's application or conclusions of law. Judgment on the award may be
     entered in any court having jurisdiction.
 
     20.8 **No Class Actions.** YOU AND TIGRIS DATA AGREE THAT EACH MAY BRING
     CLAIMS AGAINST THE OTHER ONLY IN YOUR OR ITS INDIVIDUAL CAPACITY AND NOT AS
     A PLAINTIFF OR CLASS MEMBER IN ANY PURPORTED CLASS OR REPRESENTATIVE
     PROCEEDING. Further, unless both you and Tigris Data agree otherwise, the
-    arbitrator may not consolidate more than one person’s claims, and may not
+    arbitrator may not consolidate more than one person's claims, and may not
     otherwise preside over any form of a representative or class proceeding.
 
     20.9 **Modifications to this Arbitration Provision.** If Tigris Data makes
     any substantive change to this arbitration provision, you may reject the
     change by sending us written notice within 30 days of the change to Tigris
-    Data’s address for Notice of Arbitration, in which case your account with
+    Data's address for Notice of Arbitration, in which case your account with
     Tigris Data will be immediately terminated and this arbitration provision,
     as in effect immediately prior to the changes you rejected will survive.
 
@@ -801,8 +805,8 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     itself. The parties are independent contractors, not agents, partners, or
     joint venturers. Use of Section headers in this Agreement is for convenience
     only and will not have any impact on the interpretation of any provision.
-    Throughout this Agreement the use of the word “including” means “including
-    but not limited to.” If any part of this Agreement is held to be invalid or
+    Throughout this Agreement the use of the word "including" means "including
+    but not limited to." If any part of this Agreement is held to be invalid or
     unenforceable, then the unenforceable part will be given effect to the
     greatest extent possible, and the remaining parts will remain in full force
     and effect. Except as set forth in Section 17.1, this Agreement does not
@@ -830,7 +834,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     failures, refusal of government license, or natural disaster.
 
     22.5 **Confidentiality and Publicity.** User may use Tigris Confidential
-    Information only in connection with User’s use of the Tigris Object Storage
+    Information only in connection with User's use of the Tigris Object Storage
     Service as permitted under this Agreement. User will not disclose Tigris
     Confidential Information during the Term or at any time during the 5-year
     period following the end of the Term. User will take all reasonable measures
@@ -839,10 +843,10 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     to protect your own confidential information of a similar nature. User will
     not issue any press release or make any other public communication with
     respect to this Agreement or your use of the Tigris Object Storage Service
-    without Tigris Data’s prior written consent, in each instance.
+    without Tigris Data's prior written consent, in each instance.
 
     22.6 **Privacy Policy.** Please read the Tigris Data Privacy Policy (the
-    “Privacy Policy”) carefully for information relating to our collection, use,
+    "Privacy Policy") carefully for information relating to our collection, use,
     storage, and disclosure of your personal information. The Tigris Data
     Privacy Policy is incorporated by this reference into, and made a part of,
     this Agreement.
@@ -851,7 +855,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     subject to all additional terms, policies, rules, or guidelines applicable
     to the Tigris Object Storage Service or certain features of the Tigris
     Object Storage Service that we may post on or link to from the Tigris Object
-    Storage Service (the “Additional Terms”). All Additional Terms are
+    Storage Service (the "Additional Terms"). All Additional Terms are
     incorporated by this reference into, and made a part of, this Agreement.
 
     22.8 **Notices.**
@@ -904,7 +908,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     represents and warrants that it is not listed on any U.S. government list of
     prohibited or restricted parties or located in (or a national of) a country
     that is subject to a U.S. government embargo or that has been designated by
-    the U.S. government as a “terrorist supporting” country; (b) agrees not to
+    the U.S. government as a "terrorist supporting" country; (b) agrees not to
     access or use the Tigris Object Storage Service in violation of any U.S.
     export embargo, prohibition, or restriction; and (c) will not submit to the
     Tigris Object Storage Service any information controlled under the U.S.
@@ -924,23 +928,23 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
 
 23. **Definitions**
 
-    “**Aggregated Data**” means User Data that has been deidentified or
+    "**Aggregated Data**" means User Data that has been deidentified or
     aggregated with other data such that the resulting data no longer reasonably
     identifies User or a specific individual.
 
-    “**Customer Content**” means any software, data, text, audio, video, images
+    "**Customer Content**" means any software, data, text, audio, video, images
     or other information User (or an End User) Transmits to Tigris Data through
     the API for storage on the Tigris Object Storage Service.
 
-    “**High Risk Activities**” means any activities where use or failure of the
+    "**High Risk Activities**" means any activities where use or failure of the
     Tigris Object Storage Service could lead to death, personal injury, or
     environmental damage, including life support systems, emergency services,
     nuclear facilities, autonomous vehicles, or air traffic control.
 
-    “**Laws**” means all applicable relevant local, state, federal and
+    "**Laws**" means all applicable relevant local, state, federal and
     international laws, regulations and conventions.
 
-    “**Prohibited Content**” means any software (whether in object or source
+    "**Prohibited Content**" means any software (whether in object or source
     code form), data, text, audio, video, images or other information that: (a)
     is unlawful and/or promotes unlawful activities; (b) defames, harasses,
     abuses, threatens or incites violence towards any individual or group or
@@ -960,25 +964,25 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     person or entity, including any of our employees, personnel or
     representatives; and/or (i) violates the privacy of any third party.
 
-    “**Process**” means to collect, access, use, disclose, transfer, transmit,
+    "**Process**" means to collect, access, use, disclose, transfer, transmit,
     store, host, or otherwise process.
 
-    “**Restricted Data**” means any: (a) special categories of data enumerated
+    "**Restricted Data**" means any: (a) special categories of data enumerated
     in European Union Regulation 2016/679, Article 9(1) or any successor
     legislation; (b) other information subject to regulation or protection under
-    specific Laws such as the Children’s Online Privacy Protection Act or
+    specific Laws such as the Children's Online Privacy Protection Act or
     Gramm-Leach-Bliley Act (or related rules or regulations); (c) any data that
     could otherwise be considered sensitive personal information pursuant to
     relevant and applicable Privacy Laws as defined in the Data Protection
     Addendum.
 
-    “**Tigris Confidential Information**” means all nonpublic information
+    "**Tigris Confidential Information**" means all nonpublic information
     disclosed by us, our affiliates, business partners, or our or their
     respective employees, contractors or agents that is designated as
     confidential or that, given the nature of the information or circumstances
     surrounding its disclosure, reasonably should be understood to be
     confidential. Tigris Confidential Information includes: (a) nonpublic
-    information relating to our or our affiliates or business partners’
+    information relating to our or our affiliates or business partners'
     technology, customers, business plans, promotional and marketing activities,
     finances and other business affairs; (b) third-party information that we are
     obligated to keep confidential; and (c) the nature, content and existence of
@@ -991,19 +995,19 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     documentation to have been independently developed by you without reference
     to the Tigris Confidential Information.
 
-    “**Tigris Data Entities**” means, collectively, Tigris Data, its affiliates
+    "**Tigris Data Entities**" means, collectively, Tigris Data, its affiliates
     and their respective shareholders, directors, managers, members, officers,
     employees, consultants, and agents.
 
-    “**Transmit**” means to submit, upload, transfer or otherwise transmit.
+    "**Transmit**" means to submit, upload, transfer or otherwise transmit.
 
-    “**Usage Data**” means information generated from use of the Tigris Object
+    "**Usage Data**" means information generated from use of the Tigris Object
     Storage Service, which data does not identify users, any other natural human
-    persons, or you, such as technical logs, data, and learnings about User’s
+    persons, or you, such as technical logs, data, and learnings about User's
     use of the Tigris Object Storage Service, but excluding any identifiable
     User Data.
 
-    “**User Data**” means any data or information (other than Customer Content)
+    "**User Data**" means any data or information (other than Customer Content)
     that: (i) User submit to the Tigris Object Storage Service, including from
     any third-party platform, add-on, service, or product not provided by Tigris
     Data that User elects to integrate or enable for use with the Tigris Object

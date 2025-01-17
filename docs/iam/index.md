@@ -90,3 +90,4 @@ Here are some common use cases for IAM policies:
 
 - [Restrict the actions that can be performed on a bucket or object by a specific access-key (machine user)](/docs/iam/limited-access-key.md).
 - [IP restrictions](/docs/iam/ip-restrictions.md).
+- [Restricting access by date and time](/docs/iam/date-time-restrictions.md).

@@ -1,4 +1,4 @@
-# IAM
+# Overview
 
 IAM stands for Identity and Access Management. By default, Tigris supplies two
 simplified roles that fit the majority of use cases, `Read Only` and `Editor`.

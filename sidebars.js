@@ -81,6 +81,16 @@ const sidebars = {
     },
     {
       type: "category",
+      label: "IAM",
+      items: [
+        "iam/index",
+        "iam/limited-access-key",
+        "iam/ip-restrictions",
+        "iam/date-time-restrictions",
+      ],
+    },
+    {
+      type: "category",
       label: "Data Migration",
       items: ["migration/index"],
     },
@@ -126,11 +136,6 @@ const sidebars = {
         "model-storage/skypilot",
         "model-storage/vast-ai",
       ],
-    },
-    {
-      type: "category",
-      label: "IAM",
-      items: ["iam/index", "iam/ip-restrictions", "iam/limited-access-key"],
     },
     {
       type: "doc",

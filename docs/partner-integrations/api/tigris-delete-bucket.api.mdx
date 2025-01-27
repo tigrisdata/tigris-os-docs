@@ -1,0 +1,266 @@
+---
+id: tigris-delete-bucket
+title: "Delete a bucket"
+description: "Delete a bucket"
+sidebar_label: "Delete a bucket"
+hide_title: true
+hide_table_of_contents: true
+api: eJylVltP4zgU/iuWXxaktmkLbNlK88AOaAfN7oK4SCMRBE5y0nhw7YztFLpV//se20lJLyMB85TEsc/3nct3fBbUsomh4zuaVOkTWEPvO1SVoJnlSp5ndExv+ERz83AKAiz86XfRDi2ZZlNc0O7wgkr8wL2lVjOegX7gGe7h0i0xW+C7hh8V14AGra6gQzMwqealQ8FNl/U5cn6Ke01awJTR8YLaeenMGqu5nNDlsrNCUnryXpALPWGS/+c9eztQiMuD/3oPWogUqc+9BSlXOl1h/KhAz9dAcibMFsp5TgyiWEU8B5L5LBliCyCBOYEZSMJzwu1vhkiFC9PSzndxSpQSwCSSunfAplTSgHEbhv2+e2zE8ysaSZW0IK37y8pS8NSHN/pu3JbFNoZKvkPqCshyK9xCu66uakxkgIFBuJxVwm4j30p4KdEMZAS0VvpXeGDJYrlbHhydgjFsAjsTtaL8F0jQPD3z0MuGa5tgcIqwOgcIg1oplJNTyJBXEFbRmEazQdTIxkSLloKWERY5LoVSX0a1QqNFqySXLo+gZ40OKy3QZmFtacZRlIt5bzqRtmes0uhWz3ot9zKY0U3KQeYE8bMq9RIJdqkrBgNppTlWjcO45hPJbKUxFHf4718l0/r1hmP8LJuW7rN97tqFP0S43r6KLyv5V5g3ZV8AQ+fxq9bEt27g1Q3HNklfMZmpKakkR72QkConBoygtDyf+0+UglMRMiO4HT10irC4Vgo2J8xalj6ZHjl7IV0S0/w4GxwcpEn3iB0Ou4ejZND9A/Jh93h0mCRHRwlLRsOY0uWat+/1xh3dcuZW8hdiG6OESzLlQmBOVN52omY6GB0MRv2D4eDgeNR3dFppeS+d16ObnL78c/K5e/3lZHj0+wYNEiq6Q7DkOoQJhaF+5rbwe+qESJc0H/RXtwxioW4r43JjCoa9DSst1WB7sbxRBN8YSsdZMQ2tDkF5o6JBNr/WwD1MZwPHc2FEwrPgEkiKSAw7hnZxTcA+A0gHWIBE60yklWhs7/C5BZ81ZRY88DzXvPDpiWUsP3tPMvKYMmSIHUk81LF7JMyMY/n4+BjLy4vrm1i+QbGrLhEJdGUGIrSH6byLz/DTYNJiuVYZsXxTQQcum9HYFYnGl1Ud/CQOLRdX5UU+kQJe9nAfWnTZ3dsKTQclGAw8BHMx3d+v7fgmzGWufIXXzbjuW/CC6XH+G3JyeY7kctCwq2WcCKGeCY4vFpu4cc1iyiRGGo8YVeENbFyF1FYv/C1BrkMyfEfk3qZruMFev9fvDZz+SmUsmnLcan1t3wJrVFYqtUg+wmaEIkU7voUv6uvhjs4G4ZIKFwS+j9eHLFcEbnU1EDWDHK61ZxfsxgUydCYXi4QZuNViuXTLYdRwnT3jhiXiZ8PG4vWS/aW5Y6fXT9imXkegGROV2+MvnxnT3NF6J8W9q3p02ifr4+VO/KZhynkbvuHVDrmb2D7EYnv+/ACTOs0fJrE+ln6AQLumlve4vb5VXHLCjpM0hdK2zm4NZC6rq4Ho9Ozvs5sz1Pb/CgtRWQ==
+sidebar_class_name: "delete api-method"
+info_path: partner-integrations/api/tigris-extensions-api-reference
+custom_edit_url: null
+---
+
+import ApiTabs from "@theme/ApiTabs";
+import DiscriminatorTabs from "@theme/DiscriminatorTabs";
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import SecuritySchemes from "@theme/ApiExplorer/SecuritySchemes";
+import MimeTabs from "@theme/MimeTabs";
+import ParamsItem from "@theme/ParamsItem";
+import ResponseSamples from "@theme/ResponseSamples";
+import SchemaItem from "@theme/SchemaItem";
+import SchemaTabs from "@theme/SchemaTabs";
+import Heading from "@theme/Heading";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Delete a bucket"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"delete"}
+  path={"/v1/providers/{provider_id}/orgs/{org_id}/buckets/{bucket_name}"}
+>
+  
+</MethodEndpoint>
+
+
+
+Delete a bucket
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<details
+  style={{"marginBottom":"1rem"}}
+  className={"openapi-markdown__details"}
+  data-collapsed={false}
+  open={true}
+>
+  <summary
+    style={{}}
+  >
+    <h3
+      className={"openapi-markdown__details-summary-header-params"}
+    >
+      Path Parameters
+    </h3>
+  </summary><div>
+    <ul>
+      <ParamsItem
+        className={"paramsItem"}
+        param={{"name":"provider_id","in":"path","required":true,"description":"Provider ID","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem><ParamsItem
+        className={"paramsItem"}
+        param={{"name":"org_id","in":"path","required":true,"description":"Organization ID","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem><ParamsItem
+        className={"paramsItem"}
+        param={{"name":"bucket_name","in":"path","required":true,"description":"Bucket name","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem>
+    </ul>
+  </div>
+</details><details
+  style={{"marginBottom":"1rem"}}
+  className={"openapi-markdown__details"}
+  data-collapsed={false}
+  open={true}
+>
+  <summary
+    style={{}}
+  >
+    <h3
+      className={"openapi-markdown__details-summary-header-params"}
+    >
+      Query Parameters
+    </h3>
+  </summary><div>
+    <ul>
+      <ParamsItem
+        className={"paramsItem"}
+        param={{"name":"force","in":"query","required":false,"description":"If set to true, deletes the bucket even if it's not empty","schema":{"type":"boolean"}}}
+      >
+        
+      </ParamsItem>
+    </ul>
+  </div>
+</details><div>
+  <div>
+    <ApiTabs
+      label={undefined}
+      id={undefined}
+    >
+      <TabItem
+        label={"200"}
+        value={"200"}
+      >
+        <div>
+          
+          
+          OK
+          
+          
+        </div><div>
+          <MimeTabs
+            className={"openapi-tabs__mime"}
+            schemaType={"response"}
+          >
+            <TabItem
+              label={"application/json"}
+              value={"application/json"}
+            >
+              <SchemaTabs
+                className={"openapi-tabs__schema"}
+              >
+                <TabItem
+                  label={"Schema"}
+                  value={"Schema"}
+                >
+                  <details
+                    style={{}}
+                    className={"openapi-markdown__details response"}
+                    data-collapsed={false}
+                    open={true}
+                  >
+                    <summary
+                      style={{}}
+                      className={"openapi-markdown__details-summary-response"}
+                    >
+                      <strong>
+                        Schema
+                      </strong>
+                    </summary><div
+                      style={{"textAlign":"left","marginLeft":"1rem"}}
+                    >
+                      
+                    </div><ul
+                      style={{"marginLeft":"1rem"}}
+                    >
+                      <div
+                        style={{"marginTop":".5rem","marginBottom":".5rem"}}
+                      >
+                        
+                        
+                        object
+                        
+                        
+                      </div>
+                    </ul>
+                  </details>
+                </TabItem><TabItem
+                  label={"Example (from schema)"}
+                  value={"Example (from schema)"}
+                >
+                  <ResponseSamples
+                    responseExample={"{}"}
+                    language={"json"}
+                  >
+                    
+                  </ResponseSamples>
+                </TabItem>
+              </SchemaTabs>
+            </TabItem>
+          </MimeTabs>
+        </div>
+      </TabItem><TabItem
+        label={"default"}
+        value={"default"}
+      >
+        <div>
+          
+          
+          Unexpected error
+          
+          
+        </div><div>
+          <MimeTabs
+            className={"openapi-tabs__mime"}
+            schemaType={"response"}
+          >
+            <TabItem
+              label={"application/json"}
+              value={"application/json"}
+            >
+              <SchemaTabs
+                className={"openapi-tabs__schema"}
+              >
+                <TabItem
+                  label={"Schema"}
+                  value={"Schema"}
+                >
+                  <details
+                    style={{}}
+                    className={"openapi-markdown__details response"}
+                    data-collapsed={false}
+                    open={true}
+                  >
+                    <summary
+                      style={{}}
+                      className={"openapi-markdown__details-summary-response"}
+                    >
+                      <strong>
+                        Schema
+                      </strong>
+                    </summary><div
+                      style={{"textAlign":"left","marginLeft":"1rem"}}
+                    >
+                      
+                    </div><ul
+                      style={{"marginLeft":"1rem"}}
+                    >
+                      <SchemaItem
+                        collapsible={false}
+                        name={"message"}
+                        required={false}
+                        schemaName={"string"}
+                        qualifierMessage={undefined}
+                        schema={{"type":"string"}}
+                      >
+                        
+                      </SchemaItem>
+                    </ul>
+                  </details>
+                </TabItem><TabItem
+                  label={"Example (from schema)"}
+                  value={"Example (from schema)"}
+                >
+                  <ResponseSamples
+                    responseExample={"{\n  \"message\": \"string\"\n}"}
+                    language={"json"}
+                  >
+                    
+                  </ResponseSamples>
+                </TabItem>
+              </SchemaTabs>
+            </TabItem>
+          </MimeTabs>
+        </div>
+      </TabItem>
+    </ApiTabs>
+  </div>
+</div>
+      

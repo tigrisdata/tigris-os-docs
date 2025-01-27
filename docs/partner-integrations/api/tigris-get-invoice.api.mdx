@@ -1,0 +1,552 @@
+---
+id: tigris-get-invoice
+title: "Get invoice for a specific month"
+description: "Get invoice for a specific month"
+sidebar_label: "Get invoice for a specific month"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "get api-method"
+info_path: partner-integrations/api/tigris-extensions-api-reference
+custom_edit_url: null
+---
+
+import ApiTabs from "@theme/ApiTabs";
+import DiscriminatorTabs from "@theme/DiscriminatorTabs";
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import SecuritySchemes from "@theme/ApiExplorer/SecuritySchemes";
+import MimeTabs from "@theme/MimeTabs";
+import ParamsItem from "@theme/ParamsItem";
+import ResponseSamples from "@theme/ResponseSamples";
+import SchemaItem from "@theme/SchemaItem";
+import SchemaTabs from "@theme/SchemaTabs";
+import Heading from "@theme/Heading";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get invoice for a specific month"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"get"}
+  path={"/v1/providers/{provider_id}/orgs/{org_id}/invoices/{month}"}
+>
+  
+</MethodEndpoint>
+
+
+
+Get invoice for a specific month
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<details
+  style={{"marginBottom":"1rem"}}
+  className={"openapi-markdown__details"}
+  data-collapsed={false}
+  open={true}
+>
+  <summary
+    style={{}}
+  >
+    <h3
+      className={"openapi-markdown__details-summary-header-params"}
+    >
+      Path Parameters
+    </h3>
+  </summary><div>
+    <ul>
+      <ParamsItem
+        className={"paramsItem"}
+        param={{"name":"provider_id","in":"path","required":true,"description":"Provider ID","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem><ParamsItem
+        className={"paramsItem"}
+        param={{"name":"org_id","in":"path","required":true,"description":"Organization ID","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem><ParamsItem
+        className={"paramsItem"}
+        param={{"name":"month","in":"path","required":true,"description":"Month in format YYYY-MM","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem>
+    </ul>
+  </div>
+</details><div>
+  <div>
+    <ApiTabs
+      label={undefined}
+      id={undefined}
+    >
+      <TabItem
+        label={"200"}
+        value={"200"}
+      >
+        <div>
+          
+          
+          OK
+          
+          
+        </div><div>
+          <MimeTabs
+            className={"openapi-tabs__mime"}
+            schemaType={"response"}
+          >
+            <TabItem
+              label={"application/json"}
+              value={"application/json"}
+            >
+              <SchemaTabs
+                className={"openapi-tabs__schema"}
+              >
+                <TabItem
+                  label={"Schema"}
+                  value={"Schema"}
+                >
+                  <details
+                    style={{}}
+                    className={"openapi-markdown__details response"}
+                    data-collapsed={false}
+                    open={true}
+                  >
+                    <summary
+                      style={{}}
+                      className={"openapi-markdown__details-summary-response"}
+                    >
+                      <strong>
+                        Schema
+                      </strong>
+                    </summary><div
+                      style={{"textAlign":"left","marginLeft":"1rem"}}
+                    >
+                      
+                    </div><ul
+                      style={{"marginLeft":"1rem"}}
+                    >
+                      <SchemaItem
+                        collapsible={true}
+                        className={"schemaItem"}
+                      >
+                        <details
+                          style={{}}
+                          className={"openapi-markdown__details"}
+                        >
+                          <summary
+                            style={{}}
+                          >
+                            <span
+                              className={"openapi-schema__container"}
+                            >
+                              <strong
+                                className={"openapi-schema__property"}
+                              >
+                                data
+                              </strong><span
+                                className={"openapi-schema__name"}
+                              >
+                                 object
+                              </span>
+                            </span>
+                          </summary><div
+                            style={{"marginLeft":"1rem"}}
+                          >
+                            <SchemaItem
+                              collapsible={false}
+                              name={"org_id"}
+                              required={true}
+                              schemaName={"string"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"string","description":"Organization ID"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"plan_name"}
+                              required={true}
+                              schemaName={"string"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"string","description":"Name of the plan"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={true}
+                              className={"schemaItem"}
+                            >
+                              <details
+                                style={{}}
+                                className={"openapi-markdown__details"}
+                              >
+                                <summary
+                                  style={{}}
+                                >
+                                  <span
+                                    className={"openapi-schema__container"}
+                                  >
+                                    <strong
+                                      className={"openapi-schema__property"}
+                                    >
+                                      charges
+                                    </strong><span
+                                      className={"openapi-schema__name"}
+                                    >
+                                       object[]
+                                    </span><span
+                                      className={"openapi-schema__divider"}
+                                    >
+                                      
+                                    </span><span
+                                      className={"openapi-schema__required"}
+                                    >
+                                      required
+                                    </span>
+                                  </span>
+                                </summary><div
+                                  style={{"marginLeft":"1rem"}}
+                                >
+                                  <div
+                                    style={{"marginTop":".5rem","marginBottom":".5rem"}}
+                                  >
+                                    
+                                    
+                                    List of charges in the invoice
+                                    
+                                    
+                                  </div><li>
+                                    <div
+                                      style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem","paddingBottom":".5rem"}}
+                                    >
+                                      Array [
+                                    </div>
+                                  </li><SchemaItem
+                                    collapsible={false}
+                                    name={"id"}
+                                    required={true}
+                                    schemaName={"string"}
+                                    qualifierMessage={undefined}
+                                    schema={{"type":"string","description":"Unique identifier for the charge"}}
+                                  >
+                                    
+                                  </SchemaItem><SchemaItem
+                                    collapsible={false}
+                                    name={"name"}
+                                    required={true}
+                                    schemaName={"string"}
+                                    qualifierMessage={undefined}
+                                    schema={{"type":"string","description":"User friendly name of the charge"}}
+                                  >
+                                    
+                                  </SchemaItem><SchemaItem
+                                    collapsible={false}
+                                    name={"quantity"}
+                                    required={true}
+                                    schemaName={"double"}
+                                    qualifierMessage={undefined}
+                                    schema={{"type":"number","description":"Number of units consumed","format":"double"}}
+                                  >
+                                    
+                                  </SchemaItem><SchemaItem
+                                    collapsible={false}
+                                    name={"unit"}
+                                    required={true}
+                                    schemaName={"string"}
+                                    qualifierMessage={undefined}
+                                    schema={{"type":"string","description":"Consumption unit"}}
+                                  >
+                                    
+                                  </SchemaItem><SchemaItem
+                                    collapsible={false}
+                                    name={"total"}
+                                    required={true}
+                                    schemaName={"double"}
+                                    qualifierMessage={undefined}
+                                    schema={{"type":"number","description":"Total cost for the charge","format":"double"}}
+                                  >
+                                    
+                                  </SchemaItem><SchemaItem
+                                    collapsible={true}
+                                    className={"schemaItem"}
+                                  >
+                                    <details
+                                      style={{}}
+                                      className={"openapi-markdown__details"}
+                                    >
+                                      <summary
+                                        style={{}}
+                                      >
+                                        <span
+                                          className={"openapi-schema__container"}
+                                        >
+                                          <strong
+                                            className={"openapi-schema__property"}
+                                          >
+                                            tiers
+                                          </strong><span
+                                            className={"openapi-schema__name"}
+                                          >
+                                             object[]
+                                          </span><span
+                                            className={"openapi-schema__divider"}
+                                          >
+                                            
+                                          </span><span
+                                            className={"openapi-schema__required"}
+                                          >
+                                            required
+                                          </span>
+                                        </span>
+                                      </summary><div
+                                        style={{"marginLeft":"1rem"}}
+                                      >
+                                        <li>
+                                          <div
+                                            style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem","paddingBottom":".5rem"}}
+                                          >
+                                            Array [
+                                          </div>
+                                        </li><SchemaItem
+                                          collapsible={false}
+                                          name={"name"}
+                                          required={true}
+                                          schemaName={"string"}
+                                          qualifierMessage={undefined}
+                                          schema={{"type":"string"}}
+                                        >
+                                          
+                                        </SchemaItem><SchemaItem
+                                          collapsible={false}
+                                          name={"quantity"}
+                                          required={true}
+                                          schemaName={"double"}
+                                          qualifierMessage={undefined}
+                                          schema={{"type":"number","description":"Number of units consumed","format":"double"}}
+                                        >
+                                          
+                                        </SchemaItem><SchemaItem
+                                          collapsible={false}
+                                          name={"starting_after"}
+                                          required={true}
+                                          schemaName={"double"}
+                                          qualifierMessage={undefined}
+                                          schema={{"type":"number","description":"Starting point when this tier is applicable","format":"double"}}
+                                        >
+                                          
+                                        </SchemaItem><SchemaItem
+                                          collapsible={false}
+                                          name={"price"}
+                                          required={true}
+                                          schemaName={"double"}
+                                          qualifierMessage={undefined}
+                                          schema={{"type":"number","description":"Rate per unit","format":"double"}}
+                                        >
+                                          
+                                        </SchemaItem><SchemaItem
+                                          collapsible={false}
+                                          name={"subtotal"}
+                                          required={true}
+                                          schemaName={"double"}
+                                          qualifierMessage={undefined}
+                                          schema={{"type":"number","description":"Total cost for the tier","format":"double"}}
+                                        >
+                                          
+                                        </SchemaItem><li>
+                                          <div
+                                            style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem"}}
+                                          >
+                                            ]
+                                          </div>
+                                        </li>
+                                      </div>
+                                    </details>
+                                  </SchemaItem><SchemaItem
+                                    collapsible={false}
+                                    name={"charged_quantity"}
+                                    required={true}
+                                    schemaName={"double"}
+                                    qualifierMessage={undefined}
+                                    schema={{"type":"number","description":"Actual number of units charged for","format":"double"}}
+                                  >
+                                    
+                                  </SchemaItem><li>
+                                    <div
+                                      style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem"}}
+                                    >
+                                      ]
+                                    </div>
+                                  </li>
+                                </div>
+                              </details>
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"subtotal"}
+                              required={true}
+                              schemaName={"double"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"number","description":"Amount before any credits/discounts/minimum commitments","format":"double"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"total"}
+                              required={true}
+                              schemaName={"double"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"number","description":"Total payable amount","format":"double"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"created_at"}
+                              required={true}
+                              schemaName={"date-time"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"string","format":"date-time","description":"RFC3339 timestamp when this invoice was generated","example":"2021-09-01T12:00:00Z"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"last_modified"}
+                              required={true}
+                              schemaName={"date-time"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"string","format":"date-time","description":"RFC3339 timestamp when this invoice was last modified","example":"2021-09-01T12:00:00Z"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"starting_on"}
+                              required={true}
+                              schemaName={"date-time"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"string","format":"date-time","description":"RFC3339 starting time for usage period during which items were added to this invoice","example":"2021-09-01T12:00:00Z"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"ending_before"}
+                              required={true}
+                              schemaName={"date-time"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"string","format":"date-time","description":"RFC3339 ending time for usage period during which items were added to this invoice","example":"2021-09-01T12:00:00Z"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"status"}
+                              required={true}
+                              schemaName={"string"}
+                              qualifierMessage={"**Possible values:** [`DRAFT`, `FINALIZED`]"}
+                              schema={{"type":"string","description":"* `DRAFT` - Invoice can be modified as the billing period progresses\n* `FINALIZED` - Invoice is locked and can't be modified\n","enum":["DRAFT","FINALIZED"]}}
+                            >
+                              
+                            </SchemaItem>
+                          </div>
+                        </details>
+                      </SchemaItem>
+                    </ul>
+                  </details>
+                </TabItem><TabItem
+                  label={"Example (from schema)"}
+                  value={"Example (from schema)"}
+                >
+                  <ResponseSamples
+                    responseExample={"{\n  \"data\": {\n    \"org_id\": \"string\",\n    \"plan_name\": \"string\",\n    \"charges\": [\n      {\n        \"id\": \"string\",\n        \"name\": \"string\",\n        \"quantity\": 0,\n        \"unit\": \"string\",\n        \"total\": 0,\n        \"tiers\": [\n          {\n            \"name\": \"string\",\n            \"quantity\": 0,\n            \"starting_after\": 0,\n            \"price\": 0,\n            \"subtotal\": 0\n          }\n        ],\n        \"charged_quantity\": 0\n      }\n    ],\n    \"subtotal\": 0,\n    \"total\": 0,\n    \"created_at\": \"2021-09-01T12:00:00Z\",\n    \"last_modified\": \"2021-09-01T12:00:00Z\",\n    \"starting_on\": \"2021-09-01T12:00:00Z\",\n    \"ending_before\": \"2021-09-01T12:00:00Z\",\n    \"status\": \"DRAFT\"\n  }\n}"}
+                    language={"json"}
+                  >
+                    
+                  </ResponseSamples>
+                </TabItem>
+              </SchemaTabs>
+            </TabItem>
+          </MimeTabs>
+        </div>
+      </TabItem><TabItem
+        label={"default"}
+        value={"default"}
+      >
+        <div>
+          
+          
+          Unexpected error
+          
+          
+        </div><div>
+          <MimeTabs
+            className={"openapi-tabs__mime"}
+            schemaType={"response"}
+          >
+            <TabItem
+              label={"application/json"}
+              value={"application/json"}
+            >
+              <SchemaTabs
+                className={"openapi-tabs__schema"}
+              >
+                <TabItem
+                  label={"Schema"}
+                  value={"Schema"}
+                >
+                  <details
+                    style={{}}
+                    className={"openapi-markdown__details response"}
+                    data-collapsed={false}
+                    open={true}
+                  >
+                    <summary
+                      style={{}}
+                      className={"openapi-markdown__details-summary-response"}
+                    >
+                      <strong>
+                        Schema
+                      </strong>
+                    </summary><div
+                      style={{"textAlign":"left","marginLeft":"1rem"}}
+                    >
+                      
+                    </div><ul
+                      style={{"marginLeft":"1rem"}}
+                    >
+                      <SchemaItem
+                        collapsible={false}
+                        name={"message"}
+                        required={false}
+                        schemaName={"string"}
+                        qualifierMessage={undefined}
+                        schema={{"type":"string"}}
+                      >
+                        
+                      </SchemaItem>
+                    </ul>
+                  </details>
+                </TabItem><TabItem
+                  label={"Example (from schema)"}
+                  value={"Example (from schema)"}
+                >
+                  <ResponseSamples
+                    responseExample={"{\n  \"message\": \"string\"\n}"}
+                    language={"json"}
+                  >
+                    
+                  </ResponseSamples>
+                </TabItem>
+              </SchemaTabs>
+            </TabItem>
+          </MimeTabs>
+        </div>
+      </TabItem>
+    </ApiTabs>
+  </div>
+</div>
+      

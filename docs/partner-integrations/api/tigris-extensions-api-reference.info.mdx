@@ -1,0 +1,145 @@
+---
+id: tigris-extensions-api-reference
+title: "Tigris extensions API reference"
+description: "Allow partners to manage resources in Tigris Object Storage service"
+sidebar_label: Introduction
+sidebar_position: 0
+hide_title: true
+custom_edit_url: null
+---
+
+import ApiLogo from "@theme/ApiLogo";
+import Heading from "@theme/Heading";
+import SchemaTabs from "@theme/SchemaTabs";
+import TabItem from "@theme/TabItem";
+import Export from "@theme/ApiExplorer/Export";
+
+<span
+  className={"theme-doc-version-badge badge badge--secondary"}
+  children={"Version: 0.0.1"}
+>
+</span>
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Tigris extensions API reference"}
+>
+</Heading>
+
+
+
+Allow partners to manage resources in Tigris Object Storage service
+
+<div
+  style={{"marginBottom":"2rem"}}
+>
+  <Heading
+    id={"authentication"}
+    as={"h2"}
+    className={"openapi-tabs__heading"}
+    children={"Authentication"}
+  >
+  </Heading><SchemaTabs
+    className={"openapi-tabs__security-schemes"}
+  >
+    <TabItem
+      label={"API Key: Nonce"}
+      value={"Nonce"}
+    >
+      
+      
+      Random unique string to identifying the request and prevent replay attacks. Ex - "f8d133cb-5a42-47b1-9ef2-874bb55bab72"
+      
+      <div>
+        <table>
+          <tbody>
+            <tr>
+              <th>
+                Security Scheme Type:
+              </th><td>
+                apiKey
+              </td>
+            </tr><tr>
+              <th>
+                Header parameter name:
+              </th><td>
+                X-Tigris-Nonce
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </TabItem><TabItem
+      label={"API Key: Timestamp"}
+      value={"Timestamp"}
+    >
+      
+      
+      Unix timestamp in millis of the request. Ex - 1731703213870
+      
+      <div>
+        <table>
+          <tbody>
+            <tr>
+              <th>
+                Security Scheme Type:
+              </th><td>
+                apiKey
+              </td>
+            </tr><tr>
+              <th>
+                Header parameter name:
+              </th><td>
+                X-Tigris-Time
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </TabItem><TabItem
+      label={"API Key: Signature"}
+      value={"Signature"}
+    >
+      
+      
+      HMAC-SHA256 of the request method, url, along with the unique nonce and timestamp signed using shared secret.
+      To create the signature, concatenate the method, url, nonce, and timestamp with a newline character in between.
+      Then, calculate the HMAC-SHA256 of the concatenated string using the shared secret. Ex -
+      
+      Created `canonical_request` as:
+      ```
+      POST
+      https://fly.mgnt.storage.tigris.dev/provider/laravel/orgs/my-org/provision
+      1731703213870
+      f8d133cb-5a42-47b1-9ef2-874bb55bab72
+      ```
+      Then, calculate HMAC-SHA256 of the canonical request using the shared secret as:
+      ```
+      Signature = hex(sha256sign(canonical_request, "secret_shared"))
+      ```
+      
+      
+      <div>
+        <table>
+          <tbody>
+            <tr>
+              <th>
+                Security Scheme Type:
+              </th><td>
+                apiKey
+              </td>
+            </tr><tr>
+              <th>
+                Header parameter name:
+              </th><td>
+                X-Tigris-Signature
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </TabItem>
+  </SchemaTabs>
+</div>
+      

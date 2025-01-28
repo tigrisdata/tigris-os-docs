@@ -25,6 +25,7 @@
     "@social-embed/wc": "^0.0.4-next.0",
     "clsx": "^1.1.1",
     "docusaurus-plugin-openapi-docs": "3.0.2",
+    "docusaurus-theme-openapi-docs": "3.0.2",
     "dotenv": "^16.0.2",
     "follow-redirects": ">=1.15.6",
     "param-case": "^3.0.4",

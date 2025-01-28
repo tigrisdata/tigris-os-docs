@@ -6,7 +6,6 @@
 // Needed for testing with environment variables locally
 // On Vercel the environment variables are automatically injected
 require("dotenv").config({ path: ".env.local" });
-import * as OpenApiPlugin from "docusaurus-plugin-openapi-docs";
 
 const tigrisConfig = require("./tigris.config");
 
@@ -65,22 +64,23 @@ const config = {
     [
       "docusaurus-plugin-openapi-docs",
       {
-        id: "extensions-api", // plugin id
+        id: "openapi", // plugin id
         docsPluginId: "classic", // configured for preset-classic
         config: {
-          petstore: {
+          extensions: {
             specPath: "api/extensions/v1/api.yaml",
             outputDir: "docs/partner-integrations/api",
             sidebarOptions: {
               groupPathsBy: "tag",
+              categoryLinkSource: "tag",
             },
+            downloadUrl: "/tigris-extension.yaml",
+            showSchemas: true,
           },
         }
       },
     ],
   ],
-
-  themes: ["docusaurus-theme-openapi-docs"], // export theme components
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
@@ -297,7 +297,10 @@ const config = {
   markdown: {
     mermaid: true,
   },
-  themes: ["@docusaurus/theme-mermaid"],
+  themes: [
+    "@docusaurus/theme-mermaid",
+    "docusaurus-theme-openapi-docs",
+  ],
 };
 
 module.exports = config;

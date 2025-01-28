@@ -924,3 +924,7 @@ tags:
     description: Bucket management
   - name: billing
     description: Billing and Invoicing
+  - name: iam
+    description: Identity and Access Management
+  - name: organizations
+    description: Organization management

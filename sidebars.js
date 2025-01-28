@@ -163,6 +163,7 @@ const sidebars = {
           link: {
             type: "generated-index",
             title: "Extensions API",
+            slug: "/partner-integrations/api/",
             description:
               "API spec for Tigris parter extensions API.",
           },

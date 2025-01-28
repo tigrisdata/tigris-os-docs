@@ -11,7 +11,8 @@ paths:
     post:
       tags:
         - buckets
-      summary: Provision a new bucket in the organization account, also creates the organization account if it doesn't exist
+      summary: Provision a new bucket
+      description: Provision a new bucket in the organization account, also creates the organization account if it doesn't exist
       operationId: Tigris_Provisioning
       parameters:
         - $ref: '#/components/parameters/provider_id'
@@ -922,9 +923,13 @@ security:
 tags:
   - name: buckets
     description: Bucket management
+    x-displayName: Buckets
   - name: billing
     description: Billing and Invoicing
+    x-displayName: Billing
   - name: iam
     description: Identity and Access Management
+    x-displayName: IAM
   - name: organizations
     description: Organization management
+    x-displayName: Organizations

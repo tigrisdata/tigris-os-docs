@@ -8,7 +8,7 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "buckets",
+      label: "Buckets",
       link: {
         type: "doc",
         id: "partner-integrations/api/buckets",
@@ -17,7 +17,7 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "partner-integrations/api/tigris-provisioning",
-          label: "Provision a new bucket in the organization account, also creates the organization account if it doesn't exist",
+          label: "Provision a new bucket",
           className: "api-method post",
         },
         {
@@ -48,7 +48,7 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "billing",
+      label: "Billing",
       link: {
         type: "doc",
         id: "partner-integrations/api/billing",
@@ -70,7 +70,7 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "iam",
+      label: "IAM",
       link: {
         type: "doc",
         id: "partner-integrations/api/iam",
@@ -110,7 +110,7 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "organizations",
+      label: "Organizations",
       link: {
         type: "doc",
         id: "partner-integrations/api/organizations",

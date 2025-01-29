@@ -38,6 +38,8 @@ const config = {
           breadcrumbs: false,
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
+          docRootComponent: "@theme/DocRoot", // added for OpenAPI plugin
+          docItemComponent: "@theme/ApiItem", // added for OpenAPI plugin
         },
         blog: false,
         theme: {

@@ -159,7 +159,7 @@ const sidebars = {
       items: [
         {
           type: "category",
-          label: "API",
+          label: "Extensions API",
           link: {
             type: "generated-index",
             title: "Extensions API",

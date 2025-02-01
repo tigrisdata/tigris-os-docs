@@ -60,13 +60,30 @@ aws s3api put-bucket-accelerate-configuration \
 	--accelerate-configuration Status=Enabled
 ```
 
+Once eager caching is enabled, the object will be cached in regions according to
+the following rules:
+
+| Region of Object Write | Regions for Eager Caching |
+| ---------------------- | ------------------------- |
+| iad                    | fra, sin, sjc             |
+| fra                    | iad, sin, sjc             |
+| sin                    | iad, fra, sjc             |
+| sjc                    | iad, fra, sin             |
+
+For details on the region IDs, see the
+[Regions](/docs/concepts/regions/index.md) page.
+
 ## Caching on List (Eager Caching)
 
 Tigris also supports eager caching while listing the objects. This can be
-achieved by setting a header `x-tigris-prefetch` during list API request. This
-indicates Tigris to initiate automatic caching of listed objects in proximity to
-the list request's region. Subsequent Get requests for these objects will then
-take advantage of the cache.
+achieved by setting the `x-tigris-prefetch` header with the
+ListObjects/ListObjectsV2 API requests. This indicates Tigris to initiate
+automatic caching of listed objects in proximity to the list request's region.
+Subsequent Get requests for these objects will then take advantage of the cache.
+
+For example, if the list request is made from the Sydney region, the objects
+listed will be cached in the Sydney region. This will result in faster access to
+the objects when requested from the Sydney region.
 
 ### Prefetch Request Syntax
 

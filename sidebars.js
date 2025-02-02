@@ -159,13 +159,13 @@ const sidebars = {
       items: [
         {
           type: "category",
-          label: "Extensions API",
+          label: "API reference",
           link: {
             type: "generated-index",
-            title: "Extensions API",
+            title: "Extensions API reference",
             slug: "/partner-integrations/api/",
             description:
-              "API spec for Tigris parter extensions API.",
+              "OpenAPI spec for Tigris parter extensions API.",
           },
           items: apisidebar,
         },

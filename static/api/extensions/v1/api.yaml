@@ -5,11 +5,82 @@ info:
     This API provides additional functionality for managing buckets, access keys, and organizations.
 
     ## OpenAPI specification
-    This API follows the OpenAPI 3.0 specification, and the spec can be downloaded from [here](http://replace.me).
+    This API follows the OpenAPI 3.0 specification, and the spec can be downloaded by clicking on the `Export` button in the top right corner.
+
+    ## Authentication
+
+    To authenticate with Tigris Object Store, you need to sign your requests with the signing key following simple steps:
+
+    :::note
+    Reach out to [help@tigrisdata.com](mailto:help@tigrisdata.com) to request a:
+    - Provider ID
+    - Signing Key
+    :::
+
+    #### 1. Generate current timestamp
+    Set the `X-Tigris-Time` header to the current timestamp in milliseconds since epoch. Ex - `1731703213870`
+    ```
+    X-Tigris-Time: 1731703213870
+    ```
+
+    #### 2. Generate a unique nonce
+    Set the `X-Tigris-Nonce` header to a unique random string to identify the request and prevent replay attacks. Ex - `f8d133cb-5a42-47b1-9ef2-874bb55bab72`
+    ```
+    X-Tigris-Nonce: f8d133cb-5a42-47b1-9ef2-874bb55bab72
+    ```
+
+    #### 3. Create a canonical request
+    Concatenate the following details with a newline character in between:
+    ```
+    <HTTPMethod>\n
+    <CanonicalURI>\n
+    <Header:X-Tigris-Time>\n
+    <Header:X-Tigris-Nonce>
+    ```
+
+    :::tip
+    The `CanonicalURI` is the path of the request URL including the host and query parameters.
+
+    For example, for a `POST` request to `/provider/laravel/orgs/my-org/provision`, the `CanonicalURI` would be:
+    ```
+    https://fly.mgnt.storage.tigris.dev/provider/your-provider-id/orgs/user-org-id/provision
+    ```
+    And for a `GET` request with query parameters:
+    ```
+    https://fly.mgnt.storage.tigris.dev/provider/your-provider-id/orgs/?include_inactive=true
+    ```
+    :::
+
+
+
+    ### 4. Generate request signature
+    Calculate the HMAC-SHA256 of the canonical request using the shared secret as the signing key. Ex -
+    ```
+    Signature = hex(sha256sign(canonical_request, "signing_key"))
+    ```
+
+    ### 5. Include the signature in the request
+    Set the `X-Tigris-Signature` header to the generated signature.
+    ```
+    X-Tigris-Signature: <generated_signature>
+    ```
   version: 0.0.1
 servers:
   - url: https://fly.mgnt.storage.tigris.dev
     description: Tigris production server
+tags:
+  - name: buckets
+    description: Bucket management
+    x-displayName: Buckets
+  - name: billing
+    description: Usage and billing
+    x-displayName: Usage and Billing
+  - name: iam
+    description: Identity and Access Management
+    x-displayName: IAM
+  - name: organizations
+    description: Organization management
+    x-displayName: Organizations
 paths:
   /v1/providers/{provider_id}/orgs/{org_id}/provision:
     post:
@@ -926,16 +997,3 @@ security:
   - Signature: [ ]
     Nonce: [ ]
     Timestamp: [ ]
-tags:
-  - name: buckets
-    description: Bucket management
-    x-displayName: Buckets
-  - name: billing
-    description: Usage and billing
-    x-displayName: Usage and Billing
-  - name: iam
-    description: Identity and Access Management
-    x-displayName: IAM
-  - name: organizations
-    description: Organization management
-    x-displayName: Organizations

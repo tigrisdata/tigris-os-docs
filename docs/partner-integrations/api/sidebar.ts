@@ -48,7 +48,7 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "Billing",
+      label: "Usage and Billing",
       link: {
         type: "doc",
         id: "partner-integrations/api/billing",

@@ -1,7 +1,11 @@
 openapi: 3.0.3
 info:
   title: Tigris extensions API reference
-  description: "Allow partners to manage resources in Tigris Object Storage service"
+  description: |
+    This API provides additional functionality for managing buckets, access keys, and organizations.
+
+    ## OpenAPI specification
+    This API follows the OpenAPI 3.0 specification, and the spec can be downloaded from [here](http://replace.me).
   version: 0.0.1
 servers:
   - url: https://fly.mgnt.storage.tigris.dev
@@ -891,11 +895,13 @@ components:
       in: header
       name: X-Tigris-Nonce
       description: Random unique string to identifying the request and prevent replay attacks. Ex - "f8d133cb-5a42-47b1-9ef2-874bb55bab72"
+      example: f8d133cb-5a42-47b1-9ef2-874bb55bab72
     Timestamp:
       type: apiKey
       in: header
       name: X-Tigris-Time
       description: Unix timestamp in millis of the request. Ex - 1731703213870
+      example: 1731703213870
     Signature:
       type: apiKey
       in: header
@@ -925,8 +931,8 @@ tags:
     description: Bucket management
     x-displayName: Buckets
   - name: billing
-    description: Billing and Invoicing
-    x-displayName: Billing
+    description: Usage and billing
+    x-displayName: Usage and Billing
   - name: iam
     description: Identity and Access Management
     x-displayName: IAM

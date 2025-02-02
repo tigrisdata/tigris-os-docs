@@ -70,13 +70,13 @@ const config = {
         docsPluginId: "classic", // configured for preset-classic
         config: {
           extensions: {
-            specPath: "api/extensions/v1/api.yaml",
+            specPath: "static/api/extensions/v1/api.yaml",
             outputDir: "docs/partner-integrations/api",
             sidebarOptions: {
               groupPathsBy: "tag",
               categoryLinkSource: "tag",
             },
-            downloadUrl: "/tigris-extension.yaml",
+            downloadUrl: "/docs/api/extensions/v1/api.yaml",
             showSchemas: true,
           },
         }

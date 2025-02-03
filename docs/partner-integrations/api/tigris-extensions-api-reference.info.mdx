@@ -1,7 +1,9 @@
 ---
 id: tigris-extensions-api-reference
 title: "Tigris extensions API reference"
-description: "This API provides additional functionality for managing buckets, access keys, and organizations."
+description:
+  "This API provides additional functionality for managing buckets, access keys,
+  and organizations."
 sidebar_label: Introduction
 sidebar_position: 0
 hide_title: true
@@ -17,54 +19,57 @@ import Export from "@theme/ApiExplorer/Export";
 <span
   className={"theme-doc-version-badge badge badge--secondary"}
   children={"Version: 0.0.1"}
->
-</span>
+></span>
 
-<Export
-  url={"/docs/api/extensions/v1/api.yaml"}
-  proxy={undefined}
->
-  
-</Export>
+<Export url={"/docs/api/extensions/v1/api.yaml"} proxy={undefined}></Export>
 
 <Heading
   as={"h1"}
   className={"openapi__heading"}
   children={"Tigris extensions API reference"}
->
-</Heading>
+></Heading>
 
-
-
-This API provides additional functionality for managing buckets, access keys, and organizations.
+This API provides additional functionality for managing buckets, access keys,
+and organizations.
 
 ## OpenAPI specification
-This API follows the OpenAPI 3.0 specification, and the spec can be downloaded by clicking on the `Export` button in the top right corner.
+
+This API follows the OpenAPI 3.0 specification, and the spec can be downloaded
+by clicking on the `Export` button in the top right corner.
 
 ## Authentication
 
-To authenticate with Tigris Object Store, you need to sign your requests with the signing key following simple steps:
+To authenticate with Tigris Object Store, you need to sign your requests with
+the signing key following simple steps:
 
-:::note
-Reach out to [help@tigrisdata.com](mailto:help@tigrisdata.com) to request a:
+:::note Reach out to [help@tigrisdata.com](mailto:help@tigrisdata.com) to
+request a:
+
 - Provider ID
-- Signing Key
-:::
+- Signing Key :::
 
 #### 1. Generate current timestamp
-Set the `X-Tigris-Time` header to the current timestamp in milliseconds since epoch. Ex - `1731703213870`
+
+Set the `X-Tigris-Time` header to the current timestamp in milliseconds since
+epoch. Ex - `1731703213870`
+
 ```
 X-Tigris-Time: 1731703213870
 ```
 
 #### 2. Generate a unique nonce
-Set the `X-Tigris-Nonce` header to a unique random string to identify the request and prevent replay attacks. Ex - `f8d133cb-5a42-47b1-9ef2-874bb55bab72`
+
+Set the `X-Tigris-Nonce` header to a unique random string to identify the
+request and prevent replay attacks. Ex - `f8d133cb-5a42-47b1-9ef2-874bb55bab72`
+
 ```
 X-Tigris-Nonce: f8d133cb-5a42-47b1-9ef2-874bb55bab72
 ```
 
 #### 3. Create a canonical request
+
 Concatenate the following details with a newline character in between:
+
 ```
 <HTTPMethod>\n
 <CanonicalURI>\n
@@ -72,138 +77,104 @@ Concatenate the following details with a newline character in between:
 <Header:X-Tigris-Nonce>
 ```
 
-:::tip
-The `CanonicalURI` is the path of the request URL including the host and query parameters.
+:::tip The `CanonicalURI` is the path of the request URL including the host and
+query parameters.
 
-For example, for a `POST` request to `/provider/laravel/orgs/my-org/provision`, the `CanonicalURI` would be:
+For example, for a `POST` request to `/provider/laravel/orgs/my-org/provision`,
+the `CanonicalURI` would be:
+
 ```
 https://fly.mgnt.storage.tigris.dev/provider/your-provider-id/orgs/user-org-id/provision
 ```
+
 And for a `GET` request with query parameters:
+
 ```
 https://fly.mgnt.storage.tigris.dev/provider/your-provider-id/orgs/?include_inactive=true
 ```
+
 :::
 
-
-
 ### 4. Generate request signature
-Calculate the HMAC-SHA256 of the canonical request using the shared secret as the signing key. Ex -
+
+Calculate the HMAC-SHA256 of the canonical request using the shared secret as
+the signing key. Ex -
+
 ```
 Signature = hex(sha256sign(canonical_request, "signing_key"))
 ```
 
 ### 5. Include the signature in the request
+
 Set the `X-Tigris-Signature` header to the generated signature.
+
 ```
 X-Tigris-Signature: <generated_signature>
 ```
 
-
-<div
-  style={{"marginBottom":"2rem"}}
->
+<div style={{ marginBottom: "2rem" }}>
   <Heading
     id={"authentication"}
     as={"h2"}
     className={"openapi-tabs__heading"}
     children={"Authentication"}
-  >
-  </Heading><SchemaTabs
-    className={"openapi-tabs__security-schemes"}
-  >
-    <TabItem
-      label={"API Key: Nonce"}
-      value={"Nonce"}
-    >
-      
-      
-      Random unique string to identifying the request and prevent replay attacks. Ex - "f8d133cb-5a42-47b1-9ef2-874bb55bab72"
-      
+  ></Heading>
+  <SchemaTabs className={"openapi-tabs__security-schemes"}>
+    <TabItem label={"API Key: Nonce"} value={"Nonce"}>
+      Random unique string to identifying the request and prevent replay
+      attacks. Ex - "f8d133cb-5a42-47b1-9ef2-874bb55bab72"
       <div>
         <table>
           <tbody>
             <tr>
-              <th>
-                Security Scheme Type:
-              </th><td>
-                apiKey
-              </td>
-            </tr><tr>
-              <th>
-                Header parameter name:
-              </th><td>
-                X-Tigris-Nonce
-              </td>
+              <th>Security Scheme Type:</th>
+              <td>apiKey</td>
+            </tr>
+            <tr>
+              <th>Header parameter name:</th>
+              <td>X-Tigris-Nonce</td>
             </tr>
           </tbody>
         </table>
       </div>
-    </TabItem><TabItem
-      label={"API Key: Timestamp"}
-      value={"Timestamp"}
-    >
-      
-      
+    </TabItem>
+    <TabItem label={"API Key: Timestamp"} value={"Timestamp"}>
       Unix timestamp in millis of the request. Ex - 1731703213870
-      
       <div>
         <table>
           <tbody>
             <tr>
-              <th>
-                Security Scheme Type:
-              </th><td>
-                apiKey
-              </td>
-            </tr><tr>
-              <th>
-                Header parameter name:
-              </th><td>
-                X-Tigris-Time
-              </td>
+              <th>Security Scheme Type:</th>
+              <td>apiKey</td>
+            </tr>
+            <tr>
+              <th>Header parameter name:</th>
+              <td>X-Tigris-Time</td>
             </tr>
           </tbody>
         </table>
       </div>
-    </TabItem><TabItem
-      label={"API Key: Signature"}
-      value={"Signature"}
-    >
-      
-      
-      HMAC-SHA256 of the request method, url, along with the unique nonce and timestamp signed using shared secret.
-      To create the signature, concatenate the method, url, nonce, and timestamp with a newline character in between.
-      Then, calculate the HMAC-SHA256 of the concatenated string using the shared secret. Ex -
-      
-      Created `canonical_request` as:
-      ```
-      POST
+    </TabItem>
+    <TabItem label={"API Key: Signature"} value={"Signature"}>
+      HMAC-SHA256 of the request method, url, along with the unique nonce and
+      timestamp signed using shared secret. To create the signature, concatenate
+      the method, url, nonce, and timestamp with a newline character in between.
+      Then, calculate the HMAC-SHA256 of the concatenated string using the
+      shared secret. Ex - Created `canonical_request` as: ``` POST
       https://fly.mgnt.storage.tigris.dev/provider/laravel/orgs/my-org/provision
-      1731703213870
-      f8d133cb-5a42-47b1-9ef2-874bb55bab72
-      ```
-      Then, calculate HMAC-SHA256 of the canonical request using the shared secret as:
-      ```
-      Signature = hex(sha256sign(canonical_request, "secret_shared"))
-      ```
-      
-      
+      1731703213870 f8d133cb-5a42-47b1-9ef2-874bb55bab72 ``` Then, calculate
+      HMAC-SHA256 of the canonical request using the shared secret as: ```
+      Signature = hex(sha256sign(canonical_request, "secret_shared")) ```
       <div>
         <table>
           <tbody>
             <tr>
-              <th>
-                Security Scheme Type:
-              </th><td>
-                apiKey
-              </td>
-            </tr><tr>
-              <th>
-                Header parameter name:
-              </th><td>
-                X-Tigris-Signature
-              </td>
+              <th>Security Scheme Type:</th>
+              <td>apiKey</td>
+            </tr>
+            <tr>
+              <th>Header parameter name:</th>
+              <td>X-Tigris-Signature</td>
             </tr>
           </tbody>
         </table>
@@ -211,4 +182,3 @@ X-Tigris-Signature: <generated_signature>
     </TabItem>
   </SchemaTabs>
 </div>
-      

@@ -18,12 +18,7 @@ import TabItem from "@theme/TabItem";
   as={"h1"}
   className={"openapi__heading"}
   children={"CreateAccessKeyRequest"}
->
-</Heading>
-
-
-
-
+></Heading>
 
 <ul>
   <SchemaItem
@@ -32,81 +27,83 @@ import TabItem from "@theme/TabItem";
     required={false}
     schemaName={"string"}
     qualifierMessage={undefined}
-    schema={{"type":"string","description":"Name of the access key"}}
-  >
-    
-  </SchemaItem><SchemaItem
+    schema={{ type: "string", description: "Name of the access key" }}
+  ></SchemaItem>
+  <SchemaItem
     collapsible={false}
     name={"user_id"}
     required={true}
     schemaName={"string"}
     qualifierMessage={undefined}
-    schema={{"type":"string","description":"ID of the user for whom the access key is being created"}}
-  >
-    
-  </SchemaItem><SchemaItem
+    schema={{
+      type: "string",
+      description: "ID of the user for whom the access key is being created",
+    }}
+  ></SchemaItem>
+  <SchemaItem
     collapsible={false}
     name={"user_role"}
     required={false}
     schemaName={"OrgMembership (string)"}
     qualifierMessage={"**Possible values:** [`Admin`, `Member`]"}
-    schema={{"type":"string","description":"Role assigned to the user in the organization","enum":["Admin","Member"],"title":"OrgMembership"}}
-  >
-    
-  </SchemaItem><SchemaItem
-    collapsible={true}
-    className={"schemaItem"}
-  >
-    <details
-      style={{}}
-      className={"openapi-markdown__details"}
-    >
-      <summary
-        style={{}}
-      >
-        <span
-          className={"openapi-schema__container"}
-        >
-          <strong
-            className={"openapi-schema__property"}
-          >
-            buckets_roles
-          </strong><span
-            className={"openapi-schema__name"}
-          >
-             object[]
-          </span>
+    schema={{
+      type: "string",
+      description: "Role assigned to the user in the organization",
+      enum: ["Admin", "Member"],
+      title: "OrgMembership",
+    }}
+  ></SchemaItem>
+  <SchemaItem collapsible={true} className={"schemaItem"}>
+    <details style={{}} className={"openapi-markdown__details"}>
+      <summary style={{}}>
+        <span className={"openapi-schema__container"}>
+          <strong className={"openapi-schema__property"}>buckets_roles</strong>
+          <span className={"openapi-schema__name"}>object[]</span>
         </span>
-      </summary><div
-        style={{"marginLeft":"1rem"}}
-      >
+      </summary>
+      <div style={{ marginLeft: "1rem" }}>
         <li>
           <div
-            style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem","paddingBottom":".5rem"}}
+            style={{
+              fontSize: "var(--ifm-code-font-size)",
+              opacity: "0.6",
+              marginLeft: "-.5rem",
+              paddingBottom: ".5rem",
+            }}
           >
             Array [
           </div>
-        </li><SchemaItem
+        </li>
+        <SchemaItem
           collapsible={false}
           name={"bucket_name"}
           required={true}
           schemaName={"string"}
           qualifierMessage={undefined}
-          schema={{"type":"string","description":"Name of the bucket"}}
-        >
-          
-        </SchemaItem><SchemaItem
+          schema={{ type: "string", description: "Name of the bucket" }}
+        ></SchemaItem>
+        <SchemaItem
           collapsible={false}
           name={"role"}
           required={true}
           schemaName={"string"}
-          qualifierMessage={"**Possible values:** [`ReadOnly`, `Editor`, `Admin`]"}
-          schema={{"type":"string","description":"The role assigned to the access key defines the permissions (read, write, admin) for the associated bucket.","enum":["ReadOnly","Editor","Admin"]}}
-        >
-          
-        </SchemaItem><li>
+          qualifierMessage={
+            "**Possible values:** [`ReadOnly`, `Editor`, `Admin`]"
+          }
+          schema={{
+            type: "string",
+            description:
+              "The role assigned to the access key defines the permissions (read, write, admin) for the associated bucket.",
+            enum: ["ReadOnly", "Editor", "Admin"],
+          }}
+        ></SchemaItem>
+        <li>
           <div
-            style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem"}}
+            style={{
+              fontSize: "var(--ifm-code-font-size)",
+              opacity: "0.6",
+              marginLeft: "-.5rem",
+            }}
           >
             ]
           </div>
@@ -115,4 +112,3 @@ import TabItem from "@theme/TabItem";
     </details>
   </SchemaItem>
 </ul>
-            

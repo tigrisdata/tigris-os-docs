@@ -63,5 +63,5 @@ Example queries that can be performed:
 
 ## Next steps
 
-- Check out the [Example usage](/docs/sdks/s3/aws-go-sdk.md#metadata-querying)
-  for more details on how to use them in your application.
+- Check out the [Example usage](/docs/sdks/s3/aws-go-sdk#metadata-querying) for
+  more details on how to use them in your application.

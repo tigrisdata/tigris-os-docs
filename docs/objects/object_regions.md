@@ -51,5 +51,5 @@ how the storage cost is calculated when multiple copies are stored.
 
 ## Next steps
 
-- Check out the [Example usage](/docs/sdks/s3/aws-go-sdk.md#object-regions) for
+- Check out the [Example usage](/docs/sdks/s3/aws-go-sdk.mdx#object-regions) for
   more details on how to configure object regions in your application.

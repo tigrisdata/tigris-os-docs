@@ -1,0 +1,99 @@
+# AWS Go SDK
+
+import CodeBlock from "@theme/CodeBlock";
+
+This guide assumes that you have followed the steps in the
+[Getting Started](/docs/get-started/index.md) guide, and have the access keys
+available.
+
+You may continue to use the AWS Go SDK as you normally would, but with the
+endpoint set to `https://fly.storage.tigris.dev`.
+
+This example uses the [AWS Go SDK v2](https://github.com/aws/aws-sdk-go-v2) and
+reads the default credentials file or the environment variables
+`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+
+## Getting started
+
+This shows off a few basic operations with the AWS Go SDK such as PutObject,
+ListObjectsV2, and GetObject.
+
+import gettingStarted from "!!raw-loader!../../../examples/go/cmd/getting-started/main.go";
+
+<CodeBlock language="go">{gettingStarted}</CodeBlock>;
+
+Run it with:
+
+```sh
+go run main.go bucket-name
+```
+
+## Conditional operations
+
+Below is an example of how to use the AWS Go SDK to
+[perform conditional operations](/docs/objects/conditionals.md) on objects in
+Tigris. The example reads an object, modifies it, and then writes it back to the
+bucket. The write operation is conditional on the object not being modified
+since it was read.
+
+import conditionalOperations from "!!raw-loader!../../../examples/go/cmd/conditional-operations/main.go";
+
+<CodeBlock language="go">{conditionalOperations}</CodeBlock>;
+
+Run it with:
+
+```sh
+go run main.go bucket-name
+```
+
+## Using presigned URLs
+
+Presigned URLs can be used with the AWS Go SDK as follows:
+
+import presignedUrls from "!!raw-loader!../../../examples/go/cmd/presigned-urls/main.go";
+
+<CodeBlock language="go">{presignedUrls}</CodeBlock>;
+
+You can now use the URL returned by the `presignedPutReq.URL` and
+`presignedGetReq.URL` to upload or download objects.
+
+Run it with:
+
+```sh
+go run main.go bucket-name
+```
+
+## Object Regions
+
+Below is an example of how to use the AWS Go SDK to restrict
+[object region](/docs/objects/object_regions) to Europe only (`fra` region).
+
+import objectRegions from "!!raw-loader!../../../examples/go/cmd/object-regions/main.go";
+
+<CodeBlock language="go">{objectRegions}</CodeBlock>;
+
+Run it with:
+
+```sh
+go run main.go bucket-name
+```
+
+## Metadata Querying
+
+Below is an example of how to use
+[metadata querying](/docs/objects/query-metadata) with the AWS Go SDK.
+
+import metadataQuerying from "!!raw-loader!../../../examples/go/cmd/metadata-querying/main.go";
+
+<CodeBlock language="go">{metadataQuerying}</CodeBlock>;
+
+## Object Notifications
+
+If you want to be notified when an object is created or deleted in a bucket, use
+[object notifications](/docs/buckets/object-notifications). This example shows
+you how to implement a server that listens for and parses object notifications
+so you can take action when an object is created or deleted.
+
+import webhook from "!!raw-loader!../../../examples/go/cmd/webhook/main.go";
+
+<CodeBlock language="go">{webhook}</CodeBlock>;

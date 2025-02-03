@@ -79,19 +79,19 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "partner-integrations/api/tigris-rotate-access-key",
-          label: "Rotates the access key secret for a user",
+          label: "Rotates Access Key secret",
           className: "api-method post",
         },
         {
           type: "doc",
           id: "partner-integrations/api/tigris-create-access-key",
-          label: "Create a new access key for a user",
+          label: "Create a new Access Key",
           className: "api-method post",
         },
         {
           type: "doc",
           id: "partner-integrations/api/tigris-update-access-key",
-          label: "Update an existing access key for a user",
+          label: "Update an Access Key",
           className: "api-method put",
         },
         {

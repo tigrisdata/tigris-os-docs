@@ -87,7 +87,11 @@ paths:
       tags:
         - buckets
       summary: Provision a new bucket
-      description: Provision a new bucket in the organization account, also creates the organization account if it doesn't exist
+      description: |
+        Provision a new bucket in the organization account, also creates the organization account if it doesn't exist. This is an
+        idempotent operation, and calling it multiple times with the same parameters will not create duplicate buckets.
+
+        Provisioning API responds with an access key and secret to access the newly provisioned bucket.
       operationId: Tigris_Provisioning
       parameters:
         - $ref: '#/components/parameters/provider_id'
@@ -116,6 +120,8 @@ paths:
       tags:
         - buckets
       summary: Delete a bucket
+      description: |
+        Deletes the bucket and all its contents. If the bucket is not empty, it will not be deleted unless the `force` query parameter is set to `true`.
       operationId: Tigris_DeleteBucket
       parameters:
         - $ref: '#/components/parameters/provider_id'
@@ -144,6 +150,8 @@ paths:
       tags:
         - buckets
       summary: Get bucket details
+      description: |
+        Returns the details of the bucket including its size, object count, and other metadata.
       operationId: Tigris_GetBucket
       parameters:
         - $ref: '#/components/parameters/provider_id'
@@ -166,6 +174,8 @@ paths:
       tags:
         - buckets
       summary: Update bucket settings
+      description: |
+        Updates the bucket settings like public access, storage class, and object ACL.
       operationId: Tigris_UpdateBucket
       parameters:
         - $ref: '#/components/parameters/provider_id'
@@ -196,6 +206,8 @@ paths:
       tags:
         - buckets
       summary: List all buckets for an organization
+      description: |
+        Lists all the buckets provisioned in the organization account.
       operationId: Tigris_ListBuckets
       parameters:
         - $ref: '#/components/parameters/provider_id'
@@ -218,7 +230,9 @@ paths:
     post:
       tags:
         - iam
-      summary: Rotates the access key secret for a user
+      summary: Rotates Access Key secret
+      description: |
+        Rotates the access key secret for a user. The old secret will be invalidated, and the new secret will be returned in the response.
       operationId: Tigris_RotateAccessKey
       parameters:
         - $ref: '#/components/parameters/provider_id'
@@ -246,7 +260,9 @@ paths:
     post:
       tags:
         - iam
-      summary: Create a new access key for a user
+      summary: Create a new Access Key
+      description: |
+        Creates a new access key for a user. The access key ID and secret will be returned in the response.
       operationId: Tigris_CreateAccessKey
       parameters:
         - $ref: '#/components/parameters/provider_id'
@@ -273,7 +289,9 @@ paths:
     put:
       tags:
         - iam
-      summary: Update an existing access key for a user
+      summary: Update an Access Key
+      description: |
+        Updates the access key details like user role and bucket access permissions.
       operationId: Tigris_UpdateAccessKey
       parameters:
         - $ref: '#/components/parameters/provider_id'
@@ -300,7 +318,9 @@ paths:
     delete:
       tags:
         - iam
-      summary: Delete an access key for a user
+      summary: Delete an Access Key
+      description: |
+        Deletes an access key for a user. The access key will be invalidated and can't be used for further requests.
       operationId: Tigris_DeleteAccessKey
       parameters:
         - $ref: '#/components/parameters/provider_id'
@@ -329,7 +349,9 @@ paths:
     post:
       tags:
         - iam
-      summary: List all access keys for a user
+      summary: List all Access Keys
+      description: |
+        Lists all the access keys for a user in the organization account.
       operationId: Tigris_ListAccessKeys
       parameters:
         - $ref: '#/components/parameters/provider_id'
@@ -359,7 +381,9 @@ paths:
     get:
       tags:
         - billing
-      summary: Get invoice for a specific month
+      summary: Get invoice for a month
+      description: |
+        Returns the invoice for the specified month. The invoice will include all the charges for the month.
       operationId: Tigris_GetInvoice
       parameters:
         - $ref: '#/components/parameters/provider_id'
@@ -388,6 +412,8 @@ paths:
       tags:
         - billing
       summary: Get usage details for an organization
+      description: |
+        Returns the usage details for the specified period. The usage details will include all the billable metrics for the period.
       operationId: Tigris_GetUsage
       parameters:
         - $ref: '#/components/parameters/provider_id'
@@ -425,6 +451,8 @@ paths:
       tags:
         - organizations
       summary: Update organization details
+      description: |
+        Updates the organization details like active status.
       operationId: Tigris_UpdateOrganization
       parameters:
         - $ref: '#/components/parameters/provider_id'

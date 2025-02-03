@@ -164,8 +164,7 @@ const sidebars = {
             type: "generated-index",
             title: "Extensions API reference",
             slug: "/partner-integrations/api/",
-            description:
-              "OpenAPI spec for Tigris parter extensions API.",
+            description: "OpenAPI spec for Tigris parter extensions API.",
           },
           items: apisidebar,
         },

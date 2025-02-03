@@ -79,7 +79,7 @@ const config = {
             downloadUrl: "/docs/api/extensions/v1/api.yaml",
             showSchemas: true,
           },
-        }
+        },
       },
     ],
   ],
@@ -299,10 +299,7 @@ const config = {
   markdown: {
     mermaid: true,
   },
-  themes: [
-    "@docusaurus/theme-mermaid",
-    "docusaurus-theme-openapi-docs",
-  ],
+  themes: ["@docusaurus/theme-mermaid", "docusaurus-theme-openapi-docs"],
 };
 
 module.exports = config;

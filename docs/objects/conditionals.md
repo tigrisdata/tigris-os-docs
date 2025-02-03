@@ -76,5 +76,5 @@ object.
 ## Next steps
 
 - Check out the
-  [Example usage](/docs/sdks/s3/aws-go-sdk.md#conditional-operations) for more
+  [Example usage](/docs/sdks/s3/aws-go-sdk.mdx#conditional-operations) for more
   details on how to use them in your application.

@@ -20,6 +20,11 @@ change the service endpoint to point to Tigris.
 
 ## Configuring AWS CLI
 
+Make sure you've installed the AWS CLI locally by following
+[Amazon's directions](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions).
+Also see
+[Why does Tigris use the AWS CLI and SDKs?](/docs/about/faq/#why-does-tigris-use-the-aws-cli-and-sdks).
+
 Once you have your access key, you can configure the AWS CLI with the following
 command:
 

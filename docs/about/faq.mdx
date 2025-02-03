@@ -1,0 +1,36 @@
+# Frequently Asked Questions
+
+We've compiled a list of frequently asked questions to help you get started with
+Tigris.
+
+## Why does Tigris use the AWS CLI and SDKs?
+
+Tigris is a globally distributed object storage system that is compatible with
+[AWS S3](https://aws.amazon.com/s3/). This allows you to use familiar S3-based
+tools like the AWS CLI and SDKs to interact with Tigris, all you have to do is
+tell them to use the Tigris endpoint URL and Tigris credentials instead of using
+AWS. This also means that if the project or tool you're using works with S3, it
+will work with Tigris
+[as long as it uses calls that Tigris supports](/docs/api/s3/).
+
+S3 is the standard object storage protocol, and it's widely supported by the
+industry at large. By supporting the S3 API, Tigris can be used with a wide
+variety of tools and libraries without requiring any changes. All you need to do
+is change out the endpoint and credentials.
+
+Most applications stick to a very limited subset of the S3 API (typically
+`GetObject`, `PutObject`, `ListObjectsV2`, `DeleteObject`, `HeadObject`, and
+[presigned URLs](/docs/objects/presigned/)), so in practice, most applications
+should work with Tigris without any changes.
+
+## Is Tigris a CDN?
+
+Tigris has a lot in common with
+[Content Delivery/Distribution Networks (CDNs)](https://en.wikipedia.org/wiki/Content_delivery_network)
+and you can create your own CDN on top of Tigris, but it is not a CDN per se.
+Tigris is a globally distributed object storage system that moves files around
+the globe to be close to your users. This is similar to what a CDN does, but
+Tigris is a general-purpose object storage system. You can use Tigris to store
+and serve any kind of file (text, images, videos, invoice PDFs, AI training
+data, AI models, etc.), not just web content. There are no restrictions on what
+types of files you can store in Tigris.

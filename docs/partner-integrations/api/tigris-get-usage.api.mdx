@@ -1,0 +1,414 @@
+---
+id: tigris-get-usage
+title: "Get usage details for an organization"
+description: "Returns the usage details for the specified period. The usage details will include all the billable metrics for the period."
+sidebar_label: "Get usage details for an organization"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "get api-method"
+info_path: partner-integrations/api/tigris-extensions-api-reference
+custom_edit_url: null
+---
+
+import ApiTabs from "@theme/ApiTabs";
+import DiscriminatorTabs from "@theme/DiscriminatorTabs";
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import SecuritySchemes from "@theme/ApiExplorer/SecuritySchemes";
+import MimeTabs from "@theme/MimeTabs";
+import ParamsItem from "@theme/ParamsItem";
+import ResponseSamples from "@theme/ResponseSamples";
+import SchemaItem from "@theme/SchemaItem";
+import SchemaTabs from "@theme/SchemaTabs";
+import Heading from "@theme/Heading";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get usage details for an organization"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"get"}
+  path={"/v1/providers/{provider_id}/orgs/{org_id}/usage"}
+>
+  
+</MethodEndpoint>
+
+
+
+Returns the usage details for the specified period. The usage details will include all the billable metrics for the period.
+
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<details
+  style={{"marginBottom":"1rem"}}
+  className={"openapi-markdown__details"}
+  data-collapsed={false}
+  open={true}
+>
+  <summary
+    style={{}}
+  >
+    <h3
+      className={"openapi-markdown__details-summary-header-params"}
+    >
+      Path Parameters
+    </h3>
+  </summary><div>
+    <ul>
+      <ParamsItem
+        className={"paramsItem"}
+        param={{"name":"provider_id","in":"path","required":true,"description":"Provider ID","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem><ParamsItem
+        className={"paramsItem"}
+        param={{"name":"org_id","in":"path","required":true,"description":"Organization ID","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem>
+    </ul>
+  </div>
+</details><details
+  style={{"marginBottom":"1rem"}}
+  className={"openapi-markdown__details"}
+  data-collapsed={false}
+  open={true}
+>
+  <summary
+    style={{}}
+  >
+    <h3
+      className={"openapi-markdown__details-summary-header-params"}
+    >
+      Query Parameters
+    </h3>
+  </summary><div>
+    <ul>
+      <ParamsItem
+        className={"paramsItem"}
+        param={{"name":"starting_on","in":"query","required":true,"description":"RFC3339 formatted UTC midnight timestamp for starting period","example":"2021-09-01T00:00:00Z","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem><ParamsItem
+        className={"paramsItem"}
+        param={{"name":"ending_before","in":"query","required":true,"description":"RFC3339 formatted UTC midnight timestamp for ending period","example":"2021-09-01T00:00:00Z","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem>
+    </ul>
+  </div>
+</details><div>
+  <div>
+    <ApiTabs
+      label={undefined}
+      id={undefined}
+    >
+      <TabItem
+        label={"200"}
+        value={"200"}
+      >
+        <div>
+          
+          
+          OK
+          
+          
+        </div><div>
+          <MimeTabs
+            className={"openapi-tabs__mime"}
+            schemaType={"response"}
+          >
+            <TabItem
+              label={"application/json"}
+              value={"application/json"}
+            >
+              <SchemaTabs
+                className={"openapi-tabs__schema"}
+              >
+                <TabItem
+                  label={"Schema"}
+                  value={"Schema"}
+                >
+                  <details
+                    style={{}}
+                    className={"openapi-markdown__details response"}
+                    data-collapsed={false}
+                    open={true}
+                  >
+                    <summary
+                      style={{}}
+                      className={"openapi-markdown__details-summary-response"}
+                    >
+                      <strong>
+                        Schema
+                      </strong>
+                    </summary><div
+                      style={{"textAlign":"left","marginLeft":"1rem"}}
+                    >
+                      
+                    </div><ul
+                      style={{"marginLeft":"1rem"}}
+                    >
+                      <SchemaItem
+                        collapsible={true}
+                        className={"schemaItem"}
+                      >
+                        <details
+                          style={{}}
+                          className={"openapi-markdown__details"}
+                        >
+                          <summary
+                            style={{}}
+                          >
+                            <span
+                              className={"openapi-schema__container"}
+                            >
+                              <strong
+                                className={"openapi-schema__property"}
+                              >
+                                data
+                              </strong><span
+                                className={"openapi-schema__name"}
+                              >
+                                 object[]
+                              </span>
+                            </span>
+                          </summary><div
+                            style={{"marginLeft":"1rem"}}
+                          >
+                            <li>
+                              <div
+                                style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem","paddingBottom":".5rem"}}
+                              >
+                                Array [
+                              </div>
+                            </li><SchemaItem
+                              collapsible={false}
+                              name={"id"}
+                              required={true}
+                              schemaName={"string"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"string","description":"Unique identifier for the usage metric"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"name"}
+                              required={true}
+                              schemaName={"string"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"string","description":"Display name for customer invoice"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"description"}
+                              required={true}
+                              schemaName={"string"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"string","description":"Human readable description of the usage metric"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"unit"}
+                              required={true}
+                              schemaName={"string"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"string","description":"Unit of measurement"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={true}
+                              className={"schemaItem"}
+                            >
+                              <details
+                                style={{}}
+                                className={"openapi-markdown__details"}
+                              >
+                                <summary
+                                  style={{}}
+                                >
+                                  <span
+                                    className={"openapi-schema__container"}
+                                  >
+                                    <strong
+                                      className={"openapi-schema__property"}
+                                    >
+                                      values
+                                    </strong><span
+                                      className={"openapi-schema__name"}
+                                    >
+                                       object[]
+                                    </span><span
+                                      className={"openapi-schema__divider"}
+                                    >
+                                      
+                                    </span><span
+                                      className={"openapi-schema__required"}
+                                    >
+                                      required
+                                    </span>
+                                  </span>
+                                </summary><div
+                                  style={{"marginLeft":"1rem"}}
+                                >
+                                  <li>
+                                    <div
+                                      style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem","paddingBottom":".5rem"}}
+                                    >
+                                      Array [
+                                    </div>
+                                  </li><SchemaItem
+                                    collapsible={false}
+                                    name={"starting_on"}
+                                    required={true}
+                                    schemaName={"date-time"}
+                                    qualifierMessage={undefined}
+                                    schema={{"type":"string","format":"date-time","description":"RFC3339 formatted UTC timestamp for starting period","example":"2021-09-01T01:00:00Z"}}
+                                  >
+                                    
+                                  </SchemaItem><SchemaItem
+                                    collapsible={false}
+                                    name={"ending_before"}
+                                    required={true}
+                                    schemaName={"date-time"}
+                                    qualifierMessage={undefined}
+                                    schema={{"type":"string","format":"date-time","description":"RFC3339 formatted UTC timestamp for ending period","example":"2021-09-01T02:00:00Z"}}
+                                  >
+                                    
+                                  </SchemaItem><SchemaItem
+                                    collapsible={false}
+                                    name={"value"}
+                                    required={true}
+                                    schemaName={"double"}
+                                    qualifierMessage={undefined}
+                                    schema={{"type":"number","description":"Usage value for the period","format":"double"}}
+                                  >
+                                    
+                                  </SchemaItem><li>
+                                    <div
+                                      style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem"}}
+                                    >
+                                      ]
+                                    </div>
+                                  </li>
+                                </div>
+                              </details>
+                            </SchemaItem><li>
+                              <div
+                                style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem"}}
+                              >
+                                ]
+                              </div>
+                            </li>
+                          </div>
+                        </details>
+                      </SchemaItem>
+                    </ul>
+                  </details>
+                </TabItem><TabItem
+                  label={"Example (from schema)"}
+                  value={"Example (from schema)"}
+                >
+                  <ResponseSamples
+                    responseExample={"{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"unit\": \"string\",\n      \"values\": [\n        {\n          \"starting_on\": \"2021-09-01T01:00:00Z\",\n          \"ending_before\": \"2021-09-01T02:00:00Z\",\n          \"value\": 0\n        }\n      ]\n    }\n  ]\n}"}
+                    language={"json"}
+                  >
+                    
+                  </ResponseSamples>
+                </TabItem>
+              </SchemaTabs>
+            </TabItem>
+          </MimeTabs>
+        </div>
+      </TabItem><TabItem
+        label={"default"}
+        value={"default"}
+      >
+        <div>
+          
+          
+          Unexpected error
+          
+          
+        </div><div>
+          <MimeTabs
+            className={"openapi-tabs__mime"}
+            schemaType={"response"}
+          >
+            <TabItem
+              label={"application/json"}
+              value={"application/json"}
+            >
+              <SchemaTabs
+                className={"openapi-tabs__schema"}
+              >
+                <TabItem
+                  label={"Schema"}
+                  value={"Schema"}
+                >
+                  <details
+                    style={{}}
+                    className={"openapi-markdown__details response"}
+                    data-collapsed={false}
+                    open={true}
+                  >
+                    <summary
+                      style={{}}
+                      className={"openapi-markdown__details-summary-response"}
+                    >
+                      <strong>
+                        Schema
+                      </strong>
+                    </summary><div
+                      style={{"textAlign":"left","marginLeft":"1rem"}}
+                    >
+                      
+                    </div><ul
+                      style={{"marginLeft":"1rem"}}
+                    >
+                      <SchemaItem
+                        collapsible={false}
+                        name={"message"}
+                        required={false}
+                        schemaName={"string"}
+                        qualifierMessage={undefined}
+                        schema={{"type":"string"}}
+                      >
+                        
+                      </SchemaItem>
+                    </ul>
+                  </details>
+                </TabItem><TabItem
+                  label={"Example (from schema)"}
+                  value={"Example (from schema)"}
+                >
+                  <ResponseSamples
+                    responseExample={"{\n  \"message\": \"string\"\n}"}
+                    language={"json"}
+                  >
+                    
+                  </ResponseSamples>
+                </TabItem>
+              </SchemaTabs>
+            </TabItem>
+          </MimeTabs>
+        </div>
+      </TabItem>
+    </ApiTabs>
+  </div>
+</div>
+      

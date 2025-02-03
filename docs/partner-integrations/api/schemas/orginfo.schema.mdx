@@ -1,0 +1,58 @@
+---
+id: orginfo
+title: "OrgInfo"
+description: ""
+sidebar_label: "OrgInfo"
+hide_title: true
+schema: true
+custom_edit_url: null
+---
+
+import DiscriminatorTabs from "@theme/DiscriminatorTabs";
+import SchemaItem from "@theme/SchemaItem";
+import SchemaTabs from "@theme/SchemaTabs";
+import Heading from "@theme/Heading";
+import TabItem from "@theme/TabItem";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"OrgInfo"}
+>
+</Heading>
+
+
+
+
+
+<ul>
+  <SchemaItem
+    collapsible={false}
+    name={"id"}
+    required={true}
+    schemaName={"string"}
+    qualifierMessage={undefined}
+    schema={{"type":"string","description":"Organization ID"}}
+  >
+    
+  </SchemaItem><SchemaItem
+    collapsible={false}
+    name={"name"}
+    required={false}
+    schemaName={"string"}
+    qualifierMessage={undefined}
+    schema={{"type":"string","description":"Name of the organization"}}
+  >
+    
+  </SchemaItem><SchemaItem
+    collapsible={false}
+    name={"active"}
+    required={false}
+    schemaName={"boolean"}
+    qualifierMessage={undefined}
+    schema={{"type":"boolean","description":"If set to false, the organization is deactivated"}}
+  >
+    
+  </SchemaItem>
+</ul>
+            

@@ -1,0 +1,89 @@
+# AWS Python SDK
+
+import CodeBlock from "@theme/CodeBlock";
+
+This guide assumes that you have followed the steps in the
+[Getting Started](/docs/get-started/index.md) guide, and have the access keys
+available.
+
+You may continue to use the AWS Python SDK as you normally would, but with the
+endpoint set to `https://fly.storage.tigris.dev`.
+
+## Getting started
+
+This example uses the
+[AWS SDK for Python (Boto3)](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html)
+and reads the default credentials file or the environment variables
+`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+
+import gettingStarted from "!!raw-loader!../../../examples/python/getting-started.py";
+
+<CodeBlock language="py">{gettingStarted}</CodeBlock>
+
+## Using multiple AWS Profiles
+
+If you want to use Tigris alongside AWS, you'll need to differentiate your
+access keys. There are several options ranging from passing access keys as
+parameters when creating clients:
+
+import hardcodeCredentials from "!!raw-loader!../../../examples/python/hardcode-credentials.py";
+
+<CodeBlock language="py">{hardcodeCredentials}</CodeBlock>
+
+Or you can add another profile to `~/.aws/credentials` directly:
+
+```text
+# ~/.aws/credentials
+
+[aws-compute]
+aws_access_key_id=<access_key_id>
+aws_secret_access_key=<access_key_secret>
+
+[tigris]
+aws_access_key_id=<access_key_id>
+aws_secret_access_key=<access_key_secret>
+endpoint_url=https://fly.storage.tigris.dev
+```
+
+To switch profiles while using `boto3`, you can set the `profile` on the
+`session`:
+
+import profileName from "!!raw-loader!../../../examples/python/profile-name.py";
+
+<CodeBlock language="py">{profileName}</CodeBlock>
+
+To change the default `session` to use Tigris, you can configure boto3:
+
+import defaultSession from "!!raw-loader!../../../examples/python/default-session.py";
+
+<CodeBlock language="py">{defaultSession}</CodeBlock>
+
+## Using presigned URLs
+
+Presigned URLs can be used with the AWS Python (Boto3) SDK as follows:
+
+import presignedURLs from "!!raw-loader!../../../examples/python/presigned-urls.py";
+
+<CodeBlock language="py">{presignedURLs}</CodeBlock>
+
+## Object Regions
+
+Below is an example of how to use the AWS Python SDK to restrict
+[object region](/docs/objects/object_regions) to Europe only (`fra` region).
+
+import objectRegions from "!!raw-loader!../../../examples/python/object-regions.py";
+
+<CodeBlock language="py">{objectRegions}</CodeBlock>
+
+## Object Metadata Querying
+
+Below is an example for querying for objects
+[based on their metadata](https://www.tigrisdata.com/docs/objects/query-metadata/):
+
+import objectMetadata from "!!raw-loader!../../../examples/python/object-metadata.py";
+
+<CodeBlock language="py">{objectMetadata}</CodeBlock>
+
+Note that in order to use this feature, you need to create a separate boto3
+client for each kind of query you want to do. This is a limitation of boto3. For
+best effect, create that boto3 client inline in the function that needs it.

@@ -1,3 +1,10 @@
 {
-  "trailingSlash": true
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/docs/caching/",
+      "destination": "/docs/objects/caching/",
+      "permanent": true
+    }
+  ]
 }

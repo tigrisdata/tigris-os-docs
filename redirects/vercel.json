@@ -1,6 +1,11 @@
 {
   "redirects": [
     {
+      "source": "/docs/caching/",
+      "destination": "https://www.tigrisdata.com/docs/objects/caching/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "destination": "https://www.tigrisdata.com/docs/:path*",
       "permanent": true

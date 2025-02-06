@@ -84,6 +84,7 @@ const sidebars = {
       label: "IAM",
       items: [
         "iam/index",
+        "iam/iam-policy-support",
         "iam/limited-access-key",
         "iam/ip-restrictions",
         "iam/date-time-restrictions",

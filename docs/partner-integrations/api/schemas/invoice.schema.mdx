@@ -18,7 +18,12 @@ import TabItem from "@theme/TabItem";
   as={"h1"}
   className={"openapi__heading"}
   children={"Invoice"}
-></Heading>
+>
+</Heading>
+
+
+
+
 
 <ul>
   <SchemaItem
@@ -27,304 +32,288 @@ import TabItem from "@theme/TabItem";
     required={true}
     schemaName={"string"}
     qualifierMessage={undefined}
-    schema={{ type: "string", description: "Organization ID" }}
-  ></SchemaItem>
-  <SchemaItem
+    schema={{"type":"string","description":"Organization ID"}}
+  >
+    
+  </SchemaItem><SchemaItem
     collapsible={false}
     name={"plan_name"}
     required={true}
     schemaName={"string"}
     qualifierMessage={undefined}
-    schema={{ type: "string", description: "Name of the plan" }}
-  ></SchemaItem>
-  <SchemaItem collapsible={true} className={"schemaItem"}>
-    <details style={{}} className={"openapi-markdown__details"}>
-      <summary style={{}}>
-        <span className={"openapi-schema__container"}>
-          <strong className={"openapi-schema__property"}>charges</strong>
-          <span className={"openapi-schema__name"}>object[]</span>
-          <span className={"openapi-schema__divider"}></span>
-          <span className={"openapi-schema__required"}>required</span>
+    schema={{"type":"string","description":"Name of the plan"}}
+  >
+    
+  </SchemaItem><SchemaItem
+    collapsible={true}
+    className={"schemaItem"}
+  >
+    <details
+      style={{}}
+      className={"openapi-markdown__details"}
+    >
+      <summary
+        style={{}}
+      >
+        <span
+          className={"openapi-schema__container"}
+        >
+          <strong
+            className={"openapi-schema__property"}
+          >
+            charges
+          </strong><span
+            className={"openapi-schema__name"}
+          >
+             object[]
+          </span><span
+            className={"openapi-schema__divider"}
+          >
+            
+          </span><span
+            className={"openapi-schema__required"}
+          >
+            required
+          </span>
         </span>
-      </summary>
-      <div style={{ marginLeft: "1rem" }}>
-        <div style={{ marginTop: ".5rem", marginBottom: ".5rem" }}>
+      </summary><div
+        style={{"marginLeft":"1rem"}}
+      >
+        <div
+          style={{"marginTop":".5rem","marginBottom":".5rem"}}
+        >
+          
+          
           List of charges in the invoice
-        </div>
-        <li>
+          
+          
+        </div><li>
           <div
-            style={{
-              fontSize: "var(--ifm-code-font-size)",
-              opacity: "0.6",
-              marginLeft: "-.5rem",
-              paddingBottom: ".5rem",
-            }}
+            style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem","paddingBottom":".5rem"}}
           >
             Array [
           </div>
-        </li>
-        <SchemaItem
+        </li><SchemaItem
           collapsible={false}
           name={"id"}
           required={true}
           schemaName={"string"}
           qualifierMessage={undefined}
-          schema={{
-            type: "string",
-            description: "Unique identifier for the charge",
-          }}
-        ></SchemaItem>
-        <SchemaItem
+          schema={{"type":"string","description":"Unique identifier for the charge"}}
+        >
+          
+        </SchemaItem><SchemaItem
           collapsible={false}
           name={"name"}
           required={true}
           schemaName={"string"}
           qualifierMessage={undefined}
-          schema={{
-            type: "string",
-            description: "User friendly name of the charge",
-          }}
-        ></SchemaItem>
-        <SchemaItem
+          schema={{"type":"string","description":"User friendly name of the charge"}}
+        >
+          
+        </SchemaItem><SchemaItem
           collapsible={false}
           name={"quantity"}
           required={true}
           schemaName={"double"}
           qualifierMessage={undefined}
-          schema={{
-            type: "number",
-            description: "Number of units consumed",
-            format: "double",
-          }}
-        ></SchemaItem>
-        <SchemaItem
+          schema={{"type":"number","description":"Number of units consumed","format":"double"}}
+        >
+          
+        </SchemaItem><SchemaItem
           collapsible={false}
           name={"unit"}
           required={true}
           schemaName={"string"}
           qualifierMessage={undefined}
-          schema={{ type: "string", description: "Consumption unit" }}
-        ></SchemaItem>
-        <SchemaItem
+          schema={{"type":"string","description":"Consumption unit"}}
+        >
+          
+        </SchemaItem><SchemaItem
           collapsible={false}
           name={"total"}
           required={true}
           schemaName={"double"}
           qualifierMessage={undefined}
-          schema={{
-            type: "number",
-            description: "Total cost for the charge",
-            format: "double",
-          }}
-        ></SchemaItem>
-        <SchemaItem collapsible={true} className={"schemaItem"}>
-          <details style={{}} className={"openapi-markdown__details"}>
-            <summary style={{}}>
-              <span className={"openapi-schema__container"}>
-                <strong className={"openapi-schema__property"}>tiers</strong>
-                <span className={"openapi-schema__name"}>object[]</span>
-                <span className={"openapi-schema__divider"}></span>
-                <span className={"openapi-schema__required"}>required</span>
+          schema={{"type":"number","description":"Total cost for the charge","format":"double"}}
+        >
+          
+        </SchemaItem><SchemaItem
+          collapsible={true}
+          className={"schemaItem"}
+        >
+          <details
+            style={{}}
+            className={"openapi-markdown__details"}
+          >
+            <summary
+              style={{}}
+            >
+              <span
+                className={"openapi-schema__container"}
+              >
+                <strong
+                  className={"openapi-schema__property"}
+                >
+                  tiers
+                </strong><span
+                  className={"openapi-schema__name"}
+                >
+                   object[]
+                </span><span
+                  className={"openapi-schema__divider"}
+                >
+                  
+                </span><span
+                  className={"openapi-schema__required"}
+                >
+                  required
+                </span>
               </span>
-            </summary>
-            <div style={{ marginLeft: "1rem" }}>
+            </summary><div
+              style={{"marginLeft":"1rem"}}
+            >
               <li>
                 <div
-                  style={{
-                    fontSize: "var(--ifm-code-font-size)",
-                    opacity: "0.6",
-                    marginLeft: "-.5rem",
-                    paddingBottom: ".5rem",
-                  }}
+                  style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem","paddingBottom":".5rem"}}
                 >
                   Array [
                 </div>
-              </li>
-              <SchemaItem
+              </li><SchemaItem
                 collapsible={false}
                 name={"name"}
                 required={true}
                 schemaName={"string"}
                 qualifierMessage={undefined}
-                schema={{ type: "string" }}
-              ></SchemaItem>
-              <SchemaItem
+                schema={{"type":"string"}}
+              >
+                
+              </SchemaItem><SchemaItem
                 collapsible={false}
                 name={"quantity"}
                 required={true}
                 schemaName={"double"}
                 qualifierMessage={undefined}
-                schema={{
-                  type: "number",
-                  description: "Number of units consumed",
-                  format: "double",
-                }}
-              ></SchemaItem>
-              <SchemaItem
+                schema={{"type":"number","description":"Number of units consumed","format":"double"}}
+              >
+                
+              </SchemaItem><SchemaItem
                 collapsible={false}
                 name={"starting_after"}
                 required={true}
                 schemaName={"double"}
                 qualifierMessage={undefined}
-                schema={{
-                  type: "number",
-                  description: "Starting point when this tier is applicable",
-                  format: "double",
-                }}
-              ></SchemaItem>
-              <SchemaItem
+                schema={{"type":"number","description":"Starting point when this tier is applicable","format":"double"}}
+              >
+                
+              </SchemaItem><SchemaItem
                 collapsible={false}
                 name={"price"}
                 required={true}
                 schemaName={"double"}
                 qualifierMessage={undefined}
-                schema={{
-                  type: "number",
-                  description: "Rate per unit",
-                  format: "double",
-                }}
-              ></SchemaItem>
-              <SchemaItem
+                schema={{"type":"number","description":"Rate per unit","format":"double"}}
+              >
+                
+              </SchemaItem><SchemaItem
                 collapsible={false}
                 name={"subtotal"}
                 required={true}
                 schemaName={"double"}
                 qualifierMessage={undefined}
-                schema={{
-                  type: "number",
-                  description: "Total cost for the tier",
-                  format: "double",
-                }}
-              ></SchemaItem>
-              <li>
+                schema={{"type":"number","description":"Total cost for the tier","format":"double"}}
+              >
+                
+              </SchemaItem><li>
                 <div
-                  style={{
-                    fontSize: "var(--ifm-code-font-size)",
-                    opacity: "0.6",
-                    marginLeft: "-.5rem",
-                  }}
+                  style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem"}}
                 >
                   ]
                 </div>
               </li>
             </div>
           </details>
-        </SchemaItem>
-        <SchemaItem
+        </SchemaItem><SchemaItem
           collapsible={false}
           name={"charged_quantity"}
           required={true}
           schemaName={"double"}
           qualifierMessage={undefined}
-          schema={{
-            type: "number",
-            description: "Actual number of units charged for",
-            format: "double",
-          }}
-        ></SchemaItem>
-        <li>
+          schema={{"type":"number","description":"Actual number of units charged for","format":"double"}}
+        >
+          
+        </SchemaItem><li>
           <div
-            style={{
-              fontSize: "var(--ifm-code-font-size)",
-              opacity: "0.6",
-              marginLeft: "-.5rem",
-            }}
+            style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem"}}
           >
             ]
           </div>
         </li>
       </div>
     </details>
-  </SchemaItem>
-  <SchemaItem
+  </SchemaItem><SchemaItem
     collapsible={false}
     name={"subtotal"}
     required={true}
     schemaName={"double"}
     qualifierMessage={undefined}
-    schema={{
-      type: "number",
-      description: "Amount before any credits/discounts/minimum commitments",
-      format: "double",
-    }}
-  ></SchemaItem>
-  <SchemaItem
+    schema={{"type":"number","description":"Amount before any credits/discounts/minimum commitments","format":"double"}}
+  >
+    
+  </SchemaItem><SchemaItem
     collapsible={false}
     name={"total"}
     required={true}
     schemaName={"double"}
     qualifierMessage={undefined}
-    schema={{
-      type: "number",
-      description: "Total payable amount",
-      format: "double",
-    }}
-  ></SchemaItem>
-  <SchemaItem
+    schema={{"type":"number","description":"Total payable amount","format":"double"}}
+  >
+    
+  </SchemaItem><SchemaItem
     collapsible={false}
     name={"created_at"}
     required={true}
     schemaName={"date-time"}
     qualifierMessage={undefined}
-    schema={{
-      type: "string",
-      format: "date-time",
-      description: "RFC3339 timestamp when this invoice was generated",
-      example: "2021-09-01T12:00:00Z",
-    }}
-  ></SchemaItem>
-  <SchemaItem
+    schema={{"type":"string","format":"date-time","description":"RFC3339 timestamp when this invoice was generated","example":"2021-09-01T12:00:00Z"}}
+  >
+    
+  </SchemaItem><SchemaItem
     collapsible={false}
     name={"last_modified"}
     required={true}
     schemaName={"date-time"}
     qualifierMessage={undefined}
-    schema={{
-      type: "string",
-      format: "date-time",
-      description: "RFC3339 timestamp when this invoice was last modified",
-      example: "2021-09-01T12:00:00Z",
-    }}
-  ></SchemaItem>
-  <SchemaItem
+    schema={{"type":"string","format":"date-time","description":"RFC3339 timestamp when this invoice was last modified","example":"2021-09-01T12:00:00Z"}}
+  >
+    
+  </SchemaItem><SchemaItem
     collapsible={false}
     name={"starting_on"}
     required={true}
     schemaName={"date-time"}
     qualifierMessage={undefined}
-    schema={{
-      type: "string",
-      format: "date-time",
-      description:
-        "RFC3339 starting time for usage period during which items were added to this invoice",
-      example: "2021-09-01T12:00:00Z",
-    }}
-  ></SchemaItem>
-  <SchemaItem
+    schema={{"type":"string","format":"date-time","description":"RFC3339 starting time for usage period during which items were added to this invoice","example":"2021-09-01T12:00:00Z"}}
+  >
+    
+  </SchemaItem><SchemaItem
     collapsible={false}
     name={"ending_before"}
     required={true}
     schemaName={"date-time"}
     qualifierMessage={undefined}
-    schema={{
-      type: "string",
-      format: "date-time",
-      description:
-        "RFC3339 ending time for usage period during which items were added to this invoice",
-      example: "2021-09-01T12:00:00Z",
-    }}
-  ></SchemaItem>
-  <SchemaItem
+    schema={{"type":"string","format":"date-time","description":"RFC3339 ending time for usage period during which items were added to this invoice","example":"2021-09-01T12:00:00Z"}}
+  >
+    
+  </SchemaItem><SchemaItem
     collapsible={false}
     name={"status"}
     required={true}
     schemaName={"string"}
     qualifierMessage={"**Possible values:** [`DRAFT`, `FINALIZED`]"}
-    schema={{
-      type: "string",
-      description:
-        "* `DRAFT` - Invoice can be modified as the billing period progresses\n* `FINALIZED` - Invoice is locked and can't be modified\n",
-      enum: ["DRAFT", "FINALIZED"],
-    }}
-  ></SchemaItem>
+    schema={{"type":"string","description":"* `DRAFT` - Invoice can be modified as the billing period progresses\n* `FINALIZED` - Invoice is locked and can't be modified\n","enum":["DRAFT","FINALIZED"]}}
+  >
+    
+  </SchemaItem>
 </ul>
+            

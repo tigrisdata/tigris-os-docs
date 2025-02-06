@@ -18,7 +18,12 @@ import TabItem from "@theme/TabItem";
   as={"h1"}
   className={"openapi__heading"}
   children={"UpdateBucketRequest"}
-></Heading>
+>
+</Heading>
+
+
+
+
 
 <ul>
   <SchemaItem
@@ -27,22 +32,18 @@ import TabItem from "@theme/TabItem";
     required={false}
     schemaName={"boolean"}
     qualifierMessage={undefined}
-    schema={{
-      type: "boolean",
-      description:
-        "If set to true, the bucket will be publicly accessible. Default is false.",
-    }}
-  ></SchemaItem>
-  <SchemaItem
+    schema={{"type":"boolean","description":"If set to true, the bucket will be publicly accessible. Default is false."}}
+  >
+    
+  </SchemaItem><SchemaItem
     collapsible={false}
     name={"enable_object_acl"}
     required={false}
     schemaName={"boolean"}
     qualifierMessage={undefined}
-    schema={{
-      type: "boolean",
-      description:
-        "If set to true, per object ACL will be enabled. Default is false.",
-    }}
-  ></SchemaItem>
+    schema={{"type":"boolean","description":"If set to true, per object ACL will be enabled. Default is false."}}
+  >
+    
+  </SchemaItem>
 </ul>
+            

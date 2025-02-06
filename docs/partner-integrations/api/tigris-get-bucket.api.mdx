@@ -1,9 +1,7 @@
 ---
 id: tigris-get-bucket
 title: "Get bucket details"
-description:
-  "Returns the details of the bucket including its size, object count, and other
-  metadata."
+description: "Returns the details of the bucket including its size, object count, and other metadata."
 sidebar_label: "Get bucket details"
 hide_title: true
 hide_table_of_contents: true
@@ -30,79 +28,95 @@ import TabItem from "@theme/TabItem";
   as={"h1"}
   className={"openapi__heading"}
   children={"Get bucket details"}
-></Heading>
+>
+</Heading>
 
 <MethodEndpoint
   method={"get"}
   path={"/v1/providers/{provider_id}/orgs/{org_id}/buckets/{bucket_name}"}
-></MethodEndpoint>
+>
+  
+</MethodEndpoint>
 
-Returns the details of the bucket including its size, object count, and other
-metadata.
+
+
+Returns the details of the bucket including its size, object count, and other metadata.
+
 
 <Heading
   id={"request"}
   as={"h2"}
   className={"openapi-tabs__heading"}
   children={"Request"}
-></Heading>
+>
+</Heading>
 
 <details
-  style={{ marginBottom: "1rem" }}
+  style={{"marginBottom":"1rem"}}
   className={"openapi-markdown__details"}
   data-collapsed={false}
   open={true}
 >
-  <summary style={{}}>
-    <h3 className={"openapi-markdown__details-summary-header-params"}>
+  <summary
+    style={{}}
+  >
+    <h3
+      className={"openapi-markdown__details-summary-header-params"}
+    >
       Path Parameters
     </h3>
-  </summary>
-  <div>
+  </summary><div>
     <ul>
       <ParamsItem
         className={"paramsItem"}
-        param={{
-          name: "provider_id",
-          in: "path",
-          required: true,
-          description: "Provider ID",
-          schema: { type: "string" },
-        }}
-      ></ParamsItem>
-      <ParamsItem
+        param={{"name":"provider_id","in":"path","required":true,"description":"Provider ID","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem><ParamsItem
         className={"paramsItem"}
-        param={{
-          name: "org_id",
-          in: "path",
-          required: true,
-          description: "Organization ID",
-          schema: { type: "string" },
-        }}
-      ></ParamsItem>
-      <ParamsItem
+        param={{"name":"org_id","in":"path","required":true,"description":"Organization ID","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem><ParamsItem
         className={"paramsItem"}
-        param={{
-          name: "bucket_name",
-          in: "path",
-          required: true,
-          description: "Bucket name",
-          schema: { type: "string" },
-        }}
-      ></ParamsItem>
+        param={{"name":"bucket_name","in":"path","required":true,"description":"Bucket name","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem>
     </ul>
   </div>
-</details>
-<div>
+</details><div>
   <div>
-    <ApiTabs label={undefined} id={undefined}>
-      <TabItem label={"200"} value={"200"}>
-        <div>OK</div>
+    <ApiTabs
+      label={undefined}
+      id={undefined}
+    >
+      <TabItem
+        label={"200"}
+        value={"200"}
+      >
         <div>
-          <MimeTabs className={"openapi-tabs__mime"} schemaType={"response"}>
-            <TabItem label={"application/json"} value={"application/json"}>
-              <SchemaTabs className={"openapi-tabs__schema"}>
-                <TabItem label={"Schema"} value={"Schema"}>
+          
+          
+          OK
+          
+          
+        </div><div>
+          <MimeTabs
+            className={"openapi-tabs__mime"}
+            schemaType={"response"}
+          >
+            <TabItem
+              label={"application/json"}
+              value={"application/json"}
+            >
+              <SchemaTabs
+                className={"openapi-tabs__schema"}
+              >
+                <TabItem
+                  label={"Schema"}
+                  value={"Schema"}
+                >
                   <details
                     style={{}}
                     className={"openapi-markdown__details response"}
@@ -113,153 +127,153 @@ metadata.
                       style={{}}
                       className={"openapi-markdown__details-summary-response"}
                     >
-                      <strong>Schema</strong>
-                    </summary>
-                    <div
-                      style={{ textAlign: "left", marginLeft: "1rem" }}
-                    ></div>
-                    <ul style={{ marginLeft: "1rem" }}>
-                      <SchemaItem collapsible={true} className={"schemaItem"}>
+                      <strong>
+                        Schema
+                      </strong>
+                    </summary><div
+                      style={{"textAlign":"left","marginLeft":"1rem"}}
+                    >
+                      
+                    </div><ul
+                      style={{"marginLeft":"1rem"}}
+                    >
+                      <SchemaItem
+                        collapsible={true}
+                        className={"schemaItem"}
+                      >
                         <details
                           style={{}}
                           className={"openapi-markdown__details"}
                         >
-                          <summary style={{}}>
-                            <span className={"openapi-schema__container"}>
-                              <strong className={"openapi-schema__property"}>
+                          <summary
+                            style={{}}
+                          >
+                            <span
+                              className={"openapi-schema__container"}
+                            >
+                              <strong
+                                className={"openapi-schema__property"}
+                              >
                                 bucket
-                              </strong>
-                              <span className={"openapi-schema__name"}>
-                                object
+                              </strong><span
+                                className={"openapi-schema__name"}
+                              >
+                                 object
                               </span>
                             </span>
-                          </summary>
-                          <div style={{ marginLeft: "1rem" }}>
+                          </summary><div
+                            style={{"marginLeft":"1rem"}}
+                          >
                             <SchemaItem
                               collapsible={false}
                               name={"name"}
                               required={false}
                               schemaName={"string"}
                               qualifierMessage={undefined}
-                              schema={{
-                                type: "string",
-                                description: "Name of the bucket",
-                              }}
-                            ></SchemaItem>
-                            <SchemaItem
+                              schema={{"type":"string","description":"Name of the bucket"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
                               collapsible={false}
                               name={"created_at"}
                               required={false}
                               schemaName={"date-time"}
                               qualifierMessage={undefined}
-                              schema={{
-                                type: "string",
-                                format: "date-time",
-                                description:
-                                  "RFC3339 formatted timestamp of bucket creation",
-                                example: "2021-09-01T12:00:00Z",
-                              }}
-                            ></SchemaItem>
-                            <SchemaItem
+                              schema={{"type":"string","format":"date-time","description":"RFC3339 formatted timestamp of bucket creation","example":"2021-09-01T12:00:00Z"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
                               collapsible={false}
                               name={"size"}
                               required={false}
                               schemaName={"int64"}
                               qualifierMessage={undefined}
-                              schema={{
-                                type: "integer",
-                                format: "int64",
-                                description:
-                                  "Estimated size of the bucket in bytes",
-                              }}
-                            ></SchemaItem>
-                            <SchemaItem
+                              schema={{"type":"integer","format":"int64","description":"Estimated size of the bucket in bytes"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
                               collapsible={false}
                               name={"object_count"}
                               required={false}
                               schemaName={"int64"}
                               qualifierMessage={undefined}
-                              schema={{
-                                type: "integer",
-                                format: "int64",
-                                description:
-                                  "Estimated number of objects in the bucket",
-                              }}
-                            ></SchemaItem>
-                            <SchemaItem
+                              schema={{"type":"integer","format":"int64","description":"Estimated number of objects in the bucket"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
                               collapsible={false}
                               name={"public"}
                               required={false}
                               schemaName={"boolean"}
                               qualifierMessage={undefined}
-                              schema={{
-                                type: "boolean",
-                                description:
-                                  "If set to true, the bucket is publicly accessible",
-                              }}
-                            ></SchemaItem>
-                            <SchemaItem
+                              schema={{"type":"boolean","description":"If set to true, the bucket is publicly accessible"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
                               collapsible={false}
                               name={"storage_class"}
                               required={false}
                               schemaName={"StorageClass (string)"}
-                              qualifierMessage={
-                                "**Possible values:** [`STANDARD`, `STANDARD_IA`, `GLACIER`, `GLACIER_IR`]"
-                              }
-                              schema={{
-                                type: "string",
-                                description:
-                                  "Storage class for the bucket. Default is `STANDARD`.",
-                                enum: [
-                                  "STANDARD",
-                                  "STANDARD_IA",
-                                  "GLACIER",
-                                  "GLACIER_IR",
-                                ],
-                                title: "StorageClass",
-                              }}
-                            ></SchemaItem>
-                            <SchemaItem
+                              qualifierMessage={"**Possible values:** [`STANDARD`, `STANDARD_IA`, `GLACIER`, `GLACIER_IR`]"}
+                              schema={{"type":"string","description":"Storage class for the bucket. Default is `STANDARD`.","enum":["STANDARD","STANDARD_IA","GLACIER","GLACIER_IR"],"title":"StorageClass"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
                               collapsible={false}
                               name={"object_acl_enabled"}
                               required={false}
                               schemaName={"boolean"}
                               qualifierMessage={undefined}
-                              schema={{
-                                type: "boolean",
-                                description:
-                                  "If set to true, per object ACL is enabled",
-                              }}
-                            ></SchemaItem>
+                              schema={{"type":"boolean","description":"If set to true, per object ACL is enabled"}}
+                            >
+                              
+                            </SchemaItem>
                           </div>
                         </details>
                       </SchemaItem>
                     </ul>
                   </details>
-                </TabItem>
-                <TabItem
+                </TabItem><TabItem
                   label={"Example (from schema)"}
                   value={"Example (from schema)"}
                 >
                   <ResponseSamples
-                    responseExample={
-                      '{\n  "bucket": {\n    "name": "string",\n    "created_at": "2021-09-01T12:00:00Z",\n    "size": 0,\n    "object_count": 0,\n    "public": true,\n    "storage_class": "STANDARD",\n    "object_acl_enabled": true\n  }\n}'
-                    }
+                    responseExample={"{\n  \"bucket\": {\n    \"name\": \"string\",\n    \"created_at\": \"2021-09-01T12:00:00Z\",\n    \"size\": 0,\n    \"object_count\": 0,\n    \"public\": true,\n    \"storage_class\": \"STANDARD\",\n    \"object_acl_enabled\": true\n  }\n}"}
                     language={"json"}
-                  ></ResponseSamples>
+                  >
+                    
+                  </ResponseSamples>
                 </TabItem>
               </SchemaTabs>
             </TabItem>
           </MimeTabs>
         </div>
-      </TabItem>
-      <TabItem label={"default"} value={"default"}>
-        <div>Unexpected error</div>
+      </TabItem><TabItem
+        label={"default"}
+        value={"default"}
+      >
         <div>
-          <MimeTabs className={"openapi-tabs__mime"} schemaType={"response"}>
-            <TabItem label={"application/json"} value={"application/json"}>
-              <SchemaTabs className={"openapi-tabs__schema"}>
-                <TabItem label={"Schema"} value={"Schema"}>
+          
+          
+          Unexpected error
+          
+          
+        </div><div>
+          <MimeTabs
+            className={"openapi-tabs__mime"}
+            schemaType={"response"}
+          >
+            <TabItem
+              label={"application/json"}
+              value={"application/json"}
+            >
+              <SchemaTabs
+                className={"openapi-tabs__schema"}
+              >
+                <TabItem
+                  label={"Schema"}
+                  value={"Schema"}
+                >
                   <details
                     style={{}}
                     className={"openapi-markdown__details response"}
@@ -270,31 +284,38 @@ metadata.
                       style={{}}
                       className={"openapi-markdown__details-summary-response"}
                     >
-                      <strong>Schema</strong>
-                    </summary>
-                    <div
-                      style={{ textAlign: "left", marginLeft: "1rem" }}
-                    ></div>
-                    <ul style={{ marginLeft: "1rem" }}>
+                      <strong>
+                        Schema
+                      </strong>
+                    </summary><div
+                      style={{"textAlign":"left","marginLeft":"1rem"}}
+                    >
+                      
+                    </div><ul
+                      style={{"marginLeft":"1rem"}}
+                    >
                       <SchemaItem
                         collapsible={false}
                         name={"message"}
                         required={false}
                         schemaName={"string"}
                         qualifierMessage={undefined}
-                        schema={{ type: "string" }}
-                      ></SchemaItem>
+                        schema={{"type":"string"}}
+                      >
+                        
+                      </SchemaItem>
                     </ul>
                   </details>
-                </TabItem>
-                <TabItem
+                </TabItem><TabItem
                   label={"Example (from schema)"}
                   value={"Example (from schema)"}
                 >
                   <ResponseSamples
-                    responseExample={'{\n  "message": "string"\n}'}
+                    responseExample={"{\n  \"message\": \"string\"\n}"}
                     language={"json"}
-                  ></ResponseSamples>
+                  >
+                    
+                  </ResponseSamples>
                 </TabItem>
               </SchemaTabs>
             </TabItem>
@@ -304,3 +325,4 @@ metadata.
     </ApiTabs>
   </div>
 </div>
+      

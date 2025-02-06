@@ -13,12 +13,12 @@ Because Tigris is S3-compatible, you can continue to use existing AWS S3 IAM
 policies, CLIs, SDKs, and libraries with Tigris. Custom IAM policies must be
 defined and set using the AWS CLI, configured with Tigris credentials.
 
-# How to create and attach an IAM policy
+## How to create and attach an IAM policy
 
 Policies are attached to access keys. If you delete and recreate an access key,
 you'll need to attach IAM policies to the new access key.
 
-## Create an Access Key
+### Create an Access Key
 
 - Go to the [Tigris Dashboard](https://console.tigris.dev).
 - Click on the `Access Keys` tab.
@@ -31,7 +31,7 @@ you'll need to attach IAM policies to the new access key.
 - Ensure your IAM endpoint URL points to Tigris:
   `AWS_ENDPOINT_URL_IAM=https://fly.iam.storage.tigris.dev`
 
-## Create an IAM Policy
+### Create an IAM Policy
 
 Let's create an IAM policy and attach it to an access key. Here's an example IAM
 policy. You'll need to save it as a `.json` file.
@@ -71,7 +71,7 @@ aws iam create-policy --policy-name <example-org-level-unique-policy-name> --pol
 
 Note the ARN of the policy.
 
-## Attach IAM Policy
+### Attach IAM Policy
 
 Once you've created an IAM Policy, you can attach it to users using the
 `IAM:AttachUserPolicy` operation:

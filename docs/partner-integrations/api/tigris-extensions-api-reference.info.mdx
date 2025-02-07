@@ -172,9 +172,9 @@ X-Tigris-Signature: <generated_signature>
     >
       
       
-      HMAC-SHA256 of the request method, url, along with the unique nonce and timestamp signed using shared secret.
+      HMAC-SHA256 of the request method, url, along with the unique nonce and timestamp signed using signing key.
       To create the signature, concatenate the method, url, nonce, and timestamp with a newline character in between.
-      Then, calculate the HMAC-SHA256 of the concatenated string using the shared secret. Ex -
+      Then, calculate the HMAC-SHA256 of the concatenated string using the signing key. Ex -
       
       Created `canonical_request` as:
       ```
@@ -183,9 +183,9 @@ X-Tigris-Signature: <generated_signature>
       1731703213870
       f8d133cb-5a42-47b1-9ef2-874bb55bab72
       ```
-      Then, calculate HMAC-SHA256 of the canonical request using the shared secret as:
+      Then, calculate HMAC-SHA256 of the canonical request using the signing key as:
       ```
-      Signature = hex(sha256sign(canonical_request, "secret_shared"))
+      Signature = hex(sha256sign(canonical_request, "signing key"))
       ```
       
       

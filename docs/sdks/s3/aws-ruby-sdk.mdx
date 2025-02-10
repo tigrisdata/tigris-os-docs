@@ -1,0 +1,25 @@
+# AWS Ruby SDK
+
+import CodeBlock from "@theme/CodeBlock";
+
+This guide assumes that you have followed the steps in the
+[Getting Started](/docs/get-started/index.md) guide, and have the access keys
+available.
+
+You may continue to use the AWS Ruby SDK as you normally would, but with the
+endpoint set to `https://fly.storage.tigris.dev`.
+
+This example uses the [AWS Ruby SDK v3](https://github.com/aws/aws-sdk-ruby) and
+reads the default credentials file or the environment variables
+`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+
+import Gemfile from "!!raw-loader!../../../examples/ruby/Gemfile";
+
+<CodeBlock language="ruby">{Gemfile}</CodeBlock>
+
+Then you can use the SDK as you normally would, but with the endpoint set to
+`https://fly.storage.tigris.dev`.
+
+import gettingStarted from "!!raw-loader!../../../examples/ruby/getting_started.rb";
+
+<CodeBlock language="ruby">{gettingStarted}</CodeBlock>

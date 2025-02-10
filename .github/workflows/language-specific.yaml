@@ -98,3 +98,21 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: auto
+  ruby:
+    name: "Ruby"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.4'
+    - run: |
+        cd examples/ruby
+        bundle install
+    - run: |
+        cd examples/ruby
+        ruby getting_started.rb
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: auto

@@ -6,6 +6,29 @@ on:
     branches: ["main"]
 
 jobs:
+  dotnet:
+    name: ".Net"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: "9.0.x"
+        cache: true
+        cache-dependency-path: '**/package-lock.json'
+    - run: curl -s https://raw.githubusercontent.com/dotnet-script/dotnet-script/master/install/install.sh | sudo bash
+    - run: |
+        cd examples/dotnet
+        dotnet restore
+    - run: |
+        cd examples/dotnet
+        dotnet run # runs GettingStarted.cs
+        dotnet script ListBuckets.csx
+        dotnet script PutObject.csx
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: auto
   go:
     name: Go
     runs-on: ubuntu-latest

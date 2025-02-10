@@ -1,0 +1,33 @@
+name: Language-specific validation
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main"]
+
+jobs:
+  go:
+    name: Go
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-go@v5
+      with:
+        cache-dependency-path: |
+          examples/go/go.sum
+    - name: Deps
+      run: |
+        cd examples/go
+        go mod download
+    - name: Examples
+      run: |
+        cd examples/go
+        go run ./cmd/getting-started tigris-example
+        go run ./cmd/conditional-operations tigris-example
+        go run ./cmd/metadata-querying tigris-example
+        go run ./cmd/object-regions tigris-example
+        go run ./cmd/presigned-urls tigris-example
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: auto

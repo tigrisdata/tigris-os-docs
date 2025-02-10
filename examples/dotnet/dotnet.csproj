@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.7.414.1" />
+    <PackageReference Include="AWSSDK.SecurityToken" Version="3.7.401.40" />
+    <PackageReference Include="AWSSDK.SSO" Version="3.7.400.91" />
+    <PackageReference Include="AWSSDK.SSOOIDC" Version="3.7.400.92" />
+  </ItemGroup>
+
+</Project>

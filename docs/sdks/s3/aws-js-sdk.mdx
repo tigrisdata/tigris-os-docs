@@ -7,7 +7,20 @@ This guide assumes that you have followed the steps in the
 available.
 
 You may continue to use the AWS JS SDK as you normally would, but with the
-endpoint set to `https://fly.storage.tigris.dev`.
+endpoint set to `https://fly.storage.tigris.dev`. Also make sure that
+`s3ForcePathStyle` is set to `false`.
+
+```js
+import { S3Client } from "@aws-sdk/client-s3";
+
+const S3 = new S3Client({
+  region: "auto",
+  endpoint: "https://fly.storage.tigris.dev",
+  // highlight-start
+  s3ForcePathStyle: false,
+  // highlight-end
+});
+```
 
 ## Getting started
 

@@ -6,14 +6,17 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-const S3 = new S3Client({ region: "auto" });
+const S3 = new S3Client({
+  region: "auto",
+  s3ForcePathStyle: false,
+});
 
 // Presigned GET, allows users to download objects without making the bucket public.
 console.log(
   "GET:",
   await getSignedUrl(
     S3,
-    new GetObjectCommand({ Bucket: "foo-bucket", Key: "bar.txt" }),
+    new GetObjectCommand({ Bucket: "tigris-example", Key: "bar.txt" }),
     { expiresIn: 3600 } // 1 hour
   )
 );
@@ -23,7 +26,7 @@ console.log(
   "PUT:",
   await getSignedUrl(
     S3,
-    new PutObjectCommand({ Bucket: "foo-bucket", Key: "bar.txt" }),
+    new PutObjectCommand({ Bucket: "tigris-example", Key: "bar.txt" }),
     { expiresIn: 3600 } // 1 hour
   )
 );
@@ -33,7 +36,7 @@ console.log(
   "DELETE:",
   await getSignedUrl(
     S3,
-    new DeleteObjectCommand({ Bucket: "foo-bucket", Key: "bar.txt" }),
+    new DeleteObjectCommand({ Bucket: "tigris-example", Key: "bar.txt" }),
     { expiresIn: 3600 } // 1 hour
   )
 );

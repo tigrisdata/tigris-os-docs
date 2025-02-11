@@ -6,8 +6,9 @@ using Amazon.S3;
 using Amazon.S3.Model;
 
 IAmazonS3 s3Client = new AmazonS3Client(
-    new AmazonS3Config { ServiceURL = "https://fly.storage.tigris.dev" }
+    new AmazonS3Config { ForcePathStyle = false,  ServiceURL = "https://fly.storage.tigris.dev" }
 );
+
 
 // List buckets
 var listResponse = await s3Client.ListBucketsAsync();

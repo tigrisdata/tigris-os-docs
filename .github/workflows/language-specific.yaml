@@ -16,10 +16,8 @@ jobs:
           dotnet-version: "9.0.x"
           cache: true
           cache-dependency-path: "**/package-lock.json"
-      - run:
-          curl -s
-          https://raw.githubusercontent.com/dotnet-script/dotnet-script/master/install/install.sh
-          | sudo bash
+      - run: |
+          curl -s https://raw.githubusercontent.com/dotnet-script/dotnet-script/master/install/install.sh | sudo bash
       - run: |
           cd examples/dotnet
           dotnet restore
@@ -28,6 +26,25 @@ jobs:
           dotnet run # runs GettingStarted.cs
           dotnet script ListBuckets.csx
           dotnet script PutObject.csx
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: auto
+  elixir:
+    name: Elixir
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: "27"
+          elixir-version: "1.18.2"
+      - run: |
+          cd examples/elixir
+          mix deps.get
+      - run: |
+          cd examples/elixir
+          mix test
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}

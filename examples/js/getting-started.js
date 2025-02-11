@@ -49,7 +49,10 @@ export const uploadObjectFromFS = async (S3, bucket, key, filePath) => {
   return response;
 };
 
-const S3 = new S3Client({ region: "auto" });
+const S3 = new S3Client({
+  region: "auto",
+  s3ForcePathStyle: false,
+});
 
 console.log("List buckets");
 const buckets = await listBuckets(S3);

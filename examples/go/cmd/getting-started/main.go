@@ -34,6 +34,7 @@ func main() {
 	svc := s3.NewFromConfig(sdkConfig, func(o *s3.Options) {
 		o.BaseEndpoint = aws.String("https://fly.storage.tigris.dev")
 		o.Region = "auto"
+		o.UsePathStyle = false
 	})
 
 	// List buckets

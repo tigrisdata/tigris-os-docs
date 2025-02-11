@@ -132,6 +132,7 @@ jobs:
       - run: |
           cd examples/ruby
           ruby getting_started.rb
+          ruby presigned_urls_test.rb
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}

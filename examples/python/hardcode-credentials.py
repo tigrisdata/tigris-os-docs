@@ -1,5 +1,6 @@
 import boto3
 import os
+from botocore.client import Config
 
 client = boto3.client(
     's3',

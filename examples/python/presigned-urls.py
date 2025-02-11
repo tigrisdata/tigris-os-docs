@@ -1,4 +1,5 @@
 import boto3
+from botocore.client import Config
 
 # Create S3 service client
 svc = boto3.client(

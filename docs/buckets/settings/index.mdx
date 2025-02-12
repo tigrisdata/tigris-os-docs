@@ -1,0 +1,153 @@
+# Bucket Settings
+
+The Tigris dashboard lets you configure various settings for your buckets.
+Here's an overview of the settings you can configure:
+
+- Bucket Sharing: Share buckets between your organization members or outside
+  collaborators.
+- Public / Private Access: Set the default access rules for a bucket.
+- Storage Tier: Set the storage tier for a bucket.
+- Custom Domains: Configure a custom domain to serve your bucket content.
+- Object Notifications: Subscribe to events on your buckets.
+- Data Migration: Migrate data from one bucket to another.
+- Region Restriction: Restrict the regions where your bucket data is stored.
+- Cache Control: Set the default `Cache-Control` header for objects in the
+  bucket.
+- Additional Headers: TODO(Xe): What does this mean???
+- TTL Configuration: Set the default time-to-live (TTL) for objects in the
+  bucket.
+- CORS Configuration: Configure Cross-Origin Resource Sharing (CORS) rules for
+  your bucket.
+- Delete This Bucket: Permanently delete a bucket.
+
+## Sharing
+
+![Bucket Sharing](./sharing-buckets.webp)
+
+You use Bucket Sharing to share buckets between your organization members or
+outside collaborators. For more information, please see the bucket sharing page:
+[Bucket Sharing](/docs/buckets/sharing/).
+
+## Public / Private Access
+
+![Bucket default access](./bucket-default-acl.webp)
+
+Tigris lets you control the [access rules](/docs/buckets/public-bucket/) for a
+bucket. This section lets you set the default access rules for a bucket (either
+public or private). You can optionally enable "Allow Object ACL" to let you
+customize public/private status
+[for individual objects](/docs/objects/acl/#applying-acls-to-objects).
+
+## Storage Tier
+
+This is set on bucket creation and cannot be changed. For more information,
+please see the storage tiers page: [Storage Tiers](/docs/objects/tiers/).
+
+## Custom Domains
+
+![Custom domain settings](./bucket-custom-domain.webp)
+
+You can configure a custom domain to serve your bucket content. For more
+information see the [Custom Domain](/docs/buckets/custom-domain/) documentation.
+
+The custom domain name must match the bucket name. For example, if the custom
+domain is `foo.example.com`, the bucket name must be `foo.example.com`.
+
+## Object Notifications
+
+![Object Notifications](./object-notifications.webp)
+
+Object notifications allow you to subscribe to events on your buckets. For more
+information see the [object notifications](/docs/buckets/object-notifications/)
+documentation. You can configure the following settings:
+
+- Webhook URL: The URL to send the notification to.
+- Authentication type: None, token or password.
+- Filter: SQL style filtering for objects.
+
+Tigris will notify you on the following events:
+
+- New objects being put into buckets.
+- Existing objects being deleted from buckets.
+
+## Data Migration
+
+![Shadow bucket migration](./shadow-bucket-migration.webp)
+
+You can migrate data from one bucket to another using the
+[data migration](/docs/migration/) feature. This will automatically copy data
+that isn't in Tigris over to Tigris when it's needed. Tigris implements the
+following migration strategy:
+
+1. When an object is requested, it is served from your Tigris bucket if it is
+   found.
+2. If the object is not found in Tigris bucket, the object will be returned from
+   your source bucket and asynchronously copied to Tigris.
+3. All other operations, including put and delete, continue to work as usual
+
+If you enable the write-through option, Tigris will write the object to your
+source bucket and Tigris bucket at the same time. This is useful for keeping
+your source bucket in sync with Tigris.
+
+## Region Restriction
+
+![Region restriction](./region-restriction.webp)
+
+You can restrict the regions where your bucket data is stored. This is useful
+for compliance with data protection regulations. For more information see the
+[region restriction](/docs/objects/object_regions/) documentation.
+
+## Cache Control
+
+![Cache control](./cache-control.webp)
+
+This lets you set the default `Cache-Control` header for objects in the bucket.
+Tigris will set some
+[cache control headers by default](/docs/objects/caching/#cache-headers) for
+public objects, but you can set an implicit default here.
+
+## Additional Headers
+
+TODO(Xe): What does this mean???
+
+## TTL Configuration
+
+![TTL Configuration](./ttl-configuration.webp)
+
+You can set the default time-to-live (TTL) for objects in the bucket. This is
+useful for buckets that contain ephmemeral data that should be deleted after a
+certain period of time. For more information see the
+[Object Expiration](/docs/buckets/objects-expiration/) documentation.
+
+You can configure the following modes:
+
+![TTL configuration: delete anything older than a given date](./ttl-configuration-prune.webp)
+
+You can configure Tigris to delete anything older than a given date. This lets
+you clean up a bucket by deleting old data on the server side.
+
+![TTL configuration: delete anything older than a given duration](./ttl-configuration-maxage.webp)
+
+You can also configure Tigris to automatically delete any object older than a
+given number of days.
+
+## CORS Configuration
+
+![CORS Configuration](./cors.webp)
+
+You can configure
+[Cross-Origin Resource Sharing (CORS)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+rules for your bucket. This allows you to have a website dynamically fetch data
+from Tigris. For more information see the
+[CORS Configuration](/docs/buckets/cors/) documentation.
+
+## Delete This Bucket
+
+![Delete bucket](./bucket-goodbye.webp)
+
+You can delete a bucket by clicking the "Delete Bucket" button. This will
+permanently delete all objects in the bucket. This action cannot be undone.
+
+When you delete a bucket, its name will become unavailable for reuse for a few
+minutes while the deletion is processed. If you try to create a new bucket with
+the same name during this time, you will receive an error.

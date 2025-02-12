@@ -19,4 +19,4 @@ svc.meta.events.register(
 )
 
 # Upload file to frankfurt
-response = svc.upload_file('bar.txt', 'tigris-example', 'bar.txt')
+response = svc.upload_file('bar.txt', 'tigris-example', 'bar-fra.txt')

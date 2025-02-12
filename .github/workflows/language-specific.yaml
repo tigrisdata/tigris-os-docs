@@ -26,6 +26,7 @@ jobs:
           dotnet run # runs GettingStarted.cs
           dotnet script ListBuckets.csx
           dotnet script PutObject.csx
+          dotnet script PresignedURLTest.csx
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}

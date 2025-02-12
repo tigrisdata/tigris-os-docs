@@ -43,9 +43,10 @@ import putObject from "!!raw-loader!../../../examples/dotnet/PutObject.csx";
 
 ## Pre-signed URLs
 
-The .Net SDK defaults to using v2 signatures, Tigris only supports v4
-signatures. In order to use pre-signed URLs, you must set `UseSignatureV4` to
-`true` in the global `AWSConfigsS3` object in the Amazon namespace.
+Using Tigris with the .NET SDK is easy with one small change. The .Net SDK
+defaults to using v2 signatures, Tigris only supports v4 signatures. In order to
+use pre-signed URLs, you must set `UseSignatureV4` to `true` in the global
+`AWSConfigsS3` object in the Amazon namespace.
 
 ```csharp
 using Amazon;

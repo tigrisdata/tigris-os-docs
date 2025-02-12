@@ -1,30 +1,42 @@
 # Partner Integration Program
 
-Tigris is a globally-distributed S3-compatible object storage service that
-allows users to store and retrieve any amount of data for a wide range of use
-cases. Tigris automatically and intelligently manages the storage of data across
-multiple regions, providing the best possible performance, durability, and
-availability.
+Tigris is an object storage service that allows users to store and retrieve any amount of data without egress fees. As Tigris is S3-compatible, existing S3 SDKs and tools work simply by configuring them to point to Tigris.
 
-As Tigris is S3-compatible, users can continue to use existing AWS S3 SDKs, and
-tools to interact with Tigris.
+For users who wish to integrate with Tigris to offer object storage as a service to their customers, there is an additional API for managing billing, buckets, authorization, and organizations.
 
-But there are use cases where platforms need to integrate with Tigris Object
-Store to provide a seamless experience to their users. An example of this is
-integrating Tigris Object Store with a cloud platform to provide a unified
-experience to the end-users. Fly.io is an example of such an integration.
+The Partner Integrations API supports a variety of use cases where an application creates and manages access keys, buckets, objects, and user identities on behalf of end users. For example, a cloud platform that offers compute may seamlessly extend their offering to include object storage by integrating via the Partner Integrations API.
 
-This is exactly why we have launched the Partner Integration Program. The
-Partner Integration Program is designed to help partners integrate Tigris with
+The Partner Integration Program is designed to help partners integrate Tigris with
 their platforms.
+
 
 # Getting Started
 
-To get started with the Partner Integration Program, reach out to us at
+Ready to check it out? Try our [Getting Started Guide](/docs/get-started) to get familiar with Tigris. If you’re ready to start integrating with Tigris, check out the
+[Partner Integrations API reference guide](/docs/partner-integrations/api/tigris-partner—integrations-api-reference/) for authentication and usage.
+
+To kick off a partnership with the Partner Integration Program, reach out to us at
 [help@tigrisdata.com](mailto:help@tigrisdata.com). We will provide you with a
 signing key that you can use to authenticate your requests and start using the
 API.
 
-Checkout the
-[API reference guide](/docs/partner-integrations/api/tigris-extensions-api-reference/)
-for authentication and usage.
+# Partner Requirements
+
+As a Tigris Partner, you'll need to give us a unique user identifier per end user for provisioning appropriate access controls. You do not need to have a Fly.io account to use the Partner Integrations API.
+
+We'll need to supply you a:
+- Provider ID
+- Signing key
+
+# White Label Use
+
+Tigris supports custom bucket endpoints for partners. A typical bucket endpoint looks like `https://tigris-example-bucket.fly.storage.tigris.dev/bar.txt`, and it can be customized to `https://tigris-example-bucket.<CUSTOM_URL>/bar.txt`
+
+# Billing
+
+You are able to run your own billing logic. Tigris provides billing totals given a date range with granularity to the day.
+
+# Partnerships
+
+For further questions surrounding partnerships, please reach out to us at
+[help@tigrisdata.com](mailto:help@tigrisdata.com). We're happy to help!

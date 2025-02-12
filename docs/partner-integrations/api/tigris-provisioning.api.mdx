@@ -1,0 +1,371 @@
+---
+id: tigris-provisioning
+title: "Provision a new bucket"
+description: "Provision a new bucket in the organization account, also creates the organization account if it doesn't exist. This is an"
+sidebar_label: "Provision a new bucket"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "post api-method"
+info_path: partner-integrations/api/tigris-extensions-api-reference
+custom_edit_url: null
+---
+
+import ApiTabs from "@theme/ApiTabs";
+import DiscriminatorTabs from "@theme/DiscriminatorTabs";
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import SecuritySchemes from "@theme/ApiExplorer/SecuritySchemes";
+import MimeTabs from "@theme/MimeTabs";
+import ParamsItem from "@theme/ParamsItem";
+import ResponseSamples from "@theme/ResponseSamples";
+import SchemaItem from "@theme/SchemaItem";
+import SchemaTabs from "@theme/SchemaTabs";
+import Heading from "@theme/Heading";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Provision a new bucket"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/v1/providers/{provider_id}/orgs/{org_id}/provision"}
+>
+  
+</MethodEndpoint>
+
+
+
+Provision a new bucket in the organization account, also creates the organization account if it doesn't exist. This is an
+idempotent operation, and calling it multiple times with the same parameters will not create duplicate buckets.
+
+Provisioning API responds with an access key and secret to access the newly provisioned bucket.
+
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<details
+  style={{"marginBottom":"1rem"}}
+  className={"openapi-markdown__details"}
+  data-collapsed={false}
+  open={true}
+>
+  <summary
+    style={{}}
+  >
+    <h3
+      className={"openapi-markdown__details-summary-header-params"}
+    >
+      Path Parameters
+    </h3>
+  </summary><div>
+    <ul>
+      <ParamsItem
+        className={"paramsItem"}
+        param={{"name":"provider_id","in":"path","required":true,"description":"Provider ID","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem><ParamsItem
+        className={"paramsItem"}
+        param={{"name":"org_id","in":"path","required":true,"description":"Organization ID","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem>
+    </ul>
+  </div>
+</details><MimeTabs
+  className={"openapi-tabs__mime"}
+>
+  <TabItem
+    label={"application/json"}
+    value={"application/json-schema"}
+  >
+    <details
+      style={{}}
+      className={"openapi-markdown__details mime"}
+      data-collapsed={false}
+      open={true}
+    >
+      <summary
+        style={{}}
+        className={"openapi-markdown__details-summary-mime"}
+      >
+        <h3
+          className={"openapi-markdown__details-summary-header-body"}
+        >
+          Body
+        </h3><strong
+          className={"openapi-schema__required"}
+        >
+          required
+        </strong>
+      </summary><div
+        style={{"textAlign":"left","marginLeft":"1rem"}}
+      >
+        
+      </div><ul
+        style={{"marginLeft":"1rem"}}
+      >
+        <SchemaItem
+          collapsible={false}
+          name={"bucket_name"}
+          required={true}
+          schemaName={"string"}
+          qualifierMessage={undefined}
+          schema={{"type":"string","description":"Name of the bucket to be provisioned"}}
+        >
+          
+        </SchemaItem><SchemaItem
+          collapsible={false}
+          name={"org_name"}
+          required={true}
+          schemaName={"string"}
+          qualifierMessage={undefined}
+          schema={{"type":"string","description":"Name of the organization where the bucket should be provisioned"}}
+        >
+          
+        </SchemaItem><SchemaItem
+          collapsible={false}
+          name={"user_id"}
+          required={true}
+          schemaName={"string"}
+          qualifierMessage={undefined}
+          schema={{"type":"string","description":"ID of the user who is requesting the bucket"}}
+        >
+          
+        </SchemaItem><SchemaItem
+          collapsible={true}
+          className={"schemaItem"}
+        >
+          <details
+            style={{}}
+            className={"openapi-markdown__details"}
+          >
+            <summary
+              style={{}}
+            >
+              <span
+                className={"openapi-schema__container"}
+              >
+                <strong
+                  className={"openapi-schema__property"}
+                >
+                  bucket_options
+                </strong><span
+                  className={"openapi-schema__name"}
+                >
+                   object
+                </span>
+              </span>
+            </summary><div
+              style={{"marginLeft":"1rem"}}
+            >
+              <SchemaItem
+                collapsible={false}
+                name={"public"}
+                required={false}
+                schemaName={"boolean"}
+                qualifierMessage={undefined}
+                schema={{"type":"boolean","description":"If set to true, the bucket will be publicly accessible. Default is false."}}
+              >
+                
+              </SchemaItem><SchemaItem
+                collapsible={false}
+                name={"storage_class"}
+                required={false}
+                schemaName={"StorageClass (string)"}
+                qualifierMessage={"**Possible values:** [`STANDARD`, `STANDARD_IA`, `GLACIER`, `GLACIER_IR`]"}
+                schema={{"type":"string","description":"Storage class for the bucket. Default is `STANDARD`.","enum":["STANDARD","STANDARD_IA","GLACIER","GLACIER_IR"],"title":"StorageClass"}}
+              >
+                
+              </SchemaItem><SchemaItem
+                collapsible={false}
+                name={"enable_object_acl"}
+                required={false}
+                schemaName={"boolean"}
+                qualifierMessage={undefined}
+                schema={{"type":"boolean","description":"If set to true, per object ACL will be enabled. Default is false."}}
+              >
+                
+              </SchemaItem>
+            </div>
+          </details>
+        </SchemaItem><SchemaItem
+          collapsible={false}
+          name={"user_role"}
+          required={false}
+          schemaName={"OrgMembership (string)"}
+          qualifierMessage={"**Possible values:** [`Admin`, `Member`]"}
+          schema={{"type":"string","description":"Role assigned to the user in the organization","enum":["Admin","Member"],"title":"OrgMembership"}}
+        >
+          
+        </SchemaItem>
+      </ul>
+    </details>
+  </TabItem>
+</MimeTabs><div>
+  <div>
+    <ApiTabs
+      label={undefined}
+      id={undefined}
+    >
+      <TabItem
+        label={"200"}
+        value={"200"}
+      >
+        <div>
+          
+          
+          OK
+          
+          
+        </div><div>
+          <MimeTabs
+            className={"openapi-tabs__mime"}
+            schemaType={"response"}
+          >
+            <TabItem
+              label={"application/json"}
+              value={"application/json"}
+            >
+              <SchemaTabs
+                className={"openapi-tabs__schema"}
+              >
+                <TabItem
+                  label={"Schema"}
+                  value={"Schema"}
+                >
+                  <details
+                    style={{}}
+                    className={"openapi-markdown__details response"}
+                    data-collapsed={false}
+                    open={true}
+                  >
+                    <summary
+                      style={{}}
+                      className={"openapi-markdown__details-summary-response"}
+                    >
+                      <strong>
+                        Schema
+                      </strong>
+                    </summary><div
+                      style={{"textAlign":"left","marginLeft":"1rem"}}
+                    >
+                      
+                    </div><ul
+                      style={{"marginLeft":"1rem"}}
+                    >
+                      <div
+                        style={{"marginTop":".5rem","marginBottom":".5rem"}}
+                      >
+                        
+                        
+                        object
+                        
+                        
+                      </div>
+                    </ul>
+                  </details>
+                </TabItem><TabItem
+                  label={"Example (from schema)"}
+                  value={"Example (from schema)"}
+                >
+                  <ResponseSamples
+                    responseExample={"{}"}
+                    language={"json"}
+                  >
+                    
+                  </ResponseSamples>
+                </TabItem>
+              </SchemaTabs>
+            </TabItem>
+          </MimeTabs>
+        </div>
+      </TabItem><TabItem
+        label={"default"}
+        value={"default"}
+      >
+        <div>
+          
+          
+          Unexpected error
+          
+          
+        </div><div>
+          <MimeTabs
+            className={"openapi-tabs__mime"}
+            schemaType={"response"}
+          >
+            <TabItem
+              label={"application/json"}
+              value={"application/json"}
+            >
+              <SchemaTabs
+                className={"openapi-tabs__schema"}
+              >
+                <TabItem
+                  label={"Schema"}
+                  value={"Schema"}
+                >
+                  <details
+                    style={{}}
+                    className={"openapi-markdown__details response"}
+                    data-collapsed={false}
+                    open={true}
+                  >
+                    <summary
+                      style={{}}
+                      className={"openapi-markdown__details-summary-response"}
+                    >
+                      <strong>
+                        Schema
+                      </strong>
+                    </summary><div
+                      style={{"textAlign":"left","marginLeft":"1rem"}}
+                    >
+                      
+                    </div><ul
+                      style={{"marginLeft":"1rem"}}
+                    >
+                      <SchemaItem
+                        collapsible={false}
+                        name={"message"}
+                        required={false}
+                        schemaName={"string"}
+                        qualifierMessage={undefined}
+                        schema={{"type":"string"}}
+                      >
+                        
+                      </SchemaItem>
+                    </ul>
+                  </details>
+                </TabItem><TabItem
+                  label={"Example (from schema)"}
+                  value={"Example (from schema)"}
+                >
+                  <ResponseSamples
+                    responseExample={"{\n  \"message\": \"string\"\n}"}
+                    language={"json"}
+                  >
+                    
+                  </ResponseSamples>
+                </TabItem>
+              </SchemaTabs>
+            </TabItem>
+          </MimeTabs>
+        </div>
+      </TabItem>
+    </ApiTabs>
+  </div>
+</div>
+      

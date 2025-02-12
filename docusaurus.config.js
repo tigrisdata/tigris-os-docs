@@ -38,6 +38,8 @@ const config = {
           breadcrumbs: false,
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
+          docRootComponent: "@theme/DocRoot", // added for OpenAPI plugin
+          docItemComponent: "@theme/ApiItem", // added for OpenAPI plugin
         },
         blog: false,
         theme: {
@@ -59,6 +61,25 @@ const config = {
         appUrl: process.env.NEXT_PUBLIC_POSTHOG_HOST,
         opt_in_site_apps: true,
         enableInDevelopment: process.env.USE_POSTHOG_IN_DEVELOPMENT === "true",
+      },
+    ],
+    [
+      "docusaurus-plugin-openapi-docs",
+      {
+        id: "openapi", // plugin id
+        docsPluginId: "classic", // configured for preset-classic
+        config: {
+          extensions: {
+            specPath: "static/api/extensions/v1/api.yaml",
+            outputDir: "docs/partner-integrations/api",
+            sidebarOptions: {
+              groupPathsBy: "tag",
+              categoryLinkSource: "tag",
+            },
+            downloadUrl: "/docs/api/extensions/v1/api.yaml",
+            showSchemas: true,
+          },
+        },
       },
     ],
   ],
@@ -278,7 +299,7 @@ const config = {
   markdown: {
     mermaid: true,
   },
-  themes: ["@docusaurus/theme-mermaid"],
+  themes: ["@docusaurus/theme-mermaid", "docusaurus-theme-openapi-docs"],
 };
 
 module.exports = config;

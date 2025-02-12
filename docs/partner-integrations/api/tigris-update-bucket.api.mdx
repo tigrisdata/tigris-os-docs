@@ -1,0 +1,298 @@
+---
+id: tigris-update-bucket
+title: "Update bucket settings"
+description: "Updates the bucket settings like public access, storage class, and object ACL."
+sidebar_label: "Update bucket settings"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "put api-method"
+info_path: partner-integrations/api/tigris-extensions-api-reference
+custom_edit_url: null
+---
+
+import ApiTabs from "@theme/ApiTabs";
+import DiscriminatorTabs from "@theme/DiscriminatorTabs";
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import SecuritySchemes from "@theme/ApiExplorer/SecuritySchemes";
+import MimeTabs from "@theme/MimeTabs";
+import ParamsItem from "@theme/ParamsItem";
+import ResponseSamples from "@theme/ResponseSamples";
+import SchemaItem from "@theme/SchemaItem";
+import SchemaTabs from "@theme/SchemaTabs";
+import Heading from "@theme/Heading";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Update bucket settings"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"put"}
+  path={"/v1/providers/{provider_id}/orgs/{org_id}/buckets/{bucket_name}"}
+>
+  
+</MethodEndpoint>
+
+
+
+Updates the bucket settings like public access, storage class, and object ACL.
+
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<details
+  style={{"marginBottom":"1rem"}}
+  className={"openapi-markdown__details"}
+  data-collapsed={false}
+  open={true}
+>
+  <summary
+    style={{}}
+  >
+    <h3
+      className={"openapi-markdown__details-summary-header-params"}
+    >
+      Path Parameters
+    </h3>
+  </summary><div>
+    <ul>
+      <ParamsItem
+        className={"paramsItem"}
+        param={{"name":"provider_id","in":"path","required":true,"description":"Provider ID","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem><ParamsItem
+        className={"paramsItem"}
+        param={{"name":"org_id","in":"path","required":true,"description":"Organization ID","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem><ParamsItem
+        className={"paramsItem"}
+        param={{"name":"bucket_name","in":"path","required":true,"description":"Bucket name","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem>
+    </ul>
+  </div>
+</details><MimeTabs
+  className={"openapi-tabs__mime"}
+>
+  <TabItem
+    label={"application/json"}
+    value={"application/json-schema"}
+  >
+    <details
+      style={{}}
+      className={"openapi-markdown__details mime"}
+      data-collapsed={false}
+      open={true}
+    >
+      <summary
+        style={{}}
+        className={"openapi-markdown__details-summary-mime"}
+      >
+        <h3
+          className={"openapi-markdown__details-summary-header-body"}
+        >
+          Body
+        </h3><strong
+          className={"openapi-schema__required"}
+        >
+          required
+        </strong>
+      </summary><div
+        style={{"textAlign":"left","marginLeft":"1rem"}}
+      >
+        
+      </div><ul
+        style={{"marginLeft":"1rem"}}
+      >
+        <SchemaItem
+          collapsible={false}
+          name={"public"}
+          required={false}
+          schemaName={"boolean"}
+          qualifierMessage={undefined}
+          schema={{"type":"boolean","description":"If set to true, the bucket will be publicly accessible. Default is false."}}
+        >
+          
+        </SchemaItem><SchemaItem
+          collapsible={false}
+          name={"enable_object_acl"}
+          required={false}
+          schemaName={"boolean"}
+          qualifierMessage={undefined}
+          schema={{"type":"boolean","description":"If set to true, per object ACL will be enabled. Default is false."}}
+        >
+          
+        </SchemaItem>
+      </ul>
+    </details>
+  </TabItem>
+</MimeTabs><div>
+  <div>
+    <ApiTabs
+      label={undefined}
+      id={undefined}
+    >
+      <TabItem
+        label={"200"}
+        value={"200"}
+      >
+        <div>
+          
+          
+          OK
+          
+          
+        </div><div>
+          <MimeTabs
+            className={"openapi-tabs__mime"}
+            schemaType={"response"}
+          >
+            <TabItem
+              label={"application/json"}
+              value={"application/json"}
+            >
+              <SchemaTabs
+                className={"openapi-tabs__schema"}
+              >
+                <TabItem
+                  label={"Schema"}
+                  value={"Schema"}
+                >
+                  <details
+                    style={{}}
+                    className={"openapi-markdown__details response"}
+                    data-collapsed={false}
+                    open={true}
+                  >
+                    <summary
+                      style={{}}
+                      className={"openapi-markdown__details-summary-response"}
+                    >
+                      <strong>
+                        Schema
+                      </strong>
+                    </summary><div
+                      style={{"textAlign":"left","marginLeft":"1rem"}}
+                    >
+                      
+                    </div><ul
+                      style={{"marginLeft":"1rem"}}
+                    >
+                      <div
+                        style={{"marginTop":".5rem","marginBottom":".5rem"}}
+                      >
+                        
+                        
+                        object
+                        
+                        
+                      </div>
+                    </ul>
+                  </details>
+                </TabItem><TabItem
+                  label={"Example (from schema)"}
+                  value={"Example (from schema)"}
+                >
+                  <ResponseSamples
+                    responseExample={"{}"}
+                    language={"json"}
+                  >
+                    
+                  </ResponseSamples>
+                </TabItem>
+              </SchemaTabs>
+            </TabItem>
+          </MimeTabs>
+        </div>
+      </TabItem><TabItem
+        label={"default"}
+        value={"default"}
+      >
+        <div>
+          
+          
+          Unexpected error
+          
+          
+        </div><div>
+          <MimeTabs
+            className={"openapi-tabs__mime"}
+            schemaType={"response"}
+          >
+            <TabItem
+              label={"application/json"}
+              value={"application/json"}
+            >
+              <SchemaTabs
+                className={"openapi-tabs__schema"}
+              >
+                <TabItem
+                  label={"Schema"}
+                  value={"Schema"}
+                >
+                  <details
+                    style={{}}
+                    className={"openapi-markdown__details response"}
+                    data-collapsed={false}
+                    open={true}
+                  >
+                    <summary
+                      style={{}}
+                      className={"openapi-markdown__details-summary-response"}
+                    >
+                      <strong>
+                        Schema
+                      </strong>
+                    </summary><div
+                      style={{"textAlign":"left","marginLeft":"1rem"}}
+                    >
+                      
+                    </div><ul
+                      style={{"marginLeft":"1rem"}}
+                    >
+                      <SchemaItem
+                        collapsible={false}
+                        name={"message"}
+                        required={false}
+                        schemaName={"string"}
+                        qualifierMessage={undefined}
+                        schema={{"type":"string"}}
+                      >
+                        
+                      </SchemaItem>
+                    </ul>
+                  </details>
+                </TabItem><TabItem
+                  label={"Example (from schema)"}
+                  value={"Example (from schema)"}
+                >
+                  <ResponseSamples
+                    responseExample={"{\n  \"message\": \"string\"\n}"}
+                    language={"json"}
+                  >
+                    
+                  </ResponseSamples>
+                </TabItem>
+              </SchemaTabs>
+            </TabItem>
+          </MimeTabs>
+        </div>
+      </TabItem>
+    </ApiTabs>
+  </div>
+</div>
+      

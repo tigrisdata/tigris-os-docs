@@ -57,6 +57,7 @@ const sidebars = {
       label: "Buckets",
       items: [
         "buckets/create-bucket",
+        "buckets/bucket-rules",
         "buckets/public-bucket",
         "buckets/cors",
         "buckets/custom-domain",

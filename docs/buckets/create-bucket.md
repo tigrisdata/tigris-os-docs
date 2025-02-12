@@ -30,7 +30,7 @@ see the [Storage Tiers](../objects/tiers.md) guide.
 To create a bucket using the Tigris Dashboard, follow these steps:
 
 1. Go to [storage.new](https://storage.new/).
-2. Enter a unique bucket name.
+2. Enter a unique bucket name. ([Rules](./bucket-rules.md))
 3. Choose the default tier for the bucket.
 
 ![Create Tigris Bucket](/img/create-bucket.png)

@@ -63,6 +63,7 @@ const sidebars = {
         "buckets/custom-domain",
         "buckets/objects-expiration",
         "buckets/object-notifications",
+        "buckets/settings/index",
         "buckets/sharing",
       ],
     },

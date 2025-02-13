@@ -25,19 +25,9 @@ Here is a step-by-step visual guide:
 
 ![Tigris Rename Object Success modal ](/img/rename-obj-step-3.png)
 
-## Renaming Objects using AWS CLI
+## Renaming Objects using AWS SDKs
 
-To rename an object using AWS CLI, include an additional header. This header
+To rename an object using AWS SDK, include an additional header. This header
 informs Tigris to perform a rename operation instead of a copy.
+
 `X-Tigris-Rename: True`
-
-```
-aws s3api copy-object --bucket destination-bucket --copy-source source-bucket/source-key --key destination-key
-```
-
-For example: If you want to rename `file-1.txt` to `file-2.txt` in the bucket
-`my-files-collection`
-
-```
-aws s3api copy-object --bucket my-files-collection --copy-source my-files-collection/file-1.txt --key file-2.txt --metadata-directive REPLACE --metadata X-Tigris-Rename=True
-```

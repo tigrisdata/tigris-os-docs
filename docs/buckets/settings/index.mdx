@@ -13,7 +13,8 @@ Here's an overview of the settings you can configure:
 - Region Restriction: Restrict the regions where your bucket data is stored.
 - Cache Control: Set the default `Cache-Control` header for objects in the
   bucket.
-- Additional Headers: TODO(Xe): What does this mean???
+- Additional Headers: Configure implicit response headers for objects stored in
+  your buckets.
 - TTL Configuration: Set the default time-to-live (TTL) for objects in the
   bucket.
 - CORS Configuration: Configure Cross-Origin Resource Sharing (CORS) rules for
@@ -108,7 +109,14 @@ public objects, but you can set an implicit default here.
 
 ## Additional Headers
 
-TODO(Xe): What does this mean???
+![Bucket additional headers](./bucket-additional-headers.webp)
+
+You can configure additional headers for objects stored in your buckets. This
+can be useful when your tools set incorrect headers or you need to set custom
+headers. Right now the only setting implemented is to set the
+`X-Content-Type-Options` header to `nosniff`, which prevents browsers from
+performing "content sniffing" and guessing the MIME type of the content based on
+the content itself.
 
 ## TTL Configuration
 

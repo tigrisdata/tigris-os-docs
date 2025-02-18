@@ -4,7 +4,7 @@ const sidebar: SidebarsConfig = {
   apisidebar: [
     {
       type: "doc",
-      id: "partner-integrations/api/tigris-extensions-api-reference",
+      id: "partner-integrations/api/tigris-partner-integrations-api-reference",
     },
     {
       type: "category",

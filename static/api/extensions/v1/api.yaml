@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Tigris extensions API reference
+  title: Tigris Partner Integrations API reference
   description: |
     This API provides additional functionality for managing buckets, access keys, and organizations.
 

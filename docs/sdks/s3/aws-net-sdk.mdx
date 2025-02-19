@@ -1,0 +1,59 @@
+# AWS .Net SDK
+
+import CodeBlock from "@theme/CodeBlock";
+
+This guide assumes that you have followed the steps in the
+[Getting Started](/docs/get-started/index.md) guide, and have the access keys
+available.
+
+You may continue to use the AWS .Net SDK as you normally would, but with the
+endpoint set to `https://fly.storage.tigris.dev`.
+
+This example uses the
+[AWS .Net SDK v3](https://www.nuget.org/packages/AWSSDK.S3) and reads the
+default credentials file or the environment variables `AWS_ACCESS_KEY_ID` and
+`AWS_SECRET_ACCESS_KEY`.
+
+Install the SDK from nuget:
+
+```text
+dotnet add package AWSSDK.S3
+dotnet add package AWSSDK.SecurityToken
+dotnet add package AWSSDK.SSO
+dotnet add package AWSSDK.SSOOIDC
+```
+
+Then you can use the SDK as you normally would, but with the endpoint set to
+`https://fly.storage.tigris.dev`.
+
+import gettingStarted from "!!raw-loader!../../../examples/dotnet/GettingStarted.cs";
+
+<CodeBlock language="csharp">{gettingStarted}</CodeBlock>
+
+:::note
+
+Tigris currently does not support chunk encoding. You must set
+`UseChunkEncoding` to `false` in the `PutObjectRequest`.
+
+import putObject from "!!raw-loader!../../../examples/dotnet/PutObject.csx";
+
+<CodeBlock language="csharp">{putObject}</CodeBlock>
+
+:::
+
+## Pre-signed URLs
+
+Using Tigris with the .NET SDK is easy with one small change. The .Net SDK
+defaults to using v2 signatures, Tigris only supports v4 signatures. In order to
+use pre-signed URLs, you must set `UseSignatureV4` to `true` in the global
+`AWSConfigsS3` object in the Amazon namespace.
+
+```csharp
+using Amazon;
+
+AWSConfigsS3.UseSignatureVersion4 = true;
+```
+
+import presignedUrl from "!!raw-loader!../../../examples/dotnet/PresignedURL.csx";
+
+<CodeBlock language="csharp">{presignedUrl}</CodeBlock>

@@ -1,7 +1,12 @@
 import boto3
+from botocore.client import Config
 
 # Create S3 service client
-svc = boto3.client('s3', endpoint_url='https://fly.storage.tigris.dev')
+svc = boto3.client(
+    's3',
+    endpoint_url='https://fly.storage.tigris.dev',
+    config=Config(s3={'addressing_style': 'virtual'}),
+)
 
 # List buckets
 response = svc.list_buckets()

@@ -1,0 +1,45 @@
+# AWS JavaScript SDK
+
+import CodeBlock from "@theme/CodeBlock";
+
+This guide assumes that you have followed the steps in the
+[Getting Started](/docs/get-started/index.md) guide, and have the access keys
+available.
+
+You may continue to use the AWS JS SDK as you normally would, but with the
+endpoint set to `https://fly.storage.tigris.dev`. Also make sure that
+`s3ForcePathStyle` is set to `false`.
+
+```js
+import { S3Client } from "@aws-sdk/client-s3";
+
+const S3 = new S3Client({
+  region: "auto",
+  endpoint: "https://fly.storage.tigris.dev",
+  // highlight-start
+  s3ForcePathStyle: false,
+  // highlight-end
+});
+```
+
+## Getting started
+
+This example uses the
+[AWS Node.js SDK v3](https://www.npmjs.com/package/@aws-sdk/client-s3) and reads
+the default credentials file or the environment variables `AWS_ACCESS_KEY_ID`
+and `AWS_SECRET_ACCESS_KEY`.
+
+import gettingStarted from "!!raw-loader!../../../examples/js/getting-started.js";
+
+<CodeBlock language="js">{gettingStarted}</CodeBlock>
+
+## Using presigned URLs
+
+Presigned URLs can be used with the AWS Node.js SDK as follows:
+
+import presignedUrls from "!!raw-loader!../../../examples/js/presigned-urls.js";
+
+<CodeBlock language="js">{presignedUrls}</CodeBlock>
+
+You can now use the URL returned by the `getSignedUrl` function to download or
+upload objects to the bucket using the `https` package.

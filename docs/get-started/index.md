@@ -12,7 +12,8 @@ only via granted access keys.
 1. To get started, create an account at [storage.new](https://storage.new/).
    You'll be up and running in a minute.
 2. Create a bucket with a unique name.
-3. Upload your data using any of the popular
+3. Create [Access Keys](https://console.tigris.dev/createaccesskey) and upload
+   your data using any of the popular
    [S3 tools, libraries, and extensions](../sdks/s3/) - Tigris is S3-compatible.
 
 :::note

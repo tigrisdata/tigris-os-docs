@@ -1,0 +1,1047 @@
+openapi: 3.0.3
+info:
+  title: Tigris Partner Integrations API reference
+  description: |
+    This API provides additional functionality for managing buckets, access keys, and organizations.
+
+    ## OpenAPI specification
+    This API follows the OpenAPI 3.0 specification, and the spec can be downloaded by clicking on the `Export` button in the top right corner.
+
+    ## Authentication
+
+    To authenticate with Tigris Object Store, you need to sign your requests with the signing key following simple steps:
+
+    :::note
+    Reach out to [help@tigrisdata.com](mailto:help@tigrisdata.com) to request a:
+    - Provider ID
+    - Signing Key
+    :::
+
+    #### 1. Generate current timestamp
+    Set the `X-Tigris-Time` header to the current timestamp in milliseconds since epoch. Ex - `1731703213870`
+    ```
+    X-Tigris-Time: 1731703213870
+    ```
+
+    #### 2. Generate a unique nonce
+    Set the `X-Tigris-Nonce` header to a unique random string to identify the request and prevent replay attacks. Ex - `f8d133cb-5a42-47b1-9ef2-874bb55bab72`
+    ```
+    X-Tigris-Nonce: f8d133cb-5a42-47b1-9ef2-874bb55bab72
+    ```
+
+    #### 3. Create a canonical request
+    Concatenate the following details with a newline character in between:
+    ```
+    <HTTPMethod>\n
+    <CanonicalURI>\n
+    <Header:X-Tigris-Time>\n
+    <Header:X-Tigris-Nonce>
+    ```
+
+    :::tip
+    The `CanonicalURI` is the path of the request URL including the host and query parameters.
+
+    For example, for a `POST` request to `/provider/laravel/orgs/my-org/provision`, the `CanonicalURI` would be:
+    ```
+    https://fly.mgnt.storage.tigris.dev/provider/your-provider-id/orgs/user-org-id/provision
+    ```
+    And for a `GET` request with query parameters:
+    ```
+    https://fly.mgnt.storage.tigris.dev/provider/your-provider-id/orgs/?include_inactive=true
+    ```
+    :::
+
+
+
+    ### 4. Generate request signature
+    Calculate the HMAC-SHA256 of the canonical request using the shared secret as the signing key. Ex -
+    ```
+    Signature = hex(sha256sign(canonical_request, "signing_key"))
+    ```
+
+    ### 5. Include the signature in the request
+    Set the `X-Tigris-Signature` header to the generated signature.
+    ```
+    X-Tigris-Signature: <generated_signature>
+    ```
+  version: 0.0.1
+servers:
+  - url: https://fly.mgnt.storage.tigris.dev
+    description: Tigris production server
+tags:
+  - name: buckets
+    description: Bucket management
+    x-displayName: Buckets
+  - name: billing
+    description: Usage and billing
+    x-displayName: Usage and Billing
+  - name: iam
+    description: Identity and Access Management
+    x-displayName: IAM
+  - name: organizations
+    description: Organization management
+    x-displayName: Organizations
+paths:
+  /v1/providers/{provider_id}/orgs/{org_id}/provision:
+    post:
+      tags:
+        - buckets
+      summary: Provision a new bucket
+      description: |
+        Provision a new bucket in the organization account, also creates the organization account if it doesn't exist. This is an
+        idempotent operation, and calling it multiple times with the same parameters will not create duplicate buckets.
+
+        Provisioning API responds with an access key and secret to access the newly provisioned bucket.
+      operationId: Tigris_Provisioning
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProvisioningRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProvisioningResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+  /v1/providers/{provider_id}/orgs/{org_id}/buckets/{bucket_name}:
+    delete:
+      tags:
+        - buckets
+      summary: Delete a bucket
+      description: |
+        Deletes the bucket and all its contents. If the bucket is not empty, it will not be deleted unless the `force` query parameter is set to `true`.
+      operationId: Tigris_DeleteBucket
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/bucket_name"
+        - name: force
+          in: query
+          required: false
+          description: If set to true, deletes the bucket even if it's not empty
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteBucketResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+    get:
+      tags:
+        - buckets
+      summary: Get bucket details
+      description: |
+        Returns the details of the bucket including its size, object count, and other metadata.
+      operationId: Tigris_GetBucket
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/bucket_name"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetBucketResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+    put:
+      tags:
+        - buckets
+      summary: Update bucket settings
+      description: |
+        Updates the bucket settings like public access, storage class, and object ACL.
+      operationId: Tigris_UpdateBucket
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/bucket_name"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateBucketRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateBucketResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
+  /v1/providers/{provider_id}/orgs/{org_id}/buckets:
+    get:
+      tags:
+        - buckets
+      summary: List all buckets for an organization
+      description: |
+        Lists all the buckets provisioned in the organization account.
+      operationId: Tigris_ListBuckets
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListBucketsResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
+  /v1/providers/{provider_id}/orgs/{org_id}/key/rotate:
+    post:
+      tags:
+        - iam
+      summary: Rotates Access Key secret
+      description: |
+        Rotates the access key secret for a user. The old secret will be invalidated, and the new secret will be returned in the response.
+      operationId: Tigris_RotateAccessKey
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RotateAccessKeyRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RotateAccessKeyResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+  /v1/providers/{provider_id}/orgs/{org_id}/key:
+    post:
+      tags:
+        - iam
+      summary: Create a new Access Key
+      description: |
+        Creates a new access key for a user. The access key ID and secret will be returned in the response.
+      operationId: Tigris_CreateAccessKey
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAccessKeyRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateAccessKeyResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+    put:
+      tags:
+        - iam
+      summary: Update an Access Key
+      description: |
+        Updates the access key details like user role and bucket access permissions.
+      operationId: Tigris_UpdateAccessKey
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAccessKeyRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateAccessKeyResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+    delete:
+      tags:
+        - iam
+      summary: Delete an Access Key
+      description: |
+        Deletes an access key for a user. The access key will be invalidated and can't be used for further requests.
+      operationId: Tigris_DeleteAccessKey
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteAccessKeyRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteAccessKeyResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
+  /v1/providers/{provider_id}/orgs/{org_id}/keys:
+    post:
+      tags:
+        - iam
+      summary: List all Access Keys
+      description: |
+        Lists all the access keys for a user in the organization account.
+      operationId: Tigris_ListAccessKeys
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListAccessKeysRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListAccessKeysResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
+  /v1/providers/{provider_id}/orgs/{org_id}/invoices/{month}:
+    get:
+      tags:
+        - billing
+      summary: Get invoice for a month
+      description: |
+        Returns the invoice for the specified month. The invoice will include all the charges for the month.
+      operationId: Tigris_GetInvoice
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - name: month
+          in: path
+          required: true
+          description: Month in format YYYY-MM
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetInvoiceResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+  /v1/providers/{provider_id}/orgs/{org_id}/usage:
+    get:
+      tags:
+        - billing
+      summary: Get usage details for an organization
+      description: |
+        Returns the usage details for the specified period. The usage details will include all the billable metrics for the period.
+      operationId: Tigris_GetUsage
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - name: starting_on
+          in: query
+          required: true
+          description:
+            RFC3339 formatted UTC midnight timestamp for starting period
+          example: "2021-09-01T00:00:00Z"
+          schema:
+            type: string
+        - name: ending_before
+          in: query
+          required: true
+          description:
+            RFC3339 formatted UTC midnight timestamp for ending period
+          example: "2021-09-01T00:00:00Z"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetUsageResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
+  /v1/providers/{provider_id}/orgs/{org_id}:
+    put:
+      tags:
+        - organizations
+      summary: Update organization details
+      description: |
+        Updates the organization details like active status.
+      operationId: Tigris_UpdateOrganization
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateOrganizationRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateOrganizationResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
+  /v1/providers/{provider_id}/orgs/:
+    get:
+      tags:
+        - organizations
+      summary: List all organizations
+      operationId: Tigris_ListOrganizations
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - name: include_inactive
+          in: query
+          description:
+            If set to true, includes inactive organizations in the response
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListOrganizationsResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+components:
+  schemas:
+    ProvisioningRequest:
+      type: object
+      required:
+        - bucket_name
+        - org_name
+        - user_id
+      properties:
+        bucket_name:
+          type: string
+          description: Name of the bucket to be provisioned
+        org_name:
+          type: string
+          description:
+            Name of the organization where the bucket should be provisioned
+        user_id:
+          type: string
+          description: ID of the user who is requesting the bucket
+        bucket_options:
+          $ref: "#/components/schemas/BucketOptions"
+        user_role:
+          $ref: "#/components/schemas/OrgMembership"
+    OrgMembership:
+      type: string
+      description: Role assigned to the user in the organization
+      enum: [Admin, Member]
+    BucketOptions:
+      type: object
+      properties:
+        public:
+          type: boolean
+          description:
+            If set to true, the bucket will be publicly accessible. Default is
+            false.
+        storage_class:
+          $ref: "#/components/schemas/StorageClass"
+        enable_object_acl:
+          type: boolean
+          description:
+            If set to true, per object ACL will be enabled. Default is false.
+    ProvisioningResponse:
+      type: object
+    UpdateBucketRequest:
+      type: object
+      properties:
+        public:
+          type: boolean
+          description:
+            If set to true, the bucket will be publicly accessible. Default is
+            false.
+        enable_object_acl:
+          type: boolean
+          description:
+            If set to true, per object ACL will be enabled. Default is false.
+    UpdateBucketResponse:
+      type: object
+    DeleteBucketResponse:
+      type: object
+    GetBucketResponse:
+      type: object
+      properties:
+        bucket:
+          $ref: "#/components/schemas/BucketInfo"
+    ListBucketsResponse:
+      type: object
+      required:
+        - buckets
+      properties:
+        buckets:
+          type: array
+          items:
+            $ref: "#/components/schemas/BucketInfo"
+    GetInvoiceResponse:
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/Invoice"
+    Invoice:
+      type: object
+      properties:
+        org_id:
+          type: string
+          description: Organization ID
+        plan_name:
+          type: string
+          description: Name of the plan
+        charges:
+          type: array
+          description: List of charges in the invoice
+          items:
+            $ref: "#/components/schemas/InvoiceCharge"
+        subtotal:
+          type: number
+          description: Amount before any credits/discounts/minimum commitments
+          format: double
+        total:
+          type: number
+          description: Total payable amount
+          format: double
+        created_at:
+          type: string
+          format: date-time
+          description: RFC3339 timestamp when this invoice was generated
+          example: "2021-09-01T12:00:00Z"
+        last_modified:
+          type: string
+          format: date-time
+          description: RFC3339 timestamp when this invoice was last modified
+          example: "2021-09-01T12:00:00Z"
+        starting_on:
+          type: string
+          format: date-time
+          description:
+            RFC3339 starting time for usage period during which items were added
+            to this invoice
+          example: "2021-09-01T12:00:00Z"
+        ending_before:
+          type: string
+          format: date-time
+          description:
+            RFC3339 ending time for usage period during which items were added
+            to this invoice
+          example: "2021-09-01T12:00:00Z"
+        status:
+          type: string
+          description: |
+            * `DRAFT` - Invoice can be modified as the billing period progresses
+            * `FINALIZED` - Invoice is locked and can't be modified
+          enum:
+            - DRAFT
+            - FINALIZED
+      required:
+        - org_id
+        - charges
+        - plan_name
+        - subtotal
+        - total
+        - created_at
+        - last_modified
+        - starting_on
+        - ending_before
+        - status
+    InvoiceCharge:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the charge
+        name:
+          type: string
+          description: User friendly name of the charge
+        quantity:
+          type: number
+          description: Number of units consumed
+          format: double
+        unit:
+          type: string
+          description: Consumption unit
+        total:
+          type: number
+          description: Total cost for the charge
+          format: double
+        tiers:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChargeTier"
+        charged_quantity:
+          type: number
+          description: Actual number of units charged for
+          format: double
+      required:
+        - id
+        - name
+        - quantity
+        - unit
+        - total
+        - tiers
+        - charged_quantity
+    ChargeTier:
+      type: object
+      properties:
+        name:
+          type: string
+        quantity:
+          type: number
+          description: Number of units consumed
+          format: double
+        starting_after:
+          type: number
+          description: Starting point when this tier is applicable
+          format: double
+        price:
+          type: number
+          description: Rate per unit
+          format: double
+        subtotal:
+          type: number
+          description: Total cost for the tier
+          format: double
+      required:
+        - name
+        - quantity
+        - starting_after
+        - price
+        - subtotal
+    BucketInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the bucket
+        created_at:
+          type: string
+          format: date-time
+          description: RFC3339 formatted timestamp of bucket creation
+          example: "2021-09-01T12:00:00Z"
+        size:
+          type: integer
+          format: int64
+          description: Estimated size of the bucket in bytes
+        object_count:
+          type: integer
+          format: int64
+          description: Estimated number of objects in the bucket
+        public:
+          type: boolean
+          description: If set to true, the bucket is publicly accessible
+        storage_class:
+          $ref: "#/components/schemas/StorageClass"
+        object_acl_enabled:
+          type: boolean
+          description: If set to true, per object ACL is enabled
+    GetUsageResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Usage"
+    Usage:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the usage metric
+        name:
+          type: string
+          description: Display name for customer invoice
+        description:
+          type: string
+          description: Human readable description of the usage metric
+        unit:
+          type: string
+          description: Unit of measurement
+        values:
+          type: array
+          items:
+            $ref: "#/components/schemas/UsageValue"
+      required:
+        - id
+        - name
+        - description
+        - unit
+        - values
+    UsageValue:
+      type: object
+      properties:
+        starting_on:
+          type: string
+          format: date-time
+          description: RFC3339 formatted UTC timestamp for starting period
+          example: "2021-09-01T01:00:00Z"
+        ending_before:
+          type: string
+          format: date-time
+          description: RFC3339 formatted UTC timestamp for ending period
+          example: "2021-09-01T02:00:00Z"
+        value:
+          type: number
+          description: Usage value for the period
+          format: double
+      required:
+        - starting_on
+        - ending_before
+        - value
+    CreateAccessKeyRequest:
+      type: object
+      required:
+        - user_id
+      properties:
+        name:
+          type: string
+          description: Name of the access key
+        user_id:
+          type: string
+          description: ID of the user for whom the access key is being created
+        user_role:
+          $ref: "#/components/schemas/OrgMembership"
+        buckets_roles:
+          type: array
+          items:
+            $ref: "#/components/schemas/BucketAccess"
+    CreateAccessKeyResponse:
+      type: object
+      required:
+        - id
+        - secret_key
+      properties:
+        id:
+          type: string
+          description: Access key ID
+        secret_key:
+          type: string
+          description: Access secret
+        name:
+          type: string
+          description: Name of the access key
+    BucketAccess:
+      type: object
+      required:
+        - bucket_name
+        - role
+      properties:
+        bucket_name:
+          type: string
+          description: Name of the bucket
+        role:
+          type: string
+          description:
+            "The role assigned to the access key defines the permissions (read,
+            write, admin) for the associated bucket."
+          enum: [ReadOnly, Editor, Admin]
+    UpdateAccessKeyRequest:
+      type: object
+      required:
+        - user_id
+        - id
+      properties:
+        user_id:
+          type: string
+          description: ID of the user for whom the access key is being updated
+        id:
+          type: string
+          description: Access key ID
+        user_role:
+          $ref: "#/components/schemas/OrgMembership"
+        buckets_roles:
+          type: array
+          items:
+            $ref: "#/components/schemas/BucketAccess"
+    UpdateAccessKeyResponse:
+      type: object
+    RotateAccessKeyRequest:
+      type: object
+      required:
+        - user_id
+        - id
+      properties:
+        user_id:
+          type: string
+          description: ID of the user for whom the access key is being updated
+        id:
+          type: string
+          description: Access key ID
+        user_role:
+          $ref: "#/components/schemas/OrgMembership"
+    RotateAccessKeyResponse:
+      type: object
+      properties:
+        new_secret:
+          type: string
+          description: Rotated access key secret
+    ListAccessKeysRequest:
+      type: object
+      required:
+        - user_id
+      properties:
+        user_id:
+          type: string
+          description: ID of the user for whom the access keys are being listed
+        user_role:
+          $ref: "#/components/schemas/OrgMembership"
+    ListAccessKeysResponse:
+      type: object
+      required:
+        - keys
+      properties:
+        keys:
+          type: array
+          items:
+            $ref: "#/components/schemas/AccessKeyInfo"
+    AccessKeyInfo:
+      type: object
+      required:
+        - id
+        - status
+        - name
+      properties:
+        id:
+          type: string
+          description: Access key ID
+        name:
+          type: string
+          description: Name of the access key
+        status:
+          type: string
+          description: Status of the access key.
+          enum: [Active, Inactive]
+        buckets_roles:
+          type: array
+          items:
+            $ref: "#/components/schemas/BucketAccess"
+    DeleteAccessKeyRequest:
+      type: object
+      required:
+        - user_id
+        - id
+      properties:
+        id:
+          type: string
+          description: Access key ID
+        user_id:
+          type: string
+          description: ID of the user for whom the access key is being deleted
+        user_role:
+          $ref: "#/components/schemas/OrgMembership"
+    DeleteAccessKeyResponse:
+      type: object
+    UpdateOrganizationRequest:
+      type: object
+      required:
+        - user_id
+      properties:
+        user_id:
+          type: string
+          description: ID of the user who is updating the organization
+        user_role:
+          $ref: "#/components/schemas/OrgMembership"
+        active:
+          type: boolean
+          description:
+            If set to false, the organization will be deactivated and no new
+            resources can be provisioned. Existing resources will be
+            inaccessible.
+    UpdateOrganizationResponse:
+      type: object
+    ListOrganizationsResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrgInfo"
+    OrgInfo:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: Organization ID
+        name:
+          type: string
+          description: Name of the organization
+        active:
+          type: boolean
+          description: If set to false, the organization is deactivated
+    StorageClass:
+      type: string
+      description: Storage class for the bucket. Default is `STANDARD`.
+      enum: [STANDARD, STANDARD_IA, GLACIER, GLACIER_IR]
+    GenericError:
+      type: object
+      properties:
+        message:
+          type: string
+  parameters:
+    provider_id:
+      name: provider_id
+      in: path
+      required: true
+      description: Provider ID
+      schema:
+        type: string
+    org_id:
+      name: org_id
+      in: path
+      required: true
+      description: Organization ID
+      schema:
+        type: string
+    bucket_name:
+      name: bucket_name
+      in: path
+      required: true
+      description: Bucket name
+      schema:
+        type: string
+  securitySchemes:
+    Nonce:
+      type: apiKey
+      in: header
+      name: X-Tigris-Nonce
+      description:
+        Random unique string to identifying the request and prevent replay
+        attacks. Ex - "f8d133cb-5a42-47b1-9ef2-874bb55bab72"
+      example: f8d133cb-5a42-47b1-9ef2-874bb55bab72
+    Timestamp:
+      type: apiKey
+      in: header
+      name: X-Tigris-Time
+      description: Unix timestamp in millis of the request. Ex - 1731703213870
+      example: 1731703213870
+    Signature:
+      type: apiKey
+      in: header
+      name: X-Tigris-Signature
+      description: |
+        HMAC-SHA256 of the request method, url, along with the unique nonce and timestamp signed using signing key.
+        To create the signature, concatenate the method, url, nonce, and timestamp with a newline character in between.
+        Then, calculate the HMAC-SHA256 of the concatenated string using the signing key. Ex -
+
+        Created `canonical_request` as:
+        ```
+        POST
+        https://fly.mgnt.storage.tigris.dev/provider/laravel/orgs/my-org/provision
+        1731703213870
+        f8d133cb-5a42-47b1-9ef2-874bb55bab72
+        ```
+        Then, calculate HMAC-SHA256 of the canonical request using the signing key as:
+        ```
+        Signature = hex(sha256sign(canonical_request, "signing key"))
+        ```
+security:
+  - Signature: []
+    Nonce: []
+    Timestamp: []

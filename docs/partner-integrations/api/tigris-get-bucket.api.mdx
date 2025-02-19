@@ -1,0 +1,328 @@
+---
+id: tigris-get-bucket
+title: "Get bucket details"
+description: "Returns the details of the bucket including its size, object count, and other metadata."
+sidebar_label: "Get bucket details"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "get api-method"
+info_path: partner-integrations/api/tigris-partner-integrations-api-reference
+custom_edit_url: null
+---
+
+import ApiTabs from "@theme/ApiTabs";
+import DiscriminatorTabs from "@theme/DiscriminatorTabs";
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import SecuritySchemes from "@theme/ApiExplorer/SecuritySchemes";
+import MimeTabs from "@theme/MimeTabs";
+import ParamsItem from "@theme/ParamsItem";
+import ResponseSamples from "@theme/ResponseSamples";
+import SchemaItem from "@theme/SchemaItem";
+import SchemaTabs from "@theme/SchemaTabs";
+import Heading from "@theme/Heading";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get bucket details"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"get"}
+  path={"/v1/providers/{provider_id}/orgs/{org_id}/buckets/{bucket_name}"}
+>
+  
+</MethodEndpoint>
+
+
+
+Returns the details of the bucket including its size, object count, and other metadata.
+
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<details
+  style={{"marginBottom":"1rem"}}
+  className={"openapi-markdown__details"}
+  data-collapsed={false}
+  open={true}
+>
+  <summary
+    style={{}}
+  >
+    <h3
+      className={"openapi-markdown__details-summary-header-params"}
+    >
+      Path Parameters
+    </h3>
+  </summary><div>
+    <ul>
+      <ParamsItem
+        className={"paramsItem"}
+        param={{"name":"provider_id","in":"path","required":true,"description":"Provider ID","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem><ParamsItem
+        className={"paramsItem"}
+        param={{"name":"org_id","in":"path","required":true,"description":"Organization ID","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem><ParamsItem
+        className={"paramsItem"}
+        param={{"name":"bucket_name","in":"path","required":true,"description":"Bucket name","schema":{"type":"string"}}}
+      >
+        
+      </ParamsItem>
+    </ul>
+  </div>
+</details><div>
+  <div>
+    <ApiTabs
+      label={undefined}
+      id={undefined}
+    >
+      <TabItem
+        label={"200"}
+        value={"200"}
+      >
+        <div>
+          
+          
+          OK
+          
+          
+        </div><div>
+          <MimeTabs
+            className={"openapi-tabs__mime"}
+            schemaType={"response"}
+          >
+            <TabItem
+              label={"application/json"}
+              value={"application/json"}
+            >
+              <SchemaTabs
+                className={"openapi-tabs__schema"}
+              >
+                <TabItem
+                  label={"Schema"}
+                  value={"Schema"}
+                >
+                  <details
+                    style={{}}
+                    className={"openapi-markdown__details response"}
+                    data-collapsed={false}
+                    open={true}
+                  >
+                    <summary
+                      style={{}}
+                      className={"openapi-markdown__details-summary-response"}
+                    >
+                      <strong>
+                        Schema
+                      </strong>
+                    </summary><div
+                      style={{"textAlign":"left","marginLeft":"1rem"}}
+                    >
+                      
+                    </div><ul
+                      style={{"marginLeft":"1rem"}}
+                    >
+                      <SchemaItem
+                        collapsible={true}
+                        className={"schemaItem"}
+                      >
+                        <details
+                          style={{}}
+                          className={"openapi-markdown__details"}
+                        >
+                          <summary
+                            style={{}}
+                          >
+                            <span
+                              className={"openapi-schema__container"}
+                            >
+                              <strong
+                                className={"openapi-schema__property"}
+                              >
+                                bucket
+                              </strong><span
+                                className={"openapi-schema__name"}
+                              >
+                                 object
+                              </span>
+                            </span>
+                          </summary><div
+                            style={{"marginLeft":"1rem"}}
+                          >
+                            <SchemaItem
+                              collapsible={false}
+                              name={"name"}
+                              required={false}
+                              schemaName={"string"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"string","description":"Name of the bucket"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"created_at"}
+                              required={false}
+                              schemaName={"date-time"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"string","format":"date-time","description":"RFC3339 formatted timestamp of bucket creation","example":"2021-09-01T12:00:00Z"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"size"}
+                              required={false}
+                              schemaName={"int64"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"integer","format":"int64","description":"Estimated size of the bucket in bytes"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"object_count"}
+                              required={false}
+                              schemaName={"int64"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"integer","format":"int64","description":"Estimated number of objects in the bucket"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"public"}
+                              required={false}
+                              schemaName={"boolean"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"boolean","description":"If set to true, the bucket is publicly accessible"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"storage_class"}
+                              required={false}
+                              schemaName={"StorageClass (string)"}
+                              qualifierMessage={"**Possible values:** [`STANDARD`, `STANDARD_IA`, `GLACIER`, `GLACIER_IR`]"}
+                              schema={{"type":"string","description":"Storage class for the bucket. Default is `STANDARD`.","enum":["STANDARD","STANDARD_IA","GLACIER","GLACIER_IR"],"title":"StorageClass"}}
+                            >
+                              
+                            </SchemaItem><SchemaItem
+                              collapsible={false}
+                              name={"object_acl_enabled"}
+                              required={false}
+                              schemaName={"boolean"}
+                              qualifierMessage={undefined}
+                              schema={{"type":"boolean","description":"If set to true, per object ACL is enabled"}}
+                            >
+                              
+                            </SchemaItem>
+                          </div>
+                        </details>
+                      </SchemaItem>
+                    </ul>
+                  </details>
+                </TabItem><TabItem
+                  label={"Example (from schema)"}
+                  value={"Example (from schema)"}
+                >
+                  <ResponseSamples
+                    responseExample={"{\n  \"bucket\": {\n    \"name\": \"string\",\n    \"created_at\": \"2021-09-01T12:00:00Z\",\n    \"size\": 0,\n    \"object_count\": 0,\n    \"public\": true,\n    \"storage_class\": \"STANDARD\",\n    \"object_acl_enabled\": true\n  }\n}"}
+                    language={"json"}
+                  >
+                    
+                  </ResponseSamples>
+                </TabItem>
+              </SchemaTabs>
+            </TabItem>
+          </MimeTabs>
+        </div>
+      </TabItem><TabItem
+        label={"default"}
+        value={"default"}
+      >
+        <div>
+          
+          
+          Unexpected error
+          
+          
+        </div><div>
+          <MimeTabs
+            className={"openapi-tabs__mime"}
+            schemaType={"response"}
+          >
+            <TabItem
+              label={"application/json"}
+              value={"application/json"}
+            >
+              <SchemaTabs
+                className={"openapi-tabs__schema"}
+              >
+                <TabItem
+                  label={"Schema"}
+                  value={"Schema"}
+                >
+                  <details
+                    style={{}}
+                    className={"openapi-markdown__details response"}
+                    data-collapsed={false}
+                    open={true}
+                  >
+                    <summary
+                      style={{}}
+                      className={"openapi-markdown__details-summary-response"}
+                    >
+                      <strong>
+                        Schema
+                      </strong>
+                    </summary><div
+                      style={{"textAlign":"left","marginLeft":"1rem"}}
+                    >
+                      
+                    </div><ul
+                      style={{"marginLeft":"1rem"}}
+                    >
+                      <SchemaItem
+                        collapsible={false}
+                        name={"message"}
+                        required={false}
+                        schemaName={"string"}
+                        qualifierMessage={undefined}
+                        schema={{"type":"string"}}
+                      >
+                        
+                      </SchemaItem>
+                    </ul>
+                  </details>
+                </TabItem><TabItem
+                  label={"Example (from schema)"}
+                  value={"Example (from schema)"}
+                >
+                  <ResponseSamples
+                    responseExample={"{\n  \"message\": \"string\"\n}"}
+                    language={"json"}
+                  >
+                    
+                  </ResponseSamples>
+                </TabItem>
+              </SchemaTabs>
+            </TabItem>
+          </MimeTabs>
+        </div>
+      </TabItem>
+    </ApiTabs>
+  </div>
+</div>
+      

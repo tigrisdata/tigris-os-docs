@@ -13,6 +13,22 @@ This example uses the [AWS Go SDK v2](https://github.com/aws/aws-sdk-go-v2) and
 reads the default credentials file or the environment variables
 `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 
+When you create your client, make sure to enable the following settings:
+
+- `BaseEndpoint` should be set to `https://fly.storage.tigris.dev`.
+- `Region` should be set to `auto`.
+- `UsePathStyle` should be set to `false`.
+
+```go
+svc := s3.NewFromConfig(sdkConfig, func(o *s3.Options) {
+  // highlight-start
+  o.BaseEndpoint = aws.String("https://fly.storage.tigris.dev")
+  o.Region = "auto"
+  o.UsePathStyle = false
+  // highlight-end
+})
+```
+
 ## Getting started
 
 This shows off a few basic operations with the AWS Go SDK such as PutObject,
@@ -20,7 +36,7 @@ ListObjectsV2, and GetObject.
 
 import gettingStarted from "!!raw-loader!../../../examples/go/cmd/getting-started/main.go";
 
-<CodeBlock language="go">{gettingStarted}</CodeBlock>;
+<CodeBlock language="go">{gettingStarted}</CodeBlock>
 
 Run it with:
 
@@ -38,7 +54,7 @@ since it was read.
 
 import conditionalOperations from "!!raw-loader!../../../examples/go/cmd/conditional-operations/main.go";
 
-<CodeBlock language="go">{conditionalOperations}</CodeBlock>;
+<CodeBlock language="go">{conditionalOperations}</CodeBlock>
 
 Run it with:
 
@@ -52,7 +68,7 @@ Presigned URLs can be used with the AWS Go SDK as follows:
 
 import presignedUrls from "!!raw-loader!../../../examples/go/cmd/presigned-urls/main.go";
 
-<CodeBlock language="go">{presignedUrls}</CodeBlock>;
+<CodeBlock language="go">{presignedUrls}</CodeBlock>
 
 You can now use the URL returned by the `presignedPutReq.URL` and
 `presignedGetReq.URL` to upload or download objects.
@@ -63,6 +79,15 @@ Run it with:
 go run main.go bucket-name
 ```
 
+:::note
+
+When you use presigned URLs, you must disable path-style requests in your S3 SDK
+configuration.
+
+This will generate a virtual-hosted-style URL that is compatible with Tigris.
+
+:::
+
 ## Object Regions
 
 Below is an example of how to use the AWS Go SDK to restrict
@@ -70,7 +95,7 @@ Below is an example of how to use the AWS Go SDK to restrict
 
 import objectRegions from "!!raw-loader!../../../examples/go/cmd/object-regions/main.go";
 
-<CodeBlock language="go">{objectRegions}</CodeBlock>;
+<CodeBlock language="go">{objectRegions}</CodeBlock>
 
 Run it with:
 
@@ -85,7 +110,7 @@ Below is an example of how to use
 
 import metadataQuerying from "!!raw-loader!../../../examples/go/cmd/metadata-querying/main.go";
 
-<CodeBlock language="go">{metadataQuerying}</CodeBlock>;
+<CodeBlock language="go">{metadataQuerying}</CodeBlock>
 
 ## Object Notifications
 
@@ -96,4 +121,4 @@ so you can take action when an object is created or deleted.
 
 import webhook from "!!raw-loader!../../../examples/go/cmd/webhook/main.go";
 
-<CodeBlock language="go">{webhook}</CodeBlock>;
+<CodeBlock language="go">{webhook}</CodeBlock>

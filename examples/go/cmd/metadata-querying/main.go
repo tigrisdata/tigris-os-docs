@@ -41,6 +41,7 @@ func main() {
 	client := s3.NewFromConfig(cfg, func(o *s3.Options) {
 		o.BaseEndpoint = aws.String("https://fly.storage.tigris.dev")
 		o.Region = "auto"
+		o.UsePathStyle = false
 	})
 
 	contentType := "text/javascript"

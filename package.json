@@ -6,11 +6,13 @@
     "docusaurus": "docusaurus",
     "dev": "docusaurus start",
     "start": "docusaurus start",
+    "build:apidocs": "docusaurus gen-api-docs all",
     "build": "docusaurus build",
     "vercel-build": "[ \"$VERCEL\" = 1 ] && docusaurus build --out-dir build/docs && npm run vercel-copy-404",
     "vercel-copy-404": "[ \"$VERCEL\" = 1 ] && echo \"copying 404\" && cp build/docs/404.html build/",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
+    "clear:apidocs": "docusaurus clean-api-docs all",
     "clear": "docusaurus clear",
     "clean": "npm run clear && rm -rf node_modules",
     "serve": "docusaurus serve",
@@ -24,6 +26,8 @@
     "@mdx-js/react": "^3.0.0",
     "@social-embed/wc": "^0.0.4-next.0",
     "clsx": "^1.1.1",
+    "docusaurus-plugin-openapi-docs": "3.0.2",
+    "docusaurus-theme-openapi-docs": "3.0.2",
     "dotenv": "^16.0.2",
     "follow-redirects": ">=1.15.6",
     "param-case": "^3.0.4",
@@ -33,7 +37,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-lite-youtube-embed": "^2.3.1",
-    "webpack-dev-middleware": ">=5.3.4"
+    "webpack-dev-middleware": ">=5.3.4",
+    "yarn": "^1.22.22"
   },
   "browserslist": {
     "production": [

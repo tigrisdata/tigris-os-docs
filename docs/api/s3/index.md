@@ -100,6 +100,8 @@ Note: IAM APIs are served at `https://fly.iam.storage.tigris.dev` for now.
 | [GetPolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_GetPolicy.html)               | Yes                 |
 | [AttachUserPolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_AttachUserPolicy.html) | Yes                 |
 | [ListUserPolicies](https://docs.aws.amazon.com/IAM/latest/APIReference/API_ListUserPolicies.html) | Yes                 |
+| [DeletePolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeletePolicy.html)         | Yes                 |
+| [DetachUserPolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_DetachUserPolicy.html) | Yes                 |
 
 ## CloudFront APIs
 

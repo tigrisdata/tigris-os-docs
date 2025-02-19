@@ -42,6 +42,11 @@ Now, anyone can read this file without authentication.
 
 ### Path-style request
 
+For buckets created on or after February 19, 2025, path-style URLs are no longer
+supported. For buckets created before February 19, 2025, path-style URLs will
+continue to function. However, we recommend updating your code to use
+virtual-hosted style URLs as it privides a unique subdomain per bucket.
+
 Path-style URLs use the following format:
 
 ```text

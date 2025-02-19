@@ -21,7 +21,7 @@ import Export from "@theme/ApiExplorer/Export";
 </span>
 
 <Export
-  url={"/docs/api/partner-integrations/v1/api.yaml"}
+  url={"/docs/api/extensions/v1/api.yaml"}
   proxy={undefined}
 >
   
@@ -30,7 +30,7 @@ import Export from "@theme/ApiExplorer/Export";
 <Heading
   as={"h1"}
   className={"openapi__heading"}
-  children={"Tigris partner-integrations API reference"}
+  children={"Tigris Partner Integrations API reference"}
 >
 </Heading>
 
@@ -51,19 +51,19 @@ Reach out to [help@tigrisdata.com](mailto:help@tigrisdata.com) to request a:
 - Signing Key
 :::
 
-#### 1. Generate current timestamp
+### 1. Generate current timestamp
 Set the `X-Tigris-Time` header to the current timestamp in milliseconds since epoch. Ex - `1731703213870`
 ```
 X-Tigris-Time: 1731703213870
 ```
 
-#### 2. Generate a unique nonce
+### 2. Generate a unique nonce
 Set the `X-Tigris-Nonce` header to a unique random string to identify the request and prevent replay attacks. Ex - `f8d133cb-5a42-47b1-9ef2-874bb55bab72`
 ```
 X-Tigris-Nonce: f8d133cb-5a42-47b1-9ef2-874bb55bab72
 ```
 
-#### 3. Create a canonical request
+### 3. Create a canonical request
 Concatenate the following details with a newline character in between:
 ```
 <HTTPMethod>\n

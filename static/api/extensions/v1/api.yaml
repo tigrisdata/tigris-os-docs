@@ -17,19 +17,19 @@ info:
     - Signing Key
     :::
 
-    #### 1. Generate current timestamp
+    ### 1. Generate current timestamp
     Set the `X-Tigris-Time` header to the current timestamp in milliseconds since epoch. Ex - `1731703213870`
     ```
     X-Tigris-Time: 1731703213870
     ```
 
-    #### 2. Generate a unique nonce
+    ### 2. Generate a unique nonce
     Set the `X-Tigris-Nonce` header to a unique random string to identify the request and prevent replay attacks. Ex - `f8d133cb-5a42-47b1-9ef2-874bb55bab72`
     ```
     X-Tigris-Nonce: f8d133cb-5a42-47b1-9ef2-874bb55bab72
     ```
 
-    #### 3. Create a canonical request
+    ### 3. Create a canonical request
     Concatenate the following details with a newline character in between:
     ```
     <HTTPMethod>\n

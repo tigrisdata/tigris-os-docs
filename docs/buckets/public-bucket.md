@@ -40,6 +40,24 @@ $ aws s3api --endpoint-url https://fly.storage.tigris.dev put-object --bucket fo
 
 Now, anyone can read this file without authentication.
 
+### Virtual-hosted–style request
+
+Virtual host style URLs are the default way of referencing your objects. In a
+virtual-hosted–style URI, the bucket name is part of the domain name in the URL.
+
+Virtual-hosted–style URLs use the following format:
+
+```text
+https://bucket-name.fly.storage.tigris.dev/key-name
+```
+
+So for the object we just uploaded, the virtual-hosted–style URL would be:
+
+```bash
+$ wget https://foo-public-bucket.fly.storage.tigris.dev/bar.txt -O- -q
+bar
+```
+
 ### Path-style request
 
 For buckets created on or after February 19, 2025, path-style URLs are no longer
@@ -57,24 +75,6 @@ So for the object we just uploaded, the path-style URL would be:
 
 ```bash
 $ wget https://fly.storage.tigris.dev/foo-public-bucket/bar.txt -O- -q
-bar
-```
-
-### Virtual-hosted–style request
-
-In a virtual-hosted–style URI, the bucket name is part of the domain name in the
-URL.
-
-Virtual-hosted–style URLs use the following format:
-
-```text
-https://bucket-name.fly.storage.tigris.dev/key-name
-```
-
-So for the object we just uploaded, the virtual-hosted–style URL would be:
-
-```bash
-$ wget https://foo-public-bucket.fly.storage.tigris.dev/bar.txt -O- -q
 bar
 ```
 

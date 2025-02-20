@@ -1,0 +1,137 @@
+# Renaming Objects
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+Tigris allows you to rename objects without rewriting the data so renames are
+fast and cost-effective. Because Tigris utilizes an object metadata service,
+renaming an object updates its metadata in place. You can rename objects in the
+Tigris Dashboard and via passing an additional header on the CopyObject command
+using your existing S3 tools.
+
+## Renaming Objects using the Dashboard
+
+To rename files or objects using the Tigris console, follow these steps.
+
+Here is a step-by-step visual guide:
+
+1. **Open the Tigris Console**: Go to
+   [Tigris Console](https://console.tigris.dev/) and log in.
+2. **Go to the Buckets Section**: In the side navigation, click on "Buckets".
+   Select the desired bucket and locate the file you want to rename. Click the
+   "Rename" option from the action menu next to the file.
+
+![Tigris File Browser](/img/rename-obj-step-1.png)
+
+3. **Enter the New Name**: Type the new name in the provided input field.
+   ![Tigris Rename Object Popup](/img/rename-obj-step-2.png)
+
+4. **Confirm the Rename**: Click "Save" to apply the new name.
+5. **Verify the Change**: Check the list to ensure the object/file has been
+   updated.
+
+![Tigris Rename Object Success modal ](/img/rename-obj-step-3.png)
+
+## Renaming Objects using AWS SDKs
+
+To rename an object using AWS SDK, attach the `X-Tigris-Rename: true` header to
+a CopyObject request.
+
+```
+X-Tigris-Rename: true
+```
+
+This is not supported in every AWS SDK. For the languages that are not listed
+below, you must use the console to rename objects.
+
+<Tabs groupId="languages">
+<TabItem value="go" label="Go">
+
+```go
+func WithRename() func(*s3.Options) {
+	return func(options *s3.Options) {
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Rename", "true"))
+	}
+}
+
+// rename the object in the bucket
+_, err = client.CopyObject(ctx, &s3.CopyObjectInput{
+   Bucket:     aws.String(bucketName),
+   CopySource: aws.String(bucketName + "/" + keyName),
+   Key:        aws.String(targetName),
+}, WithRename())
+if err != nil {
+   log.Fatalf("Unable to rename object. Here's why: %v", err)
+}
+```
+
+</TabItem>
+<TabItem value="js" label="JavaScript">
+Add the header to the S3 client middleware stack for the rename operation:
+
+```js
+export const renameObject = async (S3, bucket, oldKey, newKey) => {
+  S3.middlewareStack.add(
+    (next) => async (args) => {
+      // eslint-disable-next-line no-param-reassign
+      args.request.headers["X-Tigris-Rename"] = "true";
+      return next(args);
+    },
+    {
+      step: "build",
+      name: "renameObject",
+      tags: ["METADATA", "RENAME"],
+    }
+  );
+
+  const copyCommand = new CopyObjectCommand({
+    Bucket: bucket,
+    CopySource: `${bucket}/${oldKey}`,
+    Key: newKey,
+  });
+
+  await S3.send(copyCommand);
+
+  S3.middlewareStack.remove("renameObject");
+};
+
+const S3 = new S3Client({
+  region: "auto",
+  s3ForcePathStyle: false,
+  endpoint: "https://fly.storage.tigris.dev",
+});
+
+console.log("Rename object");
+await renameObject(S3, bucket, object, newObject);
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+Create a dedicated boto3 client for the rename operation, otherwise every copy_object call will become a rename operation.
+
+```python
+svc = boto3.client(
+    's3',
+    endpoint_url='https://fly.storage.tigris.dev',
+    config=Config(s3={'addressing_style': 'virtual'}),
+)
+
+def _x_tigris_rename(request):
+    request.headers.add_header('X-Tigris-Rename', "true")
+
+# Register event into boto
+svc.meta.events.register(
+    "before-sign.s3.CopyObject",
+    lambda request, **kwargs: _x_tigris_rename(request),
+)
+
+# Rename object
+response = svc.copy_object(
+    Bucket='tigris-example',
+    CopySource='tigris-example/source-object.txt',
+    Key='renamed-object.txt',
+)
+```
+
+</TabItem>
+</Tabs>

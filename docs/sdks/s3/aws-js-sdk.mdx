@@ -43,3 +43,12 @@ import presignedUrls from "!!raw-loader!../../../examples/js/presigned-urls.js";
 
 You can now use the URL returned by the `getSignedUrl` function to download or
 upload objects to the bucket using the `https` package.
+
+## Renaming objects
+
+[Objects can be renamed](/docs/objects/object-rename/) in Tigris by attaching
+the `X-Tigris-Rename` header to a CopyObject request.
+
+import renameObject from "!!raw-loader!../../../examples/js/rename-object.js";
+
+<CodeBlock language="js">{renameObject}</CodeBlock>

@@ -71,6 +71,7 @@ jobs:
           go run ./cmd/metadata-querying tigris-example
           go run ./cmd/object-regions tigris-example
           go run ./cmd/presigned-urls tigris-example
+          go run ./cmd/rename-objects tigris-example
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}
@@ -92,6 +93,7 @@ jobs:
           cd examples/js
           node getting-started.js
           node presigned-urls.js
+          node rename-object.js
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}
@@ -115,6 +117,7 @@ jobs:
           python hardcode-credentials.py
           python object-metadata.py
           python object-regions.py
+          python rename-object.py
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}

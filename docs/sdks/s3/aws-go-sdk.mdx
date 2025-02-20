@@ -122,3 +122,12 @@ so you can take action when an object is created or deleted.
 import webhook from "!!raw-loader!../../../examples/go/cmd/webhook/main.go";
 
 <CodeBlock language="go">{webhook}</CodeBlock>
+
+## Renaming Objects
+
+To rename an object using the AWS Go SDK, attach the `X-Tigris-Rename: true`
+header to a CopyObject request.
+
+import renameObject from "!!raw-loader!../../../examples/go/cmd/rename-objects/main.go";
+
+<CodeBlock language="go">{renameObject}</CodeBlock>

@@ -99,3 +99,12 @@ import objectMetadata from "!!raw-loader!../../../examples/python/object-metadat
 Note that in order to use this feature, you need to create a separate boto3
 client for each kind of query you want to do. This is a limitation of boto3. For
 best effect, create that boto3 client inline in the function that needs it.
+
+## Object Renaming
+
+Below is an example of how to use the AWS Python SDK to
+[rename an object](/docs/objects/object-rename/):
+
+import renameObject from "!!raw-loader!../../../examples/python/rename-object.py";
+
+<CodeBlock language="py">{renameObject}</CodeBlock>

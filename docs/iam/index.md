@@ -36,6 +36,13 @@ you'll need to attach IAM policies to the new access key.
 Let's create an IAM policy and attach it to an access key. Here's an example IAM
 policy. You'll need to save it as a `.json` file.
 
+:::note
+
+Refer [here](./iam-policy-support.md) for more information on what blocks of IAM
+policies are supported by Tigris.
+
+:::
+
 ```
 nano file:///path/to/policy.json
 

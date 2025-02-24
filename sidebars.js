@@ -50,6 +50,7 @@ const sidebars = {
         "concepts/authnz/index",
         "api/s3/index",
         "concepts/regions/index",
+        "about/faq",
       ],
     },
     {

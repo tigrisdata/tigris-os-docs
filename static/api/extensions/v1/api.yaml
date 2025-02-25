@@ -478,7 +478,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/GenericError"
 
-  /v1/providers/{provider_id}/orgs/:
+  /v1/providers/{provider_id}/orgs:
     get:
       tags:
         - organizations
@@ -1014,13 +1014,11 @@ components:
       description:
         Random unique string to identifying the request and prevent replay
         attacks. Ex - "f8d133cb-5a42-47b1-9ef2-874bb55bab72"
-      example: f8d133cb-5a42-47b1-9ef2-874bb55bab72
     Timestamp:
       type: apiKey
       in: header
       name: X-Tigris-Time
       description: Unix timestamp in millis of the request. Ex - 1731703213870
-      example: 1731703213870
     Signature:
       type: apiKey
       in: header

@@ -17,11 +17,25 @@ regions mentioned [here](/docs/concepts/regions/index.md).
 The table below illustrates examples of how you can restrict data storage to
 specific regions.
 
-| Use-Case              | Header                 |
-| --------------------- | ---------------------- |
-| Restrict to Europe    | "X-Tigris-Regions:eur" |
-| Restrict to USA       | "X-Tigris-Regions:usa" |
-| Restrict to Singapore | "X-Tigris-Regions:sin" |
+| Use-Case               | Header                 |
+| ---------------------- | ---------------------- |
+| Restrict to Washington | "X-Tigris-Regions:iad" |
+| Restrict to San Jose   | "X-Tigris-Regions:sjc" |
+| Restrict to Frankfurt  | "X-Tigris-Regions:fra" |
+| Restrict to Singapore  | "X-Tigris-Regions:sin" |
+
+Restricting your bucket data to a single region ensures that all requests to
+that bucket are directed there.
+
+Following example showing that it is also possible to apply restriction to a
+broader geographical regions. When a broader geo is use like "eur" or "usa" then
+Tigris picks a region to the user in that geo and serve the requests from that
+region.
+
+| Use-Case           | Header                 |
+| ------------------ | ---------------------- |
+| Restrict to Europe | "X-Tigris-Regions:eur" |
+| Restrict to USA    | "X-Tigris-Regions:usa" |
 
 ## Multiple copies of data
 
@@ -41,6 +55,9 @@ The table below illustrates examples of how you can achieve this.
 Multiple copies may be useful in scenarios where you want to ensure data is
 always present in specific regions. However, we think the most performant and
 cost-effective approach is to let Tigris manage the data distribution for you.
+
+Restricting your bucket data to multiple regions also means that all requests
+are directed to only one of the specified region.
 
 :::note
 

@@ -98,9 +98,17 @@ your source bucket in sync with Tigris.
 
 ![Region restriction](./region-restriction.webp)
 
-You can restrict the regions where your bucket data is stored. This is useful
-for compliance with data protection regulations. For more information see the
-[region restriction](/docs/objects/object_regions/) documentation.
+You can restrict the regions where your bucket data is stored, ensuring that all
+requests are directed to a single region or a few selected regions. This setup
+is especially useful for compliance with data protection regulations that
+mandate data residency in specific regions. However, it's important to note that
+restricting your bucket to a single region (or a few regions) may impact
+performance, particularly in a globally distributed environment. It can lead to
+higher latency for users located far from the selected regions, as all requests
+must be routed to the restricted location..
+
+For more information see the [region restriction](/docs/objects/object_regions/)
+documentation.
 
 ## Cache Control
 

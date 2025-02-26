@@ -14,7 +14,10 @@ is a strategy where the client assumes that the object has not been modified
 since it was last read, and proceeds with the operation only if the assumption
 holds true.
 
-Conditions is provided through request headers.
+Conditions are provided through request headers. Attach the
+`X-Tigris-Consistent:true` header in your conditional request to ensure Tigris
+performs the conditional operation on the leader. The same applies to reads, to
+ensure you get consistent read results.
 
 ## Supported Conditions
 
@@ -66,12 +69,13 @@ since provided data.
 Multiple conditions can be specified in a single request. Request fails if any
 condition is not met.
 
-### CAS Reads (GET request)
+Don't forget to attach `X-Tigris-Consistent:true` header as that ensures the
+conditions are evaluated and conditional operation will be performed on leader.
 
-During reads, specifying `x-tigris-cas: true` header will indicate Tigris to
-skip the cache and read the object from its designated region. This ensures a
-consistent read, particularly when accessing the most recently written CAS
-object.
+### Reads (GET request)
+
+During reads, specifying the `X-Tigris-Consistent:true` header will direct
+Tigris to read from the leader. This ensures consistent reads.
 
 ## Next steps
 

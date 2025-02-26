@@ -74,6 +74,7 @@ const sidebars = {
         "objects/tiers",
         "objects/caching",
         "objects/object_regions",
+        "objects/consistency",
         "objects/conditionals",
         "objects/query-metadata",
         "objects/presigned",

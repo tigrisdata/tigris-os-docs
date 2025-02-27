@@ -825,6 +825,8 @@ components:
           description: Name of the access key
     BucketAccess:
       type: object
+      description: |
+        Access permissions for a bucket. The role assigned to the access key defines the permissions (read, write, admin) for the associated bucket.
       required:
         - bucket_name
         - role

@@ -142,7 +142,7 @@ import TabItem from "@theme/TabItem";
                 required={true}
                 schemaName={"string"}
                 qualifierMessage={"**Possible values:** [`ReadOnly`, `Editor`, `Admin`]"}
-                schema={{"type":"string","description":"The role assigned to the access key defines the permissions (read, write, admin) for the associated bucket.","enum":["ReadOnly","Editor","Admin"]}}
+                schema={{"type":"string","description":"The role assigned to the access key defines the permissions (read,\nwrite, admin) for the associated bucket.\n\n- `ReadOnly`: Read-only access to the bucket.\n- `Editor`: Read and write access to the bucket.\n- `Admin`: Full access to all the buckets in org, including management of\n  permissions. Since, this access key manages all the buckets, the value of `bucket_name`\n  field should always be `*`.\n\n  Example:\n  ```\n  {\n    \"bucket_name\": \"*\",\n    \"role\": \"Admin\"\n  }\n  ```\n","enum":["ReadOnly","Editor","Admin"],"x-enumDescriptions":{"ReadOnly":"Read-only access to the bucket","Editor":"Read and write access to the bucket","Admin":"Full access to all the buckets in org, including management of permissions"}}}
               >
                 
               </SchemaItem><li>

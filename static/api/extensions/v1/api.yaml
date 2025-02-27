@@ -837,7 +837,7 @@ components:
           description: |
             The role assigned to the access key defines the permissions (read,
             write, admin) for the associated bucket.
-            
+
             - `ReadOnly`: Read-only access to the bucket.
             - `Editor`: Read and write access to the bucket.
             - `Admin`: Full access to all the buckets in org, including management of

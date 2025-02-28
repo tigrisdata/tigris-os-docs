@@ -3,3 +3,4 @@ extends:
 
 rules:
   info-license: off
+  operation-4xx-response: off

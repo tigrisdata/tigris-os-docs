@@ -825,6 +825,8 @@ components:
           description: Name of the access key
     BucketAccess:
       type: object
+      description: |
+        Access permissions for a bucket. The role assigned to the access key defines the permissions (read, write, admin) for the associated bucket.
       required:
         - bucket_name
         - role
@@ -834,9 +836,23 @@ components:
           description: Name of the bucket
         role:
           type: string
-          description:
-            "The role assigned to the access key defines the permissions (read,
-            write, admin) for the associated bucket."
+          description: |
+            The role assigned to the access key defines the permissions (read,
+            write, admin) for the associated bucket.
+
+            - `ReadOnly`: Read-only access to the bucket.
+            - `Editor`: Read and write access to the bucket.
+            - `Admin`: Full access to all the buckets in org, including management of
+              permissions. Since, this access key manages all the buckets, the value of `bucket_name`
+              field should always be `*`.
+
+              Example:
+              ```
+              {
+                "bucket_name": "*",
+                "role": "Admin"
+              }
+              ```
           enum: [ReadOnly, Editor, Admin]
     UpdateAccessKeyRequest:
       type: object

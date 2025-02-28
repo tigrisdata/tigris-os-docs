@@ -23,4 +23,5 @@ jobs:
           npm install
           npx prettier --check .
           npx eslint .
+          npm run lint:apidocs
           npm run build

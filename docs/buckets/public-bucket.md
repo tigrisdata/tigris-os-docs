@@ -58,6 +58,15 @@ $ wget https://foo-public-bucket.fly.storage.tigris.dev/bar.txt -O- -q
 bar
 ```
 
+:::warning
+
+The virtual hosted style access doesn’t work with dot in the bucket names due to
+the fact that the SSL wildcard certificate matches only buckets that do not
+contain dots (. ) because dots in your bucket name create what appears to be
+multiple subdomain levels, which a single wildcard certificate doesn’t cover.
+
+:::
+
 ### Path-style request
 
 For buckets created on or after February 19, 2025, path-style URLs are no longer

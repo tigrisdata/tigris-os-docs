@@ -22,6 +22,16 @@ To remove the custom domain, you can use the following command:
 flyctl storage update foo.example.com --clear-custom-domain
 ```
 
+:::warning
+
+If the bucket name contains a dot (.), you will not be able to use the
+virtual-hosted style access (e.g.,
+https://foo.example.com.fly.storage.tigris.dev). However, you can still access
+it through the correctly configured custom domain (e.g.,
+https://foo.example.com).
+
+:::
+
 # Security
 
 When providing objects that render in a browser and have access to your domain's

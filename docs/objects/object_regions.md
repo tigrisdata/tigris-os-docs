@@ -29,7 +29,7 @@ that bucket are directed there.
 
 Following example showing that it is also possible to apply restriction to a
 broader geographical regions. When a broader geo is use like "eur" or "usa" then
-Tigris picks a region to the user in that geo and serve the requests from that
+Tigris picks a region for the user in that geo and serve the requests from that
 region.
 
 | Use-Case           | Header                 |
@@ -56,8 +56,9 @@ Multiple copies may be useful in scenarios where you want to ensure data is
 always present in specific regions. However, we think the most performant and
 cost-effective approach is to let Tigris manage the data distribution for you.
 
-Restricting your bucket data to multiple regions also means that all requests
-are directed to only one of the specified region.
+Restricting your bucket data to multiple regions means that requests are
+directed to one of the specified region depending on the region of the user
+making the request.
 
 :::note
 

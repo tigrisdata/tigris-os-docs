@@ -46,10 +46,11 @@ const sidebars = {
       label: "Concepts",
       collapsed: false,
       items: [
-        "concepts/architecture/index",
-        "concepts/authnz/index",
+        "concepts/architecture",
+        "concepts/authnz",
         "api/s3/index",
-        "concepts/regions/index",
+        "concepts/regions",
+        "concepts/consistency",
       ],
     },
     {

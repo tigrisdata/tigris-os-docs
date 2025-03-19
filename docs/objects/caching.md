@@ -70,8 +70,8 @@ the following rules:
 | sin                    | iad, fra, sjc             |
 | sjc                    | iad, fra, sin             |
 
-For details on the region IDs, see the
-[Regions](/docs/concepts/regions/index.md) page.
+For details on the region IDs, see the [Regions](/docs/concepts/regions.md)
+page.
 
 ## Caching on List (Eager Caching)
 

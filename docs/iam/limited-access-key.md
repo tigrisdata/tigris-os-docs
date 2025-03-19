@@ -2,9 +2,10 @@
 
 Normally the Tigris Dashboard allows you to do everything you need to make
 access keys have the minimum scope possible. However sometimes you need more.
-Tigris allows you [to attach IAM policies](/docs/concepts/authnz/#iam-policies)
-to access keys. This blueprint will show you how to make up complicated policies
-for your buckets, such as this:
+Tigris allows you
+[to attach IAM policies](/docs/concepts/authnz.md#iam-policies) to access keys.
+This blueprint will show you how to make up complicated policies for your
+buckets, such as this:
 
 - Read, List, and Write files to bucket `generated-images`
 - Read and List files in bucket `model-storage`

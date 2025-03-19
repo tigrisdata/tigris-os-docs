@@ -10,7 +10,7 @@ requests. Tigris will then write data only to the regions specified in this
 header, respecting your preferences and legal requirements.
 
 This header may include a single or comma-separated list of multiple Tigris
-regions mentioned [here](/docs/concepts/regions/index.md).
+regions mentioned [here](/docs/concepts/regions.md).
 
 ## Restricting to specific regions
 

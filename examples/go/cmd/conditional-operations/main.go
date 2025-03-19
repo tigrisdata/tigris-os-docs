@@ -85,7 +85,7 @@ func main() {
 			Key:    aws.String(keyName),
 			Body:   bytes.NewBuffer(body),
 		},
-		WithHeader("If-Match", value),
+		WithHeader("If-Match", *out.ETag),
 		WithHeader("X-Tigris-Consistent", "true"),
 	)
 	if err != nil {

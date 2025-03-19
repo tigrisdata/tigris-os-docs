@@ -1,6 +1,6 @@
 import React from "react";
 import { PageMetadata } from "@docusaurus/theme-common";
-import { useDoc } from "@docusaurus/theme-common/internal";
+import { useDoc } from "@docusaurus/plugin-content-docs/client"; // Updated import for useDoc
 import { getImage } from "../../share-image";
 
 export default function DocItemMetadata() {

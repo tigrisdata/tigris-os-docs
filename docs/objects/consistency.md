@@ -14,8 +14,10 @@ the bucket level.
 
 At the bucket level, you can set the consistency model for all operations within
 that bucket. The default is strict read-after-write consistency within the same
-region. But you can choose to set it to global strong consistency. This can be
-done when creating the bucket or by updating the bucket settings later.
+region. But you can choose to set it to global strong consistency. The bucket
+consistency can be specified in the
+[bucket configuration](../buckets/create-bucket.md#bucket-consistency) during
+bucket creation time, or by updating the bucket settings later.
 
 ## Request Level Consistency
 

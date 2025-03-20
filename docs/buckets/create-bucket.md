@@ -25,6 +25,15 @@ uploaded to it. The default tier can be one of the following:
 The default tier can be overridden at the object level. For more information,
 see the [Storage Tiers](../objects/tiers.md) guide.
 
+## Bucket consistency
+
+When you create a bucket, you can choose the consistency model for the bucket.
+The consistency model can be one of the following:
+
+- Strict read-after-write consistency within the same region (default)
+- Strict read-after-write consistency globally (strong consistency). Latency
+  will be higher than the default.
+
 ## Creating a bucket using the Dashboard
 
 To create a bucket using the Tigris Dashboard, follow these steps:
@@ -32,6 +41,8 @@ To create a bucket using the Tigris Dashboard, follow these steps:
 1. Go to [storage.new](https://storage.new/).
 2. Enter a unique bucket name. ([Rules](./bucket-rules.md))
 3. Choose the default tier for the bucket.
+4. Choose the consistency model for the bucket.
+5. Click **Create Bucket**.
 
 ![Create Tigris Bucket](/img/create-bucket.png)
 

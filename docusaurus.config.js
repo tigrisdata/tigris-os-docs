@@ -233,6 +233,10 @@ const config = {
                 label: "Privacy Policy",
                 to: "/legal/privacy-policy/",
               },
+              {
+                label: "Report Abuse",
+                href: tigrisConfig.reportAbuseUrl,
+              },
               // {
               //   label: "Videos",
               //   href: "https://www.youtube.com/channel/UCsCQ5Nl3JOh71UNCCNZ3q2g",

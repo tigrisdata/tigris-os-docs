@@ -7,4 +7,5 @@ module.exports = {
   websiteUrl: "https://www.tigrisdata.com",
   discordUrl: "https://www.tigrisdata.com/discord/",
   statusPageUrl: "https://status.tigris.dev/",
+  reportAbuseUrl: "mailto:abuse@tigrisdata.com",
 };

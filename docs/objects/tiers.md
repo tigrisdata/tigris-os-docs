@@ -45,12 +45,14 @@ bucket's default tier. To set the object tier:
   field of PutObject, CreateMultipartUpload SDK APIs input, or
 - set the `x-amz-storage-class` header when using the REST API.
 
-Tigris accepts S3 compatible storage classes:
+**Tigris accepts S3 compatible storage classes:**
 
-- STANDARD: for Standard tier
-- STANDARD_IA: for Infrequent Access tier
-- GLACIER: for Archive tier
-- GLACIER_IR: for Archive instant retrieval tier
+| Storage Class | Description                        |
+| ------------- | ---------------------------------- |
+| STANDARD      | for Standard tier                  |
+| STANDARD_IA   | for Infrequent Access tier         |
+| GLACIER       | for Archive tier                   |
+| GLACIER_IR    | for Archive instant retrieval tier |
 
 ### Example with AWS CLI
 

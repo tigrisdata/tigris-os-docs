@@ -83,7 +83,7 @@ attack that results in a surprisingly large bill. Please reach out to us at
 
 We do not charge for unauthorized requests to your buckets and objects. You will
 not be charged for the following error responses: 301 Moved Permanently, 307
-Temporary Redirect, 400 Bad Request, 403 Forbidden, 404 Not Found, 405 Method
+Temporary Redirect, 400 Bad Request, 403 Forbidden, 405 Method
 Not Allowed, 409 Conflict, 411 Length Required, 412 Precondition Failed, 416
 Requested Range Not Satisfiable, 304 Not Modified, 500 Internal Server Error,
 and 501 Not Implemented.

@@ -509,6 +509,7 @@ components:
   schemas:
     ProvisioningRequest:
       type: object
+      additionalProperties: false
       required:
         - bucket_name
         - org_name
@@ -550,6 +551,7 @@ components:
       type: object
     UpdateBucketRequest:
       type: object
+      additionalProperties: false
       properties:
         public:
           type: boolean
@@ -793,6 +795,7 @@ components:
         - value
     CreateAccessKeyRequest:
       type: object
+      additionalProperties: false
       required:
         - user_id
       properties:
@@ -856,6 +859,7 @@ components:
           enum: [ReadOnly, Editor, Admin]
     UpdateAccessKeyRequest:
       type: object
+      additionalProperties: false
       required:
         - user_id
         - id
@@ -876,6 +880,7 @@ components:
       type: object
     RotateAccessKeyRequest:
       type: object
+      additionalProperties: false
       required:
         - user_id
         - id
@@ -896,6 +901,7 @@ components:
           description: Rotated access key secret
     ListAccessKeysRequest:
       type: object
+      additionalProperties: false
       required:
         - user_id
       properties:
@@ -936,6 +942,7 @@ components:
             $ref: "#/components/schemas/BucketAccess"
     DeleteAccessKeyRequest:
       type: object
+      additionalProperties: false
       required:
         - user_id
         - id
@@ -952,6 +959,7 @@ components:
       type: object
     UpdateOrganizationRequest:
       type: object
+      additionalProperties: false
       required:
         - user_id
       properties:

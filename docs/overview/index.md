@@ -34,11 +34,11 @@ The global endpoint provides a unified entry point for accessing your Tigris
 buckets globally, while the dynamic distribution of objects based on access
 patterns, results in optimized latency, providing faster access to your data.
 
-### Store Data Near Users
+### Globally Distributed Data
 
-Tigris automatically stores the data close to the users and distributes it to
-regions based on the request pattern. There is no configuration required to
-enable this feature.
+Tigris dynamically places the data close to the users and distributes it to
+regions globally based on the request pattern. There is no configuration
+required to enable this feature.
 
 What this means is, if a request comes from a user in Frankfurt, Germany, the
 data is stored in the closest region in EU. If a request comes from a user in
@@ -46,10 +46,13 @@ New York, US, the data is stored in the closest US region.
 
 ![Data Storage](/img/tigris-os-arch-block-store.png)
 
-Furthermore, if the user now starts accessing the data from a region where the
-data is not stored, Tigris transparently fetches the data from the region where
-the data is stored and caches it in the region where the user is accessing it.
-Eventually the data gets moved to the region where the user is accessing it.
+Tigris employs **"access-based rebalancing"** to optimize data placement
+dynamically. When a user begins accessing data from a region where it is not
+currently stored, Tigris seamlessly retrieves the data from its original
+location and temporarily caches it in the accessing region. Over time, as access
+patterns persist, the data is automatically relocated to the region where it is
+most frequently accessed, ensuring improved performance and reduced latency for
+end users.
 
 ### S3-compatible API
 
@@ -58,6 +61,28 @@ of available S3 tools, libraries, and extensions. See the
 [S3 API Compatibility](../api/s3/) section for more details. We also have
 [language specific guides](../sdks/s3/) on how to use the AWS S3 SDKs with
 Tigris.
+
+### Strong Consistency
+
+By default, Tigris offers strict read-after-write consistency within the same
+region and eventual consistency globally. In most cases, global eventual
+consistency is preferred for performance reasons, as it allows for lower latency
+and better scalability.
+
+However, for use cases where a single object can be modified from any region,
+Tigris provides global strong consistency option which ensures that all
+operations for a bucket are globally consistent. See the
+[Consistency](../concepts/consistency/) section for more details.
+
+### Flexible Storage Tiers
+
+Tigris offers object storage tiers to optimize storage costs based on the access
+patterns of your data. The standard tier allows for high durability,
+availability, and performance for frequently accessed data. While the infrequent
+access, and archive tiers provide lower-cost storage for data that is accessed
+less frequently.
+
+See the [Storage Tiers](../objects/tiers/) section for more details.
 
 ### Fast Small Object Retrieval
 

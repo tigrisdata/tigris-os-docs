@@ -32,6 +32,15 @@ We offer a free allowance as follows:
 - 10,000 PUT, COPY, POST, LIST requests per month
 - 100,000 GET, SELECT, and all other requests per month
 
+## Zero egress fees
+
+While other cloud providers tax you for each GB of data transferred, we don't.
+At Tigris, we don't charge for regional data transfer, region-to-region data
+transfer, or data transfer out to the internet (egress). However, if your
+bandwidth requirements are extraordinary, please reach out to us at
+[sales@tigrisdata.com](mailto:sales@tigrisdata.com) to discuss your
+requirements.
+
 ## Enterprise pricing
 
 For larger workloads we offer the ability to customize the pricing and service
@@ -115,18 +124,6 @@ GetObjectTagging, HeadBucket, HeadObject
 #### Free Requests
 
 All DELETE and CANCEL requests are free
-
-</details>
-
-<details>
-<summary>Do you charge for data transfer?</summary>
-
-While other cloud providers tax you for each GB of data transferred, we don't.
-At Tigris, we don't charge for regional data transfer, region-to-region data
-transfer, or data transfer out to the internet (egress) in the majority of use
-cases. However, if your bandwidth requirements are extraordinary, please reach
-out to us at [sales@tigrisdata.com](mailto:sales@tigrisdata.com) to discuss your
-requirements.
 
 </details>
 

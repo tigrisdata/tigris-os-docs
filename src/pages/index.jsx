@@ -61,9 +61,9 @@ export default function Homepage() {
 
           <Section title="Features" id="features" HeadingTag="h2">
             <Card
-              title="Store Data Near Users"
+              title="Globally Distributed Data"
               description="Data stored close to the users automatically ensuring low latency everywhere."
-              to="/overview/#store-data-near-users"
+              to="/overview/#globally-distributed-data"
               icon={<GreenStar />}
             />
             <Card
@@ -75,19 +75,19 @@ export default function Homepage() {
             <Card
               title="Zero Egress Fees"
               description="Free data egress ensures seamless and unrestricted access to your data whenever you need it."
-              to="/pricing/"
+              to="/pricing/#zero-egress-fees"
               icon={<GreenStar />}
             />
             <Card
-              title="Fast Small Object Retrieval"
-              description="Access small objects at close to Redis speed, ensuring swift, efficient retrieval."
-              to="/overview/#fast-small-object-retrieval"
+              title="Strong Consistency"
+              description="Strong consistency ensures that you always get the correct version of your data."
+              to="/concepts/consistency/"
               icon={<GreenStar />}
             />
             <Card
-              title="Object Caching"
-              description="Get the benefits of Content Delivery Network (CDN) with no work on your part."
-              to="/objects/caching/"
+              title="Flexible Storage Tiers"
+              description="Choose the right storage tier for your data to optimize costs and performance."
+              to="/objects/tiers/"
               icon={<GreenStar />}
             />
             <Card

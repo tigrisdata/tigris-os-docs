@@ -18,11 +18,11 @@ version could be served. This is the default consistency model.
 In most cases, global eventual consistency (default) is preferred for
 performance reasons, as it allows for lower latency and better scalability
 across regions. However, there are situations where a single object can be
-modified from any region, making strong consistency the only viable option.
-Additionally, some use cases may require strong consistency for all requests,
-while others may only need it for a specific subset of requests. To address
-this, Tigris provides strong consistency options at both the request level and
-at the bucket level.
+modified from any region, making global strong consistency the only viable
+option. Additionally, some use cases may require global consistency for all
+requests, while others may only need it for a specific subset of requests. To
+address this, Tigris provides global consistency options at both the request
+level and at the bucket level.
 
 ### Strong Consistency Options
 

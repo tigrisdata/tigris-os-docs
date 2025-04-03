@@ -1,0 +1,69 @@
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Custom domains
+
+You can also use a custom domain with your bucket. To do this, the following
+requirements must be met first:
+
+1. The custom domain name must be a valid domain or subdomain. For example,
+   `foo.example.com`, `example.com`.
+
+   :::note[Update]
+
+   Starting 7 April 2025, bucket names no longer need to match custom domain
+   names.
+
+   :::
+
+2. The custom domain must be a CNAME record that points to the bucket URL. For
+   example, if you own the domain `example.com`, you can create a CNAME record
+   for `foo.example.com` that points to `foo-bucket.fly.storage.tigris.dev`.
+
+    :::warning
+
+    If the bucket name contains a dot (.), you will not be able to use the virtual-hosted style access (e.g., https://foo.bucket.fly.storage.tigris.dev). However, you can still access it through the correctly configured custom domain (e.g., https://foo.example.com).
+
+    :::
+
+Once these requirements are met, you can enable the custom domain as follows:
+
+<Tabs>
+  <TabItem value="dashboard" label="Dashboard" default>
+    <p>
+      To set a custom domain for your bucket, go to the{" "}
+      <a href="/docs/buckets/settings#custom-domains"><strong>Settings</strong></a>
+      page of your bucket and click on the <strong>Custom Domain</strong> section.
+    </p>
+    <p>
+      Enter the custom domain name in the <strong>Custom Domain</strong> field
+      and click on the <strong>Save</strong> button.
+    </p>
+  </TabItem>
+  <TabItem value="flyctl" label="Fly CLI">
+    <p>
+      To set a custom domain for your bucket, use the{" "}
+      <code>flyctl storage update</code> command with the{" "}
+      <code>--custom-domain</code> flag.
+    </p>
+    <p>
+      For example, to set the custom domain for a bucket named
+      <code>foo-bucket</code> to <code>foo.example.com</code>, use the following
+      command:
+    </p>
+    <p>
+      <code>flyctl storage update foo-bucket --custom-domain foo.example.com</code>
+    </p>
+    <p>
+      To remove the custom domain, use the <code>--clear-custom-domain</code>
+      flag:
+    </p>
+    <p><code>flyctl storage update foo-bucket --clear-custom-domain</code></p>
+  </TabItem>
+</Tabs>
+
+
+## Security
+
+When providing objects that render in a browser and have access to your domain's
+cookies, ensure that objects are sanitized to prevent XSS vulnerabilities.

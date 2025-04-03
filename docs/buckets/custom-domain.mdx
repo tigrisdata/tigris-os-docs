@@ -20,22 +20,25 @@ requirements must be met first:
    example, if you own the domain `example.com`, you can create a CNAME record
    for `foo.example.com` that points to `foo-bucket.fly.storage.tigris.dev`.
 
-    :::warning
+   :::warning
 
-    If the bucket name contains a dot (.), you will not be able to use the virtual-hosted style access (e.g., https://foo.bucket.fly.storage.tigris.dev). However, you can still access it through the correctly configured custom domain (e.g., https://foo.example.com).
+   If the bucket name contains a dot (.), you will not be able to use the
+   virtual-hosted style access (e.g.,
+   https://foo.bucket.fly.storage.tigris.dev). However, you can still access it
+   through the correctly configured custom domain (e.g.,
+   https://foo.example.com).
 
-    :::
+   :::
 
 Once these requirements are met, you can enable the custom domain as follows:
 
+{/* prettier-ignore */}
 <Tabs>
   <TabItem value="dashboard" label="Dashboard" default>
     <p>
       To set a custom domain for your bucket, go to the{" "}
       <a href="/docs/buckets/settings#custom-domains"><strong>Settings</strong></a>
-      page of your bucket and click on the <strong>Custom Domain</strong> section.
-    </p>
-    <p>
+      page of your bucket and click on the <strong>Custom Domain</strong> section. 
       Enter the custom domain name in the <strong>Custom Domain</strong> field
       and click on the <strong>Save</strong> button.
     </p>
@@ -51,7 +54,7 @@ Once these requirements are met, you can enable the custom domain as follows:
       <code>foo-bucket</code> to <code>foo.example.com</code>, use the following
       command:
     </p>
-    <p>
+    <p> 
       <code>flyctl storage update foo-bucket --custom-domain foo.example.com</code>
     </p>
     <p>
@@ -61,7 +64,6 @@ Once these requirements are met, you can enable the custom domain as follows:
     <p><code>flyctl storage update foo-bucket --clear-custom-domain</code></p>
   </TabItem>
 </Tabs>
-
 
 ## Security
 

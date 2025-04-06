@@ -9,7 +9,18 @@ these rules below.
 The following naming rules apply for buckets.
 
 - Bucket name must be between [3, 63] characters
-- Bucket name can only contain lower case characters, numbers, dots, and hyphens
+- Bucket name can only contain lower case characters, numbers, dots, and
+  hyphens.
+
+  :::info
+
+  Using a dot (.) will disable virtual-hosted style access (e.g.,
+  `https://foo.bucket.fly.storage.tigris.dev`) for a bucket. However, you can
+  still access it through a correctly configured
+  [custom domain](/docs/buckets/custom-domain.mdx).
+
+  :::
+
 - Bucket names must not contain two adjacent periods
 - Name must start with number or lower case character
 - Name must end with number or lower case character

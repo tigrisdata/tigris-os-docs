@@ -80,6 +80,26 @@ Or,
 fly storage update bucket-name --private
 ```
 
+### Updating custom domain
+
+You can associate a domain or subdomain you own with the bucket.
+
+```bash
+flyctl storage update bucket-name --custom-domain images.example.com
+```
+
+For this to work, you need to create a CNAME record for `images.example.com`
+that points to `bucket-name.fly.storage.tigris.dev`.
+
+### Remove the custom domain
+
+To remove a custom domain and certificate from your bucket, run the following
+command:
+
+```bash
+fly storage update bucket-name --clear-custom-domain
+```
+
 ## Listing buckets
 
 To list all the buckets associated with your Fly account, run the following

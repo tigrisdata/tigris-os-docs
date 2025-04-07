@@ -28,7 +28,7 @@ Refer to the following example to generate a presigned URL:
 
 ## Presigned URL with custom domain
 
-If you utilize a [custom domain with Tigris](../buckets/custom-domain.mdx), you
+If you utilize a [custom domain with Tigris](../buckets/custom-domain.md), you
 can also generate the presigned URL with the custom domain. This allows you to
 have consistent branding and user experience. You can utilize any of the SDKs
 mentioned above to generate the presigned URL and do string manipulation to have

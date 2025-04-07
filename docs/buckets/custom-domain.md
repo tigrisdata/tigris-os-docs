@@ -1,6 +1,3 @@
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
-
 # Custom domains
 
 You can also use a custom domain with your bucket. To do this, the following

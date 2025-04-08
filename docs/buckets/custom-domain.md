@@ -1,38 +1,50 @@
-# Custom domain
+# Custom domains
 
 You can also use a custom domain with your bucket. To do this, the following
 requirements must be met first:
 
-1. The custom domain name must match the bucket name. For example, if the custom
-   domain is `foo.example.com`, the bucket name must be `foo.example.com`.
-2. The custom domain must be a CNAME record that points to the bucket URL. For
-   example, if you own the domain `example.com`, you can create a CNAME record
-   for `foo.example.com` that points to
-   `foo.example.com.fly.storage.tigris.dev`.
+1. The custom domain name must be a valid domain or subdomain. For example,
+   `images.example.com`, `example.com`.
+
+   :::note[Update]
+
+   Starting 7 April 2025, bucket names no longer need to match custom domain
+   names.
+
+   :::
+
+2. The custom domain must have a CNAME record that points to the bucket URL. For
+   example, if you own the domain `images.example.com` and bucket `foo-bucket`,
+   the CNAME record for `images.example.com` should point to
+   `foo-bucket.fly.storage.tigris.dev`.
 
 Once these requirements are met, you can enable the custom domain as follows:
 
-```bash
-flyctl storage update foo.example.com --custom-domain foo.example.com
-```
+### Set custom domain using the Tigris dashboard
 
-To remove the custom domain, you can use the following command:
+1. Navigate to the Tigris dashboard and select the bucket you want to set a
+   custom domain for.
+2. Click on the **Settings** tab.
+3. Scroll down to the **Custom Domain** section.
+4. Enter the custom domain name in the **Custom Domain** field.
+5. Click on the **Save** button to save the changes.
 
-```bash
-flyctl storage update foo.example.com --clear-custom-domain
-```
+[Learn more](/docs/buckets/settings/) about managing your bucket settings.
 
-:::warning
+### Set custom domain using the Fly CLI
 
-If the bucket name contains a dot (.), you will not be able to use the
-virtual-hosted style access (e.g.,
-https://foo.example.com.fly.storage.tigris.dev). However, you can still access
-it through the correctly configured custom domain (e.g.,
-https://foo.example.com).
+1. Open a terminal and run the following command to set the custom domain for
+   your bucket:
+   ```bash
+   flyctl storage update foo-bucket --custom-domain images.example.com
+   ```
+2. To remove the custom domain, run the following command:
+   ```bash
+   flyctl storage update foo-bucket --clear-custom-domain
+   ```
+   [Learn more](/docs/sdks/fly/) about managing your bucket via fly cli.
 
-:::
-
-# Security
+## Security
 
 When providing objects that render in a browser and have access to your domain's
 cookies, ensure that objects are sanitized to prevent XSS vulnerabilities.

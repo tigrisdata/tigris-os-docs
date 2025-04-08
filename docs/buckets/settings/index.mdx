@@ -52,11 +52,14 @@ more information, please see the storage tiers page:
 
 ![Custom domain settings](./bucket-custom-domain.webp)
 
-You can configure a custom domain to serve your bucket content. For more
-information see the [Custom Domain](/docs/buckets/custom-domain/) documentation.
+You can configure a custom domain to serve your bucket content. The custom
+domain name must be a valid domain or subdomain. For example, if you own the
+domain `images.example.com` and use that as the custom domain for the bucket
+`foo-bucket`, you will have to first create a CNAME record that points
+`images.example.com` to `foo-bucket.fly.storage.tigris.dev`.
 
-The custom domain name must match the bucket name. For example, if the custom
-domain is `foo.example.com`, the bucket name must be `foo.example.com`.
+For more information see the [Custom Domain](/docs/buckets/custom-domain/)
+documentation.
 
 ## Object Notifications
 

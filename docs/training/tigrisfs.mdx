@@ -1,0 +1,108 @@
+# Mount Tigris as a Filesystem
+
+For AI workloads, most runtimes assume data is accessible via a filesystem. By
+mounting a Tigris bucket as a filesystem, data is no longer limited by local
+storage nor memory capacity.
+
+We provide [TigrisFS](https://github.com/tigrisdata/tigrisfs) a fork of the
+original [yandex-cloud/geesefs](https://github.com/yandex-cloud/geesefs) project
+with optimizations for Tigris. TigrisFS is a FUSE-based filesystem that mounts
+S3-compatible storage as a local filesystem. You can use TigrisFS to mount any
+Tigris bucket as if it was a normal Linux filesystem.
+
+:::note
+
+TigrisFS does not obfuscate the objects in the bucket, and does not require an
+additional metadata service (unlike JuiceFS). This means you can access the
+objects directly via the S3-compatible API using the standard S3 SDKs, tools,
+and libraries, as well as via the TigrisFS filesystem.
+
+:::
+
+## Prerequisites:
+
+- A Tigris account
+- A bucket you want to mount into your system (`mybucket`)
+- A target location you want to mount your bucket to (`~/data`)
+
+:::note
+
+TigrisFS uses
+[FUSE](https://www.kernel.org/doc/html/latest/filesystems/fuse.html) to mount
+buckets into the filesystem. FUSE has limitations involving multiple users
+accessing the same mountpoint. If you need multiple users (human or service) to
+access the same bucket, consider creating multiple systemd services mounting the
+bucket in each user's home directory.
+
+:::
+
+## Installing TigrisFS
+
+Download the latest release for your machine from
+[the list of TigrisFS releases](https://github.com/tigrisdata/tigrisfs/releases)
+
+<details>
+<summary>Debian Linux</summary>
+
+```shell
+wget https://github.com/tigrisdata/tigrisfs/releases/download/v1.1.2/tigrisfs_1.1.2_linux_amd64.deb
+dpkg -i tigrisfs_1.1.2_linux_amd64.deb
+```
+
+</details>
+
+<details>
+  <summary>MacOS ARM64</summary>
+
+```shell
+curl -sL https://github.com/tigrisdata/tigrisfs/releases/download/v1.1.2/tigrisfs_1.1.2_darwin_arm64.tar.gz | sudo tar -xz -C /usr/local/bin
+```
+
+</details>
+
+## Configure credentials
+
+Create a new access key with edit permissions on your target bucket in the
+[Tigris Dashboard](https://console.tigris.dev/). Configure the aws-cli to
+utilize the credentials as described in the guide
+[here](https://www.tigrisdata.com/docs/sdks/s3/aws-cli/).
+
+## Mount bucket
+
+### Using systemd
+
+When installed from the DEB or RPM package, TigrisFS installs a systemd service
+to simplify mounting and configuration.
+
+Mount as current user:
+
+```bash
+systemctl --user start tigrisfs@<bucket>
+```
+
+Mount as root:
+
+```bash
+systemctl start tigrisfs@<bucket>
+```
+
+The bucket is mounted at `$HOME/mnt/tigrisfs/<bucket>` for the current user, or
+`/mnt/tigrisfs/<bucket>` for root.
+
+To automount the bucket at boot or user login, enable the systemd service:
+
+```bash
+systemctl enable tigrisfs@<bucket> # as root
+systemctl --user enable tigrisfs@<bucket> # as current user
+```
+
+### Using the command line
+
+To mount the bucket using the command line, run the following command:
+
+```bash
+/usr/local/bin/tigrisfs <bucket> <mountpoint>
+```
+
+You did it! You now have a performant filesystem backed by bottomless object
+storage.

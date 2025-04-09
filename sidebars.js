@@ -132,7 +132,7 @@ const sidebars = {
       items: [
         "training/big-data-skypilot/index",
         "training/csi-s3/index",
-        "training/geesefs-linux",
+        "training/tigrisfs",
       ],
     },
     {

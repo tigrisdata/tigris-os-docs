@@ -7,7 +7,7 @@
       "permanent": true
     },
     {
-      "source": "/docs/training/geesefs-linux",
+      "source": "/docs/training/geesefs-linux/",
       "destination": "/docs/training/tigrisfs/",
       "permanent": true
     }

@@ -4,23 +4,23 @@ Tigris allows you to share buckets with other users from your organization or
 with users from other organizations. This feature allows you to collaborate with
 other users and organizations without having to create multiple buckets.
 
-## Sharing within an organization
+## Sharing to another user in an organization
 
-To share a bucket within your organization, you need to have the necessary
-permissions.
+To share a bucket to another user in your organization, you need to have the
+necessary permissions.
 
 If you are the bucket owner, you can share the bucket with other users from your
 organization. If you are an admin, you can share any bucket from your
-organization with other users.
+organization with other users in that organization.
 
-To share a bucket within your organization:
+To share a bucket to another user in your organization:
 
-- Go to the [Tigris dashboard](https://console.tigris.dev)
-- Click on the bucket you want to share
-- Click on the `Share` button
+- Go to the [Tigris dashboard](https://console.tigris.dev).
+- Click on the bucket you want to share.
+- Click on the `Share` button.
 - Select the users you want to share the bucket with and the role you want to
-  assign to them
-- Click on the `Save` button
+  assign to them.
+- Click on the `Save` button.
 
 The roles you can assign to the users are:
 
@@ -34,6 +34,27 @@ that bucket programmatically.
 
 When the share is revoked, the access keys created by the shared users will no
 longer have access to the bucket.
+
+## Sharing with your entire organization
+
+You can also share your buckets with your entire organization.
+
+To share a bucket to another user in your organization:
+
+- Go to the [Tigris dashboard](https://console.tigris.dev).
+- Click on the bucket you want to share.
+- Click on the `Share` button.
+- Modify the "Organization Access" settings to your desired permissions (Editor
+  or Read Only).
+- Click on the `Save` button.
+
+Once the bucket is shared, the users you shared it with will be able to see it
+in their dashboard and access its content based on the role you assigned. Users
+will also be able to create access-keys for the shared bucket to access that
+bucket programmatically.
+
+When the share is revoked, the access keys created by other users in your
+organization will no longer have access to the bucket.
 
 ## Sharing with another organization
 

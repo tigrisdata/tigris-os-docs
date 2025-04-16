@@ -1,25 +1,25 @@
-# Object Lifecycle Transitions
+# Object Lifecycle
 
 As your data storage needs evolve, you may want to optimize costs by moving less
 frequently accessed objects to more cost-effective storage tiers. Tigris
-provides a lifecycle transition rule will automatically move objects between
-storage classes based on the transition rule. For example, you might want to
-move older log files or archived data to a lower-cost storage tier while keeping
-frequently accessed data in the standard tier. This helps to maintain optimal
-performance for active data while reducing storage costs for infrequently
-accessed objects.
+provides an object lifecycle rule to automatically move objects between storage
+classes. For example, you might want to move older log files or archived data to
+a lower-cost storage tier while keeping frequently accessed data in the standard
+tier. This helps to maintain optimal performance for active data while reducing
+storage costs for infrequently accessed objects.
 
-## Configuring object lifecycle transitions
+## Configuring an Object Lifecycle rule
 
-Tigris allows you to set up lifecycle transition configuration for objects in a
-bucket through bucket lifecycle rules.
+With Object Lifecycle rules, you can configure when and how your objects
+transition between storage tiers. This is done at the bucket level and applies
+to all objects within that bucket.
 
 The transition timing can be set in two ways:
 
 - **Days**: The objects will be transitioned after the specified number of days.
 - **Date**: The objects will be transitioned on the specified date.
 
-Tigris currently supports two storage tiers:
+Tigris currently supports three storage tiers:
 
 1. **STANDARD_IA**: Infrequent Access storage is designed for data that is
    accessed less frequently, but requires rapid access when needed. This tier
@@ -33,27 +33,34 @@ Tigris currently supports two storage tiers:
    archival purposes but rarely need to access, such as old backups, historical
    records, or completed projects.
 
-### Specifying lifecycle transition rules via the Tigris Dashboard
+3. **GLACIER_IA**: Glacier Infrequent Access storage is designed for data that
+   requires immediate access but is accessed very infrequently. This tier offers
+   a balance between cost and retrieval time - it's more expensive than GLACIER
+   but provides faster access times. Ideal for data that needs to be available
+   quickly when requested, such as monthly reports, quarterly analytics, or
+   seasonal data that might be needed on short notice.
+
+### Specifying an Object Lifecycle rule via the Tigris Dashboard
 
 You can specify lifecycle transition rules for your bucket using the
 [Tigris Dashboard](https://console.tigris.dev/).
 
-Here's a short video that demonstrates how to specify lifecycle transition rules
-for a bucket:
+Here's a short video that demonstrates how to specify Object Lifecycle rule for
+a bucket:
 
 <a href="https://www.loom.com/share/efaee9e7df504f428126ee9eee72c9f8" target="_blank">
   <img src="https://cdn.loom.com/sessions/thumbnails/efaee9e7df504f428126ee9eee72c9f8-fa18cf817af7197e-full-play.gif" />
 </a>
 
-### Specifying lifecycle transition rules via the AWS CLI
+### Specifying an Object Lifecycle rule via the AWS CLI
 
-You can configure lifecycle transition rules for objects in the bucket using AWS
+You can configure an Object Lifecycle rule for objects in the bucket using AWS
 the CLI. Below are some examples of how you can configure the lifecycle
 transition rules.
 
 #### Transition objects after 30 days
 
-Here's an example of a bucket lifecycle configuration that transitions objects
+Here's an example of an Object Lifecycle configuration that transitions objects
 after 30 days.
 
 Create a JSON file named `lifecycle.json` with the following content:
@@ -83,7 +90,7 @@ aws s3api put-bucket-lifecycle-configuration --bucket my-bucket --lifecycle-conf
 
 #### Transition objects at the end of the year 2024
 
-Here's an example of a bucket lifecycle configuration that transitions objects
+Here's an example of an Object lifecycle configuration that transitions objects
 at the end of the year 2024.
 
 Create a JSON file named `lifecycle.json` with the following content:
@@ -115,7 +122,6 @@ aws s3api put-bucket-lifecycle-configuration --bucket my-bucket --lifecycle-conf
 
 - Tigris always rounds the transition time to UTC midnight for the scheduled
   date.
-- Only one object lifecycle transition rule can be applied to a bucket at a
-  time.
-- When using the AWS CLI to apply a bucket lifecycle configuration, the JSON can
-  only contain the fields shown in the examples above.
+- Only one Object Lifecycle rule can be applied to a bucket at a time.
+- When using the AWS CLI to apply a, Object Lifecycle configuration, the JSON
+  can only contain the fields shown in the examples above.

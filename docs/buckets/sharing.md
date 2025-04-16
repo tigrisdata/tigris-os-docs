@@ -4,23 +4,23 @@ Tigris allows you to share buckets with other users from your organization or
 with users from other organizations. This feature allows you to collaborate with
 other users and organizations without having to create multiple buckets.
 
-## Sharing within an organization
+## Sharing to another user in an organization
 
-To share a bucket within your organization, you need to have the necessary
-permissions.
+To share a bucket to another user in your organization, you need to have the
+necessary permissions.
 
 If you are the bucket owner, you can share the bucket with other users from your
 organization. If you are an admin, you can share any bucket from your
-organization with other users.
+organization with other users in that organization.
 
-To share a bucket within your organization:
+To share a bucket to another user in your organization:
 
-- Go to the [Tigris dashboard](https://console.tigris.dev)
-- Click on the bucket you want to share
-- Click on the `Share` button
+- Go to the [Tigris dashboard](https://console.tigris.dev).
+- Click on the bucket you want to share.
+- Click on the `Share` button.
 - Select the users you want to share the bucket with and the role you want to
-  assign to them
-- Click on the `Save` button
+  assign to them.
+- Click on the `Save` button.
 
 The roles you can assign to the users are:
 
@@ -35,6 +35,27 @@ that bucket programmatically.
 When the share is revoked, the access keys created by the shared users will no
 longer have access to the bucket.
 
+## Sharing with your entire organization
+
+You can also share your buckets with your entire organization.
+
+To share a bucket to another user in your organization:
+
+- Go to the [Tigris dashboard](https://console.tigris.dev).
+- Click on the bucket you want to share.
+- Click on the `Share` button.
+- Modify the "Organization Access" settings to your desired permissions (Editor
+  or Read Only).
+- Click on the `Save` button.
+
+Once the bucket is shared, the users you shared it with will be able to see it
+in their dashboard and access its content based on the role you assigned. Users
+will also be able to create access-keys for the shared bucket to access that
+bucket programmatically.
+
+When the share is revoked, the access keys created by other users in your
+organization will no longer have access to the bucket.
+
 ## Sharing with another organization
 
 Tigris allows you to share a bucket with users from another organization. This
@@ -43,14 +64,68 @@ organization. The sharing is limited to access keys from the other organization.
 
 To share a bucket with users from another organization:
 
-- Receive the access key id (`tid_access_key_id`) from the user outside your
-  organization you want to share the bucket
-- Go to the [Tigris dashboard](https://console.tigris.dev)
-- Click on the bucket you want to share
-- Click on the `Share` button
-- Click on the `Advanced Sharing`
-- Enter the `tid_access_key_id` in the input field "External ID"
-- Click on the `Save` button
+- Receive the access key id (starts with `tid_`) from the user outside your
+  organization you want to share the bucket.
+- Go to the [Tigris dashboard](https://console.tigris.dev).
+- Click on the bucket you want to share.
+- Click on the `Share` button.
+- Expand the `External Sharing` section.
+- Enter the access key (starts with `tid_`) in the text box.
+- Click "Add External ID" to add the access key ID to the list. It should have
+  the role `External`.
+- Click on the `Save` button at the top of the dialogue.
 
 Once the bucket is shared, the user from the other organization will be able to
 access the bucket using the access key id you shared with them.
+
+### External permissions
+
+An external user (internally, an `ExternalCollaborator`) has most of the same
+permissions as a bucket editor does, but without any administrative permissions
+(EG: deleting the bucket).
+
+<details>
+<summary>Full list of permissions</summary>
+
+- Abort multipart uploads (`AbortMultipartUpload`)
+- Complete multipart uploads (`CompleteMultipartUpload`)
+- Copy or rename objects (`CopyObject`)
+- Copy uploaded parts (`UploadPartCopy`)
+- Delete multiple objects (`DeleteMultipleObjects`)
+- Delete objects (`DeleteObject`)
+- Delete object tagging (`DeleteObjectTagging`)
+- Get bucket ACL (`GetBucketACL`)
+- Get bucket CORS configuration (`GetBucketCors`)
+- Get bucket lifecycle configuration (`GetBucketLifecycleConfiguration`)
+- Get bucket location (`GetBucketLocation`)
+- Get bucket ownership controls (`GetBucketOwnershipControls`)
+- Get bucket policy (`GetBucketPolicy`)
+- Get bucket policy status (`GetBucketPolicyStatus`)
+- Get bucket request payment configuration (`GetBucketRequestPayment`)
+- Get bucket tagging (`GetBucketTagging`)
+- Get bucket versioning (`GetBucketVersioning`)
+- Get objects (`GetObject`)
+- Get object ACL (`GetObjectACL`)
+- Get object tagging (`GetObjectTagging`)
+- Head bucket (`HeadBucket`)
+- Head object (`HeadObject`)
+- List access keys (`ListAccessKeys`)
+- List multipart uploads (`ListMultipartUploads`)
+- List object parts (`ListObjectParts`)
+- List objects (V1) (`ListObjectsV1`)
+- List objects (V2) (`ListObjectsV2`)
+- Start new multipart uploads (`NewMultipartUpload`)
+- Get bucket accelerate configuration (`GetBucketAccelerateConfiguration`)
+- Use POST policy (`PostPolicy`)
+- Put bucket CORS configuration (`PutBucketCors`)
+- Put bucket lifecycle configuration (`PutBucketLifecycleConfiguration`)
+- Put bucket policy (`PutBucketPolicy`)
+- Put bucket tagging (`PutBucketTagging`)
+- Put objects (`PutObject`)
+- Put object ACL (`PutObjectAcl`)
+- Put object tagging (`PutObjectTagging`)
+- Upload parts (`UploadPart`)
+- Restore objects (`RestoreObject`)
+- Put object lock configuration (`PutObjectLockConfiguration`)
+
+</details>

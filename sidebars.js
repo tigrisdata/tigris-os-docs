@@ -50,7 +50,7 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "Platform",
+      label: "Product",
       collapsed: false,
       items: [
         {

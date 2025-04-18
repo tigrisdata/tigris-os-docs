@@ -121,6 +121,7 @@ const config = {
             label: "Docs",
             to: "/",
             position: "left",
+            activeBaseRegex: "^\\/docs\\/$",
           },
           {
             label: "Overview",

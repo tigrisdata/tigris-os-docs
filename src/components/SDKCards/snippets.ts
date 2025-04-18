@@ -1,11 +1,20 @@
+const bash = `aws configure set aws_access_key_id <access-key>
+aws configure set aws_secret_access_key <secret-key>
+aws configure set region auto
+aws s3 ls --endpoint-url https://fly.storage.tigris.dev
+aws s3api create-bucket --bucket <bucket-name> --endpoint-url https://fly.storage.tigris.dev
+aws s3api put-object --bucket <bucket-name> --key <key> --body <file> --endpoint-url https://fly.storage.tigris.dev
+aws s3api get-object --bucket <bucket-name> --key <key> <file> --endpoint-url https://fly.storage.tigris.dev
+aws s3api delete-object --bucket <bucket-name> --key <key> --endpoint-url https://fly.storage.tigris.dev
+aws s3api delete-bucket --bucket <bucket-name> --endpoint-url https://fly.storage.tigris.dev
+`;
+
 const javascript = `import { S3Client, paginateListBuckets } from "@aws-sdk/client-s3";
 
 const S3 = new S3Client({
   region: "auto",
   endpoint: "https://fly.storage.tigris.dev",
-  // highlight-start
   s3ForcePathStyle: false,
-  // highlight-end
 });
 
 const listBuckets = async () => {
@@ -18,23 +27,10 @@ const listBuckets = async () => {
   return buckets;
 };`;
 
-const bash = `aws configure set aws_access_key_id <access-key>
-aws configure set aws_secret_access_key <secret-key>
-aws configure set region auto
-aws s3 ls --endpoint-url https://fly.storage.tigris.dev
-aws s3api create-bucket --bucket <bucket-name> --endpoint-url https://fly.storage.tigris.dev
-aws s3api put-object --bucket <bucket-name> --key <key> --body <file> --endpoint-url https://fly.storage.tigris.dev
-aws s3api get-object --bucket <bucket-name> --key <key> <file> --endpoint-url https://fly.storage.tigris.dev
-aws s3api delete-object --bucket <bucket-name> --key <key> --endpoint-url https://fly.storage.tigris.dev
-aws s3api delete-bucket --bucket <bucket-name> --endpoint-url https://fly.storage.tigris.dev
-`;
-
 const go = `svc := s3.NewFromConfig(sdkConfig, func(o *s3.Options) {
-  // highlight-start
   o.BaseEndpoint = aws.String("https://fly.storage.tigris.dev")
   o.Region = "auto"
   o.UsePathStyle = false
-  // highlight-end
 })
   
 package main

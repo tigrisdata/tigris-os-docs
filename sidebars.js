@@ -101,7 +101,7 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "Recipes",
+      label: "Examples",
       collapsible: true,
       collapsed: false,
       items: ["quickstarts/go", "quickstarts/kubernetes", "quickstarts/node"],
@@ -130,27 +130,7 @@ const sidebars = {
       label: "Guides",
       collapsed: false,
       items: [
-        {
-          type: "doc",
-          label: "Migrating from a S3-Compatible Bucket",
-          id: "migration/index",
-        },
-        {
-          type: "doc",
-          label: "Bucket Management with Flyctl",
-          id: "sdks/fly/index",
-        },
-        {
-          type: "doc",
-          label: "Terraform",
-          id: "terraform/index",
-        },
-        {
-          type: "doc",
-          label: "Docker Registry",
-          id: "apps/docker-registry",
-        },
-        "training/csi-s3/index",
+        "migration/index",
         "training/tigrisfs",
         "training/big-data-skypilot/index",
         {
@@ -183,6 +163,10 @@ const sidebars = {
             },
           ],
         },
+        "training/csi-s3/index",
+        "apps/docker-registry",
+        "sdks/fly/index",
+        "terraform/index",
       ],
     },
     {

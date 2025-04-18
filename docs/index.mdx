@@ -17,37 +17,38 @@ import Link from "@docusaurus/Link";
 # Tigris Developer Documentation
 
 <div style={{ fontSize: "20px" }}>
-  Tigris is a globally distributed S3-compatible object storage service that provides low latency anywhere in the world. 
-  Tigris enables developers to quickly and easily store and access any amount of data for a wide range of use cases.
+  Tigris is a globally distributed, multi-cloud object storage service with built-in support for the S3 API. 
+  It uses <strong>Dynamic Data Placement</strong> and <strong>Access-Based Rebalancing</strong> to deliver 
+  low-latency access worldwide — without the need to manage replication or caching.
+
 </div>
 </div>
 
 <div className="homepage-card-container">
   <div className="homepage-card-pic">
     <div className="img">
-        <Link to="/get-started/">
-            <img src="img/console-preview.svg" alt="Console Preview" />
-        </Link>
+      <Link to="/overview/">
+        <img src={WorldMap} alt="Global" />
+      </Link>
     </div>
     <div className="text">
-        <Link to="/get-started/">
-            <h3>Get Started</h3>
-            <span>Essential guide to get you up and running quickly</span>
-        </Link>
+      <Link to="/overview/">
+        <h3>Overview</h3>
+        <span>Learn about the core Tigris concepts</span>
+      </Link>
     </div>
   </div>
-
   <div className="homepage-card-pic">
     <div className="img">
-        <Link to="/overview/">
-            <img src={WorldMap} alt="Global" />
-        </Link>
+      <Link to="/get-started/">
+        <img src="img/console-preview.svg" alt="Console Preview" />
+      </Link>
     </div>
     <div className="text">
-        <Link to="/overview/">
-            <h3>Overview</h3>
-            <span>Learn about the core Tigris concepts</span>
-        </Link>
+      <Link to="/get-started/">
+        <h3>Get Started</h3>
+        <span>Essential guide to get you up and running quickly</span>
+      </Link>
     </div>
   </div>
 </div>
@@ -101,21 +102,15 @@ import Link from "@docusaurus/Link";
     icon="img/bolt"
   />
   <Card
-    title="Docker Registry"
-    description="Use Tigris instead of S3 to pull images as fast as possible and get around Docker Hub rate limits."
-    to="/apps/docker-registry/"
-    icon="img/bolt"
-  />
-  <Card
-    title="Bottomless Kubernetes with Tigris"
-    description="Use Tigris to get access to bottomless storage on your Kubernetes clusters."
-    to="/training/csi-s3/"
-    icon="img/bolt"
-  />
-  <Card
     title="Mount Tigris as a Filesystem"
     description="Use Tigris bucket as a filesystem for AI workloads and get unlimited storage and memory capacity."
     to="/training/tigrisfs/"
+    icon="img/bolt"
+  />
+  <Card
+    title="Training with Big Data on SkyPilot"
+    description="Build a multi-cloud compatible model training job that leverages Tigris to store training data and SkyPilot to manage compute."
+    to="/training/big-data-skypilot/"
     icon="img/bolt"
   />
   <Card
@@ -128,6 +123,12 @@ import Link from "@docusaurus/Link";
     title="Fly.io Integration"
     description="Natively integrated with Fly.io. Tigris runs on Fly.io hardware and is fully integrated with flyctl."
     to="/sdks/fly/"
+    icon="img/bolt"
+  />
+  <Card
+    title="Docker Registry"
+    description="Use Tigris instead of S3 to pull images as fast as possible and get around Docker Hub rate limits."
+    to="/apps/docker-registry/"
     icon="img/bolt"
   />
 </Section>

@@ -44,34 +44,9 @@ const sidebars = {
       ],
     },
     {
-      type: "category",
+      type: "doc",
       label: "Get Started",
-      collapsible: true,
-      collapsed: false,
-      link: {
-        type: "doc",
-        id: "get-started/index",
-      },
-      items: ["quickstarts/go", "quickstarts/kubernetes", "quickstarts/node"],
-    },
-    {
-      type: "category",
-      label: "AWS S3 SDKs",
-      link: {
-        type: "doc",
-        id: "sdks/s3/index",
-      },
-      items: [
-        "sdks/s3/aws-cli",
-        "sdks/s3/aws-js-sdk",
-        "sdks/s3/aws-go-sdk",
-        "sdks/s3/aws-java-sdk",
-        "sdks/s3/aws-python-sdk",
-        "sdks/s3/aws-php-sdk",
-        "sdks/s3/aws-elixir-sdk",
-        "sdks/s3/aws-ruby-sdk",
-        "sdks/s3/aws-net-sdk",
-      ],
+      id: "get-started/index",
     },
     {
       type: "category",
@@ -122,6 +97,39 @@ const sidebars = {
             "iam/date-time-restrictions",
           ],
         },
+      ],
+    },
+    {
+      type: "category",
+      label: "Recipes",
+      collapsible: true,
+      collapsed: false,
+      items: ["quickstarts/go", "quickstarts/kubernetes", "quickstarts/node"],
+    },
+    {
+      type: "category",
+      label: "AWS S3 SDKs",
+      link: {
+        type: "doc",
+        id: "sdks/s3/index",
+      },
+      items: [
+        "sdks/s3/aws-cli",
+        "sdks/s3/aws-js-sdk",
+        "sdks/s3/aws-go-sdk",
+        "sdks/s3/aws-java-sdk",
+        "sdks/s3/aws-python-sdk",
+        "sdks/s3/aws-php-sdk",
+        "sdks/s3/aws-elixir-sdk",
+        "sdks/s3/aws-ruby-sdk",
+        "sdks/s3/aws-net-sdk",
+      ],
+    },
+    {
+      type: "category",
+      label: "Guides",
+      collapsed: false,
+      items: [
         {
           type: "doc",
           label: "Migrating from a S3-Compatible Bucket",
@@ -132,12 +140,6 @@ const sidebars = {
           label: "Bucket Management with Flyctl",
           id: "sdks/fly/index",
         },
-      ],
-    },
-    {
-      type: "category",
-      label: "Guides",
-      items: [
         {
           type: "doc",
           label: "Terraform",

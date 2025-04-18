@@ -128,18 +128,8 @@ const config = {
             position: "left",
           },
           {
-            label: "About",
-            to: "/about/",
-            position: "left",
-          },
-          {
             label: "Get Started",
             to: "/get-started/",
-            position: "left",
-          },
-          {
-            label: "Fly.io",
-            to: "/sdks/fly/",
             position: "left",
           },
           {

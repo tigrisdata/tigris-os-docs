@@ -6,7 +6,7 @@ import CodeBlock from "@theme/CodeBlock";
 import { codes } from "./snippets";
 
 export default function SDKCards() {
-  const [selectedLanguage, setSelectedLanguage] = React.useState("bash");
+  const [selectedLanguage, setSelectedLanguage] = React.useState("shell");
   const code = codes[selectedLanguage];
   return (
     <div id="sdks" className="sdk-cards">
@@ -17,7 +17,7 @@ export default function SDKCards() {
         <Link to="get-started">changing your configuration</Link>.
       </div>
       <ul className="list">
-        <li onMouseEnter={() => setSelectedLanguage("bash")}>
+        <li onMouseEnter={() => setSelectedLanguage("shell")}>
           <Card
             title="AWS CLI"
             to="/sdks/s3/aws-cli/"

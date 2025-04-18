@@ -1,12 +1,19 @@
-const bash = `aws configure set aws_access_key_id <access-key>
+const shell = `# Configure AWS CLI
+aws configure set aws_access_key_id <access-key>
 aws configure set aws_secret_access_key <secret-key>
 aws configure set region auto
+
+# List buckets
 aws s3 ls --endpoint-url https://fly.storage.tigris.dev
+
+# Create a bucket
 aws s3api create-bucket --bucket <bucket-name> --endpoint-url https://fly.storage.tigris.dev
+
+# Put an object in the bucket
 aws s3api put-object --bucket <bucket-name> --key <key> --body <file> --endpoint-url https://fly.storage.tigris.dev
+
+# Get an object from the bucket
 aws s3api get-object --bucket <bucket-name> --key <key> <file> --endpoint-url https://fly.storage.tigris.dev
-aws s3api delete-object --bucket <bucket-name> --key <key> --endpoint-url https://fly.storage.tigris.dev
-aws s3api delete-bucket --bucket <bucket-name> --endpoint-url https://fly.storage.tigris.dev
 `;
 
 const javascript = `import { S3Client, paginateListBuckets } from "@aws-sdk/client-s3";
@@ -246,7 +253,7 @@ foreach (var s3Bucket in listResponse.Buckets)
 }`;
 
 export const codes = {
-  bash,
+  shell,
   javascript,
   go,
   java,

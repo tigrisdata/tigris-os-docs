@@ -161,7 +161,7 @@ const php = `<?php
 
     $bucket_name = 'foo-bucket';
 
-    $s3 = new Aws\S3\S3Client([
+    $s3 = new Aws\\S3\\S3Client([
         'region' => 'auto',
         'endpoint' => 'https://fly.storage.tigris.dev',
         'version' => 'latest',

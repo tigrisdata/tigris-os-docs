@@ -31,7 +31,12 @@ export function HomepageSection({
 export function HomepageCard({ id, icon, title, description, to }) {
   return (
     <Link to={to} className="homepage-card">
-      {icon && <div className="icon">{icon}</div>}
+      {icon && (
+        <div className="icon">
+          <img src={`${icon}.svg`} className="dark" />
+          <img src={`${icon}-light.svg`} className="light" />
+        </div>
+      )}
       <div className="card-content">
         <div className="title" id={id && paramCase(title)}>
           {title}

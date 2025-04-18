@@ -1,4 +1,4 @@
-# Migrating from a S3-compatible bucket
+# Migrating from a S3-Compatible Bucket
 
 Tigris allows you to incrementally migrate the data from an existing S3 or a
 compatible bucket via the `fly storage` command. This allows you to

@@ -1,0 +1,22 @@
+# Using model weights in Tigris anywhere
+
+The most common way to deploy AI models in production is by using “serverless”
+inference. This means that every time you get a request, you don’t know what
+state the underlying hardware is in. You don’t know if you have your models
+cached, and in the worst case you need to do a cold start and download your
+model weights from scratch.
+
+A couple fixable problems arise when running your models on serverless or any
+frequently changing infrastructure:
+
+- Model distribution that's not optimized for latency causes needless GPU idle
+  time as the model weights are downloaded to the machine on cold start. Tigris
+  behaves like a content delivery network by default and is designed for low
+  latency, saving idle time on cold start.
+- Compliance restrictions like data sovereignty and GDPR increase complexity
+  quickly. Tigris makes regional restrictions a one-line configuration, guide
+  [here](https://www.tigrisdata.com/docs/objects/object_regions/).
+- Reliance on third party caches for distributing models creates an upstream
+  dependency and leaves your system vulnerable to downtime. Tigris guarantees
+  99.99% availability with
+  [public availability data](https://www.tigrisdata.com/blog/availability-metrics-public/).

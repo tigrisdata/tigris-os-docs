@@ -1,0 +1,133 @@
+---
+id: index
+title: "Docs"
+---
+
+import {
+  HomepageCard as Card,
+  HomepageSection as Section,
+} from "@site/src/components/HomepageComponents.jsx";
+import { YellowStar } from "@site/src/icons";
+import SDKCards from "@site/src/components/SDKCards";
+import WorldMap from "@site/static/img/world.png";
+import Link from "@docusaurus/Link";
+
+<div style={{ textAlign: 'center', margin: "2em auto 0 auto", width: '80%' }}>
+
+# Tigris Developer Documentation
+
+<div style={{ fontSize: "20px" }}>
+  Purpose-built storage infrastructure for AI teams and developers. Get
+  high-performance, portable, and cost-effective storage across any cloud.
+</div>
+</div>
+
+<div className="homepage-card-container">
+  <div className="homepage-card-pic">
+    <div className="img">
+        <Link to="/get-started/">
+            <img src="img/console-preview.svg" alt="Console Preview" />
+        </Link>
+    </div>
+    <div className="text">
+        <Link to="/get-started/">
+            <h3>Get Started</h3>
+            <span>Essential guide to get you up and running quickly</span>
+        </Link>
+    </div>
+  </div>
+
+  <div className="homepage-card-pic">
+    <div className="img">
+        <Link to="/overview/">
+            <img src={WorldMap} alt="Global" />
+        </Link>
+    </div>
+    <div className="text">
+        <Link to="/overview/">
+            <h3>Overview</h3>
+            <span>Learn about the core Tigris concepts</span>
+        </Link>
+    </div>
+  </div>
+</div>
+
+<Section title="Features" id="features" HeadingTag="h2">
+  <Card
+    title="Globally Distributed Data"
+    description="Data stored close to the users automatically ensuring low latency everywhere."
+    to="/overview/#globally-distributed-data"
+    icon="img/spark"
+  />
+  <Card
+    title="S3 Compatible API"
+    description="Global and fast object storage with familiar AWS S3 tools, libraries, and extensions."
+    to="/api/s3/"
+    icon="img/spark"
+  />
+  <Card
+    title="Zero Egress Fees"
+    description="Free data egress ensures seamless and unrestricted access to your data whenever you need it."
+    to="/pricing/#zero-egress-fees"
+    icon="img/spark"
+  />
+  <Card
+    title="Strong Consistency"
+    description="Strong consistency ensures that you always get the correct version of your data."
+    to="/concepts/consistency/"
+    icon="img/spark"
+  />
+  <Card
+    title="Flexible Storage Tiers"
+    description="Choose the right storage tier for your data to optimize costs and performance."
+    to="/objects/tiers/"
+    icon="img/spark"
+  />
+  <Card
+    title="Public Buckets"
+    description="Public buckets allow you to share data with anyone, anywhere."
+    to="/buckets/public-bucket/"
+    icon="img/spark"
+  />
+</Section>
+
+<SDKCards />
+
+<Section title="End-to-End Guides" id="features" HeadingTag="h2">
+  <Card
+    title="Data Migration"
+    description="Migrate data from an existing S3-compatible bucket to Tigris without downtime and without incuring egress costs."
+    to="/migration/"
+    icon="img/bolt"
+  />
+  <Card
+    title="Docker Registry"
+    description="Use Tigris instead of S3 to pull images as fast as possible and get around Docker Hub rate limits."
+    to="/apps/docker-registry/"
+    icon="img/bolt"
+  />
+  <Card
+    title="Bottomless Kubernetes with Tigris"
+    description="Use Tigris to get access to bottomless storage on your Kubernetes clusters."
+    to="/training/csi-s3/"
+    icon="img/bolt"
+  />
+  <Card
+    title="Mount Tigris as a Filesystem"
+    description="Use Tigris bucket as a filesystem for AI workloads and get unlimited storage and memory capacity."
+    to="/training/tigrisfs/"
+    icon="img/bolt"
+  />
+  <Card
+    title="Using model weights in Tigris"
+    description="Enhance AI model deployment by optimizing cold starts and ensuring high availability without third-party dependencies."
+    to="/model-storage/"
+    icon="img/bolt"
+  />
+  <Card
+    title="Fly.io Integration"
+    description="Natively integrated with Fly.io. Tigris runs on Fly.io hardware and is fully integrated with flyctl."
+    to="/sdks/fly/"
+    icon="img/bolt"
+  />
+</Section>

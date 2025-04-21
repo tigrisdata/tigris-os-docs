@@ -17,35 +17,50 @@ export default function SDKCards() {
         <Link to="get-started">changing your configuration</Link>.
       </div>
       <ul className="list">
-        <li onMouseEnter={() => setSelectedLanguage("shell")}>
+        <li
+          onMouseEnter={() => setSelectedLanguage("shell")}
+          onTouchStart={() => setSelectedLanguage("shell")}
+        >
           <Card
             title="AWS CLI"
             to="/sdks/s3/aws-cli/"
             icon="img/icons/aws-cli"
           />
         </li>
-        <li onMouseEnter={() => setSelectedLanguage("javascript")}>
+        <li
+          onMouseEnter={() => setSelectedLanguage("javascript")}
+          onTouchStart={() => setSelectedLanguage("javascript")}
+        >
           <Card
             title="JavaScript"
             to="/sdks/s3/aws-js-sdk/"
             icon="img/icons/javascript"
           />
         </li>
-        <li onMouseEnter={() => setSelectedLanguage("go")}>
+        <li
+          onMouseEnter={() => setSelectedLanguage("go")}
+          onTouchStart={() => setSelectedLanguage("go")}
+        >
           <Card
             title="Golang"
             to="/sdks/s3/aws-go-sdk/"
             icon="img/icons/golang"
           />
         </li>
-        <li onMouseEnter={() => setSelectedLanguage("java")}>
+        <li
+          onMouseEnter={() => setSelectedLanguage("java")}
+          onTouchStart={() => setSelectedLanguage("java")}
+        >
           <Card
             title="Java"
             to="/sdks/s3/aws-java-sdk/"
             icon="img/icons/java"
           />
         </li>
-        <li onMouseEnter={() => setSelectedLanguage("python")}>
+        <li
+          onMouseEnter={() => setSelectedLanguage("python")}
+          onTouchStart={() => setSelectedLanguage("python")}
+        >
           <Card
             title="Python"
             to="/sdks/s3/aws-python-sdk/"

@@ -716,8 +716,13 @@ table td {
   border-radius: 8px;
 }
 
-.homepage-card:hover {
+.homepage-card:hover,
+.homepage-card.selected {
   background-color: var(--docs-color-background-100);
+}
+
+.homepage-card.selected .title {
+  color: var(--docs-color-primary);
 }
 
 .icon svg {

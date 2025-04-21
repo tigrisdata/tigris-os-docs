@@ -17,39 +17,39 @@ export default function SDKCards() {
         <Link to="get-started">changing your configuration</Link>.
       </div>
       <ul className="list">
-        <li onMouseEnter={() => setSelectedLanguage("shell")}>
+        <li onClick={() => setSelectedLanguage("shell")}>
           <Card
             title="AWS CLI"
-            to="/sdks/s3/aws-cli/"
             icon="img/icons/aws-cli"
+            selected={selectedLanguage === "shell"}
           />
         </li>
-        <li onMouseEnter={() => setSelectedLanguage("javascript")}>
+        <li onClick={() => setSelectedLanguage("javascript")}>
           <Card
             title="JavaScript"
-            to="/sdks/s3/aws-js-sdk/"
             icon="img/icons/javascript"
+            selected={selectedLanguage === "javascript"}
           />
         </li>
-        <li onMouseEnter={() => setSelectedLanguage("go")}>
+        <li onClick={() => setSelectedLanguage("go")}>
           <Card
             title="Golang"
-            to="/sdks/s3/aws-go-sdk/"
             icon="img/icons/golang"
+            selected={selectedLanguage === "go"}
           />
         </li>
-        <li onMouseEnter={() => setSelectedLanguage("java")}>
+        <li onClick={() => setSelectedLanguage("java")}>
           <Card
             title="Java"
-            to="/sdks/s3/aws-java-sdk/"
             icon="img/icons/java"
+            selected={selectedLanguage === "java"}
           />
         </li>
-        <li onMouseEnter={() => setSelectedLanguage("python")}>
+        <li onClick={() => setSelectedLanguage("python")}>
           <Card
             title="Python"
-            to="/sdks/s3/aws-python-sdk/"
             icon="img/icons/python"
+            selected={selectedLanguage === "python"}
           />
         </li>
         <li>
@@ -59,11 +59,15 @@ export default function SDKCards() {
       <div className="terminal">
         <CodeBlock
           language={selectedLanguage}
-          title={selectedLanguage}
+          title={
+            <Link to={code.link}>
+              <h3 style={{ margin: "0px" }}>{code.title}</h3>
+            </Link>
+          }
           showLineNumbers={true}
           className="code-block"
         >
-          {code}
+          {code.code}
         </CodeBlock>
       </div>
     </div>

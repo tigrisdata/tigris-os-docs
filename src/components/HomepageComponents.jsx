@@ -28,9 +28,9 @@ export function HomepageSection({
   );
 }
 
-export function HomepageCard({ id, icon, title, description, to }) {
+export function HomepageCard({ id, icon, title, description, to, selected }) {
   return (
-    <Link to={to} className="homepage-card">
+    <Link to={to} className={`homepage-card ${selected ? "selected" : ""}`}>
       {icon && (
         <div className="icon">
           <img src={`${icon}.svg`} className="dark" />

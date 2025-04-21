@@ -17,35 +17,40 @@ export default function SDKCards() {
         <Link to="get-started">changing your configuration</Link>.
       </div>
       <ul className="list">
-        <li
-          onMouseEnter={() => setSelectedLanguage("shell")}
-          onTouchStart={() => setSelectedLanguage("shell")}
-        >
-          <Card title="AWS CLI" icon="img/icons/aws-cli" />
+        <li onClick={() => setSelectedLanguage("shell")}>
+          <Card
+            title="AWS CLI"
+            icon="img/icons/aws-cli"
+            selected={selectedLanguage === "shell"}
+          />
         </li>
-        <li
-          onMouseEnter={() => setSelectedLanguage("javascript")}
-          onTouchStart={() => setSelectedLanguage("javascript")}
-        >
-          <Card title="JavaScript" icon="img/icons/javascript" />
+        <li onClick={() => setSelectedLanguage("javascript")}>
+          <Card
+            title="JavaScript"
+            icon="img/icons/javascript"
+            selected={selectedLanguage === "javascript"}
+          />
         </li>
-        <li
-          onMouseEnter={() => setSelectedLanguage("go")}
-          onTouchStart={() => setSelectedLanguage("go")}
-        >
-          <Card title="Golang" icon="img/icons/golang" />
+        <li onClick={() => setSelectedLanguage("go")}>
+          <Card
+            title="Golang"
+            icon="img/icons/golang"
+            selected={selectedLanguage === "go"}
+          />
         </li>
-        <li
-          onMouseEnter={() => setSelectedLanguage("java")}
-          onTouchStart={() => setSelectedLanguage("java")}
-        >
-          <Card title="Java" icon="img/icons/java" />
+        <li onClick={() => setSelectedLanguage("java")}>
+          <Card
+            title="Java"
+            icon="img/icons/java"
+            selected={selectedLanguage === "java"}
+          />
         </li>
-        <li
-          onMouseEnter={() => setSelectedLanguage("python")}
-          onTouchStart={() => setSelectedLanguage("python")}
-        >
-          <Card title="Python" icon="img/icons/python" />
+        <li onClick={() => setSelectedLanguage("python")}>
+          <Card
+            title="Python"
+            icon="img/icons/python"
+            selected={selectedLanguage === "python"}
+          />
         </li>
         <li>
           <Card title="And More!" to="/sdks/s3/" icon="img/cube" />

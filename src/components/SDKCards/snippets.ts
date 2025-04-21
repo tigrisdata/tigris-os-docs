@@ -252,14 +252,53 @@ foreach (var s3Bucket in listResponse.Buckets)
     Console.WriteLine("* {0}", s3Bucket.BucketName);
 }`;
 
-export const codes = {
-  shell,
-  javascript,
-  go,
-  java,
-  python,
-  php,
-  elixir,
-  ruby,
-  csharp,
+export const codes: Record<
+  string,
+  { title: string; code: string; link: string }
+> = {
+  shell: {
+    title: "AWS CLI",
+    code: shell,
+    link: "/sdks/s3/aws-cli/",
+  },
+  javascript: {
+    title: "JavaScript",
+    code: javascript,
+    link: "/sdks/s3/aws-js-sdk/",
+  },
+  go: {
+    title: "Golang",
+    code: go,
+    link: "/sdks/s3/aws-go-sdk/",
+  },
+  java: {
+    title: "Java",
+    code: java,
+    link: "/sdks/s3/aws-java-sdk/",
+  },
+  python: {
+    title: "Python",
+    code: python,
+    link: "/sdks/s3/aws-python-sdk/",
+  },
+  php: {
+    title: "PHP",
+    code: php,
+    link: "/sdks/s3/aws-php-sdk/",
+  },
+  elixir: {
+    title: "Elixir",
+    code: elixir,
+    link: "/sdks/s3/aws-elixir-sdk/",
+  },
+  ruby: {
+    title: "Ruby",
+    code: ruby,
+    link: "/sdks/s3/aws-ruby-sdk/",
+  },
+  csharp: {
+    title: "C#",
+    code: csharp,
+    link: "/sdks/s3/aws-net-sdk/",
+  },
 };

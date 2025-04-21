@@ -21,51 +21,31 @@ export default function SDKCards() {
           onMouseEnter={() => setSelectedLanguage("shell")}
           onTouchStart={() => setSelectedLanguage("shell")}
         >
-          <Card
-            title="AWS CLI"
-            to="/sdks/s3/aws-cli/"
-            icon="img/icons/aws-cli"
-          />
+          <Card title="AWS CLI" icon="img/icons/aws-cli" />
         </li>
         <li
           onMouseEnter={() => setSelectedLanguage("javascript")}
           onTouchStart={() => setSelectedLanguage("javascript")}
         >
-          <Card
-            title="JavaScript"
-            to="/sdks/s3/aws-js-sdk/"
-            icon="img/icons/javascript"
-          />
+          <Card title="JavaScript" icon="img/icons/javascript" />
         </li>
         <li
           onMouseEnter={() => setSelectedLanguage("go")}
           onTouchStart={() => setSelectedLanguage("go")}
         >
-          <Card
-            title="Golang"
-            to="/sdks/s3/aws-go-sdk/"
-            icon="img/icons/golang"
-          />
+          <Card title="Golang" icon="img/icons/golang" />
         </li>
         <li
           onMouseEnter={() => setSelectedLanguage("java")}
           onTouchStart={() => setSelectedLanguage("java")}
         >
-          <Card
-            title="Java"
-            to="/sdks/s3/aws-java-sdk/"
-            icon="img/icons/java"
-          />
+          <Card title="Java" icon="img/icons/java" />
         </li>
         <li
           onMouseEnter={() => setSelectedLanguage("python")}
           onTouchStart={() => setSelectedLanguage("python")}
         >
-          <Card
-            title="Python"
-            to="/sdks/s3/aws-python-sdk/"
-            icon="img/icons/python"
-          />
+          <Card title="Python" icon="img/icons/python" />
         </li>
         <li>
           <Card title="And More!" to="/sdks/s3/" icon="img/cube" />
@@ -74,11 +54,15 @@ export default function SDKCards() {
       <div className="terminal">
         <CodeBlock
           language={selectedLanguage}
-          title={selectedLanguage}
+          title={
+            <Link to={code.link}>
+              <h3 style={{ margin: "0px" }}>{code.title}</h3>
+            </Link>
+          }
           showLineNumbers={true}
           className="code-block"
         >
-          {code}
+          {code.code}
         </CodeBlock>
       </div>
     </div>

@@ -17,9 +17,17 @@ Tigris pricing is based on the following components:
 | Class A Requests: PUT, COPY, POST, LIST       | $0.005/1000 requests        | $0.005/1000 requests        | $0.005/1000 requests        | $0.005/1000 requests           |
 | Class B Requests: GET, SELECT, and all others | $0.0005/1000 requests       | $0.0005/1000 requests       | $0.0005/1000 requests       | $0.0005/1000 requests          |
 | Data Retrieval                                | Free                        | $0.01/GB                    | Free                        | $0.03/GB                       |
-| Minimum Storage Retention                     | -                           | 30 days                     | 90 days                     | 90 days                        |
+| Minimum Storage Retention \*                  | -                           | 30 days                     | 90 days                     | 90 days                        |
 | Object Notifications                          | $0.01/1000 events published | $0.01/1000 events published | $0.01/1000 events published | $0.01/1000 events published    |
 | Egress (Data Transfer to Internet)            | Free                        | Free                        | Free                        | Free                           |
+
+_\* A minimum storage retention charge applies to objects stored in the
+Infrequent Access, Archive, and Archive Instant Retrieval tiers. For example,
+objects in the Infrequent Access tier are subject to a minimum storage duration
+of 30 days. If objects are deleted, updated, or transitioned to another storage
+tier before 30 days, a 30-day storage charge will still apply. Objects stored
+for 30 days or longer will be charged only for the actual number of days
+stored._
 
 _\*\* Data in Archive tier requires restoration before it can be accessed. Read
 more about [Storage tiers](/docs/objects/tiers.md)._
@@ -154,6 +162,21 @@ tier for the duration you specify. You will be charged for the data storage in
 the Standard tier for the duration of the restoration. Once the restoration
 period is over, the data is moved back to the Archive tier, and you will be
 charged for the data storage in the Archive tier.
+
+</details>
+
+<details>
+<summary>How is Data Transfer (Egress) different from Data Retrieval? </summary>
+
+Data retrieval is only applicable to Infrequent Access and Archive Instant
+Retrieval tiers. Comparing to AWS S3, when you GET an object stored in
+Infrequent Access tier you pay Data Retrieval and Data Transfer (Egress) fees.
+With Tigris, you are only responsible for Data Retrieval fee and there is no
+charge for Data Transfer (Egress).
+
+In the Archive tier, AWS S3 charges for data retrievals as part of the archive
+restore process. In contrast, there is no retrieval charge when you restore data
+from Archive tier and Data Transfer (Egress) is always free.
 
 </details>
 

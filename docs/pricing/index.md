@@ -175,8 +175,8 @@ With Tigris, you are only responsible for Data Retrieval fee and there is no
 charge for Data Transfer (Egress).
 
 In the Archive tier, AWS S3 charges for data retrievals as part of the archive
-restore process. In contrast, there is no retrieval charge when you restore data
-from Archive tier and Data Transfer (Egress) is always free.
+restore process. In contrast, there is no retrieval charge in Tigris when you
+restore data from Archive tier and Data Transfer (Egress) is always free.
 
 </details>
 

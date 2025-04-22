@@ -107,7 +107,6 @@ const sidebars = {
       items: [
         "quickstarts/go",
         "quickstarts/kubernetes",
-        "quickstarts/lancedb/index",
         "quickstarts/node",
       ],
     },
@@ -170,6 +169,7 @@ const sidebars = {
         },
         "training/csi-s3/index",
         "apps/docker-registry",
+        "libraries/lancedb/index",
         "sdks/fly/index",
         "terraform/index",
       ],

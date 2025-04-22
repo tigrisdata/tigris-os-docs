@@ -104,7 +104,11 @@ const sidebars = {
       label: "Examples",
       collapsible: true,
       collapsed: false,
-      items: ["quickstarts/go", "quickstarts/kubernetes", "quickstarts/node"],
+      items: [
+        "quickstarts/go",
+        "quickstarts/kubernetes",
+        "quickstarts/node",
+      ],
     },
     {
       type: "category",
@@ -165,6 +169,7 @@ const sidebars = {
         },
         "training/csi-s3/index",
         "apps/docker-registry",
+        "libraries/lancedb/index",
         "sdks/fly/index",
         "terraform/index",
       ],

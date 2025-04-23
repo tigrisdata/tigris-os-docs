@@ -17,17 +17,9 @@ Tigris pricing is based on the following components:
 | Class A Requests: PUT, COPY, POST, LIST       | $0.005/1000 requests        | $0.005/1000 requests        | $0.005/1000 requests        | $0.005/1000 requests           |
 | Class B Requests: GET, SELECT, and all others | $0.0005/1000 requests       | $0.0005/1000 requests       | $0.0005/1000 requests       | $0.0005/1000 requests          |
 | Data Retrieval                                | Free                        | $0.01/GB                    | Free                        | $0.03/GB                       |
-| Minimum Storage Retention \*                  | -                           | 30 days                     | 90 days                     | 90 days                        |
+| Minimum Storage Retention                     | -                           | 30 days                     | 90 days                     | 90 days                        |
 | Object Notifications                          | $0.01/1000 events published | $0.01/1000 events published | $0.01/1000 events published | $0.01/1000 events published    |
 | Egress (Data Transfer to Internet)            | Free                        | Free                        | Free                        | Free                           |
-
-_\* A minimum storage retention charge applies to objects stored in the
-Infrequent Access, Archive, and Archive Instant Retrieval tiers. For example,
-objects in the Infrequent Access tier are subject to a minimum storage duration
-of 30 days. If objects are deleted, updated, or transitioned to another storage
-tier before 30 days, a 30-day storage charge will still apply. Objects stored
-for 30 days or longer will be charged only for the actual number of days
-stored._
 
 _\*\* Data in Archive tier requires restoration before it can be accessed. Read
 more about [Storage tiers](/docs/objects/tiers.md)._
@@ -151,6 +143,18 @@ averaging the daily peak storage over a billing period (1 month). Example:
 - Storing 10 GB for 12 days in June, and then 20 GB for the rest 18 days will be
   charged as 16 GB/month
   - 10 GB x 12/30 + 20 GB x 18/30 = 16 GB/month
+
+</details>
+
+<details>
+<summary>What is Minimum Storage Retention charge?</summary>
+
+A minimum storage retention charge applies to objects stored in the Infrequent
+Access, Archive, and Archive Instant Retrieval tiers. For example, objects in
+the Infrequent Access tier are subject to a minimum storage duration of 30 days.
+If objects are deleted, updated, or transitioned to another storage tier before
+30 days, a 30-day storage charge will still apply. Objects stored for 30 days or
+longer will be charged only for the actual number of days stored.
 
 </details>
 

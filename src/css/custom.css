@@ -183,8 +183,6 @@ nav.navbar {
 
 .menu__link {
   border-radius: 4px 0 0 4px;
-  /* Background tint only for menu links in sidebar */
-  --ifm-menu-color-background-active: var(--docs-color-primary-tint);
 }
 
 .menu__list-item-collapsible:hover {
@@ -722,7 +720,7 @@ table td {
 }
 
 .homepage-card.selected .title {
-  color: var(--docs-color-primary);
+  color: var(--ifm-link-color);
 }
 
 .icon svg {

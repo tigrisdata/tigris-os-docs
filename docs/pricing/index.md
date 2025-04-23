@@ -147,6 +147,18 @@ averaging the daily peak storage over a billing period (1 month). Example:
 </details>
 
 <details>
+<summary>What is Minimum Storage Retention charge?</summary>
+
+A minimum storage retention charge applies to objects stored in the Infrequent
+Access, Archive, and Archive Instant Retrieval tiers. For example, objects in
+the Infrequent Access tier are subject to a minimum storage duration of 30 days.
+If objects are deleted, updated, or transitioned to another storage tier before
+30 days, a 30-day storage charge will still apply. Objects stored for 30 days or
+longer will be charged only for the actual number of days stored.
+
+</details>
+
+<details>
 <summary>How am I charged when restoring data from archive tier?</summary>
 
 When you restore data from the Archive tier, the data is moved to the Standard
@@ -154,6 +166,21 @@ tier for the duration you specify. You will be charged for the data storage in
 the Standard tier for the duration of the restoration. Once the restoration
 period is over, the data is moved back to the Archive tier, and you will be
 charged for the data storage in the Archive tier.
+
+</details>
+
+<details>
+<summary>How is Data Transfer (Egress) different from Data Retrieval? </summary>
+
+Data retrieval is only applicable to Infrequent Access and Archive Instant
+Retrieval tiers. Comparing to AWS S3, when you GET an object stored in
+Infrequent Access tier you pay Data Retrieval and Data Transfer (Egress) fees.
+With Tigris, you are only responsible for Data Retrieval fee and there is no
+charge for Data Transfer (Egress).
+
+In the Archive tier, AWS S3 charges for data retrievals as part of the archive
+restore process. In contrast, there is no retrieval charge in Tigris when you
+restore data from Archive tier and Data Transfer (Egress) is always free.
 
 </details>
 

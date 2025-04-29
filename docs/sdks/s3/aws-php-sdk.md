@@ -24,7 +24,7 @@ default credentials file or the environment variables `AWS_ACCESS_KEY_ID` and
 
     $s3 = new Aws\S3\S3Client([
         'region' => 'auto',
-        'endpoint' => 'https://fly.storage.tigris.dev',
+        'endpoint' => 'https://t3.storage.dev',
         'version' => 'latest',
     ]);
 
@@ -93,7 +93,7 @@ Presigned URLs can be used with the AWS PHP SDK as follows:
 
     $s3 = new Aws\S3\S3Client([
         'region' => 'auto',
-        'endpoint' => 'https://fly.storage.tigris.dev',
+        'endpoint' => 'https://t3.storage.dev',
         'version' => 'latest',
     ]);
 

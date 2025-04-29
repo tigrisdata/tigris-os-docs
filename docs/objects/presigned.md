@@ -46,7 +46,7 @@ aws s3 presign s3://mybucket.mydomain.com/hello.txt
 and generated URL would look like
 
 ```bash
-https://fly.storage.tigris.dev/mybucket.mydomain.com/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=tid_<>%2F20241210%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=<>X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=<>
+https://t3.storage.dev/mybucket.mydomain.com/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=tid_<>%2F20241210%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=<>X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=<>
 ```
 
 You can remove `fly.storage.tigris.dev/` and make it look like

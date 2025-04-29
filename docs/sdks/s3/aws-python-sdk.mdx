@@ -16,7 +16,7 @@ Also ensure that the addressing style is set to `virtual`.
 # Create S3 service client
 svc = boto3.client(
     's3',
-    endpoint_url='https://fly.storage.tigris.dev',
+    endpoint_url='https://t3.storage.dev',
     # highlight-start
     config=Config(s3={'addressing_style': 'virtual'}),
     # highlight-end
@@ -56,7 +56,7 @@ aws_secret_access_key=<access_key_secret>
 [tigris]
 aws_access_key_id=<access_key_id>
 aws_secret_access_key=<access_key_secret>
-endpoint_url=https://fly.storage.tigris.dev
+endpoint_url=https://t3.storage.dev
 ```
 
 To switch profiles while using `boto3`, you can set the `profile` on the

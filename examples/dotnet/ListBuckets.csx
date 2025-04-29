@@ -6,7 +6,7 @@ using Amazon.S3;
 using Amazon.S3.Model;
 
 IAmazonS3 s3Client = new AmazonS3Client(
-    new AmazonS3Config { ForcePathStyle = false,  ServiceURL = "https://fly.storage.tigris.dev" }
+    new AmazonS3Config { ForcePathStyle = false,  ServiceURL = "https://t3.storage.dev" }
 );
 
 

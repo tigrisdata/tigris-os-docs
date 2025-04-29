@@ -49,7 +49,7 @@ Fly, use the endpoint [https://fly.storage.tigris.dev](https://fly.storage.tigri
 :::
 
 ```bash
-aws s3api --endpoint-url https://fly.storage.tigris.dev put-object --bucket foo-bucket --key bar-public.txt --body bar.txt --acl public-read
+aws s3api --endpoint-url https://t3.storage.dev put-object --bucket foo-bucket --key bar-public.txt --body bar.txt --acl public-read
 ```
 
 `--acl public-read` makes the object publicly viewable.
@@ -60,7 +60,7 @@ If you have a public bucket and you want to make an object in it private, you
 can do so by setting the object ACL to `private`.
 
 ```bash
-aws s3api --endpoint-url https://fly.storage.tigris.dev put-object --bucket foo-public-bucket --key bar-private.txt --body bar.txt --acl private
+aws s3api --endpoint-url https://t3.storage.dev put-object --bucket foo-public-bucket --key bar-private.txt --body bar.txt --acl private
 ```
 
 `--acl private` makes the object private.

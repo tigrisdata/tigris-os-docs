@@ -60,7 +60,7 @@ const fnameToURL = (fname) => {
 
   const db = await lancedb.connect(`s3://${bucketName}/docs-test`, {
     storageOptions: {
-      endpoint: "https://fly.storage.tigris.dev",
+      endpoint: "https://t3.storage.dev",
       region: "auto",
     },
   });

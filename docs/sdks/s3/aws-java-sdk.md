@@ -37,7 +37,7 @@ public class AWSS3HelloWorld {
 
     private final S3Client s3Client;
 
-    private static final URI TIGRIS_ENDPOINT_URI = URI.create("https://fly.storage.tigris.dev");
+    private static final URI TIGRIS_ENDPOINT_URI = URI.create("https://t3.storage.dev");
     private static final Logger log = LoggerFactory.getLogger(AWSS3HelloWorld.class);
 
     public AWSS3HelloWorld() {
@@ -92,7 +92,7 @@ public class AWSS3PresignedURLs {
 
     private final S3Presigner presigner;
 
-    private static final URI TIGRIS_ENDPOINT_URI = URI.create("https://fly.storage.tigris.dev");
+    private static final URI TIGRIS_ENDPOINT_URI = URI.create("https://t3.storage.dev");
     private static final Logger log = LoggerFactory.getLogger(AWSS3PresignedURLs.class);
 
     public AWSS3PresignedURLs() {

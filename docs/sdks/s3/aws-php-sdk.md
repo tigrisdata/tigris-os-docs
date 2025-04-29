@@ -5,7 +5,9 @@ This guide assumes that you have followed the steps in the
 available.
 
 You may continue to use the AWS PHP SDK as you normally would, but with the
-endpoint set to `https://fly.storage.tigris.dev`.
+endpoint set to Tigris. If you are using Tigris outside of Fly, use the endpoint
+[t3.storage.dev](https://t3.storage.dev). If you are using Tigris from within
+Fly, use the endpoint [fly.storage.tigris.dev](https://fly.storage.tigris.dev).
 
 ## Getting started
 

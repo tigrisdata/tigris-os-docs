@@ -26,7 +26,9 @@ To optimize performance and reduce latency, these objects are intelligently
 distributed to other regions based on the access patterns observed over time.
 
 This means that you can access your bucket from any region by using a single
-global endpoint [fly.storage.tigris.dev](https://fly.storage.tigris.dev)
+global endpoint. If you are using Tigris outside of Fly, use the endpoint
+[t3.storage.dev](https://t3.storage.dev). If you are using Tigris from within
+Fly, use the endpoint [fly.storage.tigris.dev](https://fly.storage.tigris.dev).
 
 ![Global Endpoint](/img/tigris-os-global-endpoint.png)
 

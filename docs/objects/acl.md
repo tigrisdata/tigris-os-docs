@@ -40,6 +40,14 @@ For the object ACLs migration rules see the
 If you have a private bucket and you want to make an object in it publically
 readable, you can do so by setting the object ACL to `public-read`.
 
+:::note
+
+If you are using Tigris outside of Fly, use the endpoint
+[t3.storage.dev](https://t3.storage.dev). If you are using Tigris from within
+Fly, use the endpoint [fly.storage.tigris.dev](https://fly.storage.tigris.dev).
+
+:::
+
 ```bash
 aws s3api --endpoint-url https://fly.storage.tigris.dev put-object --bucket foo-bucket --key bar-public.txt --body bar.txt --acl public-read
 ```

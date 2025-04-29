@@ -10,7 +10,7 @@ The `X-Tigris-Query` field query can be thought of as the `WHERE` clause in a
 SQL query. For instance, to find all objects with a `Content-Type` of
 `text/javascript`, set the header as follows:
 
-- `X-Tigris-Query`: `` WHERE `Content-Type` = "text/javascript" ``
+- `X-Tigris-Query`: ``WHERE `Content-Type` = "text/javascript"``
 
 ## Queryable Fields
 
@@ -40,9 +40,9 @@ Tigris supports `IN`, `NOT IN`, and `REGEXP` operators for filtering results.
 Since these operations are performed in memory, they must be combined with SQL
 operations mentioned above. For example:
 
-1. `` WHERE `Content-Type` = "text/plain" AND key REGEXP ".*\.txt$"  ``
-2. `` WHERE `Content-Length` > 1024 AND `Content-Type` IN ("text/javascript", "text/css")  ``.
-3. `` WHERE `Content-Length` != 65536 AND `Content-Type` NOT IN ("text/plain", "text/html")  ``.
+1. ``WHERE `Content-Type` = "text/plain" AND key REGEXP ".*\.txt$" ``
+2. ``WHERE `Content-Length` > 1024 AND `Content-Type` IN ("text/javascript", "text/css") ``.
+3. ``WHERE `Content-Length` != 65536 AND `Content-Type` NOT IN ("text/plain", "text/html") ``.
 
 ## Order by
 
@@ -55,11 +55,11 @@ smaller than `64KB` ordered by `Content-Type`:
 
 Example queries that can be performed:
 
-1. `` WHERE `Content-Type` = "text/plain"  ``
-2. `` WHERE `Content-Type` >= "text/c" AND `Content-Type` < "text/j"  ``
-3. `` WHERE `Content-Length` > 0 ORDER BY `Content-Length` ASC  ``
-4. `` WHERE `Content-Length` != 65536 AND `Content-Type` = "text/plain"  ``
-5. `` WHERE `Last-Modified` > "2024-06-23T10:38:46Z"  ``
+1. ``WHERE `Content-Type` = "text/plain" ``
+2. ``WHERE `Content-Type` >= "text/c" AND `Content-Type` < "text/j" ``
+3. ``WHERE `Content-Length` > 0 ORDER BY `Content-Length` ASC ``
+4. ``WHERE `Content-Length` != 65536 AND `Content-Type` = "text/plain" ``
+5. ``WHERE `Last-Modified` > "2024-06-23T10:38:46Z" ``
 
 ## Next steps
 

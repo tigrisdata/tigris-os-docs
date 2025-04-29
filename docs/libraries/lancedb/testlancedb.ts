@@ -38,7 +38,7 @@ const fnameToURL = (fname) => {
 (async () => {
   const markdownFiles = glob.sync("../../**/*.md");
   const files = [...markdownFiles].filter(
-    (fname) => !fname.endsWith("README.md")
+    (fname) => !fname.endsWith("README.md"),
   );
   files.sort();
 
@@ -60,7 +60,7 @@ const fnameToURL = (fname) => {
 
   const db = await lancedb.connect(`s3://${bucketName}/docs-test`, {
     storageOptions: {
-      endpoint: "https://fly.storage.tigris.dev",
+      endpoint: "https://t3.storage.dev",
       region: "auto",
     },
   });
@@ -99,6 +99,6 @@ const fnameToURL = (fname) => {
   console.log(
     actual.map(({ url, heading, text }) => {
       return { url, heading, text };
-    })
+    }),
   );
 })();

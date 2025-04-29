@@ -7,7 +7,10 @@ This guide assumes that you have followed the steps in the
 available.
 
 You may continue to use the AWS Go SDK as you normally would, but with the
-endpoint set to `https://fly.storage.tigris.dev`.
+endpoint set to Tigris. If you are using Tigris outside of Fly, use the endpoint
+[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
+within Fly, use the endpoint
+[https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
 
 This example uses the [AWS Go SDK v2](https://github.com/aws/aws-sdk-go-v2) and
 reads the default credentials file or the environment variables
@@ -15,14 +18,14 @@ reads the default credentials file or the environment variables
 
 When you create your client, make sure to enable the following settings:
 
-- `BaseEndpoint` should be set to `https://fly.storage.tigris.dev`.
+- `BaseEndpoint` should be set to `https://t3.storage.dev`.
 - `Region` should be set to `auto`.
 - `UsePathStyle` should be set to `false`.
 
 ```go
 svc := s3.NewFromConfig(sdkConfig, func(o *s3.Options) {
   // highlight-start
-  o.BaseEndpoint = aws.String("https://fly.storage.tigris.dev")
+  o.BaseEndpoint = aws.String("https://t3.storage.dev")
   o.Region = "auto"
   o.UsePathStyle = false
   // highlight-end

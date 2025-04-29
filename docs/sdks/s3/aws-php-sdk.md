@@ -5,7 +5,10 @@ This guide assumes that you have followed the steps in the
 available.
 
 You may continue to use the AWS PHP SDK as you normally would, but with the
-endpoint set to `https://fly.storage.tigris.dev`.
+endpoint set to Tigris. If you are using Tigris outside of Fly, use the endpoint
+[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
+within Fly, use the endpoint
+[https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
 
 ## Getting started
 
@@ -22,7 +25,7 @@ default credentials file or the environment variables `AWS_ACCESS_KEY_ID` and
 
     $s3 = new Aws\S3\S3Client([
         'region' => 'auto',
-        'endpoint' => 'https://fly.storage.tigris.dev',
+        'endpoint' => 'https://t3.storage.dev',
         'version' => 'latest',
     ]);
 
@@ -91,7 +94,7 @@ Presigned URLs can be used with the AWS PHP SDK as follows:
 
     $s3 = new Aws\S3\S3Client([
         'region' => 'auto',
-        'endpoint' => 'https://fly.storage.tigris.dev',
+        'endpoint' => 'https://t3.storage.dev',
         'version' => 'latest',
     ]);
 

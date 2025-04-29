@@ -7,14 +7,17 @@ This guide assumes that you have followed the steps in the
 available.
 
 You may continue to use the AWS Python SDK as you normally would, but with the
-endpoint set to `https://fly.storage.tigris.dev`. Also ensure that the
-addressing style is set to `virtual`.
+endpoint set to Tigris. If you are using Tigris outside of Fly, use the endpoint
+[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
+within Fly, use the endpoint
+[https://fly.storage.tigris.dev](https://fly.storage.tigris.dev). Also ensure
+that the addressing style is set to `virtual`.
 
 ```python
 # Create S3 service client
 svc = boto3.client(
     's3',
-    endpoint_url='https://fly.storage.tigris.dev',
+    endpoint_url='https://t3.storage.dev',
     # highlight-start
     config=Config(s3={'addressing_style': 'virtual'}),
     # highlight-end
@@ -54,7 +57,7 @@ aws_secret_access_key=<access_key_secret>
 [tigris]
 aws_access_key_id=<access_key_id>
 aws_secret_access_key=<access_key_secret>
-endpoint_url=https://fly.storage.tigris.dev
+endpoint_url=https://t3.storage.dev
 ```
 
 To switch profiles while using `boto3`, you can set the `profile` on the

@@ -92,7 +92,7 @@ const bucketName = process.env.BUCKET_NAME || "tigris-example";
 
 const db = await lancedb.connect(`s3://${bucketName}/docs`, {
   storageOptions: {
-    endpoint: "https://fly.storage.tigris.dev",
+    endpoint: "https://t3.storage.dev",
     region: "auto",
   },
 });
@@ -214,7 +214,7 @@ import { chunkify } from "./markdownChunk";
 const markdownFiles = await glob("./docs/**/*.md");
 
 const files = [...markdownFiles].filter(
-  (fname) => !fname.endsWith("README.md")
+  (fname) => !fname.endsWith("README.md"),
 );
 files.sort();
 
@@ -280,7 +280,7 @@ const actual = await tbl.search(query).limit(10).toArray();
 console.log(
   actual.map(({ url, heading, text }) => {
     return { url, heading, text };
-  })
+  }),
 );
 ```
 
@@ -331,7 +331,7 @@ Set your OpenAI API key and Tigris credentials in your environment:
 export OPENAI_API_KEY=sk-hunter2-hunter2hunter2hunter2
 export AWS_ACCESS_KEY_ID=tid_AzureDiamond
 export AWS_SECRET_ACCESS_KEY=tid_hunter2hunter2hunter2
-export AWS_ENDPOINT_URL_S3=https://fly.storage.tigris.dev
+export AWS_ENDPOINT_URL_S3=https://t3.storage.dev
 export AWS_REGION=auto
 export BUCKET_NAME=your-bucket-name-here
 ```

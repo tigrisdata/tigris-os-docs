@@ -18,7 +18,7 @@ export const renameObject = async (S3, bucket, oldKey, newKey) => {
       step: "build",
       name: "renameObject",
       tags: ["METADATA", "RENAME"],
-    }
+    },
   );
 
   const copyCommand = new CopyObjectCommand({
@@ -35,7 +35,7 @@ export const renameObject = async (S3, bucket, oldKey, newKey) => {
 const S3 = new S3Client({
   region: "auto",
   s3ForcePathStyle: false,
-  endpoint: "https://fly.storage.tigris.dev",
+  endpoint: "https://t3.storage.dev",
 });
 
 const bucket = "tigris-example";

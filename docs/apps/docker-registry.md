@@ -63,7 +63,7 @@ Your Tigris project (adjective-noun-1234) is ready. See details and next steps w
 
 Setting the following secrets on tigris-registry:
 AWS_ACCESS_KEY_ID: tid_AzureDiamond
-AWS_ENDPOINT_URL_S3: https://fly.storage.tigris.dev
+AWS_ENDPOINT_URL_S3: https://t3.storage.dev
 AWS_REGION: auto
 AWS_SECRET_ACCESS_KEY: tsec_hunter2hunter2hunter2
 BUCKET_NAME: delicate-sea-639
@@ -86,7 +86,7 @@ REGISTRY_STORAGE_S3_SECRETKEY=tsec_secretAccessKey
 # Don't change these settings
 REGISTRY_STORAGE=s3
 REGISTRY_STORAGE_S3_REGION=auto
-REGISTRY_STORAGE_S3_REGIONENDPOINT=https://fly.storage.tigris.dev
+REGISTRY_STORAGE_S3_REGIONENDPOINT=https://t3.storage.dev
 REGISTRY_STORAGE_S3_FORCEPATHSTYLE=false
 REGISTRY_STORAGE_S3_ENCRYPT=false
 REGISTRY_STORAGE_S3_SECURE=true

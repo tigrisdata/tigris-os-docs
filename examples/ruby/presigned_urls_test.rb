@@ -7,7 +7,7 @@ bucket_name = "tigris-example"
 
 s3 = Aws::S3::Client.new(
     region: "auto",
-    endpoint: "https://fly.storage.tigris.dev",
+    endpoint: "https://t3.storage.dev",
     force_path_style: false,
 )
 

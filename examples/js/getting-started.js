@@ -24,7 +24,7 @@ export const listBuckets = async (S3) => {
 export const listObjects = async (S3, bucketName) => {
   const paginator = paginateListObjectsV2(
     { client: S3, pageSize: 100 },
-    { Bucket: bucketName }
+    { Bucket: bucketName },
   );
   const objects = [];
 
@@ -69,6 +69,6 @@ const response = await uploadObjectFromFS(
   S3,
   "tigris-example",
   "examples/js/getting-started.js",
-  "getting-started.js"
+  "getting-started.js",
 );
 console.log("Upload response:", response);

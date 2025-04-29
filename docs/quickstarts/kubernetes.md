@@ -36,7 +36,7 @@ type: Opaque
 stringData:
   AWS_ACCESS_KEY_ID: tid_*
   AWS_SECRET_ACCESS_KEY: tsec_*
-  AWS_ENDPOINT_URL_S3: https://fly.storage.tigris.dev
+  AWS_ENDPOINT_URL_S3: https://t3.storage.dev
   AWS_ENDPOINT_URL_IAM: https://fly.iam.storage.tigris.dev
   AWS_REGION: auto
   BUCKET_NAME: mybucket

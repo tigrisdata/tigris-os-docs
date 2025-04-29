@@ -6,10 +6,14 @@ available.
 
 ## Service Endpoints
 
-Requests to Tigris must be directed to the appropriate service endpoint:
+Requests to Tigris must be directed to the appropriate service endpoint, usually
+by updating your endpoint URL configuration:
 
 - IAM requests must be directed to `https://fly.iam.storage.tigris.dev`
-- S3 requests must be directed to `https://fly.storage.tigris.dev`
+- S3 requests made from outside Fly should be directed to
+  `https://t3.storage.dev`
+- S3 requests made from within Fly must be directed to
+  `https://fly.storage.tigris.dev`
 
 When using the AWS CLI, this service endpoint is set by default based on the
 region and is not configured by the user directly. AWS S3 recommends using
@@ -32,11 +36,12 @@ Default output format [None]: json
 ```
 
 You can then use the AWS CLI as you normally would, but with the
-`--endpoint-url` flag set to `https://fly.storage.tigris.dev`:
+`--endpoint-url` flag set to `https://t3.storage.dev` or
+`https://fly.storage.tigris.dev`:
 
 ```bash
-aws s3api list-buckets --endpoint-url https://fly.storage.tigris.dev
-aws s3api list-objects-v2 --endpoint-url https://fly.storage.tigris.dev --bucket foo-bucket
+aws s3api list-buckets --endpoint-url https://t3.storage.dev
+aws s3api list-objects-v2 --endpoint-url https://t3.storage.dev --bucket foo-bucket
 ```
 
 ## Setting the endpoint URL in credentials file
@@ -50,7 +55,7 @@ nano ~/.aws/credentials
 [default]
 aws_access_key_id=<tid>
 aws_secret_access_key=<tsec_>
-endpoint_url=https://fly.storage.tigris.dev
+endpoint_url=https://t3.storage.dev
 ```
 
 Once this is done, you can use the AWS CLI as you normally would (without the
@@ -77,7 +82,7 @@ aws_secret_access_key=<tsec_>
 [tigris]
 aws_access_key_id=<tid>
 aws_secret_access_key=<tsec_>
-endpoint_url=https://fly.storage.tigris.dev
+endpoint_url=https://t3.storage.dev
 ```
 
 You can verify the profiles are configured correctly:

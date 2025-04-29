@@ -5,7 +5,10 @@ This guide assumes that you have followed the steps in the
 available.
 
 You may continue to use the AWS Java SDK as you normally would, but with the
-endpoint set to `https://fly.storage.tigris.dev`.
+endpoint set to Tigris. If you are using Tigris outside of Fly, use the endpoint
+[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
+within Fly, use the endpoint
+[https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
 
 This example uses the [AWS Java SDK v2](https://github.com/aws/aws-sdk-java-v2)
 
@@ -35,7 +38,7 @@ public class AWSS3HelloWorld {
 
     private final S3Client s3Client;
 
-    private static final URI TIGRIS_ENDPOINT_URI = URI.create("https://fly.storage.tigris.dev");
+    private static final URI TIGRIS_ENDPOINT_URI = URI.create("https://t3.storage.dev");
     private static final Logger log = LoggerFactory.getLogger(AWSS3HelloWorld.class);
 
     public AWSS3HelloWorld() {
@@ -90,7 +93,7 @@ public class AWSS3PresignedURLs {
 
     private final S3Presigner presigner;
 
-    private static final URI TIGRIS_ENDPOINT_URI = URI.create("https://fly.storage.tigris.dev");
+    private static final URI TIGRIS_ENDPOINT_URI = URI.create("https://t3.storage.dev");
     private static final Logger log = LoggerFactory.getLogger(AWSS3PresignedURLs.class);
 
     public AWSS3PresignedURLs() {

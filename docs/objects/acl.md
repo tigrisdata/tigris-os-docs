@@ -43,8 +43,8 @@ readable, you can do so by setting the object ACL to `public-read`.
 :::note
 
 If you are using Tigris outside of Fly, use the endpoint
-[t3.storage.dev](https://t3.storage.dev). If you are using Tigris from within
-Fly, use the endpoint [fly.storage.tigris.dev](https://fly.storage.tigris.dev).
+[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from within
+Fly, use the endpoint [https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
 
 :::
 

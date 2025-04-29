@@ -49,8 +49,8 @@ You can specify lifecycle transition rules for your bucket using the
 Here's a short video that demonstrates how to specify Object Lifecycle rule for
 a bucket:
 
-<a href="https://www.loom.com/share/6eb3ce130dba40dbb12c041e7b6e81c1" target="_blank">
-  <img src="https://cdn.loom.com/sessions/thumbnails/6eb3ce130dba40dbb12c041e7b6e81c1-0c370dbff9e88875-full-play.gif"/>
+<a href="https://www.loom.com/share/cb502607f86c443b835575681922f01c">
+  <img src="https://cdn.loom.com/sessions/thumbnails/cb502607f86c443b835575681922f01c-7a7b4d8fdc70c5ed-full-play.gif"/>
 </a>
 
 ### Specifying an Object Lifecycle rule via the AWS CLI

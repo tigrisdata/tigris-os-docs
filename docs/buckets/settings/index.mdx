@@ -17,6 +17,7 @@ Here's an overview of the settings you can configure:
   your buckets.
 - TTL Configuration: Set the default time-to-live (TTL) for objects in the
   bucket.
+- Object Lifecycle: Set an Object Lifecycle rule for objects in the bucket.
 - CORS Configuration: Configure Cross-Origin Resource Sharing (CORS) rules for
   your bucket.
 - Delete This Bucket: Permanently delete a bucket.
@@ -153,6 +154,14 @@ you clean up a bucket by deleting old data on the server side.
 
 You can also configure Tigris to automatically delete any object older than a
 given number of days.
+
+## Object Lifecycle
+
+You can set an Object Lifecycle rule for objects in the bucket. This is useful
+for buckets that contain lots of old objects that are not accessed that often.
+They can be transitioned to a different storage tier after a certain period of
+time. For more information see the
+[Object Lifecycle](/docs/buckets/object-lifecycle/) documentation.
 
 ## CORS Configuration
 

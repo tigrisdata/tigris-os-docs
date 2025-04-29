@@ -18,7 +18,7 @@ export const renameObject = async (S3, bucket, oldKey, newKey) => {
       step: "build",
       name: "renameObject",
       tags: ["METADATA", "RENAME"],
-    }
+    },
   );
 
   const copyCommand = new CopyObjectCommand({

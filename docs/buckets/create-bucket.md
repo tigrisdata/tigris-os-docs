@@ -54,8 +54,9 @@ Assuming you have the AWS CLI configured as shown in the
 :::note
 
 If you are using Tigris outside of Fly, use the endpoint
-[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from within
-Fly, use the endpoint [https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
+[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
+within Fly, use the endpoint
+[https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
 
 :::
 

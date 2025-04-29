@@ -27,8 +27,9 @@ distributed to other regions based on the access patterns observed over time.
 
 This means that you can access your bucket from any region by using a single
 global endpoint. If you are using Tigris outside of Fly, use the endpoint
-[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from within
-Fly, use the endpoint [https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
+[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
+within Fly, use the endpoint
+[https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
 
 ![Global Endpoint](/img/tigris-os-global-endpoint.png)
 

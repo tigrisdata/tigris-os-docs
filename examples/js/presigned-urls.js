@@ -17,8 +17,8 @@ console.log(
   await getSignedUrl(
     S3,
     new GetObjectCommand({ Bucket: "tigris-example", Key: "bar.txt" }),
-    { expiresIn: 3600 } // 1 hour
-  )
+    { expiresIn: 3600 }, // 1 hour
+  ),
 );
 
 // Presigned PUT, allows users to upload objects without going through your server.
@@ -27,8 +27,8 @@ console.log(
   await getSignedUrl(
     S3,
     new PutObjectCommand({ Bucket: "tigris-example", Key: "bar.txt" }),
-    { expiresIn: 3600 } // 1 hour
-  )
+    { expiresIn: 3600 }, // 1 hour
+  ),
 );
 
 // Presigned DELETE, allows users to delete objects.
@@ -37,6 +37,6 @@ console.log(
   await getSignedUrl(
     S3,
     new DeleteObjectCommand({ Bucket: "tigris-example", Key: "bar.txt" }),
-    { expiresIn: 3600 } // 1 hour
-  )
+    { expiresIn: 3600 }, // 1 hour
+  ),
 );

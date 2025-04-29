@@ -11,12 +11,12 @@ export function getImage(metadata) {
   }
   if (frontMatter.shareText) {
     return `https://vercel-og-tigris.vercel.app/api/param?title=${encodeURIComponent(
-      frontMatter.shareText
+      frontMatter.shareText,
     )}`;
   }
   if (title) {
     return `https://vercel-og-tigris.vercel.app/api/param?title=${encodeURIComponent(
-      title
+      title,
     )}`;
   }
   return defaultImg;

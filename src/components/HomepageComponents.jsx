@@ -18,7 +18,7 @@ export function HomepageSection({
       className={clsx(
         "homepage-section",
         hasSubSections && "has-sub-sections",
-        className
+        className,
       )}
     >
       {title && <HeadingTag id={id ?? paramCase(title)}>{title}</HeadingTag>}

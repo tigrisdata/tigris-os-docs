@@ -37,7 +37,7 @@ Default output format [None]: json
 
 You can then use the AWS CLI as you normally would, but with the
 `--endpoint-url` flag set to `https://t3.storage.dev` or
-`https://t3.storage.dev`:
+`https://fly.storage.tigris.dev`:
 
 ```bash
 aws s3api list-buckets --endpoint-url https://t3.storage.dev

@@ -105,7 +105,12 @@ const sidebars = {
       label: "Examples",
       collapsible: true,
       collapsed: false,
-      items: ["quickstarts/go", "quickstarts/kubernetes", "quickstarts/node"],
+      items: [
+        "quickstarts/go",
+        "quickstarts/kubernetes",
+        "quickstarts/node",
+        "quickstarts/rclone",
+      ],
     },
     {
       type: "category",

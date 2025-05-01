@@ -1,0 +1,167 @@
+# rclone Quickstart
+
+[rclone](https://rclone.org/) is an open-source command line tool that lets you
+manage files in Tigris, AWS S3, Google Drive, Dropbox, and
+[many other storage providers](https://rclone.org/#providers) with the same
+interface. rclone has built-in support for encrypting your files, managing
+versioned backups, incrementally transferring only what changed, and even
+mounting your cloud storage to your computer like a virtual flash drive.
+
+To get started uploading data to rclone, you need to do the following things:
+
+- Create a new bucket at [storage.new](https://storage.new)
+- Create an access keypair for that bucket at
+  [storage.new/accesskey](https://storage.new/accesskey)
+- Configure rclone to use Tigris
+- Upload files to Tigris
+
+## 1. Create a new bucket
+
+Open [storage.new](https://storage.new) in your web browser.
+
+Give your bucket a name and select what [storage tier](../objects/tiers.md) it
+should use by default. As a general rule of thumb:
+
+- Standard is the default. If you're not sure what you want, pick standard.
+- Infrequent Access is cheaper than Standard, but charges per gigabyte of
+  retrieval.
+- Instant Retrieval Archive is for long-term storage where you might need urgent
+  access at any moment.
+- Archive is for long-term storage where you don't mind having to wait for data
+  to be brought out of cold storage.
+
+Click "Create".
+
+## 2. Create an access keypair for that bucket
+
+Open [storage.new/accesskey](https://storage.new/accesskey) in your web browser.
+
+Give the keypair a name. This name will be shown in your list of access keys, so
+be sure to make it descriptive enough that you can figure out what it's for
+later.
+
+You can either give this key access to all of the buckets you have access to or
+grant access to an individual bucket by name. Type the name of your bucket and
+give it Editor permissions.
+
+Click "Create".
+
+Copy the Access Key ID, Secret Access Key, and other values into a safe place
+such as your password manager. Tigris will not show you the Secret Access Key
+again.
+
+## 3. Configure rclone to use Tigris
+
+Open a terminal and run `rclone config`:
+
+```text
+$ rclone config
+o remotes found, make a new one?
+n) New remote
+s) Set configuration password
+q) Quit config
+```
+
+Create a new remote with `n`:
+
+```text
+Enter name for new remote.
+name>
+```
+
+Name it `tigris`.
+
+Choose the "Amazon S3 Compliant Storage Providers" provider.
+
+```text
+ 4 / Amazon S3 Compliant Storage Providers including AWS, Alibaba, ArvanCloud, Ceph, ChinaMobile, Cloudflare, DigitalOcean, Dreamhost, GCS, HuaweiOBS, IBMCOS, IDrive, IONOS, LyveCloud, Leviia, Liara, Linode, Magalu, Minio, Netease, Outscale, Petabox, RackCorp, Rclone, Scaleway, SeaweedFS, Selectel, StackPath, Storj, Synology, TencentCOS, Wasabi, Qiniu and others
+   \ (s3)
+...
+Storage> 4
+```
+
+Select "Any other S3 compatible provider":
+
+```text
+34 / Any other S3 compatible provider
+   \ (Other)
+provider> 34
+```
+
+Enter AWS credentials in the next step.
+
+```text
+ 1 / Enter AWS credentials in the next step.
+   \ (false)
+env_auth> 1
+```
+
+Copy the Access Key ID from your password manager, paste it into the terminal,
+and hit enter.
+
+```text
+access_key_id> tid_samplesampledocstest
+```
+
+Copy the Secret Access Key from your password manager, paste it into the
+terminal, and hit enter.
+
+```text
+secret_access_key> tsec_samplesampledocstest_hunter2
+```
+
+Enter the region `auto`:
+
+```text
+region> auto
+```
+
+Enter the endpoint `https://t3.storage.dev`:
+
+```text
+endpoint> https://t3.storage.dev
+```
+
+Skip the location constraint by pressing enter.
+
+Skip the canned ACL by pressing enter.
+
+Skip editing advanced config by pressing enter.
+
+Read over the configuration options you set and confirm with `y`:
+
+```text
+Keep this "tigris" remote?
+y) Yes this is OK (default)
+e) Edit this remote
+d) Delete this remote
+y/e/d> y
+```
+
+To confirm things are working, list your buckets with `rclone lsd tigris:`
+
+```text
+$ rclone lsd tigris:
+[...]
+          -1 2025-05-01 14:20:48        -1 example-bucket
+```
+
+## 4. Upload files to Tigris
+
+Finally, upload a big file to rclone with `rclone copy`:
+
+```text
+$ rclone copy /path/to/bigfile.tar.gz tigris:example-bucket/bigfile.tar.gz
+```
+
+Make sure it's there with `rclone ls`:
+
+```text
+$ rclone ls tigris:example-bucket/
+5460387840 bigfile.tar.gz
+```
+
+And that's it! You've successfully configured rclone to manage your files on
+Tigris! For further customization, advanced configuration options, or
+troubleshooting, refer to the
+[official rclone documentation](https://rclone.org/docs/). Happy copying!

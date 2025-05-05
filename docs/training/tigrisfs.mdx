@@ -44,9 +44,11 @@ Download the latest release for your machine from
 <details>
 <summary>Debian Linux</summary>
 
+You may need to install FUSE utils (fuse3 or fuse RPM/Debian package) first.
+
 ```shell
-wget https://github.com/tigrisdata/tigrisfs/releases/download/v1.1.2/tigrisfs_1.1.2_linux_amd64.deb
-dpkg -i tigrisfs_1.1.2_linux_amd64.deb
+wget https://github.com/tigrisdata/tigrisfs/releases/download/v1.2.0/tigrisfs_1.2.0_linux_amd64.deb
+dpkg -i tigrisfs_1.2.0_linux_amd64.deb
 ```
 
 </details>
@@ -54,8 +56,10 @@ dpkg -i tigrisfs_1.1.2_linux_amd64.deb
 <details>
   <summary>MacOS ARM64</summary>
 
+You may need to install osxfuse/macfuse first.
+
 ```shell
-curl -sL https://github.com/tigrisdata/tigrisfs/releases/download/v1.1.2/tigrisfs_1.1.2_darwin_arm64.tar.gz | sudo tar -xz -C /usr/local/bin
+curl -sL https://github.com/tigrisdata/tigrisfs/releases/download/v1.2.0/tigrisfs_1.2.0_darwin_arm64.tar.gz | sudo tar -xz -C /usr/local/bin
 ```
 
 </details>

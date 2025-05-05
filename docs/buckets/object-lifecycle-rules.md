@@ -1,4 +1,4 @@
-# Object Lifecycle
+# Object Lifecycle Rules
 
 As your data storage needs evolve, you may want to optimize costs by moving less
 frequently accessed objects to more cost-effective storage tiers. Tigris
@@ -8,7 +8,7 @@ lower-cost storage tier while keeping frequently accessed data in the standard
 tier. This helps to maintain optimal performance for active data while reducing
 storage costs for infrequently accessed objects.
 
-## Configuring an Object Lifecycle rule
+## Configuring an Object Lifecycle Rule
 
 With Object Lifecycle rules, you can configure when and how your objects
 transition between storage tiers. This is done at the bucket level and applies

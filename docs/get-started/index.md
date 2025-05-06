@@ -16,17 +16,6 @@ only via granted access keys.
    your data using any of the popular
    [S3 tools, libraries, and extensions](../sdks/s3/) - Tigris is S3-compatible.
 
-:::note
-
-At the moment, the signup process will involve creating or using a Fly.io
-account. We will soon be adding support for other identity providers such as
-GitHub, and Google.
-
-Use of Tigris does not require your application to be hosted on Fly.io. Your
-application can be hosted anywhere.
-
-:::
-
 ## Next Steps
 
 Now that you have a bucket, you can start storing objects in it. An object can

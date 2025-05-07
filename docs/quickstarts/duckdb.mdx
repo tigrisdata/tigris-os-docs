@@ -1,0 +1,99 @@
+# DuckDB Quickstart
+
+[DuckDB](https://duckdb.org) is an in-process embedded analytical database
+optimized for fast queries, ease of use, and embedding efficient analytics
+inside existing applications. It's the SQLite for analytics, but with a stronger
+focus on data analytics, aggregation, and Online Analytical Processing (OLAP)
+queries.
+
+To get started using DuckDB with Tigris, you need to do the following things:
+
+- Create new bucket at [storage.new](https://storage.new) if you don't have one
+- Create an access keypair for that bucket at
+  [storage.new/accesskey](https://storage.new/accesskey)
+- Configure DuckDB to use Tigris
+- Query files in Tigris
+
+## (**OPTIONAL**) Create a new bucket
+
+Open [storage.new](https://storage.new) in your web browser.
+
+Give your bucket a name and select what [storage tier](../objects/tiers.md) it
+should use by default. As a general rule of thumb:
+
+- Standard is the default. If you're not sure what you want, pick standard.
+- Infrequent Access is cheaper than Standard, but charges per gigabyte of
+  retrieval.
+- Instant Retrieval Archive is for long-term storage where you might need urgent
+  access at any moment.
+- Archive is for long-term storage where you don't mind having to wait for data
+  to be brought out of cold storage.
+
+Click "Create".
+
+## Create an access keypair for that bucket
+
+Open [storage.new/accesskey](https://storage.new/accesskey) in your web browser.
+
+Give the keypair a name. This name will be shown in your list of access keys, so
+be sure to make it descriptive enough that you can figure out what it's for
+later.
+
+You can either give this key access to all of the buckets you have access to or
+grant access to an individual bucket by name. Type the name of your bucket and
+give it Editor permissions.
+
+Click "Create".
+
+Copy the Access Key ID, Secret Access Key, and other values into a safe place
+such as your password manager. Tigris will not show you the Secret Access Key
+again.
+
+## Configure DuckDB to use Tigris
+
+Open the DuckDB command line in your terminal:
+
+```text
+$ duckdb
+v1.2.2 7c039464e4
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+D
+```
+
+Create a new secret with the `CREATE SECRET` command:
+
+```sql
+CREATE OR REPLACE SECRET tigris
+  ( TYPE s3
+  , PROVIDER config
+  , KEY_ID 'tid_access_key_id'
+  , SECRET 'tsec_secret_access_key'
+  , REGION 'auto'
+  , ENDPOINT 't3.storage.dev'
+  , URL_STYLE 'vhost'
+  );
+```
+
+## Query files in DuckDB
+
+Once you're in, you can query files in your bucket like you would normally, just
+open them with the `s3://<bucketname>` prefix:
+
+```sql
+SELECT * FROM
+  READ_JSON
+    ( 's3://xe-duckdb/*.json'
+    , columns =
+      { request_date: 'struct("seconds" bigint, "nanos" bigint)'
+      , response_time: 'struct(nanos bigint)'
+      , host: 'varchar'
+      , "method": 'varchar'
+      , path: 'varchar'
+      , headers: 'map(string, string)'
+      , remote_ip: 'varchar'
+      , request_id: 'uuid'
+      }
+    );
+```

@@ -66,13 +66,13 @@ Create a new secret with the `CREATE SECRET` command:
 
 ```sql
 CREATE OR REPLACE SECRET tigris
-  ( TYPE s3
-  , PROVIDER config
-  , KEY_ID 'tid_access_key_id'
-  , SECRET 'tsec_secret_access_key'
-  , REGION 'auto'
-  , ENDPOINT 't3.storage.dev'
-  , URL_STYLE 'vhost'
+  (      TYPE  s3
+  ,  PROVIDER  config
+  ,    KEY_ID  'tid_access_key_id'
+  ,    SECRET  'tsec_secret_access_key'
+  ,    REGION  'auto'
+  ,  ENDPOINT  't3.storage.dev'
+  , URL_STYLE  'vhost'
   );
 ```
 

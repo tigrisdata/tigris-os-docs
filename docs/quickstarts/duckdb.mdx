@@ -79,21 +79,56 @@ CREATE OR REPLACE SECRET tigris
 ## Query files in DuckDB
 
 Once you're in, you can query files in your bucket like you would normally, just
-open them with the `s3://<bucketname>` prefix:
+open them with the `s3://<bucketname>` prefix. For example, you can import the
+data from the
+[LinkedIn Data Jobs Dataset](https://www.kaggle.com/datasets/joykimaiyo18/linkedin-data-jobs-dataset)
+by creating a local table like this:
 
 ```sql
+CREATE TABLE IF NOT EXISTS jobs
+  ( id               INT64  NOT NULL
+  , title            TEXT   NOT NULL
+  , company          TEXT   NOT NULL
+  , "location"       TEXT   NOT NULL
+  , link             TEXT   NOT NULL
+  , source           TEXT   NOT NULL
+  , date_posted      DATE   NOT NULL
+  , work_type        TEXT   NOT NULL
+  , employment_type  TEXT   NOT NULL
+  , "description"    TEXT   NOT NULL
+  );
+```
+
+And then importing the data from Tigris:
+
+```sql
+INSERT INTO jobs
 SELECT * FROM
-  READ_JSON
-    ( 's3://xe-duckdb/*.json'
+  READ_CSV
+    ( 's3://xe-duckdb/clean_jobs.csv'
+    , header = true
     , columns =
-      { request_date: 'struct("seconds" bigint, "nanos" bigint)'
-      , response_time: 'struct(nanos bigint)'
-      , host: 'varchar'
-      , "method": 'varchar'
-      , path: 'varchar'
-      , headers: 'map(string, string)'
-      , remote_ip: 'varchar'
-      , request_id: 'uuid'
+      {              'id': 'INT64'
+      ,           'title': 'TEXT'
+      ,         'company': 'TEXT'
+      ,        'location': 'TEXT'
+      ,            'link': 'TEXT'
+      ,          'source': 'TEXT'
+      ,     'date_posted': 'DATE'
+      ,       'work_type': 'TEXT'
+      , 'employment_type': 'TEXT'
+      ,     'description': 'TEXT'
       }
     );
+```
+
+Now you can query it like normal:
+
+```sql
+SELECT
+  *
+FROM
+  jobs
+WHERE
+  location LIKE 'Seattle%';
 ```

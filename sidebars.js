@@ -106,6 +106,7 @@ const sidebars = {
       collapsible: true,
       collapsed: false,
       items: [
+        "quickstarts/duckdb",
         "quickstarts/go",
         "quickstarts/kubernetes",
         "quickstarts/node",

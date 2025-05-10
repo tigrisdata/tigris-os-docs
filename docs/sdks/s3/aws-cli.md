@@ -9,7 +9,7 @@ available.
 Requests to Tigris must be directed to the appropriate service endpoint, usually
 by updating your endpoint URL configuration:
 
-- IAM requests must be directed to `https://fly.iam.storage.tigris.dev`
+- IAM requests must be directed to `https://iam.storage.dev`
 - S3 requests made from outside Fly should be directed to
   `https://t3.storage.dev`
 - S3 requests made from within Fly must be directed to

@@ -93,7 +93,7 @@ const sidebars = {
             "iam/index",
             "iam/iam-policy-support",
             "iam/create-access-key/index",
-            "iam/limited-access-key",
+            "iam/limited-access-key/index",
             "iam/ip-restrictions",
             "iam/date-time-restrictions",
           ],

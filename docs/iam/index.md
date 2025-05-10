@@ -29,7 +29,7 @@ you'll need to attach IAM policies to the new access key.
 - Configure your environment to use Tigris credentials with
   [these guides.](https://www.tigrisdata.com/docs/sdks/s3/aws-cli)
 - Ensure your IAM endpoint URL points to Tigris:
-  `AWS_ENDPOINT_URL_IAM=https://fly.iam.storage.tigris.dev`
+  `AWS_ENDPOINT_URL_IAM=https://iam.storage.dev`
 
 ### Create an IAM Policy
 
@@ -95,6 +95,6 @@ Here `--user-name` is the access key id.
 
 Here are some common use cases for IAM policies:
 
-- [Restrict the actions that can be performed on a bucket or object by a specific access-key (machine user)](/docs/iam/limited-access-key.md).
+- [Restrict the actions that can be performed on a bucket or object by a specific access-key (machine user)](/docs/iam/limited-access-key/index.md).
 - [IP restrictions](/docs/iam/ip-restrictions.md).
 - [Restricting access by date and time](/docs/iam/date-time-restrictions.md).

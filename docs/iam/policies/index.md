@@ -1,9 +1,31 @@
-# Tigris IAM Policy Support
+# IAM Policy Support
 
 An IAM (Identity and Access Management) policy is a set of rules that define
 permissions, specifying what actions can be performed on specific resources
-optionally with some conditions. IAM policy is very broad and in context of
-Tigris we support the following blocks:
+optionally with some conditions.
+
+## Supported IAM Policy operations
+
+Tigris supports a subset of IAM operations that are commonly used for managing
+permissions. The following operations are supported:
+
+| Operation            | Description                                        |
+| -------------------- | -------------------------------------------------- |
+| IAM:CreatePolicy     | Creates a new IAM policy.                          |
+| IAM:ListPolicies     | Lists all IAM policies.                            |
+| IAM:GetPolicy        | Retrieves information about a specific IAM policy. |
+| IAM:DeletePolicy     | Deletes a specific IAM policy.                     |
+| IAM:AttachUserPolicy | Attaches an IAM policy to a user.                  |
+| IAM:DetachUserPolicy | Detaches an IAM policy from a user.                |
+| IAM:ListUserPolicies | Lists all IAM policies attached to a user.         |
+
+## Supported IAM Policy Blocks
+
+Tigris supports the core set of IAM policy blocks as defined by AWS IAM
+specification.
+
+IAM policy is very broad and in context of Tigris we support the following
+blocks:
 
 | Block               | Supported | Description                                                                                                                                                                                 |
 | ------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

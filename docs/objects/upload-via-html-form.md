@@ -24,7 +24,7 @@ to AWS S3:
   region segment of the `X-Amz-Credential` is designated as `auto`.
 - Tigris supports only `public-read` and `private` ACLs at Object. Read more
   about it [here](https://www.tigrisdata.com/docs/objects/acl/).
-- For signature verification, Tigris only supports Signature version 4.
+- For signature verification, Tigris only supports AWS signature version 4.
 
 ## Example
 
@@ -69,7 +69,7 @@ For illustrative purposes, let's utilize the following credentials:
 - The credentials used to sign this policy have an access key ID of
   `tid_example_key_id`, and the date must match the expiration date.
 - Full
-  [detailed grammar of policy is documented here](https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html)
+  [detailed grammar of policy is documented here](https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html).
 
 ### Truncate space characters
 

@@ -21,7 +21,7 @@ code (`HMAC`) is derived. The signing key is derived from the secret access key.
 The AWS S3 SDK handles this signature generation part.
 
 The server then receives a request along with the signature and the
-access_key_id. The server recreates the signature and compares it to the
+`access_key_id`. The server recreates the signature and compares it to the
 incoming signature. This is how the server authenticates and fetches the
 authenticated user’s context.
 
@@ -38,13 +38,13 @@ this is mainly used for human users when interacting with Tigris’s web console
 The session token has a limited lifetime. Tigris uses `JWT` (JSON Web Token) as
 the session token. This token is signed by an authentication provider using the
 `RS256` algorithm. When the user logs in to Tigris’s web console, Tigris’s
-authentication service issues the `JWT`. This JWT contains the metadata about
+authentication service issues the `JWT`. This `JWT` contains the metadata about
 the user, for example, the org ids and the user id.
 
 This session token is signed by Tigris’s authentication service using `RS256`.
 This token is fed to the AWS S3 client as a session token field. When a Tigris
 server receives a request containing the session token via header
-`x-amz-security-token`, Tigris validates the signature of the JWT by using the
+`x-amz-security-token`, Tigris validates the signature of the `JWT` by using the
 public key rendered by Tigris’s authentication service. If the signature is
 valid, Tigris server further validates the claims made by the token. Such as
 issuer, audience, and expiration.
@@ -70,7 +70,6 @@ based on the role assigned to the it.
 | AbortMultipartUpload               | ✅    | ✅     | ❌       |
 | CompleteMultipartUpload            | ✅    | ✅     | ❌       |
 | CopyObject                         | ✅    | ✅     | ❌       |
-| CopyObjectPart                     | ✅    | ✅     | ❌       |
 | DeleteBucket                       | ✅    | ✅     | ❌       |
 | DeleteBucketCors                   | ✅    | ✅     | ❌       |
 | DeleteBucketLifecycleConfiguration | ✅    | ✅     | ❌       |
@@ -121,7 +120,9 @@ based on the role assigned to the it.
 | PutObjectLockConfiguration         | ✅    | ✅     | ❌       |
 | PutObjectRetention                 | ✅    | ✅     | ❌       |
 | PutObjectTagging                   | ✅    | ✅     | ❌       |
-| UploadObjectPart                   | ✅    | ✅     | ❌       |
+| RestoreObject                      | ✅    | ✅     | ✅       |
+| UploadPart                         | ✅    | ✅     | ❌       |
+| UploadPartCopy                     | ✅    | ✅     | ❌       |
 | IAM:CreatePolicy                   | ✅    | ❌     | ❌       |
 | IAM:ListPolicies                   | ✅    | ❌     | ❌       |
 | IAM:ListUserPolicies               | ✅    | ❌     | ❌       |

@@ -34,10 +34,10 @@ level and at the bucket level.
   need certain requests to be strongly consistent, as marking the entire bucket
   for strong consistency can introduce higher latencies across all operations.
   Remember to include this header for every operation that requires strong
-  consistency. For example, if a put operation for key 'a' needs strong
+  consistency. For example, if a `PUT` operation for key 'a' needs strong
   consistency, set this header, and then also set it for any subsequent
-  operations where you need read-your-write guarantees, such as later get or
-  delete operations.
+  operations where you need read-your-write guarantees, such as later `GET` or
+  `DELETE` operations.
 
 ## Performance Considerations
 

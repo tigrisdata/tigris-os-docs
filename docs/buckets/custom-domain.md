@@ -1,4 +1,4 @@
-# Custom domains
+# Custom Domains
 
 You can also use a custom domain with your bucket. To do this, the following
 requirements must be met first:
@@ -20,12 +20,12 @@ requirements must be met first:
 
 Once these requirements are met, you can enable the custom domain as follows:
 
-### Set custom domain using the Tigris dashboard
+### Set custom domain using the Tigris Dashboard
 
-1. Navigate to the Tigris dashboard and select the bucket you want to set a
+1. Navigate to the Tigris Dashboard and select the bucket you want to set a
    custom domain for.
 2. Click on the **Settings** tab.
-3. Scroll down to the **Custom Domain** section.
+3. Scroll down to the **Custom Domains** section.
 4. Enter the custom domain name in the **Custom Domain** field.
 5. Click on the **Save** button to save the changes.
 

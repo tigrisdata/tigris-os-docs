@@ -1,7 +1,7 @@
 # Regions
 
-We are deployed around the world in multiple regions on fly.io infrastructure.
-Our goal is to be deployed in every region that fly.io supports. As of now, we
+We are deployed around the world in multiple regions on Fly.io infrastructure.
+Our goal is to be deployed in every region that Fly.io supports. As of now, we
 are deployed in the following regions:
 
 | Region ID | Region Location            |

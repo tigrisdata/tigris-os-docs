@@ -28,10 +28,10 @@ setting the entire bucket to strong consistency can increase latencies for all
 operations.
 
 To use this feature, include the `X-Tigris-Consistent:true` header in every
-request that requires global strong consistency. For example, if you need a put
+request that requires global strong consistency. For example, if you need a PUT
 operation for key 'a' to be globally strongly consistent, add this header to the
-request. Similarly, include the header in any subsequent operations, such as get
-or delete requests, where you need read-your-write guarantees globally.
+request. Similarly, include the header in any subsequent operations, such as GET
+or DELETE requests, where you need read-your-write guarantees globally.
 
 By using this header selectively, you can balance the need for strong
 consistency with the performance benefits of eventual consistency for other

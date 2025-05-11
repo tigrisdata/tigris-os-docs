@@ -58,10 +58,10 @@ bucket:
 aws s3api put-bucket-lifecycle-configuration --bucket my-bucket --lifecycle-configuration file://lifecycle.json
 ```
 
-#### Expire objects at the end of the year 2024
+#### Expire objects at the end of the year 2025
 
 Here's an example of a bucket lifecycle configuration that expires objects at
-the end of the year 2024.
+the end of the year 2025.
 
 Create a JSON file named `lifecycle.json` with the following content:
 
@@ -71,7 +71,7 @@ Create a JSON file named `lifecycle.json` with the following content:
     {
       "Status": "Enabled",
       "Expiration": {
-        "Date": "2024-12-31T00:00:00Z"
+        "Date": "2025-12-31T00:00:00Z"
       }
     }
   ]

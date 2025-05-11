@@ -9,7 +9,7 @@ these rules below.
 The following naming rules apply for buckets.
 
 - Bucket name must be between [3, 63] characters
-- Bucket name can only contain lower case characters, numbers, dots, and
+- Bucket name can only contain lowercase characters, numbers, dots, and
   hyphens.
 
   :::info
@@ -22,10 +22,10 @@ The following naming rules apply for buckets.
   :::
 
 - Bucket names must not contain two adjacent periods
-- Name must start with number or lower case character
-- Name must end with number or lower case character
-- Prefix `xn--` is reserved and not allowed in bucket prefix
-- Suffix `-s3alias` is reserved and not allowed in bucket suffix
+- Name must start with a number or a lowercase character
+- Name must end with a number or a lowercase character
+- Prefix `xn--` is reserved and not allowed in the bucket prefix
+- Suffix `-s3alias` is reserved and not allowed in the bucket suffix
 - Bucket name cannot be IP addresses
 
 ## Example bucket names
@@ -47,7 +47,7 @@ The following example bucket names are not valid:
 tigris_demo_bucket (contains underscores)
 TigrisDemoBucket (contains uppercase letters)
 tigris-demo-bucket- (ends with a hyphen)
-example..com (contains two periods in a row)
+example..com (contains two adjacent periods)
 192.168.5.4 (matches format of an IP address)
 xn--examplebucket (starts with reserved prefix)
 examplebucket-s3alias (ends with reserved suffix)

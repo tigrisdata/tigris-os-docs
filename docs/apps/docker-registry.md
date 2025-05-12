@@ -28,7 +28,7 @@ For a full end-to-end example, check out the
 [Registry example in tigrisdata-community](https://github.com/tigrisdata-community/docker-registry).
 
 You can create this in any cloud you want (including self-hosting it on top of a
-Kubernetes cluster), but this blueprint will be using [fly.io](https://fly.io)
+Kubernetes cluster), but this blueprint will be using [Fly.io](https://fly.io)
 as an example. The important parts are all in the environment variable
 configuration.
 

@@ -89,10 +89,10 @@ bucket:
 aws s3api put-bucket-lifecycle-configuration --bucket my-bucket --lifecycle-configuration file://lifecycle.json
 ```
 
-#### Transition objects at the end of the year 2024
+#### Transition objects at the end of the year 2025
 
 Here's an example of an Object lifecycle configuration that transitions objects
-at the end of the year 2024.
+at the end of the year 2025.
 
 Create a JSON file named `lifecycle.json` with the following content:
 
@@ -103,7 +103,7 @@ Create a JSON file named `lifecycle.json` with the following content:
       "Status": "Enabled",
       "Transitions": [
         {
-          "Date": "2024-12-31T00:00:00Z",
+          "Date": "2025-12-31T00:00:00Z",
           "StorageClass": "GLACIER"
         }
       ]

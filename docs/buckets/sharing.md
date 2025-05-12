@@ -13,9 +13,9 @@ If you are the bucket owner, you can share the bucket with other users from your
 organization. If you are an admin, you can share any bucket from your
 organization with other users in that organization.
 
-To share a bucket to another user in your organization:
+To share a bucket with another user in your organization:
 
-- Go to the [Tigris dashboard](https://console.tigris.dev).
+- Go to the [Tigris Dashboard](https://console.tigris.dev).
 - Click on the bucket you want to share.
 - Click on the `Share` button.
 - Select the users you want to share the bucket with and the role you want to
@@ -29,7 +29,7 @@ The roles you can assign to the users are:
 
 Once the bucket is shared, the users you shared it with will be able to see it
 in their dashboard and access its content based on the role you assigned. The
-users will also be able to create access-keys for the shared bucket to access
+users will also be able to create access keys for the shared bucket to access
 that bucket programmatically.
 
 When the share is revoked, the access keys created by the shared users will no
@@ -39,18 +39,18 @@ longer have access to the bucket.
 
 You can also share your buckets with your entire organization.
 
-To share a bucket to another user in your organization:
+To share a bucket with all users in your organization:
 
-- Go to the [Tigris dashboard](https://console.tigris.dev).
+- Go to the [Tigris Dashboard](https://console.tigris.dev).
 - Click on the bucket you want to share.
 - Click on the `Share` button.
 - Modify the "Organization Access" settings to your desired permissions (Editor
   or Read Only).
 - Click on the `Save` button.
 
-Once the bucket is shared, the users you shared it with will be able to see it
+Once the bucket is shared, all users in the organization will be able to see it
 in their dashboard and access its content based on the role you assigned. Users
-will also be able to create access-keys for the shared bucket to access that
+will also be able to create access keys for the shared bucket to access that
 bucket programmatically.
 
 When the share is revoked, the access keys created by other users in your
@@ -64,9 +64,9 @@ organization. The sharing is limited to access keys from the other organization.
 
 To share a bucket with users from another organization:
 
-- Receive the access key id (starts with `tid_`) from the user outside your
+- Receive the access key ID (starts with `tid_`) from the user outside your
   organization you want to share the bucket.
-- Go to the [Tigris dashboard](https://console.tigris.dev).
+- Go to the [Tigris Dashboard](https://console.tigris.dev).
 - Click on the bucket you want to share.
 - Click on the `Share` button.
 - Expand the `External Sharing` section.
@@ -76,13 +76,13 @@ To share a bucket with users from another organization:
 - Click on the `Save` button at the top of the dialogue.
 
 Once the bucket is shared, the user from the other organization will be able to
-access the bucket using the access key id you shared with them.
+access the bucket using the access key.
 
 ### External permissions
 
-An external user (internally, an `ExternalCollaborator`) has most of the same
-permissions as a bucket editor does, but without any administrative permissions
-(EG: deleting the bucket).
+An external user (internally referred to as an `ExternalCollaborator`) has most
+of the same permissions as a bucket Editor does, but without any administrative
+permissions (e.g. deleting the bucket).
 
 <details>
 <summary>Full list of permissions</summary>

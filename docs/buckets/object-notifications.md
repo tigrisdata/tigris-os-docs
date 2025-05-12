@@ -30,8 +30,8 @@ Object notifications are delivered via a webhook, and obey the following rules:
 ## Webhook Authentication
 
 Tigris supports basic authentication and token authentication for webhooks. When
-configuring the webhook in the Tigris Console, you can choose the authentication
-type and provide the necessary credentials.
+configuring the webhook in the Tigris Dashboard, you can choose the
+authentication type and provide the necessary credentials.
 
 For basic authentication, the header will set as follows:
 

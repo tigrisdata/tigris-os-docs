@@ -44,7 +44,7 @@ operations mentioned above. For example:
 2. ``WHERE `Content-Length` > 1024 AND `Content-Type` IN ("text/javascript", "text/css") ``.
 3. ``WHERE `Content-Length` != 65536 AND `Content-Type` NOT IN ("text/plain", "text/html") ``.
 
-## Order by
+## Order By
 
 You can sort the list using `ORDER BY`. For example, to retrieve all items
 smaller than `64KB` ordered by `Content-Type`:
@@ -61,7 +61,7 @@ Example queries that can be performed:
 4. ``WHERE `Content-Length` != 65536 AND `Content-Type` = "text/plain" ``
 5. ``WHERE `Last-Modified` > "2024-06-23T10:38:46Z" ``
 
-## Next steps
+## Next Steps
 
-- Check out the [Example usage](/docs/sdks/s3/aws-go-sdk#metadata-querying) for
+- Check out the [Example Usage](/docs/sdks/s3/aws-go-sdk#metadata-querying) for
   more details on how to use them in your application.

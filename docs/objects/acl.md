@@ -23,7 +23,7 @@ setting the object ACL.
 ## Enabling Object ACLs
 
 By default, object ACLs are disabled. Object ACLs can be enabled at the bucket
-level through the [Tigris dashboard](https://console.tigris.dev) from the bucket
+level through the [Tigris Dashboard](https://console.tigris.dev) from the bucket
 settings.
 
 <a href="https://www.loom.com/share/747c12e19f524c97b88083355077de26" target="_blank">
@@ -35,9 +35,9 @@ For the object ACLs migration rules see the
 
 ## Applying ACLs to objects
 
-### Publically readable objects in a private bucket
+### Publicly readable objects in a private bucket
 
-If you have a private bucket and you want to make an object in it publically
+If you have a private bucket and you want to make an object in it publicly
 readable, you can do so by setting the object ACL to `public-read`.
 
 :::note

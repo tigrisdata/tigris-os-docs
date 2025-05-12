@@ -29,7 +29,7 @@ Here's a short video that demonstrates how to specify CORS rules for a bucket:
 Let's take an example of the public bucket `public-scripts`. Consider, as the
 owner of this bucket, you want to restrict access via HTTP methods `PUT`, `POST`
 and `DELETE` to objects of this bucket from origins `https://www.example.com`.
-And for http `GET` access you want to allow it from all the origins.
+And for HTTP `GET` access you want to allow it from all the origins.
 
 You can achieve this behavior by specifying CORS rules. Tigris will serve the
 CORS headers according to the defined CORS rules, instructing modern web

@@ -17,7 +17,7 @@ of 7 days.
 
 ## Generating a presigned URL
 
-Refer to the following example to generate a presigned URL:
+Refer to the following examples to generate a presigned URL:
 
 - [AWS CLI](/docs/sdks/s3/aws-cli/#using-presigned-urls)
 - [ExAWS Elixir SDK](/docs/sdks/s3/aws-elixir-sdk/#using-presigned-urls)
@@ -43,13 +43,13 @@ command to generate a presigned URL would look like:
 aws s3 presign s3://mybucket.mydomain.com/hello.txt
 ```
 
-and generated URL would look like
+and generated URL would look like:
 
 ```bash
 https://t3.storage.dev/mybucket.mydomain.com/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=tid_<>%2F20241210%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=<>X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=<>
 ```
 
-You can remove `fly.storage.tigris.dev/` and make it look like
+You can remove `fly.storage.tigris.dev/` and make it look like:
 
 ```bash
 https://mybucket.mydomain.com/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=tid_<>%2F20241210%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=<>X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=<>

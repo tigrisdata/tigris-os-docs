@@ -4,17 +4,17 @@ Tigris offers compatibility with CloudFront's signed cookies, empowering you to
 manage access to your content without altering existing URLs. This feature is
 particularly useful when you need to grant access to multiple restricted files.
 
-At a high level, this is the process of how Signed Cookies operate:
+At a high level, this is the process of how signed cookies work:
 
 - The user generates an RSA private-public key pair.
-- The user associates the public key with the Tigris.
+- The user associates the public key with Tigris.
 - The user defines access policies using a predefined grammar, specifying what,
   where, and when access is permitted.
 - The user signs the cookie using the private key.
 - The user distributes these signed cookies to their web users, granting them
   access to private resources.
 
-Let's run it by an example.
+Let’s walk through an example.
 
 ## Create RSA key pair
 
@@ -34,7 +34,7 @@ Generate the public key from this private key:
 openssl rsa -pubout -in private_key.pem -out public_key.pem
 ```
 
-For example purpose this is the public key we are going to use
+For demonstration purposes, we’ll use the following public key:
 
 ```shell
 % cat public_key.pem
@@ -51,9 +51,9 @@ REHldcvu7lx2qpqZ1wclnFoTzpsN56H53aM81nrjGs+tHiVUTb4hsqoNbPIR0TBO
 
 ## Register public-key with Tigris
 
-Let's proceed with registering the public key on Tigris.
+Let's proceed with registering the public key with Tigris.
 
-- Create a JSON file with the following content, ensuring to replace the
+- Create a JSON file with the following content, making sure to replace the
   `EncodedKey` field with your own public key:
 
 ```json
@@ -61,7 +61,7 @@ Let's proceed with registering the public key on Tigris.
   "CallerReference": "Tigris example app public key",
   "Name": "Tigris example app key",
   "EncodedKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArHJ8Cxp2x18Hcc6ya7Nm\no7bDr0kTDnMjUlhnkQ0D6zB0yhXqbXhVYZmR08wdrWX7q0dNU9mReTr305FMrWLQ\nNSzKVLfEis99YskVnWl9PAq3eHMPRnI1jXtMMmaajndjq+aPxJ5WJuoGNRgeZrSt\nw3ndaCIAgJHFnqvZ24LdrfmpKtzvZQGySjFSyyPOUOQkcmC2jc2HzZJx0jTsuTtv\ndY+kFN2ZSpJofAz+52EOwLM3+MuPCM6KU+3xr1mNJqOfi0GFuFZVK0s1wAI0DgaE\n+jkRm2qNYhE6b4TiXQJpnGlvud5LROl+/h65Ofu2tXfnlCOY/9waiTk8gW6M/uHT\noQIDAQAB\n-----END PUBLIC KEY-----",
-  "Comment": "This is the tigris example app key"
+  "Comment": "This is the Tigris example app key"
 }
 ```
 
@@ -87,7 +87,7 @@ Upon execution, you will receive an output similar to this:
            "CallerReference": "Tigris example app public key",
            "Name": "Tigris example app key",
            "EncodedKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArHJ8Cxp2x18Hcc6ya7Nm\no7bDr0kTDnMjUlhnkQ0D6zB0yhXqbXhVYZmR08wdrWX7q0dNU9mReTr305FMrWLQ\nNSzKVLfEis99YskVnWl9PAq3eHMPRnI1jXtMMmaajndjq+aPxJ5WJuoGNRgeZrSt\nw3ndaCIAgJHFnqvZ24LdrfmpKtzvZQGySjFSyyPOUOQkcmC2jc2HzZJx0jTsuTtv\ndY+kFN2ZSpJofAz+52EOwLM3+MuPCM6KU+3xr1mNJqOfi0GFuFZVK0s1wAI0DgaE\n+jkRm2qNYhE6b4TiXQJpnGlvud5LROl+/h65Ofu2tXfnlCOY/9waiTk8gW6M/uHT\noQIDAQAB\n-----END PUBLIC KEY-----",
-           "Comment": "This is the tigris example app key"
+           "Comment": "This is the Tigris example app key"
        }
    }
 }
@@ -97,19 +97,19 @@ Notes:
 
 - The public key ID is generated on the Tigris side and returned for further
   reference.
-- Your access-key has to be admin privileges to make calls to `CreatePublicKey`
+- Your access key must have admin privileges to call `CreatePublicKey`
 
 ## Create bucket on Tigris
 
 Create bucket named `images.example.com` on Tigris.
 
-using Fly
+using Fly:
 
 ```shell
 fly storage create
 ```
 
-or using AWS CLI
+or using AWS CLI:
 
 ```shell
 aws s3api create-bucket --bucket=images.example.com
@@ -118,17 +118,17 @@ aws s3api create-bucket --bucket=images.example.com
 Note: Choose the bucket name to be the custom domain name that you intend to
 use.
 
-## Setup custom domain
+## Set up custom domain
 
-Setup custom domain to access this bucket.
+Set up custom domain to access this bucket.
 
 ```shell
 flyctl storage update  images.example.com  --custom-domain images.example.com
 ```
 
-See more [here](https://www.tigrisdata.com/docs/buckets/custom-domain/)
+See more [here](https://www.tigrisdata.com/docs/buckets/custom-domain/).
 
-## Setup CORS
+## Set up CORS
 
 To enable access to this bucket from the parent domain, let's configure CORS.
 
@@ -153,7 +153,7 @@ Then, register this CORS configuration with the bucket:
 aws s3api put-bucket-cors --bucket images.example.com --cors-configuration file:///path/to/cors.json
 ```
 
-Learn more [here](https://www.tigrisdata.com/docs/buckets/cors/)
+Learn more [here](https://www.tigrisdata.com/docs/buckets/cors/).
 
 ## Example code to issue signed cookies
 
@@ -215,8 +215,8 @@ function issueCloudFrontCookies(req, res) {
 Note:
 
 - This defines the
-  [full grammar of the Policy](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-setting-signed-cookie-custom-policy.html)
-- Refer more about Node.js CloudFront SDK
-  [here](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-cloudfront-signer/)
-- Read more about cookie
-  [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie)
+  [full grammar of custom policies](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-setting-signed-cookie-custom-policy.html)
+- Learn more about Node.js CloudFront SDK
+  [here](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-cloudfront-signer/).
+- Read more about cookies
+  [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie).

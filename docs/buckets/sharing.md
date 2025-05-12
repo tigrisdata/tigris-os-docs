@@ -80,9 +80,9 @@ access the bucket using the access key.
 
 ### External permissions
 
-An external user (internally referred to as an `ExternalCollaborator`) has most of the same
-permissions as a bucket Editor does, but without any administrative permissions
-(e.g. deleting the bucket).
+An external user (internally referred to as an `ExternalCollaborator`) has most
+of the same permissions as a bucket Editor does, but without any administrative
+permissions (e.g. deleting the bucket).
 
 <details>
 <summary>Full list of permissions</summary>

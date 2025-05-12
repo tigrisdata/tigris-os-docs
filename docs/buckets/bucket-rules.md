@@ -9,8 +9,7 @@ these rules below.
 The following naming rules apply for buckets.
 
 - Bucket name must be between [3, 63] characters
-- Bucket name can only contain lowercase characters, numbers, dots, and
-  hyphens.
+- Bucket name can only contain lowercase characters, numbers, dots, and hyphens.
 
   :::info
 

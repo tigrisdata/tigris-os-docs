@@ -32,7 +32,8 @@ The condition is specified using the `If-Match` header:
 - `If-Match: "etag value"`
 - `If-Match: ""` - (empty etag) creates only if object not exists
 
-Request fails with HTTP status code 412 (Precondition Failed) if there is no match.
+Request fails with HTTP status code 412 (Precondition Failed) if there is no
+match.
 
 #### Proceed with operation if Etag doesn't match (i.e. object has been changed)
 
@@ -42,8 +43,9 @@ The condition is specified using the `If-None-Match` header.
 - `If-None-Match: ""` - (empty etag) replace only if object exists
 - `If-None-Match: "*"` - Matches no etag, i.e. create only
 
-Request fails with HTTP status code 304 (Not Modified) if there is a match on GET.
-Request fails with HTTP status code 412 (Precondition Failed) if there is a match on PUT.
+Request fails with HTTP status code 304 (Not Modified) if there is a match on
+GET. Request fails with HTTP status code 412 (Precondition Failed) if there is a
+match on PUT.
 
 ### Date based conditions
 
@@ -53,7 +55,8 @@ The condition is specified using the `If-Modified-Since` header.
 
 - `If-Modified-Since: <date in RFC1123 format>`
 
-Request fails with HTTP status code 304 (Not Modified) if the object has not been modified since the provided date.
+Request fails with HTTP status code 304 (Not Modified) if the object has not
+been modified since the provided date.
 
 #### Proceed with operation if object wasn't modified after
 
@@ -61,10 +64,11 @@ The condition is specified using the `If-Unmodified-Since` header.
 
 - `If-Unmodified-Since: <date in RFC1123 format>`
 
-Request fails with HTTP status code 412 (Precondition Failed) if the object was modified
-since provided date.
+Request fails with HTTP status code 412 (Precondition Failed) if the object was
+modified since provided date.
 
-Multiple conditions can be specified in a single request. The request fails if any of the conditions are not met.
+Multiple conditions can be specified in a single request. The request fails if
+any of the conditions are not met.
 
 Don't forget to attach `X-Tigris-Consistent:true` header as that ensures the
 conditions are evaluated and conditional operation will be performed on leader.

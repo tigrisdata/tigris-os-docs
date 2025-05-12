@@ -1,6 +1,7 @@
 # Regions
 
-We are deployed around the world in multiple regions. As of now, we are deployed in the following regions:
+We are deployed around the world in multiple regions. As of now, we are deployed
+in the following regions:
 
 | Region ID | Region Location            |
 | --------- | -------------------------- |
@@ -18,5 +19,5 @@ We are deployed around the world in multiple regions. As of now, we are deployed
 | sjc       | San Jose, California (US)  |
 | syd       | Sydney, Australia          |
 
-If you have a specific region you would like us to be available in, please reach out to
-us at [help@tigrisdata.com](mailto:help@tigrisdata.com).
+If you have a specific region you would like us to be available in, please reach
+out to us at [help@tigrisdata.com](mailto:help@tigrisdata.com).

@@ -3,7 +3,7 @@
 Tigris is compatible with the AWS S3 API. This means that you can use the
 standard AWS S3 SDKs, tool and libraries with Tigris.
 
-This section covers Tigris’s S3 API compatibility. The complete list of S3 APIs
+This section covers Tigris' S3 API compatibility. The complete list of S3 APIs
 are listed in the
 [AWS S3 documentation](https://docs.aws.amazon.com/AmazonS3/latest/API/API_Operations_Amazon_Simple_Storage_Service.html).
 

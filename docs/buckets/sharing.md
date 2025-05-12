@@ -39,7 +39,7 @@ longer have access to the bucket.
 
 You can also share your buckets with your entire organization.
 
-To share a bucket with all user in your organization:
+To share a bucket with all users in your organization:
 
 - Go to the [Tigris Dashboard](https://console.tigris.dev).
 - Click on the bucket you want to share.

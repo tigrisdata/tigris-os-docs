@@ -13,7 +13,7 @@ the presigned URL will allow the user to overwrite the object.
 
 Presigned URLs are only valid for a limited time. The expiration time can be
 specified when generating the URL. The expiration time can be set to a maximum
-of 7 days.
+of 90 days.
 
 ## Generating a presigned URL
 

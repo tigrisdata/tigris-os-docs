@@ -55,6 +55,14 @@ const sidebars = {
       items: [
         {
           type: "category",
+          label: "Account Management",
+          items: [
+            "account-management/accounts",
+            "account-management/organizations",
+          ],
+        },
+        {
+          type: "category",
           label: "Buckets",
           items: [
             "buckets/create-bucket",

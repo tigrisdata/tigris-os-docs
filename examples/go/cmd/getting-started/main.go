@@ -35,6 +35,7 @@ func main() {
 		o.BaseEndpoint = aws.String("https://t3.storage.dev")
 		o.Region = "auto"
 		o.UsePathStyle = false
+		o.DisableLogOutputChecksumValidationSkipped = true
 	})
 
 	// List buckets
@@ -49,7 +50,6 @@ func main() {
 	for _, b := range result.Buckets {
 		fmt.Printf("* %s created on %s\n",
 			aws.ToString(b.Name), aws.ToTime(b.CreationDate))
-		bucketName = aws.ToString(b.Name)
 	}
 
 	// Upload file
@@ -61,16 +61,17 @@ func main() {
 	if err != nil {
 		log.Printf("Couldn't open file to upload. Here's why: %v\n", err)
 		return
-	} else {
-		defer file.Close()
-		_, err = svc.PutObject(ctx, &s3.PutObjectInput{
-			Bucket: aws.String(bucketName),
-			Key:    aws.String("bar.txt"),
-			Body:   file,
-		})
-		if err != nil {
-			log.Printf("Couldn't upload file. Here's why: %v\n", err)
-		}
+	}
+
+	defer file.Close()
+	_, err = svc.PutObject(ctx, &s3.PutObjectInput{
+		Bucket: aws.String(bucketName),
+		Key:    aws.String("bar.txt"),
+		Body:   file,
+	})
+	if err != nil {
+		log.Printf("Couldn't upload file. Here's why: %v\n", err)
+		return
 	}
 
 	fmt.Println("File uploaded.")
@@ -112,5 +113,7 @@ func main() {
 	})
 	if err != nil {
 		log.Printf("Couldn't download file. Here's why: %v", err)
+		return
 	}
+	fmt.Println("File downloaded.")
 }

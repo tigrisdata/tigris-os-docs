@@ -185,6 +185,7 @@ const sidebars = {
         "apps/docker-registry",
         "libraries/lancedb/index",
         "sdks/fly/index",
+        "sdks/fly/data-migration-with-flyctl",
         "terraform/index",
       ],
     },

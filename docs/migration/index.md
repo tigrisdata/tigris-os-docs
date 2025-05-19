@@ -59,108 +59,40 @@ find documentation on which endpoint to utilize here:
   generally uses `https://s3.<region>.amazonaws.com`
 - [Google Cloud Storage Endpoint Documentation](https://cloud.google.com/storage/docs/request-endpoints)
   generally uses `https://storage.googleapis.com`
+- Cloudflare R2 uses an account specific endpoint,
+  `https://<account-id>.r2.cloudflarestorage.com`
   <!-- prettier-ignore -->
   :::
 
-## Copying object ACLs
+If the storage service does not require a region, set the region to `auto` in
+the `Enable Data Migration` settings. For example, GCS and Cloudflare R2 do not
+require a region to be set, and therefore use `auto`.
 
-By default, migrated objects inherit the access control settings of the bucket
-to which they are migrated. However, if the bucket is configured to
-[allow object ACLs](/docs/objects/acl.md#enabling-object-acls), the migration
-process will copy object ACLs from the shadow bucket to the Tigris bucket. The
-following rules apply:
+## Creating Access Credentials for Migration
 
-- Tigris bucket is private:
-  - Public S3 objects will be migrated as public and have explicit `public-read`
-    ACL set.
-  - Private S3 objects will be migrated as private and inherit bucket ACL.
-- Tigris bucket is public:
-  - Public S3 objects will be migrated as public and inherit bucket ACL.
-  - Private S3 objects will be copied as private and have explicit `private` ACL
-    set.
+### Create AWS S3 Access Keys for Migration
 
-## Migrate from Amazon Simple Storage Service (S3)
+To migrate data from AWS S3 to Tigris, you'll need to generate an **access key
+ID** and **secret access key** associated with an AWS IAM user that has
+permissions to access your S3 bucket:
 
-### Use a new Tigris bucket for data migration
+- Go to the [AWS Management Console](https://console.aws.amazon.com/) and open
+  the `IAM` service.
+- In the sidebar, click `Users`, then select an existing user or click
+  `Add users` to create a new one.
+- If creating a new user, enable `Programmatic access` to generate an access key
+  and secret.
+- Attach a policy that grants access to your S3 bucket. You can use managed
+  policies like `AmazonS3ReadOnlyAccess`, `AmazonS3FullAccess`, or create a
+  custom policy scoped to your specific bucket.
+- Complete the user creation process, and on the final screen, you'll see the
+  `Access key ID` and `Secret access key`. Download or copy these credentials —
+  the secret will not be shown again.
+- If you're using an existing user, go to the `Security credentials` tab and
+  click `Create access key` under the `Access keys` section.
 
-When creating a new Tigris bucket, you can specify the source bucket from where
-the data is migrated. We call this the shadow bucket. This is how you can create
-a new Tigris bucket with an AWS S3 shadow bucket using `flyctl`:
-
-```bash
-flyctl storage create -n {{tigris-bucket-name}} -o {{your-fly-org}} \
-	--shadow-access-key {{s3_access_key}} --shadow-secret-key {{s3_secret_key}} \
-	--shadow-endpoint https://s3.us-east-1.amazonaws.com --shadow-region us-east-1 \
-	--shadow-name {{your-s3-bucket}} --shadow-write-through
-```
-
-This command will create a new bucket `tigris-bucket-name` in the organization
-`your-fly-org` and will migrate the data from the S3 bucket `your-s3-bucket` as
-data is requested.
-
-The endpoint and region are provider specific and should be set accordingly. You
-can find the endpoint and region for AWS S3 in the
-[AWS documentation](https://docs.aws.amazon.com/general/latest/gr/s3.html).
-
-### Use an existing Tigris bucket for data migration
-
-You can also migrate the data to an existing Tigris bucket. This is how you can
-update an existing bucket to use the shadow bucket feature using `flyctl`:
-
-```bash
-flyctl storage update {{tigris-bucket-name}} \
-	--shadow-access-key {{s3_access_key}} --shadow-secret-key {{s3_secret_key}} \
-	--shadow-endpoint https://s3.us-east-1.amazonaws.com --shadow-region us-east-1 \
-	--shadow-name {{your-s3-bucket}} --shadow-write-through
-```
-
-This command will update the bucket `tigris-bucket-name` settings so that Tigris
-will migrate the data from the S3 bucket `your-s3-bucket` as data is requested.
-
-### Finishing the migration
-
-Once you are confident that all the objects have been migrated, you can stop the
-migration by removing the shadow bucket from the bucket settings. This will stop
-the objects from being read from or written to the shadow bucket. Any subsequent
-requests will only read from and write to the Tigris bucket.
-
-```bash
-flyctl storage update {{tigris-bucket-name}} --clear-shadow
-```
-
-## Migrate from Google Cloud Storage (GCS)
-
-### Use a new Tigris bucket for data migration
-
-When creating a new Tigris bucket, you can specify the source bucket from where
-the data is migrated. We call this the shadow bucket. This is how you can create
-a new Tigris bucket with an GCS shadow bucket using `flyctl`:
-
-```bash
-flyctl storage create -n {{to-be-created-tigris-bucket-name}} -o {{your-fly-org}} \
---shadow-access-key {{gcs_access_key}} --shadow-secret-key {{gcs_secret_key}} \
---shadow-endpoint https://storage.googleapis.com --shadow-region auto \
---shadow-name {{gcs-bucket-name}} --shadow-write-through
-```
-
-GCS does not require a region, so the command sets the `--shadow-region` as
-`auto` and uses the general endpoint, `https://storage.googleapis.com`.
-
-### Use an existing Tigris bucket for data migration
-
-You can also migrate the data to an existing Tigris bucket. This is how you can
-update an existing bucket to use the shadow bucket feature using `flyctl`:
-
-```bash
-flyctl storage update {{tigris-bucket-name}} \
-	--shadow-access-key {{gcs_access_key}} --shadow-secret-key {{gcs_secret_key}} \
-	--shadow-endpoint https://storage.googleapis.com --shadow-region auto \
-	--shadow-name {{gcs-bucket-name}} --shadow-write-through
-```
-
-This command will update the bucket `tigris-bucket-name` settings so that Tigris
-will migrate the data from the GCS bucket `gcs-bucket-name` as data is
-requested.
+Make sure the access keys you generate have permissions to list, read, write,
+and delete objects in the relevant S3 bucket.
 
 ### Create Google Cloud Storage Access Keys for Migration
 
@@ -182,59 +114,34 @@ for a GCS service account:
 - Make sure the service account has permission to access the GCS bucket you want
   to migrate from.
 
-### Finishing the migration
+### Create Cloudflare R2 Access Keys for Migration
 
-Once you are confident that all the objects have been migrated, you can stop the
-migration by removing the shadow bucket configuration. This will stop the
-objects from being read from or written to the shadow bucket. Any subsequent
-requests will only read from and write to the Tigris bucket.
+To migrate data from Cloudflare R2 to Tigris, you'll need to generate an
+**access key** and **secret key** for your R2 storage:
 
-```bash
-flyctl storage update {{tigris-bucket-name}} --clear-shadow
-```
+- Go to the [Cloudflare dashboard](https://dash.cloudflare.com/), and select
+  your account.
+- In the left sidebar, click `R2 Object Storage`.
+- Click the `{} API` button and `Manage API Tokens`.
+- Click `Create Account API token` and select the appropriate permissions level.
+- Copy and securely store these credentials — you won’t be able to view the
+  secret key again.
+- Your Cloudflare Account specific endpoint is shown alongside your access keys.
+  You'll need it to set the endpoint for the shadow bucket.
 
-## Migrate from Cloudflare R2
+## Copying object ACLs
 
-### Use a new Tigris bucket for data migration
+By default, migrated objects inherit the access control settings of the bucket
+to which they are migrated. However, if the bucket is configured to
+[allow object ACLs](/docs/objects/acl.md#enabling-object-acls), the migration
+process will copy object ACLs from the shadow bucket to the Tigris bucket. The
+following rules apply:
 
-When creating a new Tigris bucket, you can specify the source bucket from where
-the data is migrated. We call this the shadow bucket. This is how you can create
-a new Tigris bucket with a Cloudflare R2 shadow bucket using `flyctl`:
-
-```bash
-flyctl storage create -n {{to-be-created-tigris-bucket-name}} -o {{your-fly-org}} \
---shadow-access-key {{r2_access_key}} --shadow-secret-key {{r2_secret_key}} \
---shadow-endpoint https://{{account-id}}.r2.cloudflarestorage.com --shadow-region auto \
---shadow-name {{r2-bucket-name}} --shadow-write-through
-```
-
-Cloudflare R2 uses a custom endpoint format that includes your account ID.
-Replace `account-id` with your Cloudflare account ID. R2 does not require a
-specific region, so `--shadow-region` is set to `auto`.
-
-### Use an existing Tigris bucket for data migration
-
-You can also migrate the data to an existing Tigris bucket. This is how you can
-update an existing bucket to use the shadow bucket feature using `flyctl`:
-
-```bash
-flyctl storage update {{tigris-bucket-name}} \
-  --shadow-access-key {{r2_access_key}} --shadow-secret-key {{r2_secret_key}} \
-  --shadow-endpoint https://{{account-id}}.r2.cloudflarestorage.com --shadow-region auto \
-  --shadow-name {{r2-bucket-name}} --shadow-write-through
-```
-
-This command updates the `tigris-bucket-name` settings so that Tigris will
-migrate data from the Cloudflare R2 bucket `r2-bucket-name` as data is
-requested.
-
-### Finishing the migration
-
-Once you are confident that all the objects have been migrated, you can stop the
-migration by removing the shadow bucket configuration. This will stop the
-objects from being read from or written to the shadow bucket. Any subsequent
-requests will only read from and write to the Tigris bucket.
-
-```bash
-flyctl storage update {{tigris-bucket-name}} --clear-shadow
-```
+- Tigris bucket is private:
+  - Public S3 objects will be migrated as public and have explicit `public-read`
+    ACL set.
+  - Private S3 objects will be migrated as private and inherit bucket ACL.
+- Tigris bucket is public:
+  - Public S3 objects will be migrated as public and inherit bucket ACL.
+  - Private S3 objects will be copied as private and have explicit `private` ACL
+    set.

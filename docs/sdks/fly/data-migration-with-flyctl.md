@@ -55,7 +55,7 @@ flyctl storage update {{tigris-bucket-name}} --clear-shadow
 
 When creating a new Tigris bucket, you can specify the source bucket from where
 the data is migrated. We call this the shadow bucket. This is how you can create
-a new Tigris bucket with an GCS shadow bucket using `flyctl`:
+a new Tigris bucket with a GCS shadow bucket using `flyctl`:
 
 ```bash
 flyctl storage create -n {{to-be-created-tigris-bucket-name}} -o {{your-fly-org}} \

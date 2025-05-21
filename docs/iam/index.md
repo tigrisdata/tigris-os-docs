@@ -20,7 +20,7 @@ Below are some common IAM operations you can perform:
 - [Create an Access Key](/docs/iam/create-access-key/index.mdx)
 - [Attach an IAM Policy](/docs/iam/policies/attach-iam-policy.md)
 - [Detach an IAM Policy](/docs/iam/policies/detach-iam-policy.md)
-- [Limit Access Key Read and Write Permissions](/docs/iam/policies/limited-access-key.md)
+- [Limiting Allowed Actions on Buckets](/docs/iam/policies/limited-access-key.md)
 - [IP Restrictions](/docs/iam/policies/ip-restrictions.md)
 - [Date and Time Restrictions](/docs/iam/policies/date-time-restrictions.md)
 

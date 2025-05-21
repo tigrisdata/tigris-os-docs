@@ -1,7 +1,6 @@
 # Enforcing IP restrictions
 
-Here we will show you how to restrict a particular access key to access your
-bucket from specific IP addresses
+Here, we will show you how to restrict a specific access key to allow access to your bucket only from certain IP addresses.
 
 ```json
 {
@@ -25,10 +24,10 @@ bucket from specific IP addresses
 }
 ```
 
-This policy contains two statements
+This policy contains two statements:
 
 - first statement allows listing and reading objects from the `images` bucket
-  from the IP address `1.2.3.4`
+  from the IP address `1.2.3.4`.
 - second statement allows listing and reading objects from the `images` bucket
   from the CIDR IP range `201.0.113.0/24`.
 

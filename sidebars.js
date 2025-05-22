@@ -68,6 +68,7 @@ const sidebars = {
             "buckets/create-bucket",
             "buckets/bucket-rules",
             "buckets/public-bucket",
+            "buckets/multi-region",
             "buckets/cors",
             "buckets/custom-domain",
             "buckets/objects-expiration",

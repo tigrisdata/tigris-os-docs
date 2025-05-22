@@ -41,6 +41,20 @@ bandwidth requirements are extraordinary, please reach out to us at
 [sales@tigrisdata.com](mailto:sales@tigrisdata.com) to discuss your
 requirements.
 
+## Multi-Region Buckets
+
+Tigris, by default, manages the data distribution for you, ensuring data is
+stored close to the users to ensure low latency and high availability. However,
+as mentioned in the [Multi-Region Buckets](/docs/buckets/multi-region.md)
+section, you may explicitly choose to store multiple copies of your data in
+different regions. In such cases, in addition to the Data Storage charge, you
+will be charged for **Data Replication**.
+
+Data Replication is charged at $0.015/GB/month for each additional region. For
+example, if you store 1 GB of data in standard tier in two regions, you will be
+charged $0.02/GB/month for the first region and $0.015/GB/month for the second
+region, resulting in a total of $0.035/GB/month.
+
 ## Enterprise pricing
 
 For larger workloads we offer the ability to customize the pricing and service
@@ -181,20 +195,6 @@ charge for Data Transfer (Egress).
 In the Archive tier, AWS S3 charges for data retrievals as part of the archive
 restore process. In contrast, there is no retrieval charge in Tigris when you
 restore data from Archive tier and Data Transfer (Egress) is always free.
-
-</details>
-
-<details>
-<summary>Do you charge for storing multiple copies of data?</summary>
-
-Tigris, by default, manages the data distribution for you, ensuring data is
-stored close to the users to ensure low latency and high availability. However,
-as mentioned in the [Object Regions](/docs/objects/object_regions.md) section,
-you may choose to control the data distribution and store multiple copies of
-your data in different regions. In such cases, the storage cost is calculated
-based on the number of copies stored. For example, if you elect to store two
-copies of your data in two different regions, you will be charged twice for the
-storage.
 
 </details>
 

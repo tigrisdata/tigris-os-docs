@@ -50,10 +50,10 @@ section, you may explicitly choose to store multiple copies of your data in
 different regions. In such cases, in addition to the Data Storage charge, you
 will be charged for **Data Replication**.
 
-Data Replication is charged at $0.015/GB/month for each additional region. For
+Data Replication is charged at $0.02/GB/month for each additional region. For
 example, if you store 1 GB of data in standard tier in two regions, you will be
-charged $0.02/GB/month for the first region and $0.015/GB/month for the second
-region, resulting in a total of $0.035/GB/month.
+charged $0.02/GB/month for the first region and $0.02/GB/month for the second
+region, resulting in a total of $0.04/GB/month.
 
 ## Enterprise pricing
 

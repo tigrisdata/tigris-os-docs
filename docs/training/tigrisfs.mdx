@@ -110,3 +110,54 @@ To mount the bucket using the command line, run the following command:
 
 You did it! You now have a performant filesystem backed by bottomless object
 storage.
+
+## Maximizing performance
+
+### Cache sizing
+
+TigrisFS uses cache for both read buffers when it needs to read data from your
+Tigris bucket, and write buffers when it needs to write data to Tigris. The
+cache can be configured using the `--memory-limit` flag when mounting the
+bucket. The default value is 1GB. You can increase it to 4GB or more, depending
+on available memory on your machine. For example, below is how to mount a bucket
+with a 4GB cache:
+
+```bash
+/usr/local/bin/tigrisfs --memory-limit 4096 <bucket> <mountpoint>
+```
+
+### Improving write performance
+
+TigrisFS uses a write-back cache to improve write performance. This means that
+when you write data to the mounted filesystem, it is first written to the cache
+and then flushed to the Tigris bucket in the background.
+
+As mentioned above, the cache is used for both read and write buffers, so
+increasing the cache size will also improve write performance.
+
+The other way to improve write performance is to increase the number of flushing
+threads. By default, TigrisFS uses 16 flushing threads. You can increase this
+number using the `--max-flushers` flag when mounting the bucket. The recommended
+value is 32 or more, depending on the number of CPU cores available on your
+machine.
+
+```bash
+/usr/local/bin/tigrisfs --memory-limit 4096 --max-flushers 64 <bucket> <mountpoint>
+```
+
+### Improving performance for small files
+
+Apart from the data cache mentioned above, TigrisFS also uses a metadata cache
+to improve performance for metadata operations. The metadata cache is enabled by
+default. For small files, the metadata cache can significantly improve
+performance, as it reduces the number of requests to the Tigris bucket for
+metadata operations.
+
+To improve performance for small files, you can increase the TTL of the cached
+entries in the metadata cache using the `--stat-cache-ttl` flag when mounting
+the bucket. The default value is 60 seconds. For example, below is how to mount
+a bucket with a 15 minutes metadata cache TTL:
+
+```bash
+/usr/local/bin/tigrisfs --memory-limit 4096 --max-flushers 64 --stat-cache-ttl 15m <bucket> <mountpoint>
+```

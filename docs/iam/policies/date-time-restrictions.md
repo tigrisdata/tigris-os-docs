@@ -38,6 +38,7 @@ In this IAM policy, there are two conditions specified:
 
 Similar to `DateGreaterThan` here are the date-time conditions which are
 supported by Tigris:
+
 - `DateGreaterThan`
 - `DateGreaterThanEquals`
 - `DateLessThan`

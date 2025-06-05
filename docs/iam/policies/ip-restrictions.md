@@ -1,6 +1,7 @@
 # Enforcing IP restrictions
 
-Here, we will show you how to restrict a specific access key to allow access to your bucket only from certain IP addresses.
+Here, we will show you how to restrict a specific access key to allow access to
+your bucket only from certain IP addresses.
 
 ```json
 {

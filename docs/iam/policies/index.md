@@ -24,7 +24,8 @@ permissions. The following operations are supported:
 Tigris supports the core set of IAM policy blocks as defined by the AWS IAM
 specification.
 
-IAM policies encompass a broad range of features. In the context of Tigris, we support the following policy blocks:
+IAM policies encompass a broad range of features. In the context of Tigris, we
+support the following policy blocks:
 
 | Block               | Supported | Description                                                                                                                                                                                                                           |
 | ------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -43,7 +44,8 @@ the request.
 
 # Supported Access Key Operations
 
-Tigris supports a subset operations that used for managing access keys. The following operations are supported:
+Tigris supports a subset operations that used for managing access keys. The
+following operations are supported:
 
 | Operation           | Description                          |
 | ------------------- | ------------------------------------ |

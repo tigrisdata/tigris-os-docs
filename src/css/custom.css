@@ -51,6 +51,12 @@
   src: url(/fonts/FiraCode-VariableFont_wght.ttf);
 }
 
+@media (min-width: 997px) {
+  body .docItemCol_xLCN:only-child {
+    max-width: var(--ifm-col-width) !important;
+  }
+}
+
 pre,
 code {
   font-variant-ligatures: none;

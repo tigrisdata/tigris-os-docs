@@ -1,7 +1,7 @@
-# Enforcing Date Time restrictions
+# Enforcing Date Time Restrictions
 
-Here we will show you how to restrict a particular access key to access your
-bucket within certain time window
+Here, we will show you how to restrict a specific access key to access your
+bucket within a certain time window.
 
 ```json
 {
@@ -31,13 +31,13 @@ the current time when server is processing the request.
 In this IAM policy, there are two conditions specified:
 
 - the first condition allows listing and reading objects from the `images`
-  bucket after `2025-01-14T00:00:00Z`
+  bucket after `2025-01-14T00:00:00Z`.
 - the second condition allows listing and reading objects from the `images`
   bucket before `2025-01-14T23:59:59Z`. Simply, the bucket is made accessible on
   `2025-01-14` only.
 
 Similar to `DateGreaterThan` here are the date-time conditions which are
-supported by Tigris.
+supported by Tigris:
 
 - `DateGreaterThan`
 - `DateGreaterThanEquals`

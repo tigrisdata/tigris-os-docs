@@ -184,6 +184,7 @@ const sidebars = {
         },
         "training/csi-s3/index",
         "apps/docker-registry",
+        "libraries/databricks/index",
         "libraries/lancedb/index",
         "sdks/fly/index",
         "sdks/fly/data-migration-with-flyctl",

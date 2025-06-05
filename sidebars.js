@@ -107,6 +107,7 @@ const sidebars = {
             "iam/policies/limited-access-key",
             "iam/policies/ip-restrictions",
             "iam/policies/date-time-restrictions",
+            "iam/supported-iam-operations",
           ],
         },
       ],

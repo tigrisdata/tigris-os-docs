@@ -59,6 +59,7 @@ const sidebars = {
           items: [
             "account-management/accounts",
             "account-management/organizations",
+            "account-management/billing",
           ],
         },
         {

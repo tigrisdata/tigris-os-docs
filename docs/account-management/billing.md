@@ -1,6 +1,6 @@
 # Billing
 
-Tigris follows a [usage-based pricing](../pricing/) model, so you are only
+Tigris follows a [usage-based pricing](../../pricing/) model, so you are only
 charged for the resources you use. All charges are billed in USD on a monthly
 basis, following a calendar month billing cycle. Invoices are generated at the
 end of each billing period and are due upon issuance. You are required to have a

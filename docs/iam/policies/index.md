@@ -9,15 +9,21 @@ optionally with some conditions.
 Tigris supports a subset of IAM operations that are commonly used for managing
 permissions. The following operations are supported:
 
-| Operation            | Description                                        |
-| -------------------- | -------------------------------------------------- |
-| IAM:CreatePolicy     | Creates a new IAM policy.                          |
-| IAM:ListPolicies     | Lists all IAM policies.                            |
-| IAM:GetPolicy        | Retrieves information about a specific IAM policy. |
-| IAM:DeletePolicy     | Deletes a specific IAM policy.                     |
-| IAM:AttachUserPolicy | Attaches an IAM policy to a user.                  |
-| IAM:DetachUserPolicy | Detaches an IAM policy from a user.                |
-| IAM:ListUserPolicies | Lists all IAM policies attached to a user.         |
+| Operation                 | Description                                        |
+| ------------------------- | -------------------------------------------------- |
+| IAM:CreatePolicy          | Creates a new IAM policy.                          |
+| IAM:ListPolicies          | Lists all IAM policies.                            |
+| IAM:GetPolicy             | Retrieves information about a specific IAM policy. |
+| IAM:DeletePolicy          | Deletes a specific IAM policy.                     |
+| IAM:AttachUserPolicy      | Attaches an IAM policy to a user.                  |
+| IAM:DetachUserPolicy      | Detaches an IAM policy from a user.                |
+| IAM:ListUserPolicies      | Lists all IAM policies attached to a user.         |
+| IAM:GetPolicyVersion      | Retrieves a specific IAM policy version.           |
+| IAM:ListEntitiesForPolicy | List entities (users only) attached to a policy.   |
+
+Note: Tigris does not support attaching IAM policies to specific users. Instead,
+policies can be attached to access keys. This applies to all other IAM policy
+operations as well.
 
 ## Supported IAM Policy Blocks
 

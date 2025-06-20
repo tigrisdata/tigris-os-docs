@@ -1,7 +1,7 @@
 # Limiting Allowed Actions on Buckets
 
-Normally the Tigris Dashboard allows you to do everything you need to make
-access keys have the minimum scope possible. However sometimes you need more.
+Normally, the Tigris Dashboard allows you to do everything you need to make
+access keys have the minimum scope possible. However, sometimes you need more.
 For more advanced use cases, you can use IAM policies to limit the actions that
 can be performed on the buckets. This is useful when you want to limit the
 actions that can be performed on the buckets to a specific set of operations.

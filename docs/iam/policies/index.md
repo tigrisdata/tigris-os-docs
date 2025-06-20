@@ -21,7 +21,9 @@ permissions. The following operations are supported:
 | IAM:GetPolicyVersion      | Retrieves a specific IAM policy version.           |
 | IAM:ListEntitiesForPolicy | List entities (users only) attached to a policy.   |
 
-Note: Tigris does not support attaching IAM policies to specific users. Instead, policies can be attached to access keys. This applies to all other IAM policy operations as well.
+Note: Tigris does not support attaching IAM policies to specific users. Instead,
+policies can be attached to access keys. This applies to all other IAM policy
+operations as well.
 
 ## Supported IAM Policy Blocks
 

@@ -18,6 +18,10 @@ permissions. The following operations are supported:
 | IAM:AttachUserPolicy | Attaches an IAM policy to a user.                  |
 | IAM:DetachUserPolicy | Detaches an IAM policy from a user.                |
 | IAM:ListUserPolicies | Lists all IAM policies attached to a user.         |
+| IAM:GetUserPolicy    | Gets a specific IAM policy (including document) attached to a user.        |
+| IAM:GetPolicyVersion | Retrieves a specific policy version.         |
+| IAM:ListEntitiesForPolicy | List entities (only users supported) for a policy. |
+
 
 ## Supported IAM Policy Blocks
 

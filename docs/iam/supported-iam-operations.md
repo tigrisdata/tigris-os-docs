@@ -1,7 +1,7 @@
-# Supported IAM Operations
+# Supported Access Key Operations
 
-Tigris supports a subset of IAM operations that are commonly used for managing
-permissions. The following operations are supported:
+Tigris supports a subset of operations that are commonly used for managing
+access keys. The following operations are supported:
 
 | Operation           | Description                          |
 | ------------------- | ------------------------------------ |

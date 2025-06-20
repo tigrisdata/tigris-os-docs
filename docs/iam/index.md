@@ -4,8 +4,8 @@ IAM stands for Identity and Access Management. By default, Tigris supplies two
 simplified roles that fit the majority of use cases, `Read Only` and `Editor`.
 In addition to these prebuilt roles, Admin users and bucket owners can also
 further customize access controls by crafting IAM policies and attaching them to
-users. This is a powerful feature that allows you to create fine-grained access
-control for your buckets.
+access keys. This is a powerful feature that allows you to create fine-grained
+access control for your buckets.
 
 ## Using AWS Tools with Tigris
 

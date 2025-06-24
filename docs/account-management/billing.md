@@ -36,7 +36,25 @@ To update your billing email:
 5. Once saved, this email address will be used for all future billing
    communications.
 
+## Update your billing address
+
+To update your billing address:
+
+1. Log in to the [Tigris Dashboard](https://console.tigris.dev).
+2. Open the **Organization picker** in the upper right corner and select your
+   organization.
+3. Select **Billing** from the dropdown menu.
+4. In the **Billing Address** section, update your address details as needed.
+5. Click **Update Billing Address** to apply the changes.
+
 ## Manage payment methods
+
+:::info
+
+Before adding a payment card or bank account, please set your billing address.
+This ensures you see the supported payment options for your location.
+
+:::
 
 You can manage your payment methods directly from the Dashboard:
 
@@ -58,17 +76,6 @@ You can manage your payment methods directly from the Dashboard:
 - SEPA direct debit (for customers in Europe)
 - Other region-specific payment methods may be available depending on your
   location
-
-## Update your billing address
-
-To update your billing address:
-
-1. Log in to the [Tigris Dashboard](https://console.tigris.dev).
-2. Open the **Organization picker** in the upper right corner and select your
-   organization.
-3. Select **Billing** from the dropdown menu.
-4. In the **Billing Address** section, update your address details as needed.
-5. Click **Update Billing Address** to apply the changes.
 
 ## Invoices
 

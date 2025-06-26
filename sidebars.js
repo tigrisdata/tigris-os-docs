@@ -107,6 +107,7 @@ const sidebars = {
       collapsed: false,
       items: [
         "quickstarts/go",
+        "quickstarts/ipython",
         "quickstarts/kubernetes",
         "quickstarts/node",
         "quickstarts/rclone",

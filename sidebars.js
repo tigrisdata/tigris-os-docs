@@ -122,6 +122,7 @@ const sidebars = {
         "quickstarts/duckdb",
         "quickstarts/go",
         "quickstarts/kubernetes",
+        "quickstarts/mcp",
         "quickstarts/node",
         "quickstarts/rclone",
       ],

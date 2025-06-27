@@ -1,0 +1,180 @@
+# MCP Quickstart
+
+## Overview
+
+The Tigris MCP Server implements the
+[Model Context Protocol (MCP)](https://modelcontextprotocol.io/) on top of
+Tigris’s high-performance, S3-compatible object storage. By deploying this
+server alongside your AI agents, you can manage buckets and objects directly
+from your editor or workflow—upload training data, share model artifacts, or
+serve large files with zero egress fees, all without leaving your development
+environment.
+
+You can view the source code
+[on GitHub](https://github.com/tigrisdata/tigris-mcp-server). We strongly
+recommend reviewing the source code before employing this MCP server.
+
+## Key Features
+
+- **Bucket Management** Create, list and delete Tigris buckets from your AI
+  agent or editor.
+- **Object Operations** Upload, list, download, move and delete individual
+  objects or folders in any bucket.
+- **Pre-signed URLs** Generate shareable links for objects to grant temporary,
+  secure access.
+
+## Example Prompts
+
+Once the MCP Server is running, you can can issue natural-language commands such
+as:
+
+**Bucket actions**
+
+```text
+List my Tigris buckets
+Create a new bucket named my-bucket
+Delete the bucket called my-bucket
+```
+
+**Object actions**
+
+```text
+List objects in my-bucket
+Upload /path/to/file.txt to my-bucket
+Create a folder test in my-bucket
+Create test.txt with content "Hello World" in my-bucket
+Generate a shareable link for test.txt
+Delete myfile.txt from my-bucket
+```
+
+## Prerequisites
+
+- **Tigris Account & Credentials**
+
+  1. Sign up at [https://storage.new](https://storage.new)
+  2. Create or retrieve an access key pair (AWS-style) at
+     [https://storage.new/accesskey](https://storage.new/accesskey)
+  3. Save your `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` securely.
+
+- **Tooling**
+
+  - **Docker Engine** (for sandboxed deployments) Install via
+    [https://docs.docker.com/engine/install/](https://docs.docker.com/engine/install/)
+  - **Node.js & NPX** (for lightweight, direct runs) Install via
+    [https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/)
+
+## Installation
+
+### 1. VS Code / VS Code Insiders Extension
+
+Click to install the MCP Server in your editor. Replace `YOUR_AWS_*` with your
+credentials:
+
+[![Install in VS Code](https://img.shields.io/badge/VS%20Code-Install%20Tigris%20MCP%20Server-0098FF?logo=)](https://insiders.vscode.dev/redirect/mcp/install?name=Tigris%20MCP%20Server&config=%7B%22mcpServers%22%3A%7B%22tigris-mcp-server%22%3A%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40tigrisdata%2Ftigris-mcp-server%22%2C%22run%22%5D%2C%22env%22%3A%7B%22AWS_ACCESS_KEY_ID%22%3A%22YOUR_AWS_ACCESS_KEY_ID%22%2C%22AWS_SECRET_ACCESS_KEY%22%3A%22YOUR_AWS_SECRET_ACCESS_KEY%22%2C%22AWS_ENDPOINT_URL_S3%22%3A%22https%3A%2F%2Ffly.storage.tigris.dev%22%7D%7D%7D%7D)
+
+[![Install in VS Code Insiders](https://img.shields.io/badge/VS%20Code%20Insiders-Install%20Tigris%20MCP%20Server-24bfa5)](https://insiders.vscode.dev/redirect/mcp/install?name=Tigris%20MCP%20Server&config=%7B%22mcpServers%22%3A%7B%22tigris-mcp-server%22%3A%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40tigrisdata%2Ftigris-mcp-server%22%2C%22run%22%5D%2C%22env%22%3A%7B%22AWS_ACCESS_KEY_ID%22%3A%22YOUR_AWS_ACCESS_KEY_ID%22%2C%22AWS_SECRET_ACCESS_KEY%22%3A%22YOUR_AWS_SECRET_ACCESS_KEY%22%2C%22AWS_ENDPOINT_URL_S3%22%3A%22https%3A%2F%2Ffly.storage.tigris.dev%22%7D%7D%7D%7D&quality=insiders)
+
+### 2. Docker
+
+```bash
+docker run \
+  -e AWS_ACCESS_KEY_ID \
+  -e AWS_SECRET_ACCESS_KEY \
+  -e AWS_ENDPOINT_URL_S3=https://fly.storage.tigris.dev \
+  -i --rm \
+  --mount type=bind,src=$HOME/tigris-mcp-server,dst=$HOME/tigris-mcp-server \
+  quay.io/tigrisdata/tigris-mcp-server:latest
+```
+
+> **Note:** The server will only operate within the mounted directory for
+> enhanced security.
+
+### 3. NPX
+
+```bash
+npx -y @tigrisdata/tigris-mcp-server run
+```
+
+## Configuration
+
+By default, the MCP Server reads its configuration from environment variables:
+
+| Variable                | Description                                                    |
+| ----------------------- | -------------------------------------------------------------- |
+| `AWS_ACCESS_KEY_ID`     | Your Tigris access key ID                                      |
+| `AWS_SECRET_ACCESS_KEY` | Your Tigris secret access key                                  |
+| `AWS_ENDPOINT_URL_S3`   | S3-compatible endpoint (e.g. `https://fly.storage.tigris.dev`) |
+| `USE_AWS_PROFILES`      | (Optional) `true` to use existing AWS CLI profiles             |
+| `AWS_PROFILE`           | (Optional) AWS profile name to use                             |
+
+## Manual Setup for Claude Desktop & Cursor AI
+
+Add one of the following blocks to your client’s configuration file:
+
+<details>
+<summary>Via NPX</summary>
+
+```jsonc
+{
+  "mcpServers": {
+    "tigris-mcp-server": {
+      "command": "npx",
+      "args": ["-y", "@tigrisdata/tigris-mcp-server", "run"],
+      "env": {
+        "AWS_ACCESS_KEY_ID": "YOUR_AWS_ACCESS_KEY_ID",
+        "AWS_SECRET_ACCESS_KEY": "YOUR_AWS_SECRET_ACCESS_KEY",
+        "AWS_ENDPOINT_URL_S3": "https://fly.storage.tigris.dev",
+      },
+    },
+  },
+}
+```
+
+</details>
+
+<details>
+<summary>Via Docker</summary>
+
+```jsonc
+{
+  "mcpServers": {
+    "tigris-mcp-server": {
+      "command": "docker",
+      "args": [
+        "-e",
+        "AWS_ACCESS_KEY_ID",
+        "-e",
+        "AWS_SECRET_ACCESS_KEY",
+        "-e",
+        "AWS_ENDPOINT_URL_S3",
+        "-i",
+        "--rm",
+        "--mount",
+        "type=bind,src=/Users/CURRENT_USER/tigris-mcp-server,dst=/Users/CURRENT_USER/tigris-mcp-server",
+        "quay.io/tigrisdata/tigris-mcp-server:latest",
+      ],
+      "env": {
+        "AWS_ACCESS_KEY_ID": "YOUR_AWS_ACCESS_KEY_ID",
+        "AWS_SECRET_ACCESS_KEY": "YOUR_AWS_SECRET_ACCESS_KEY",
+        "AWS_ENDPOINT_URL_S3": "https://fly.storage.tigris.dev",
+      },
+    },
+  },
+}
+```
+
+</details>
+
+> You can also enable `USE_AWS_PROFILES` and set `AWS_PROFILE` if you prefer to
+> manage credentials via the AWS CLI.
+
+## Resources
+
+- **MCP Specification:**
+  [https://modelcontextprotocol.io/](https://modelcontextprotocol.io/)
+- **Tigris Documentation:**
+  [https://www.tigrisdata.com/docs/get-started/](https://www.tigrisdata.com/docs/get-started/)
+- **Blog: Vibe-led Coding**
+  [https://www.tigrisdata.com/blog/vibes-off/](https://www.tigrisdata.com/blog/vibes-off/)
+- **Blog: Sharing Files with MCP Server**
+  [https://www.tigrisdata.com/blog/mcp-server-sharing/](https://www.tigrisdata.com/blog/mcp-server-sharing/)

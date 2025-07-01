@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -65,7 +66,7 @@ func main() {
 		&s3.ListObjectsV2Input{
 			Bucket: aws.String(bucketName),
 		},
-		WithHeader("X-Tigris-Query", fmt.Sprintf("`Content-Type` = %q", contentType)),
+		WithHeader("X-Tigris-Query", fmt.Sprintf("`Last-Modified` < %q AND `Content-Type` = %q", time.Now().Format(time.RFC3339), contentType)),
 	)
 	if err != nil {
 		log.Fatalf("unable to list objects: %v", err)

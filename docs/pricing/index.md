@@ -1,15 +1,41 @@
 # Pricing
+// make this title bigger and more stylized with a tagline as below, reference: https://railway.com/pricing
 
-Tigris pricing is based on the following components:
+S3-compatible, globally distributed, zero egress fees. Fast, flexible object storage built for modern AI workloads. Access your data freely, in any cloud.
 
-- Data Storage: the amount of data stored in your buckets and the storage tier
-  used.
-- Requests: the number of requests made to your buckets and objects. The request
-  costs are based on the type of request and are calculated based on the
-  quantity of requests.
-- Data Transfer: the amount of data transferred out of your buckets.
+inline CTA style from the blog, "Get Started for Free"
+- 5GB of data storage (standard tier) per month
+- 10,000 PUT, COPY, POST, LIST requests per month
+- 100,000 GET, SELECT, and all other requests per month
+
+## Why teams choose Tigris over S3 and R2
+
+- Global performance without complexity: 
+Automatically optimizes for global low-latency access - no need to configure replication or placement.
+- Zero egress fees: 
+Access your data freely. Stop paying just to use your own data.
+- No lock-in: 
+Works with any compute or GPU provider.
+- Optimized for AI workloads: 
+Serve massive datasets for training, inference, and vector search - reliably and fast.
+
+## Quick Comparison
+|                           |           |          |               |
+| ------------------------- | --------- | -------- | ------------- |
+|                           | Tigris    | S3       | Cloudflare R2 |
+| Global low-latency access | Y         | N        | N             |
+| Egress fees               | $0        | $$$      | $0            |
+| S3-compatible             | Y         | Y        | Y             |
+| Multi-region included     | Y         | N        | N             |
+| IAM support               | Extensive | Complete | Limited       |
+| Availability              | 99.99     | 99.99    | 99.9          |
+| Low cost storage tiers    | Y         | Y        | N             |
+| Enterprise Support        | Included  | $$$      | $             |
+
 
 ## Pricing table
+
+Tigris pricing is based on the amount of data stored per storage tier and the number of requests per request type.
 
 | Component                                     | Standard Tier               | Infrequent Access Tier      | Archive Tier \*\*           | Archive Instant Retrieval Tier |
 | --------------------------------------------- | --------------------------- | --------------------------- | --------------------------- | ------------------------------ |
@@ -24,71 +50,15 @@ Tigris pricing is based on the following components:
 _\*\* Data in Archive tier requires restoration before it can be accessed. Read
 more about [Storage tiers](/docs/objects/tiers.md)._
 
-## Free allowances
+## Cost Savings
 
-We offer a free allowance as follows:
+Customers using Tigris often see dramatic reductions in their storage costs—up to 85% in some cases—by eliminating hidden fees and optimizing infrastructure. These savings don’t come at the expense of performance; in fact, Tigris delivers lower latency, greater reliability, and faster access to data across regions.
 
-- 5GB of data storage (standard tier) per month
-- 10,000 PUT, COPY, POST, LIST requests per month
-- 100,000 GET, SELECT, and all other requests per month
+Read how fal.ai cut their storage costs by 85% while offering the fastest inference endpoint in the the world.
 
-## Zero egress fees
+// show tile from the ai lander for fal case study cost savings https://www.tigrisdata.com/ai/
 
-While other cloud providers tax you for each GB of data transferred, we don't.
-At Tigris, we don't charge for regional data transfer, region-to-region data
-transfer, or data transfer out to the internet (egress). However, if your
-bandwidth requirements are extraordinary, please reach out to us at
-[sales@tigrisdata.com](mailto:sales@tigrisdata.com) to discuss your
-requirements.
-
-## Multi-Region Buckets
-
-Tigris, by default, manages the data distribution for you, ensuring data is
-stored close to the users to ensure low latency and high availability. However,
-as mentioned in the [Multi-Region Buckets](/docs/buckets/multi-region.md)
-section, you may explicitly choose to store multiple copies of your data in
-different regions. In such cases, in addition to the Data Storage charge, you
-will be charged for **Data Replication**.
-
-Data Replication is charged at $0.02/GB/month for each additional region. For
-example, if you store 1 GB of data in standard tier in two regions, you will be
-charged $0.02/GB/month for the first region and $0.02/GB/month for the second
-region, resulting in a total of $0.04/GB/month.
-
-## Enterprise pricing
-
-For larger workloads we offer the ability to customize the pricing and service
-contract to best fit your needs. Please reach out to us at
-[sales@tigrisdata.com](mailto:sales@tigrisdata.com) to discuss your
-requirements.
-
-## Example pricing
-
-### Example 1
-
-Let's say you have a bucket with 10GB of data with an average size of 1MB per
-object, and you make 100,000 GET requests to the objects in the bucket. You will
-be charged as follows:
-
-- Data Storage (standard tier): 5GB x $0/GB/month (free allowance) + 5GB x
-  $0.02/GB/month = $0.10
-- PUT Requests: 10,000 x $0/1000 requests (free allowance) = $0
-- GET Requests: 100,000 x $0/1000 requests (free allowance) = $0
-- Data Transfer: $0
-
-### Example 2
-
-Let's say you have a bucket with 100GB of data with an average size of 1MB per
-object, and you make 1,000,000 GET requests to the objects in the bucket. You
-will be charged as follows:
-
-- Data Storage (standard tier): 5GB x $0/GB/month (free allowance) + 95GB x
-  $0.02/GB/month = $1.90
-- PUT Requests: 10,000 x $0/1000 requests (free allowance) + 90,000 x
-  $0.005/1000 requests = $0.45
-- GET Requests: 100,000 x $0/1000 requests + 900,000 x $0.0005/1000 requests =
-  $0.45
-- Data Transfer: $0
+Example Pricing
 
 ## Frequently asked questions
 

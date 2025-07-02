@@ -121,6 +121,7 @@ const sidebars = {
       items: [
         "quickstarts/duckdb",
         "quickstarts/go",
+        "quickstarts/ipython",
         "quickstarts/kubernetes",
         "quickstarts/mcp",
         "quickstarts/node",

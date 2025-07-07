@@ -154,6 +154,7 @@ const sidebars = {
         "migration/index",
         "training/tigrisfs",
         "training/big-data-skypilot/index",
+        "guides/warpstream",
         {
           type: "category",
           label: "Model Storage",

@@ -1,0 +1,34 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/debian
+{
+  "name": "Dev",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "build": {
+    "dockerfile": "Dockerfile",
+    "cacheFrom": [
+      "type=registry,ref=ghcr.io/tigrisdata/tigris-os-docs/devcontainer"
+    ]
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers-extra/features/neovim-apt-get:1": {}
+  },
+  "postStartCommand": "npm ci",
+  "initializeCommand": "mkdir -p ${localEnv:HOME}${localEnv:USERPROFILE}/.local/share/atuin",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "unifiedjs.vscode-mdx",
+        "esbenp.prettier-vscode",
+        "ms-azuretools.vscode-containers",
+        "redhat.vscode-yaml",
+        "ms-vsliveshare.vsliveshare",
+        "ms-azuretools.vscode-docker",
+        "dbaeumer.vscode-eslint",
+        "GitHub.vscode-github-actions",
+        "DavidAnson.vscode-markdownlint",
+        "ms-vscode.wordcount"
+      ]
+    }
+  }
+}

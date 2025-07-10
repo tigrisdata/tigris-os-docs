@@ -1,60 +1,42 @@
-# Store Vector Embeddings with LanceDB
+# LanceDB
 
 import CodeBlock from "@theme/CodeBlock";
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-[LanceDB](https://lancedb.github.io/lancedb/) is an open-source vector database
-(like a search engine) that enables you to ingest, and query documents via any
-number of backends, including Tigris. LanceDB sets itself apart from other
-vector databases because you can embed it into the same process that your web
-service runs in. Imagine it as being zero-setup like SQLite, but for vector
-databases instead of relational databases.
+[LanceDB Multimodal Lakehouse](https://lancedb.github.io/lancedb/) lets you
+store, process, and search across text, images, audio, video, embeddings, and
+structured metadata in one system. This functionality makes it easier to go from
+raw data to training-ready features and build pipelines that can handle a
+variety of inputs without stitching together multiple tools or managing
+pipelines manually.
 
-When you ingest a document, image, video, or your secret world domination plans
-into LanceDB, you use an
-[embedding model](https://www.cloudflare.com/learning/ai/what-are-embeddings/)
-to transform the text of the document into high-dimensional embedding vectors.
-These vectors can be searched through
-[cosine similarity](https://en.wikipedia.org/wiki/Cosine_similarity), allowing
-you to search by concepts (eg: "hot" and "warm" would register as adjacent to
-eachother) instead of just the pure words of a search query.
+Teams can connect to all their existing LanceDB datasets to easily define
+feature logic as standard Python functions, automatically versioned and executed
+across distributed, scalable infrastructure.
 
-Of note: LanceDB isn't limited to just storing text, embedding vectors, and
-other simple metadata. LanceDB schemas can point to the raw bytes of your data,
-meaning that you don't need to store references to where your data lives if you
-don't need to.
+By using Tigris with the Multimodal Lakehouse, developers can now build
+bottomless vector pipelines—ingesting multimodal context into LanceDB with
+Tigris as the backend for seamless, elastic storage that scales infinitely.
 
-The main reason you'd want to bring a vector database into the equation is if
-you're doing a
-[Retrieval-Augmented Generation (RAG)](https://blogs.nvidia.com/blog/what-is-retrieval-augmented-generation/)
-pipeline like this:
+## Getting Started with LanceDB Multimodal Lakehouse
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant Backend
-    participant Model
-    participant Vector DB
-    participant Tigris
+The LanceDB Multimodal Lakehouse is available in LanceDB Enterprise with Tigris
+as a supported object storage provider. Using the multimodal lakehouse features
+of LanceDB, starts with installing the open-source Python package `geneva`:
 
-    User->>+Backend: How do I upload a file to Tigris?
-    Backend->>+Model: Produce embeddings of question
-    Model->>+Backend: High-dimensional vector embeddings
-    Backend->>+Vector DB: Search for similar documents
-    Vector DB->>+Tigris: Fetch data...
-    Tigris->>+Vector DB: Binary data...
-    Vector DB->>+Backend: Here's the top 10 documents
-    Backend->>+Model: Using these documents, answer the question
-    Model->>+User: Sure, you upload a file using...
+```text
+pip install geneva
 ```
 
-Vector databases are also general search engines and you can search anything
-that can be embedded, be it text, images, audio, or video. Most AI providers
-offer an embedding model and nearly all of them are good enough for just about
-any task you would want to do.
+And importing your LanceDB table:
 
-## Getting Started
+```python
+import geneva as gv
+table = gv.connect("table-name")
+```
+
+## Getting Started with LanceDB
 
 To get started, install LanceDB into your project's NPM dependencies:
 

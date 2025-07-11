@@ -111,6 +111,78 @@ const sidebars = {
             "iam/supported-iam-operations",
           ],
         },
+        "training/tigrisfs",
+      ],
+    },
+    {
+      type: "category",
+      label: "Integrations",
+      collapsible: true,
+      collapsed: false,
+      items: [
+        {
+          type: "category",
+          label: "LanceDB",
+          items: [
+            {
+              type: "doc",
+              label: "Getting Started",
+              id: "libraries/lancedb/index",
+            },
+            {
+              type: "doc",
+              label: "Example: Document Search",
+              id: "libraries/lancedb/docs-search",
+            },
+          ],
+        },
+        {
+          type: "doc",
+          label: "DuckDB",
+          id: "quickstarts/duckdb",
+        },
+        {
+          type: "category",
+          label: "Fly.io",
+          items: [
+            {
+              type: "doc",
+              label: "Getting Started",
+              id: "sdks/fly/index",
+            },
+            {
+              type: "doc",
+              label: "Data Migration with Flyctl",
+              id: "sdks/fly/data-migration-with-flyctl",
+            },
+            {
+              type: "doc",
+              label: "Model Storage",
+              id: "model-storage/fly-io",
+            },
+          ],
+        },
+        {
+          type: "category",
+          label: "SkyPilot",
+          items: [
+            {
+              type: "doc",
+              label: "Getting Started",
+              id: "quickstarts/skypilot",
+            },
+            {
+              type: "doc",
+              label: "Model Storage",
+              id: "model-storage/skypilot",
+            },
+            {
+              type: "doc",
+              label: "Training With Big Data",
+              id: "training/big-data-skypilot/index",
+            },
+          ],
+        },
       ],
     },
     {
@@ -119,7 +191,6 @@ const sidebars = {
       collapsible: true,
       collapsed: false,
       items: [
-        "quickstarts/duckdb",
         "quickstarts/go",
         "quickstarts/kubernetes",
         "quickstarts/mcp",
@@ -152,9 +223,6 @@ const sidebars = {
       collapsed: false,
       items: [
         "migration/index",
-        "training/tigrisfs",
-        "training/big-data-skypilot/index",
-        "guides/warpstream",
         {
           type: "category",
           label: "Model Storage",
@@ -170,16 +238,6 @@ const sidebars = {
             },
             {
               type: "doc",
-              label: "Fly.io",
-              id: "model-storage/fly-io",
-            },
-            {
-              type: "doc",
-              label: "SkyPilot",
-              id: "model-storage/skypilot",
-            },
-            {
-              type: "doc",
               label: "Vast.ai",
               id: "model-storage/vast-ai",
             },
@@ -188,15 +246,17 @@ const sidebars = {
         "training/csi-s3/index",
         "apps/docker-registry",
         "libraries/databricks/index",
-        "libraries/lancedb/index",
-        "sdks/fly/index",
-        "sdks/fly/data-migration-with-flyctl",
         "terraform/index",
+        {
+          type: "doc",
+          label: "Warpstream",
+          id: "guides/warpstream",
+        },
       ],
     },
     {
       type: "category",
-      label: "Partner Integration",
+      label: "Partner Integration Program",
       link: {
         type: "doc",
         id: "partner-integrations/index",

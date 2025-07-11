@@ -1,7 +1,9 @@
 ---
 id: bucketaccess
 title: "BucketAccess"
-description: "Access permissions for a bucket. The role assigned to the access key defines the permissions (read, write, admin) for the associated bucket."
+description:
+  "Access permissions for a bucket. The role assigned to the access key defines
+  the permissions (read, write, admin) for the associated bucket."
 sidebar_label: "BucketAccess"
 hide_title: true
 schema: true
@@ -18,13 +20,10 @@ import TabItem from "@theme/TabItem";
   as={"h1"}
   className={"openapi__heading"}
   children={"BucketAccess"}
->
-</Heading>
+></Heading>
 
-
-
-Access permissions for a bucket. The role assigned to the access key defines the permissions (read, write, admin) for the associated bucket.
-
+Access permissions for a bucket. The role assigned to the access key defines the
+permissions (read, write, admin) for the associated bucket.
 
 <ul>
   <SchemaItem
@@ -33,18 +32,19 @@ Access permissions for a bucket. The role assigned to the access key defines the
     required={true}
     schemaName={"string"}
     qualifierMessage={undefined}
-    schema={{"type":"string","description":"Name of the bucket"}}
-  >
-    
-  </SchemaItem><SchemaItem
+    schema={{ type: "string", description: "Name of the bucket" }}
+  ></SchemaItem>
+  <SchemaItem
     collapsible={false}
     name={"role"}
     required={true}
     schemaName={"string"}
     qualifierMessage={"**Possible values:** [`ReadOnly`, `Editor`, `Admin`]"}
-    schema={{"type":"string","description":"The role assigned to the access key defines the permissions (read,\nwrite, admin) for the associated bucket.\n\n- `ReadOnly`: Read-only access to the bucket.\n- `Editor`: Read and write access to the bucket.\n- `Admin`: Full access to all the buckets in org, including management of\n  permissions. Since, this access key manages all the buckets, the value of `bucket_name`\n  field should always be `*`.\n\n  Example:\n  ```\n  {\n    \"bucket_name\": \"*\",\n    \"role\": \"Admin\"\n  }\n  ```\n","enum":["ReadOnly","Editor","Admin"]}}
-  >
-    
-  </SchemaItem>
+    schema={{
+      type: "string",
+      description:
+        'The role assigned to the access key defines the permissions (read,\nwrite, admin) for the associated bucket.\n\n- `ReadOnly`: Read-only access to the bucket.\n- `Editor`: Read and write access to the bucket.\n- `Admin`: Full access to all the buckets in org, including management of\n  permissions. Since, this access key manages all the buckets, the value of `bucket_name`\n  field should always be `*`.\n\n  Example:\n  ```\n  {\n    "bucket_name": "*",\n    "role": "Admin"\n  }\n  ```\n',
+      enum: ["ReadOnly", "Editor", "Admin"],
+    }}
+  ></SchemaItem>
 </ul>
-            

@@ -1,0 +1,95 @@
+# SkyPilot Quickstart
+
+[SkyPilot](https://skypilot.readthedocs.io/en/latest/docs/index.html) is an
+open-source framework for running AI and batch workloads on any infrastructure
+provider, anywhere. Flexibly provision compute in any cloud with the same common
+configuration-- no switch statements or analyzing instance types.
+
+Tigris enables this extreme portability by globally distributing your data so
+it's always close to the compute SkyPilot dynamically provisions. Since Tigris
+is a no egress fee storage provider, you don't have to worry about additional
+costs by going multi-cloud.
+
+## How to install SkyPilot
+
+There's a few ways to set up SkyPilot, here's the easiest methods:
+
+### Conda
+
+If you already use [conda](https://anaconda.org/anaconda/conda), follow the
+[upstream guide](https://docs.skypilot.co/en/latest/getting-started/installation.html)
+on how to install SkyPilot. Make sure to install the adaptor for your
+infrastructure:
+
+```sh
+pip install "skypilot[aws]"
+pip install "skypilot[kubernetes]"
+# ...
+```
+
+Or mix and match:
+
+```sh
+pip install -U "skypilot[kubernetes,aws,gcp]"
+```
+
+### How to use Docker to run SkyPilot
+
+If you want to skip the grind and just get started, run this `docker` command to
+set up SkyPilot in a container:
+
+```text
+# NOTE: '--platform linux/amd64' is needed for Apple silicon Macs
+docker run --platform linux/amd64 \
+  -td --rm --name sky \
+  -v "$HOME/.sky:/root/.sky:rw" \
+  -v "$HOME/.aws:/root/.aws:rw" \
+  -v "$HOME/.config/gcloud:/root/.config/gcloud:rw" \
+  berkeleyskypilot/skypilot
+```
+
+Then open a shell with `docker exec`:
+
+```text
+docker exec -it sky /bin/bash
+```
+
+## How to use Tigris with SkyPilot
+
+If you're running a training job or storing model weights, reference these
+guides:
+
+- [Using model weights in Tigris anywhere with SkyPilot](/docs/model-storage/skypilot.mdx)
+- [Training with Big Data on SkyPilot](/docs/training/big-data-skypilot/index.mdx)
+
+Otherwise, use
+[boto3 to interact with Tigris](/docs/sdks/s3/aws-python-sdk.mdx):
+
+```python
+# Create S3 service client
+svc = boto3.client(
+    's3',
+    endpoint_url='https://t3.storage.dev',
+    config=Config(s3={'addressing_style': 'virtual'}),
+)
+
+# List buckets
+response = svc.list_buckets()
+
+for bucket in response['Buckets']:
+    print(f'  {bucket["Name"]}')
+
+# List objects
+response = svc.list_objects_v2(Bucket='tigris-example')
+
+for obj in response['Contents']:
+    print(f'  {obj["Key"]}')
+
+# Upload file
+response = svc.upload_file('getting-started.py', 'tigris-example', 'getting-started.py')
+
+# Download file
+response = svc.download_file('tigris-example', 'getting-started.py', 'getting-started-2.py')
+```
+
+Now you have SkyPilot installed with Tigris. Enjoy building!

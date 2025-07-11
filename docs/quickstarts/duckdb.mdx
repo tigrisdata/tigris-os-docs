@@ -1,53 +1,30 @@
-# DuckDB Quickstart
+# DuckDB
 
 [DuckDB](https://duckdb.org) is an in-process embedded analytical database
 optimized for fast queries, ease of use, and embedding efficient analytics
 inside existing applications. It's the SQLite for analytics, but with a stronger
 focus on data analytics, aggregation, and Online Analytical Processing (OLAP)
-queries.
+queries. Tigris dynamically distributes your data based on access patterns and
+handles lots of small files efficiently, enabling additional performance gains
+while using DuckDB.
 
-To get started using DuckDB with Tigris, you need to do the following things:
+Tigris is also compatible with [DuckLake](https://github.com/duckdb/ducklake), a
+lakehouse format that simplifies lakehouses by using a standard SQL database for
+all metadata, instead of complex file-based systems, while still storing data in
+open formats like Parquet, in object storage.
 
-- Create new bucket at [storage.new](https://storage.new) if you don't have one
-- Create an access keypair for that bucket at
-  [storage.new/accesskey](https://storage.new/accesskey)
-- Configure DuckDB to use Tigris
-- Query files in Tigris
+## Prerequisites
 
-## (**OPTIONAL**) Create a new bucket
+Make sure you have the following information from your Tigris account:
 
-Open [storage.new](https://storage.new) in your web browser.
+- Tigris **Access Key ID**
+- Tigris **Secret Access Key**
+- Tigris **Endpoint** (e.g., `https://t3.storage.dev`)
+- Tigris **Bucket Name**
 
-Give your bucket a name and select what [storage tier](../objects/tiers.md) it
-should use by default. As a general rule of thumb:
-
-- Standard is the default. If you're not sure what you want, pick standard.
-- Infrequent Access is cheaper than Standard, but charges per gigabyte of
-  retrieval.
-- Instant Retrieval Archive is for long-term storage where you might need urgent
-  access at any moment.
-- Archive is for long-term storage where you don't mind having to wait for data
-  to be brought out of cold storage.
-
-Click "Create".
-
-## Create an access keypair for that bucket
-
-Open [storage.new/accesskey](https://storage.new/accesskey) in your web browser.
-
-Give the keypair a name. This name will be shown in your list of access keys, so
-be sure to make it descriptive enough that you can figure out what it's for
-later.
-
-You can either give this key access to all of the buckets you have access to or
-grant access to an individual bucket by name. Type the name of your bucket and
-give it Editor permissions.
-
-Click "Create".
-
-Copy the Access Key ID, Secret Access Key, and other values into a safe place
-such as your password manager. Tigris will not show you the Secret Access Key
-again.
+If you don't yet have access credentials, follow the steps in the
+[Access Key guide](https://www.tigrisdata.com/docs/iam/create-access-key/) to
+create one.
 
 ## Configure DuckDB to use Tigris
 

@@ -111,6 +111,7 @@ const sidebars = {
             "iam/supported-iam-operations",
           ],
         },
+        "training/tigrisfs",
       ],
     },
     {
@@ -119,6 +120,22 @@ const sidebars = {
       collapsible: true,
       collapsed: false,
       items: [
+        {
+          type: "category",
+          label: "LanceDB",
+          items: [
+            {
+              type: "doc",
+              label: "Getting Started",
+              id: "libraries/lancedb/index",
+            },
+            {
+              type: "doc",
+              label: "Example: Document Search",
+              id: "libraries/lancedb/docs-search",
+            },
+          ],
+        },
         {
           type: "doc",
           label: "DuckDB",
@@ -138,21 +155,10 @@ const sidebars = {
               label: "Data Migration with Flyctl",
               id: "sdks/fly/data-migration-with-flyctl",
             },
-          ],
-        },
-        {
-          type: "category",
-          label: "LanceDB",
-          items: [
             {
               type: "doc",
-              label: "Getting Started",
-              id: "libraries/lancedb/index",
-            },
-            {
-              type: "doc",
-              label: "Example: Document Search",
-              id: "libraries/lancedb/docs-search",
+              label: "Model Storage",
+              id: "model-storage/fly-io",
             },
           ],
         },
@@ -217,8 +223,6 @@ const sidebars = {
       collapsed: false,
       items: [
         "migration/index",
-        "training/tigrisfs",
-        "training/big-data-skypilot/index",
         {
           type: "category",
           label: "Model Storage",
@@ -231,16 +235,6 @@ const sidebars = {
               type: "doc",
               label: "Beam Cloud",
               id: "model-storage/beam-cloud",
-            },
-            {
-              type: "doc",
-              label: "Fly.io",
-              id: "model-storage/fly-io",
-            },
-            {
-              type: "doc",
-              label: "SkyPilot",
-              id: "model-storage/skypilot",
             },
             {
               type: "doc",

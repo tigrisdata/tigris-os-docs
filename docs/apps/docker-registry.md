@@ -1,4 +1,4 @@
-# Docker Registry
+# Host Your Own Docker Registry on Tigris
 
 The [Docker Registry](https://distribution.github.io/distribution/about/)
 program can be self-hosted, and one of the storage backends it supports is S3.
@@ -43,7 +43,7 @@ fly launch --no-deploy --from=https://github.com/tigrisdata-community/docker-reg
 When asked, copy the configuration to the new app. You won't need to tweak the
 settings.
 
-### Registry configuration
+### How to Configure the Registry
 
 The Docker registry has multiple storage driver implementations. Tigris is
 compatible with the
@@ -97,7 +97,7 @@ REGISTRY_STORAGE_S3_ROOTDIRECTORY=/
 
 Write this to `.env` in your current working directory.
 
-### Starting your registry
+### How to run your docker registry
 
 Then import the secrets into your app:
 
@@ -119,7 +119,7 @@ fly deploy --no-ha
 
 Once it’s up, you can push and pull like normal.
 
-### Push/pull images to test
+### How to test your docker registry
 
 Now that we have a private Docker registry, let's give it a whirl with smollm.
 Clone the example models repo and build smollm:
@@ -134,7 +134,7 @@ Then push it to your registry:
 docker push your-registry.fly.dev/models/smollm/135m:q4
 ```
 
-## [SUGGESTED] Securing the registry
+## How to secure your docker registry
 
 Right now this registry is open for anyone in the world to pull from and push to
 it. This is not ideal. In lack of a better option, we're going to use htpasswd

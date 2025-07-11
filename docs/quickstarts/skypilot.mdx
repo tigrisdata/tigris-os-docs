@@ -1,13 +1,16 @@
 # SkyPilot Quickstart
 
-[SkyPilot](https://skypilot.readthedocs.io/en/latest/docs/index.html) is a tool
-that lets you route GPU compute to the cheapest possible locale based on your
-requirements. The same configuration lets you control AWS, Azure, Google Cloud,
-Oracle Cloud, Kubernetes, Runpod, Fluidstack, or more. For more information
-about Skypilot, check out
-[their documentation](https://skypilot.readthedocs.io/en/latest/docs/index.html).
+[SkyPilot](https://skypilot.readthedocs.io/en/latest/docs/index.html) is an
+open-source framework for running AI and batch workloads on any infrastructure
+provider, anywhere. Flexibly provision compute in any cloud with the same common
+configuration-- no switch statements or analyzing instance types.
 
-## Setting it up
+Tigris enables this extreme portability by globally distributing your data so
+it's always close to the compute SkyPilot dynamically provisions. Since Tigris
+is a no egress fee storage provider, you don't have to worry about additional
+costs by going multi-cloud.
+
+## How to install SkyPilot
 
 There's a few ways to set up SkyPilot, here's the easiest methods:
 
@@ -30,7 +33,7 @@ Or mix and match:
 pip install -U "skypilot[kubernetes,aws,gcp]"
 ```
 
-### Docker
+### How to use Docker to run SkyPilot
 
 If you want to skip the grind and just get started, run this `docker` command to
 set up SkyPilot in a container:
@@ -51,15 +54,16 @@ Then open a shell with `docker exec`:
 docker exec -it sky /bin/bash
 ```
 
-## Using Tigris
+## How to use Tigris with SkyPilot
 
-In order to use Tigris in your jobs, see one of the other guides on SkyPilot:
+If you're running a training job or storing model weights, reference these
+guides:
 
 - [Using model weights in Tigris anywhere with SkyPilot](/docs/model-storage/skypilot.mdx)
 - [Training with Big Data on SkyPilot](/docs/training/big-data-skypilot/index.mdx)
 
-Otherwise, use [boto3 to interact with Tigris](/docs/sdks/s3/aws-python-sdk.mdx)
-like normal:
+Otherwise, use
+[boto3 to interact with Tigris](/docs/sdks/s3/aws-python-sdk.mdx):
 
 ```python
 # Create S3 service client
@@ -87,3 +91,5 @@ response = svc.upload_file('getting-started.py', 'tigris-example', 'getting-star
 # Download file
 response = svc.download_file('tigris-example', 'getting-started.py', 'getting-started-2.py')
 ```
+
+Now you have SkyPilot installed with Tigris. Enjoy building!

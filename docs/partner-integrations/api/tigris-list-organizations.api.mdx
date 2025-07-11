@@ -28,17 +28,12 @@ import TabItem from "@theme/TabItem";
   as={"h1"}
   className={"openapi__heading"}
   children={"List all organizations"}
->
-</Heading>
+></Heading>
 
 <MethodEndpoint
   method={"get"}
   path={"/v1/providers/{provider_id}/orgs"}
->
-  
-</MethodEndpoint>
-
-
+></MethodEndpoint>
 
 List all organizations
 
@@ -47,89 +42,70 @@ List all organizations
   as={"h2"}
   className={"openapi-tabs__heading"}
   children={"Request"}
->
-</Heading>
+></Heading>
 
 <details
-  style={{"marginBottom":"1rem"}}
+  style={{ marginBottom: "1rem" }}
   className={"openapi-markdown__details"}
   data-collapsed={false}
   open={true}
 >
-  <summary
-    style={{}}
-  >
-    <h3
-      className={"openapi-markdown__details-summary-header-params"}
-    >
+  <summary style={{}}>
+    <h3 className={"openapi-markdown__details-summary-header-params"}>
       Path Parameters
     </h3>
-  </summary><div>
+  </summary>
+  <div>
     <ul>
       <ParamsItem
         className={"paramsItem"}
-        param={{"name":"provider_id","in":"path","required":true,"description":"Provider ID","schema":{"type":"string"}}}
-      >
-        
-      </ParamsItem>
+        param={{
+          name: "provider_id",
+          in: "path",
+          required: true,
+          description: "Provider ID",
+          schema: { type: "string" },
+        }}
+      ></ParamsItem>
     </ul>
   </div>
-</details><details
-  style={{"marginBottom":"1rem"}}
+</details>
+<details
+  style={{ marginBottom: "1rem" }}
   className={"openapi-markdown__details"}
   data-collapsed={false}
   open={true}
 >
-  <summary
-    style={{}}
-  >
-    <h3
-      className={"openapi-markdown__details-summary-header-params"}
-    >
+  <summary style={{}}>
+    <h3 className={"openapi-markdown__details-summary-header-params"}>
       Query Parameters
     </h3>
-  </summary><div>
+  </summary>
+  <div>
     <ul>
       <ParamsItem
         className={"paramsItem"}
-        param={{"name":"include_inactive","in":"query","description":"If set to true, includes inactive organizations in the response","schema":{"type":"boolean"}}}
-      >
-        
-      </ParamsItem>
+        param={{
+          name: "include_inactive",
+          in: "query",
+          description:
+            "If set to true, includes inactive organizations in the response",
+          schema: { type: "boolean" },
+        }}
+      ></ParamsItem>
     </ul>
   </div>
-</details><div>
+</details>
+<div>
   <div>
-    <ApiTabs
-      label={undefined}
-      id={undefined}
-    >
-      <TabItem
-        label={"200"}
-        value={"200"}
-      >
+    <ApiTabs label={undefined} id={undefined}>
+      <TabItem label={"200"} value={"200"}>
+        <div>OK</div>
         <div>
-          
-          
-          OK
-          
-          
-        </div><div>
-          <MimeTabs
-            className={"openapi-tabs__mime"}
-            schemaType={"response"}
-          >
-            <TabItem
-              label={"application/json"}
-              value={"application/json"}
-            >
-              <SchemaTabs
-                className={"openapi-tabs__schema"}
-              >
-                <TabItem
-                  label={"Schema"}
-                  value={"Schema"}
-                >
+          <MimeTabs className={"openapi-tabs__mime"} schemaType={"response"}>
+            <TabItem label={"application/json"} value={"application/json"}>
+              <SchemaTabs className={"openapi-tabs__schema"}>
+                <TabItem label={"Schema"} value={"Schema"}>
                   <details
                     style={{}}
                     className={"openapi-markdown__details response"}
@@ -140,87 +116,87 @@ List all organizations
                       style={{}}
                       className={"openapi-markdown__details-summary-response"}
                     >
-                      <strong>
-                        Schema
-                      </strong>
-                    </summary><div
-                      style={{"textAlign":"left","marginLeft":"1rem"}}
-                    >
-                      
-                    </div><ul
-                      style={{"marginLeft":"1rem"}}
-                    >
-                      <SchemaItem
-                        collapsible={true}
-                        className={"schemaItem"}
-                      >
+                      <strong>Schema</strong>
+                    </summary>
+                    <div
+                      style={{ textAlign: "left", marginLeft: "1rem" }}
+                    ></div>
+                    <ul style={{ marginLeft: "1rem" }}>
+                      <SchemaItem collapsible={true} className={"schemaItem"}>
                         <details
                           style={{}}
                           className={"openapi-markdown__details"}
                         >
-                          <summary
-                            style={{}}
-                          >
-                            <span
-                              className={"openapi-schema__container"}
-                            >
-                              <strong
-                                className={"openapi-schema__property"}
-                              >
+                          <summary style={{}}>
+                            <span className={"openapi-schema__container"}>
+                              <strong className={"openapi-schema__property"}>
                                 data
-                              </strong><span
-                                className={"openapi-schema__name"}
-                              >
-                                 object[]
-                              </span><span
+                              </strong>
+                              <span className={"openapi-schema__name"}>
+                                object[]
+                              </span>
+                              <span
                                 className={"openapi-schema__divider"}
-                              >
-                                
-                              </span><span
-                                className={"openapi-schema__required"}
-                              >
+                              ></span>
+                              <span className={"openapi-schema__required"}>
                                 required
                               </span>
                             </span>
-                          </summary><div
-                            style={{"marginLeft":"1rem"}}
-                          >
+                          </summary>
+                          <div style={{ marginLeft: "1rem" }}>
                             <li>
                               <div
-                                style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem","paddingBottom":".5rem"}}
+                                style={{
+                                  fontSize: "var(--ifm-code-font-size)",
+                                  opacity: "0.6",
+                                  marginLeft: "-.5rem",
+                                  paddingBottom: ".5rem",
+                                }}
                               >
                                 Array [
                               </div>
-                            </li><SchemaItem
+                            </li>
+                            <SchemaItem
                               collapsible={false}
                               name={"id"}
                               required={true}
                               schemaName={"string"}
                               qualifierMessage={undefined}
-                              schema={{"type":"string","description":"Organization ID"}}
-                            >
-                              
-                            </SchemaItem><SchemaItem
+                              schema={{
+                                type: "string",
+                                description: "Organization ID",
+                              }}
+                            ></SchemaItem>
+                            <SchemaItem
                               collapsible={false}
                               name={"name"}
                               required={false}
                               schemaName={"string"}
                               qualifierMessage={undefined}
-                              schema={{"type":"string","description":"Name of the organization"}}
-                            >
-                              
-                            </SchemaItem><SchemaItem
+                              schema={{
+                                type: "string",
+                                description: "Name of the organization",
+                              }}
+                            ></SchemaItem>
+                            <SchemaItem
                               collapsible={false}
                               name={"active"}
                               required={false}
                               schemaName={"boolean"}
                               qualifierMessage={undefined}
-                              schema={{"type":"boolean","description":"If set to false, the organization is deactivated"}}
-                            >
-                              
-                            </SchemaItem><li>
+                              schema={{
+                                type: "boolean",
+                                description:
+                                  "If set to false, the organization is deactivated",
+                              }}
+                            ></SchemaItem>
+                            <li>
                               <div
-                                style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem"}}
+                                style={{
+                                  fontSize: "var(--ifm-code-font-size)",
+                                  opacity: "0.6",
+                                  marginLeft: "-.5rem",
+                                }}
                               >
                                 ]
                               </div>
@@ -230,47 +206,30 @@ List all organizations
                       </SchemaItem>
                     </ul>
                   </details>
-                </TabItem><TabItem
+                </TabItem>
+                <TabItem
                   label={"Example (from schema)"}
                   value={"Example (from schema)"}
                 >
                   <ResponseSamples
-                    responseExample={"{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"active\": true\n    }\n  ]\n}"}
+                    responseExample={
+                      '{\n  "data": [\n    {\n      "id": "string",\n      "name": "string",\n      "active": true\n    }\n  ]\n}'
+                    }
                     language={"json"}
-                  >
-                    
-                  </ResponseSamples>
+                  ></ResponseSamples>
                 </TabItem>
               </SchemaTabs>
             </TabItem>
           </MimeTabs>
         </div>
-      </TabItem><TabItem
-        label={"default"}
-        value={"default"}
-      >
+      </TabItem>
+      <TabItem label={"default"} value={"default"}>
+        <div>Unexpected error</div>
         <div>
-          
-          
-          Unexpected error
-          
-          
-        </div><div>
-          <MimeTabs
-            className={"openapi-tabs__mime"}
-            schemaType={"response"}
-          >
-            <TabItem
-              label={"application/json"}
-              value={"application/json"}
-            >
-              <SchemaTabs
-                className={"openapi-tabs__schema"}
-              >
-                <TabItem
-                  label={"Schema"}
-                  value={"Schema"}
-                >
+          <MimeTabs className={"openapi-tabs__mime"} schemaType={"response"}>
+            <TabItem label={"application/json"} value={"application/json"}>
+              <SchemaTabs className={"openapi-tabs__schema"}>
+                <TabItem label={"Schema"} value={"Schema"}>
                   <details
                     style={{}}
                     className={"openapi-markdown__details response"}
@@ -281,38 +240,31 @@ List all organizations
                       style={{}}
                       className={"openapi-markdown__details-summary-response"}
                     >
-                      <strong>
-                        Schema
-                      </strong>
-                    </summary><div
-                      style={{"textAlign":"left","marginLeft":"1rem"}}
-                    >
-                      
-                    </div><ul
-                      style={{"marginLeft":"1rem"}}
-                    >
+                      <strong>Schema</strong>
+                    </summary>
+                    <div
+                      style={{ textAlign: "left", marginLeft: "1rem" }}
+                    ></div>
+                    <ul style={{ marginLeft: "1rem" }}>
                       <SchemaItem
                         collapsible={false}
                         name={"message"}
                         required={false}
                         schemaName={"string"}
                         qualifierMessage={undefined}
-                        schema={{"type":"string"}}
-                      >
-                        
-                      </SchemaItem>
+                        schema={{ type: "string" }}
+                      ></SchemaItem>
                     </ul>
                   </details>
-                </TabItem><TabItem
+                </TabItem>
+                <TabItem
                   label={"Example (from schema)"}
                   value={"Example (from schema)"}
                 >
                   <ResponseSamples
-                    responseExample={"{\n  \"message\": \"string\"\n}"}
+                    responseExample={'{\n  "message": "string"\n}'}
                     language={"json"}
-                  >
-                    
-                  </ResponseSamples>
+                  ></ResponseSamples>
                 </TabItem>
               </SchemaTabs>
             </TabItem>
@@ -322,4 +274,3 @@ List all organizations
     </ApiTabs>
   </div>
 </div>
-      

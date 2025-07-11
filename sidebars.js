@@ -125,9 +125,36 @@ const sidebars = {
           id: "quickstarts/duckdb",
         },
         {
-          type: "doc",
+          type: "category",
+          label: "Fly.io",
+          items: [
+            {
+              type: "doc",
+              label: "Getting Started",
+              id: "sdks/fly/index",
+            },
+            {
+              type: "doc",
+              label: "Data Migration with Flyctl",
+              id: "sdks/fly/data-migration-with-flyctl",
+            },
+          ],
+        },
+        {
+          type: "category",
           label: "LanceDB",
-          id: "libraries/lancedb/index"
+          items: [
+            {
+              type: "doc",
+              label: "Getting Started",
+              id: "libraries/lancedb/index",
+            },
+            {
+              type: "doc",
+              label: "Example: Document Search",
+              id: "libraries/lancedb/docs-search",
+            },
+          ],
         },
         {
           type: "category",
@@ -141,12 +168,12 @@ const sidebars = {
             {
               type: "doc",
               label: "Model Storage",
-              id: "model-storage/skypilot"
+              id: "model-storage/skypilot",
             },
             {
               type: "doc",
               label: "Training With Big Data",
-              id: "training/big-data-skypilot/index"
+              id: "training/big-data-skypilot/index",
             },
           ],
         },
@@ -225,9 +252,6 @@ const sidebars = {
         "training/csi-s3/index",
         "apps/docker-registry",
         "libraries/databricks/index",
-        "libraries/lancedb/index",
-        "sdks/fly/index",
-        "sdks/fly/data-migration-with-flyctl",
         "terraform/index",
         {
           type: "doc",

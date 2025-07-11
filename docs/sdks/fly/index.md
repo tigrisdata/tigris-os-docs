@@ -1,8 +1,8 @@
-# Bucket Management with Flyctl
+# How to Manage Tigris Buckets with Fly.io
 
-Tigris is a globally distributed S3-compatible object storage service natively
-integrated with [Fly.io](https://fly.io/). Tigris runs on
-[Fly.io](https://fly.io/) hardware and is fully integrated with flyctl.
+Tigris is a globally distributed, multi-cloud object storage service with
+built-in support for the S3 API and no egress fees. Fly.io users can create and
+manage Tigris buckets natively within Fly.io via the tool, `flyctl`.
 
 ## Getting Started
 

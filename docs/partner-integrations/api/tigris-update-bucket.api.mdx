@@ -1,7 +1,9 @@
 ---
 id: tigris-update-bucket
 title: "Update bucket settings"
-description: "Updates the bucket settings like public access, storage class, and object ACL."
+description:
+  "Updates the bucket settings like public access, storage class, and object
+  ACL."
 sidebar_label: "Update bucket settings"
 hide_title: true
 hide_table_of_contents: true
@@ -28,150 +30,122 @@ import TabItem from "@theme/TabItem";
   as={"h1"}
   className={"openapi__heading"}
   children={"Update bucket settings"}
->
-</Heading>
+></Heading>
 
 <MethodEndpoint
   method={"put"}
   path={"/v1/providers/{provider_id}/orgs/{org_id}/buckets/{bucket_name}"}
->
-  
-</MethodEndpoint>
-
-
+></MethodEndpoint>
 
 Updates the bucket settings like public access, storage class, and object ACL.
-
 
 <Heading
   id={"request"}
   as={"h2"}
   className={"openapi-tabs__heading"}
   children={"Request"}
->
-</Heading>
+></Heading>
 
 <details
-  style={{"marginBottom":"1rem"}}
+  style={{ marginBottom: "1rem" }}
   className={"openapi-markdown__details"}
   data-collapsed={false}
   open={true}
 >
-  <summary
-    style={{}}
-  >
-    <h3
-      className={"openapi-markdown__details-summary-header-params"}
-    >
+  <summary style={{}}>
+    <h3 className={"openapi-markdown__details-summary-header-params"}>
       Path Parameters
     </h3>
-  </summary><div>
+  </summary>
+  <div>
     <ul>
       <ParamsItem
         className={"paramsItem"}
-        param={{"name":"provider_id","in":"path","required":true,"description":"Provider ID","schema":{"type":"string"}}}
-      >
-        
-      </ParamsItem><ParamsItem
+        param={{
+          name: "provider_id",
+          in: "path",
+          required: true,
+          description: "Provider ID",
+          schema: { type: "string" },
+        }}
+      ></ParamsItem>
+      <ParamsItem
         className={"paramsItem"}
-        param={{"name":"org_id","in":"path","required":true,"description":"Organization ID","schema":{"type":"string"}}}
-      >
-        
-      </ParamsItem><ParamsItem
+        param={{
+          name: "org_id",
+          in: "path",
+          required: true,
+          description: "Organization ID",
+          schema: { type: "string" },
+        }}
+      ></ParamsItem>
+      <ParamsItem
         className={"paramsItem"}
-        param={{"name":"bucket_name","in":"path","required":true,"description":"Bucket name","schema":{"type":"string"}}}
-      >
-        
-      </ParamsItem>
+        param={{
+          name: "bucket_name",
+          in: "path",
+          required: true,
+          description: "Bucket name",
+          schema: { type: "string" },
+        }}
+      ></ParamsItem>
     </ul>
   </div>
-</details><MimeTabs
-  className={"openapi-tabs__mime"}
->
-  <TabItem
-    label={"application/json"}
-    value={"application/json-schema"}
-  >
+</details>
+<MimeTabs className={"openapi-tabs__mime"}>
+  <TabItem label={"application/json"} value={"application/json-schema"}>
     <details
       style={{}}
       className={"openapi-markdown__details mime"}
       data-collapsed={false}
       open={true}
     >
-      <summary
-        style={{}}
-        className={"openapi-markdown__details-summary-mime"}
-      >
-        <h3
-          className={"openapi-markdown__details-summary-header-body"}
-        >
+      <summary style={{}} className={"openapi-markdown__details-summary-mime"}>
+        <h3 className={"openapi-markdown__details-summary-header-body"}>
           Body
-        </h3><strong
-          className={"openapi-schema__required"}
-        >
-          required
-        </strong>
-      </summary><div
-        style={{"textAlign":"left","marginLeft":"1rem"}}
-      >
-        
-      </div><ul
-        style={{"marginLeft":"1rem"}}
-      >
+        </h3>
+        <strong className={"openapi-schema__required"}>required</strong>
+      </summary>
+      <div style={{ textAlign: "left", marginLeft: "1rem" }}></div>
+      <ul style={{ marginLeft: "1rem" }}>
         <SchemaItem
           collapsible={false}
           name={"public"}
           required={false}
           schemaName={"boolean"}
           qualifierMessage={undefined}
-          schema={{"type":"boolean","description":"If set to true, the bucket will be publicly accessible. Default is false."}}
-        >
-          
-        </SchemaItem><SchemaItem
+          schema={{
+            type: "boolean",
+            description:
+              "If set to true, the bucket will be publicly accessible. Default is false.",
+          }}
+        ></SchemaItem>
+        <SchemaItem
           collapsible={false}
           name={"enable_object_acl"}
           required={false}
           schemaName={"boolean"}
           qualifierMessage={undefined}
-          schema={{"type":"boolean","description":"If set to true, per object ACL will be enabled. Default is false."}}
-        >
-          
-        </SchemaItem>
+          schema={{
+            type: "boolean",
+            description:
+              "If set to true, per object ACL will be enabled. Default is false.",
+          }}
+        ></SchemaItem>
       </ul>
     </details>
   </TabItem>
-</MimeTabs><div>
+</MimeTabs>
+<div>
   <div>
-    <ApiTabs
-      label={undefined}
-      id={undefined}
-    >
-      <TabItem
-        label={"200"}
-        value={"200"}
-      >
+    <ApiTabs label={undefined} id={undefined}>
+      <TabItem label={"200"} value={"200"}>
+        <div>OK</div>
         <div>
-          
-          
-          OK
-          
-          
-        </div><div>
-          <MimeTabs
-            className={"openapi-tabs__mime"}
-            schemaType={"response"}
-          >
-            <TabItem
-              label={"application/json"}
-              value={"application/json"}
-            >
-              <SchemaTabs
-                className={"openapi-tabs__schema"}
-              >
-                <TabItem
-                  label={"Schema"}
-                  value={"Schema"}
-                >
+          <MimeTabs className={"openapi-tabs__mime"} schemaType={"response"}>
+            <TabItem label={"application/json"} value={"application/json"}>
+              <SchemaTabs className={"openapi-tabs__schema"}>
+                <TabItem label={"Schema"} value={"Schema"}>
                   <details
                     style={{}}
                     className={"openapi-markdown__details response"}
@@ -182,68 +156,41 @@ Updates the bucket settings like public access, storage class, and object ACL.
                       style={{}}
                       className={"openapi-markdown__details-summary-response"}
                     >
-                      <strong>
-                        Schema
-                      </strong>
-                    </summary><div
-                      style={{"textAlign":"left","marginLeft":"1rem"}}
-                    >
-                      
-                    </div><ul
-                      style={{"marginLeft":"1rem"}}
-                    >
+                      <strong>Schema</strong>
+                    </summary>
+                    <div
+                      style={{ textAlign: "left", marginLeft: "1rem" }}
+                    ></div>
+                    <ul style={{ marginLeft: "1rem" }}>
                       <div
-                        style={{"marginTop":".5rem","marginBottom":".5rem"}}
+                        style={{ marginTop: ".5rem", marginBottom: ".5rem" }}
                       >
-                        
-                        
                         object
-                        
-                        
                       </div>
                     </ul>
                   </details>
-                </TabItem><TabItem
+                </TabItem>
+                <TabItem
                   label={"Example (from schema)"}
                   value={"Example (from schema)"}
                 >
                   <ResponseSamples
                     responseExample={"{}"}
                     language={"json"}
-                  >
-                    
-                  </ResponseSamples>
+                  ></ResponseSamples>
                 </TabItem>
               </SchemaTabs>
             </TabItem>
           </MimeTabs>
         </div>
-      </TabItem><TabItem
-        label={"default"}
-        value={"default"}
-      >
+      </TabItem>
+      <TabItem label={"default"} value={"default"}>
+        <div>Unexpected error</div>
         <div>
-          
-          
-          Unexpected error
-          
-          
-        </div><div>
-          <MimeTabs
-            className={"openapi-tabs__mime"}
-            schemaType={"response"}
-          >
-            <TabItem
-              label={"application/json"}
-              value={"application/json"}
-            >
-              <SchemaTabs
-                className={"openapi-tabs__schema"}
-              >
-                <TabItem
-                  label={"Schema"}
-                  value={"Schema"}
-                >
+          <MimeTabs className={"openapi-tabs__mime"} schemaType={"response"}>
+            <TabItem label={"application/json"} value={"application/json"}>
+              <SchemaTabs className={"openapi-tabs__schema"}>
+                <TabItem label={"Schema"} value={"Schema"}>
                   <details
                     style={{}}
                     className={"openapi-markdown__details response"}
@@ -254,38 +201,31 @@ Updates the bucket settings like public access, storage class, and object ACL.
                       style={{}}
                       className={"openapi-markdown__details-summary-response"}
                     >
-                      <strong>
-                        Schema
-                      </strong>
-                    </summary><div
-                      style={{"textAlign":"left","marginLeft":"1rem"}}
-                    >
-                      
-                    </div><ul
-                      style={{"marginLeft":"1rem"}}
-                    >
+                      <strong>Schema</strong>
+                    </summary>
+                    <div
+                      style={{ textAlign: "left", marginLeft: "1rem" }}
+                    ></div>
+                    <ul style={{ marginLeft: "1rem" }}>
                       <SchemaItem
                         collapsible={false}
                         name={"message"}
                         required={false}
                         schemaName={"string"}
                         qualifierMessage={undefined}
-                        schema={{"type":"string"}}
-                      >
-                        
-                      </SchemaItem>
+                        schema={{ type: "string" }}
+                      ></SchemaItem>
                     </ul>
                   </details>
-                </TabItem><TabItem
+                </TabItem>
+                <TabItem
                   label={"Example (from schema)"}
                   value={"Example (from schema)"}
                 >
                   <ResponseSamples
-                    responseExample={"{\n  \"message\": \"string\"\n}"}
+                    responseExample={'{\n  "message": "string"\n}'}
                     language={"json"}
-                  >
-                    
-                  </ResponseSamples>
+                  ></ResponseSamples>
                 </TabItem>
               </SchemaTabs>
             </TabItem>
@@ -295,4 +235,3 @@ Updates the bucket settings like public access, storage class, and object ACL.
     </ApiTabs>
   </div>
 </div>
-      

@@ -1,7 +1,9 @@
 ---
 id: tigris-create-access-key
 title: "Create a new Access Key"
-description: "Creates a new access key for a user. The access key ID and secret will be returned in the response."
+description:
+  "Creates a new access key for a user. The access key ID and secret will be
+  returned in the response."
 sidebar_label: "Create a new Access Key"
 hide_title: true
 hide_table_of_contents: true
@@ -28,172 +30,161 @@ import TabItem from "@theme/TabItem";
   as={"h1"}
   className={"openapi__heading"}
   children={"Create a new Access Key"}
->
-</Heading>
+></Heading>
 
 <MethodEndpoint
   method={"post"}
   path={"/v1/providers/{provider_id}/orgs/{org_id}/key"}
->
-  
-</MethodEndpoint>
+></MethodEndpoint>
 
-
-
-Creates a new access key for a user. The access key ID and secret will be returned in the response.
-
+Creates a new access key for a user. The access key ID and secret will be
+returned in the response.
 
 <Heading
   id={"request"}
   as={"h2"}
   className={"openapi-tabs__heading"}
   children={"Request"}
->
-</Heading>
+></Heading>
 
 <details
-  style={{"marginBottom":"1rem"}}
+  style={{ marginBottom: "1rem" }}
   className={"openapi-markdown__details"}
   data-collapsed={false}
   open={true}
 >
-  <summary
-    style={{}}
-  >
-    <h3
-      className={"openapi-markdown__details-summary-header-params"}
-    >
+  <summary style={{}}>
+    <h3 className={"openapi-markdown__details-summary-header-params"}>
       Path Parameters
     </h3>
-  </summary><div>
+  </summary>
+  <div>
     <ul>
       <ParamsItem
         className={"paramsItem"}
-        param={{"name":"provider_id","in":"path","required":true,"description":"Provider ID","schema":{"type":"string"}}}
-      >
-        
-      </ParamsItem><ParamsItem
+        param={{
+          name: "provider_id",
+          in: "path",
+          required: true,
+          description: "Provider ID",
+          schema: { type: "string" },
+        }}
+      ></ParamsItem>
+      <ParamsItem
         className={"paramsItem"}
-        param={{"name":"org_id","in":"path","required":true,"description":"Organization ID","schema":{"type":"string"}}}
-      >
-        
-      </ParamsItem>
+        param={{
+          name: "org_id",
+          in: "path",
+          required: true,
+          description: "Organization ID",
+          schema: { type: "string" },
+        }}
+      ></ParamsItem>
     </ul>
   </div>
-</details><MimeTabs
-  className={"openapi-tabs__mime"}
->
-  <TabItem
-    label={"application/json"}
-    value={"application/json-schema"}
-  >
+</details>
+<MimeTabs className={"openapi-tabs__mime"}>
+  <TabItem label={"application/json"} value={"application/json-schema"}>
     <details
       style={{}}
       className={"openapi-markdown__details mime"}
       data-collapsed={false}
       open={true}
     >
-      <summary
-        style={{}}
-        className={"openapi-markdown__details-summary-mime"}
-      >
-        <h3
-          className={"openapi-markdown__details-summary-header-body"}
-        >
+      <summary style={{}} className={"openapi-markdown__details-summary-mime"}>
+        <h3 className={"openapi-markdown__details-summary-header-body"}>
           Body
-        </h3><strong
-          className={"openapi-schema__required"}
-        >
-          required
-        </strong>
-      </summary><div
-        style={{"textAlign":"left","marginLeft":"1rem"}}
-      >
-        
-      </div><ul
-        style={{"marginLeft":"1rem"}}
-      >
+        </h3>
+        <strong className={"openapi-schema__required"}>required</strong>
+      </summary>
+      <div style={{ textAlign: "left", marginLeft: "1rem" }}></div>
+      <ul style={{ marginLeft: "1rem" }}>
         <SchemaItem
           collapsible={false}
           name={"name"}
           required={false}
           schemaName={"string"}
           qualifierMessage={undefined}
-          schema={{"type":"string","description":"Name of the access key"}}
-        >
-          
-        </SchemaItem><SchemaItem
+          schema={{ type: "string", description: "Name of the access key" }}
+        ></SchemaItem>
+        <SchemaItem
           collapsible={false}
           name={"user_id"}
           required={true}
           schemaName={"string"}
           qualifierMessage={undefined}
-          schema={{"type":"string","description":"ID of the user for whom the access key is being created"}}
-        >
-          
-        </SchemaItem><SchemaItem
+          schema={{
+            type: "string",
+            description:
+              "ID of the user for whom the access key is being created",
+          }}
+        ></SchemaItem>
+        <SchemaItem
           collapsible={false}
           name={"user_role"}
           required={false}
           schemaName={"OrgMembership (string)"}
           qualifierMessage={"**Possible values:** [`Admin`, `Member`]"}
-          schema={{"type":"string","description":"Role assigned to the user in the organization","enum":["Admin","Member"],"title":"OrgMembership"}}
-        >
-          
-        </SchemaItem><SchemaItem
-          collapsible={true}
-          className={"schemaItem"}
-        >
-          <details
-            style={{}}
-            className={"openapi-markdown__details"}
-          >
-            <summary
-              style={{}}
-            >
-              <span
-                className={"openapi-schema__container"}
-              >
-                <strong
-                  className={"openapi-schema__property"}
-                >
+          schema={{
+            type: "string",
+            description: "Role assigned to the user in the organization",
+            enum: ["Admin", "Member"],
+            title: "OrgMembership",
+          }}
+        ></SchemaItem>
+        <SchemaItem collapsible={true} className={"schemaItem"}>
+          <details style={{}} className={"openapi-markdown__details"}>
+            <summary style={{}}>
+              <span className={"openapi-schema__container"}>
+                <strong className={"openapi-schema__property"}>
                   buckets_roles
-                </strong><span
-                  className={"openapi-schema__name"}
-                >
-                   object[]
-                </span>
+                </strong>
+                <span className={"openapi-schema__name"}>object[]</span>
               </span>
-            </summary><div
-              style={{"marginLeft":"1rem"}}
-            >
+            </summary>
+            <div style={{ marginLeft: "1rem" }}>
               <li>
                 <div
-                  style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem","paddingBottom":".5rem"}}
+                  style={{
+                    fontSize: "var(--ifm-code-font-size)",
+                    opacity: "0.6",
+                    marginLeft: "-.5rem",
+                    paddingBottom: ".5rem",
+                  }}
                 >
                   Array [
                 </div>
-              </li><SchemaItem
+              </li>
+              <SchemaItem
                 collapsible={false}
                 name={"bucket_name"}
                 required={true}
                 schemaName={"string"}
                 qualifierMessage={undefined}
-                schema={{"type":"string","description":"Name of the bucket"}}
-              >
-                
-              </SchemaItem><SchemaItem
+                schema={{ type: "string", description: "Name of the bucket" }}
+              ></SchemaItem>
+              <SchemaItem
                 collapsible={false}
                 name={"role"}
                 required={true}
                 schemaName={"string"}
-                qualifierMessage={"**Possible values:** [`ReadOnly`, `Editor`, `Admin`]"}
-                schema={{"type":"string","description":"The role assigned to the access key defines the permissions (read,\nwrite, admin) for the associated bucket.\n\n- `ReadOnly`: Read-only access to the bucket.\n- `Editor`: Read and write access to the bucket.\n- `Admin`: Full access to all the buckets in org, including management of\n  permissions. Since, this access key manages all the buckets, the value of `bucket_name`\n  field should always be `*`.\n\n  Example:\n  ```\n  {\n    \"bucket_name\": \"*\",\n    \"role\": \"Admin\"\n  }\n  ```\n","enum":["ReadOnly","Editor","Admin"]}}
-              >
-                
-              </SchemaItem><li>
+                qualifierMessage={
+                  "**Possible values:** [`ReadOnly`, `Editor`, `Admin`]"
+                }
+                schema={{
+                  type: "string",
+                  description:
+                    'The role assigned to the access key defines the permissions (read,\nwrite, admin) for the associated bucket.\n\n- `ReadOnly`: Read-only access to the bucket.\n- `Editor`: Read and write access to the bucket.\n- `Admin`: Full access to all the buckets in org, including management of\n  permissions. Since, this access key manages all the buckets, the value of `bucket_name`\n  field should always be `*`.\n\n  Example:\n  ```\n  {\n    "bucket_name": "*",\n    "role": "Admin"\n  }\n  ```\n',
+                  enum: ["ReadOnly", "Editor", "Admin"],
+                }}
+              ></SchemaItem>
+              <li>
                 <div
-                  style={{"fontSize":"var(--ifm-code-font-size)","opacity":"0.6","marginLeft":"-.5rem"}}
+                  style={{
+                    fontSize: "var(--ifm-code-font-size)",
+                    opacity: "0.6",
+                    marginLeft: "-.5rem",
+                  }}
                 >
                   ]
                 </div>
@@ -204,38 +195,17 @@ Creates a new access key for a user. The access key ID and secret will be return
       </ul>
     </details>
   </TabItem>
-</MimeTabs><div>
+</MimeTabs>
+<div>
   <div>
-    <ApiTabs
-      label={undefined}
-      id={undefined}
-    >
-      <TabItem
-        label={"200"}
-        value={"200"}
-      >
+    <ApiTabs label={undefined} id={undefined}>
+      <TabItem label={"200"} value={"200"}>
+        <div>OK</div>
         <div>
-          
-          
-          OK
-          
-          
-        </div><div>
-          <MimeTabs
-            className={"openapi-tabs__mime"}
-            schemaType={"response"}
-          >
-            <TabItem
-              label={"application/json"}
-              value={"application/json"}
-            >
-              <SchemaTabs
-                className={"openapi-tabs__schema"}
-              >
-                <TabItem
-                  label={"Schema"}
-                  value={"Schema"}
-                >
+          <MimeTabs className={"openapi-tabs__mime"} schemaType={"response"}>
+            <TabItem label={"application/json"} value={"application/json"}>
+              <SchemaTabs className={"openapi-tabs__schema"}>
+                <TabItem label={"Schema"} value={"Schema"}>
                   <details
                     style={{}}
                     className={"openapi-markdown__details response"}
@@ -246,87 +216,71 @@ Creates a new access key for a user. The access key ID and secret will be return
                       style={{}}
                       className={"openapi-markdown__details-summary-response"}
                     >
-                      <strong>
-                        Schema
-                      </strong>
-                    </summary><div
-                      style={{"textAlign":"left","marginLeft":"1rem"}}
-                    >
-                      
-                    </div><ul
-                      style={{"marginLeft":"1rem"}}
-                    >
+                      <strong>Schema</strong>
+                    </summary>
+                    <div
+                      style={{ textAlign: "left", marginLeft: "1rem" }}
+                    ></div>
+                    <ul style={{ marginLeft: "1rem" }}>
                       <SchemaItem
                         collapsible={false}
                         name={"id"}
                         required={true}
                         schemaName={"string"}
                         qualifierMessage={undefined}
-                        schema={{"type":"string","description":"Access key ID"}}
-                      >
-                        
-                      </SchemaItem><SchemaItem
+                        schema={{
+                          type: "string",
+                          description: "Access key ID",
+                        }}
+                      ></SchemaItem>
+                      <SchemaItem
                         collapsible={false}
                         name={"secret_key"}
                         required={true}
                         schemaName={"string"}
                         qualifierMessage={undefined}
-                        schema={{"type":"string","description":"Access secret"}}
-                      >
-                        
-                      </SchemaItem><SchemaItem
+                        schema={{
+                          type: "string",
+                          description: "Access secret",
+                        }}
+                      ></SchemaItem>
+                      <SchemaItem
                         collapsible={false}
                         name={"name"}
                         required={false}
                         schemaName={"string"}
                         qualifierMessage={undefined}
-                        schema={{"type":"string","description":"Name of the access key"}}
-                      >
-                        
-                      </SchemaItem>
+                        schema={{
+                          type: "string",
+                          description: "Name of the access key",
+                        }}
+                      ></SchemaItem>
                     </ul>
                   </details>
-                </TabItem><TabItem
+                </TabItem>
+                <TabItem
                   label={"Example (from schema)"}
                   value={"Example (from schema)"}
                 >
                   <ResponseSamples
-                    responseExample={"{\n  \"id\": \"string\",\n  \"secret_key\": \"string\",\n  \"name\": \"string\"\n}"}
+                    responseExample={
+                      '{\n  "id": "string",\n  "secret_key": "string",\n  "name": "string"\n}'
+                    }
                     language={"json"}
-                  >
-                    
-                  </ResponseSamples>
+                  ></ResponseSamples>
                 </TabItem>
               </SchemaTabs>
             </TabItem>
           </MimeTabs>
         </div>
-      </TabItem><TabItem
-        label={"default"}
-        value={"default"}
-      >
+      </TabItem>
+      <TabItem label={"default"} value={"default"}>
+        <div>Unexpected error</div>
         <div>
-          
-          
-          Unexpected error
-          
-          
-        </div><div>
-          <MimeTabs
-            className={"openapi-tabs__mime"}
-            schemaType={"response"}
-          >
-            <TabItem
-              label={"application/json"}
-              value={"application/json"}
-            >
-              <SchemaTabs
-                className={"openapi-tabs__schema"}
-              >
-                <TabItem
-                  label={"Schema"}
-                  value={"Schema"}
-                >
+          <MimeTabs className={"openapi-tabs__mime"} schemaType={"response"}>
+            <TabItem label={"application/json"} value={"application/json"}>
+              <SchemaTabs className={"openapi-tabs__schema"}>
+                <TabItem label={"Schema"} value={"Schema"}>
                   <details
                     style={{}}
                     className={"openapi-markdown__details response"}
@@ -337,38 +291,31 @@ Creates a new access key for a user. The access key ID and secret will be return
                       style={{}}
                       className={"openapi-markdown__details-summary-response"}
                     >
-                      <strong>
-                        Schema
-                      </strong>
-                    </summary><div
-                      style={{"textAlign":"left","marginLeft":"1rem"}}
-                    >
-                      
-                    </div><ul
-                      style={{"marginLeft":"1rem"}}
-                    >
+                      <strong>Schema</strong>
+                    </summary>
+                    <div
+                      style={{ textAlign: "left", marginLeft: "1rem" }}
+                    ></div>
+                    <ul style={{ marginLeft: "1rem" }}>
                       <SchemaItem
                         collapsible={false}
                         name={"message"}
                         required={false}
                         schemaName={"string"}
                         qualifierMessage={undefined}
-                        schema={{"type":"string"}}
-                      >
-                        
-                      </SchemaItem>
+                        schema={{ type: "string" }}
+                      ></SchemaItem>
                     </ul>
                   </details>
-                </TabItem><TabItem
+                </TabItem>
+                <TabItem
                   label={"Example (from schema)"}
                   value={"Example (from schema)"}
                 >
                   <ResponseSamples
-                    responseExample={"{\n  \"message\": \"string\"\n}"}
+                    responseExample={'{\n  "message": "string"\n}'}
                     language={"json"}
-                  >
-                    
-                  </ResponseSamples>
+                  ></ResponseSamples>
                 </TabItem>
               </SchemaTabs>
             </TabItem>
@@ -378,4 +325,3 @@ Creates a new access key for a user. The access key ID and secret will be return
     </ApiTabs>
   </div>
 </div>
-      

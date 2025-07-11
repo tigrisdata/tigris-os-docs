@@ -22,21 +22,34 @@ Tigris as the backend for seamless, elastic storage that scales infinitely.
 ## Getting Started with LanceDB Multimodal Lakehouse
 
 The LanceDB Multimodal Lakehouse is available in LanceDB Enterprise with Tigris
-as a supported object storage provider. Using the multimodal lakehouse features
-of LanceDB, starts with installing the open-source Python package `geneva`:
+as a supported object storage provider. You can still use Tigris with
+[LanceDB Cloud](https://accounts.lancedb.com/sign-up), and with the
+[open-source LanceDB](https://github.com/lancedb/lancedb).
+
+Using the multimodal lakehouse features of LanceDB Enterprise, starts with
+installing the open-source Python package `geneva`:
 
 ```text
 pip install geneva
 ```
 
-And importing your LanceDB table:
+And connecting to your LanceDB table:
 
 ```python
 import geneva as gv
 table = gv.connect("table-name")
 ```
 
-## Getting Started with LanceDB
+From there, you can write Python functions, decorated as UDFs, and apply them to
+your LanceDB datasets automatically. LanceDB Enterprise packages your
+environment, deploys your code, and handles all the data partitioning,
+checkpointing, and incremental updates. Reference the LanceDB Multimodal
+Lakehouse [documentation](http://lancedb.com/documentation) for the latest
+guides on using `geneva`.
+
+You'll need existing LanceDB datasets to use the Multimodal Lakehouse features.
+
+## How to Create LanceDB Datasets with Tigris
 
 To get started, install LanceDB into your project's NPM dependencies:
 
@@ -273,78 +286,4 @@ import entireExample from "!!raw-loader!./testlancedb.ts";
   <CodeBlock language="ts">{entireExample}</CodeBlock>
 </details>
 
-## Example: Docs search
-
-We've created an example app that lets you search the Tigris docs using LanceDB
-and the OpenAI embedding model at
-[tigrisdata-community/docs-search-example](https://github.com/tigrisdata-community/docs-search-example).
-To set this up you need the following:
-
-- An API key for OpenAI
-- A [Tigris account and bucket](https://storage.new)
-- A Tigris [access keypair](https://console.tigris.dev/createaccesskey)
-- [Node.js](https://nodejs.org/en) installed
-
-Clone the repository to your local machine:
-
-```text
-git clone https://github.com/tigrisdata-community/docs-search-example
-cd docs-search-example
-```
-
-Install all of the NPM dependencies:
-
-```text
-npm ci
-```
-
-Then clone the blog and documentation repositories:
-
-```text
-cd var
-git clone https://github.com/tigrisdata/tigris-blog
-git clone https://github.com/tigrisdata/tigris-os-docs
-cd ..
-```
-
-Set your OpenAI API key and Tigris credentials in your environment:
-
-```text
-export OPENAI_API_KEY=sk-hunter2-hunter2hunter2hunter2
-export AWS_ACCESS_KEY_ID=tid_AzureDiamond
-export AWS_SECRET_ACCESS_KEY=tid_hunter2hunter2hunter2
-export AWS_ENDPOINT_URL_S3=https://t3.storage.dev
-export AWS_REGION=auto
-export BUCKET_NAME=your-bucket-name-here
-```
-
-Make sure to replace the secrets with your keys!
-
-Ingest the docs with `ingest.ts`:
-
-```text
-npx tsx ingest.ts
-```
-
-Then you can run the server with `node`:
-
-```text
-node index.js
-```
-
-Then open [http://localhost:3000](http://localhost:3000) and search for whatever
-you want to know!
-
-## Next steps
-
-The following is left as an exercise for the reader:
-
-- The markdown chunkify function doesn't properly handle Markdown
-  [front matter](https://frontmatter.codes/docs/markdown). Try adding support
-  for it using the
-  [gray-matter package](https://www.npmjs.com/package/gray-matter).
-- Try integrating this with an AI model by passing the user query through
-  LanceDB to get a list of candidate documents, insert the document details, and
-  then see how it changes the results of your model.
-
-What else can you do with this database? The cloud's the limit!
+And now you can search the Tigris docs!

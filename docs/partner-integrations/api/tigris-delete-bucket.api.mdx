@@ -1,7 +1,9 @@
 ---
 id: tigris-delete-bucket
 title: "Delete a bucket"
-description: "Deletes the bucket and all its contents. If the bucket is not empty, it will not be deleted unless the `force` query parameter is set to `true`."
+description:
+  "Deletes the bucket and all its contents. If the bucket is not empty, it will
+  not be deleted unless the `force` query parameter is set to `true`."
 sidebar_label: "Delete a bucket"
 hide_title: true
 hide_table_of_contents: true
@@ -28,119 +30,106 @@ import TabItem from "@theme/TabItem";
   as={"h1"}
   className={"openapi__heading"}
   children={"Delete a bucket"}
->
-</Heading>
+></Heading>
 
 <MethodEndpoint
   method={"delete"}
   path={"/v1/providers/{provider_id}/orgs/{org_id}/buckets/{bucket_name}"}
->
-  
-</MethodEndpoint>
+></MethodEndpoint>
 
-
-
-Deletes the bucket and all its contents. If the bucket is not empty, it will not be deleted unless the `force` query parameter is set to `true`.
-
+Deletes the bucket and all its contents. If the bucket is not empty, it will not
+be deleted unless the `force` query parameter is set to `true`.
 
 <Heading
   id={"request"}
   as={"h2"}
   className={"openapi-tabs__heading"}
   children={"Request"}
->
-</Heading>
+></Heading>
 
 <details
-  style={{"marginBottom":"1rem"}}
+  style={{ marginBottom: "1rem" }}
   className={"openapi-markdown__details"}
   data-collapsed={false}
   open={true}
 >
-  <summary
-    style={{}}
-  >
-    <h3
-      className={"openapi-markdown__details-summary-header-params"}
-    >
+  <summary style={{}}>
+    <h3 className={"openapi-markdown__details-summary-header-params"}>
       Path Parameters
     </h3>
-  </summary><div>
+  </summary>
+  <div>
     <ul>
       <ParamsItem
         className={"paramsItem"}
-        param={{"name":"provider_id","in":"path","required":true,"description":"Provider ID","schema":{"type":"string"}}}
-      >
-        
-      </ParamsItem><ParamsItem
+        param={{
+          name: "provider_id",
+          in: "path",
+          required: true,
+          description: "Provider ID",
+          schema: { type: "string" },
+        }}
+      ></ParamsItem>
+      <ParamsItem
         className={"paramsItem"}
-        param={{"name":"org_id","in":"path","required":true,"description":"Organization ID","schema":{"type":"string"}}}
-      >
-        
-      </ParamsItem><ParamsItem
+        param={{
+          name: "org_id",
+          in: "path",
+          required: true,
+          description: "Organization ID",
+          schema: { type: "string" },
+        }}
+      ></ParamsItem>
+      <ParamsItem
         className={"paramsItem"}
-        param={{"name":"bucket_name","in":"path","required":true,"description":"Bucket name","schema":{"type":"string"}}}
-      >
-        
-      </ParamsItem>
+        param={{
+          name: "bucket_name",
+          in: "path",
+          required: true,
+          description: "Bucket name",
+          schema: { type: "string" },
+        }}
+      ></ParamsItem>
     </ul>
   </div>
-</details><details
-  style={{"marginBottom":"1rem"}}
+</details>
+<details
+  style={{ marginBottom: "1rem" }}
   className={"openapi-markdown__details"}
   data-collapsed={false}
   open={true}
 >
-  <summary
-    style={{}}
-  >
-    <h3
-      className={"openapi-markdown__details-summary-header-params"}
-    >
+  <summary style={{}}>
+    <h3 className={"openapi-markdown__details-summary-header-params"}>
       Query Parameters
     </h3>
-  </summary><div>
+  </summary>
+  <div>
     <ul>
       <ParamsItem
         className={"paramsItem"}
-        param={{"name":"force","in":"query","required":false,"description":"If set to true, deletes the bucket even if it's not empty","schema":{"type":"boolean"}}}
-      >
-        
-      </ParamsItem>
+        param={{
+          name: "force",
+          in: "query",
+          required: false,
+          description:
+            "If set to true, deletes the bucket even if it's not empty",
+          schema: { type: "boolean" },
+        }}
+      ></ParamsItem>
     </ul>
   </div>
-</details><div>
+</details>
+<div>
   <div>
-    <ApiTabs
-      label={undefined}
-      id={undefined}
-    >
-      <TabItem
-        label={"200"}
-        value={"200"}
-      >
+    <ApiTabs label={undefined} id={undefined}>
+      <TabItem label={"200"} value={"200"}>
+        <div>OK</div>
         <div>
-          
-          
-          OK
-          
-          
-        </div><div>
-          <MimeTabs
-            className={"openapi-tabs__mime"}
-            schemaType={"response"}
-          >
-            <TabItem
-              label={"application/json"}
-              value={"application/json"}
-            >
-              <SchemaTabs
-                className={"openapi-tabs__schema"}
-              >
-                <TabItem
-                  label={"Schema"}
-                  value={"Schema"}
-                >
+          <MimeTabs className={"openapi-tabs__mime"} schemaType={"response"}>
+            <TabItem label={"application/json"} value={"application/json"}>
+              <SchemaTabs className={"openapi-tabs__schema"}>
+                <TabItem label={"Schema"} value={"Schema"}>
                   <details
                     style={{}}
                     className={"openapi-markdown__details response"}
@@ -151,68 +140,41 @@ Deletes the bucket and all its contents. If the bucket is not empty, it will not
                       style={{}}
                       className={"openapi-markdown__details-summary-response"}
                     >
-                      <strong>
-                        Schema
-                      </strong>
-                    </summary><div
-                      style={{"textAlign":"left","marginLeft":"1rem"}}
-                    >
-                      
-                    </div><ul
-                      style={{"marginLeft":"1rem"}}
-                    >
+                      <strong>Schema</strong>
+                    </summary>
+                    <div
+                      style={{ textAlign: "left", marginLeft: "1rem" }}
+                    ></div>
+                    <ul style={{ marginLeft: "1rem" }}>
                       <div
-                        style={{"marginTop":".5rem","marginBottom":".5rem"}}
+                        style={{ marginTop: ".5rem", marginBottom: ".5rem" }}
                       >
-                        
-                        
                         object
-                        
-                        
                       </div>
                     </ul>
                   </details>
-                </TabItem><TabItem
+                </TabItem>
+                <TabItem
                   label={"Example (from schema)"}
                   value={"Example (from schema)"}
                 >
                   <ResponseSamples
                     responseExample={"{}"}
                     language={"json"}
-                  >
-                    
-                  </ResponseSamples>
+                  ></ResponseSamples>
                 </TabItem>
               </SchemaTabs>
             </TabItem>
           </MimeTabs>
         </div>
-      </TabItem><TabItem
-        label={"default"}
-        value={"default"}
-      >
+      </TabItem>
+      <TabItem label={"default"} value={"default"}>
+        <div>Unexpected error</div>
         <div>
-          
-          
-          Unexpected error
-          
-          
-        </div><div>
-          <MimeTabs
-            className={"openapi-tabs__mime"}
-            schemaType={"response"}
-          >
-            <TabItem
-              label={"application/json"}
-              value={"application/json"}
-            >
-              <SchemaTabs
-                className={"openapi-tabs__schema"}
-              >
-                <TabItem
-                  label={"Schema"}
-                  value={"Schema"}
-                >
+          <MimeTabs className={"openapi-tabs__mime"} schemaType={"response"}>
+            <TabItem label={"application/json"} value={"application/json"}>
+              <SchemaTabs className={"openapi-tabs__schema"}>
+                <TabItem label={"Schema"} value={"Schema"}>
                   <details
                     style={{}}
                     className={"openapi-markdown__details response"}
@@ -223,38 +185,31 @@ Deletes the bucket and all its contents. If the bucket is not empty, it will not
                       style={{}}
                       className={"openapi-markdown__details-summary-response"}
                     >
-                      <strong>
-                        Schema
-                      </strong>
-                    </summary><div
-                      style={{"textAlign":"left","marginLeft":"1rem"}}
-                    >
-                      
-                    </div><ul
-                      style={{"marginLeft":"1rem"}}
-                    >
+                      <strong>Schema</strong>
+                    </summary>
+                    <div
+                      style={{ textAlign: "left", marginLeft: "1rem" }}
+                    ></div>
+                    <ul style={{ marginLeft: "1rem" }}>
                       <SchemaItem
                         collapsible={false}
                         name={"message"}
                         required={false}
                         schemaName={"string"}
                         qualifierMessage={undefined}
-                        schema={{"type":"string"}}
-                      >
-                        
-                      </SchemaItem>
+                        schema={{ type: "string" }}
+                      ></SchemaItem>
                     </ul>
                   </details>
-                </TabItem><TabItem
+                </TabItem>
+                <TabItem
                   label={"Example (from schema)"}
                   value={"Example (from schema)"}
                 >
                   <ResponseSamples
-                    responseExample={"{\n  \"message\": \"string\"\n}"}
+                    responseExample={'{\n  "message": "string"\n}'}
                     language={"json"}
-                  >
-                    
-                  </ResponseSamples>
+                  ></ResponseSamples>
                 </TabItem>
               </SchemaTabs>
             </TabItem>
@@ -264,4 +219,3 @@ Deletes the bucket and all its contents. If the bucket is not empty, it will not
     </ApiTabs>
   </div>
 </div>
-      

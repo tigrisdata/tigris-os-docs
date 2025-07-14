@@ -4,7 +4,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "examples": "npm run examples:getting-started && npm run examples:presigned-urls && npm run examples:rename-object",
+    "examples:getting-started": "node getting-started.js",
+    "examples:presigned-urls": "node presigned-urls.js",
+    "examples:rename-object": "node rename-object.js"
   },
   "author": "",
   "license": "ISC",

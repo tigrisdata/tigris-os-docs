@@ -11,10 +11,22 @@
   },
   "features": {
     "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/go:1": {},
+    "ghcr.io/devcontainers/features/python:1": {},
+    "ghcr.io/devcontainers/features/dotnet:2": {},
+    "ghcr.io/devcontainers/features/ruby:1": {},
+    "ghcr.io/devcontainers/features/aws-cli:1": {},
     "ghcr.io/devcontainers-extra/features/neovim-apt-get:1": {}
   },
-  "postStartCommand": "npm ci",
-  "initializeCommand": "mkdir -p ${localEnv:HOME}${localEnv:USERPROFILE}/.local/share/atuin",
+  "postStartCommand": "./.devcontainer/poststart.sh",
+  "initializeCommand": "mkdir -p ${localEnv:HOME}${localEnv:USERPROFILE}/.aws",
+  "mounts": [
+    {
+      "type": "bind",
+      "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.aws",
+      "target": "/home/vscode/.aws"
+    }
+  ],
   "customizations": {
     "vscode": {
       "extensions": [
@@ -27,7 +39,8 @@
         "dbaeumer.vscode-eslint",
         "GitHub.vscode-github-actions",
         "DavidAnson.vscode-markdownlint",
-        "ms-vscode.wordcount"
+        "ms-vscode.wordcount",
+        "JakeBecker.elixir-ls"
       ]
     }
   }

@@ -21,7 +21,9 @@ for obj in response['Contents']:
     print(f'  {obj["Key"]}')
 
 # Upload file
-response = svc.upload_file('getting-started.py', 'tigris-example', 'getting-started.py')
+response = svc.upload_file(
+    'getting-started.py', 'tigris-example', 'getting-started.py')
 
 # Download file
-response = svc.download_file('tigris-example', 'getting-started.py', 'getting-started-2.py')
+response = svc.download_file(
+    'tigris-example', 'getting-started.py', 'getting-started-2.py')

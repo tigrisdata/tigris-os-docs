@@ -13,6 +13,10 @@ echo "Installing dependencies..."
 pip install -r requirements.txt
 
 for program in ./*.py; do
+  if [[ "$program" == "./profile-name.py" ]]; then
+    continue
+  fi
+
   retries=5
   delay=1
   for ((i=0; i<retries; i++)); do

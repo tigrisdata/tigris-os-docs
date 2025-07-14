@@ -9,13 +9,17 @@ svc = boto3.client(
 )
 
 # build an object metadata query
+
+
 def _x_tigris_query(request, query):
     request.headers.add_header('X-Tigris-Query', query.strip())
+
 
 # Register event into boto with custom query
 svc.meta.events.register(
     "before-sign.s3.ListObjectsV2",
-    lambda request, **kwargs: _x_tigris_query(request, '`Content-Type` = "text/plain"'),
+    lambda request, **kwargs: _x_tigris_query(
+        request, '`Content-Type` = "text/plain" ORDER BY `Last-Modified`'),
 )
 
 response = svc.list_objects_v2(Bucket="tigris-example")

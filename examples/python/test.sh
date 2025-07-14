@@ -13,6 +13,10 @@ echo "Installing dependencies..."
 pip install -r requirements.txt
 
 for program in ./*.py; do
+  if [[ "$program" == "./default-session.py" ]]; then
+    continue
+  fi
+
   if [[ "$program" == "./profile-name.py" ]]; then
     continue
   fi

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
-    "dev": "docusaurus start",
+    "dev": "docusaurus start --host 0.0.0.0",
     "start": "docusaurus start",
     "build:apidocs": "docusaurus gen-api-docs all",
     "build": "docusaurus build",

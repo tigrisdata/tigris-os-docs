@@ -1,9 +1,9 @@
 defmodule PutObjectTest do
   use ExUnit.Case
 
-  test "put bar.txt" do
+  test "put bar-elixir.txt" do
     bucket_name = "tigris-example"
-    key = "bar.txt"
+    key = "bar-elixir.txt"
     body = "Hello, world!"
 
     response = ExAws.S3.put_object(bucket_name, key, body) |> ExAws.request!()
@@ -11,9 +11,9 @@ defmodule PutObjectTest do
     assert response.status_code == 200
   end
 
-  test "read back bar.txt" do
+  test "read back bar-elixir.txt" do
     bucket_name = "tigris-example"
-    key = "bar.txt"
+    key = "bar-elixir.txt"
 
     response = ExAws.S3.get_object(bucket_name, key) |> ExAws.request!()
 

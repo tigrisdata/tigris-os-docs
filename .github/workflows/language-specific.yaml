@@ -15,18 +15,10 @@ jobs:
         with:
           dotnet-version: "9.0.x"
           cache: true
-          cache-dependency-path: "**/package-lock.json"
-      - run: |
-          curl -s https://raw.githubusercontent.com/dotnet-script/dotnet-script/master/install/install.sh | sudo bash
+          cache-dependency-path: "**/packages.lock.json"
       - run: |
           cd examples/dotnet
-          dotnet restore
-      - run: |
-          cd examples/dotnet
-          dotnet run # runs GettingStarted.cs
-          dotnet script ListBuckets.csx
-          dotnet script PutObject.csx
-          dotnet script PresignedURLTest.csx
+          ./test.sh
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}
@@ -42,10 +34,7 @@ jobs:
           elixir-version: "1.18.2"
       - run: |
           cd examples/elixir
-          mix deps.get
-      - run: |
-          cd examples/elixir
-          mix test
+          ./test.sh
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}
@@ -59,19 +48,10 @@ jobs:
         with:
           cache-dependency-path: |
             examples/go/go.sum
-      - name: Deps
+      - name: Run examples
         run: |
           cd examples/go
-          go mod download
-      - name: Examples
-        run: |
-          cd examples/go
-          go run ./cmd/getting-started tigris-example
-          go run ./cmd/conditional-operations tigris-example
-          go run ./cmd/metadata-querying tigris-example
-          go run ./cmd/object-regions tigris-example
-          go run ./cmd/presigned-urls tigris-example
-          go run ./cmd/rename-objects tigris-example
+          ./test.sh
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}
@@ -84,16 +64,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "latest"
-      - name: Deps
+      - name: Run examples
         run: |
           cd examples/js
-          npm ci --include=dev
-      - name: Examples
-        run: |
-          cd examples/js
-          node getting-started.js
-          node presigned-urls.js
-          node rename-object.js
+          ./test.sh
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}
@@ -110,14 +84,7 @@ jobs:
           cache: pip
       - run: |
           cd examples/python
-          pip install -r requirements.txt
-      - run: |
-          cd examples/python
-          python getting-started.py
-          python hardcode-credentials.py
-          python object-metadata.py
-          python object-regions.py
-          python rename-object.py
+          ./test.sh
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}
@@ -130,13 +97,10 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.4"
+          bundler-cache: true
       - run: |
           cd examples/ruby
-          bundle install
-      - run: |
-          cd examples/ruby
-          ruby getting_started.rb
-          ruby presigned_urls_test.rb
+          ./test.sh
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}

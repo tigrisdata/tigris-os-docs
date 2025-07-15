@@ -9,8 +9,11 @@ svc = boto3.client(
 )
 
 # Restrict data to Europe (Frankfurt) only
+
+
 def _limit_to_fra(request, **kwargs):
     request.headers.add_header('X-Tigris-Regions', 'fra')
+
 
 # Register event into boto
 svc.meta.events.register(

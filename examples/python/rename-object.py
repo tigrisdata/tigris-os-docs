@@ -9,8 +9,10 @@ svc = boto3.client(
     config=Config(s3={'addressing_style': 'virtual'}),
 )
 
+
 def _x_tigris_rename(request):
     request.headers.add_header('X-Tigris-Rename', "true")
+
 
 # Register event into boto
 svc.meta.events.register(

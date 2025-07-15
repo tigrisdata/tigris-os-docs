@@ -1,0 +1,47 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/debian
+{
+  "name": "Dev",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "build": {
+    "dockerfile": "Dockerfile",
+    "cacheFrom": [
+      "type=registry,ref=ghcr.io/tigrisdata/tigris-os-docs/devcontainer"
+    ]
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/go:1": {},
+    "ghcr.io/devcontainers/features/python:1": {},
+    "ghcr.io/devcontainers/features/dotnet:2": {},
+    "ghcr.io/devcontainers/features/ruby:1": {},
+    "ghcr.io/devcontainers/features/aws-cli:1": {},
+    "ghcr.io/devcontainers-extra/features/neovim-apt-get:1": {}
+  },
+  "postStartCommand": "./.devcontainer/poststart.sh",
+  "initializeCommand": "mkdir -p ${localEnv:HOME}${localEnv:USERPROFILE}/.aws",
+  "mounts": [
+    {
+      "type": "bind",
+      "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.aws",
+      "target": "/home/vscode/.aws"
+    }
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "unifiedjs.vscode-mdx",
+        "esbenp.prettier-vscode",
+        "ms-azuretools.vscode-containers",
+        "redhat.vscode-yaml",
+        "ms-vsliveshare.vsliveshare",
+        "ms-azuretools.vscode-docker",
+        "dbaeumer.vscode-eslint",
+        "GitHub.vscode-github-actions",
+        "DavidAnson.vscode-markdownlint",
+        "ms-vscode.wordcount",
+        "JakeBecker.elixir-ls"
+      ]
+    }
+  }
+}

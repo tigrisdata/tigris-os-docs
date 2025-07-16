@@ -15,7 +15,7 @@ credentials. You can do this by following the instructions in the
 
 First, create an access key. You can do this using the Tigris Dashboard or the
 AWS CLI. For more information, refer to the
-[Create an Access Key](/docs/iam/create-access-key/index.mdx) guide.
+[Manage an Access Key](/docs/iam/manage-access-key/index.mdx) guide.
 
 Make sure to **not** grant access to any bucket when creating the access key.
 This will create an access key with no permissions.

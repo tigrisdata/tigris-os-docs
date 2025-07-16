@@ -58,7 +58,6 @@ If the access key is compromised, the blast radius is minimal:
         "s3:ListBucket",
         "s3:PutObject",
         "s3:PutObjectAcl",
-        "s3:CreateMultipartUpload",
         "s3:AbortMultipartUpload",
         "s3:ListMultipartUploadParts",
         "s3:CompleteMultipartUpload"

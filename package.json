@@ -32,6 +32,8 @@
     "docusaurus-theme-openapi-docs": "4.3.7",
     "dotenv": "^16.0.2",
     "follow-redirects": ">=1.15.6",
+    "lodash": "^4.17.21",
+    "lodash.template": "^4.5.0",
     "param-case": "^3.0.4",
     "posthog-docusaurus": "^2.0.0",
     "prism-react-renderer": "^2.3.0",

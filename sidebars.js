@@ -111,6 +111,7 @@ const sidebars = {
                 "iam/policies/examples/limited-access-key",
                 "iam/policies/examples/ip-restrictions",
                 "iam/policies/examples/date-time-restrictions",
+                "iam/policies/examples/training-job",
               ],
             },
             "training/tigrisfs",

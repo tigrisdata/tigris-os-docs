@@ -37,8 +37,8 @@ If the access key is compromised, the blast radius is minimal:
       "Effect": "Allow",
       "Action": ["s3:GetObject", "s3:ListBucket"],
       "Resource": [
-        "arn:aws:s3:::contoso-training-datasets-wikipedia-2025-07-01",
-        "arn:aws:s3:::contoso-training-datasets-wikipedia-2025-07-01/*"
+        "arn:aws:s3:::acmeco-training-datasets-wikipedia-2025-07-01",
+        "arn:aws:s3:::acmeco-training-datasets-wikipedia-2025-07-01/*"
       ]
     },
     {
@@ -46,8 +46,8 @@ If the access key is compromised, the blast radius is minimal:
       "Effect": "Allow",
       "Action": ["s3:GetObject", "s3:ListBucket"],
       "Resource": [
-        "arn:aws:s3:::contoso-base-models",
-        "arn:aws:s3:::contoso-base-models/*"
+        "arn:aws:s3:::acmeco-base-models",
+        "arn:aws:s3:::acmeco-base-models/*"
       ]
     },
     {
@@ -64,8 +64,8 @@ If the access key is compromised, the blast radius is minimal:
         "s3:CompleteMultipartUpload"
       ],
       "Resource": [
-        "arn:aws:s3:::contoso-finetuned-models",
-        "arn:aws:s3:::contoso-finetuned-models/*"
+        "arn:aws:s3:::acmeco-finetuned-models",
+        "arn:aws:s3:::acmeco-finetuned-models/*"
       ],
       "Condition": {
         "DateGreaterThan": {

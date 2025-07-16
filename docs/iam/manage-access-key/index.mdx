@@ -1,0 +1,100 @@
+---
+title: Manage Access Keys
+description:
+  Learn how to create and delete access keys in Tigris for secure programmatic
+  access.
+---
+
+# Manage Access Keys
+
+Tigris access keys authenticate programmatic access to your object storage
+buckets. You can manage them via the Tigris Dashboard or programmatically using
+the AWS CLI.
+
+---
+
+## 🔑 Create an Access Key
+
+### From the Dashboard
+
+1. **Open the Dashboard**  
+   Go to the [Tigris Dashboard](https://console.tigris.dev) and select **Access
+   Keys** from the sidebar.
+
+2. **Click "Create New Access Key +"**  
+   Optionally choose your service endpoint (`Default` or `Fly`).
+
+3. **Fill in Key Details**
+
+   - **Key Name**: e.g., `ci-access`, `backup-script`
+   - **Permissions**:
+     - **Admin** – full access (dev use only)
+     - **Editor** – read/write to selected buckets
+     - **ReadOnly** – read-only for selected buckets
+
+4. **Click Create**  
+   You’ll receive:
+
+   - Access Key ID
+   - Secret Access Key _(shown once—store it securely)_
+   - S3 & IAM endpoint URLs
+   - Region
+
+   Set the following environment variables:
+
+   ```bash
+   export AWS_ACCESS_KEY_ID=your-access-key-id
+   export AWS_SECRET_ACCESS_KEY=your-secret-access-key
+   export AWS_ENDPOINT_URL_S3=https://t3.storage.dev
+   export AWS_ENDPOINT_URL_IAM=https://iam.storage.dev
+   export AWS_REGION=auto
+   ```
+
+---
+
+### Programmatically
+
+1. **Set Environment Variables**
+
+   ```bash
+   export AWS_ACCESS_KEY_ID=tid_
+   export AWS_SECRET_ACCESS_KEY=tsec_
+   export AWS_ENDPOINT_URL_S3=https://t3.storage.dev
+   export AWS_ENDPOINT_URL_IAM=https://iam.storage.dev
+   export AWS_REGION=auto
+   ```
+
+2. **Create an Access Key**
+
+   ```bash
+   aws iam create-access-key --endpoint-url "$AWS_ENDPOINT_URL_IAM"
+   ```
+
+---
+
+## 🗑️ Delete an Access Key
+
+### From the Dashboard
+
+1. **Open the Dashboard**  
+   Go to the [Tigris Dashboard](https://console.tigris.dev) and select **Access
+   Keys**.
+
+2. **Find the Key**  
+   In the list, locate the access key you want to delete.
+
+3. **Delete the Key**  
+   Click the 🗑️ icon next to the key. A confirmation modal will appear—click
+   **Delete** to confirm.
+
+---
+
+### Programmatically
+
+Ensure your environment variables are still set (see above), then run:
+
+```bash
+aws iam delete-access-key --endpoint-url "$AWS_ENDPOINT_URL_IAM" --access-key-id=tid_
+```
+
+> 🔐 Tip: Rotate or delete unused access keys regularly.

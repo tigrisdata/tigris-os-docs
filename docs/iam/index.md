@@ -41,14 +41,14 @@ while logged in— not what an access key can do programmatically.
 
 To control programmatic access, attach IAM Policies directly to Access Keys. To
 manage Organizations, reference the
-[Organizations Documentation](docs/account-management/organizations/).
+[Organizations Documentation](/docs/account-management/organizations/).
 
 ---
 
 ## 🛠️ Programmatic Access with Existing S3 API Tools
 
 Tigris is S3-compatible, which means all the same API calls work, but pointed at
-the Tigris [service endpoints](docs/sdks/s3/aws-cli/#service-endpoints).
+the Tigris [service endpoints](/docs/sdks/s3/aws-cli/#service-endpoints).
 Practically, this means you can change your existing code to use Tigris by:
 
 - Join or create an Organization
@@ -60,11 +60,11 @@ Practically, this means you can change your existing code to use Tigris by:
 - Update your region, `AWS_REGION` to `auto`
 - Override the endpoint URL, `AWS_ENDPOINT_URL_IAM` to `https://iam.storage.dev`
   for IAM operations.
-- Now you're ready to use the [AWS CLI](docs/sdks/s3/aws-cli/), or any of your
-  [familiar SDKs](docs/sdks/s3/) to manage Tigris Access Keys.
+- Now you're ready to use the [AWS CLI](/docs/sdks/s3/aws-cli/), or any of your
+  [familiar SDKs](/docs/sdks/s3/) to manage Tigris Access Keys.
 
 More help for how to configure your specific tool is available in the
-[AWS S3 SDKs Documentation](docs/sdks/s3/).
+[AWS S3 SDKs Documentation](/docs/sdks/s3/).
 
 ---
 
@@ -84,7 +84,7 @@ Tigris also supports many common S3-compatible actions such as:
 - `s3:ListObjectsV2`
 
 For a full list of supported actions, examples, and conditions, see the
-[Policies Documentation](docs/iam/policies/).
+[Policies Documentation](/docs/iam/policies/).
 
 ---
 

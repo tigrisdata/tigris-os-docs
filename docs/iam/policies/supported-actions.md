@@ -17,7 +17,8 @@ You can:
 
 ## 📋 Action Reference Table
 
-The table below lists supported IAM policy actions and what APIs they control (allow or deny).
+The table below lists supported IAM policy actions and what APIs they control
+(allow or deny).
 
 | IAM action                    | Controlled APIs                                                                | Description                                                                                                                                       |
 | ----------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -17,7 +17,9 @@ You can:
 
 ## 📋 Action Reference Table
 
-| IAM action                    | Mapped operations                                                              | Description                                                                                                                                       |
+The table below lists supported IAM policy actions and what APIs they control (allow or deny).
+
+| IAM action                    | Controlled APIs                                                                | Description                                                                                                                                       |
 | ----------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | s3:AbortMultipartUpload       | AbortMultipartUpload                                                           | Grants permission to abort a multipart upload.                                                                                                    |
 | s3:CreateBucket               | CreateBucket                                                                   | Grants permission to create a new bucket.                                                                                                         |

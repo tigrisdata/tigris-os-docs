@@ -1,94 +1,72 @@
 # IAM Overview
 
-Tigris IAM is designed to be simple, secure, and purpose-built for object
-storage. We started by removing two of the easiest to misuse components: IAM
-Users and IAM Roles. On Tigris, you’re a Member or Admin of an organization, but
-that’s as far as “users” go. You don’t assume roles to get temporary credentials
-that you then need to refresh in the middle of longer running jobs. We don’t
-have compute instances, so we don’t need instance profiles for policy
-attachments to access your data from an instance. Tigris IAM is only access keys
-with policy attachments— focusing instead on what developers actually need.
+Tigris IAM simplifies access management by removing IAM Users and Roles. All
+users are either Members or Admins within an organization. Access is managed
+through access keys with attached policies. Roles, temporary credentials, and
+instance profiles are not used.
 
----
+Instead of delegating permissions to IAM users or groups, you delegate them to
+members of your organization or access keys. By only focusing on policies
+attached to access keys, Tigris focuses on what developers really need.
 
-## 🎯 Key Principles
+## Key Principles
 
-- **Simplified IAM that's still S3 Compatible**: You don’t create IAM users or
-  assume roles for programmatic access.
-- **Access Keys Have Policies Attached**: Access to resources is governed by
-  policy attachments, not roles or groups.
-- **No Temporary Credentials**: Expire your access keys when you choose.
-- ✅ Instead, you are a **Member of an Organization**.
-- ✅ You create **Access Keys**, and attach **Policies** directly to them.
+- Tigris IAM is S3-compatible, or written specifically for the needs of object
+  storage management.
+- Access keys can have directly attached policies. Tigris does not use IAM
+  Users, IAM groups, or IAM Roles.
+- Access keys can have an expiry attached to them.
+- All users are Members of an Organization and use Access Keys with policies.
+- Any Member can create an Access Key with as much permissions as they have and
+  no more.
 
-This model removes confusion, reduces risk, and ensures that permissions are
-clear, scoped, and easy to manage.
+## Prebuilt Roles for Organization Members
 
----
+Two
+[prebuilt roles](../account-management/accounts.md#user-roles-and-permissions)
+are available for organization members:
 
-## 🧩 Prebuilt Roles for Organization Members
+- `Member`: List, read, and create access to buckets.
+- `Admin`: Full access to buckets, objects, and member management.
 
-Tigris provides two prebuilt roles that can be assigned to **Members of your
-Organization**:
+:::note
 
-- `Member`: Grants list, read, and create access to buckets within the
-  organization.
-- `Admin`: Grants full read/write and create access to buckets and objects, as
-  well as management of Members and permissions.
+These are different from the concept of IAM Roles in other cloud platforms.
+Tigris roles set the permission limits that a user has instead of defining the
+scope of every single action they can do.
 
-These roles are managed via the Tigris Dashboard and control what a human can do
-while logged in— not what an access key can do programmatically.
+:::
 
-To control programmatic access, attach IAM Policies directly to Access Keys. To
-manage Organizations, reference the
+These roles apply to users in the Tigris Dashboard. Programmatic access is
+controlled by
+[attaching IAM policies to access keys](./policies/attach-iam-policy.md). For
+organization management, see the
 [Organizations Documentation](/docs/account-management/organizations/).
 
----
+## Programmatic Access with Existing AWS IAM API Tools
 
-## 🛠️ Programmatic Access with Existing S3 API Tools
-
-Tigris is S3-compatible, which means all the same API calls work, but pointed at
-the Tigris [service endpoints](/docs/sdks/s3/aws-cli/#service-endpoints).
-Practically, this means you can change your existing code to use Tigris by:
+Tigris' IAM API is [compatible with existing IAM tooling](/docs/iam/policies/)
+by emulating the right
+[service endpoints](/docs/sdks/s3/aws-cli/#service-endpoints), but Tigris
+specifically focuses on the part of IAM that's relevant for object storage. In
+many cases, you can change over your existing IAM tooling to use Tigris by doing
+the following:
 
 - Join or create an Organization
-- Create Access Keys
-- Attach a Policy to your Access Keys
-- Update your environment variables or credentials file to set
-  `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to the Tigris Access Key and
-  Secret
-- Update your region, `AWS_REGION` to `auto`
-- Override the endpoint URL, `AWS_ENDPOINT_URL_IAM` to `https://iam.storage.dev`
-  for IAM operations.
-- Now you're ready to use the [AWS CLI](/docs/sdks/s3/aws-cli/), or any of your
-  [familiar SDKs](/docs/sdks/s3/) to manage Tigris Access Keys.
+- Create access keys and attach policies
+- Set the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
+  to your Tigris credentials
+- Set the environment variable `AWS_REGION` to `auto`
+- Set the environment variable `AWS_ENDPOINT_URL_IAM` to
+  `https://iam.storage.dev` for IAM operations
 
-More help for how to configure your specific tool is available in the
-[AWS S3 SDKs Documentation](/docs/sdks/s3/).
+Refer to the [AWS CLI](/docs/sdks/s3/aws-cli/) and
+[SDK documentation](/docs/sdks/s3/) for configuration details.
 
----
+### Access Key Operations: Tigris vs AWS IAM API
 
-## 📜 Policy Compatibility
-
-Tigris supports the same policy document structure as AWS IAM, including
-standard `Action`, `Effect`, `Resource`, and `Condition` blocks. This makes it
-easy to reuse existing IAM policies or migrate from AWS without learning a new
-syntax.
-
-Tigris also supports many common S3-compatible actions such as:
-
-- `s3:GetObject`
-- `s3:PutObject`
-- `s3:ListBucket`
-- `s3:DeleteObject`
-- `s3:ListObjectsV2`
-
-For a full list of supported actions, examples, and conditions, see the
-[Policies Documentation](/docs/iam/policies/).
-
----
-
-## 🔑 Access Key Operations: Tigris vs AWS IAM API
+Our [IAM APIs page](../api/s3/index.md#iam-apis) has more information, but at a
+high level:
 
 | Operation                               | Tigris Support | AWS Support | Description                                     |
 | --------------------------------------- | -------------- | ----------- | ----------------------------------------------- |
@@ -103,3 +81,27 @@ For a full list of supported actions, examples, and conditions, see the
 
 Tigris only supports the operations required for secure and scoped Access Key
 management— no IAM users, roles, or identity management APIs needed.
+
+## Policy Compatibility
+
+Tigris supports the same policy document structure as AWS IAM, including
+standard `Action`, `Effect`, `Resource`, and `Condition` blocks. This makes it
+easy to reuse existing IAM policies or migrate from AWS without learning new
+syntax.
+
+Tigris also supports many common S3-compatible actions such as:
+
+- `s3:GetObject`
+- `s3:PutObject`
+- `s3:ListBucket`
+- `s3:DeleteObject`
+- `s3:ListObjectsV2`
+
+For a full list of supported actions, examples, and conditions, see the
+[Policies Documentation](/docs/iam/policies/). Also see these example policies:
+
+- [Creating a limited access key](./policies/examples/limited-access-key.md)
+- [Enforcing IP restrictions](./policies/examples/ip-restrictions.md)
+- [Enforcing date/time restrictions](./policies/examples/date-time-restrictions.md)
+  (automatic expiration)
+- [Limiting access for a training job](./policies/examples/training-job.md)

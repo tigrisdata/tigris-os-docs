@@ -1,0 +1,71 @@
+# Choosing a Lance Dataset Type
+
+LanceDB provides
+[two dataset types](https://blog.lancedb.com/custom-dataset-for-llm-training-using-lance/)
+for use with PyTorch, each suited for different scenarios:
+
+- `SafeLanceDataset`: A "map-style" dataset ideal for **finite** datasets. It
+  provides high-performance random access to your data.
+- `LanceDataset`: An "iterable-style" dataset designed for **streaming or
+  constantly updated** datasets that may be too large to index in memory.
+
+This page explains the differences between them and how to pick the best one for
+the job.
+
+| **Criterion**                       | **`SafeLanceDataset` (map‑style)**                                                                                           | **`LanceDataset` (iterable‑style)**                                                                                      |
+| :---------------------------------- | :--------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------- |
+| **Data access pattern**             | Random access via integer indices ✅                                                                                         | Sequential streaming; no random access ❌                                                                                |
+| **Indexing & memory footprint**     | Builds in‑memory index of all records (requires enough RAM for index)                                                        | No full index; reads shards on the fly                                                                                   |
+| **Multi‑worker loading**            | Fully supported—each worker gets its own slice via PyTorch’s samplers                                                        | Workers share the iterator; use `ShardedFragmentSampler` to split work                                                   |
+| **Prefetching & multiprocessing**   | Leverages PyTorch’s prefetching, caching, and multiprocessing                                                                | Limited to what your iterable and sampler can buffer; may require custom logic                                           |
+| **Typical use cases**               | Fixed, finite datasets (ImageNet, CIFAR, COCO, large text corpora)                                                           | Streaming/unbounded data (real‑time feeds, logs, social media)                                                           |
+| **Sampling & sharding flexibility** | Uses PyTorch’s `RandomSampler` or `DistributedSampler` for uniform splits                                                    | Built‑in `ShardedFragmentSampler` that understands Lance shards—no inter‑worker coordination needed                      |
+| **Distributed training**            | Easy to split with `DistributedSampler` when `num_workers > 0`                                                               | Use iterable‑aware samplers to ensure each process reads distinct fragments                                              |
+| **Throughput & performance**        | Highest throughput when dataset index fits in memory and you can use multiple workers                                        | Scales to arbitrarily large or infinite data; optimized for sequential reads on huge datasets                            |
+| **When to choose**                  | • Your dataset size is moderate and indexable in RAM<br/>• You want max random‑access throughput & simple multi‑worker setup | • You’re dealing with streaming/unbounded data<br/>• Your data is too big to index in RAM<br/>• You need custom sharding |
+
+## When to Use Each Dataset Type
+
+Both dataset types let you stream your training data from Tigris, but picking
+the right option depends on your use case.
+
+### Use `SafeLanceDataset` for Finite Datasets
+
+`SafeLanceDataset` is a map-style dataset and should be your default choice for
+most standard, finite datasets. If your data can be indexed (most image, text,
+or tabular datasets fall in this category), `SafeLanceDataset` is the way to go.
+
+It works by building an index of all records in your dataset, which needs to fit
+into your system's RAM. The dataset itself, however, can be much larger than
+your available memory and live in Tigris. This in-memory index allows for very
+fast, random access to any item, which is essential for efficient shuffling and
+for using multiple workers (`num_workers > 0` in PyTorch's `DataLoader`) to
+parallelize and speed up data loading. This makes it ideal for common supervised
+learning datasets like ImageNet, COCO, or large text corpuses.
+
+If you are in doubt, start with `SafeLanceDataset`.
+
+### Use `LanceDataset` for Streaming or Unbounded Datasets
+
+Use the iterable-style `LanceDataset` for more specialized scenarios, such as:
+
+- **Streaming or unbounded data sources:** If your dataset is a continual stream
+  (like a real-time data feed, social media posts, or other infinite sources),
+  you need an iterable dataset. `LanceDataset` lets you iterate over the data as
+  it arrives without needing a predefined length.
+- **Extremely large datasets:** If your dataset is so large that even its index
+  is too big to fit in memory, you'll need to stream the data. `LanceDataset`
+  reads data sequentially in chunks (or "shards") on the fly without building a
+  full index.
+- **Custom sampling or sharding logic:** If you need to process data in a way
+  that standard samplers can't handle, `LanceDataset` can be configured with
+  custom samplers. It includes an optimized `ShardedFragmentSampler` that
+  understands the internal structure of Lance files, which can outperform
+  standard samplers for certain large-scale distributed training scenarios. This
+  ensures each process reads a distinct fragment of the dataset without needing
+  extra coordination.
+
+In practice, many teams will find that `SafeLanceDataset` meets all their needs
+for training on fixed datasets. Use `LanceDataset` when you have a compelling
+reason, like data streaming or when experimenting with LanceDB’s advanced
+sampling capabilities.

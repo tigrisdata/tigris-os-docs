@@ -11,6 +11,8 @@ raw data to training-ready features and build pipelines that can handle a
 variety of inputs without stitching together multiple tools or managing
 pipelines manually.
 
+{/* truncate */}
+
 Teams can connect to all their existing LanceDB datasets to easily define
 feature logic as standard Python functions, automatically versioned and executed
 across distributed, scalable infrastructure.
@@ -51,7 +53,141 @@ You'll need existing LanceDB datasets to use the Multimodal Lakehouse features.
 
 ## How to Create LanceDB Datasets with Tigris
 
-To get started, install LanceDB into your project's NPM dependencies:
+In order to use LanceDB as our data lakehouse, we need to configure it to use
+Tigris as a storage backend. Tigris
+[works with LanceDB](https://www.tigrisdata.com/docs/libraries/lancedb/) because
+Tigris exposes the S3 API, which LanceDB can use to read and write data. All you
+need to do is change out the credentials and endpoints.
+
+### Authentication via Environment Variables
+
+The LanceDB client will pick up credentials from environment variables. Set the
+following environment variables with your Tigris credentials either in your
+shell or in a `.env` file:
+
+<Tabs>
+  <TabItem value="shell" label="Shell" default>
+
+```bash
+export AWS_ACCESS_KEY_ID=tid_access_key_id
+export AWS_SECRET_ACCESS_KEY=tsec_secret_access_key
+export AWS_ENDPOINT_URL_S3=https://t3.storage.dev
+export AWS_REGION=auto
+```
+
+  </TabItem>
+  <TabItem value="env-file" label=".env file">
+
+```sh
+AWS_ACCESS_KEY_ID=tid_access_key_id
+AWS_SECRET_ACCESS_KEY=tsec_secret_access_key
+AWS_ENDPOINT_URL_S3=https://t3.storage.dev AWS_REGION=auto
+```
+
+  </TabItem>
+</Tabs>
+
+Make sure `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` match the values you
+get from the Tigris console. The other variables tell LanceDB where to look for
+your data. Once these variables are exported into or loaded by your training
+loop, LanceDB will use them internally to authenticate with Tigris.
+
+### Authentication via Hardcoded Credentials
+
+:::warning
+
+Hardcoding access credentials is a bad idea from a security standpoint. These
+credentials will allow an attacker to delete or modify your training dataset
+bucket. Please only do this if you are unable to set the credentials in your
+platform of choice properly.
+
+:::
+
+You can also pass credentials directly to LanceDB in your code. LanceDB’s
+`connect` method accepts a `storage_options` dictionary to let you specify
+whatever credentials you want. This is useful if you are in an environment where
+you need to retrieve credentials from a secret store at runtime.
+
+### Connecting to Tigris
+
+Now, let’s connect LanceDB to your Tigris bucket. In Python, use the
+[LanceDB SDK](https://lancedb.github.io/lancedb/python/python/) to connect to
+your database in Tigris. For example, if your bucket is `my-bucket` and you want
+to store a dataset under the path `ml-datasets/food101`, you can connect like
+this:
+
+<Tabs>
+  <TabItem value="js" label="JavaScript">
+
+```js
+import * as lancedb from "@lancedb/lancedb";
+
+const bucketName = process.env.BUCKET_NAME || "my-bucket";
+
+// Connect to LanceDB database in a Tigris bucket (s3-compatible URI for Tigris)
+const db = await lancedb.connect(`s3://${bucketName}/ml-datasets/food101`, {
+  storageOptions: {
+    endpoint: "https://t3.storage.dev", // Tigris storage endpoint
+    region: "auto", // auto region for global routing
+    // If you are not using env vars, you can also specify credentials here:
+    // accessKeyId: "tid_access_key_id",
+    // secretAccessKey: "tsec_secret_access_key",
+  },
+});
+```
+
+  </TabItem>
+  <TabItem value="python" label="Python" default>
+
+```py
+import lancedb
+
+# Connect to LanceDB database in a Tigris bucket (s3-compatible URI for Tigris)
+db = lancedb.connect(
+    "s3://my-bucket/ml-datasets/food101",
+    storage_options={
+        "endpoint": "https://t3.storage.dev", # Tigris storage endpoint
+        "region": "auto",                     # auto region for global routing
+        # If you are not using env vars, you can also specify credentials here:
+        # "aws_access_key_id": "tid_access_key_id",
+        # "aws_secret_access_key": "tsec_secret_access_key",
+    }
+)
+```
+
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+
+```ts
+import * as lancedb from "@lancedb/lancedb";
+
+const bucketName: string = process.env.BUCKET_NAME || "my-bucket";
+
+// Connect to LanceDB database in a Tigris bucket (s3-compatible URI for Tigris)
+const db = await lancedb.connect(`s3://${bucketName}/ml-datasets/food101`, {
+  storageOptions: {
+    endpoint: "https://t3.storage.dev", // Tigris storage endpoint
+    region: "auto", // auto region for global routing
+    // If you are not using env vars, you can also specify credentials here:
+    // accessKeyId: "tid_access_key_id",
+    // secretAccessKey: "tsec_secret_access_key",
+  },
+});
+```
+
+  </TabItem>
+</Tabs>
+
+In this example, we connected to the path `s3://my-bucket/ml-datasets/food101`
+with the Tigris endpoint and region we specified. The `db` object is a handle to
+a LanceDB database stored remotely on Tigris. We’ve configured it to talk to
+Tigris instead of S3 by setting the the endpoint to Tigris’
+[`https://t3.storage.dev`](https://t3.storage.dev), so even though the path
+starts with `s3://`, it’s actually talking to Tigris.
+
+## Creating a dataset
+
+To get started, install LanceDB into your project's dependencies:
 
 <Tabs>
   <TabItem value="npm" label="npm" default>
@@ -75,23 +211,21 @@ yarn add @lancedb/lancedb apache-arrow
 ```
 
   </TabItem>
-</Tabs>
+  <TabItem value="pip" label="pip">
 
-Then import LanceDB into your project:
-
-```ts
-import * as lancedb from "@lancedb/lancedb";
-import * as arrow from "apache-arrow";
-
-const bucketName = process.env.BUCKET_NAME || "tigris-example";
-
-const db = await lancedb.connect(`s3://${bucketName}/docs`, {
-  storageOptions: {
-    endpoint: "https://t3.storage.dev",
-    region: "auto",
-  },
-});
+```text
+pip install lancedb
 ```
+
+  </TabItem>
+  <TabItem value="uv" label="uv">
+
+```text
+uv pip install lancedb
+```
+
+  </TabItem>
+</Tabs>
 
 Then register the embedding model you plan to use, such as
 [OpenAI's embedding model](https://platform.openai.com/docs/guides/embeddings):

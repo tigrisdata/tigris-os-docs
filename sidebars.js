@@ -143,6 +143,11 @@ const sidebars = {
                 },
                 {
                   type: "doc",
+                  label: "Vector Database Tutorial",
+                  id: "libraries/lancedb/vector-database",
+                },
+                {
+                  type: "doc",
                   label: "Example: Document Search",
                   id: "libraries/lancedb/docs-search",
                 },

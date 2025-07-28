@@ -133,13 +133,13 @@ const sidebars = {
               items: [
                 {
                   type: "doc",
-                  label: "Choosing a Lance Dataset Type",
-                  id: "libraries/lancedb/choosing-dataset-type",
+                  label: "Getting Started",
+                  id: "libraries/lancedb/index",
                 },
                 {
                   type: "doc",
-                  label: "Getting Started",
-                  id: "libraries/lancedb/index",
+                  label: "Choosing a Lance Dataset Type",
+                  id: "libraries/lancedb/choosing-dataset-type",
                 },
                 {
                   type: "doc",

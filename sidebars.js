@@ -138,6 +138,16 @@ const sidebars = {
                 },
                 {
                   type: "doc",
+                  label: "Choosing a Lance Dataset Type",
+                  id: "libraries/lancedb/choosing-dataset-type",
+                },
+                {
+                  type: "doc",
+                  label: "Vector Database Tutorial",
+                  id: "libraries/lancedb/vector-database",
+                },
+                {
+                  type: "doc",
                   label: "Example: Document Search",
                   id: "libraries/lancedb/docs-search",
                 },

@@ -1,0 +1,242 @@
+# Vector search in LanceDB
+
+import CodeBlock from "@theme/CodeBlock";
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+To get started, install LanceDB into your project's NPM dependencies:
+
+<Tabs>
+  <TabItem value="npm" label="npm" default>
+
+```text
+npm install --save @lancedb/lancedb apache-arrow
+```
+
+  </TabItem>
+  <TabItem value="pnpm" label="pnpm">
+
+```text
+pnpm add @lancedb/lancedb apache-arrow
+```
+
+  </TabItem>
+  <TabItem value="yarn" label="yarn">
+
+```
+yarn add @lancedb/lancedb apache-arrow
+```
+
+  </TabItem>
+</Tabs>
+
+Then import LanceDB into your project:
+
+```ts
+import * as lancedb from "@lancedb/lancedb";
+import * as arrow from "apache-arrow";
+
+const bucketName = process.env.BUCKET_NAME || "tigris-example";
+
+const db = await lancedb.connect(`s3://${bucketName}/docs`, {
+  storageOptions: {
+    endpoint: "https://t3.storage.dev",
+    region: "auto",
+  },
+});
+```
+
+Then register the embedding model you plan to use, such as
+[OpenAI's embedding model](https://platform.openai.com/docs/guides/embeddings):
+
+```ts
+import "@lancedb/lancedb/embedding/openai";
+import { LanceSchema, getRegistry, register } from "@lancedb/lancedb/embedding";
+import { EmbeddingFunction } from "@lancedb/lancedb/embedding";
+
+const func = getRegistry()
+  .get("openai")
+  ?.create({ model: "text-embedding-3-small" }) as EmbeddingFunction;
+```
+
+And create the schema for the data you want to ingest:
+
+```ts
+const contentSchema = LanceSchema({
+  text: func.sourceField(new arrow.Utf8()),
+  vector: func.vectorField(),
+  //title: new arrow.Utf8(),
+  url: new arrow.Utf8(),
+  heading: new arrow.Utf8(),
+});
+```
+
+This creates a schema that has a few fields:
+
+- The source `text` that you are searching against
+- The high-dimensional generated `vector` used to search for similar embeddings
+- Additional metadata such as the `title`, `heading`, and `url` of the document
+  you're embedding so that the model can link users back to a source
+
+Strictly speaking, only the `text` and `vector` fields are required. The rest
+are optional but can help you make the user experience better. Users tend to
+trust responses that have citations a lot more than responses that don't.
+
+Next, create a table that uses that schema:
+
+```ts
+const tbl = await db.createEmptyTable("content", contentSchema, {
+  // if both of these are set, LanceDB uses the semantics of
+  // `CREATE TABLE IF NOT EXISTS content` in your favorite relational
+  // database.
+  mode: "create",
+  existOk: true,
+});
+```
+
+### Ingesting files
+
+The exact details of how you ingest files will vary based on what you are
+ingesting, but at a high level you can make a lot of cheap assumptions about the
+data that will help. The biggest barrier to ingesting data into a model is a
+combination of two factors:
+
+1. The context window of the model
+   ([8191 tokens for OpenAI models](https://dev.to/simplr_sh/the-best-way-to-chunk-text-data-for-generating-embeddings-with-openai-models-56c9)).
+2. Figuring out where to chunk files such that they fit into the context window
+   of the model.
+
+For the sake of argument, let's say that we're dealing with a folder full of
+[Markdown documents](https://en.wikipedia.org/wiki/Markdown). Markdown is a
+fairly variable format that is versatile enough (this document is written in a
+variant of Markdown), but we can also take advantage of human organizational
+psychology to make this easier. People generally break Markdown documents into
+sections where each section is separated by a line beginning with one or more
+hashes:
+
+```markdown
+# Title of the document
+
+Ah yes, the venerable introduction paragraph—the sacred scroll...
+
+## Insights
+
+What began as an unrelated string of metaphors...
+```
+
+You can break this into two chunks:
+
+```json
+[
+  {
+    "heading": "Title of the document",
+    "content": "Ah yes, the venerable introduction paragraph—the sacred scroll..."
+  },
+  {
+    "heading": "Insights",
+    "content": "What began as an unrelated string of metaphors..."
+  }
+]
+```
+
+Each of these should be indexed separately and the heading metadata should be
+attached to each record in the database. You can break it up into sections of up
+to 8191 tokens (or however big your model's context window is) with logic like
+this:
+
+import markdownChunk from "!!raw-loader!./markdownChunk.ts";
+
+<details>
+  <summary>Long code block with example document chunking code</summary>
+  <CodeBlock language="ts">{markdownChunk}</CodeBlock>
+</details>
+
+Then when you're reading your files, use a loop like this to break all of the
+files into chunks:
+
+```ts
+import { glob } from "glob";
+import { readFile } from "node:fs/promises";
+import { chunkify } from "./markdownChunk";
+
+const markdownFiles = await glob("./docs/**/*.md");
+
+const files = [...markdownFiles].filter(
+  (fname) => !fname.endsWith("README.md"),
+);
+files.sort();
+
+const fnameToURL = (fname) => {
+  // Implement me!
+};
+
+const utterances = [];
+
+for (const fname of files) {
+  const data = await readFile(fname, "utf-8");
+  const chunks = await chunkify(data);
+
+  chunks.forEach(({ heading, content }) => {
+    utterances.push({
+      fname,
+      heading,
+      content,
+      url: fnameToURL(fname),
+    });
+  });
+}
+```
+
+And finally ingest all the files into LanceDB:
+
+```ts
+let docs: unknown = []; // temporary buffer so we don't block all the time
+const MAX_BUFFER_SIZE = 100;
+for (const utterance of utterances) {
+  const { heading, content, url } = utterance;
+  docs.push({
+    heading,
+    content,
+    url,
+  });
+
+  if (docs.length >= MAX_BUFFER_SIZE) {
+    console.log(`adding ${docs.length} documents`);
+    await tbl.add(docs);
+    docs = [];
+  }
+}
+
+if (docs.length !== 0) {
+  console.log(`adding ${docs.length} documents`);
+  await tbl.add(docs);
+}
+```
+
+Finally, create an index on the `vector` field so the LanceDB client can search
+faster:
+
+```ts
+await tbl.createIndex("vector");
+```
+
+And then run an example search for the term "Tigris":
+
+```ts
+const query = "Tigris";
+const actual = await tbl.search(query).limit(10).toArray();
+console.log(
+  actual.map(({ url, heading, text }) => {
+    return { url, heading, text };
+  }),
+);
+```
+
+import entireExample from "!!raw-loader!./testlancedb.ts";
+
+<details>
+  <summary>The entire example in one big file</summary>
+  <CodeBlock language="ts">{entireExample}</CodeBlock>
+</details>
+
+And now you can search the Tigris docs!

@@ -1,0 +1,129 @@
+# iPython / Jupyter Quickstart
+
+To get started using your iPython notebooks with Tigris, you can check out our
+[example notebook](https://github.com/tigrisdata-community/ipython-notebooks/blob/main/quickstart.ipynb)
+or
+[run it on Google Colab](https://colab.research.google.com/drive/1AFr9vyERpQWhdXbLt-wrLNH7w7N4SbzI).
+
+To run it you will need the following:
+
+1. A [Tigris account](https://storage.new/)
+2. An [access keypair](https://storage.new/accesskey)
+3. A computer running Python 3.10 (or later) that has internet access (OS and
+   CPU architecture does not matter)
+4. A tigris bucket
+5. The
+   [uv python environment manager](https://docs.astral.sh/uv/getting-started/installation/)
+
+If you are running this notebook in an environment such as Google Colab, uv will
+be installed for you and all you need are your Tigris credentials.
+
+First, install
+[boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html), the
+library for accessing object storage from Python programs:
+
+```sh
+uv pip install boto3
+```
+
+Then set your access key details in the notebook environment:
+
+```python
+import os
+
+# Replace these with the access key ID and secret access key
+# from the access key creation modal dialog box.
+os.environ['AWS_ACCESS_KEY_ID'] = 'tid_access_key_id'
+os.environ['AWS_SECRET_ACCESS_KEY'] = 'tsec_secret_access_key'
+
+# Leave these at the default settings.
+os.environ['AWS_ENDPOINT_URL_S3'] = 'https://t3.storage.dev'
+os.environ['AWS_ENDPOINT_URL_IAM'] = 'https://iam.storage.dev'
+os.environ['AWS_REGION'] = 'auto'
+```
+
+Or if you have
+[AWS profiles](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html)
+configured, change the `AWS_PROFILE` environment variable to point to the
+profile you want to use:
+
+```python
+import os
+
+os.environ['AWS_PROFILE'] = 'tigris'
+```
+
+Then create a storage client:
+
+```python
+import boto3
+from botocore.client import Config
+
+# Create object storage service client
+svc = boto3.client(
+    's3',
+    endpoint_url='https://t3.storage.dev',
+    config=Config(s3={'addressing_style': 'virtual'}),
+)
+```
+
+And list buckets:
+
+```python
+response = svc.list_buckets()
+
+for bucket in response['Buckets']:
+    print(f'  {bucket["Name"]}')
+```
+
+Create a `bucket_name` alias to make it easier to interact with Tigris:
+
+```python
+bucket_name = bucket_name = os.getenv('TIGRIS_BUCKET', 'xe-tigris-test2') # Replace your bucket name here
+```
+
+Or make a new bucket if you don't have one:
+
+```python
+svc.create_bucket(
+    ACL='private',
+    Bucket=bucket_name,
+)
+```
+
+Then upload a file:
+
+```python
+with open('test.txt', 'w') as file:
+    file.write('Hi there, this is a test!\n')
+
+svc.upload_file('test.txt', bucket_name, 'notebook/test.txt')
+```
+
+And grab it back:
+
+```python
+svc.download_file(bucket_name, 'notebook/test.txt', 'test2.txt')
+```
+
+Make sure the files match:
+
+```sh
+ls *.txt
+cat test.txt
+cat test2.txt
+```
+
+Finally, generate a
+[presigned URL](https://www.tigrisdata.com/docs/objects/presigned/) to share it
+with a friend:
+
+```python
+url = svc.generate_presigned_url(
+    'get_object',
+    Params={'Bucket': bucket_name, 'Key': 'notebook/test.txt'},
+    ExpiresIn=604800
+)
+
+print(f'Presigned URL to download an object: {url}')
+```

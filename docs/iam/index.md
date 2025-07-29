@@ -14,11 +14,8 @@ attached to access keys, Tigris focuses on what developers really need.
 - Tigris IAM is S3-compatible, or written specifically for the needs of object
   storage management.
 - Access keys can have directly attached policies. Tigris does not use IAM
-  Users, IAM groups, or IAM Roles.
-- Access keys can have an expiry attached to them.
-- All users are Members of an Organization and use Access Keys with policies.
-- Any Member can create an Access Key with as much permissions as they have and
-  no more.
+  Users, IAM Groups, or IAM Roles.
+- All users in an Organization and can create access keys and attach IAM policies to them.
 
 ## Prebuilt Roles for Organization Members
 
@@ -26,16 +23,8 @@ Two
 [prebuilt roles](../account-management/accounts.md#user-roles-and-permissions)
 are available for organization members:
 
-- `Member`: List, read, and create access to buckets.
-- `Admin`: Full access to buckets, objects, and member management.
-
-:::note
-
-These are different from the concept of IAM Roles in other cloud platforms.
-Tigris roles set the permission limits that a user has instead of defining the
-scope of every single action they can do.
-
-:::
+- `Member`: can list all buckets and create new buckets within the Organization. They have access to all buckets shared with the Organization.
+- `Admin`: have full access to all buckets and can manage Organization members and their permissions.
 
 These roles apply to users in the Tigris Dashboard. Programmatic access is
 controlled by
@@ -74,13 +63,15 @@ high level:
 | `ListAccessKeys`                        | ✅             | ✅          | View existing access keys                       |
 | `UpdateAccessKey`                       | ✅             | ✅          | Enable or disable an access key                 |
 | `DeleteAccessKey`                       | ✅             | ✅          | Permanently delete an access key                |
+| `AttachUserPolicy` / `DetachUserPolicy` | ✅             | ✅          | Attach or detach IAM policy to an access key (not user) |
+| `ListUserPolicies`                      | ✅             | ✅          | List IAM policies attached to an access key (not user)  |
 | `GetAccessKeyLastUsed`                  | ❌             | ✅          | View the last-used timestamp for audit purposes |
 | `TagAccessKey` / `UntagAccessKey`       | ❌             | ✅          | Add or remove metadata tags                     |
 | `CreateUser`, `DeleteUser`, `ListUsers` | ❌             | ✅          | Full IAM user lifecycle                         |
 | `GetUser`, `UpdateUser`, `ListUserTags` | ❌             | ✅          | Manage IAM user metadata                        |
 
-Tigris only supports the operations required for secure and scoped Access Key
-management— no IAM users, roles, or identity management APIs needed.
+Tigris only supports the operations required for secure and scoped access key
+management — no IAM Users, Roles, or identity management APIs needed.
 
 ## Policy Compatibility
 
@@ -95,7 +86,7 @@ Tigris also supports many common S3-compatible actions such as:
 - `s3:PutObject`
 - `s3:ListBucket`
 - `s3:DeleteObject`
-- `s3:ListObjectsV2`
+- `s3:RestoreObject`
 
 For a full list of supported actions, examples, and conditions, see the
 [Policies Documentation](/docs/iam/policies/). Also see these example policies:

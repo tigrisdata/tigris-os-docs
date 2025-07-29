@@ -18,7 +18,7 @@ Organizations have two member roles:
 
 The **Owner** – the user who created the organization – has the same privileges
 as an Admin but cannot be removed from the organization or downgraded from Admin
-to Member. The Owner is also responsible for the organization’s billing.
+to Member. The Owner is also responsible for the Organization’s billing.
 
 |                              |           |            |
 | ---------------------------- | --------- | ---------- |

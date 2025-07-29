@@ -17,17 +17,17 @@ you’ll be prompted to sign up.
 
 ## User roles and permissions
 
-Users have three roles:
+Users can have three roles:
 
 - **Members** can list all buckets and create new buckets within the
-  organization. They have access to all buckets shared with the Organization.
+  Organization. They have access to all buckets shared with the Organization.
 
-- **Admins** have full access to all buckets and can manage organization members
+- **Admins** have full access to all buckets and can manage Organization members
   and their permissions.
 
-- **Owner** – the user who created the organization – has the same privileges as
-  an Admin but cannot be removed from the organization or downgraded from Admin
-  to Member. The Owner is also responsible for the organization’s billing.
+- **Owner** – the user who created the Organization – has the same privileges as
+  an Admin but cannot be removed from the Organization or downgraded from Admin
+  to Member. The Owner is also responsible for the Organization’s billing.
 
 ## Logging in with Fly
 

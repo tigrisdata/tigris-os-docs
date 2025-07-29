@@ -17,7 +17,7 @@ you’ll be prompted to sign up.
 
 ## User roles and permissions
 
-Users can have three roles:
+Users can have one of three roles:
 
 - **Members** can list all buckets and create new buckets within the
   Organization. They have access to all buckets shared with the Organization.

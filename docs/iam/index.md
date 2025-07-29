@@ -15,7 +15,8 @@ attached to access keys, Tigris focuses on what developers really need.
   storage management.
 - Access keys can have directly attached policies. Tigris does not use IAM
   Users, IAM Groups, or IAM Roles.
-- All users in an Organization and can create access keys and attach IAM policies to them.
+- All users in an Organization and can create access keys and attach IAM
+  policies to them.
 
 ## Prebuilt Roles for Organization Members
 
@@ -23,8 +24,10 @@ Two
 [prebuilt roles](../account-management/accounts.md#user-roles-and-permissions)
 are available for organization members:
 
-- `Member`: can list all buckets and create new buckets within the Organization. They have access to all buckets shared with the Organization.
-- `Admin`: have full access to all buckets and can manage Organization members and their permissions.
+- `Member` can list all buckets and create new buckets within the Organization.
+  They have access to all buckets shared with the Organization.
+- `Admin` have full access to all buckets and can manage Organization members
+  and their permissions.
 
 These roles apply to users in the Tigris Dashboard. Programmatic access is
 controlled by
@@ -57,18 +60,18 @@ Refer to the [AWS CLI](/docs/sdks/s3/aws-cli/) and
 Our [IAM APIs page](../api/s3/index.md#iam-apis) has more information, but at a
 high level:
 
-| Operation                               | Tigris Support | AWS Support | Description                                     |
-| --------------------------------------- | -------------- | ----------- | ----------------------------------------------- |
-| `CreateAccessKey`                       | ✅             | ✅          | Generate a new access key                       |
-| `ListAccessKeys`                        | ✅             | ✅          | View existing access keys                       |
-| `UpdateAccessKey`                       | ✅             | ✅          | Enable or disable an access key                 |
-| `DeleteAccessKey`                       | ✅             | ✅          | Permanently delete an access key                |
+| Operation                               | Tigris Support | AWS Support | Description                                             |
+| --------------------------------------- | -------------- | ----------- | ------------------------------------------------------- |
+| `CreateAccessKey`                       | ✅             | ✅          | Generate a new access key                               |
+| `ListAccessKeys`                        | ✅             | ✅          | View existing access keys                               |
+| `UpdateAccessKey`                       | ✅             | ✅          | Enable or disable an access key                         |
+| `DeleteAccessKey`                       | ✅             | ✅          | Permanently delete an access key                        |
 | `AttachUserPolicy` / `DetachUserPolicy` | ✅             | ✅          | Attach or detach IAM policy to an access key (not user) |
 | `ListUserPolicies`                      | ✅             | ✅          | List IAM policies attached to an access key (not user)  |
-| `GetAccessKeyLastUsed`                  | ❌             | ✅          | View the last-used timestamp for audit purposes |
-| `TagAccessKey` / `UntagAccessKey`       | ❌             | ✅          | Add or remove metadata tags                     |
-| `CreateUser`, `DeleteUser`, `ListUsers` | ❌             | ✅          | Full IAM user lifecycle                         |
-| `GetUser`, `UpdateUser`, `ListUserTags` | ❌             | ✅          | Manage IAM user metadata                        |
+| `GetAccessKeyLastUsed`                  | ❌             | ✅          | View the last-used timestamp for audit purposes         |
+| `TagAccessKey` / `UntagAccessKey`       | ❌             | ✅          | Add or remove metadata tags                             |
+| `CreateUser`, `DeleteUser`, `ListUsers` | ❌             | ✅          | Full IAM user lifecycle                                 |
+| `GetUser`, `UpdateUser`, `ListUserTags` | ❌             | ✅          | Manage IAM user metadata                                |
 
 Tigris only supports the operations required for secure and scoped access key
 management — no IAM Users, Roles, or identity management APIs needed.

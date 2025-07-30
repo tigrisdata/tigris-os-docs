@@ -4,133 +4,30 @@ title: "Usage"
 description: ""
 sidebar_label: "Usage"
 hide_title: true
+hide_table_of_contents: true
 schema: true
+sample: {"id":"string","name":"string","description":"string","unit":"string","values":[{"starting_on":"2021-09-01T01:00:00Z","ending_before":"2021-09-01T02:00:00Z","value":0}]}
 custom_edit_url: null
 ---
 
-import DiscriminatorTabs from "@theme/DiscriminatorTabs";
-import SchemaItem from "@theme/SchemaItem";
-import SchemaTabs from "@theme/SchemaTabs";
+import Schema from "@theme/Schema";
 import Heading from "@theme/Heading";
-import TabItem from "@theme/TabItem";
 
-<Heading as={"h1"} className={"openapi__heading"} children={"Usage"}></Heading>
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Usage"}
+>
+</Heading>
 
-<ul>
-  <SchemaItem
-    collapsible={false}
-    name={"id"}
-    required={true}
-    schemaName={"string"}
-    qualifierMessage={undefined}
-    schema={{
-      type: "string",
-      description: "Unique identifier for the usage metric",
-    }}
-  ></SchemaItem>
-  <SchemaItem
-    collapsible={false}
-    name={"name"}
-    required={true}
-    schemaName={"string"}
-    qualifierMessage={undefined}
-    schema={{
-      type: "string",
-      description: "Display name for customer invoice",
-    }}
-  ></SchemaItem>
-  <SchemaItem
-    collapsible={false}
-    name={"description"}
-    required={true}
-    schemaName={"string"}
-    qualifierMessage={undefined}
-    schema={{
-      type: "string",
-      description: "Human readable description of the usage metric",
-    }}
-  ></SchemaItem>
-  <SchemaItem
-    collapsible={false}
-    name={"unit"}
-    required={true}
-    schemaName={"string"}
-    qualifierMessage={undefined}
-    schema={{ type: "string", description: "Unit of measurement" }}
-  ></SchemaItem>
-  <SchemaItem collapsible={true} className={"schemaItem"}>
-    <details style={{}} className={"openapi-markdown__details"}>
-      <summary style={{}}>
-        <span className={"openapi-schema__container"}>
-          <strong className={"openapi-schema__property"}>values</strong>
-          <span className={"openapi-schema__name"}>object[]</span>
-          <span className={"openapi-schema__divider"}></span>
-          <span className={"openapi-schema__required"}>required</span>
-        </span>
-      </summary>
-      <div style={{ marginLeft: "1rem" }}>
-        <li>
-          <div
-            style={{
-              fontSize: "var(--ifm-code-font-size)",
-              opacity: "0.6",
-              marginLeft: "-.5rem",
-              paddingBottom: ".5rem",
-            }}
-          >
-            Array [
-          </div>
-        </li>
-        <SchemaItem
-          collapsible={false}
-          name={"starting_on"}
-          required={true}
-          schemaName={"date-time"}
-          qualifierMessage={undefined}
-          schema={{
-            type: "string",
-            format: "date-time",
-            description: "RFC3339 formatted UTC timestamp for starting period",
-            example: "2021-09-01T01:00:00Z",
-          }}
-        ></SchemaItem>
-        <SchemaItem
-          collapsible={false}
-          name={"ending_before"}
-          required={true}
-          schemaName={"date-time"}
-          qualifierMessage={undefined}
-          schema={{
-            type: "string",
-            format: "date-time",
-            description: "RFC3339 formatted UTC timestamp for ending period",
-            example: "2021-09-01T02:00:00Z",
-          }}
-        ></SchemaItem>
-        <SchemaItem
-          collapsible={false}
-          name={"value"}
-          required={true}
-          schemaName={"double"}
-          qualifierMessage={undefined}
-          schema={{
-            type: "number",
-            description: "Usage value for the period",
-            format: "double",
-          }}
-        ></SchemaItem>
-        <li>
-          <div
-            style={{
-              fontSize: "var(--ifm-code-font-size)",
-              opacity: "0.6",
-              marginLeft: "-.5rem",
-            }}
-          >
-            ]
-          </div>
-        </li>
-      </div>
-    </details>
-  </SchemaItem>
-</ul>
+
+
+
+
+<Schema
+  schema={{"type":"object","properties":{"id":{"type":"string","description":"Unique identifier for the usage metric"},"name":{"type":"string","description":"Display name for customer invoice"},"description":{"type":"string","description":"Human readable description of the usage metric"},"unit":{"type":"string","description":"Unit of measurement"},"values":{"type":"array","items":{"type":"object","properties":{"starting_on":{"type":"string","format":"date-time","description":"RFC3339 formatted UTC timestamp for starting period","example":"2021-09-01T01:00:00Z"},"ending_before":{"type":"string","format":"date-time","description":"RFC3339 formatted UTC timestamp for ending period","example":"2021-09-01T02:00:00Z"},"value":{"type":"number","description":"Usage value for the period","format":"double"}},"required":["starting_on","ending_before","value"],"title":"UsageValue"}}},"required":["id","name","description","unit","values"],"title":"Usage"}}
+  schemaType={"response"}
+>
+  
+</Schema>
+            

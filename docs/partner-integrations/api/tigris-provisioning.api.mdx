@@ -1,9 +1,7 @@
 ---
 id: tigris-provisioning
 title: "Provision a new bucket"
-description:
-  "Provision a new bucket in the organization account, also creates the
-  organization account if it doesn't exist. This is an"
+description: "Provision a new bucket in the organization account, also creates the organization account if it doesn't exist. This is an"
 sidebar_label: "Provision a new bucket"
 hide_title: true
 hide_table_of_contents: true
@@ -13,298 +11,65 @@ info_path: partner-integrations/api/tigris-partner-integrations-api-reference
 custom_edit_url: null
 ---
 
-import ApiTabs from "@theme/ApiTabs";
-import DiscriminatorTabs from "@theme/DiscriminatorTabs";
 import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
-import SecuritySchemes from "@theme/ApiExplorer/SecuritySchemes";
-import MimeTabs from "@theme/MimeTabs";
-import ParamsItem from "@theme/ParamsItem";
-import ResponseSamples from "@theme/ResponseSamples";
-import SchemaItem from "@theme/SchemaItem";
-import SchemaTabs from "@theme/SchemaTabs";
-import Heading from "@theme/Heading";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
 import OperationTabs from "@theme/OperationTabs";
 import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
 
 <Heading
   as={"h1"}
   className={"openapi__heading"}
   children={"Provision a new bucket"}
-></Heading>
+>
+</Heading>
 
 <MethodEndpoint
   method={"post"}
   path={"/v1/providers/{provider_id}/orgs/{org_id}/provision"}
-></MethodEndpoint>
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
 
-Provision a new bucket in the organization account, also creates the
-organization account if it doesn't exist. This is an idempotent operation, and
-calling it multiple times with the same parameters will not create duplicate
-buckets.
 
-Provisioning API responds with an access key and secret to access the newly
-provisioned bucket.
+
+Provision a new bucket in the organization account, also creates the organization account if it doesn't exist. This is an
+idempotent operation, and calling it multiple times with the same parameters will not create duplicate buckets.
+
+Provisioning API responds with an access key and secret to access the newly provisioned bucket.
+
 
 <Heading
   id={"request"}
   as={"h2"}
   className={"openapi-tabs__heading"}
   children={"Request"}
-></Heading>
-
-<details
-  style={{ marginBottom: "1rem" }}
-  className={"openapi-markdown__details"}
-  data-collapsed={false}
-  open={true}
 >
-  <summary style={{}}>
-    <h3 className={"openapi-markdown__details-summary-header-params"}>
-      Path Parameters
-    </h3>
-  </summary>
-  <div>
-    <ul>
-      <ParamsItem
-        className={"paramsItem"}
-        param={{
-          name: "provider_id",
-          in: "path",
-          required: true,
-          description: "Provider ID",
-          schema: { type: "string" },
-        }}
-      ></ParamsItem>
-      <ParamsItem
-        className={"paramsItem"}
-        param={{
-          name: "org_id",
-          in: "path",
-          required: true,
-          description: "Organization ID",
-          schema: { type: "string" },
-        }}
-      ></ParamsItem>
-    </ul>
-  </div>
-</details>
-<MimeTabs className={"openapi-tabs__mime"}>
-  <TabItem label={"application/json"} value={"application/json-schema"}>
-    <details
-      style={{}}
-      className={"openapi-markdown__details mime"}
-      data-collapsed={false}
-      open={true}
-    >
-      <summary style={{}} className={"openapi-markdown__details-summary-mime"}>
-        <h3 className={"openapi-markdown__details-summary-header-body"}>
-          Body
-        </h3>
-        <strong className={"openapi-schema__required"}>required</strong>
-      </summary>
-      <div style={{ textAlign: "left", marginLeft: "1rem" }}></div>
-      <ul style={{ marginLeft: "1rem" }}>
-        <SchemaItem
-          collapsible={false}
-          name={"bucket_name"}
-          required={true}
-          schemaName={"string"}
-          qualifierMessage={undefined}
-          schema={{
-            type: "string",
-            description: "Name of the bucket to be provisioned",
-          }}
-        ></SchemaItem>
-        <SchemaItem
-          collapsible={false}
-          name={"org_name"}
-          required={true}
-          schemaName={"string"}
-          qualifierMessage={undefined}
-          schema={{
-            type: "string",
-            description:
-              "Name of the organization where the bucket should be provisioned",
-          }}
-        ></SchemaItem>
-        <SchemaItem
-          collapsible={false}
-          name={"user_id"}
-          required={true}
-          schemaName={"string"}
-          qualifierMessage={undefined}
-          schema={{
-            type: "string",
-            description: "ID of the user who is requesting the bucket",
-          }}
-        ></SchemaItem>
-        <SchemaItem collapsible={true} className={"schemaItem"}>
-          <details style={{}} className={"openapi-markdown__details"}>
-            <summary style={{}}>
-              <span className={"openapi-schema__container"}>
-                <strong className={"openapi-schema__property"}>
-                  bucket_options
-                </strong>
-                <span className={"openapi-schema__name"}>object</span>
-              </span>
-            </summary>
-            <div style={{ marginLeft: "1rem" }}>
-              <SchemaItem
-                collapsible={false}
-                name={"public"}
-                required={false}
-                schemaName={"boolean"}
-                qualifierMessage={undefined}
-                schema={{
-                  type: "boolean",
-                  description:
-                    "If set to true, the bucket will be publicly accessible. Default is false.",
-                }}
-              ></SchemaItem>
-              <SchemaItem
-                collapsible={false}
-                name={"storage_class"}
-                required={false}
-                schemaName={"StorageClass (string)"}
-                qualifierMessage={
-                  "**Possible values:** [`STANDARD`, `STANDARD_IA`, `GLACIER`, `GLACIER_IR`]"
-                }
-                schema={{
-                  type: "string",
-                  description:
-                    "Storage class for the bucket. Default is `STANDARD`.",
-                  enum: ["STANDARD", "STANDARD_IA", "GLACIER", "GLACIER_IR"],
-                  title: "StorageClass",
-                }}
-              ></SchemaItem>
-              <SchemaItem
-                collapsible={false}
-                name={"enable_object_acl"}
-                required={false}
-                schemaName={"boolean"}
-                qualifierMessage={undefined}
-                schema={{
-                  type: "boolean",
-                  description:
-                    "If set to true, per object ACL will be enabled. Default is false.",
-                }}
-              ></SchemaItem>
-            </div>
-          </details>
-        </SchemaItem>
-        <SchemaItem
-          collapsible={false}
-          name={"user_role"}
-          required={false}
-          schemaName={"OrgMembership (string)"}
-          qualifierMessage={"**Possible values:** [`Admin`, `Member`]"}
-          schema={{
-            type: "string",
-            description: "Role assigned to the user in the organization",
-            enum: ["Admin", "Member"],
-            title: "OrgMembership",
-          }}
-        ></SchemaItem>
-      </ul>
-    </details>
-  </TabItem>
-</MimeTabs>
-<div>
-  <div>
-    <ApiTabs label={undefined} id={undefined}>
-      <TabItem label={"200"} value={"200"}>
-        <div>OK</div>
-        <div>
-          <MimeTabs className={"openapi-tabs__mime"} schemaType={"response"}>
-            <TabItem label={"application/json"} value={"application/json"}>
-              <SchemaTabs className={"openapi-tabs__schema"}>
-                <TabItem label={"Schema"} value={"Schema"}>
-                  <details
-                    style={{}}
-                    className={"openapi-markdown__details response"}
-                    data-collapsed={false}
-                    open={true}
-                  >
-                    <summary
-                      style={{}}
-                      className={"openapi-markdown__details-summary-response"}
-                    >
-                      <strong>Schema</strong>
-                    </summary>
-                    <div
-                      style={{ textAlign: "left", marginLeft: "1rem" }}
-                    ></div>
-                    <ul style={{ marginLeft: "1rem" }}>
-                      <div
-                        style={{ marginTop: ".5rem", marginBottom: ".5rem" }}
-                      >
-                        object
-                      </div>
-                    </ul>
-                  </details>
-                </TabItem>
-                <TabItem
-                  label={"Example (from schema)"}
-                  value={"Example (from schema)"}
-                >
-                  <ResponseSamples
-                    responseExample={"{}"}
-                    language={"json"}
-                  ></ResponseSamples>
-                </TabItem>
-              </SchemaTabs>
-            </TabItem>
-          </MimeTabs>
-        </div>
-      </TabItem>
-      <TabItem label={"default"} value={"default"}>
-        <div>Unexpected error</div>
-        <div>
-          <MimeTabs className={"openapi-tabs__mime"} schemaType={"response"}>
-            <TabItem label={"application/json"} value={"application/json"}>
-              <SchemaTabs className={"openapi-tabs__schema"}>
-                <TabItem label={"Schema"} value={"Schema"}>
-                  <details
-                    style={{}}
-                    className={"openapi-markdown__details response"}
-                    data-collapsed={false}
-                    open={true}
-                  >
-                    <summary
-                      style={{}}
-                      className={"openapi-markdown__details-summary-response"}
-                    >
-                      <strong>Schema</strong>
-                    </summary>
-                    <div
-                      style={{ textAlign: "left", marginLeft: "1rem" }}
-                    ></div>
-                    <ul style={{ marginLeft: "1rem" }}>
-                      <SchemaItem
-                        collapsible={false}
-                        name={"message"}
-                        required={false}
-                        schemaName={"string"}
-                        qualifierMessage={undefined}
-                        schema={{ type: "string" }}
-                      ></SchemaItem>
-                    </ul>
-                  </details>
-                </TabItem>
-                <TabItem
-                  label={"Example (from schema)"}
-                  value={"Example (from schema)"}
-                >
-                  <ResponseSamples
-                    responseExample={'{\n  "message": "string"\n}'}
-                    language={"json"}
-                  ></ResponseSamples>
-                </TabItem>
-              </SchemaTabs>
-            </TabItem>
-          </MimeTabs>
-        </div>
-      </TabItem>
-    </ApiTabs>
-  </div>
-</div>
+</Heading>
+
+<ParamsDetails
+  parameters={[{"name":"provider_id","in":"path","required":true,"description":"Provider ID","schema":{"type":"string"}},{"name":"org_id","in":"path","required":true,"description":"Organization ID","schema":{"type":"string"}}]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"content":{"application/json":{"schema":{"type":"object","additionalProperties":false,"required":["bucket_name","org_name","user_id"],"properties":{"bucket_name":{"type":"string","description":"Name of the bucket to be provisioned"},"org_name":{"type":"string","description":"Name of the organization where the bucket should be provisioned"},"user_id":{"type":"string","description":"ID of the user who is requesting the bucket"},"bucket_options":{"type":"object","properties":{"public":{"type":"boolean","description":"If set to true, the bucket will be publicly accessible. Default is false."},"storage_class":{"type":"string","description":"Storage class for the bucket. Default is `STANDARD`.","enum":["STANDARD","STANDARD_IA","GLACIER","GLACIER_IR"],"title":"StorageClass"},"enable_object_acl":{"type":"boolean","description":"If set to true, per object ACL will be enabled. Default is false."}},"title":"BucketOptions"},"user_role":{"type":"string","description":"Role assigned to the user in the organization","enum":["Admin","Member"],"title":"OrgMembership"}},"title":"ProvisioningRequest"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"object","title":"ProvisioningResponse"}}}},"default":{"description":"Unexpected error","content":{"application/json":{"schema":{"type":"object","properties":{"message":{"type":"string"}},"title":"GenericError"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      

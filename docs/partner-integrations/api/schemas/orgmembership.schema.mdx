@@ -4,29 +4,30 @@ title: "OrgMembership"
 description: "Role assigned to the user in the organization"
 sidebar_label: "OrgMembership"
 hide_title: true
+hide_table_of_contents: true
 schema: true
+sample: "Admin"
 custom_edit_url: null
 ---
 
-import DiscriminatorTabs from "@theme/DiscriminatorTabs";
-import SchemaItem from "@theme/SchemaItem";
-import SchemaTabs from "@theme/SchemaTabs";
+import Schema from "@theme/Schema";
 import Heading from "@theme/Heading";
-import TabItem from "@theme/TabItem";
 
 <Heading
   as={"h1"}
   className={"openapi__heading"}
   children={"OrgMembership"}
-></Heading>
+>
+</Heading>
+
+
 
 Role assigned to the user in the organization
 
-<ul>
-  <div style={{ marginTop: ".5rem", marginBottom: ".5rem" }}>
-    string
-    <div style={{ paddingTop: "1rem" }}>
-      **Possible values:** [`Admin`, `Member`]
-    </div>
-  </div>
-</ul>
+<Schema
+  schema={{"type":"string","description":"Role assigned to the user in the organization","enum":["Admin","Member"],"title":"OrgMembership"}}
+  schemaType={"response"}
+>
+  
+</Schema>
+            

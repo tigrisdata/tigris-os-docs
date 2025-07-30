@@ -4,53 +4,30 @@ title: "DeleteAccessKeyRequest"
 description: ""
 sidebar_label: "DeleteAccessKeyRequest"
 hide_title: true
+hide_table_of_contents: true
 schema: true
+sample: {"id":"string","user_id":"string","user_role":"Admin"}
 custom_edit_url: null
 ---
 
-import DiscriminatorTabs from "@theme/DiscriminatorTabs";
-import SchemaItem from "@theme/SchemaItem";
-import SchemaTabs from "@theme/SchemaTabs";
+import Schema from "@theme/Schema";
 import Heading from "@theme/Heading";
-import TabItem from "@theme/TabItem";
 
 <Heading
   as={"h1"}
   className={"openapi__heading"}
   children={"DeleteAccessKeyRequest"}
-></Heading>
+>
+</Heading>
 
-<ul>
-  <SchemaItem
-    collapsible={false}
-    name={"id"}
-    required={true}
-    schemaName={"string"}
-    qualifierMessage={undefined}
-    schema={{ type: "string", description: "Access key ID" }}
-  ></SchemaItem>
-  <SchemaItem
-    collapsible={false}
-    name={"user_id"}
-    required={true}
-    schemaName={"string"}
-    qualifierMessage={undefined}
-    schema={{
-      type: "string",
-      description: "ID of the user for whom the access key is being deleted",
-    }}
-  ></SchemaItem>
-  <SchemaItem
-    collapsible={false}
-    name={"user_role"}
-    required={false}
-    schemaName={"OrgMembership (string)"}
-    qualifierMessage={"**Possible values:** [`Admin`, `Member`]"}
-    schema={{
-      type: "string",
-      description: "Role assigned to the user in the organization",
-      enum: ["Admin", "Member"],
-      title: "OrgMembership",
-    }}
-  ></SchemaItem>
-</ul>
+
+
+
+
+<Schema
+  schema={{"type":"object","additionalProperties":false,"required":["user_id","id"],"properties":{"id":{"type":"string","description":"Access key ID"},"user_id":{"type":"string","description":"ID of the user for whom the access key is being deleted"},"user_role":{"type":"string","description":"Role assigned to the user in the organization","enum":["Admin","Member"],"title":"OrgMembership"}},"title":"DeleteAccessKeyRequest"}}
+  schemaType={"response"}
+>
+  
+</Schema>
+            

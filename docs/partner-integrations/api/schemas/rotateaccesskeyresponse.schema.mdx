@@ -4,29 +4,30 @@ title: "RotateAccessKeyResponse"
 description: ""
 sidebar_label: "RotateAccessKeyResponse"
 hide_title: true
+hide_table_of_contents: true
 schema: true
+sample: {"new_secret":"string"}
 custom_edit_url: null
 ---
 
-import DiscriminatorTabs from "@theme/DiscriminatorTabs";
-import SchemaItem from "@theme/SchemaItem";
-import SchemaTabs from "@theme/SchemaTabs";
+import Schema from "@theme/Schema";
 import Heading from "@theme/Heading";
-import TabItem from "@theme/TabItem";
 
 <Heading
   as={"h1"}
   className={"openapi__heading"}
   children={"RotateAccessKeyResponse"}
-></Heading>
+>
+</Heading>
 
-<ul>
-  <SchemaItem
-    collapsible={false}
-    name={"new_secret"}
-    required={false}
-    schemaName={"string"}
-    qualifierMessage={undefined}
-    schema={{ type: "string", description: "Rotated access key secret" }}
-  ></SchemaItem>
-</ul>
+
+
+
+
+<Schema
+  schema={{"type":"object","properties":{"new_secret":{"type":"string","description":"Rotated access key secret"}},"title":"RotateAccessKeyResponse"}}
+  schemaType={"response"}
+>
+  
+</Schema>
+            

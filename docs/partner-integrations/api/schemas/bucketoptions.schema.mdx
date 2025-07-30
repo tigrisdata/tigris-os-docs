@@ -4,60 +4,30 @@ title: "BucketOptions"
 description: ""
 sidebar_label: "BucketOptions"
 hide_title: true
+hide_table_of_contents: true
 schema: true
+sample: {"public":true,"storage_class":"STANDARD","enable_object_acl":true}
 custom_edit_url: null
 ---
 
-import DiscriminatorTabs from "@theme/DiscriminatorTabs";
-import SchemaItem from "@theme/SchemaItem";
-import SchemaTabs from "@theme/SchemaTabs";
+import Schema from "@theme/Schema";
 import Heading from "@theme/Heading";
-import TabItem from "@theme/TabItem";
 
 <Heading
   as={"h1"}
   className={"openapi__heading"}
   children={"BucketOptions"}
-></Heading>
+>
+</Heading>
 
-<ul>
-  <SchemaItem
-    collapsible={false}
-    name={"public"}
-    required={false}
-    schemaName={"boolean"}
-    qualifierMessage={undefined}
-    schema={{
-      type: "boolean",
-      description:
-        "If set to true, the bucket will be publicly accessible. Default is false.",
-    }}
-  ></SchemaItem>
-  <SchemaItem
-    collapsible={false}
-    name={"storage_class"}
-    required={false}
-    schemaName={"StorageClass (string)"}
-    qualifierMessage={
-      "**Possible values:** [`STANDARD`, `STANDARD_IA`, `GLACIER`, `GLACIER_IR`]"
-    }
-    schema={{
-      type: "string",
-      description: "Storage class for the bucket. Default is `STANDARD`.",
-      enum: ["STANDARD", "STANDARD_IA", "GLACIER", "GLACIER_IR"],
-      title: "StorageClass",
-    }}
-  ></SchemaItem>
-  <SchemaItem
-    collapsible={false}
-    name={"enable_object_acl"}
-    required={false}
-    schemaName={"boolean"}
-    qualifierMessage={undefined}
-    schema={{
-      type: "boolean",
-      description:
-        "If set to true, per object ACL will be enabled. Default is false.",
-    }}
-  ></SchemaItem>
-</ul>
+
+
+
+
+<Schema
+  schema={{"type":"object","properties":{"public":{"type":"boolean","description":"If set to true, the bucket will be publicly accessible. Default is false."},"storage_class":{"type":"string","description":"Storage class for the bucket. Default is `STANDARD`.","enum":["STANDARD","STANDARD_IA","GLACIER","GLACIER_IR"],"title":"StorageClass"},"enable_object_acl":{"type":"boolean","description":"If set to true, per object ACL will be enabled. Default is false."}},"title":"BucketOptions"}}
+  schemaType={"response"}
+>
+  
+</Schema>
+            

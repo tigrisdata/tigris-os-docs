@@ -4,73 +4,30 @@ title: "ChargeTier"
 description: ""
 sidebar_label: "ChargeTier"
 hide_title: true
+hide_table_of_contents: true
 schema: true
+sample: {"name":"string","quantity":0,"starting_after":0,"price":0,"subtotal":0}
 custom_edit_url: null
 ---
 
-import DiscriminatorTabs from "@theme/DiscriminatorTabs";
-import SchemaItem from "@theme/SchemaItem";
-import SchemaTabs from "@theme/SchemaTabs";
+import Schema from "@theme/Schema";
 import Heading from "@theme/Heading";
-import TabItem from "@theme/TabItem";
 
 <Heading
   as={"h1"}
   className={"openapi__heading"}
   children={"ChargeTier"}
-></Heading>
+>
+</Heading>
 
-<ul>
-  <SchemaItem
-    collapsible={false}
-    name={"name"}
-    required={true}
-    schemaName={"string"}
-    qualifierMessage={undefined}
-    schema={{ type: "string" }}
-  ></SchemaItem>
-  <SchemaItem
-    collapsible={false}
-    name={"quantity"}
-    required={true}
-    schemaName={"double"}
-    qualifierMessage={undefined}
-    schema={{
-      type: "number",
-      description: "Number of units consumed",
-      format: "double",
-    }}
-  ></SchemaItem>
-  <SchemaItem
-    collapsible={false}
-    name={"starting_after"}
-    required={true}
-    schemaName={"double"}
-    qualifierMessage={undefined}
-    schema={{
-      type: "number",
-      description: "Starting point when this tier is applicable",
-      format: "double",
-    }}
-  ></SchemaItem>
-  <SchemaItem
-    collapsible={false}
-    name={"price"}
-    required={true}
-    schemaName={"double"}
-    qualifierMessage={undefined}
-    schema={{ type: "number", description: "Rate per unit", format: "double" }}
-  ></SchemaItem>
-  <SchemaItem
-    collapsible={false}
-    name={"subtotal"}
-    required={true}
-    schemaName={"double"}
-    qualifierMessage={undefined}
-    schema={{
-      type: "number",
-      description: "Total cost for the tier",
-      format: "double",
-    }}
-  ></SchemaItem>
-</ul>
+
+
+
+
+<Schema
+  schema={{"type":"object","properties":{"name":{"type":"string"},"quantity":{"type":"number","description":"Number of units consumed","format":"double"},"starting_after":{"type":"number","description":"Starting point when this tier is applicable","format":"double"},"price":{"type":"number","description":"Rate per unit","format":"double"},"subtotal":{"type":"number","description":"Total cost for the tier","format":"double"}},"required":["name","quantity","starting_after","price","subtotal"],"title":"ChargeTier"}}
+  schemaType={"response"}
+>
+  
+</Schema>
+            

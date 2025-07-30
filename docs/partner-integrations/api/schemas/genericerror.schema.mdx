@@ -4,29 +4,30 @@ title: "GenericError"
 description: ""
 sidebar_label: "GenericError"
 hide_title: true
+hide_table_of_contents: true
 schema: true
+sample: {"message":"string"}
 custom_edit_url: null
 ---
 
-import DiscriminatorTabs from "@theme/DiscriminatorTabs";
-import SchemaItem from "@theme/SchemaItem";
-import SchemaTabs from "@theme/SchemaTabs";
+import Schema from "@theme/Schema";
 import Heading from "@theme/Heading";
-import TabItem from "@theme/TabItem";
 
 <Heading
   as={"h1"}
   className={"openapi__heading"}
   children={"GenericError"}
-></Heading>
+>
+</Heading>
 
-<ul>
-  <SchemaItem
-    collapsible={false}
-    name={"message"}
-    required={false}
-    schemaName={"string"}
-    qualifierMessage={undefined}
-    schema={{ type: "string" }}
-  ></SchemaItem>
-</ul>
+
+
+
+
+<Schema
+  schema={{"type":"object","properties":{"message":{"type":"string"}},"title":"GenericError"}}
+  schemaType={"response"}
+>
+  
+</Schema>
+            

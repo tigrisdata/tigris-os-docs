@@ -200,6 +200,11 @@ const sidebars = {
                 },
               ],
             },
+            {
+              type: "doc",
+              label: "Mixpeek",
+              id: "guides/mixpeek",
+            },
           ],
         },
         {

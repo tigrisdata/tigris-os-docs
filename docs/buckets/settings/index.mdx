@@ -20,6 +20,8 @@ Here's an overview of the settings you can configure:
 - Object Lifecycle: Set an Object Lifecycle rule for objects in the bucket.
 - CORS Configuration: Configure Cross-Origin Resource Sharing (CORS) rules for
   your bucket.
+- Deletion Protection: Prevent accidental deletion of your bucket by enabling
+  this setting.
 - Delete This Bucket: Permanently delete a bucket.
 
 ## Sharing
@@ -172,6 +174,14 @@ You can configure
 rules for your bucket. This allows you to have a website dynamically fetch data
 from Tigris. For more information see the
 [CORS Configuration](/docs/buckets/cors/) documentation.
+
+## Delete Protection
+
+When Delete Protection is enabled, no files in the bucket can be deleted. This
+setting prevents accidental or unauthorized deletion of objects, ensuring that
+all data in the bucket remains safe until you turn off Delete Protection.
+
+![Delete Protection](./delete-protection.webp)
 
 ## Delete This Bucket
 

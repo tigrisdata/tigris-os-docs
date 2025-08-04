@@ -1,15 +1,46 @@
 # Pricing
 
-Tigris pricing is based on the following components:
+S3-compatible, globally distributed, zero egress fees. Fast, flexible object
+storage built for modern AI workloads. Access your data freely, in any cloud.
+
+## Why teams choose Tigris over S3 and R2
+
+- **Global performance without complexity:** Automatically optimizes for global
+  low-latency access - no need to configure replication or placement.
+
+- **Zero egress fees:** Access your data freely. Stop paying just to use your
+  own data.
+
+- **No lock-in:** Works with any compute or GPU provider.
+
+- **Optimized for AI workloads:** Serve massive datasets for training,
+  inference, and vector search - reliably and fast.
+
+### A Quick Comparison
+
+|                           |           |          |               |
+| ------------------------- | --------- | -------- | ------------- |
+|                           | Tigris    | S3       | Cloudflare R2 |
+| Global low-latency access | Y         | N        | N             |
+| Egress fees               | $0        | $$$      | $0            |
+| S3-compatible             | Y         | Y        | Y             |
+| Multi-region included     | Y         | N        | N             |
+| IAM support               | Extensive | Complete | Limited       |
+| Availability              | 99.99     | 99.99    | 99.9          |
+| Low cost storage tiers    | Y         | Y        | N             |
+| Enterprise Support        | Included  | $$$      | $             |
+
+## Pricing Components
+
+Tigris pricing is based on data stored and requests:
 
 - Data Storage: the amount of data stored in your buckets and the storage tier
   used.
 - Requests: the number of requests made to your buckets and objects. The request
   costs are based on the type of request and are calculated based on the
   quantity of requests.
-- Data Transfer: the amount of data transferred out of your buckets.
 
-## Pricing table
+## Pricing Details Per Storage Tier
 
 | Component                                     | Standard Tier               | Infrequent Access Tier      | Archive Tier \*\*           | Archive Instant Retrieval Tier |
 | --------------------------------------------- | --------------------------- | --------------------------- | --------------------------- | ------------------------------ |
@@ -24,9 +55,9 @@ Tigris pricing is based on the following components:
 _\*\* Data in Archive tier requires restoration before it can be accessed. Read
 more about [Storage tiers](/docs/objects/tiers.md)._
 
-## Free allowances
+## Free Tier
 
-We offer a free allowance as follows:
+We offer a free tier as follows:
 
 - 5GB of data storage (standard tier) per month
 - 10,000 PUT, COPY, POST, LIST requests per month

@@ -77,11 +77,11 @@ The `CanonicalURI` is the path of the request URL including the host and query p
 
 For example, for a `POST` request to `/provider/laravel/orgs/my-org/provision`, the `CanonicalURI` would be:
 ```
-https://fly.mgnt.storage.tigris.dev/provider/your-provider-id/orgs/user-org-id/provision
+https://mgmt.storage.dev/provider/your-provider-id/orgs/user-org-id/provision
 ```
 And for a `GET` request with query parameters:
 ```
-https://fly.mgnt.storage.tigris.dev/provider/your-provider-id/orgs/?include_inactive=true
+https://mgmt.storage.dev/provider/your-provider-id/orgs/?include_inactive=true
 ```
 :::
 
@@ -179,7 +179,7 @@ X-Tigris-Signature: <generated_signature>
       Created `canonical_request` as:
       ```
       POST
-      https://fly.mgnt.storage.tigris.dev/provider/laravel/orgs/my-org/provision
+      https://mgmt.storage.dev/provider/laravel/orgs/my-org/provision
       1731703213870
       f8d133cb-5a42-47b1-9ef2-874bb55bab72
       ```

@@ -1,22 +1,162 @@
-# Using model weights in Tigris anywhere
+# Storing and Serving Machine Learning Model Weights with Tigris
 
-The most common way to deploy AI models in production is by using “serverless”
-inference. This means that every time you get a request, you don’t know what
-state the underlying hardware is in. You don’t know if you have your models
-cached, and in the worst case you need to do a cold start and download your
-model weights from scratch.
+Whether you're fine-tuning open weights, training models from scratch, or
+running real-time inference, storing and serving model weights efficiently is
+critical. Tigris gives you fast, cloud-agnostic access to your models—perfect
+for serverless inference, autoscaling workloads, and rapid experimentation.
 
-A couple fixable problems arise when running your models on serverless or any
-frequently changing infrastructure:
+This guide walks through how and why to use Tigris to store your models, and how
+to access them using `boto3`, `s3fs`, or
+[TigrisFS](https://www.tigrisdata.com/docs/training/tigrisfs/) for local file
+system access.
 
-- Model distribution that's not optimized for latency causes needless GPU idle
-  time as the model weights are downloaded to the machine on cold start. Tigris
-  behaves like a content delivery network by default and is designed for low
-  latency, saving idle time on cold start.
-- Compliance restrictions like data sovereignty and GDPR increase complexity
-  quickly. Tigris makes regional restrictions a one-line configuration, guide
-  [here](https://www.tigrisdata.com/docs/objects/object_regions/).
-- Reliance on third party caches for distributing models creates an upstream
-  dependency and leaves your system vulnerable to downtime. Tigris guarantees
-  99.99% availability with
-  [public availability data](https://www.tigrisdata.com/blog/availability-metrics-public/).
+## Why Store Your Own Model Weights?
+
+You might need to store your own model weights due to:
+
+- **Fine-tuning** models on custom datasets
+- **Continued training** or checkpointing during training runs
+- **Quantization, distillation, or pruning** of base models
+- **Managing model variants** for ensembling or A/B testing
+- **Packaging models for serverless or low-latency inference**
+
+In all these cases, storing model weights in object storage gives you full
+control, portability, and versioning across environments.
+
+## Why Use Tigris for Model Storage?
+
+Tigris is optimized for ML workloads:
+
+- **S3-compatible**: Use standard tooling (`boto3`, `s3fs`, etc.)
+- **Global low-latency reads**: Ideal for real-time model loading
+- **Zero egress fees**: No penalty for loading models into inference backends
+- **Cloud-agnostic**: Deploy anywhere
+- **Built for streaming**: Works great for on-the-fly model loading
+
+## Setup
+
+Follow the
+[AWS Python SDK setup guide](https://www.tigrisdata.com/docs/sdks/s3/aws-python-sdk/)
+for your credentials:
+
+```bash
+export AWS_ACCESS_KEY_ID="tid_..."
+export AWS_SECRET_ACCESS_KEY="tsec_..."
+export AWS_ENDPOINT_URL="https://t3.storage.dev"
+```
+
+Or pass credentials directly in Python.
+
+## Uploading and Downloading Model Files
+
+### Using `boto3` (S3 API)
+
+```python
+import boto3
+
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id="tid_...",
+    aws_secret_access_key="tsec_...",
+    endpoint_url="https://t3.storage.dev",
+)
+
+# Upload model weights
+s3.upload_file("pytorch_model.bin", "my-models", "gpt2-finetuned/pytorch_model.bin")
+
+# Download model weights
+s3.download_file("my-models", "gpt2-finetuned/pytorch_model.bin", "model.bin")
+```
+
+## Loading Model Weights at Runtime
+
+### Using `s3fs`
+
+```python
+import s3fs
+import torch
+
+fs = s3fs.S3FileSystem(
+    key="tid_...",
+    secret="tsec_...",
+    client_kwargs={"endpoint_url": "https://t3.storage.dev"},
+)
+
+with fs.open("my-models/gpt2-finetuned/pytorch_model.bin", "rb") as f:
+    model = torch.load(f, map_location="cpu")
+```
+
+### Using TigrisFS (mount your bucket like a local folder)
+
+TigrisFS is a native file system interface for Tigris buckets. It allows your
+inference code to load models from a local file path while the data streams from
+Tigris behind the scenes.
+
+#### 1. Install TigrisFS
+
+```bash
+curl -sL https://github.com/tigrisdata/tigrisfs/releases/download/v1.2.1/tigrisfs_1.2.1_darwin_arm64.tar.gz | sudo tar -xz -C /usr/local/bin
+```
+
+#### 2. Mount your bucket
+
+```bash
+sudo tigrisfs my-models /mnt/tigrisfs/my-models
+```
+
+#### 3. Load your model from the mounted path
+
+```python
+import torch
+
+model = torch.load("/mnt/tigrisfs/my-models/gpt2-finetuned/pytorch_model.bin", map_location="cpu")
+```
+
+TigrisFS is ideal for environments where your model loading logic expects local
+file paths, such as frameworks that use `torch.load(path)` or
+`transformers.AutoModel.from_pretrained(path)`.
+
+## Real-Time Inference Example
+
+If you're loading models dynamically for serverless inference:
+
+### With `s3fs`
+
+```python
+from safetensors.torch import load_file
+import s3fs
+import torch
+
+fs = s3fs.S3FileSystem(
+    key="tid_...",
+    secret="tsec_...",
+    client_kwargs={"endpoint_url": "https://t3.storage.dev"},
+)
+
+with fs.open("models/llama2-7b-quantized/model.safetensors", "rb") as f:
+    model = load_file(f, device=torch.device("cuda"))
+```
+
+### With TigrisFS
+
+```python
+from safetensors.torch import load_file
+import torch
+
+model = load_file("/mnt/tigrisfs/my-models/llama2-7b-quantized/model.safetensors", device=torch.device("cuda"))
+```
+
+This setup works especially well in environments where containers are
+short-lived and you want low-latency cold starts.
+
+## Summary
+
+Tigris is the ideal backend for storing and serving machine learning
+models—whether you're fine-tuning open weights, checkpointing training runs, or
+running real-time inference. With global low-latency reads, zero egress fees,
+and support for both S3-compatible and file system access, Tigris helps you move
+fast without getting locked in.
+
+- [Set up with the AWS SDK](https://www.tigrisdata.com/docs/sdks/s3/aws-python-sdk/)
+- [See model storage example on Beam](https://www.tigrisdata.com/docs/model-storage/beam-cloud/)
+- [Learn more about TigrisFS](https://www.tigrisdata.com/docs/guides/tigrisfs/)

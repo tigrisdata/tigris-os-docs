@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Storage Cost Comparison</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">
+        Storage Cost Comparison
+      </h1>
+
+      <div class="bg-white rounded-lg shadow-lg p-8">
+        <div class="mb-6 space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Storage Amount (GB):</label
+            >
+            <input
+              type="range"
+              id="storageSlider"
+              min="100"
+              max="5000"
+              value="1000"
+              step="100"
+              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            />
+            <div class="flex justify-between text-sm text-gray-500 mt-1">
+              <span>100 GB</span>
+              <span id="currentGB" class="font-medium">1000 GB</span>
+              <span>5000 GB</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Egress Amount (% of Storage):</label
+            >
+            <input
+              type="range"
+              id="egressSlider"
+              min="0"
+              max="500"
+              value="50"
+              step="10"
+              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            />
+            <div class="flex justify-between text-sm text-gray-500 mt-1">
+              <span>0%</span>
+              <span id="currentEgress" class="font-medium">50%</span>
+              <span>500%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Separate Lines Container -->
+        <div class="mb-8 space-y-4">
+          <!-- Tigris Line -->
+          <div class="flex items-center">
+            <div
+              class="relative h-16 bg-gray-200 rounded-lg overflow-hidden flex-1 mr-4"
+            >
+              <div
+                id="tigrisContainer"
+                class="h-full flex rounded-lg overflow-hidden"
+                style="width: 30%"
+              >
+                <!-- Free Tier Section -->
+                <div
+                  id="tigrisFree"
+                  class="h-full bg-green-500 flex items-center justify-center transition-all duration-500 ease-out"
+                  style="min-width: 60px"
+                >
+                  <span class="text-white font-bold text-xs whitespace-nowrap"
+                    >Free</span
+                  >
+                </div>
+                <!-- Storage Section -->
+                <div
+                  id="tigrisStorage"
+                  class="h-full bg-blue-500 flex items-center justify-center transition-all duration-500 ease-out"
+                  style="min-width: 60px"
+                >
+                  <span class="text-white font-bold text-xs whitespace-nowrap"
+                    >Storage</span
+                  >
+                </div>
+                <!-- Egress Section -->
+                <div
+                  id="tigrisEgress"
+                  class="h-full bg-red-500 flex items-center justify-center transition-all duration-500 ease-out"
+                  style="min-width: 60px; display: none"
+                >
+                  <span class="text-white font-bold text-xs whitespace-nowrap"
+                    >Egress</span
+                  >
+                </div>
+              </div>
+              <!-- Total Cost -->
+              <div class="absolute top-0 right-0 h-full flex items-center pr-4">
+                <span
+                  id="tigrisCost"
+                  class="text-gray-800 font-bold text-sm bg-white bg-opacity-90 px-2 py-1 rounded"
+                  >$19.90</span
+                >
+              </div>
+            </div>
+            <div class="flex-shrink-0 w-32">
+              <span class="text-sm font-medium text-gray-700">Tigris Data</span>
+            </div>
+          </div>
+
+          <!-- Other Provider Line -->
+          <div class="flex items-center">
+            <div
+              class="relative h-16 bg-gray-200 rounded-lg overflow-hidden flex-1 mr-4"
+            >
+              <div
+                id="otherContainer"
+                class="h-full flex rounded-lg overflow-hidden"
+                style="width: 100%"
+              >
+                <!-- Free Tier Section -->
+                <div
+                  id="otherFree"
+                  class="h-full bg-green-500 flex items-center justify-center transition-all duration-500 ease-out"
+                  style="min-width: 60px"
+                >
+                  <span class="text-white font-bold text-xs whitespace-nowrap"
+                    >Free</span
+                  >
+                </div>
+                <!-- Storage Section -->
+                <div
+                  id="otherStorage"
+                  class="h-full bg-blue-500 flex items-center justify-center transition-all duration-500 ease-out"
+                  style="min-width: 60px"
+                >
+                  <span class="text-white font-bold text-xs whitespace-nowrap"
+                    >Storage</span
+                  >
+                </div>
+                <!-- Egress Section -->
+                <div
+                  id="otherEgressSection"
+                  class="h-full bg-red-500 flex items-center justify-center transition-all duration-500 ease-out"
+                  style="min-width: 60px"
+                >
+                  <span class="text-white font-bold text-xs whitespace-nowrap"
+                    >Egress</span
+                  >
+                </div>
+              </div>
+              <!-- Total Cost -->
+              <div class="absolute top-0 right-0 h-full flex items-center pr-4">
+                <span
+                  id="otherCost"
+                  class="text-white font-bold text-sm bg-black bg-opacity-60 px-2 py-1 rounded"
+                  >$66.35</span
+                >
+              </div>
+            </div>
+            <div class="flex-shrink-0 w-32">
+              <span class="text-sm font-medium text-gray-700"
+                >Other Provider</span
+              >
+            </div>
+          </div>
+
+          <!-- Savings -->
+          <div class="text-center mt-4">
+            <span id="tigrisSavings" class="text-xl font-bold text-green-600"
+              >Save $46.45</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const storageSlider = document.getElementById("storageSlider");
+      const egressSlider = document.getElementById("egressSlider");
+      const currentGB = document.getElementById("currentGB");
+      const currentEgress = document.getElementById("currentEgress");
+
+      // Container elements for proportional sizing
+      const tigrisContainer = document.getElementById("tigrisContainer");
+      const otherContainer = document.getElementById("otherContainer");
+
+      // Tigris elements
+      const tigrisFree = document.getElementById("tigrisFree");
+      const tigrisStorage = document.getElementById("tigrisStorage");
+      const tigrisEgress = document.getElementById("tigrisEgress");
+      const tigrisCost = document.getElementById("tigrisCost");
+
+      // Other provider elements
+      const otherFree = document.getElementById("otherFree");
+      const otherStorage = document.getElementById("otherStorage");
+      const otherEgressSection = document.getElementById("otherEgressSection");
+      const otherCost = document.getElementById("otherCost");
+
+      const tigrisSavings = document.getElementById("tigrisSavings");
+
+      function updateComparison() {
+        const storage = parseInt(storageSlider.value);
+        const egressPercent = parseInt(egressSlider.value);
+        const egress = Math.round((storage * egressPercent) / 100);
+
+        // Tigris calculations
+        const tigrisFreeStorage = Math.min(storage, 5);
+        const tigrisPaidStorage = Math.max(0, storage - 5);
+        const tigrisStorageCost = tigrisPaidStorage * 0.02;
+        const tigrisEgressCost = 0; // Always free
+        const tigrisTotal = tigrisStorageCost + tigrisEgressCost;
+
+        // Other provider calculations
+        const otherFreeStorage = Math.min(storage, 5);
+        const otherPaidStorage = Math.max(0, storage - 5);
+        const otherStorageCost = otherPaidStorage * 0.023;
+
+        const otherFreeEgress = Math.min(egress, 15);
+        const otherPaidEgress = Math.max(0, egress - 15);
+        const otherEgressCost = otherPaidEgress * 0.09;
+
+        const otherTotal = otherStorageCost + otherEgressCost;
+        const savings = otherTotal - tigrisTotal;
+
+        // Update display values
+        currentGB.textContent = `${storage.toLocaleString()} GB`;
+        currentEgress.textContent = `${egressPercent}% (${egress.toLocaleString()} GB)`;
+        tigrisCost.textContent = `$${tigrisTotal.toFixed(2)}`;
+        otherCost.textContent = `$${otherTotal.toFixed(2)}`;
+        tigrisSavings.textContent = `Save $${savings.toFixed(2)}`;
+
+        // Calculate proportional container widths
+        const maxTotal = Math.max(tigrisTotal, otherTotal, 1);
+        const tigrisBarWidth = Math.max((tigrisTotal / maxTotal) * 100, 20); // Minimum 20% for readability
+        const otherBarWidth = (otherTotal / maxTotal) * 100;
+
+        // Update container widths
+        tigrisContainer.style.width = `${tigrisBarWidth}%`;
+        otherContainer.style.width = `${otherBarWidth}%`;
+
+        // Calculate Tigris section widths
+        const tigrisFreeValue = tigrisFreeStorage * 0.02;
+        const totalTigrisValue = Math.max(tigrisTotal + tigrisFreeValue, 0.01);
+
+        let tigrisFreePercent = (tigrisFreeValue / totalTigrisValue) * 100;
+        let tigrisStoragePercent = (tigrisStorageCost / totalTigrisValue) * 100;
+
+        // Ensure sections are visible when they have value
+        if (tigrisFreeValue > 0) {
+          tigrisFree.style.display = "flex";
+          tigrisFree.style.flexGrow = tigrisFreePercent.toString();
+        } else {
+          tigrisFree.style.display = "none";
+          tigrisFree.style.flexGrow = "0";
+        }
+
+        if (tigrisStorageCost > 0) {
+          tigrisStorage.style.display = "flex";
+          tigrisStorage.style.flexGrow = tigrisStoragePercent.toString();
+        } else {
+          tigrisStorage.style.display = "none";
+          tigrisStorage.style.flexGrow = "0";
+        }
+
+        // Tigris egress is always 0
+        tigrisEgress.style.display = "none";
+        tigrisEgress.style.flexGrow = "0";
+
+        // Calculate Other provider section widths
+        const otherFreeValue =
+          otherFreeStorage * 0.023 + otherFreeEgress * 0.09;
+        const totalOtherValue = Math.max(otherTotal + otherFreeValue, 0.01);
+
+        let otherFreePercent = (otherFreeValue / totalOtherValue) * 100;
+        let otherStoragePercent = (otherStorageCost / totalOtherValue) * 100;
+        let otherEgressPercent = (otherEgressCost / totalOtherValue) * 100;
+
+        // Update Other provider sections
+        if (otherFreeValue > 0) {
+          otherFree.style.display = "flex";
+          otherFree.style.flexGrow = otherFreePercent.toString();
+        } else {
+          otherFree.style.display = "none";
+          otherFree.style.flexGrow = "0";
+        }
+
+        if (otherStorageCost > 0) {
+          otherStorage.style.display = "flex";
+          otherStorage.style.flexGrow = otherStoragePercent.toString();
+        } else {
+          otherStorage.style.display = "none";
+          otherStorage.style.flexGrow = "0";
+        }
+
+        if (otherEgressCost > 0) {
+          otherEgressSection.style.display = "flex";
+          otherEgressSection.style.flexGrow = otherEgressPercent.toString();
+        } else {
+          otherEgressSection.style.display = "none";
+          otherEgressSection.style.flexGrow = "0";
+        }
+      }
+
+      storageSlider.addEventListener("input", updateComparison);
+      egressSlider.addEventListener("input", updateComparison);
+      updateComparison(); // Initial calculation
+    </script>
+  </body>
+</html>

@@ -41,8 +41,8 @@ policy creation process.
 
 ![](./imgs/create-new-policy.webp)
 
-The Policy Builder makes it easy to create policies using either a `simple form`
-or a `flexible editor mode`—choose whichever works best for you.
+The Policy Builder makes it easy to create policies using either a simple form
+or the flexible JSON Editor mode — choose whichever works best for you.
 
 ![](./imgs/policy-builder.webp)
 

@@ -49,6 +49,11 @@ const sidebars = {
       id: "get-started/index",
     },
     {
+      type: "doc",
+      label: "Benchmarks",
+      id: "overview/benchmarks/index",
+    },
+    {
       type: "category",
       label: "Product",
       collapsed: false,

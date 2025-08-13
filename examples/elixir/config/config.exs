@@ -10,4 +10,5 @@ config :ex_aws,
 config :ex_aws, :s3,
   scheme: "https://",
   host: "fly.storage.tigris.dev",
-  region: "auto"
+  region: "auto",
+  virtual_host: true

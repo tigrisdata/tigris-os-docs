@@ -48,7 +48,18 @@ secret_access_key. In this case we use AWS_ACCESS_KEY_ID and
 AWS_SECRET_ACCESS_KEY environment variables to store the access keys we will use
 to access Tigris.
 
-Then we configure the S3 API endpoint, which is "fly.storage.tigris.dev".
+Then we configure the S3 API endpoint, which is "fly.storage.tigris.dev". Make
+sure you set `virtual_host` to `true` to use the bucket name as part of the URL.
+
+```elixir
+config :ex_aws, :s3,
+  scheme: "https://",
+  host: "fly.storage.tigris.dev",
+  region: "auto",
+  # highlight-start
+  virtual_host: true
+  # highlight-end
+```
 
 ### Runtime configuration
 
@@ -70,7 +81,8 @@ if config_env() == :prod do
   config :ex_aws, :s3,
     scheme: "https://",
     host: "fly.storage.tigris.dev",
-    region: "auto"
+    region: "auto",
+    virtual_host: true
 
 end
 ```

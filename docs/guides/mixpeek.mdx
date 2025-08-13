@@ -1,0 +1,93 @@
+# Mixpeek
+
+Mixpeek is a multimodal platform that provides a semantic layer that works
+out-of-the box. Connect your Tigris bucket to Mixpeek, and it lets you
+automatically index and search across text, images, audio, video, and other file
+types using natural language and vector similarity. It connects to your object
+storage (like Tigris) to perform data extraction, generate embeddings, and
+enable semantic queries—by default, with no additional configuration. With
+Tigris, your data is globally replicated and instantly available via a simple
+S3-compatible API, making it easy for Mixpeek to keep everything indexed and
+searchable in real time.
+
+By the end of this guide, you'll have:
+
+- Connected Mixpeek to your Tigris bucket
+- Uploaded files for indexing
+- Performed a multimodal search over your stored content
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- A Tigris object storage bucket already created
+- Your Tigris access key and secret
+- A Mixpeek account and API key
+
+## 1. Set Environment Variables
+
+Start by setting your credentials and endpoint information in your environment:
+
+```bash
+export MIXPEEK_API_KEY=<your_mixpeek_api_key>
+export AWS_ACCESS_KEY_ID=<your_tigris_access_key>
+export AWS_SECRET_ACCESS_KEY=<your_tigris_secret_key>
+export AWS_REGION=auto
+export AWS_S3_ENDPOINT=https://fly.storage.tigris.dev
+export BUCKET_NAME=<your_bucket_name>
+```
+
+## 2. Initialize Mixpeek with Tigris Storage
+
+Use the Mixpeek Python SDK to register your Tigris bucket as a storage source:
+
+```python
+from mixpeek import Mixpeek
+import os
+
+mp = Mixpeek(api_key=os.getenv("MIXPEEK_API_KEY"))
+
+mp.set_storage(
+    name="tigris-bucket",
+    type="s3",
+    endpoint=os.getenv("AWS_S3_ENDPOINT"),
+    access_key=os.getenv("AWS_ACCESS_KEY_ID"),
+    secret_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+    region=os.getenv("AWS_REGION")
+)
+```
+
+## 3. Upload Files to Tigris
+
+Mixpeek can automatically index files you upload to your bucket. Here’s how to
+upload via the SDK:
+
+```python
+mp.upload(
+    bucket="tigris-bucket",
+    key="datasets/report.pdf",
+    metadata={"project": "Q3 Analysis", "type": "report"}
+)
+```
+
+## 4. Run a Multimodal Search
+
+Once your files are indexed, you can search across them using natural language:
+
+```python
+results = mp.search("PDFs with revenue graphs and charts")
+for result in results:
+    print(result["key"], result["score"])
+```
+
+You can combine semantic search with metadata filtering and keyword matching to
+fine-tune results.
+
+## You Did It!
+
+You now have a working integration between Tigris and Mixpeek.
+
+- Files uploaded to your Tigris bucket are automatically indexed
+- Vector embeddings and metadata are extracted behind the scenes
+- You can search across text, images, audio, video, and more using natural
+  language

@@ -1,0 +1,588 @@
+.diagramContainer {
+  width: 100%;
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2rem;
+  background-color: #111827;
+  border-radius: 0.5rem;
+}
+
+.header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 1.875rem;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.animateButton {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  background-color: #2563eb;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  transition-property: background-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.animateButton:hover {
+  background-color: #1d4ed8;
+}
+
+.resetButton {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  background-color: #4b5563;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  transition-property: background-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.resetButton:hover {
+  background-color: #374151;
+}
+
+.relative {
+  position: relative;
+}
+
+.flowDiagram {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  position: relative;
+  gap: 32px;
+}
+
+.movingObject {
+  position: absolute;
+  top: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: #f59e0b;
+  border-radius: 0.25rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  z-index: 20;
+  margin-top: -12px;
+}
+
+.component {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.requesterBox {
+  width: 6rem;
+  height: 8rem;
+  background-color: #374151;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.requesterText {
+  color: #ffffff;
+  transform: rotate(-90deg);
+  white-space: nowrap;
+}
+
+.requestArrow {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  height: 1px;
+  background-color: #34d399;
+  margin-top: -2px;
+  width: 32px;
+}
+
+.requestArrowHead {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left-width: 4px;
+  border-right-width: 0;
+  border-top-width: 2px;
+  border-bottom-width: 2px;
+  border-left-color: #34d399;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  left: calc(100% + 32px);
+  top: calc(50% - 2px);
+}
+
+.returnArrow {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  height: 1px;
+  background-color: #f59e0b;
+  margin-top: 6px;
+  width: 32px;
+}
+
+.returnArrowHead {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-right-width: 4px;
+  border-left-width: 0;
+  border-top-width: 2px;
+  border-bottom-width: 2px;
+  border-right-color: #f59e0b;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  left: 100%;
+  top: calc(50% + 6px);
+}
+
+.componentLabel {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.componentSubLabel {
+  color: #9ca3af;
+  font-size: 0.75rem;
+}
+
+.apiGatewayBox {
+  width: 7rem;
+  height: 8rem;
+  background-color: #374151;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  position: relative;
+}
+
+.apiGatewayLights {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.light {
+  width: 2rem;
+  height: 0.75rem;
+  border-radius: 0.25rem;
+}
+
+.greenLight {
+  background-color: #34d399;
+}
+
+.redLight {
+  background-color: #f87171;
+}
+
+.blueLight {
+  background-color: #60a5fa;
+}
+
+.arrowToCache {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  height: 1px;
+  background-color: #60a5fa;
+  margin-top: -2px;
+  width: 32px;
+}
+
+.arrowToCacheHead {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left-width: 4px;
+  border-right-width: 0;
+  border-top-width: 2px;
+  border-bottom-width: 2px;
+  border-left-color: #60a5fa;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  left: calc(100% + 32px);
+  top: calc(50% - 2px);
+}
+
+.returnArrowFromCache {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  height: 1px;
+  background-color: #f59e0b;
+  margin-top: 6px;
+  width: 32px;
+}
+
+.localSsdCacheBox {
+  width: 7rem;
+  height: 8rem;
+  background-color: #374151;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  position: relative;
+}
+
+.ssdCacheGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.ssdCacheItem {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.25rem;
+}
+
+.grayCacheItem {
+  background-color: #6b7280;
+}
+
+.blueCacheItem {
+  background-color: #60a5fa;
+}
+
+.pinkCacheItem {
+  background-color: #f472b6;
+}
+
+.newCacheItem {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.25rem;
+}
+
+.arrowToFdb {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  height: 1px;
+  background-color: #ef4444;
+  margin-top: -2px;
+  width: 32px;
+}
+
+.arrowToFdbHead {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left-width: 4px;
+  border-right-width: 0;
+  border-top-width: 2px;
+  border-bottom-width: 2px;
+  border-left-color: #ef4444;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  left: calc(100% + 32px);
+  top: calc(50% - 2px);
+}
+
+.returnArrowFromBlockStore {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  height: 1px;
+  background-color: #f59e0b;
+  margin-top: -2px;
+  width: 32px;
+}
+
+.returnArrowFromBlockStoreHead {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-right-width: 4px;
+  border-left-width: 0;
+  border-top-width: 2px;
+  border-bottom-width: 2px;
+  border-right-color: #f59e0b;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  right: calc(100% + 32px);
+  top: calc(50% - 2px);
+}
+
+.fdbStorageBox {
+  width: 7rem;
+  height: 8rem;
+  background-color: #374151;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  position: relative;
+}
+
+.fdbGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.25rem;
+}
+
+.fdbItem {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 0.25rem;
+}
+
+.purpleFdbItem {
+  background-color: #a78bfa;
+}
+
+.redFdbItem {
+  background-color: #f87171;
+}
+
+.greenFdbItem {
+  background-color: #34d399;
+}
+
+.pinkFdbItem {
+  background-color: #f472b6;
+}
+
+.blueFdbItem {
+  background-color: #60a5fa;
+}
+
+.grayFdbItem {
+  background-color: #6b7280;
+}
+
+.yellowFdbItem {
+  background-color: #facc15;
+}
+
+.arrowToBlockStore {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  height: 1px;
+  background-color: #06b6d4;
+  margin-top: -2px;
+  width: 32px;
+}
+
+.arrowToBlockStoreHead {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left-width: 4px;
+  border-right-width: 0;
+  border-top-width: 2px;
+  border-bottom-width: 2px;
+  border-left-color: #06b6d4;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  left: calc(100% + 32px);
+  top: calc(50% - 2px);
+}
+
+.blockStoreBox {
+  width: 7rem;
+  height: 8rem;
+  background-color: #374151;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  position: relative;
+}
+
+.blockStoreGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.blockStoreItem {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.25rem;
+}
+
+.blueBlockStoreItem {
+  background-color: #60a5fa;
+}
+
+.amberBlockStoreItem {
+  background-color: #f59e0b;
+}
+
+.greenBlockStoreItem {
+  background-color: #34d399;
+}
+
+.purpleBlockStoreItem {
+  background-color: #a78bfa;
+}
+
+.returnArrowToLocalCache {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  height: 1px;
+  background-color: #f59e0b;
+  margin-top: -2px;
+  width: 32px;
+}
+
+.returnArrowToLocalCacheHead {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-right-width: 4px;
+  border-left-width: 0;
+  border-top-width: 2px;
+  border-bottom-width: 2px;
+  border-right-color: #f59e0b;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  right: calc(100% + 32px);
+  top: calc(50% - 2px);
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legendColorBox {
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: #f59e0b;
+  border-radius: 0.25rem;
+}
+
+.legendLabel {
+  color: #d1d5db;
+  font-size: 0.875rem;
+}
+
+.stepsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.step {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 500ms;
+}
+
+.stepContent {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.stepNumber {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stepNumberText {
+  font-size: 0.75rem;
+  color: #000000;
+}
+
+.stepTitle {
+  color: #ffffff;
+}
+
+.stepDescription {
+  color: #d1d5db;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.performanceIndicator {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #450a0a;
+  border-radius: 0.5rem;
+  border: 1px solid #f87171;
+}
+
+.performanceIndicatorContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fca5a5;
+}
+
+.performanceIndicatorText {
+  color: #f87171;
+}
+
+.cachePersistenceIndicator {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #064e3b;
+  border-radius: 0.5rem;
+  border: 1px solid #10b981;
+}
+
+.cachePersistenceIndicatorContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #a7f3d0;
+}
+
+.cachePersistenceIndicatorText {
+  color: #6ee7b7;
+}

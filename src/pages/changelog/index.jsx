@@ -12,45 +12,11 @@ const changelogData = [
         <p>Administrators can configure organizations to require two-factor authentication. In order to use this, you must be using a native Tigris organization, not one created with fly.io.</p>
         <p>
           {/* eslint-disable-next-line @typescript-eslint/no-var-requires */}
-          <img src={require("./assets/2025/08/mfa-enforcement.webp").default} alt='A screen recording of clicking the "Enable MFA" button in the admin console. Clicking on it triggers a toast that says MFA settings are updated successfully.' />
+          <img src={require("./assets/2025/08/mfa-enforcement.webp").default} alt='A screen recording of clicking the "Enable MFA" button in the Web Console. Clicking on it triggers a toast that says MFA settings are updated successfully.' />
         </p>
       </>
     ),
     subcategories: [
-      {
-        title: "Improvements",
-        items: [
-          {
-            title: "Access key flows have been updated",
-            description: (
-              <>
-                <p>New screens and flows have been added for access key management.</p>
-              </>
-            ),
-            tag: { label: "Admin Console", color: "orange" }
-          },
-          {
-            title: "IAM Policies can now be directly attached to keys",
-            description: (
-              <>
-                {/* eslint-disable-next-line @typescript-eslint/no-var-requires */}
-                <img src={require("./assets/2025/08/iam-access-key-linking.webp").default} />
-              </>
-            ),
-            tag: { label: "Admin Console", color: "orange" }
-          },
-          {
-            title: "Each bucket has a breakdown of how much data is stored in each storage tier.",
-            description: (
-              <>
-                {/* eslint-disable-next-line @typescript-eslint/no-var-requires */}
-                <img className={styles.deemphasize} src={require("./assets/2025/08/bucket-tier-size.webp").default} />
-              </>
-            ),
-            tag: { label: "Admin Console", color: "orange" }
-          },
-        ]
-      },
       {
         title: "Fixes",
         items: [
@@ -62,6 +28,40 @@ const changelogData = [
               </>
             ),
             tag: { label: "IAM", color: "red" }
+          },
+        ]
+      },
+      {
+        title: "Improvements",
+        items: [
+          {
+            title: "Access key flows have been updated",
+            description: (
+              <>
+                <p>New screens and flows have been added for access key management.</p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" }
+          },
+          {
+            title: "IAM Policies can now be directly attached to keys",
+            description: (
+              <>
+                {/* eslint-disable-next-line @typescript-eslint/no-var-requires */}
+                <img src={require("./assets/2025/08/iam-access-key-linking.webp").default} />
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" }
+          },
+          {
+            title: "Each bucket has a breakdown of how much data is stored in each storage tier.",
+            description: (
+              <>
+                {/* eslint-disable-next-line @typescript-eslint/no-var-requires */}
+                <img className={styles.deemphasize} src={require("./assets/2025/08/bucket-tier-size.webp").default} />
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" }
           },
         ]
       },

@@ -315,7 +315,7 @@
 }
 
 /* Non-collapsible header styles */
-.header {
+.itemHeader {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
@@ -376,7 +376,7 @@
 }
 
 /* Adjust entry title in non-collapsible header */
-.header .entryTitle {
+.itemHeader .entryTitle {
   margin-bottom: 0;
   flex-grow: 1;
 }
@@ -387,7 +387,7 @@
 }
 
 /* Adjust tag spacing in non-collapsible header */
-.header .tag {
+.itemHeader .tag {
   margin-top: 0.25rem;
 }
 

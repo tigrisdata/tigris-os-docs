@@ -44,7 +44,7 @@ const changelogData = [
             description: (
               <>
                 {/* eslint-disable-next-line @typescript-eslint/no-var-requires */}
-                <img className={styles.deemphazise} src={require("./assets/2025/08/bucket-tier-size.webp").default} />
+                <img className={styles.deemphasize} src={require("./assets/2025/08/bucket-tier-size.webp").default} />
               </>
             ),
             tag: { label: "Admin Console", color: "orange" }

@@ -101,7 +101,6 @@ const Subcategory = ({ title, items }) => {
 
 Subcategory.propTypes = {
   title: PropTypes.string.isRequired,
-  count: PropTypes.number.isRequired,
   items: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string.isRequired,
@@ -140,7 +139,7 @@ export const ChangelogItem = ({ date, title, content, subcategories, image, foot
         <div className={styles.dateMobile}>{date}</div>
 
         {/* Header area */}
-        <div className={styles.header}>
+        <div className={styles.itemHeader}>
           <h2 className={styles.entryTitle}>{title}</h2>
         </div>
 

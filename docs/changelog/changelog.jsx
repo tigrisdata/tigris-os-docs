@@ -1,9 +1,8 @@
 import React from 'react';
-import Layout from '@theme/Layout';
 import styles from "./styles.module.css";
-import Timeline from '../../components/Changelog';
+import Timeline from "@site/src/components/Changelog";
 
-const changelogData = [
+export const changelogData = [
   {
     date: "August 15, 2025",
     title: "Org admins can enforce two-factor auth under organization settings",
@@ -71,16 +70,13 @@ const changelogData = [
 
 export default function Changelog() {
   return (
-    <Layout title="Changelog" description="The changelog for Tigris and its surrounding infrastructure">
-      <div className={styles.container}>
-        <div className={styles.wrapper}>
-          <header className={styles.header}>
-            <h1 className={styles.title}>Changelog</h1>
-            <p className={styles.subtitle}>What&apos;s changed in Tigris? Look here to find out! This is where we document all of the changes to Tigris, its infrastructure, and other things that you'll find relevant for your work.</p>
-          </header>
-          <Timeline changelogData={changelogData} />
-        </div>
+    <div className={styles.container}>
+      <div className={styles.wrapper}>
+        <header className={styles.header}>
+          <p className={styles.subtitle}>What&apos;s changed in Tigris? Look here to find out! This is where we document all of the changes to Tigris, its infrastructure, and other things that you'll find relevant for your work.</p>
+        </header>
+        <Timeline changelogData={changelogData} />
       </div>
-    </Layout>
+    </div>
   );
 }

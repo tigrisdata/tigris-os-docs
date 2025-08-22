@@ -44,9 +44,9 @@ const sidebars = {
       ],
     },
     {
-      type: "link",
+      type: "doc",
       label: "Changelog",
-      href: "/docs/changelog",
+      id: "changelog/index",
     },
     {
       type: "doc",

@@ -29,49 +29,30 @@ const getTagColorClasses = (color) => {
 
 // --- Subcategory Item Component ---
 // This component renders individual items within a subcategory.
-const SubcategoryItem = ({ title, description, tag }) => (
-  <div className={styles.subcategoryItem}>
-    <div className={styles.subcategoryItemHeader}>
-      {tag && (
-        <span className={getTagColorClasses(tag.color)}>
-          {tag.label}
-        </span>
-      )}
-      <h4 className={styles.subcategoryItemTitle}>{title}</h4>
-    </div>
-    {description && (
-      <p className={styles.subcategoryItemDescription}>{description}</p>
-    )}
-  </div>
-);
+// Each item can be collapsed; `defaultOpen` controls initial state.
+const SubcategoryItem = ({ title, description, tag, defaultOpen = false }) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
 
-SubcategoryItem.propTypes = {
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string,
-  tag: PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    color: PropTypes.string.isRequired,
-  }),
-};
-
-// --- Subcategory Component ---
-// This component renders a collapsible subcategory with its items.
-const Subcategory = ({ title, items }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const toggleExpanded = () => {
-    setIsExpanded(!isExpanded);
-  };
+  const toggle = () => setIsOpen((v) => !v);
 
   return (
-    <div className={styles.subcategory}>
-      <div className={styles.subcategoryHeader} onClick={toggleExpanded}>
-        <h3 className={styles.subcategoryTitle}>
-          {title} ({items.length})
-        </h3>
-        <button className={styles.expandButton} aria-label={isExpanded ? 'Collapse' : 'Expand'}>
+    <div className={styles.subcategoryItem}>
+      <div className={styles.subcategoryItemHeader}>
+        {tag && (
+          <span className={getTagColorClasses(tag.color)}>
+            {tag.label}
+          </span>
+        )}
+
+        <button
+          type="button"
+          className={styles.subcategoryItemTitleButton}
+          onClick={toggle}
+          aria-expanded={isOpen}
+        >
+          <h4 className={styles.subcategoryItemTitle}>{title}</h4>
           <svg
-            className={`${styles.expandIcon} ${isExpanded ? styles.expandIconRotated : ''}`}
+            className={`${styles.expandIcon} ${isOpen ? styles.expandIconRotated : ''}`}
             width="14"
             height="14"
             viewBox="0 0 16 16"
@@ -88,16 +69,42 @@ const Subcategory = ({ title, items }) => {
         </button>
       </div>
 
-      {isExpanded && (
-        <div className={styles.subcategoryContent}>
-          {items.map((item, index) => (
-            <SubcategoryItem key={index} {...item} />
-          ))}
+      {isOpen && description && (
+        <div className={styles.subcategoryItemDescription}>
+          <p>{description}</p>
         </div>
       )}
     </div>
   );
 };
+
+SubcategoryItem.propTypes = {
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  tag: PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired,
+  }),
+  defaultOpen: PropTypes.bool,
+};
+
+// --- Subcategory Component ---
+// This component renders a subcategory and always shows its items.
+const Subcategory = ({ title, items }) => (
+  <div className={styles.subcategory}>
+    <div className={styles.subcategoryHeader}>
+      <h3 className={styles.subcategoryTitle}>
+        {title} ({items.length})
+      </h3>
+    </div>
+
+    <div className={styles.subcategoryContent}>
+      {items.map((item, index) => (
+        <SubcategoryItem key={index} {...item} />
+      ))}
+    </div>
+  </div>
+);
 
 Subcategory.propTypes = {
   title: PropTypes.string.isRequired,
@@ -109,6 +116,7 @@ Subcategory.propTypes = {
         label: PropTypes.string.isRequired,
         color: PropTypes.string.isRequired,
       }),
+      defaultOpen: PropTypes.bool,
     })
   ).isRequired,
 };

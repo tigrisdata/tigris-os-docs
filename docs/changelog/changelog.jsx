@@ -26,7 +26,8 @@ export const changelogData = [
                 <p>Previously you were able to put any S3 or IAM action into policy documents. Tigris now enforces that these be one of the <a href="/docs/iam/policies/">supported policy actions</a>.</p>
               </>
             ),
-            tag: { label: "IAM", color: "red" }
+            tag: { label: "IAM", color: "red" },
+            defaultOpen: true,
           },
         ]
       },

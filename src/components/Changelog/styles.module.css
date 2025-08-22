@@ -449,13 +449,13 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1rem;
-  cursor: pointer;
   transition: background-color 0.2s ease;
   border-radius: 0.5rem;
 }
 
 .subcategoryHeader:hover {
-  background-color: rgba(51 65 85, 0.3); /* slate-700/30 */
+  /* keep subtle hover but don't suggest clickability */
+  background-color: rgba(51 65 85, 0.12); /* lighter slate */
 }
 
 .subcategoryTitle {
@@ -481,7 +481,7 @@
 
 .subcategoryItemHeader {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.25rem;
 }
@@ -500,6 +500,47 @@
   line-height: 1.4;
   margin: 0.25rem 0 0 0;
   padding-left: 1rem;
+}
+
+/* Left wrapper inside subcategory item header (tag + title) */
+.subcategoryItemLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-grow: 1;
+}
+
+/* Expand button on the right of a subcategory item */
+.itemExpandButton {
+  background: none;
+  border: none;
+  color: rgb(148 163 184); /* slate-400 */
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.itemExpandButton:hover {
+  color: rgb(203 213 225); /* slate-300 */
+  background-color: rgba(51 65 85, 0.5); /* slate-700/50 */
+}
+
+.itemExpandIcon {
+  transition: transform 0.2s ease;
+  display: block;
+}
+
+.itemExpandIconRotated {
+  transform: rotate(180deg);
+}
+
+.subcategoryItemContent {
+  margin-top: 0.5rem;
+  padding-left: 0.5rem;
+  animation: slideDown 0.2s ease-out;
 }
 
 /* Smaller tags for subcategory items */

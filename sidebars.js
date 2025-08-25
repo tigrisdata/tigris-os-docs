@@ -45,11 +45,6 @@ const sidebars = {
     },
     {
       type: "doc",
-      label: "Changelog",
-      id: "changelog/index",
-    },
-    {
-      type: "doc",
       label: "Get Started",
       id: "get-started/index",
     },
@@ -63,6 +58,11 @@ const sidebars = {
       label: "Product",
       collapsed: false,
       items: [
+        {
+          type: "doc",
+          label: "Changelog",
+          id: "changelog/index",
+        },
         {
           type: "category",
           label: "Account Management",

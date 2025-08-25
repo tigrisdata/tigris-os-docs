@@ -1,26 +1,26 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import styles from './styles.module.css';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import styles from "./styles.module.css";
 
 // --- Helper function for tag colors ---
 // This is used by subcategory items only.
 const getTagColorClasses = (color) => {
   switch (color) {
-    case 'cyan':
+    case "cyan":
       return `${styles.tag} ${styles.tagCyan}`;
-    case 'green':
+    case "green":
       return `${styles.tag} ${styles.tagGreen}`;
-    case 'red':
+    case "red":
       return `${styles.tag} ${styles.tagRed}`;
-    case 'yellow':
+    case "yellow":
       return `${styles.tag} ${styles.tagYellow}`;
-    case 'magenta':
+    case "magenta":
       return `${styles.tag} ${styles.tagMagenta}`;
-    case 'blue':
+    case "blue":
       return `${styles.tag} ${styles.tagBlue}`;
-    case 'purple':
+    case "purple":
       return `${styles.tag} ${styles.tagPurple}`;
-    case 'orange':
+    case "orange":
       return `${styles.tag} ${styles.tagOrange}`;
     default:
       return `${styles.tag} ${styles.tagDefault}`;
@@ -39,9 +39,7 @@ const SubcategoryItem = ({ title, description, tag, defaultOpen = false }) => {
     <div className={styles.subcategoryItem}>
       <div className={styles.subcategoryItemHeader}>
         {tag && (
-          <span className={getTagColorClasses(tag.color)}>
-            {tag.label}
-          </span>
+          <span className={getTagColorClasses(tag.color)}>{tag.label}</span>
         )}
 
         <button
@@ -52,7 +50,7 @@ const SubcategoryItem = ({ title, description, tag, defaultOpen = false }) => {
         >
           <h4 className={styles.subcategoryItemTitle}>{title}</h4>
           <svg
-            className={`${styles.expandIcon} ${isOpen ? styles.expandIconRotated : ''}`}
+            className={`${styles.expandIcon} ${isOpen ? styles.expandIconRotated : ""}`}
             width="14"
             height="14"
             viewBox="0 0 16 16"
@@ -117,20 +115,25 @@ Subcategory.propTypes = {
         color: PropTypes.string.isRequired,
       }),
       defaultOpen: PropTypes.bool,
-    })
+    }),
   ).isRequired,
 };
 
-
 // --- Main Changelog Item Component ---
 // This component renders a single entry in the timeline.
-export const ChangelogItem = ({ date, title, content, subcategories, image, footerLink, isLast }) => {
+export const ChangelogItem = ({
+  date,
+  title,
+  content,
+  subcategories,
+  image,
+  footerLink,
+  isLast,
+}) => {
   return (
     <div className={styles.timelineItem}>
       {/* The vertical line connecting the timeline dots */}
-      {!isLast && (
-        <div className={styles.timelineConnector}></div>
-      )}
+      {!isLast && <div className={styles.timelineConnector}></div>}
 
       {/* The colored dot on the timeline */}
       <div className={styles.timelineDot}>
@@ -153,20 +156,35 @@ export const ChangelogItem = ({ date, title, content, subcategories, image, foot
 
         {/* Content */}
         <div className={styles.contentArea}>
-          {content && (
-            <div className={styles.entryContent}>
-              {content}
-            </div>
-          )}
+          {content && <div className={styles.entryContent}>{content}</div>}
 
           {image && (
             <div className={styles.imageContainer}>
-              <img
-                src={image.src}
-                alt={image.alt}
-                className={styles.image}
-                onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/800x450/0f172a/94a3b8?text=Image+Not+Found'; }}
-              />
+              {footerLink ? (
+                <a href={footerLink.href} className={styles.imageLink}>
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    className={styles.image}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src =
+                        "https://placehold.co/800x450/0f172a/94a3b8?text=Image+Not+Found";
+                    }}
+                  />
+                </a>
+              ) : (
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  className={styles.image}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src =
+                      "https://placehold.co/800x450/0f172a/94a3b8?text=Image+Not+Found";
+                  }}
+                />
+              )}
             </div>
           )}
 
@@ -207,9 +225,9 @@ ChangelogItem.propTypes = {
             label: PropTypes.string.isRequired,
             color: PropTypes.string.isRequired,
           }),
-        })
+        }),
       ).isRequired,
-    })
+    }),
   ),
   image: PropTypes.shape({
     src: PropTypes.string.isRequired,
@@ -221,7 +239,6 @@ ChangelogItem.propTypes = {
   }),
   isLast: PropTypes.bool.isRequired,
 };
-
 
 // --- Main App Component ---
 // This is the main component that renders the entire page and timeline.
@@ -254,6 +271,6 @@ Timeline.propTypes = {
         href: PropTypes.string.isRequired,
         text: PropTypes.string.isRequired,
       }),
-    })
+    }),
   ).isRequired,
 };

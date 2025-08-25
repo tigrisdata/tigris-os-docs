@@ -277,11 +277,29 @@
   margin-top: 1.5rem;
 }
 
+.imageLink {
+  display: block;
+  transition: opacity 0.2s ease;
+}
+
+.imageLink:hover {
+  opacity: 0.85;
+}
+
 .image {
   border-radius: 0.5rem;
   border: 1px solid rgb(51 65 85); /* slate-700 */
   width: 100%;
   height: auto;
+}
+
+.imageLink .image {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.imageLink:hover .image {
+  transform: scale(1.01);
 }
 
 /* Footer link styles */

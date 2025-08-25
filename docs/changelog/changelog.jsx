@@ -1,6 +1,7 @@
-import React from 'react';
+import React from "react";
 import styles from "./styles.module.css";
 import Timeline from "@site/src/components/Changelog";
+import BlogPostPreview from "@site/src/components/BlogPostPreview";
 
 export const changelogData = [
   {
@@ -8,10 +9,17 @@ export const changelogData = [
     title: "Org admins can enforce two-factor auth under organization settings",
     content: (
       <>
-        <p>Administrators can configure organizations to require two-factor authentication. In order to use this, you must be using a native Tigris organization, not one created with fly.io.</p>
+        <p>
+          Administrators can configure organizations to require two-factor
+          authentication. In order to use this, you must be using a native
+          Tigris organization, not one created with fly.io.
+        </p>
         <p>
           {/* eslint-disable-next-line @typescript-eslint/no-var-requires */}
-          <img src={require("./assets/2025/08/mfa-enforcement.webp").default} alt='A screen recording of clicking the "Enable MFA" button in the Web Console. Clicking on it triggers a toast that says MFA settings are updated successfully.' />
+          <img
+            src={require("./assets/2025/08/mfa-enforcement.webp").default}
+            alt='A screen recording of clicking the "Enable MFA" button in the Web Console. Clicking on it triggers a toast that says MFA settings are updated successfully.'
+          />
         </p>
       </>
     ),
@@ -23,13 +31,17 @@ export const changelogData = [
             title: "IAM policies are now required to have valid S3 actions",
             description: (
               <>
-                <p>Previously you were able to put any S3 or IAM action into policy documents. Tigris now enforces that these be one of the <a href="/docs/iam/policies/">supported policy actions</a>.</p>
+                <p>
+                  Previously you were able to put any S3 or IAM action into
+                  policy documents. Tigris now enforces that these be one of the{" "}
+                  <a href="/docs/iam/policies/">supported policy actions</a>.
+                </p>
               </>
             ),
             tag: { label: "IAM", color: "red" },
             defaultOpen: true,
           },
-        ]
+        ],
       },
       {
         title: "Improvements",
@@ -38,57 +50,94 @@ export const changelogData = [
             title: "Access key flows have been updated",
             description: (
               <>
-                <p>New screens and flows have been added for access key management.</p>
+                <p>
+                  New screens and flows have been added for access key
+                  management.
+                </p>
               </>
             ),
-            tag: { label: "Web Console", color: "orange" }
+            tag: { label: "Web Console", color: "orange" },
           },
           {
             title: "IAM Policies can now be directly attached to keys",
             description: (
               <>
                 {/* eslint-disable-next-line @typescript-eslint/no-var-requires */}
-                <img src={require("./assets/2025/08/iam-access-key-linking.webp").default} />
+                <img
+                  src={
+                    require("./assets/2025/08/iam-access-key-linking.webp")
+                      .default
+                  }
+                />
               </>
             ),
-            tag: { label: "Web Console", color: "orange" }
+            tag: { label: "Web Console", color: "orange" },
           },
           {
-            title: "Each bucket has a breakdown of how much data is stored in each storage tier",
+            title:
+              "Each bucket has a breakdown of how much data is stored in each storage tier",
             description: (
               <>
                 {/* eslint-disable-next-line @typescript-eslint/no-var-requires */}
-                <img className={styles.deemphasize} src={require("./assets/2025/08/bucket-tier-size.webp").default} />
+                <img
+                  className={styles.deemphasize}
+                  src={
+                    require("./assets/2025/08/bucket-tier-size.webp").default
+                  }
+                />
               </>
             ),
-            tag: { label: "Web Console", color: "orange" }
+            tag: { label: "Web Console", color: "orange" },
           },
-        ]
+        ],
       },
-    ]
+    ],
   },
   {
     date: "July 15, 2025",
     title: "Benchmarks",
     content: (
       <>
-        <p>We’ve been hearing from a lot of teams using Tigris for low-latency workloads consisting of billions of tiny files--think logs, AI feature payloads, or metadata. We published a benchmark comparing Tigris to AWS S3 and Cloudflare R2 using a mixed workload of 10 million 1 KB objects, 80% reads and 20% writes.</p>
-        <p>If you’ve run into scaling issues or cost challenges with traditional object stores for small-object use cases, you’ll want to read this. The full write-up includes methodology, results, and instructions to reproduce the benchmark yourself.</p>
+        <p>
+          We've been hearing from a lot of teams using Tigris for low-latency
+          workloads consisting of billions of tiny files--think logs, AI feature
+          payloads, or metadata. We published a benchmark comparing Tigris to
+          AWS S3 and Cloudflare R2 using a mixed workload of 10 million 1 KB
+          objects, 80% reads and 20% writes.
+        </p>
         <p>The results are compelling:</p>
         <ul>
-          <li>Tigris is 86.6x faster than R2 and 5.3x faster than S3 at the 90th percentile for read latency.</li>
-          <li>Throughput under mixed workloads is 4x higher than S3 and 20x higher than R2.</li>
-          <li>Writes are consistently low-latency, with P90 latencies under 17 ms.</li>
+          <li>
+            Tigris is 86.6x faster than R2 and 5.3x faster than S3 at the 90th
+            percentile for read latency.
+          </li>
+          <li>
+            Throughput under mixed workloads is 4x higher than S3 and 20x higher
+            than R2.
+          </li>
+          <li>
+            Writes are consistently low-latency, with P90 latencies under 17 ms.
+          </li>
         </ul>
-        <p>These gains come from architectural choices designed specifically for small-object performance: inline storage for tiny objects, log-structured caching, and coalesced key layouts that reduce IOPS pressure at scale.</p>
-        <p>With sub‑10ms read latencies and throughput reminiscent of key‑value stores, Tigris lets all your workloads leverage a single, unified storage system, eliminating the need for separate small‑object stores.</p>
+        <p>
+          These gains come from architectural choices designed specifically for
+          small-object performance: inline storage for tiny objects,
+          log-structured caching, and coalesced key layouts that reduce IOPS
+          pressure at scale.
+        </p>
+
+        <BlogPostPreview
+          href="https://www.tigrisdata.com/blog/benchmark-small-objects/"
+          title="Tigris Benchmark: 86× Faster Than R2 for Small Objects"
+          description="Deep dive into how Tigris achieves sub-10ms read latencies and key-value store-like throughput for small object workloads. Includes detailed methodology, results, and instructions to reproduce the benchmarks yourself."
+          imageSrc={require("./assets/2025/07/benchmark-science.jpg").default}
+          imageAlt="An anthropomorphic tiger in a lab coat doing science things in a laboratory."
+          buttonText="Read the Benchmarks"
+          author="Tigris Engineering"
+          date="July 2025"
+        />
       </>
     ),
-    image: {
-      /* eslint-disable-next-line @typescript-eslint/no-var-requires */
-      src: require("./assets/2025/07/benchmark-science.jpg").default,
-      alt: "An anthropomorphic tiger in a lab coat doing science things in a laboratory."
-    },
     subcategories: [
       {
         title: "Improvements",
@@ -133,10 +182,6 @@ export const changelogData = [
         ]
       },
     ],
-    footerLink: {
-      href: "https://www.tigrisdata.com/blog/benchmark-small-objects/",
-      text: "Read the benchmarks on the blog",
-    },
   },
 ];
 
@@ -145,7 +190,11 @@ export default function Changelog() {
     <div className={styles.container}>
       <div className={styles.wrapper}>
         <header className={styles.header}>
-          <p className={styles.subtitle}>What&apos;s changed in Tigris? Look here to find out! This is where we document all of the changes to Tigris, its infrastructure, and other things that you&apos;ll find relevant for your work.</p>
+          <p className={styles.subtitle}>
+            What&apos;s changed in Tigris? Look here to find out! This is where
+            we document all of the changes to Tigris, its infrastructure, and
+            other things that you&apos;ll find relevant for your work.
+          </p>
         </header>
         <Timeline changelogData={changelogData} />
       </div>

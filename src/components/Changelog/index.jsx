@@ -158,7 +158,20 @@ export const ChangelogItem = ({
         <div className={styles.contentArea}>
           {content && <div className={styles.entryContent}>{content}</div>}
 
-          {image && (
+          {image && image.href !== undefined ? (
+            <>
+              <a href={image.href}>
+                <div className={styles.imageContainer}>
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    className={styles.image}
+                    onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/800x450/0f172a/94a3b8?text=Image+Not+Found'; }}
+                  />
+                </div>
+              </a>
+            </>
+          ) : (
             <div className={styles.imageContainer}>
               {footerLink ? (
                 <a href={footerLink.href} className={styles.imageLink}>
@@ -232,6 +245,7 @@ ChangelogItem.propTypes = {
   image: PropTypes.shape({
     src: PropTypes.string.isRequired,
     alt: PropTypes.string.isRequired,
+    href: PropTypes.string,
   }),
   footerLink: PropTypes.shape({
     href: PropTypes.string.isRequired,

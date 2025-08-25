@@ -59,11 +59,6 @@ const sidebars = {
       collapsed: false,
       items: [
         {
-          type: "doc",
-          label: "Changelog",
-          id: "changelog/index",
-        },
-        {
           type: "category",
           label: "Account Management",
           items: [
@@ -131,6 +126,11 @@ const sidebars = {
           ],
         },
         "training/tigrisfs",
+        {
+          type: "doc",
+          label: "Changelog",
+          id: "changelog/index",
+        },
       ],
     },
     {

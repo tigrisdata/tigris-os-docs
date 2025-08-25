@@ -117,10 +117,10 @@
   margin-top: 0.5rem;
   background: linear-gradient(
     135deg,
-    rgb(34 211 238) 0%,
-    rgb(6 182 212) 100%
-  ); /* cyan gradient */
-  color: rgb(15 23 42); /* slate-900 */
+    rgb(34 197 94) 0%,
+    rgb(21 128 61) 100%
+  ); /* mint green gradient */
+  color: white;
   font-size: 0.9rem;
   font-weight: 600;
   text-decoration: none;
@@ -130,9 +130,10 @@
 }
 
 .button:hover {
-  background: linear-gradient(135deg, rgb(6 182 212) 0%, rgb(8 145 178) 100%);
+  background: linear-gradient(135deg, rgb(21 128 61) 0%, rgb(20 83 45) 100%);
   transform: translateX(2px);
-  box-shadow: 0 4px 12px rgba(34, 211, 238, 0.3);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  color: white;
 }
 
 .buttonIcon {

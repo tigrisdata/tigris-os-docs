@@ -146,7 +146,11 @@ export const changelogData = [
             title: "IAM Policy Builder",
             description: (
               <>
-                <p>Wanted to build your own IAM policies but didn&apos;t know where to start? Use the new IAM policy builder to make your own policies from scratch.</p>
+                <p>
+                  Wanted to build your own IAM policies but didn&apos;t know
+                  where to start? Use the new IAM policy builder to make your
+                  own policies from scratch.
+                </p>
               </>
             ),
             tag: { label: "IAM", color: "red" },
@@ -156,30 +160,48 @@ export const changelogData = [
             title: "Presigned Multipart Uploads",
             description: (
               <>
-                <p>Multipart uploads now work with <a href="https://www.tigrisdata.com/docs/objects/presigned/">presigned URLs</a>, including for buckets with custom domains set. This allows you to distribute presigned URLs to clients and have them do the upload so it will always upload to the closest Tigris region.</p>
+                <p>
+                  Multipart uploads now work with{" "}
+                  <a href="https://www.tigrisdata.com/docs/objects/presigned/">
+                    presigned URLs
+                  </a>
+                  , including for buckets with custom domains set. This allows
+                  you to distribute presigned URLs to clients and have them do
+                  the upload so it will always upload to the closest Tigris
+                  region.
+                </p>
               </>
             ),
-            tag: { label: "Presigned URLs", color: "green" }
+            tag: { label: "Presigned URLs", color: "green" },
           },
           {
             title: "Delete Protection",
             description: (
               <>
-                Accidents happen, but some accidents are easier to undo than others. Tigris now offers <a href="https://www.tigrisdata.com/docs/buckets/settings/#delete-protection">deletion protection</a> to prevent any users from deleting any objects in a bucket.
+                Accidents happen, but some accidents are easier to undo than
+                others. Tigris now offers{" "}
+                <a href="https://www.tigrisdata.com/docs/buckets/settings/#delete-protection">
+                  deletion protection
+                </a>{" "}
+                to prevent any users from deleting any objects in a bucket.
               </>
             ),
-            tag: { label: "Web Console", color: "orange" }
+            tag: { label: "Web Console", color: "orange" },
           },
           {
             title: "User Invites to Tigris Organizations",
             description: (
               <>
-                <p>Getting your team spun up is easier than ever! Invite your coworkers right from the web console, use enhanced tools to manage your organization, and more.</p>
+                <p>
+                  Getting your team spun up is easier than ever! Invite your
+                  coworkers right from the web console, use enhanced tools to
+                  manage your organization, and more.
+                </p>
               </>
             ),
-            tag: { label: "Web Console", color: "orange" }
+            tag: { label: "Web Console", color: "orange" },
           },
-        ]
+        ],
       },
     ],
   },

@@ -55,6 +55,13 @@
   position: relative;
   display: flex;
   align-items: flex-start;
+  padding-left: 2rem; /* Add padding on mobile to make room for timeline */
+}
+
+@media (min-width: 768px) {
+  .timelineItem {
+    padding-left: 0; /* Remove padding on larger screens */
+  }
 }
 
 .timelineConnector {
@@ -68,6 +75,16 @@
 
 .timelineDot {
   flex-shrink: 0;
+  position: absolute;
+  left: 0;
+  width: 1.25rem; /* Give it a fixed width */
+}
+
+@media (min-width: 768px) {
+  .timelineDot {
+    position: relative;
+    width: auto;
+  }
 }
 
 .timelineDotCircle {
@@ -145,6 +162,13 @@
 .content {
   flex-grow: 1;
   padding-bottom: 4rem;
+  width: 100%; /* Ensure content takes full width on mobile */
+}
+
+@media (min-width: 768px) {
+  .content {
+    width: auto;
+  }
 }
 
 .dateMobile {

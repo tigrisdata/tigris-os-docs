@@ -17,65 +17,67 @@
 @media (min-width: 640px) {
   .wrapper {
     padding-left: 1.5rem;
-    background: none;
-    border: none;
-    color: rgb(148 163 184); /* slate-400 */
-    cursor: pointer;
-    padding: 0.25rem;
-    border-radius: 0.25rem;
-    transition: all 0.2s ease;
-    margin-left: auto;
-    flex-shrink: 0;
-    margin-top: 0.25rem;
+    padding-right: 1.5rem;
   }
+}
 
-  .title {
-    font-size: 2.25rem; /* 4xl */
-    font-weight: 800;
-    color: white;
-    letter-spacing: -0.025em;
+@media (min-width: 1024px) {
+  .wrapper {
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
+}
 
-  .timelineDotCircle {
-    position: absolute;
-    top: 1.3rem;
-  }
+/* Header styles */
+.header {
+  margin-bottom: 0.5rem;
+}
 
-  /* Inline chevron/icon for expand controls */
-  .expandIcon {
-    transition: transform 0.2s ease;
-    display: inline-block;
-    flex-shrink: 0;
-    margin-left: 0.5rem;
-  }
+.title {
+  font-size: 2.25rem; /* 4xl */
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.025em;
+}
 
-  /* Title button for subcategory items: make the whole title row clickable
-       and keep the background subtle so it doesn't look like a floating chip. */
-  .subcategoryItemTitleButton {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    background: transparent;
-    border: none;
-    padding: 0.125rem 0.25rem;
-    border-radius: 0.375rem;
-    color: inherit;
-    cursor: pointer;
-    text-align: left;
-  }
+.subtitle {
+  margin-top: 0.5rem;
+  font-size: 1.125rem;
+  color: rgb(148 163 184); /* slate-400 */
+}
 
-  .subcategoryItemTitleButton:hover {
-    /* subtle, non-jarring hover that matches the surrounding UI */
-    background-color: rgba(203, 213, 225, 0.02); /* very faint */
-  }
+/* Timeline styles */
+.timeline {
+  position: relative;
+}
 
-  .subcategoryItemHeader {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.25rem;
-  }
+.timelineItem {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+}
+
+.timelineConnector {
+  position: absolute;
+  top: 2rem;
+  left: 0.625rem;
+  height: 100%;
+  width: 1px;
+  background-color: rgb(51 65 85); /* slate-700 */
+}
+
+.timelineDot {
+  flex-shrink: 0;
+}
+
+.timelineDotCircle {
+  position: absolute;
+  top: 1.3rem;
+  left: 0.45rem;
+  height: 0.5rem;
+  width: 0.5rem;
+  border-radius: 50%;
+  background-color: rgb(34 211 238); /* cyan-400 */
 }
 
 .dotCyan {

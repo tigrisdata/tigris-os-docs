@@ -126,6 +126,11 @@ const sidebars = {
           ],
         },
         "training/tigrisfs",
+        {
+          type: "doc",
+          label: "Changelog",
+          id: "changelog/index",
+        },
       ],
     },
     {

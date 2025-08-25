@@ -116,7 +116,7 @@
   padding: 0.5rem 1.5rem;
   margin-top: 0.5rem;
   background-color: #62feb5; /* mint green - matches --docs-color-primary */
-  color: #000000;
+  color: #000000 !important;
   font-size: 0.9rem;
   font-weight: 600;
   text-decoration: none;
@@ -126,15 +126,20 @@
   border: none;
 }
 
+.button span {
+  color: #000000 !important;
+}
+
 .button:hover {
   background-color: #44f1a0; /* slightly darker mint - matches --docs-color-primary-100 */
-  color: #000000;
+  color: #000000 !important;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(98, 254, 181, 0.3);
 }
 
 .buttonIcon {
   transition: transform 0.2s ease;
+  color: #000000 !important;
 }
 
 .button:hover .buttonIcon {

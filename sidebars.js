@@ -163,6 +163,11 @@ const sidebars = {
               label: "Example: Document Search",
               id: "libraries/lancedb/docs-search",
             },
+            {
+              type: "doc",
+              label: "Mixpeek",
+              id: "guides/mixpeek",
+            },
           ],
         },
         {

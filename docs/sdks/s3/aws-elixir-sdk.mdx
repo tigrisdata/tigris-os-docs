@@ -88,3 +88,14 @@ Presigned URLs can be used with the ExAWS SDK as follows:
 import presignedUrls from "!!raw-loader!../../../examples/elixir/examples/presigned_urls.ex";
 
 <CodeBlock language="elixir">{presignedUrls}</CodeBlock>
+
+### Presigned URLs with custom domains
+
+You can also use a
+[presigned URL with a custom domain](../../objects/presigned.md#presigned-url-with-custom-domain)
+by replacing the Tigris domain name with your custom domain name:
+
+```elixir
+branded_url = String.replace(presigned_url, "fly.storage.tigris.dev", "your-domain.example.com")
+IO.puts("Presigned URL for GET (custom domain): #{branded_url}")
+```

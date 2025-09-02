@@ -91,6 +91,15 @@ This will generate a virtual-hosted-style URL that is compatible with Tigris.
 
 :::
 
+### Presigned URLs with custom domains
+
+You can also use a [presigned URL with a custom domain](../../objects/presigned.md#presigned-url-with-custom-domain) by replacing the Tigris domain name with your custom domain name:
+
+```go
+brandedURL := strings.ReplaceAll(presignedGetReq.URL, "tigris-example.t3.storage.dev", "your-domain.example.com")
+fmt.Printf("Presigned URL for GET (custom domain): %s\n", brandedURL)
+```
+
 ## Object Regions
 
 Below is an example of how to use the AWS Go SDK to restrict

@@ -81,6 +81,17 @@ import presignedURLs from "!!raw-loader!../../../examples/python/presigned-urls.
 
 <CodeBlock language="py">{presignedURLs}</CodeBlock>
 
+### Presigned URLs with custom domains
+
+You can also use a
+[presigned URL with a custom domain](../../objects/presigned.md#presigned-url-with-custom-domain)
+by replacing the Tigris domain name with your custom domain name:
+
+```python
+branded_url = presigned_url.replace("t3.storage.dev", "your-domain.example.com")
+print(f"Presigned URL for GET (custom domain): {branded_url}")
+```
+
 ## Object Regions
 
 Below is an example of how to use the AWS Python SDK to restrict

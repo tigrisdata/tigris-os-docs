@@ -49,3 +49,14 @@ URL by calling the `presigned_url` method on a Bucket object.
 import presignedUrls from "!!raw-loader!../../../examples/ruby/presigned_urls.rb";
 
 <CodeBlock language="ruby">{presignedUrls}</CodeBlock>
+
+### Presigned URLs with custom domains
+
+You can also use a
+[presigned URL with a custom domain](../../objects/presigned.md#presigned-url-with-custom-domain)
+by replacing the Tigris domain name with your custom domain name:
+
+```ruby
+branded_url = presigned_url.gsub("t3.storage.dev", "your-domain.example.com")
+puts "Presigned URL for GET (custom domain): #{branded_url}"
+```

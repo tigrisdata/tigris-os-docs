@@ -63,3 +63,14 @@ AWSConfigsS3.UseSignatureVersion4 = true;
 import presignedUrl from "!!raw-loader!../../../examples/dotnet/PresignedURL.csx";
 
 <CodeBlock language="csharp">{presignedUrl}</CodeBlock>
+
+### Presigned URLs with custom domains
+
+You can also use a
+[presigned URL with a custom domain](../../objects/presigned.md#presigned-url-with-custom-domain)
+by replacing the Tigris domain name with your custom domain name:
+
+```csharp
+string brandedURL = presignedUrl.Replace("t3.storage.dev", "your-domain.example.com");
+Console.WriteLine($"Presigned URL for GET (custom domain): {brandedURL}");
+```

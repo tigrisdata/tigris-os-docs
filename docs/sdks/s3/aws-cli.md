@@ -13,7 +13,7 @@ by updating your endpoint URL configuration:
 - S3 requests made from outside Fly should be directed to
   `https://t3.storage.dev`
 - S3 requests made from within Fly must be directed to
-  `https://fly.storage.tigris.dev`
+  `https://t3.storage.dev`
 
 When using the AWS CLI, this service endpoint is set by default based on the
 region and is not configured by the user directly. AWS S3 recommends using
@@ -37,7 +37,7 @@ Default output format [None]: json
 
 You can then use the AWS CLI as you normally would, but with the
 `--endpoint-url` flag set to `https://t3.storage.dev` or
-`https://fly.storage.tigris.dev`:
+`https://t3.storage.dev`:
 
 ```bash
 aws s3api list-buckets --endpoint-url https://t3.storage.dev

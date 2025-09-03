@@ -12,8 +12,7 @@ by updating your endpoint URL configuration:
 - IAM requests must be directed to `https://iam.storage.dev`
 - S3 requests made from outside Fly should be directed to
   `https://t3.storage.dev`
-- S3 requests made from within Fly must be directed to
-  `https://t3.storage.dev`
+- S3 requests made from within Fly must be directed to `https://t3.storage.dev`
 
 When using the AWS CLI, this service endpoint is set by default based on the
 region and is not configured by the user directly. AWS S3 recommends using

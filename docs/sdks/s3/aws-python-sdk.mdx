@@ -9,9 +9,8 @@ available.
 You may continue to use the AWS Python SDK as you normally would, but with the
 endpoint set to Tigris. If you are using Tigris outside of Fly, use the endpoint
 [https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
-within Fly, use the endpoint
-[https://fly.storage.tigris.dev](https://fly.storage.tigris.dev). Also ensure
-that the addressing style is set to `virtual`.
+within Fly, use the endpoint [https://t3.storage.dev](https://t3.storage.dev).
+Also ensure that the addressing style is set to `virtual`.
 
 ```python
 # Create S3 service client
@@ -80,6 +79,17 @@ Presigned URLs can be used with the AWS Python (Boto3) SDK as follows:
 import presignedURLs from "!!raw-loader!../../../examples/python/presigned-urls.py";
 
 <CodeBlock language="py">{presignedURLs}</CodeBlock>
+
+### Presigned URLs with custom domains
+
+You can also use a
+[presigned URL with a custom domain](../../objects/presigned.md#presigned-url-with-custom-domain)
+by replacing the Tigris domain name with your custom domain name:
+
+```python
+branded_url = presigned_url.replace("t3.storage.dev", "your-domain.example.com")
+print(f"Presigned URL for GET (custom domain): {branded_url}")
+```
 
 ## Object Regions
 

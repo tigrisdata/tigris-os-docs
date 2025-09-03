@@ -7,8 +7,7 @@ available.
 You may continue to use the AWS PHP SDK as you normally would, but with the
 endpoint set to Tigris. If you are using Tigris outside of Fly, use the endpoint
 [https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
-within Fly, use the endpoint
-[https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
+within Fly, use the endpoint [https://t3.storage.dev](https://t3.storage.dev).
 
 ## Getting started
 
@@ -122,3 +121,14 @@ Presigned URLs can be used with the AWS PHP SDK as follows:
 
 You can now use the URL returned by the `$request->getUri()` to upload or
 download objects.
+
+### Presigned URLs with custom domains
+
+You can also use a
+[presigned URL with a custom domain](../../objects/presigned.md#presigned-url-with-custom-domain)
+by replacing the Tigris domain name with your custom domain name:
+
+```php
+$brandedURL = str_replace("t3.storage.dev", "your-domain.example.com", $presignedUrl);
+echo "Presigned URL for GET (custom domain): " . $brandedURL . "\n";
+```

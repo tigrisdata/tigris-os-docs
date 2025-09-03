@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -115,6 +116,10 @@ func main() {
 	} else {
 		fmt.Printf("Presigned URL for GET: %s\n", presignedGetReq.URL)
 	}
+
+	// Use a custom domain for presigned URLs
+	brandedURL := strings.ReplaceAll(presignedGetReq.URL, "tigris-example.t3.storage.dev", "your-domain.example.com")
+	fmt.Printf("Presigned URL for GET (custom domain): %s\n", brandedURL)
 
 	// Presigned URL to delete an object from the bucket
 	presignedDeleteReq, err := presigner.DeleteObject(ctx, bucketName, "bar.txt", 60*time.Minute)

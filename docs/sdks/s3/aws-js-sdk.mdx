@@ -9,9 +9,8 @@ available.
 You may continue to use the AWS JS SDK as you normally would, but with the
 endpoint set to Tigris. If you are using Tigris outside of Fly, use the endpoint
 [https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
-within Fly, use the endpoint
-[https://fly.storage.tigris.dev](https://fly.storage.tigris.dev). Also make sure
-that `s3ForcePathStyle` is set to `false`.
+within Fly, use the endpoint [https://t3.storage.dev](https://t3.storage.dev).
+Also make sure that `s3ForcePathStyle` is set to `false`.
 
 ```js
 import { S3Client } from "@aws-sdk/client-s3";
@@ -46,6 +45,20 @@ import presignedUrls from "!!raw-loader!../../../examples/js/presigned-urls.js";
 
 You can now use the URL returned by the `getSignedUrl` function to download or
 upload objects to the bucket using the `https` package.
+
+### Presigned URLs with custom domains
+
+You can also use a
+[presigned URL with a custom domain](../../objects/presigned.md#presigned-url-with-custom-domain)
+by replacing the Tigris domain name with your custom domain name:
+
+```js
+const brandedURL = presignedUrl.replace(
+  "t3.storage.dev",
+  "your-domain.example.com",
+);
+console.log("Presigned URL for GET (custom domain):", brandedURL);
+```
 
 ## Renaming objects
 

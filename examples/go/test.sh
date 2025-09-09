@@ -6,6 +6,13 @@ set -e
 echo "Installing dependencies..."
 go mod download
 
+# Check if AWS credentials are available
+if [[ -z "$AWS_ACCESS_KEY_ID" || -z "$AWS_SECRET_ACCESS_KEY" ]]; then
+  echo "AWS credentials not found. Skipping Go examples in CI environment."
+  echo "To run examples locally, set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables."
+  exit 0
+fi
+
 echo "Running Go examples..."
 for program in ./cmd/*; do
   # Skip non-example files

@@ -3,6 +3,13 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
+# Check if AWS credentials are available
+if [[ -z "$AWS_ACCESS_KEY_ID" || -z "$AWS_SECRET_ACCESS_KEY" ]]; then
+  echo "AWS credentials not found. Skipping .NET examples in CI environment."
+  echo "To run examples locally, set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables."
+  exit 0
+fi
+
 # Function to execute a command with retries
 run_with_retry() {
   local cmd="$1"

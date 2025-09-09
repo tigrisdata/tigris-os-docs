@@ -401,7 +401,7 @@ export const changelogData = [
           You can share your buckets with a single button in the admin console.
           This lets you bypass all of the IAM cruft and just give access with
           ease. We&apos;re surprised that adding a share button is a
-          meaningfully developer experience than juggling those IAM policies
+          meaningful developer experience than juggling those IAM policies
           around, but we&apos;re happy to simplify your workflow.
         </p>
         <p>

@@ -614,6 +614,7 @@ export const changelogData = [
                 </p>
               </>
             ),
+            tag: { label: "Web Console", color: "orange" },
           },
         ],
       },

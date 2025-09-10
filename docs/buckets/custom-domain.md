@@ -16,7 +16,7 @@ requirements must be met first:
 2. The custom domain must have a CNAME record that points to the bucket URL. For
    example, if you own the domain `images.example.com` and bucket `foo-bucket`,
    the CNAME record for `images.example.com` should point to
-   `foo-bucket.fly.storage.tigris.dev`.
+   `foo-bucket.t3.storage.dev`.
 
 Once these requirements are met, you can enable the custom domain as follows:
 
@@ -30,19 +30,6 @@ Once these requirements are met, you can enable the custom domain as follows:
 5. Click on the **Save** button to save the changes.
 
 [Learn more](/docs/buckets/settings/) about managing your bucket settings.
-
-### Set custom domain using the Fly CLI
-
-1. Open a terminal and run the following command to set the custom domain for
-   your bucket:
-   ```bash
-   flyctl storage update foo-bucket --custom-domain images.example.com
-   ```
-2. To remove the custom domain, run the following command:
-   ```bash
-   flyctl storage update foo-bucket --clear-custom-domain
-   ```
-   [Learn more](/docs/sdks/fly/) about managing your bucket via fly cli.
 
 ## Security
 

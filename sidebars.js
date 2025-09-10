@@ -127,6 +127,13 @@ const sidebars = {
         },
         "training/tigrisfs",
         {
+          type: "category",
+          label: "Snapshots and Forks",
+          items: [
+            "snapshots-and-forks/index",
+          ],
+        },
+        {
           type: "doc",
           label: "Changelog",
           id: "changelog/index",

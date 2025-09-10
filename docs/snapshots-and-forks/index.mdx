@@ -1,0 +1,329 @@
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Snapshots and Forks
+
+Snapshot functionality is a different spin on object versioning functionality. Instead of handling versioning at the individual object level, we allow taking a snapshot of the whole bucket. A snapshot gives an immutable, point-in-time view of the bucket and all objects in it at the time of snapshot creation. On top of snapshotting functionality, we introduce bucket forking, which allows setting dependencies between buckets and reusing objects without copying any data.
+
+## Terminology and Deep Dive
+
+### Snapshots
+
+**Snapshot** - a point-in-time, immutable view of all objects in a bucket.
+
+**Live bucket version** - the current version of the bucket which can be modified.
+
+When snapshotting is used, buckets continue to appear as a single view of objects, but behind the scenes each bucket is associated with all of its snapshots. These snapshots need to be created manually and once created they cannot be modified. This means that all write operations go to the live bucket version.
+
+![Bucket Snapshotting](/img/bucket-snapshotting.png)
+
+The image above illustrates how bucket snapshotting works.
+
+Initially, the bucket has two objects (Object 1 and Object 2).
+
+1. At time T1, a snapshot (Snapshot 1) is created. This snapshot contains these two objects (Object 1 and Object 2) with their contents at T1.
+2. At time T2, a different value is written to Object 2.
+3. At time T3, another snapshot (Snapshot 2) is created. This snapshot contains the two objects with the updated value of Object 2.
+4. At time T4, a new object (Object 3) is created in the bucket.
+5. At time T5, another snapshot (Snapshot 3) is created. This snapshot contains all three objects.
+6. At time T6, Object 1 is deleted. This does not affect any of the existing snapshots.
+7. At time T7, another snapshot (Snapshot 4) is created. This snapshot contains the two remaining objects (Object 2 and Object 3) and also a tombstone marker for Object 1.
+
+The live bucket version is the version of the bucket we see at the current time. In this case, it matches the contents of Snapshot 4 as there were no changes to the bucket since T7.
+
+### Forks
+
+**Forked bucket** - a bucket which shares objects with the original **fork upstream snapshot**.
+**Fork upstream snapshot** - the bucket snapshot from which objects are inherited.
+
+Similarly to a Git repository fork, a forked bucket shares objects with the original bucket. Differently from Git functionality, forked buckets cannot be synced with the upstream bucket snapshot as all bucket snapshots are immutable.
+
+A fork can be done only from one bucket, but there could be transitive dependencies on multiple buckets. Forks always create a new bucket, but a fork can be done on any snapshot of any bucket as long as the user has the needed permissions.
+
+![Bucket Forking](/img/bucket-snapshotting.png)
+
+The image above shows how bucket forking works.
+
+Initially, we only have one bucket (Bucket A) and this bucket has snapshotting and forking functionality enabled. The bucket has two objects (Object 1 and Object 2).
+
+1. At time T1, a snapshot of Bucket A is created (Snapshot A1). The snapshot contains the two objects.
+2. At time T2, one object (Object 1) is deleted.
+3. At time T3, another snapshot (Snapshot A2) is created.
+4. At some point, let's say time T4, a fork bucket (Bucket B) is created using Snapshot A2 as its upstream. The bucket contains the same objects as the snapshot (Object 2 with value "bar" and a tombstone marker for Object 1).
+5. At time T5, another object is created in Bucket B.
+6. At time T6, a snapshot of Bucket B (Snapshot B1) is created.
+7. At time T7, Object 3 in Bucket B is updated to value "foo".
+8. At some point, let's say time T8, another fork bucket (Bucket C) is created using Snapshot A1 as its upstream. The bucket contains the same objects as the snapshot (Object 1 and Object 2).
+9. At time T9, the value of Object 1 is updated in Bucket C. Then the bucket contains the two objects (Object 1 and Object 2), but the value of Object 1 is updated to "baz".
+10. At some point, let's say time T10, another fork bucket (Bucket D) is created and Snapshot B1 is used as its upstream. The bucket contains Object 2 with value "bar", Object 3 with value "baz", and a tombstone marker for Object 1.
+11. At time T11, Object 2 in Bucket D is updated to a different value. Then the bucket contains Object 2 with value "quux", Object 3 with value "baz", and a tombstone marker for Object 1.
+12. At time T12, Object 1 in Bucket D is updated to a different value. Then the bucket contains Object 1 with value "baz", Object 2 with value "quux", and Object 3 with value "baz".
+
+As illustrated by this example, a forked bucket can have one upstream and zero or many other buckets forked from it. Forks can only be performed on snapshots. Any modifications of the upstream bucket do not affect the forked bucket. When a write happens to a forked bucket, it gets written to the forked bucket and takes precedence over the inherited objects, as with copy-on-write.
+
+## Enabling Snapshotting and Forking Functionality
+
+Snapshotting and forking functionality is not enabled by default. It needs to be enabled by setting the `X-Tigris-Enable-Snapshot: true` header when creating the bucket.
+
+<Tabs groupId="languages">
+<TabItem value="go" label="Go">
+Using `github.com/aws/aws-sdk-go-v2/service/s3` package.
+
+```go
+func createBucketWithSnapshottingEnabled(ctx context.Context, client *s3.Client, bucketName string) error {
+	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Enable-Snapshot", "true"))
+	})
+	return err
+}
+```
+</TabItem>
+<TabItem value="js" label="JavaScript">
+Using @aws-sdk/client-s3 package.
+
+```js
+async function createBucketWithSnapshotting(client, bucketName) {
+  const command = new CreateBucketCommand({ Bucket: bucketName });
+  command.middlewareStack.add(
+    (next) => async (args) => {
+      args.request.headers["X-Tigris-Enable-Snapshot"] = "true";
+      return next(args);
+    },
+    { step: "build" }
+  );
+
+  return client.send(command);
+}
+```
+</TabItem>
+<TabItem value="python" label="Python">
+Using boto3 S3 client library.
+
+```python
+def create_bucket_with_snapshotting_enabled(s3_client, bucket_name):
+    s3_client.meta.events.register(
+        "before-sign.s3.CreateBucket",
+        lambda request, **kwargs: request.headers.add_header("X-Tigris-Enable-Snapshot", "true")
+    )
+    s3_client.create_bucket(Bucket=bucket_name)
+```
+
+</TabItem>
+</Tabs>
+
+## Managing Snapshots
+
+Similarly to the enablement of functionality, management of snapshots can be performed by setting special headers when making regular S3 requests.
+
+### Create a Snapshot
+
+To create a snapshot, you should make a create bucket request and set the `X-Tigris-Snapshot: true` header. An optional snapshot description can be specified as part of that header as well (with semicolon separator): `X-Tigris-Snapshot: true; test snapshot description`.
+
+<Tabs groupId="languages">
+<TabItem value="go" label="Go">
+
+```go
+func createBucketSnapshot(ctx context.Context, client *s3.Client, bucketName string) error {
+	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Snapshot", "true; test snapshot description"))
+	})
+	return err
+}
+```
+
+</TabItem>
+<TabItem value="js" label="JavaScript">
+
+```js
+import { CreateBucketCommand } from "@aws-sdk/client-s3";
+
+async function createBucketSnapshot(client, bucketName) {
+  const command = new CreateBucketCommand({ Bucket: bucketName });
+  command.middlewareStack.add(
+    (next) => async (args) => {
+      args.request.headers["X-Tigris-Snapshot"] = "true; test snapshot description";
+      return next(args);
+    },
+    { step: "build" }
+  );
+
+  return client.send(command);
+}
+```
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+def create_bucket_snapshot(s3_client, bucket_name):
+    s3_client.meta.events.register(
+        "before-sign.s3.CreateBucket",
+        lambda request, **kwargs: request.headers.add_header(
+            "X-Tigris-Snapshot", "true; test snapshot description"
+        )
+    )
+    s3_client.create_bucket(Bucket=bucket_name)
+```
+</TabItem>
+</Tabs>
+
+### List Snapshots for Bucket
+
+To list snapshots for a bucket, you should make a list buckets (`ListAllMyBuckets`) request and set the `X-Tigris-Snapshot` header to the bucket for which you want to list snapshots, e.g., `X-Tigris-Snapshot: test-bucket`.
+
+<Tabs groupId="languages">
+<TabItem value="go" label="Go">
+
+```go
+func listSnapshotsForBucket(ctx context.Context, client *s3.Client, bucketName string) (*s3.ListBucketsOutput, error) {
+	return client.ListBuckets(ctx, &s3.ListBucketsInput{}, func(options *s3.Options) {
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Snapshot", bucketName))
+	})
+}
+```
+</TabItem>
+<TabItem value="js" label="JavaScript">
+
+```js
+import { S3Client, ListBucketsCommand } from "@aws-sdk/client-s3";
+
+async function listSnapshotsForBucket(client, bucketName) {
+  const command = new ListBucketsCommand({});
+  command.middlewareStack.add(
+    (next) => async (args) => {
+      args.request.headers["X-Tigris-Snapshot"] = bucketName;
+      return next(args);
+    },
+    { step: "build" }
+  );
+  return client.send(command);
+}
+```
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+def list_snapshots_for_bucket(s3_client, bucket_name):
+    s3_client.meta.events.register(
+        "before-sign.s3.ListBuckets",
+        lambda request, **kwargs: request.headers.add_header("X-Tigris-Snapshot", bucket_name)
+    )
+    return s3_client.list_buckets()
+```
+</TabItem>
+</Tabs>
+
+Example list snapshots response:
+
+```xml
+<ListAllMyBucketsResult>
+    <Buckets>
+        <Bucket>
+            <Name>1751631910196672425; my first snapshot</Name>
+            <CreationDate>2025-07-04T12:25:10.19667705Z</CreationDate>
+        </Bucket>
+        <Bucket>
+            <Name>1751631910169675092</Name>
+            <CreationDate>2025-07-04T12:25:10.16968055Z</CreationDate>
+        </Bucket>
+        <Bucket>
+            <Name>1751631910140685342; another snapshot description</Name>
+            <CreationDate>2025-07-04T12:25:10.141025675Z</CreationDate>
+        </Bucket>
+    </Buckets>
+    <ContinuationToken>1751631910140685342</ContinuationToken>
+</ListAllMyBucketsResult>
+```
+
+Only `Name` and `CreationDate` fields will be populated. `Name` will contain the name of the snapshot and will be followed by the description of the snapshot if it is available.
+
+## Managing Forks
+
+In order to use forks the upstream bucket needs to to have snapshotting and forking functionality enabled. For the forked bucket, snapshotting is enabled by default.
+
+### Create a Forked Bucket
+
+In order to create a bucket which is a fork of another bucket, specify the `X-Tigris-Fork-Source-Bucket: <BUCKET_NAME>` header where `<BUCKET_NAME>` is the name of the bucket you want to use as the fork upstream.
+
+You can also add the `X-Tigris-Fork-Source-Snapshot: <SNAPSHOT_NAME>` header if you want to use a specific snapshot of the upstream bucket for the fork. If the header is not set, then a new snapshot of the upstream will be created and used for creating the fork bucket.
+
+<Tabs groupId="languages">
+<TabItem value="go" label="Go">
+
+```go
+func createBucketFork(ctx context.Context, client *s3.Client, bucketName string) error {
+	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)},
+	 func(options *s3.Options) {
+		options.APIOptions = append(
+			options.APIOptions,
+			http.AddHeaderValue("X-Tigris-Fork-Source-Bucket", "UPSTREAM_BUCKET_NAME"),
+			http.AddHeaderValue("X-Tigris-Fork-Source-Snapshot", "1751631910196672425"),
+		)
+	})
+	return err
+}
+```
+</TabItem>
+
+<TabItem value="js" label="JavaScript">
+
+```js
+import { CreateBucketCommand } from "@aws-sdk/client-s3";
+
+async function createBucketFork(client, bucketName) {
+  const command = new CreateBucketCommand({ Bucket: bucketName });
+  command.middlewareStack.add(
+    (next) => async (args) => {
+      args.request.headers["X-Tigris-Fork-Source-Bucket"] = "UPSTREAM_BUCKET_NAME";
+      args.request.headers["X-Tigris-Fork-Source-Snapshot"] = "1751631910196672425";
+      return next(args);
+    },
+    { step: "build" }
+  );
+
+  return client.send(command);
+}
+```
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+def create_bucket_fork(s3_client, bucket_name):
+    s3_client.meta.events.register(
+        "before-sign.s3.CreateBucket",
+        lambda request, **kwargs: (
+            request.headers.add_header("X-Tigris-Fork-Source-Bucket", "UPSTREAM_BUCKET_NAME"),
+            request.headers.add_header("X-Tigris-Fork-Source-Snapshot", "1751631910196672425")
+        )
+    )
+    s3_client.create_bucket(Bucket=bucket_name)
+```
+</TabItem>
+</Tabs>
+
+### Using a Forked Bucket
+
+Forked buckets behave the same as regular buckets, and you can use the usual tooling (AWS CLI or SDK) to work with them.
+
+The only restriction is that the upstream forked bucket cannot be deleted while fork buckets depend on it.
+
+## Limitations and Upcoming Functionality
+
+Currently, bucket snapshotting and forking functionality have the following limitations:
+
+* Once snapshotting support is enabled for a bucket, it cannot be disabled.
+* Object expiration (TTL) cannot be enabled for buckets with snapshotting or forking enabled.
+* Transitioning objects to different storage tiers cannot be configured for buckets with snapshotting or forking enabled.
+* Only the standard storage tier is allowed for buckets with snapshotting or forking enabled.
+* Snapshotting and forking cannot be enabled for existing buckets.
+
+Additionally, we are working on the following features, which will be available soon:
+
+* Listing and retrieving objects from a specific bucket snapshot.
+* Listing all versions of an object.
+* Snapshot and fork management in the Tigris Dashboard.
+* Deletion of old snapshots.
+* Restoring a bucket to a specific snapshot.
+
+## Billing
+
+After snapshotting is enabled, Tigris will start persisting all versions of objects in the bucket. Each version of an object is treated and billed as a separate object. Bucket snapshots or forks do not introduce any additional charge.

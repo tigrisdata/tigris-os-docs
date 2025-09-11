@@ -1,0 +1,123 @@
+# Tigris Storage SDK
+
+Tigris Storage SDK is a simplified wrapper around the Tigris Data API. It
+provides a simpler interface and minimal configuration that let's you get
+started quickly and integrate Tigris into your application. It offers all the
+functionality of the Tigris Data, but with a simpler interface.
+
+Tigris Storage SDK is geared towards application developers who needs (but not
+limited to) to store objects
+
+- that are programmatically uploaded or generated at build time, for display and
+  download such as avatars, screenshots, cover images and videos
+- that are larger and not practical to store in the database, such as images,
+  videos, etc.
+- files that needs to be retrieved frequently across different regions
+
+## Getting Started
+
+Getting started with Tigris Storage SDK is easy. First, you need to create a
+Tigris account and create a bucket.
+
+### Setting up your account and bucket
+
+1. Create a Tigris account at [https://storage.new](https://storage.new)
+2. Create a bucket at
+   [https://console.tigris.dev/createbucket](https://console.tigris.dev/createbucket)
+3. Create an access key at
+   [https://console.tigris.dev/createaccesskey](https://console.tigris.dev/createaccesskey)
+
+### Configure your Project
+
+In your project root, create a .env file if it doesn't exist already and put the
+following content in it. Replace the values with actual values your obtained
+from above steps.
+
+```bash
+TIGRIS_STORAGE_ACCESS_KEY_ID=tid_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TIGRIS_STORAGE_SECRET_ACCESS_KEY=tsec_yyyyyyyyyyyyyyyyyyyyyyy
+TIGRIS_STORAGE_BUCKET=bucket_name
+```
+
+### Installation
+
+```bash
+# NPM
+npm install @tigrisdata/storage
+# YARN
+yarn add @tigrisdata/storage
+```
+
+And this is it, you can now use the SDK in your application. Tigris Storage SDK
+supports both CommonJS and ES6 Modules syntax. That means you can use both
+`require` and `import` statements to use the SDK.
+
+```javascript
+const { list } = require("@tigrisdata/storage");
+// or
+import { list } from "@tigrisdata/storage";
+
+list().then((objects) => {
+  console.log(objects);
+});
+```
+
+## Examples
+
+There are several examples available at
+[examples](https://github.com/tigrisdata/storage/blob/main/examples). There is
+also a `NextJS` example available at our examples repository.
+
+### Viewing and downloading files
+
+`get` function can be used to get a file from a bucket.
+
+```javascript
+import { get } from "@tigrisdata/storage";
+
+const result = await get("my-file.jpg");
+```
+
+To trigger a download, you can use the `contentDisposition` option.
+
+```javascript
+const result = await get("my-file.pdf", { contentDisposition: "attachment" });
+```
+
+You can also use the `contentType` option to set the content type of the file.
+
+### Getting list of objects
+
+`list` function can be used to get a list of objects in a bucket.
+
+```javascript
+import { list } from "@tigrisdata/storage";
+
+// List first 100 objects
+const result = await list({ limit: 100 });
+```
+
+Tigris Storage SDK supports pagination of results.
+
+```javascript
+let allFiles = [];
+let currentPage = await list({ limit: 50 });
+
+if (currentPage.data) {
+  allFiles.push(...currentPage.data.items);
+
+  while (currentPage.data.hasMore && currentPage.data.paginationToken) {
+    currentPage = await list({
+      limit: 50,
+      paginationMarker: currentPage.data.paginationToken,
+    });
+
+    if (currentPage.data) {
+      allFiles.push(...currentPage.data.items);
+    } else if (currentPage.error) {
+      console.error("Error during pagination:", currentPage.error);
+      break;
+    }
+  }
+}
+```

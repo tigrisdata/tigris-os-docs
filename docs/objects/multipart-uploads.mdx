@@ -1,0 +1,135 @@
+# Multipart Upload
+
+Multipart Upload allows for the upload of large objects in parts. This provides
+improved throughput and greater resilience to network errors. You can upload
+parts in parallel to improve throughput, or if an upload of a part fails, you
+can re-upload that part without affecting other parts.
+
+Tigris is S3-compatible, so you can use the same SDKs and patterns for multipart
+uploads. Tigris also routes traffic to the nearest region by default via its
+global endpoint, providing accelerated, low-latency ingress without any extra
+configuration. Use `https://t3.storage.dev` (outside Fly.io) or
+`https://fly.storage.tigris.dev` (from Fly.io).
+
+## Prerequisites
+
+- A Tigris account and access keys.
+- A bucket.
+- An SDK that supports S3 Multipart Upload.
+
+Tigris implements the standard S3 Multipart Upload operations
+(`CreateMultipartUpload`, `UploadPart`, `CompleteMultipartUpload`, etc.), so any
+modern S3 client will work.
+
+When using an S3-compatible tool or SDK, you should use the global endpoint
+`https://t3.storage.dev` and virtual-hosted style addressing, where the bucket
+is in the hostname.
+
+## Example: Node.js (AWS SDK v3) — Managed Multipart Upload
+
+The following is an example of a managed multipart upload using the AWS SDK v3
+for Node.js.
+
+```ts
+import { S3Client } from "@aws-sdk/client-s3";
+import { Upload } from "@aws-sdk/lib-storage";
+import { createReadStream } from "node:fs";
+
+const s3 = new S3Client({
+  region: "auto",
+  endpoint: "https://t3.storage.dev",
+  s3ForcePathStyle: false, // virtual-hosted-style
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+});
+
+export async function putLargeObject(
+  bucket: string,
+  key: string,
+  filePath: string,
+) {
+  const upload = new Upload({
+    client: s3,
+    params: { Bucket: bucket, Key: key, Body: createReadStream(filePath) },
+    queueSize: 8, // concurrency
+    partSize: 32 * 1024 * 1024, // 32 MiB parts
+  });
+  await upload.done();
+}
+```
+
+## Example: Python (boto3) — Tuned Transfer Config
+
+The following is an example of a multipart upload with a tuned transfer
+configuration using boto3 for Python.
+
+```py
+import boto3
+from botocore.config import Config
+from boto3.s3.transfer import TransferConfig
+
+s3 = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+    aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+    config=Config(s3={"addressing_style": "virtual"})
+)
+
+# 32 MiB parts, multipart threshold 64 MiB
+tconfig = TransferConfig(
+    multipart_threshold=64 * 1024 * 1024,
+    multipart_chunksize=32 * 1024 * 1024,
+    max_concurrency=8,
+    use_threads=True
+)
+
+def put_large_object(bucket, key, path):
+    s3.upload_file(path, bucket, key, Config=tconfig)
+```
+
+The `upload_file` method will transparently switch to a multipart upload for
+files larger than the specified threshold.
+
+## Cleaning Up In-Progress Uploads
+
+It is good practice to occasionally list and abort stale multipart uploads to
+reclaim storage.
+
+- `ListMultipartUploads` to discover in-progress multipart uploads
+- `AbortMultipartUpload` to cancel stale multipart uploads
+
+Each SDK exposes these as standard S3 operations.
+
+## Browser & Mobile Uploads
+
+For browser and mobile applications, it is recommended to not proxy large
+payloads through your servers. Two common approaches are:
+
+- **[Presigned URLs](presigned.md):** Generate a time-limited URL on your server
+  and upload directly from the browser or mobile app.
+- **[HTML Form POST](upload-via-html-form.md):** Use a policy-based POST from
+  the browser to constrain headers like `Content-Type` and object key patterns.
+
+## CLI & Tools
+
+The following tools can be used for multipart uploads.
+
+- **AWS CLI**:
+
+  ```bash
+  aws s3 cp bigfile.bin s3://my-bucket/bigfile.bin \
+    --endpoint-url https://t3.storage.dev
+  ```
+
+  The AWS CLI automatically switches to multipart for large files.
+
+- **rclone**: Set the endpoint to `https://t3.storage.dev`.
+
+## Limits
+
+- Standard S3 multipart semantics apply (e.g., large objects up to 5 TB).
+- Tigris implements the S3 MPU API surface (create/upload
+  parts/complete/list/abort).

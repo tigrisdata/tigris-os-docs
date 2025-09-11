@@ -80,6 +80,7 @@ const sidebars = {
             "buckets/objects-expiration",
             "buckets/object-lifecycle-rules",
             "buckets/object-notifications",
+            "buckets/snapshots-and-forks",
             "buckets/settings/index",
             "buckets/sharing",
           ],
@@ -126,13 +127,6 @@ const sidebars = {
           ],
         },
         "training/tigrisfs",
-        {
-          type: "category",
-          label: "Snapshots and Forks",
-          items: [
-            "snapshots-and-forks/index",
-          ],
-        },
         {
           type: "doc",
           label: "Changelog",

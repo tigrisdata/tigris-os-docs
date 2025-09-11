@@ -40,7 +40,7 @@ Similarly to a Git repository fork, a forked bucket shares objects with the orig
 
 A fork can be done only from one bucket, but there could be transitive dependencies on multiple buckets. Forks always create a new bucket, but a fork can be done on any snapshot of any bucket as long as the user has the needed permissions.
 
-![Bucket Forking](/img/bucket-snapshotting.png)
+![Bucket Forking](/img/bucket-forking.png)
 
 The image above shows how bucket forking works.
 
@@ -238,7 +238,7 @@ Only `Name` and `CreationDate` fields will be populated. `Name` will contain the
 
 ## Managing Forks
 
-In order to use forks the upstream bucket needs to to have snapshotting and forking functionality enabled. For the forked bucket, snapshotting is enabled by default.
+In order to use forks the upstream bucket needs to have snapshotting and forking functionality enabled. For the forked bucket, snapshotting is enabled by default.
 
 ### Create a Forked Bucket
 

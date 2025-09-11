@@ -129,9 +129,7 @@ const sidebars = {
         {
           type: "category",
           label: "Snapshots and Forks",
-          items: [
-            "snapshots-and-forks/index",
-          ],
+          items: ["snapshots-and-forks/index"],
         },
         {
           type: "doc",

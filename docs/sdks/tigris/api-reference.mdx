@@ -24,7 +24,10 @@ type TigrisStorageConfig = {
 
 ### TigrisStorageResponse
 
-Generic response wrapper for all Tigris Storage operations.
+Generic response wrapper for all Tigris Storage operations. All the functions
+return a `TigrisStorageResponse` object. If there is an error, the `error`
+property will be set. If there is a successful response, the `data` property
+will be set.
 
 ```typescript
 type TigrisStorageResponse<T, E = unknown> = {
@@ -261,7 +264,8 @@ type PutOptions = {
 - `access` (optional): Access level for the uploaded object (`'public'` or
   `'private'`)
 - `addRandomSuffix` (optional): Whether to add a random suffix to the path
-- `allowOverwrite` (optional): Whether to allow overwriting existing objects
+- `allowOverwrite` (optional): Whether to allow overwriting existing objects,
+  defaults to `true`
 - `contentType` (optional): MIME type of the content
 - `contentDisposition` (optional): How the content should be presented
 - `multipart` (optional): Whether to use multipart upload

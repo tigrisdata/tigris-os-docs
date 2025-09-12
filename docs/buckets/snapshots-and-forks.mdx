@@ -38,15 +38,15 @@ The diagram below shows how snapshots capture bucket state over time:
 
 ![Snapshot Timeline](/img/bucket-snapshotting.png)
 
-At the beginning, the bucket contains two objects (Object 1 with value = `foo`,
-Object 2 with value = `bar`).
+At the beginning, the bucket contains two objects (Object 1 = `foo`, Object 2 =
+`bar`).
 
 1. **T1** → Snapshot 1 is created.
 
    - Bucket contains _Object 1 = `foo`_ and _Object 2 = `bar`_.
    - Both are preserved in Snapshot 1.
 
-2. **T2** → Object 2 value modified to `quux` using PutObject.
+2. **T2** → Object 2 is updated to `quux`.
 
    - Snapshot 1 remains unchanged.
 
@@ -112,9 +112,6 @@ timelines:
 8. **T7** → Object 3 in Bucket B is updated to `foo`.
 9. **T8** → **Bucket C is forked from Bucket A with Snapshot A1**. It starts
    with objects (Object 1 = `foo`, Object 2 = `bar`).
-   - Note that both bucket B and C is forked from same parent but as bucket B is
-     forked after object 1 got deleted it doesn't inherit object 1 but bucket C
-     does.
 10. **T9** → Object 1 in Bucket C is updated to `baz`.
     - Bucket C now has Object 1 (`baz` its own copy) and Object 2 (`bar`
       inherited from Bucket A)

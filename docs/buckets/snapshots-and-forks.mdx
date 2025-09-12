@@ -367,10 +367,10 @@ To create a bucket which is a fork of another bucket, specify the
 `X-Tigris-Fork-Source-Bucket: <BUCKET_NAME>` header where `<BUCKET_NAME>` is the
 name of the bucket you want to use as the fork parent.
 
-Add the `X-Tigris-Fork-Source-Bucket-Snapshot: <SNAPSHOT_NAME>` header if you want to
-use a specific snapshot of the parent bucket for the fork. If this header is not
-set, then a new snapshot of the parent will be created at the current time and
-used for creating the fork bucket.
+Add the `X-Tigris-Fork-Source-Bucket-Snapshot: <SNAPSHOT_NAME>` header if you
+want to use a specific snapshot of the parent bucket for the fork. If this
+header is not set, then a new snapshot of the parent will be created at the
+current time and used for creating the fork bucket.
 
 <Tabs groupId="languages">
 <TabItem value="go" label="Go">

@@ -106,14 +106,17 @@ timelines:
 5. At **T4**, **Bucket B is forked from Bucket A**. Initially, Bucket B contains
    Object 2 (`bar`).
 6. At **T5**, a new Object 3 (`baz`) is added to Bucket B.
-7. At **T6**, Object 3 in Bucket B is updated to `foo`.
-8. At **T7**, Snapshot B1 is created, preserving Object 3’s state.
-9. At **T8**, **Bucket C is forked from Bucket B**. It starts with Object 1
-   (`baz`).
-10. At **T9**, Object 1 remains unchanged in Bucket C.
-11. At **T10**, **Bucket D is forked from Bucket B**.
+7. At **T6**, Snapshot B1 is created containing two objects: Object 2 (`bar`)
+   and Object 3 (`baz`).
+8. At **T7**, Object 3 in Bucket B is updated to `foo`.
+9. At **T8**, **Bucket C is forked from Bucket A with Snapshot A1**. It starts
+   with objects (Object 1 = `foo`, Object 2 = `bar`).
+10. At **T9**, Object 1 in Bucket C is updated to `baz`.
+11. At **T10**, **Bucket D is forked from Bucket B** with Snapshot B1. It starts
+    with objects (Object 2 = `bar` and Object 3 = `baz`).
 12. At **T11**, Object 2 in Bucket D is updated to `quux`.
-13. At **T12**, Object 1 is added to Bucket D with value `baz`.
+13. At **T12**, Object 1 in Bucket D is added with value `baz`. It now contains
+    three objects: Object 1 = `baz`, Object 2 = `quux`, and Object 3 = `baz`.
 
 #### Key Takeaways
 

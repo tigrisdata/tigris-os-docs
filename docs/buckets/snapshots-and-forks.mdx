@@ -38,15 +38,15 @@ The diagram below shows how snapshots capture bucket state over time:
 
 ![Snapshot Timeline](/img/bucket-snapshotting.png)
 
-At the beginning, the bucket contains two objects (Object 1 = `foo`, Object 2 =
-`bar`).
+At the beginning, the bucket contains two objects (Object 1 with value = `foo`,
+Object 2 with value = `bar`).
 
 1. **T1** → Snapshot 1 is created.
 
    - Bucket contains _Object 1 = `foo`_ and _Object 2 = `bar`_.
    - Both are preserved in Snapshot 1.
 
-2. **T2** → Object 2 is updated to `quux`.
+2. **T2** → Object 2 value modified to `quux` using PutObject.
 
    - Snapshot 1 remains unchanged.
 
@@ -89,7 +89,8 @@ At the beginning, the bucket contains two objects (Object 1 = `foo`, Object 2 =
 A **fork** creates a new bucket from an existing one:
 
 - Shares objects with its parent (no data copy).
-- New objects written to the child bucket do not affect the parent.
+- New objects written to the child bucket do not affect the parent(same object
+  modification only reflects in child bucket).
 - Enables isolated experimentation with minimal storage overhead.
 
 ### Forking Example
@@ -100,23 +101,30 @@ timelines:
 ![Forking Example](/img/bucket-forking.png)
 
 1. **Bucket A** starts with two objects (Object 1 = `foo`, Object 2 = `bar`).
-2. At **T1**, Snapshot A1 is created.
-3. At **T2**, Object 1 is deleted in Bucket A (but remains in Snapshot A1).
-4. At **T3**, Snapshot A2 is created.
-5. At **T4**, **Bucket B is forked from Bucket A**. Initially, Bucket B contains
+2. **T1** → Snapshot A1 is created.
+3. **T2** → Object 1 is deleted in Bucket A (but remains in Snapshot A1).
+4. **T3** → Snapshot A2 is created.
+5. **T4** → **Bucket B is forked from Bucket A**. Initially, Bucket B contains
    Object 2 (`bar`).
-6. At **T5**, a new Object 3 (`baz`) is added to Bucket B.
-7. At **T6**, Snapshot B1 is created containing two objects: Object 2 (`bar`)
-   and Object 3 (`baz`).
-8. At **T7**, Object 3 in Bucket B is updated to `foo`.
-9. At **T8**, **Bucket C is forked from Bucket A with Snapshot A1**. It starts
+6. **T5** → a new Object 3 (`baz`) is added to Bucket B.
+7. **T6** → Snapshot B1 is created containing two objects: Object 2 (`bar`
+   inherited from Bucket A) and Object 3 (`baz`).
+8. **T7** → Object 3 in Bucket B is updated to `foo`.
+9. **T8** → **Bucket C is forked from Bucket A with Snapshot A1**. It starts
    with objects (Object 1 = `foo`, Object 2 = `bar`).
-10. At **T9**, Object 1 in Bucket C is updated to `baz`.
-11. At **T10**, **Bucket D is forked from Bucket B** with Snapshot B1. It starts
-    with objects (Object 2 = `bar` and Object 3 = `baz`).
-12. At **T11**, Object 2 in Bucket D is updated to `quux`.
-13. At **T12**, Object 1 in Bucket D is added with value `baz`. It now contains
-    three objects: Object 1 = `baz`, Object 2 = `quux`, and Object 3 = `baz`.
+   - Note that both bucket B and C is forked from same parent but as bucket B is
+     forked after object 1 got deleted it doesn't inherit object 1 but bucket C
+     does.
+10. **T9** → Object 1 in Bucket C is updated to `baz`.
+    - Bucket C now has Object 1 (`baz` its own copy) and Object 2 (`bar`
+      inherited from Bucket A)
+11. **T10** → **Bucket D is forked from Bucket B** with Snapshot B1. It starts
+    with objects - Object 2 = `bar`(inherited from bucket 'A') and Object 3 =
+    `baz`(inherited from bucket B).
+12. **T11** → Object 2 in Bucket D is updated to `quux`.
+13. **T12** → Object 1 in Bucket D is added with value `baz`.
+    - Bucket D now has three objects: Object 1 = `baz`(its own data), Object 2 =
+      `quux`(its own copy), and Object 3 = `baz`(inherited from bucket B).
 
 #### Key Takeaways
 
@@ -330,6 +338,8 @@ def list_snapshots_for_bucket(s3_client, bucket_name):
 
 The response will contain the list of snapshots for the bucket including the
 name and creation date of the snapshot. The response format is S3-compatible.
+Name tag here showing snapshot version with the description if added during
+snapshot creation time.
 
 ```xml
 <ListAllMyBucketsResult>
@@ -362,8 +372,8 @@ name of the bucket you want to use as the fork parent.
 
 Add the `X-Tigris-Fork-Source-Snapshot: <SNAPSHOT_NAME>` header if you want to
 use a specific snapshot of the parent bucket for the fork. If this header is not
-set, then a new snapshot of the parent will be created and used for creating the
-fork bucket.
+set, then a new snapshot at the current time of the parent will be created and
+used for creating the fork bucket.
 
 <Tabs groupId="languages">
 <TabItem value="go" label="Go">

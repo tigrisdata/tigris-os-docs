@@ -184,7 +184,7 @@ async function createBucketWithSnapshotting(client, bucketName) {
       args.request.headers["X-Tigris-Enable-Snapshot"] = "true";
       return next(args);
     },
-    { step: "build" }
+    { step: "build" },
   );
 
   return client.send(command);
@@ -244,7 +244,7 @@ async function createBucketSnapshot(client, bucketName) {
         "true; test snapshot description";
       return next(args);
     },
-    { step: "build" }
+    { step: "build" },
   );
 
   return client.send(command);
@@ -304,7 +304,7 @@ async function listSnapshotsForBucket(client, bucketName) {
       args.request.headers["X-Tigris-Snapshot"] = bucketName;
       return next(args);
     },
-    { step: "build" }
+    { step: "build" },
   );
   return client.send(command);
 }
@@ -398,7 +398,7 @@ async function createBucketFork(client, bucketName) {
         "PARENT_BUCKET_NAME";
       return next(args);
     },
-    { step: "build" }
+    { step: "build" },
   );
 
   return client.send(command);

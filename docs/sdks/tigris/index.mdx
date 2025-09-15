@@ -1,18 +1,21 @@
 # Tigris Storage SDK
 
-Tigris Storage SDK is a simplified wrapper around the Tigris Data API. It
-provides a simpler interface and minimal configuration that let's you get
-started quickly and integrate Tigris into your application. It offers all the
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+The Tigris Storage SDK is a simplified wrapper around the Tigris Data API. It
+provides a simpler interface and minimal configuration that lets you get started
+quickly and integrate Tigris into your application. It offers all the
 functionality of the Tigris Data, but with a simpler interface.
 
-Tigris Storage SDK is geared towards application developers who needs (but not
-limited to) to store objects
+Tigris Storage SDK is geared towards application developers who needs to store
+objects that:
 
-- that are programmatically uploaded or generated at build time, for display and
+- Are programmatically uploaded or generated at build time, for display and
   download such as avatars, screenshots, cover images and videos
-- that are larger and not practical to store in the database, such as images,
-  videos, etc.
-- files that needs to be retrieved frequently across different regions
+- Are larger and not practical to store in the database, such as images, videos,
+  etc.
+- That needs to be retrieved frequently across different regions
 
 ## Getting Started
 
@@ -21,46 +24,70 @@ Tigris account and create a bucket.
 
 ### Setting up your account and bucket
 
-1. Create a Tigris account at [https://storage.new](https://storage.new)
+1. Create a Tigris account at [storage.new](https://storage.new)
 2. Create a bucket at
-   [https://console.tigris.dev/createbucket](https://console.tigris.dev/createbucket)
+   [console.tigris.dev/createbucket](https://console.tigris.dev/createbucket)
 3. Create an access key at
-   [https://console.tigris.dev/createaccesskey](https://console.tigris.dev/createaccesskey)
+   [console.tigris.dev/createaccesskey](https://console.tigris.dev/createaccesskey)
 
 ### Configure your Project
 
-In your project root, create a .env file if it doesn't exist already and put the
-following content in it. Replace the values with actual values your obtained
+In your project root, create a `.env` file if it doesn't exist already and put
+the following content in it. Replace the values with actual values your obtained
 from above steps.
 
 ```bash
-TIGRIS_STORAGE_ACCESS_KEY_ID=tid_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TIGRIS_STORAGE_SECRET_ACCESS_KEY=tsec_yyyyyyyyyyyyyyyyyyyyyyy
+TIGRIS_STORAGE_ACCESS_KEY_ID=tid_access_key_id
+TIGRIS_STORAGE_SECRET_ACCESS_KEY=tsec_secret_access_key
 TIGRIS_STORAGE_BUCKET=bucket_name
 ```
 
 ### Installation
 
+<Tabs>
+<TabItem value="npm" label="NPM" default>
+
 ```bash
-# NPM
 npm install @tigrisdata/storage
-# YARN
+```
+
+</TabItem>
+<TabItem value="yarn" label="Yarn">
+
+```bash
 yarn add @tigrisdata/storage
 ```
+
+</TabItem>
+</Tabs>
 
 And this is it, you can now use the SDK in your application. Tigris Storage SDK
 supports both CommonJS and ES6 Modules syntax. That means you can use both
 `require` and `import` statements to use the SDK.
 
-```javascript
-const { list } = require("@tigrisdata/storage");
-// or
+<Tabs>
+<TabItem value="es6mod" label="ES6 Modules" default>
+
+```js
 import { list } from "@tigrisdata/storage";
+
+const objects = await list(); // lists objects in bucket $BUCKET_NAME
+console.log(objects);
+```
+
+</TabItem>
+<TabItem value="commonjs" label="CommonJS Modules">
+
+```js
+const { list } = require("@tigrisdata/storage");
 
 list().then((objects) => {
   console.log(objects);
 });
 ```
+
+</TabItem>
+</Tabs>
 
 ## Examples
 
@@ -74,23 +101,60 @@ more than happy to add in examples.
 
 `get` function can be used to get a file from a bucket.
 
-```javascript
+<Tabs>
+<TabItem value="es6mod" label="ES6 Modules" default>
+
+```js
 import { get } from "@tigrisdata/storage";
 
 const result = await get("my-file.jpg");
 ```
 
+</TabItem>
+<TabItem value="commonjs" label="CommonJS Modules">
+
+```js
+const { get } = require("@tigrisdata/storage");
+
+get("my-file.jpg").then((result) => {
+  console.log(result);
+});
+```
+
+</TabItem>
+</Tabs>
+
 To trigger a download, you can use the `contentDisposition` option.
 
-```javascript
+<Tabs>
+<TabItem value="es6mod" label="ES6 Modules" default>
+
+```js
 const result = await get("my-file.pdf", { contentDisposition: "attachment" });
 ```
+
+</TabItem>
+<TabItem value="commonjs" label="CommonJS Modules">
+
+```js
+const { get } = require("@tigrisdata/storage");
+
+get("my-file.pdf", { contentDisposition: "attachment" }).then((result) => {
+  console.log(result);
+});
+```
+
+</TabItem>
+</Tabs>
 
 You can also use the `contentType` option to set the content type of the file.
 
 ### Getting list of objects
 
 `list` function can be used to get a list of objects in a bucket.
+
+<Tabs>
+<TabItem value="es6mod" label="ES6 Modules" default>
 
 ```javascript
 import { list } from "@tigrisdata/storage";
@@ -99,7 +163,25 @@ import { list } from "@tigrisdata/storage";
 const result = await list({ limit: 100 });
 ```
 
+</TabItem>
+<TabItem value="commonjs" label="CommonJS Modules">
+
+```javascript
+const { list } = require("@tigrisdata/storage");
+
+// List first 100 objects
+list({ limit: 100 }).then((result) => {
+  console.log(result);
+});
+```
+
+</TabItem>
+</Tabs>
+
 Tigris Storage SDK supports pagination of results.
+
+<Tabs>
+<TabItem value="es6mod" label="ES6 Modules" default>
 
 ```javascript
 let allFiles = [];
@@ -123,3 +205,37 @@ if (currentPage.data) {
   }
 }
 ```
+
+</TabItem>
+<TabItem value="commonjs" label="CommonJS Modules">
+
+```javascript
+const { list } = require("@tigrisdata/storage");
+
+(async () => {
+  let allFiles = [];
+  let currentPage = await list({ limit: 50 });
+
+  if (currentPage.data) {
+    allFiles.push(...currentPage.data.items);
+
+    while (currentPage.data.hasMore && currentPage.data.paginationToken) {
+      currentPage = await list({
+        limit: 50,
+        paginationMarker: currentPage.data.paginationToken,
+      });
+
+      if (currentPage.data) {
+        allFiles.push(...currentPage.data.items);
+      } else if (currentPage.error) {
+        console.error("Error during pagination:", currentPage.error);
+        break;
+      }
+    }
+  }
+  console.log(allFiles);
+})();
+```
+
+</TabItem>
+</Tabs>

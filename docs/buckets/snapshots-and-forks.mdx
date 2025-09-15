@@ -219,7 +219,7 @@ header: `X-Tigris-Snapshot: true`.
 
 Snapshot description can optionally be specified as part of that header (with
 semicolon separator), e.g.,
-`X-Tigris-Snapshot: true; test snapshot description`.
+`X-Tigris-Snapshot: true; desc=test snapshot description`.
 
 <Tabs groupId="languages">
 <TabItem value="go" label="Go">
@@ -228,7 +228,7 @@ Example using the Go SDK `github.com/aws/aws-sdk-go-v2/service/s3`:
 ```go
 func createBucketSnapshot(ctx context.Context, client *s3.Client, bucketName string) error {
 	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
-		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Snapshot", "true; test snapshot description"))
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Snapshot", "true; desc=test snapshot description"))
 	})
 	return err
 }
@@ -246,7 +246,7 @@ async function createBucketSnapshot(client, bucketName) {
   command.middlewareStack.add(
     (next) => async (args) => {
       args.request.headers["X-Tigris-Snapshot"] =
-        "true; test snapshot description";
+        "true; desc=test snapshot description";
       return next(args);
     },
     { step: "build" },
@@ -265,7 +265,7 @@ def create_bucket_snapshot(s3_client, bucket_name):
     s3_client.meta.events.register(
         "before-sign.s3.CreateBucket",
         lambda request, **kwargs: request.headers.add_header(
-            "X-Tigris-Snapshot", "true; test snapshot description"
+            "X-Tigris-Snapshot", "true; desc=test snapshot description"
         )
     )
     s3_client.create_bucket(Bucket=bucket_name)

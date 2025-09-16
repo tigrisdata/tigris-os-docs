@@ -100,7 +100,8 @@ timelines:
 
 ![Forking Example](/img/bucket-forking.png)
 
-1. **T1** → **Bucket A** starts with two objects (Object 1 = `foo`, Object 2 = `bar`).
+1. **T1** → **Bucket A** starts with two objects (Object 1 = `foo`, Object 2 =
+   `bar`).
 2. **T2** → Snapshot A1 is created.
 3. **T3** → Object 1 is deleted in Bucket A (but remains in Snapshot A1).
 4. **T4** → Snapshot A2 is created.
@@ -120,8 +121,8 @@ timelines:
     `baz` (inherited from bucket B).
 12. **T12** → Object 2 in Bucket D is updated to `quux`.
 13. **T13** → Object 1 in Bucket D is added with value `baz`.
-    - Bucket D now has three objects: Object 1 = `baz` (its own data), Object 2 =
-      `quux` (its own copy), and Object 3 = `baz` (inherited from bucket B).
+    - Bucket D now has three objects: Object 1 = `baz` (its own data), Object 2
+      = `quux` (its own copy), and Object 3 = `baz` (inherited from bucket B).
 
 #### Key Takeaways
 

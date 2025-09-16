@@ -100,28 +100,28 @@ timelines:
 
 ![Forking Example](/img/bucket-forking.png)
 
-1. **Bucket A** starts with two objects (Object 1 = `foo`, Object 2 = `bar`).
-2. **T1** → Snapshot A1 is created.
-3. **T2** → Object 1 is deleted in Bucket A (but remains in Snapshot A1).
-4. **T3** → Snapshot A2 is created.
-5. **T4** → **Bucket B is forked from Bucket A**. Initially, Bucket B contains
+1. **T1** → **Bucket A** starts with two objects (Object 1 = `foo`, Object 2 = `bar`).
+2. **T2** → Snapshot A1 is created.
+3. **T3** → Object 1 is deleted in Bucket A (but remains in Snapshot A1).
+4. **T4** → Snapshot A2 is created.
+5. **T5** → **Bucket B is forked from Bucket A**. Initially, Bucket B contains
    Object 2 (`bar`).
-6. **T5** → a new Object 3 (`baz`) is added to Bucket B.
-7. **T6** → Snapshot B1 is created containing two objects: Object 2 (`bar`
+6. **T6** → a new Object 3 (`baz`) is added to Bucket B.
+7. **T7** → Snapshot B1 is created containing two objects: Object 2 (`bar`
    inherited from Bucket A) and Object 3 (`baz`).
-8. **T7** → Object 3 in Bucket B is updated to `foo`.
-9. **T8** → **Bucket C is forked from Bucket A with Snapshot A1**. It starts
+8. **T8** → Object 3 in Bucket B is updated to `foo`.
+9. **T9** → **Bucket C is forked from Bucket A with Snapshot A1**. It starts
    with objects (Object 1 = `foo`, Object 2 = `bar`).
-10. **T9** → Object 1 in Bucket C is updated to `baz`.
+10. **T10** → Object 1 in Bucket C is updated to `baz`.
     - Bucket C now has Object 1 (`baz` its own copy) and Object 2 (`bar`
       inherited from Bucket A)
-11. **T10** → **Bucket D is forked from Bucket B** with Snapshot B1. It starts
-    with objects - Object 2 = `bar`(inherited from bucket 'A') and Object 3 =
-    `baz`(inherited from bucket B).
-12. **T11** → Object 2 in Bucket D is updated to `quux`.
-13. **T12** → Object 1 in Bucket D is added with value `baz`.
-    - Bucket D now has three objects: Object 1 = `baz`(its own data), Object 2 =
-      `quux`(its own copy), and Object 3 = `baz`(inherited from bucket B).
+11. **T11** → **Bucket D is forked from Bucket B** with Snapshot B1. It starts
+    with objects - Object 2 = `bar` (inherited from bucket 'A') and Object 3 =
+    `baz` (inherited from bucket B).
+12. **T12** → Object 2 in Bucket D is updated to `quux`.
+13. **T13** → Object 1 in Bucket D is added with value `baz`.
+    - Bucket D now has three objects: Object 1 = `baz` (its own data), Object 2 =
+      `quux` (its own copy), and Object 3 = `baz` (inherited from bucket B).
 
 #### Key Takeaways
 

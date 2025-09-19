@@ -31,6 +31,7 @@
     "@redocly/cli": "^1.31.2",
     "@social-embed/wc": "^0.0.4-next.0",
     "clsx": "^1.1.1",
+    "docusaurus-plugin-generate-llms-txt": "^0.0.1",
     "docusaurus-plugin-openapi-docs": "4.3.7",
     "docusaurus-theme-openapi-docs": "4.3.7",
     "dotenv": "^16.0.2",

@@ -28,3 +28,6 @@ yarn-error.log*
 .netlify
 .history
 .vercel
+
+# llms.txt
+static/llms.txt

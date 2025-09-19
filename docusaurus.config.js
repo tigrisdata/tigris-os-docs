@@ -82,6 +82,12 @@ const config = {
         },
       },
     ],
+    [
+      "docusaurus-plugin-generate-llms-txt",
+      {
+        outputFile: "llms.txt", // defaults to llms.txt if not specified
+      },
+    ],
   ],
 
   themeConfig:

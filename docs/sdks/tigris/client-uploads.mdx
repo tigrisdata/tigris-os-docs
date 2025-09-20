@@ -1,0 +1,58 @@
+# Client Uploads
+
+Amongst all the other great features of Tigris, free egress fees is another
+example of what makes us stand out from other providers. We care about the
+bandwidth costs and we want to make it as cheap as possible for you to use
+Tigris. That's why we've made it so that you can upload files directly to Tigris
+from the client side.
+
+We leverage the
+[presigned URLs](/docs/sdks/tigris/using-sdk#presigning-an-object) features to
+allow you to upload files directly to Tigris from the client side.
+
+Client side uploads are a great way to upload objects to a bucket directly from
+the browser as it allows you to upload objects to a bucket without having to
+proxy the objects through your server saving costs on bandwidth.
+
+## Uploading an object
+
+You can use the `upload` method from `client` package to upload objects directly
+to Tigris from the client side.
+
+```ts
+import { upload } from "@tigrisdata/storage/client";
+```
+
+`upload` accepts the following parameters:
+
+- `path`: (Required) A string specifying the path to the object
+- `body`: (Required) A blob object as File or Blob
+- `options`: (Optional) A JSON object with the following optional parameters:
+
+| **Parameter**    | **Required** | **Values**                                                                                                  |
+| ---------------- | ------------ | ----------------------------------------------------------------------------------------------------------- |
+| url              | No           | The URL to upload the file to.                                                                              |
+| access           | No           | The access level for the object. Possible values are `public` and `private`.                                |
+| onUploadProgress | No           | Callback to track upload progress: `onUploadProgress({loaded: number, total: number, percentage: number})`. |
+| config           | No           | A configuration object to override the [default configuration](#authentication).                            |
+
+### Example
+
+```html
+<input type="file" onchange="handleFileChange(event)" />
+
+<script>
+  function handleFileChange(event) {
+    const file = event.target.files[0];
+    upload("file.txt", file, {
+      url: "/api/upload",
+      access: "private",
+      onUploadProgress: ({ loaded, total, percentage }) => {
+        console.log(`Uploaded ${loaded} of ${total} bytes (${percentage}%)`);
+      },
+    });
+  }
+</script>
+```
+
+You can see a full example [here](/docs/sdks/tigris/examples#client-uploads).

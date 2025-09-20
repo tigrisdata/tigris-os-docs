@@ -1,0 +1,226 @@
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Examples
+
+If you want to see it the Storage SDK used with your tool of choice, we have
+some ready examples available at
+[our community repo](https://github.com/tigrisdata-community/storage-sdk-examples).
+Something missing there that you you'd like to see? Let us know and we'll be
+more than happy to add in examples.
+
+### Viewing and downloading files
+
+`get` function can be used to get a file from a bucket. `contentDisposition`
+option can be to either `attachment` or `inline` depending on whether you want
+to trigger a download or display the file in the browser.
+
+<Tabs>
+<TabItem value="server" label="Server" default>
+
+```ts
+// app/api/avatar.ts
+import { NextRequest, NextResponse } from "next/server";
+import { get } from "@tigrisdata/storage";
+
+export async function GET(
+  req: NextRequest,
+): Promise<NextResponse<File | string>> {
+  const avatar = req.nextUrl.searchParams.get("avatar");
+
+  if (!avatar) {
+    return NextResponse.json("avatar parameter is required", { status: 400 });
+  }
+
+  try {
+    const avatarPath = decodeURIComponent(avatar as string);
+
+    const file = await get(avatarPath, "file", {
+      contentDisposition: "inline",
+    });
+
+    if (file.data) {
+      return new NextResponse(file.data, { status: 200 });
+    }
+
+    if (file.error && file.error.message) {
+      return NextResponse.json(file.error.message, { status: 500 });
+    }
+  } catch (error) {
+    return NextResponse.json(
+      error instanceof Error ? error.message : "Unknown error",
+      { status: 500 },
+    );
+  }
+
+  return NextResponse.json("No data found", { status: 404 });
+}
+```
+
+</TabItem>
+<TabItem value="client" label="Client">
+
+```tsx
+import Image from "next/image";
+
+export default function Avatar() {
+  const { user } = getUserData();
+
+  return (
+    <Image
+      src={`/api/avatar?avatar=${encodeURIComponent(user.avatar)}`}
+      alt="Avatar"
+      width={100}
+      height={100}
+    />
+  );
+}
+```
+
+</TabItem>
+</Tabs>
+
+To trigger a download, set the `contentDisposition` option to `attachment`.
+
+### Uploading files
+
+`put` function can be used to upload a file to a bucket.
+
+<Tabs>
+<TabItem value="server" label="Server" default>
+
+```ts
+// app/api/upload.ts
+import { NextRequest, NextResponse } from "next/server";
+import { put } from "@tigrisdata/storage";
+
+export async function PUT(req: NextRequest) {
+  const formData = await req.formData();
+  const file = formData.get("file") as File;
+
+  if (!file) {
+    return NextResponse.json({ error: "No file provided" }, { status: 400 });
+  }
+
+  const result = await put(file.name, file, {
+    access: "public",
+    addRandomSuffix: false,
+  });
+
+  if (result.error) {
+    return NextResponse.json({ error: result.error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ data: result.data }, { status: 200 });
+}
+```
+
+</TabItem>
+<TabItem value="client" label="Client">
+
+```tsx
+export default function Upload() {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      fetch("/api/test", {
+        method: "PUT",
+        body: formData,
+      });
+    }
+  };
+
+  return <input type="file" onChange={handleFileChange} />;
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Client Uploads
+
+Amongst all the other great features of Tigris, free egress fees is another
+example of what makes us stand out from other providers. We care about the
+bandwidth costs and we want to make it as cheap as possible for you to use
+Tigris. That's why we've made it so that you can upload files directly to Tigris
+from the client side.
+
+We leverage the
+[presigned URLs](/docs/sdks/tigris/using-sdk#presigning-an-object) features to
+allow you to upload files directly to Tigris from the client side.
+
+<Tabs>  
+<TabItem value="server" label="Server" default>
+
+```ts
+// app/api/signed.ts
+import { NextRequest, NextResponse } from "next/server";
+import { getPresignedUrl } from "@tigrisdata/storage";
+
+export async function POST(request: NextRequest) {
+  try {
+    const { path, method, contentType } = await request.json();
+    const result = await getPresignedUrl(path, {
+      method,
+      contentType,
+      expiresIn: 3600, // 1 hour
+    });
+
+    return NextResponse.json({ data: result.data });
+  } catch (error) {
+    console.error("Upload error:", error);
+    return NextResponse.json(
+      { error: "Failed to generate presigned URL" },
+      { status: 500 },
+    );
+  }
+}
+```
+
+</TabItem>
+
+<TabItem value="client" label="Client">
+
+```tsx
+"use client";
+
+import { upload } from "@tigrisdata/storage/client";
+import { useState } from "react";
+
+export default function ClientUpload() {
+  const [progress, setProgress] = useState<number>(0);
+  const [url, setUrl] = useState<string | null>(null);
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setProgress(0);
+    if (file) {
+      const result = await upload(`${file.name}`, file, {
+        url: "/api/test",
+        access: "private",
+        onUploadProgress: ({ loaded, total, percentage }) => {
+          setProgress(percentage);
+          if (percentage === 100) {
+            setProgress(0);
+          }
+        },
+      });
+      setUrl(result.url);
+    }
+  };
+
+  return (
+    <>
+      <input type="file" onChange={handleFileChange} />{" "}
+      {url && <div>Uploaded to: {url}</div>}{" "}
+      {progress > 0 && progress < 100 && <div>{progress}%</div>}{" "}
+    </>
+  );
+}
+```
+
+</TabItem>
+
+</Tabs>

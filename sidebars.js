@@ -229,9 +229,18 @@ const sidebars = {
       ],
     },
     {
-      type: "doc",
+      type: "category",
       label: "Tigris SDK",
-      id: "sdks/tigris/index",
+      items: [
+        {
+          type: "doc",
+          label: "Getting Started",
+          id: "sdks/tigris/index",
+        },
+        "sdks/tigris/using-sdk",
+        "sdks/tigris/client-uploads",
+        "sdks/tigris/examples",
+      ],
     },
     {
       type: "category",

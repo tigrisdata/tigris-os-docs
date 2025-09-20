@@ -3,10 +3,10 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-The Tigris Storage SDK is a simplified wrapper around the Tigris Object Storage
-API. It provides a simpler interface and minimal configuration that lets you get
-started quickly and integrate Tigris into your application. It offers all the
-functionality of the Tigris, but with a simpler interface.
+Tigris Storage SDK is a simplified wrapper around Tigris Object Storage API. It
+provides a simpler interface and minimal configuration that lets you get started
+quickly and integrate Tigris into your application. It offers all the
+functionality of Tigris, but with a simpler interface.
 
 ## Use Cases
 
@@ -19,25 +19,6 @@ who needs to store objects that:
   documents, etc.
 - That needs to be retrieved frequently across different regions
 - break your wallet by paying egress fees
-
-## Key Features
-
-As mentioned above, Tigris Storage SDK offers all the great features of the
-Tigris Object Storage API. Some of the key features are:
-
-- **[Global](/docs/objects/object_regions/):** Access your data from any region
-  by using a single global endpoint. Tigris is inherently global. However, if
-  you need to store data in single or multiple regions, you can do so by simply
-  configuring the bucket regions. Check out the
-  [Multi-Region Buckets](/docs/buckets/multi-region/) section.
-- **[Zero egress fees](/docs/pricing/):** Access your data freely. Stop paying
-  just to use your own data. From storing large datasets for your AI workflows
-  to storing small files, those egress fees can add up quickly. Tigris offers
-  world class object storage for the fraction of the cost of other providers.
-- **[Blazing fast](https://www.tigrisdata.com/blog/benchmark-small-objects/):**
-  Tigris is 5.3x faster than S3 and 86.6x faster than R2 for small object reads.
-  If your workload depends on reading lots of small objects—logs, AI features,
-  or massive number of tiny files—this matters.
 
 ## Getting Started
 
@@ -111,225 +92,61 @@ list().then((objects) => {
 </TabItem>
 </Tabs>
 
-## Examples
+## Uploading Objects
 
-If you want to see it the Storage SDK used with your tool of choice, we have
-some ready examples available at
-[our community repo](https://github.com/tigrisdata-community/storage-sdk-examples).
-Something missing there that you you'd like to see? Let us know and we'll be
-more than happy to add in examples.
-
-### Viewing and downloading files
-
-`get` function can be used to get a file from a bucket. `contentDisposition`
-option can be to either `attachment` or `inline` depending on whether you want
-to trigger a download or display the file in the browser.
-
-<Tabs>
-<TabItem value="server" label="Server" default>
+You can upload objects to a bucket using the `put` function. You can also upload
+large objects using the `multipart` option. You can also track the upload
+progress using the `onUploadProgress` option.
 
 ```ts
-// app/api/avatar.ts
-import { NextRequest, NextResponse } from "next/server";
-import { get } from "@tigrisdata/storage";
+// Simple upload
+await put("object.txt", "Hello, World!");
 
-export async function GET(
-  req: NextRequest,
-): Promise<NextResponse<File | string>> {
-  const avatar = req.nextUrl.searchParams.get("avatar");
+// Uploading a file
+await put("object.txt", file);
 
-  if (!avatar) {
-    return NextResponse.json("avatar parameter is required", { status: 400 });
-  }
+// Uploading a large object
+await put("object.txt", file, { multipart: true });
 
-  try {
-    const avatarPath = decodeURIComponent(avatar as string);
-
-    const file = await get(avatarPath, "file", {
-      contentDisposition: "inline",
-    });
-
-    if (file.data) {
-      return new NextResponse(file.data, { status: 200 });
-    }
-
-    if (file.error && file.error.message) {
-      return NextResponse.json(file.error.message, { status: 500 });
-    }
-  } catch (error) {
-    return NextResponse.json(
-      error instanceof Error ? error.message : "Unknown error",
-      { status: 500 },
-    );
-  }
-
-  return NextResponse.json("No data found", { status: 404 });
-}
+// Uploading a large object with progress
+await put("object.txt", file, {
+  multipart: true,
+  onUploadProgress: ({ loaded, total, percentage }) => {
+    console.log(`Uploaded ${loaded} of ${total} bytes (${percentage}%)`);
+  },
+});
 ```
 
-</TabItem>
-<TabItem value="client" label="Client">
+You can read more about uploading objects
+[here](/docs/sdks/tigris/using-sdk#uploading-an-object).
 
-```tsx
-import Image from "next/image";
+## Downloading Objects
 
-export default function Avatar() {
-  const { user } = getUserData();
-
-  return (
-    <Image
-      src={`/api/avatar?avatar=${encodeURIComponent(user.avatar)}`}
-      alt="Avatar"
-      width={100}
-      height={100}
-    />
-  );
-}
-```
-
-</TabItem>
-</Tabs>
-
-To trigger a download, set the `contentDisposition` option to `attachment`.
-
-### Uploading files
-
-`put` function can be used to upload a file to a bucket.
-
-<Tabs>
-<TabItem value="server" label="Server" default>
+You can download objects from a bucket using the `get` function.
 
 ```ts
-// app/api/upload.ts
-import { NextRequest, NextResponse } from "next/server";
-import { put } from "@tigrisdata/storage";
+// Get a file as string
+await get("object.json", "string");
 
-export async function PUT(req: NextRequest) {
-  const formData = await req.formData();
-  const file = formData.get("file") as File;
+// Get a object as File
+await get("my-file.jpg", "file");
 
-  if (!file) {
-    return NextResponse.json({ error: "No file provided" }, { status: 400 });
-  }
+// Stream an object
+await get("video.mp4", "stream", {
+  contentType: "video/mp4",
+});
 
-  const result = await put(file.name, file, {
-    access: "public",
-    addRandomSuffix: false,
-  });
-
-  if (result.error) {
-    return NextResponse.json({ error: result.error.message }, { status: 500 });
-  }
-
-  return NextResponse.json({ data: result.data }, { status: 200 });
-}
+// Trigger a download
+await get("object.txt", "file", {
+  contentDisposition: "attachment",
+});
 ```
 
-</TabItem>
-<TabItem value="client" label="Client">
+You can read more about downloading objects
+[here](/docs/sdks/tigris/using-sdk#downloading-an-object).
 
-```tsx
-export default function Upload() {
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+## Further Resources
 
-    if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-      fetch("/api/test", {
-        method: "PUT",
-        body: formData,
-      });
-    }
-  };
-
-  return <input type="file" onChange={handleFileChange} />;
-}
-```
-
-</TabItem>
-</Tabs>
-
-### Client side uploads
-
-Amongst all the other great features of Tigris Storage SDK, free egress fees is
-a what makes us stand out from other providers. We care about the bandwidth
-costs and we want to make it as cheap as possible for you to use Tigris. That's
-why we've made it so that you can upload files directly to Tigris from the
-client side.
-
-We leverage the presigned URLs features to allow you to upload files directly to
-Tigris from the client side.
-
-<Tabs>  
-<TabItem value="server" label="Server" default>
-
-```ts
-// app/api/signed.ts
-import { NextRequest, NextResponse } from "next/server";
-import { getPresignedUrl } from "@tigrisdata/storage";
-
-export async function POST(request: NextRequest) {
-  try {
-    const { path, method, contentType } = await request.json();
-    const result = await getPresignedUrl(path, {
-      method,
-      contentType,
-      expiresIn: 3600, // 1 hour
-    });
-
-    return NextResponse.json({ data: result.data });
-  } catch (error) {
-    console.error("Upload error:", error);
-    return NextResponse.json(
-      { error: "Failed to generate presigned URL" },
-      { status: 500 },
-    );
-  }
-}
-```
-
-</TabItem>
-
-<TabItem value="client" label="Client">
-
-```tsx
-"use client";
-
-import { upload } from "@tigrisdata/storage/client";
-import { useState } from "react";
-
-export default function ClientUpload() {
-  const [progress, setProgress] = useState<number>(0);
-  const [url, setUrl] = useState<string | null>(null);
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    setProgress(0);
-    if (file) {
-      const result = await upload(`${file.name}`, file, {
-        url: "/api/test",
-        access: "private",
-        onUploadProgress: ({ loaded, total, percentage }) => {
-          setProgress(percentage);
-          if (percentage === 100) {
-            setProgress(0);
-          }
-        },
-      });
-      setUrl(result.url);
-    }
-  };
-
-  return (
-    <>
-      <input type="file" onChange={handleFileChange} />{" "}
-      {url && <div>Uploaded to: {url}</div>}{" "}
-      {progress > 0 && progress < 100 && <div>{progress}%</div>}{" "}
-    </>
-  );
-}
-```
-
-</TabItem>
-
-</Tabs>
+- [Using the SDK](/docs/sdks/tigris/using-sdk)
+- [Client Uploads](/docs/sdks/tigris/client-uploads)
+- [Examples](/docs/sdks/tigris/examples)

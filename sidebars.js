@@ -230,6 +230,20 @@ const sidebars = {
     },
     {
       type: "category",
+      label: "Tigris SDK",
+      items: [
+        {
+          type: "doc",
+          label: "Getting Started",
+          id: "sdks/tigris/index",
+        },
+        "sdks/tigris/using-sdk",
+        "sdks/tigris/client-uploads",
+        "sdks/tigris/examples",
+      ],
+    },
+    {
+      type: "category",
       label: "AWS S3 SDKs",
       link: {
         type: "doc",

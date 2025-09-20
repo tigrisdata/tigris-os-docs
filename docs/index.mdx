@@ -10,6 +10,7 @@ import {
 import { YellowStar } from "@site/src/icons";
 import SDKCards from "@site/src/components/SDKCards";
 import WorldMap from "@site/static/img/world.png";
+import TigrisStorageSDK from "@site/static/img/tigris-sdk.png";
 import Link from "@docusaurus/Link";
 
 <div style={{ textAlign: 'center', margin: "2em auto 0 auto", width: '80%' }}>
@@ -48,6 +49,19 @@ import Link from "@docusaurus/Link";
       <Link to="/get-started/">
         <h3>Get Started</h3>
         <span>Essential guide to get you up and running quickly</span>
+      </Link>
+    </div>
+  </div>
+  <div className="homepage-card-pic">
+    <div className="img">
+      <Link to="/sdks/tigris/">
+        <img src={TigrisStorageSDK} alt="Tigris Storage SDK" />
+      </Link>
+    </div>
+    <div className="text">
+      <Link to="/sdks/tigris/">
+        <h3>Tigris Storage SDK</h3>
+        <span>Use the Tigris Storage SDK to build your applications</span>
       </Link>
     </div>
   </div>

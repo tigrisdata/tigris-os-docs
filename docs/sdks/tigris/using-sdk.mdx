@@ -360,6 +360,33 @@ getPresignedUrl(path: string, options: GetPresignedUrlOptions): Promise<TigrisSt
 | contentType   | No           | The content type of the object.                                                          |
 | config        | No           | A configuration object to override the [default configuration](#authentication).         |
 
+In case of successful `getPresignedUrl`, the `data` property will be set to the
+presigned URL and contains the following properties:
+
+- `url`: The presigned URL
+- `method`: The method used to get the presigned URL
+- `expiresIn`: The expiration time of the presigned URL
+
+### Examples
+
+#### Get a presigned URL for a GET operation
+
+```ts
+const result = await getPresignedUrl("object.txt", { method: "get" });
+
+if (result.error) {
+  console.error("Error getting presigned URL:", result.error);
+} else {
+  console.log("Presigned URL:", result.data.url);
+}
+```
+
+#### Get a presigned URL for a PUT operation
+
+```ts
+const result = await getPresignedUrl("object.txt", { method: "put" });
+```
+
 ## Listing objects
 
 `list` function can be used to list objects from a bucket.

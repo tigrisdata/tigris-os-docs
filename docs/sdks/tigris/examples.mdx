@@ -198,7 +198,7 @@ export default function ClientUpload() {
     setProgress(0);
     if (file) {
       const result = await upload(`${file.name}`, file, {
-        url: "/api/test",
+        url: "/api/upload",
         access: "private",
         onUploadProgress: ({ loaded, total, percentage }) => {
           setProgress(percentage);

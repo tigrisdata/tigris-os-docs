@@ -100,6 +100,8 @@ put(path: string, body: string | ReadableStream | Blob | Buffer, options?: PutOp
   Blob based on these supported body types
 - `options`: (Optional) A JSON object with the following optional parameters:
 
+#### `options`
+
 | **Parameter**      | **Required** | **Values**                                                                                                                                              |
 | ------------------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | access             | No           | The access level for the object. Possible values are `public` and `private`.                                                                            |
@@ -188,6 +190,8 @@ get(path: string, format?: "string" | "file" | "stream", options?: GetOptions): 
   values are `string`, `file`, and `stream`.
 - `options`: (Optional) A JSON object with the following optional parameters:
 
+#### `options`
+
 | **Parameter**      | **Required** | **Values**                                                                                                                                              |
 | ------------------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | contentDisposition | No           | Set the content disposition of the object. Possible values are `inline` and `attachment`. Default is `inline`. Use `attachment` for downloadable files. |
@@ -264,6 +268,8 @@ head(path: string, options?: HeadOptions): Promise<TigrisStorageResponse<HeadRes
 - `path`: (Required) A string specifying the path to the object
 - `options`: (Optional) A JSON object with the following optional parameters:
 
+#### `options`
+
 | **Parameter** | **Required** | **Values**                                                                       |
 | ------------- | ------------ | -------------------------------------------------------------------------------- |
 | config        | No           | A configuration object to override the [default configuration](#authentication). |
@@ -316,6 +322,8 @@ remove(path: string, options?: RemoveOptions): Promise<TigrisStorageResponse<voi
 - `path`: (Required) A string specifying the path to the object
 - `options`: (Optional) A JSON object with the following optional parameters:
 
+#### `options`
+
 | **Parameter** | **Required** | **Values**                                                                       |
 | ------------- | ------------ | -------------------------------------------------------------------------------- |
 | config        | No           | A configuration object to override the [default configuration](#authentication). |
@@ -352,6 +360,8 @@ getPresignedUrl(path: string, options: GetPresignedUrlOptions): Promise<TigrisSt
 
 - `path`: (Required) A string specifying the path to the object
 - `options`: (Optional) A JSON object with the following optional parameters:
+
+#### `options`
 
 | **Parameter** | **Required** | **Values**                                                                               |
 | ------------- | ------------ | ---------------------------------------------------------------------------------------- |
@@ -400,6 +410,8 @@ list(options?: ListOptions): Promise<TigrisStorageResponse<ListResponse, Error>>
 `list` accepts the following parameters:
 
 - `options`: (Optional) A JSON object with the following optional parameters:
+
+#### `options`
 
 | **Parameter**                             | **Required** | **Values**                                                                      |
 | ----------------------------------------- | ------------ | ------------------------------------------------------------------------------- |

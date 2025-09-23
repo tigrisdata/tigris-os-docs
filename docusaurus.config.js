@@ -210,7 +210,7 @@ const config = {
             items: [
               {
                 label: "About",
-                to: "/about/",
+                href: "https://www.tigrisdata.com/about/",
               },
               {
                 label: "Blog",

@@ -48,7 +48,7 @@ To deploy on Vercel:
 2. Import project in Vercel dashboard
 3. Add environment variables in Vercel settings:
 
-```
+```env
 - TIGRIS_STORAGE_ACCESS_KEY_ID
 - TIGRIS_STORAGE_SECRET_ACCESS_KEY
 - TIGRIS_STORAGE_BUCKET

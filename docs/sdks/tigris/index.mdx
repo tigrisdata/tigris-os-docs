@@ -1,0 +1,151 @@
+# Tigris Storage SDK
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+Tigris Storage SDK provides a simple interface and minimal configuration that
+lets you get started quickly and integrate Tigris into your application. It is
+built on top of Tigris Object Storage API and offers all the functionality of
+Tigris.
+
+## Use Cases
+
+Tigris Storage SDK is geared (but not limited to) towards application developers
+who need to store objects that:
+
+- Are programmatically uploaded or generated at build time, for display and
+  download such as avatars, screenshots, cover images and videos
+- Are larger and not practical to store in the database, such as images, videos,
+  documents, etc.
+- That needs to be retrieved frequently across different regions
+
+## Getting Started
+
+Getting started with Tigris Storage SDK is easy. First, you need to create a
+Tigris account and create a bucket.
+
+### Setting up your account and bucket
+
+1. Create a Tigris account at [storage.new](https://storage.new)
+2. Create a bucket at
+   [console.tigris.dev/createbucket](https://console.tigris.dev/createbucket)
+3. Create an access key at
+   [console.tigris.dev/createaccesskey](https://console.tigris.dev/createaccesskey)
+
+### Configure your Project
+
+In your project root, create a `.env` file if it doesn't exist already and put
+the following content in it. Replace the values with actual values you obtained
+from above steps.
+
+```bash
+TIGRIS_STORAGE_ACCESS_KEY_ID=tid_access_key_id
+TIGRIS_STORAGE_SECRET_ACCESS_KEY=tsec_secret_access_key
+TIGRIS_STORAGE_BUCKET=bucket_name
+```
+
+### Installation
+
+<Tabs>
+<TabItem value="npm" label="NPM" default>
+
+```bash
+npm install @tigrisdata/storage
+```
+
+</TabItem>
+<TabItem value="yarn" label="Yarn">
+
+```bash
+yarn add @tigrisdata/storage
+```
+
+</TabItem>
+</Tabs>
+
+And this is it, you can now use the SDK in your application. Tigris Storage SDK
+supports both CommonJS and ES6 Modules syntax. That means you can use both
+`require` and `import` statements to use the SDK.
+
+<Tabs>
+<TabItem value="es6mod" label="ES6 Modules" default>
+
+```js
+import { list } from "@tigrisdata/storage";
+
+const objects = await list(); // lists objects in bucket TIGRIS_STORAGE_BUCKET
+console.log(objects);
+```
+
+</TabItem>
+<TabItem value="commonjs" label="CommonJS Modules">
+
+```js
+const { list } = require("@tigrisdata/storage");
+
+list().then((objects) => {
+  console.log(objects);
+});
+```
+
+</TabItem>
+</Tabs>
+
+## Uploading Objects
+
+You can upload objects to a bucket using the `put` function. You can also upload
+large objects using the `multipart` option. You can also track the upload
+progress using the `onUploadProgress` option.
+
+```ts
+// Simple upload
+await put("object.txt", "Hello, World!");
+
+// Uploading a file
+await put("object.txt", file);
+
+// Uploading a large object
+await put("object.txt", file, { multipart: true });
+
+// Uploading a large object with progress
+await put("object.txt", file, {
+  multipart: true,
+  onUploadProgress: ({ loaded, total, percentage }) => {
+    console.log(`Uploaded ${loaded} of ${total} bytes (${percentage}%)`);
+  },
+});
+```
+
+You can read more about uploading objects
+[here](/docs/sdks/tigris/using-sdk#uploading-an-object).
+
+## Downloading Objects
+
+You can download objects from a bucket using the `get` function.
+
+```ts
+// Get a file as string
+await get("object.json", "string");
+
+// Get a object as File
+await get("my-file.jpg", "file");
+
+// Stream an object
+await get("video.mp4", "stream", {
+  contentType: "video/mp4",
+});
+
+// Trigger a download
+await get("object.txt", "file", {
+  contentDisposition: "attachment",
+});
+```
+
+You can read more about downloading objects
+[here](/docs/sdks/tigris/using-sdk#downloading-an-object).
+
+## Further Resources
+
+- [Using the SDK](/docs/sdks/tigris/using-sdk)
+- [Client Uploads](/docs/sdks/tigris/client-uploads)
+- [Examples](/docs/sdks/tigris/examples)

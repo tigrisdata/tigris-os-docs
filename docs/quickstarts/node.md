@@ -1,58 +1,57 @@
 # Node Quickstart
 
-This project is a simple web application that demonstrates how to upload files
-to a Tigris storage bucket and manage them. It is a web server using Express
-that serves up a single web page, preconfigured to deploy to Fly.io.
-
-All of the code in index.mjs is heavily commented to better help you understand
-what each section is doing.
+This project is a simple web application that demonstrates how to upload object
+to a Tigris storage bucket and manage them. It's built using Next.js router and
+includes implementation of both apis and client.
 
 ![Node Quickstart](/img/quickstart/app.png)
-
-## How to deploy this project
-
-This project is designed to be easily deployed to Fly.io.
-
-Before you get started, make sure you have a [Fly.io](https://fly.io/) account
-and the [fly CLI](https://fly.io/docs/flyctl/install/) installed on your
-computer.
 
 Start by cloning the project to your computer:
 
 ```bash
-git clone https://github.com/tigrisdata-community/tigris-node-quickstart.git
+git clone https://github.com/tigrisdata-community/storage-sdk-examples
 ```
 
-Open the repository in the editor of your choice. Since all applications on Fly
-need to be globally unique, change the value of app in the fly.toml file before
-attempting to deploy:
+## Running project locally
 
-```toml
-# ...
-app = 'tigris-node-quickstart' # Update this
-# ...
+1. **Install dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+2. **Configure environment variables:** Copy `.env.example` to `.env` and update
+   with your Tigris credentials:
+
+   ```bash
+   TIGRIS_STORAGE_ACCESS_KEY_ID=your-tigris-key-id
+   TIGRIS_STORAGE_SECRET_ACCESS_KEY=your-tigris-access-key
+   TIGRIS_STORAGE_BUCKET=your-bucket-name
+   ```
+
+3. **Run the development server:**
+
+   ```bash
+   npm run dev
+   ```
+
+4. **Open your browser:** Navigate to
+   [http://localhost:3000](http://localhost:3000)
+
+## How to deploy this project
+
+This project is designed to be easily deployed to Vercel.
+
+To deploy on Vercel:
+
+1. Push the updated code to your to GitHub/GitLab
+2. Import project in Vercel dashboard
+3. Add environment variables in Vercel settings:
+
+```
+- TIGRIS_STORAGE_ACCESS_KEY_ID
+- TIGRIS_STORAGE_SECRET_ACCESS_KEY
+- TIGRIS_STORAGE_BUCKET
 ```
 
-Once updated, run the following command to configure the app in your Fly
-account, accepting the defaults when prompted:
-
-```bash
-fly launch
-```
-
-Take note of the URL to access your app:
-
-```bash
-Visit your newly deployed app at https://{APP_NAME}.fly.dev/
-```
-
-Before you can access the app, you'll need to configure the Tigris storage
-bucket. Run the following command to create the bucket and set the necessary
-environment variables on your Fly app. Accept the defaults when prompted.
-
-```bash
-fly storage create
-```
-
-Now navigate to the URL from the previous step and you should be presented with
-the app.
+4. Deploy!

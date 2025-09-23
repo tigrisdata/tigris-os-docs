@@ -44,7 +44,7 @@ This project is designed to be easily deployed to Vercel.
 
 To deploy on Vercel:
 
-1. Push the updated code to your to GitHub/GitLab
+1. Push the updated code to your GitHub/GitLab
 2. Import project in Vercel dashboard
 3. Add environment variables in Vercel settings:
 

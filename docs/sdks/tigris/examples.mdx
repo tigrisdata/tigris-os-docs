@@ -189,16 +189,17 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ data: result.data });
       }
 
-      case UploadAction.MultipartComplete: {
-        if (!uploadId) {
-          return NextResponse.json(
-            { error: "uploadId is required for multipart-complete" },
-            { status: 400 },
-          );
+      case UploadAction.MultipartComplete:
+        {
+          if (!uploadId) {
+            return NextResponse.json(
+              { error: "uploadId is required for multipart-complete" },
+              { status: 400 },
+            );
+          }
+          const result = await completeMultipartUpload(path, uploadId, partIds);
+          return NextResponse.json({ data: result.data });
         }
-        const result = await completeMultipartUpload(path, uploadId, partIds);
-        return NextResponse.json({ data: result.data });
-      }
 
         return NextResponse.json(
           { error: `Unsupported action: ${action}` },

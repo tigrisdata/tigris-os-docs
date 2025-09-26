@@ -9,7 +9,7 @@ some ready examples available at
 Something missing there that you you'd like to see? Let us know and we'll be
 more than happy to add in examples.
 
-### Viewing and downloading files
+## Viewing and downloading files
 
 `get` function can be used to get a file from a bucket. `contentDisposition`
 option can be to either `attachment` or `inline` depending on whether you want
@@ -82,7 +82,7 @@ export default function Avatar() {
 
 To trigger a download, set the `contentDisposition` option to `attachment`.
 
-### Uploading files
+## Uploading files
 
 `put` function can be used to upload a file to a bucket.
 
@@ -140,7 +140,7 @@ export default function Upload() {
 </TabItem>
 </Tabs>
 
-### Client Uploads
+## Client Uploads
 
 Tigris does not charge egress fees, but your hosting provider may charge them
 for user uploads to Tigris. We care about your bandwidth costs, so we made it
@@ -152,6 +152,118 @@ We leverage the
 [presigned URLs](/docs/sdks/tigris/using-sdk#presigning-an-object) features to
 allow you to upload files directly to Tigris from the client side.
 
+### Multipart upload
+
+<Tabs>  
+<TabItem value="server" label="Server" default>
+
+```ts
+// app/api/upload/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import {
+  initMultipartUpload,
+  getPartsPresignedUrls,
+  completeMultipartUpload,
+  UploadAction,
+} from "@tigrisdata/storage";
+
+export async function POST(request: NextRequest) {
+  try {
+    const { path, operation, action, contentType, uploadId, parts, partIds } =
+      await request.json();
+
+    switch (action) {
+      case UploadAction.MultipartInit: {
+        const result = await initMultipartUpload(path, {});
+        return NextResponse.json({ data: result.data });
+      }
+
+      case UploadAction.MultipartParts: {
+        if (!uploadId || !parts) {
+          return NextResponse.json(
+            { error: "uploadId and parts are required for multipart-parts" },
+            { status: 400 },
+          );
+        }
+        const result = await getPartsPresignedUrls(path, parts, uploadId, {});
+        return NextResponse.json({ data: result.data });
+      }
+
+      case UploadAction.MultipartComplete: {
+        if (!uploadId) {
+          return NextResponse.json(
+            { error: "uploadId is required for multipart-complete" },
+            { status: 400 },
+          );
+        }
+        const result = await completeMultipartUpload(path, uploadId, partIds);
+        return NextResponse.json({ data: result.data });
+      }
+
+      default:
+        return NextResponse.json(
+          { error: `Unsupported operation: ${operation}` },
+          { status: 400 },
+        );
+    }
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to process upload request" },
+      { status: 500 },
+    );
+  }
+}
+```
+
+</TabItem>
+
+<TabItem value="client" label="Client">
+
+```tsx
+"use client";
+
+import { upload } from "@tigrisdata/storage/client";
+import { useState } from "react";
+
+export default function ClientUpload() {
+  const [progress, setProgress] = useState<number>(0);
+  const [url, setUrl] = useState<string | null>(null);
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setProgress(0);
+    if (file) {
+      const result = await upload(`${file.name}`, file, {
+        url: "/api/upload",
+        access: "private",
+        multipart: true,
+        partSize: 10 * 1024 * 1024, // 10 MiB parts
+        onUploadProgress: ({ loaded, total, percentage }) => {
+          setProgress(percentage);
+          if (percentage === 100) {
+            setProgress(0);
+          }
+        },
+      });
+      setUrl(result.url);
+    }
+  };
+
+  return (
+    <>
+      <input type="file" onChange={handleFileChange} />{" "}
+      {url && <div>Uploaded to: {url}</div>}{" "}
+      {progress > 0 && progress < 100 && <div>{progress}%</div>}{" "}
+    </>
+  );
+}
+```
+
+</TabItem>
+
+</Tabs>
+
+### Simple upload
+
 <Tabs>  
 <TabItem value="server" label="Server" default>
 
@@ -162,10 +274,9 @@ import { getPresignedUrl } from "@tigrisdata/storage";
 
 export async function POST(request: NextRequest) {
   try {
-    const { path, method, contentType } = await request.json();
+    const { path, contentType } = await request.json();
     const result = await getPresignedUrl(path, {
-      method,
-      contentType,
+      operation: "put",
       expiresIn: 3600, // 1 hour
     });
 

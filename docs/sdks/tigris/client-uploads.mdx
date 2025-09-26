@@ -38,6 +38,16 @@ import { upload } from "@tigrisdata/storage/client";
 | onUploadProgress | No           | Callback to track upload progress: `onUploadProgress({loaded: number, total: number, percentage: number})`. |
 | config           | No           | A configuration object to override the [default configuration](/docs/sdks/tigris/using-sdk#authentication). |
 
+In case of successful upload, the `data` property will be set to the upload and
+contains the following properties:
+
+- `contentDisposition`: content disposition of the object
+- `contentType`: content type of the object
+- `modified`: Last modified date of the object
+- `path`: Path to the object
+- `size`: Size of the object
+- `url`: A presigned URL to the object
+
 ### Example
 
 ```html
@@ -49,6 +59,7 @@ import { upload } from "@tigrisdata/storage/client";
     upload("file.txt", file, {
       url: "/api/upload",
       access: "private",
+      multipart: true,
       onUploadProgress: ({ loaded, total, percentage }) => {
         console.log(`Uploaded ${loaded} of ${total} bytes (${percentage}%)`);
       },

@@ -200,9 +200,8 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ data: result.data });
       }
 
-      default:
         return NextResponse.json(
-          { error: `Unsupported operation: ${operation}` },
+          { error: `Unsupported action: ${action}` },
           { status: 400 },
         );
     }

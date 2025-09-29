@@ -1,0 +1,92 @@
+# Snapshots and Forks
+
+Snapshots and forks extend traditional object versioning beyond individual
+objects.
+
+- **Snapshots** capture the state of an entire bucket at a specific point in
+  time.
+- **Forks** let you branch a bucket into a new one, reusing objects without
+  copying data.
+
+Together, they provide powerful tools for data recovery, branching workflows, AI
+agent workflows, and efficient experimentation.
+[Read more about snapshots and forks in the buckets documentation](/docs/buckets/snapshots-and-forks).
+
+Tigris SDK provides a way to create and manage snapshots and forks using a
+simple API.
+
+## Create a bucket with snapshots enabled
+
+A bucket with snapshots enabled can be created using the `createBucket`
+function.
+
+```ts
+import { createBucket } from "@tigrisdata/storage";
+
+await createBucket("llm-base", {
+  enableSnapshot: true,
+});
+```
+
+## Snapshots
+
+### Create a snapshot from the bucket
+
+A snapshot can be created from the bucket using the `createBucketSnapshot`
+function.
+
+```ts
+import { createBucketSnapshot } from "@tigrisdata/storage";
+
+await createBucketSnapshot({
+  description: "pre-finetune",
+});
+```
+
+Above example creates a snapshot with the description `pre-finetune` and use
+bucket name (in this case `llm-base`) from either `.env` or environment
+variables.
+
+### List snapshots for the bucket
+
+A list of snapshots for the bucket can be retrieved using the
+`listBucketSnapshots` function.
+
+```ts
+import { listBucketSnapshots } from "@tigrisdata/storage";
+
+const result = await listBucketSnapshots();
+
+if (result.error) {
+  console.error("Error listing snapshots:", result.error);
+} else {
+  console.log("Snapshots:");
+  result.data.forEach((snapshot) => {
+    console.log(`- ${snapshot.snapshotName}: ${snapshot.creationDate:}`);
+  });
+}
+```
+
+## Create a fork from the bucket
+
+Forks can be created using the `createBucketFork` function.
+
+```ts
+import { createBucketFork } from "@tigrisdata/storage";
+
+await createBucketFork("llm-base-fork");
+```
+
+Above example creates a fork from the bucket using the bucket name (in this case
+`llm-base`) from either `.env` or environment variables. It can be overridden
+using the `bucketName` parameter in `config`.
+
+```ts
+import { createBucketFork } from "@tigrisdata/storage";
+
+await createBucketFork("llm-model-2-fork", {
+  config: {
+    bucketName: "llm-model-2",
+  },
+});
+```

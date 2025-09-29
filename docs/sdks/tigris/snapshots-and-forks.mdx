@@ -38,14 +38,31 @@ function.
 ```ts
 import { createBucketSnapshot } from "@tigrisdata/storage";
 
+await createBucketSnapshot('llm-base', {
+  description: "pre-finetune",
+});
+
+# or
+
+await createBucketSnapshot({
+  description: "pre-finetune",
+  config: {
+    bucket: "llm-base",
+  }
+});
+```
+
+If you don't provide the bucket name in the `config` or `sourceBucketName`
+parameter, it will use the bucket name from either `.env` or environment
+variables.
+
+```ts
+import { createBucketSnapshot } from "@tigrisdata/storage";
+
 await createBucketSnapshot({
   description: "pre-finetune",
 });
 ```
-
-Above example creates a snapshot with the description `pre-finetune` and use
-bucket name (in this case `llm-base`) from either `.env` or environment
-variables.
 
 ### List snapshots for the bucket
 
@@ -55,7 +72,7 @@ A list of snapshots for the bucket can be retrieved using the
 ```ts
 import { listBucketSnapshots } from "@tigrisdata/storage";
 
-const result = await listBucketSnapshots();
+const result = await listBucketSnapshots('llm-base');
 
 if (result.error) {
   console.error("Error listing snapshots:", result.error);
@@ -67,6 +84,16 @@ if (result.error) {
 }
 ```
 
+If you don't provide the bucket name in the `config` or `sourceBucketName`
+parameter, it will use the bucket name from either `.env` or environment
+variables.
+
+```ts
+import { listBucketSnapshots } from "@tigrisdata/storage";
+
+const result = await listBucketSnapshots();
+```
+
 ## Create a fork from the bucket
 
 Forks can be created using the `createBucketFork` function.
@@ -74,19 +101,27 @@ Forks can be created using the `createBucketFork` function.
 ```ts
 import { createBucketFork } from "@tigrisdata/storage";
 
-await createBucketFork("llm-base-fork");
+await createBucketFork("llm-base-fork", "llm-base");
+
+# or
+
+await createBucketFork("llm-base-fork", {
+  config: {
+    bucket: "llm-base",
+  },
+});
 ```
 
-Above example creates a fork from the bucket using the bucket name (in this case
-`llm-base`) from either `.env` or environment variables. It can be overridden
-using the `bucketName` parameter in `config`.
+If you don't provide the bucket name in the `config` or `sourceBucketName`
+parameter, it will use the bucket name from either `.env` or environment
+variables.
+
+## Create a fork from the bucket with a specific snapshot
 
 ```ts
 import { createBucketFork } from "@tigrisdata/storage";
 
-await createBucketFork("llm-model-2-fork", {
-  config: {
-    bucketName: "llm-model-2",
-  },
+await createBucketFork("llm-base-fork", "llm-base", {
+  sourceBucketSnapshot: "fine-tuned-model-345",
 });
 ```

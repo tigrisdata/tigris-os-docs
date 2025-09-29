@@ -72,7 +72,7 @@ A list of snapshots for the bucket can be retrieved using the
 ```ts
 import { listBucketSnapshots } from "@tigrisdata/storage";
 
-const result = await listBucketSnapshots('llm-base');
+const result = await listBucketSnapshots("llm-base");
 
 if (result.error) {
   console.error("Error listing snapshots:", result.error);

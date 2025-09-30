@@ -218,9 +218,9 @@ def create_bucket_with_snapshotting_enabled(s3_client, bucket_name):
 Snapshots are created with the same CreateBucket API call, with an additional
 header: `X-Tigris-Snapshot: true`.
 
-Snapshot description can optionally be specified as part of that header (with
+Snapshot name can optionally be specified as part of that header (with
 semicolon separator), e.g.,
-`X-Tigris-Snapshot: true; desc=test snapshot description`.
+`X-Tigris-Snapshot: true; name=test snapshot name`.
 
 <Tabs groupId="languages">
 <TabItem value="go" label="Go">
@@ -229,7 +229,7 @@ Example using the Go SDK `github.com/aws/aws-sdk-go-v2/service/s3`:
 ```go
 func createBucketSnapshot(ctx context.Context, client *s3.Client, bucketName string) error {
 	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
-		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Snapshot", "true; desc=test snapshot description"))
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Snapshot", "true; name=test snapshot name"))
 	})
 	return err
 }
@@ -247,7 +247,7 @@ async function createBucketSnapshot(client, bucketName) {
   command.middlewareStack.add(
     (next) => async (args) => {
       args.request.headers["X-Tigris-Snapshot"] =
-        "true; desc=test snapshot description";
+        "true; name=test snapshot name";
       return next(args);
     },
     { step: "build" },
@@ -266,7 +266,7 @@ def create_bucket_snapshot(s3_client, bucket_name):
     s3_client.meta.events.register(
         "before-sign.s3.CreateBucket",
         lambda request, **kwargs: request.headers.add_header(
-            "X-Tigris-Snapshot", "true; desc=test snapshot description"
+            "X-Tigris-Snapshot", "true; name=test snapshot name"
         )
     )
     s3_client.create_bucket(Bucket=bucket_name)
@@ -336,14 +336,14 @@ def list_snapshots_for_bucket(s3_client, bucket_name):
 
 The response will contain the list of snapshots for the bucket including the
 name and creation date of the snapshot. The response format is S3-compatible.
-Name tag here showing snapshot version with the description if added during
+Name tag here showing snapshot version with the name if added during
 snapshot creation time.
 
 ```xml
 <ListAllMyBucketsResult>
     <Buckets>
         <Bucket>
-            <Name>1751631910196672425; my first snapshot</Name>
+            <Name>1751631910196672425; name=my first snapshot</Name>
             <CreationDate>2025-07-04T12:25:10.19667705Z</CreationDate>
         </Bucket>
         <Bucket>
@@ -351,7 +351,7 @@ snapshot creation time.
             <CreationDate>2025-07-04T12:25:10.16968055Z</CreationDate>
         </Bucket>
         <Bucket>
-            <Name>1751631910140685342; another snapshot description</Name>
+            <Name>1751631910140685342; name=another snapshot</Name>
             <CreationDate>2025-07-04T12:25:10.141025675Z</CreationDate>
         </Bucket>
     </Buckets>

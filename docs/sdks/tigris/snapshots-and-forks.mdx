@@ -5,7 +5,7 @@ objects.
 
 - **Snapshots** capture the state of an entire bucket at a specific point in
   time.
-- **Forks** let you branch a snapshot of a bucket, reusing objects without
+- **Forks** let you clone a snapshot of a bucket, reusing objects without
   copying data.
 
 Together, they provide powerful tools for data recovery, branching workflows, AI
@@ -69,7 +69,12 @@ if (result.error) {
 }
 ```
 
-## Create a fork from the bucket
+## Forks
+
+Fork is a new bucket created from an existing one, sharing data without
+duplication.
+
+### Create a fork from the bucket
 
 Forks can be created using the `createBucket` function and by passing
 `sourceBucketName` in the `options`.
@@ -91,7 +96,7 @@ if (createFork.error) {
 }
 ```
 
-## Create a fork from the bucket with a specific snapshot
+### Create a fork from the bucket with a specific snapshot
 
 ```ts
 import { createBucket } from "@tigrisdata/storage";

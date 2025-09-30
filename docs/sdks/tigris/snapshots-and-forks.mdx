@@ -71,14 +71,17 @@ if (result.error) {
 
 ## Create a fork from the bucket
 
-Forks can be created using the `createBucketFork` function.
+Forks can be created using the `createBucket` function and by passing
+`sourceBucketName` in the `options`.
 
 ```ts
-import { createBucketFork } from "@tigrisdata/storage";
+import { createBucket } from "@tigrisdata/storage";
 
-const createFork = await createBucketFork(
-  "llm-base-fork-4", // forkname
-  "llm-base", // source bucket name
+const createFork = await createBucket(
+  "llm-fork", // forkname
+  {
+    sourceBucketName: "llm-base", // source bucket name
+  },
 );
 
 if (createFork.error) {
@@ -91,18 +94,19 @@ if (createFork.error) {
 ## Create a fork from the bucket with a specific snapshot
 
 ```ts
-import { createBucketFork } from "@tigrisdata/storage";
+import { createBucket } from "@tigrisdata/storage";
 
 const forkName = "llm-fork";
 const sourceBucketName = "llm-base";
-const sourceBucketSnapshotName = "fine-tuned-model-345";
+const sourceBucketSnapshotName = "fine-tuned-model";
 
-const createFork = await createBucketFork(forkName, sourceBucketName, {
+const fromSnapshot = await createBucket(forkName, {
+  sourceBucketName: sourceBucketName,
   sourceBucketSnapshot: sourceBucketSnapshotName,
 });
 
-if (createFork.error) {
-  console.error("error creating bucket fork", createFork.error);
+if (fromSnapshot.error) {
+  console.error("error creating bucket fork", fromSnapshot.error);
 } else {
   console.log("bucket fork created");
 }
@@ -116,19 +120,11 @@ will use the bucket name from either `.env` or environment variables.
 :::
 
 ```ts
-import {
-  createBucketSnapshot,
-  createBucketFork,
-  listBucketSnapshots,
-} from "@tigrisdata/storage";
+import { createBucketSnapshot, listBucketSnapshots } from "@tigrisdata/storage";
 
 await createBucketSnapshot({
   description: "pre-finetune",
 });
 
 await listBucketSnapshots();
-
-await createBucketFork("llm-fork", {
-  sourceBucketSnapshot: "fine-tuned-model-345",
-});
 ```

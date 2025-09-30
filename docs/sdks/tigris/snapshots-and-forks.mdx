@@ -5,7 +5,7 @@ objects.
 
 - **Snapshots** capture the state of an entire bucket at a specific point in
   time.
-- **Forks** let you branch a bucket into a new one, reusing objects without
+- **Forks** let you branch a snapshot of a bucket, reusing objects without
   copying data.
 
 Together, they provide powerful tools for data recovery, branching workflows, AI
@@ -23,9 +23,15 @@ function.
 ```ts
 import { createBucket } from "@tigrisdata/storage";
 
-await createBucket("llm-base", {
+const result = await createBucket("llm-base", {
   enableSnapshot: true,
 });
+
+if (result.error) {
+  console.error("error creating bucket", result.error);
+} else {
+  console.log("bucket created with snapshots enabled");
+}
 ```
 
 ## Snapshots
@@ -38,28 +44,7 @@ function.
 ```ts
 import { createBucketSnapshot } from "@tigrisdata/storage";
 
-await createBucketSnapshot('llm-base', {
-  description: "pre-finetune",
-});
-
-# or
-
-await createBucketSnapshot({
-  description: "pre-finetune",
-  config: {
-    bucket: "llm-base",
-  }
-});
-```
-
-If you don't provide the bucket name in the `config` or `sourceBucketName`
-parameter, it will use the bucket name from either `.env` or environment
-variables.
-
-```ts
-import { createBucketSnapshot } from "@tigrisdata/storage";
-
-await createBucketSnapshot({
+await createBucketSnapshot("llm-base", {
   description: "pre-finetune",
 });
 ```
@@ -84,16 +69,6 @@ if (result.error) {
 }
 ```
 
-If you don't provide the bucket name in the `config` or `sourceBucketName`
-parameter, it will use the bucket name from either `.env` or environment
-variables.
-
-```ts
-import { listBucketSnapshots } from "@tigrisdata/storage";
-
-const result = await listBucketSnapshots();
-```
-
 ## Create a fork from the bucket
 
 Forks can be created using the `createBucketFork` function.
@@ -101,27 +76,59 @@ Forks can be created using the `createBucketFork` function.
 ```ts
 import { createBucketFork } from "@tigrisdata/storage";
 
-await createBucketFork("llm-base-fork", "llm-base");
+const createFork = await createBucketFork(
+  "llm-base-fork-4", // forkname
+  "llm-base", // source bucket name
+);
 
-# or
-
-await createBucketFork("llm-base-fork", {
-  config: {
-    bucket: "llm-base",
-  },
-});
+if (createFork.error) {
+  console.error("error creating bucket fork", createFork.error);
+} else {
+  console.log("bucket fork created");
+}
 ```
-
-If you don't provide the bucket name in the `config` or `sourceBucketName`
-parameter, it will use the bucket name from either `.env` or environment
-variables.
 
 ## Create a fork from the bucket with a specific snapshot
 
 ```ts
 import { createBucketFork } from "@tigrisdata/storage";
 
-await createBucketFork("llm-base-fork", "llm-base", {
+const forkName = "llm-fork";
+const sourceBucketName = "llm-base";
+const sourceBucketSnapshotName = "fine-tuned-model-345";
+
+const createFork = await createBucketFork(forkName, sourceBucketName, {
+  sourceBucketSnapshot: sourceBucketSnapshotName,
+});
+
+if (createFork.error) {
+  console.error("error creating bucket fork", createFork.error);
+} else {
+  console.log("bucket fork created");
+}
+```
+
+:::note
+
+If you don't provide the bucket name in the `sourceBucketName` parameter, it
+will use the bucket name from either `.env` or environment variables.
+
+:::
+
+```ts
+import {
+  createBucketSnapshot,
+  createBucketFork,
+  listBucketSnapshots,
+} from "@tigrisdata/storage";
+
+await createBucketSnapshot({
+  description: "pre-finetune",
+});
+
+await listBucketSnapshots();
+
+await createBucketFork("llm-fork", {
   sourceBucketSnapshot: "fine-tuned-model-345",
 });
 ```

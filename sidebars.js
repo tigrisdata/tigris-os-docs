@@ -239,6 +239,7 @@ const sidebars = {
         },
         "sdks/tigris/using-sdk",
         "sdks/tigris/client-uploads",
+        "sdks/tigris/snapshots-and-forks",
         "sdks/tigris/examples",
       ],
     },

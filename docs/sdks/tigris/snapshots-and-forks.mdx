@@ -1,0 +1,135 @@
+# Snapshots and Forks
+
+Snapshots and forks extend traditional object versioning beyond individual
+objects.
+
+- **Snapshots** capture the state of an entire bucket at a specific point in
+  time.
+- **Forks** let you clone a snapshot of a bucket, reusing objects without
+  copying data.
+
+Together, they provide powerful tools for data recovery, branching workflows, AI
+agent workflows, and efficient experimentation.
+[Read more about snapshots and forks in the buckets documentation](/docs/buckets/snapshots-and-forks).
+
+Tigris SDK provides a way to create and manage snapshots and forks using a
+simple API.
+
+## Create a bucket with snapshots enabled
+
+A bucket with snapshots enabled can be created using the `createBucket`
+function.
+
+```ts
+import { createBucket } from "@tigrisdata/storage";
+
+const result = await createBucket("llm-base", {
+  enableSnapshot: true,
+});
+
+if (result.error) {
+  console.error("error creating bucket", result.error);
+} else {
+  console.log("bucket created with snapshots enabled");
+}
+```
+
+## Snapshots
+
+### Create a snapshot from the bucket
+
+A snapshot can be created from the bucket using the `createBucketSnapshot`
+function.
+
+```ts
+import { createBucketSnapshot } from "@tigrisdata/storage";
+
+await createBucketSnapshot("llm-base", {
+  description: "pre-finetune",
+});
+```
+
+### List snapshots for the bucket
+
+A list of snapshots for the bucket can be retrieved using the
+`listBucketSnapshots` function.
+
+```ts
+import { listBucketSnapshots } from "@tigrisdata/storage";
+
+const result = await listBucketSnapshots("llm-base");
+
+if (result.error) {
+  console.error("Error listing snapshots:", result.error);
+} else {
+  console.log("Snapshots:");
+  result.data.forEach((snapshot) => {
+    console.log(`- ${snapshot.snapshotName}: ${snapshot.creationDate}`);
+  });
+}
+```
+
+## Forks
+
+Fork is a new bucket created from an existing one, sharing data without
+duplication.
+
+### Create a fork from the bucket
+
+Forks can be created using the `createBucket` function and by passing
+`sourceBucketName` in the `options`.
+
+```ts
+import { createBucket } from "@tigrisdata/storage";
+
+const createFork = await createBucket(
+  "llm-fork", // forkname
+  {
+    sourceBucketName: "llm-base", // source bucket name
+  },
+);
+
+if (createFork.error) {
+  console.error("error creating bucket fork", createFork.error);
+} else {
+  console.log("bucket fork created");
+}
+```
+
+### Create a fork from the bucket with a specific snapshot
+
+```ts
+import { createBucket } from "@tigrisdata/storage";
+
+const forkName = "llm-fork";
+const sourceBucketName = "llm-base";
+const sourceBucketSnapshotName = "fine-tuned-model";
+
+const fromSnapshot = await createBucket(forkName, {
+  sourceBucketName: sourceBucketName,
+  sourceBucketSnapshot: sourceBucketSnapshotName,
+});
+
+if (fromSnapshot.error) {
+  console.error("error creating bucket fork", fromSnapshot.error);
+} else {
+  console.log("bucket fork created");
+}
+```
+
+:::note
+
+If you don't provide the bucket name in the `sourceBucketName` parameter, it
+will use the bucket name from either `.env` or environment variables.
+
+:::
+
+```ts
+import { createBucketSnapshot, listBucketSnapshots } from "@tigrisdata/storage";
+
+await createBucketSnapshot({
+  description: "pre-finetune",
+});
+
+await listBucketSnapshots();
+```

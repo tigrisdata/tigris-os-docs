@@ -218,9 +218,8 @@ def create_bucket_with_snapshotting_enabled(s3_client, bucket_name):
 Snapshots are created with the same CreateBucket API call, with an additional
 header: `X-Tigris-Snapshot: true`.
 
-Snapshot name can optionally be specified as part of that header (with
-semicolon separator), e.g.,
-`X-Tigris-Snapshot: true; name=test snapshot name`.
+Snapshot name can optionally be specified as part of that header (with semicolon
+separator), e.g., `X-Tigris-Snapshot: true; name=test snapshot name`.
 
 <Tabs groupId="languages">
 <TabItem value="go" label="Go">
@@ -336,8 +335,8 @@ def list_snapshots_for_bucket(s3_client, bucket_name):
 
 The response will contain the list of snapshots for the bucket including the
 name and creation date of the snapshot. The response format is S3-compatible.
-Name tag here showing snapshot version with the name if added during
-snapshot creation time.
+Name tag here showing snapshot version with the name if added during snapshot
+creation time.
 
 ```xml
 <ListAllMyBucketsResult>
@@ -368,10 +367,11 @@ To create a bucket which is a fork of another bucket, specify the
 `X-Tigris-Fork-Source-Bucket: <BUCKET_NAME>` header where `<BUCKET_NAME>` is the
 name of the bucket you want to use as the fork parent.
 
-Add the `X-Tigris-Fork-Source-Bucket-Snapshot: <SNAPSHOT_NAME>` header if you
-want to use a specific snapshot of the parent bucket for the fork. If this
-header is not set, then a new snapshot of the parent will be created at the
-current time and used for creating the fork bucket.
+Add the `X-Tigris-Fork-Source-Bucket-Snapshot: <SNAPSHOT_VERSION>` header (e.g.
+`X-Tigris-Fork-Source-Bucket-Snapshot: 1751631910140685342`) if you want to use
+a specific snapshot of the parent bucket for the fork. If this header is not
+set, then a new snapshot of the parent will be created at the current time and
+used for creating the fork bucket.
 
 <Tabs groupId="languages">
 <TabItem value="go" label="Go">

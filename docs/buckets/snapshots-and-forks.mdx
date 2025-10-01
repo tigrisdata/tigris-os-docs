@@ -188,6 +188,12 @@ import { createBucket } from "@tigrisdata/storage";
 const result = await createBucket("bucket-with-snapshots", {
   enableSnapshot: true,
 });
+
+if (result.error) {
+  console.error("error creating bucket with snapshots enabled", result.error);
+} else {
+  console.log("bucket created with snapshots enabled");
+}
 ```
 
 </TabItem>
@@ -233,9 +239,17 @@ func createBucketSnapshot(ctx context.Context, client *s3.Client, bucketName str
 Example using the Tigris SDK for JavaScript:
 
 ```js
+import { createBucketSnapshot } from "@tigrisdata/storage";
+
 const result = await createBucketSnapshot("bucket-with-snapshots", {
   description: "test snapshot description", // optional description of the snapshot
 });
+
+if (result.error) {
+  console.error("error creating bucket snapshot", result.error);
+} else {
+  console.log("bucket snapshot created");
+}
 ```
 
 </TabItem>

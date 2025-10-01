@@ -180,20 +180,19 @@ func createBucketWithSnapshottingEnabled(ctx context.Context, client *s3.Client,
 
 </TabItem>
 <TabItem value="js" label="JavaScript">
-Example using the JavaScript SDK @aws-sdk/client-s3:
+Example using the Tigris SDK for JavaScript:
 
 ```js
-async function createBucketWithSnapshotting(client, bucketName) {
-  const command = new CreateBucketCommand({ Bucket: bucketName });
-  command.middlewareStack.add(
-    (next) => async (args) => {
-      args.request.headers["X-Tigris-Enable-Snapshot"] = "true";
-      return next(args);
-    },
-    { step: "build" },
-  );
+import { createBucket } from "@tigrisdata/storage";
 
-  return client.send(command);
+const result = await createBucket("bucket-with-snapshots", {
+  enableSnapshot: true,
+});
+
+if (result.error) {
+  console.error("error creating bucket with snapshots enabled", result.error);
+} else {
+  console.log("bucket created with snapshots enabled");
 }
 ```
 
@@ -237,23 +236,19 @@ func createBucketSnapshot(ctx context.Context, client *s3.Client, bucketName str
 
 </TabItem>
 <TabItem value="js" label="JavaScript">
-Example using the JavaScript SDK @aws-sdk/client-s3:
+Example using the Tigris SDK for JavaScript:
 
 ```js
-import { CreateBucketCommand } from "@aws-sdk/client-s3";
+import { createBucketSnapshot } from "@tigrisdata/storage";
 
-async function createBucketSnapshot(client, bucketName) {
-  const command = new CreateBucketCommand({ Bucket: bucketName });
-  command.middlewareStack.add(
-    (next) => async (args) => {
-      args.request.headers["X-Tigris-Snapshot"] =
-        "true; desc=test snapshot description";
-      return next(args);
-    },
-    { step: "build" },
-  );
+const result = await createBucketSnapshot("bucket-with-snapshots", {
+  description: "test snapshot description", // optional description of the snapshot
+});
 
-  return client.send(command);
+if (result.error) {
+  console.error("error creating bucket snapshot", result.error);
+} else {
+  console.log("bucket snapshot created");
 }
 ```
 
@@ -298,21 +293,17 @@ func listSnapshotsForBucket(ctx context.Context, client *s3.Client, bucketName s
 
 </TabItem>
 <TabItem value="js" label="JavaScript">
-Example using the JavaScript SDK @aws-sdk/client-s3:
+Example using the Tigris SDK for JavaScript:
 
 ```js
-import { S3Client, ListBucketsCommand } from "@aws-sdk/client-s3";
+import { listBucketSnapshots } from "@tigrisdata/storage";
 
-async function listSnapshotsForBucket(client, bucketName) {
-  const command = new ListBucketsCommand({});
-  command.middlewareStack.add(
-    (next) => async (args) => {
-      args.request.headers["X-Tigris-Snapshot"] = bucketName;
-      return next(args);
-    },
-    { step: "build" },
-  );
-  return client.send(command);
+const listSnapshots = await listBucketSnapshots("bucket-with-snapshots"); // bucket name
+
+if (listSnapshots.error) {
+  console.error("error listing snapshots", listSnapshots.error);
+} else {
+  console.log("snapshots:", listSnapshots.data);
 }
 ```
 
@@ -393,23 +384,20 @@ func createBucketFork(ctx context.Context, client *s3.Client, bucketName string)
 </TabItem>
 
 <TabItem value="js" label="JavaScript">
-Example using the JavaScript SDK @aws-sdk/client-s3:
+Example using the Tigris SDK for JavaScript:
 
 ```js
-import { CreateBucketCommand } from "@aws-sdk/client-s3";
+import { createBucket } from "@tigrisdata/storage";
 
-async function createBucketFork(client, bucketName) {
-  const command = new CreateBucketCommand({ Bucket: bucketName });
-  command.middlewareStack.add(
-    (next) => async (args) => {
-      args.request.headers["X-Tigris-Fork-Source-Bucket"] =
-        "PARENT_BUCKET_NAME";
-      return next(args);
-    },
-    { step: "build" },
-  );
+const result = await createBucket("forked-bucket", {
+  sourceBucketName: "SOURCE_BUCKET_NAME", // source bucket name
+  sourceBucketSnapshot: "SNAPSHOT_VERSION", // optional snapshot version e.g. 1759343574493973169
+});
 
-  return client.send(command);
+if (result.error) {
+  console.error("error creating bucket fork", result.error);
+} else {
+  console.log("bucket fork created");
 }
 ```
 

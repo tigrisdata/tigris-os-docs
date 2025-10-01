@@ -391,7 +391,7 @@ import { createBucket } from "@tigrisdata/storage";
 
 const result = await createBucket("forked-bucket", {
   sourceBucketName: "SOURCE_BUCKET_NAME", // source bucket name
-  sourceBucketSnapshot: "SNAPSHOT_NAME", // optional snapshot name
+  sourceBucketSnapshot: "SNAPSHOT_VERSION", // optional snapshot version e.g. 1759343574493973169
 });
 
 if (result.error) {

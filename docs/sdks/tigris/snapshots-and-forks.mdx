@@ -45,7 +45,7 @@ function.
 import { createBucketSnapshot } from "@tigrisdata/storage";
 
 await createBucketSnapshot("llm-base", {
-  description: "pre-finetune",
+  name: "pre-finetune", // optional name for the snapshot
 });
 ```
 
@@ -128,7 +128,7 @@ will use the bucket name from either `.env` or environment variables.
 import { createBucketSnapshot, listBucketSnapshots } from "@tigrisdata/storage";
 
 await createBucketSnapshot({
-  description: "pre-finetune",
+  name: "pre-finetune", // optional name for the snapshot
 });
 
 await listBucketSnapshots();

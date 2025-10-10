@@ -201,12 +201,14 @@ if (result.error) {
 Example using the Python SDK boto3:
 
 ```python
-def create_bucket_with_snapshotting_enabled(s3_client, bucket_name):
-    s3_client.meta.events.register(
-        "before-sign.s3.CreateBucket",
-        lambda request, **kwargs: request.headers.add_header("X-Tigris-Enable-Snapshot", "true")
-    )
-    s3_client.create_bucket(Bucket=bucket_name)
+def create_bucket_with_snapshotting_enabled(tigris, bucket_name):
+    def add_header(request, **kwargs):
+        request.headers["X-Tigris-Enable-Snapshot"] = "true"
+    tigris.meta.events.register("before-sign.s3.CreateBucket", add_header)
+    try:
+        tigris.create_bucket(Bucket=bucket_name)
+    finally:
+        tigris.meta.events.unregister("before-sign.s3.CreateBucket", add_header)
 ```
 
 </TabItem>
@@ -256,14 +258,14 @@ if (result.error) {
 Example using the Python SDK boto3:
 
 ```python
-def create_bucket_snapshot(s3_client, bucket_name):
-    s3_client.meta.events.register(
-        "before-sign.s3.CreateBucket",
-        lambda request, **kwargs: request.headers.add_header(
-            "X-Tigris-Snapshot", "true; name=test snapshot name"
-        )
-    )
-    s3_client.create_bucket(Bucket=bucket_name)
+def create_bucket_snapshot(tigris, bucket_name):
+    def add_header(request, **kwargs):
+        request.headers["X-Tigris-Snapshot"] = "true; name=test snapshot name"
+    tigris.meta.events.register("before-sign.s3.CreateBucket", add_header)
+    try:
+        tigris.create_bucket(Bucket=bucket_name)
+    finally:
+        tigris.meta.events.unregister("before-sign.s3.CreateBucket", add_header)
 ```
 
 </TabItem>
@@ -311,12 +313,15 @@ if (listSnapshots.error) {
 Example using the Python SDK boto3:
 
 ```python
-def list_snapshots_for_bucket(s3_client, bucket_name):
-    s3_client.meta.events.register(
-        "before-sign.s3.ListBuckets",
-        lambda request, **kwargs: request.headers.add_header("X-Tigris-Snapshot", bucket_name)
-    )
-    return s3_client.list_buckets()
+def list_snapshots_for_bucket(tigris, bucket_name):
+    def add_header(request, **kwargs):
+        request.headers["X-Tigris-Snapshot"] = bucket_name
+    tigris.meta.events.register("before-sign.s3.ListBuckets", add_header)
+    try:
+        snapshots = tigris.list_buckets()
+    finally:
+        tigris.meta.events.unregister("before-sign.s3.ListBuckets", add_header)
+    return snapshots
 ```
 
 </TabItem>
@@ -390,7 +395,7 @@ Example using the Tigris SDK for JavaScript:
 import { createBucket } from "@tigrisdata/storage";
 
 const result = await createBucket("forked-bucket", {
-  sourceBucketName: "SOURCE_BUCKET_NAME", // source bucket name
+  sourceBucketName: "PARENT_BUCKET_NAME", // parent bucket name
   sourceBucketSnapshot: "SNAPSHOT_VERSION", // optional snapshot version e.g. 1759343574493973169
 });
 
@@ -406,14 +411,14 @@ if (result.error) {
 Example using the Python SDK boto3:
 
 ```python
-def create_bucket_fork(s3_client, bucket_name):
-    s3_client.meta.events.register(
-        "before-sign.s3.CreateBucket",
-        lambda request, **kwargs: (
-            request.headers.add_header("X-Tigris-Fork-Source-Bucket", "PARENT_BUCKET_NAME"),
-        )
-    )
-    s3_client.create_bucket(Bucket=bucket_name)
+def create_bucket_fork(tigris, bucket_name):
+    def add_header(request, **kwargs):
+        request.headers["X-Tigris-Fork-Source-Bucket"] = "PARENT_BUCKET_NAME"
+    tigris.meta.events.register("before-sign.s3.CreateBucket", add_header)
+    try:
+        tigris.create_bucket(Bucket=bucket_name)
+    finally:
+        tigris.meta.events.unregister("before-sign.s3.CreateBucket", add_header)
 ```
 
 </TabItem>
@@ -476,4 +481,4 @@ operations to the live bucket.
 
 **Can I restore a bucket to a previous snapshot?**
 
-Not yet, but this feature is on the roadmap
+Not yet, but this feature is on the roadmap.

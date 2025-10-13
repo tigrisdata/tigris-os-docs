@@ -375,12 +375,8 @@ Example using the Go SDK `github.com/aws/aws-sdk-go-v2/service/s3`:
 
 ```go
 func createBucketFork(ctx context.Context, client *s3.Client, bucketName string) error {
-	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)},
-	 func(options *s3.Options) {
-		options.APIOptions = append(
-			options.APIOptions,
-			http.AddHeaderValue("X-Tigris-Fork-Source-Bucket", "PARENT_BUCKET_NAME"),
-		)
+	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Fork-Source-Bucket", "PARENT_BUCKET_NAME"))
 	})
 	return err
 }
@@ -424,6 +420,68 @@ def create_bucket_fork(tigris, bucket_name):
 </TabItem>
 </Tabs>
 
+### Listing and Retrieving Objects from a Snapshot
+
+Objects can be listed in a snapshot with the same ListObjectsV2 API call, with
+an additional header: `X-Tigris-Snapshot-Version: SNAPSHOT_VERSION`. Similarly,
+specific versions of an object in a particular snapshot can be retrieved with
+the same GetObject API call and header. The same approach also applies to
+HeadObject requests.
+
+Below is an example of retrieving an object from a snapshot:
+
+<Tabs groupId="languages">
+<TabItem value="go" label="Go">
+Example using the Go SDK `github.com/aws/aws-sdk-go-v2/service/s3`:
+
+```go
+func getObjectFromSnapshot(ctx context.Context, client *s3.Client, bucket string, object string, snapshotVersion string) (*s3.GetObjectOutput, error) {
+	return client.GetObject(ctx, &s3.GetObjectInput{Bucket: aws.String(bucket), Key: aws.String(object)}, func(options *s3.Options) {
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Snapshot-Version", snapshotVersion))
+	})
+}
+```
+
+</TabItem>
+
+<TabItem value="js" label="JavaScript">
+Example using the AWS SDK for JavaScript v3:
+
+```js
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+
+async function getObjectFromSnapshot(client, bucket, key, snapshotVersion) {
+  return client.send(
+    new GetObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      $httpOptions: {
+        headers: { "X-Tigris-Snapshot-Version": snapshotVersion },
+      },
+    }),
+  );
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+Example using the Python SDK boto3:
+
+```python
+def get_object_from_snapshot(s3_client, bucket_name, object_key, snapshot_version):
+    def add_header(request, **kwargs):
+        request.headers["X-Tigris-Snapshot-Version"] = snapshot_version
+    s3_client.meta.events.register("before-sign.s3.GetObject", add_header)
+    try:
+        response = s3_client.get_object(Bucket=bucket_name, Key=object_key)
+        return response
+    finally:
+        s3_client.meta.events.unregister("before-sign.s3.GetObject", add_header)
+```
+
+</TabItem>
+</Tabs>
+
 ### Using a Forked Bucket
 
 Forked buckets behave the same as regular buckets, and you can use the usual
@@ -431,6 +489,14 @@ tooling (AWS CLI or SDK) to work with them.
 
 The only restriction is that the parent bucket cannot be deleted while forked
 buckets depend on it.
+
+### Authorization
+
+Snapshotting and forking operations on existing buckets are limited to users who
+are bucket owners, organization admins, or have ReadOnly (or Editor) access to
+the buckets. This includes all operations mentioned above, such as creating a
+snapshot, creating a fork from a specific parent bucket, or listing objects in a
+snapshot.
 
 ## Limitations and Upcoming Functionality
 

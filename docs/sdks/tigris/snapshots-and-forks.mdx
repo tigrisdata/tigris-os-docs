@@ -83,9 +83,9 @@ Forks can be created using the `createBucket` function and by passing
 import { createBucket } from "@tigrisdata/storage";
 
 const createFork = await createBucket(
-  "llm-fork", // forkname
+  "llm-fork", // name of the fork bucket being created
   {
-    sourceBucketName: "llm-base", // source bucket name
+    sourceBucketName: "llm-base", // name of the fork parent bucket
   },
 );
 

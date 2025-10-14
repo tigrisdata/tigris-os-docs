@@ -222,16 +222,23 @@ header: `X-Tigris-Snapshot: true`.
 Snapshot name can optionally be specified as part of that header (with semicolon
 separator), e.g., `X-Tigris-Snapshot: true; name=test snapshot name`.
 
+The version of the snapshot created is returned in the
+`X-Tigris-Snapshot-Version` header of the response.
+
 <Tabs groupId="languages">
 <TabItem value="go" label="Go">
 Example using the Go SDK `github.com/aws/aws-sdk-go-v2/service/s3`:
 
 ```go
-func createBucketSnapshot(ctx context.Context, client *s3.Client, bucketName string) error {
-	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
-		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Snapshot", "true; name=test snapshot name"))
+func createBucketSnapshot(ctx context.Context, client *s3.Client, bucketName string, snapshotName string) (string, error) {
+	resp, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Snapshot", fmt.Sprintf("true; name=%s", snapshotName))
 	})
-	return err
+	if err != nil {
+		return "", err
+	}
+	rawResp := middleware.GetRawResponse(resp.ResultMetadata).(*http.Response)
+	return rawResp.Header.Get("X-Tigris-Snapshot-Version"), nil
 }
 ```
 
@@ -258,12 +265,14 @@ if (result.error) {
 Example using the Python SDK boto3:
 
 ```python
-def create_bucket_snapshot(tigris, bucket_name):
+def create_bucket_snapshot(tigris, bucket_name, snapshot_name):
     def add_header(request, **kwargs):
-        request.headers["X-Tigris-Snapshot"] = "true; name=test snapshot name"
+        request.headers["X-Tigris-Snapshot"] = f"true; name={snapshot_name}"
     tigris.meta.events.register("before-sign.s3.CreateBucket", add_header)
     try:
-        tigris.create_bucket(Bucket=bucket_name)
+        response = tigris.create_bucket(Bucket=bucket_name)
+        headers = response.get("ResponseMetadata", {}).get("HTTPHeaders", {})
+        return headers.get("x-tigris-snapshot-version")
     finally:
         tigris.meta.events.unregister("before-sign.s3.CreateBucket", add_header)
 ```
@@ -415,6 +424,70 @@ def create_bucket_fork(tigris, bucket_name):
         tigris.create_bucket(Bucket=bucket_name)
     finally:
         tigris.meta.events.unregister("before-sign.s3.CreateBucket", add_header)
+```
+
+</TabItem>
+</Tabs>
+
+### Retrieving Snapshotting and Forking Info for a Bucket
+
+Snapshotting and forking related information for an existing bucket can be
+retrieved by making a HeadBucket request. The response of the request will
+include custom Tigris headers with the details:
+
+- The `X-Tigris-Enable-Snapshot` header will always be present and will be set
+  to "true" for snapshotting-enabled buckets.
+- `X-Tigris-Fork-Source-Bucket` and `X-Tigris-Fork-Source-Bucket-Snapshot` will
+  only be set for fork buckets and will contain the fork parent bucket name and
+  snapshot versions respectively.
+- `X-Tigris-Is-Fork-Parent` will only be present for fork parent buckets and
+  will be set to "true".
+
+Note: These are not standard AWS S3 headers, and in order to retrieve them, the
+raw HTTP response will need to be used. Here is an example for checking whether
+snapshotting is enabled for a bucket:
+
+<Tabs groupId="languages">
+<TabItem value="go" label="Go">
+Example using the Go SDK `github.com/aws/aws-sdk-go-v2/service/s3`:
+
+```go
+func hasSnapshottingEnabled(ctx context.Context, client *s3.Client, bucketName string) (bool, error) {
+	resp, err := client.HeadBucket(ctx, &s3.HeadBucketInput{Bucket: aws.String(bucketName)})
+	if err != nil {
+		return false, err
+	}
+	rawResp := middleware.GetRawResponse(resp.ResultMetadata).(*http.Response)
+	return rawResp.Header.Get("X-Tigris-Enable-Snapshot") == true
+}
+```
+
+</TabItem>
+
+<TabItem value="js" label="JavaScript">
+Example using the AWS SDK for JavaScript v3:
+
+```js
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+
+async function hasSnapshottingEnabled(s3Client, bucketName) {
+  const response = await s3Client.send(
+    new HeadBucketCommand({ Bucket: bucketName }),
+  );
+  const headers = response.$metadata?.httpHeaders || {};
+  return headers["X-Tigris-Enable-Snapshot"] === "true";
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+Example using the Python SDK boto3:
+
+```python
+def has_snapshotting_enabled(tigris, bucket_name):
+    response = tigris.head_bucket(Bucket=bucket_name)
+    headers = response.get("ResponseMetadata", {}).get("HTTPHeaders", {})
+    return headers.get("x-tigris-enable-snapshot", "") == "true"
 ```
 
 </TabItem>

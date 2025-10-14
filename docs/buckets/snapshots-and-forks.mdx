@@ -458,7 +458,7 @@ func hasSnapshottingEnabled(ctx context.Context, client *s3.Client, bucketName s
 		return false, err
 	}
 	rawResp := middleware.GetRawResponse(resp.ResultMetadata).(*http.Response)
-	return rawResp.Header.Get("X-Tigris-Enable-Snapshot") == true
+	return rawResp.Header.Get("X-Tigris-Enable-Snapshot") == "true", nil
 }
 ```
 
@@ -468,7 +468,7 @@ func hasSnapshottingEnabled(ctx context.Context, client *s3.Client, bucketName s
 Example using the AWS SDK for JavaScript v3:
 
 ```js
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, HeadBucketCommand } from "@aws-sdk/client-s3";
 
 async function hasSnapshottingEnabled(s3Client, bucketName) {
   const response = await s3Client.send(

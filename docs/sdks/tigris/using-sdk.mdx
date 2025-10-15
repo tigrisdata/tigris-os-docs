@@ -468,3 +468,86 @@ if (currentPage.data) {
 
 console.log(allFiles);
 ```
+
+## Listing buckets
+
+`listBuckets` function can be used to list all buckets in the account.
+
+### `listBuckets`
+
+```ts
+listBuckets(): Promise<TigrisStorageResponse<ListBucketsResponse, Error>>;
+```
+
+`listBuckets` accepts the following parameters
+
+- `options`: (Optional) A JSON object with the following optional parameters:
+
+#### `options`
+
+| **Parameter**                             | **Required** | **Values**                                                                  |
+| ----------------------------------------- | ------------ | --------------------------------------------------------------------------- |
+| limit                                     | No           | The maximum number of buckets to return.                                    |
+| paginationToken                           | No           | The pagination token to continue listing buckets from the previous request. |
+| config                                    | No           | A configuration object to override the                                      |
+| [default configuration](#authentication). |
+
+In case of successful `list`, the `data` property will be set to the list of
+buckets and contains the following properties:
+
+- `buckets`: The list of buckets
+- `owner`: The owner of the buckets
+- `paginationToken`: The pagination token to continue listing objects for next
+  page.
+
+### Examples
+
+#### List buckets
+
+```ts
+const result = await listBuckets();
+
+if (result.error) {
+  console.error("Error listing buckets:", result.error);
+} else {
+  console.log("Buckets:", result.data);
+}
+```
+
+## Deleting a bucket
+
+`removeBucket` function can be used to delete a bucket.
+
+### `removeBucket`
+
+```ts
+removeBucket(bucketName: string, options?: RemoveBucketOptions): Promise<TigrisStorageResponse<void, Error>>;
+```
+
+`removeBucket` accepts the following parameters:
+
+- `bucketName`: (Required) A string specifying the name of the bucket
+- `options`: (Optional) A JSON object with the following optional parameters:
+
+#### `options`
+
+| **Parameter** | **Required** | **Values**                                                                       |
+| ------------- | ------------ | -------------------------------------------------------------------------------- |
+| config        | No           | A configuration object to override the [default configuration](#authentication). |
+
+In case of successful `removeBucket`, the `data` property will be set to
+`undefined` and the bucket will be deleted.
+
+### Examples
+
+#### Delete a bucket
+
+```ts
+const result = await removeBucket("my-bucket");
+
+if (result.error) {
+  console.error("Error deleting bucket:", result.error);
+} else {
+  console.log("Bucket deleted successfully");
+}
+```

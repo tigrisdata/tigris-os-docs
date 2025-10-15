@@ -115,13 +115,13 @@ filtering uses the SQL-like syntax defined in
 An example to only receive notifications for a key with a prefix of `images/`:
 
 ```sql
-WHERE key REGEXP "^images"
+WHERE `key` REGEXP "^images"
 ```
 
 Or to only receive notifications for delete events:
 
 ```sql
-WHERE "Event-Type" = "OBJECT_DELETED"
+WHERE `Event-Type` = "OBJECT_DELETED"
 ```
 
 ## Pricing

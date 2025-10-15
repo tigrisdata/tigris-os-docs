@@ -7,9 +7,10 @@ specified period.
 ## Configuring object expiration
 
 Tigris allows you to set up a expiration configuration for objects in a bucket
-through bucket lifecycle rules.
+through bucket lifecycle rules. The expiration is based on the last modified
+time of the object.
 
-The TTL can be set in two ways:
+The expiration can be set in two ways:
 
 - **Days**: The objects will be deleted after the specified number of days.
 - **Date**: The objects will be deleted on the specified date.
@@ -87,8 +88,9 @@ aws s3api put-bucket-lifecycle-configuration --bucket my-bucket --lifecycle-conf
 
 ## Things to note
 
-- Tigris always rounds the TTL deletion time to UTC midnight for the scheduled
+- Tigris always rounds the expiration time to UTC midnight for the scheduled
   date.
+- The expiration time is based on the last modified time of the object.
 - Only one object expiration rule can be applied to a bucket at a time.
 - When using the AWS CLI to apply a bucket lifecycle configuration, the JSON can
   only contain the fields shown in the examples above.

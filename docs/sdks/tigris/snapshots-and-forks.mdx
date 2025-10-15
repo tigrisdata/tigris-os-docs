@@ -49,7 +49,7 @@ await createBucketSnapshot("llm-base", {
 });
 ```
 
-### List snapshots for the bucket
+### List snapshots of a bucket
 
 A list of snapshots for the bucket can be retrieved using the
 `listBucketSnapshots` function.
@@ -64,9 +64,21 @@ if (result.error) {
 } else {
   console.log("Snapshots:");
   result.data.forEach((snapshot) => {
-    console.log(`- ${snapshot.snapshotName}: ${snapshot.creationDate}`);
+    console.log(`- ${snapshot.version}: ${snapshot.creationDate}`);
   });
 }
+```
+
+### List objects in a snapshot
+
+Objects in a snapshot can be listed using the `list` function.
+
+```ts
+import { list } from "@tigrisdata/storage";
+
+const result = await list("llm-base", {
+  snapshotVersion: "1760550614083112540",
+});
 ```
 
 ## Forks
@@ -103,7 +115,7 @@ import { createBucket } from "@tigrisdata/storage";
 
 const forkName = "llm-fork";
 const sourceBucketName = "llm-base";
-const sourceBucketSnapshotName = "fine-tuned-model";
+const sourceBucketSnapshot = "1760550614083112540";
 
 const fromSnapshot = await createBucket(forkName, {
   sourceBucketName: sourceBucketName,
@@ -132,4 +144,27 @@ await createBucketSnapshot({
 });
 
 await listBucketSnapshots();
+```
+
+## Getting an object from a snapshot
+
+An object from a snapshot can be retrieved using the `get` function.
+
+```ts
+import { get } from "@tigrisdata/storage";
+
+const result = await get("object.txt", {
+  snapshotVersion: "1760550614083112540",
+});
+```
+
+Similarly, `head` function can be used to get the metadata of an object from a
+specific snapshot.
+
+```ts
+import { head } from "@tigrisdata/storage";
+
+const result = await head("object.txt", {
+  snapshotVersion: "1760550614083112540",
+});
 ```

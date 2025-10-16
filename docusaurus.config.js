@@ -22,7 +22,6 @@ const config = {
   organizationName: "tigrisdata",
   projectName: "tigris-os-docs",
   onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "throw",
   trailingSlash: true,
 
   clientModules: [require.resolve("./src/util/augmentConsoleLinks.js")],
@@ -305,6 +304,9 @@ const config = {
     }),
   markdown: {
     mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: "throw",
+    },
   },
   themes: ["@docusaurus/theme-mermaid", "docusaurus-theme-openapi-docs"],
 };

@@ -1,0 +1,348 @@
+# PyTorch Quickstart
+
+[PyTorch](https://pytorch.org/) is an open-source machine learning framework
+that allows you to define, train, and deploy deep neural networks using a
+simple, Python-first approach. It's built around tensor computations, which are
+like NumPy arrays but with powerful GPU acceleration. PyTorch uses an automatic
+differentiation engine to build dynamic computational graphs, making it highly
+flexible and intuitive for both research and development. The framework is
+supported by a rich ecosystem of tools and libraries for computer vision,
+natural language processing, and production deployment.
+
+To get started training your AI models with PyTorch using data stored in Tigris,
+you need to do the following things:
+
+- Create a new bucket at [storage.new](https://storage.new)
+- Create an access keypair for that bucket at
+  [storage.new/accesskey](https://storage.new/accesskey)
+- Install the S3 connector for PyTorch
+- Configure your datasets
+- Run training jobs
+
+## 1. Create a new bucket
+
+Open [storage.new](https://storage.new) in your web browser.
+
+Give your bucket a name and select what [storage tier](../objects/tiers.md) it
+should use by default. As a general rule of thumb:
+
+- Standard is the default. If you're not sure what you want, pick standard.
+- Infrequent Access is cheaper than Standard, but charges per gigabyte of
+  retrieval.
+- Instant Retrieval Archive is for long-term storage where you might need urgent
+  access at any moment.
+- Archive is for long-term storage where you don't mind having to wait for data
+  to be brought out of cold storage.
+
+Click "Create".
+
+## 2. Create an access keypair for that bucket
+
+Open [storage.new/accesskey](https://storage.new/accesskey) in your web browser.
+
+Give the keypair a name. This name will be shown in your list of access keys, so
+be sure to make it descriptive enough that you can figure out what it's for
+later.
+
+You can either give this key access to all of the buckets you have access to or
+grant access to an individual bucket by name. Type the name of your bucket and
+give it Editor permissions.
+
+Click "Create".
+
+Copy the Access Key ID, Secret Access Key, and other values into a safe place
+such as your password manager. Tigris will not show you the Secret Access Key
+again.
+
+## 3. Install the S3 connector for PyTorch
+
+Install the
+[s3torchconnector](https://github.com/awslabs/s3-connector-for-pytorch) package.
+Depending on your environment, the command could look like this:
+
+```sh
+pip install s3torchconnector
+```
+
+If you are not sure how to install Python packages in your environment, please
+consult an expert.
+
+## 4. Configure your datasets
+
+After installing that package, import the relevant classes into your training
+code:
+
+```py
+from s3torchconnector import S3IterableDataset, S3MapDataset, S3ClientConfig
+```
+
+Now decide whether you need a **Map-Style** or **Iterative-Style** dataset:
+
+- **Map-Style** (`S3MapDataset`): Presents the S3 objects as a random-access
+  dataset (supports `len()` and indexing). It will eagerly list all objects
+  under the given prefix when first accessed, which can be slow or
+  memory-intensive if you have millions of objects. Use this if you need
+  arbitrary index-based access or shuffling of the entire dataset in memory.
+  This is also best if you have finite datasets such as the text of Wikipedia or
+  a historical archive of chat logs.
+- **Iterative-Style** (`S3IterableDataset`): Streams the S3 objects sequentially
+  as you iterate, without preloading the whole list. This is ideal for large
+  datasets where you want to stream data in batches as it’s built for streaming
+  sequential data access patterns. You sacrifice random access, but gain
+  efficiency and lower memory overhead for large-scale data. This is best when
+  you have infinite or constantly changing datasets that cannot possibly fit
+  into memory such as every Twitter post ever written or a statistical fraction
+  of website pages.
+
+For a streaming training workflow, S3IterableDataset is typically the best
+choice. Let’s create an iterable dataset from a Tigris bucket:
+
+```py
+# Parameters for your dataset location on Tigris
+bucket_name = "my-dataset-bucket"
+prefix = "train/images"  # folder/path inside the bucket (or "" for entire bucket)
+dataset_uri = f"s3://{bucket_name}/{prefix}"
+
+# (Optional) Prepare an S3 client config (e.g., to adjust performance settings)
+cfg = S3ClientConfig()  # default config (10 Gbps target, 8 MiB part size, etc.)
+
+# Create an iterable dataset from the Tigris bucket
+dataset = S3IterableDataset.from_prefix(
+    dataset_uri,
+    region="auto",                     # Region parameter (Tigris is global, so use "auto")
+    endpoint="https://t3.storage.dev",      # Tigris S3 endpoint
+    transform=None,                        # we'll set a transform in the next step
+    s3client_config=cfg,
+    enable_sharding=True                   # enable sharding across DataLoader workers (explained later)
+)
+```
+
+In the code above, we pass the S3 URI of our dataset and specify the custom
+endpoint and region. The connector will connect to t3.storage.dev instead of
+Amazon, using our provided credentials. The s3client_config=cfg is optional – by
+default it’s tuned for high throughput (e.g. ~10 Gbps target with multi-part
+downloads) and typically doesn’t need adjustment. We enabled
+enable_sharding=True so that if we use multiple data-loading workers, the
+dataset will automatically partition the data among them (more on this in
+section 4).
+
+**Map-Style Example (optional)**: If you wanted to use a map-style dataset
+instead, you would call `S3MapDataset.from_prefix` similarly. For example:
+
+```py
+map_dataset = S3MapDataset.from_prefix(
+    dataset_uri,
+    region="auto",
+    endpoint="https://t3.storage.dev",
+    s3client_config=cfg,
+)
+
+print(len(map_dataset))        # triggers listing all objects under the prefix
+sample = map_dataset[0]        # get first sample (S3 object)
+print(sample.key, sample.read()[:100])
+```
+
+This will list all objects under the prefix and allow indexed access. Keep in
+mind that the initial listing can take time and your training code may appear
+unresponsive if the bucket has many thousands of objects. For large-scale
+training, stick with `S3IterableDataset` unless you specifically need random
+access or a finite `len(dataset)` result.
+
+## 5. Run training jobs
+
+By default, iterating over the S3 dataset returns an object representing each S3
+file (e.g. an S3 reader or data wrapper). You’ll typically want to transform the
+raw S3 object data into a usable format (e.g. a PyTorch tensor) before it enters
+your model. The S3 connector allows you to provide a `transform` function when
+creating the dataset – this function takes an `S3Reader` (a file-like object for
+the S3 object) and should return the data in tensor form for training.
+
+For example, if your Tigris bucket stores images (and perhaps the directory
+structure encodes labels), you can define a transform that reads the image bytes
+and converts them to a tensor:
+
+```py
+from PIL import Image
+import io
+import torchvision.transforms as T
+
+# Define a PyTorch transformation pipeline (adjust as needed for your data)
+transform_pipeline = T.Compose([
+    T.Resize((224, 224)),               # e.g. resize images to 224x224
+    T.ToTensor(),                       # convert PIL Image to torch.FloatTensor (C x H x W)
+    T.Normalize(mean=[0.5,0.5,0.5], std=[0.5,0.5,0.5])  # example normalization
+])
+
+def obj_to_tensor(obj):
+    # Read the object content into memory
+    byte_data = obj.read()
+    # Open as an image (for binary image data)
+    image = Image.open(io.BytesIO(byte_data)).convert("RGB")
+    tensor = transform_pipeline(image)
+    # (Optional) derive label from the S3 key if applicable
+    key_path = obj.key  # e.g. "train/images/7/img123.png"
+    # Assuming the directory name is the label (e.g. "7" for class 7):
+    label_str = key_path.split("/")[1]   # "7" in this example
+    label = int(label_str) if label_str.isdigit() else label_str
+    return tensor, label
+```
+
+This `obj_to_tensor` function does the following: it reads the object’s bytes
+(e.g. an image file), converts them to a PIL image, applies a series of
+torchvision transforms (resize, tensor conversion, normalization), and then
+parses the filename or path to get a label. We return a tuple `(tensor, label)`
+for each sample. You could also return just the tensor (and handle labels
+separately) depending on your use case.
+
+Now, update the dataset to use this transform. We can either pass it during
+creation or set it afterward. It’s easiest to pass it in the `from_prefix` call:
+
+```py
+dataset = S3IterableDataset.from_prefix(
+    dataset_uri,
+    region="auto",
+    endpoint="https://t3.storage.dev",
+    transform=obj_to_tensor,      # apply our custom transform to each S3 object
+    enable_sharding=True,
+    s3client_config=cfg
+)
+```
+
+With this transform in place, iterating over dataset will yield ready-to-use
+data. In our example, each iteration gives `(image_tensor, label)` pairs. Under
+the hood, the connector will open a stream for each object and pass an
+`S3Reader` to your transform, which then reads and processes the data. This
+keeps memory usage in check by not loading more than one object at a time per
+worker (unless you increase parallelism via multiple workers).
+
+You can customize the transform for different data formats:
+
+- For example, if your objects are `.pt` or `.pth` files containing tensors,
+  your transform might use `torch.load(obj)` directly.
+- If they are CSV or text data, you could read `obj.read().decode('utf-8')` and
+  parse lines.
+- If your data is already in a numpy format (e.g. `.npy`), use `np.frombuffer`
+  on the bytes, etc.
+
+The key is that the transform should convert the raw bytes/stream into the model
+input (and target) you need.
+
+With the `S3IterableDataset` prepared, you can wrap it in a PyTorch `DataLoader`
+to batch data and feed it into your training loop. Streaming from S3 introduces
+some considerations for efficient GPU training:
+
+**DataLoader Setup**: Use an appropriate batch size and number of worker
+processes to balance throughput and memory:
+
+```py
+import torch
+from torch.utils.data import DataLoader
+
+batch_size = 32
+num_workers = 4
+
+loader = DataLoader(
+    dataset,
+    batch_size=batch_size,
+    num_workers=num_workers,
+    pin_memory=True,         # use pinned memory for faster host-to-GPU transfers
+    persistent_workers=True  # keep workers alive between epochs (if running multiple epochs)
+    # shuffle=False  # Shuffle is generally not supported for IterableDataset
+)
+```
+
+A few best practices are illustrated above:
+
+- **Multiple Workers:** By using `num_workers > 0`, you allow multiple
+  background processes to fetch data from S3 in parallel. With
+  `enable_sharding=True` set on the dataset, each worker will get a distinct
+  subset of the data (no duplicate processing). For example, with 4 workers each
+  will stream roughly 1/4 of the dataset. This parallelism can significantly
+  improve throughput, as each worker opens its own S3 connections.
+- **Batch Size:** Adjust `batch_size` based on your data size and GPU memory.
+  Each worker will load items for a batch. The `DataLoader` will concatenate
+  them into a single batch before yielding it. Ensure the batch is large enough
+  to utilize GPU efficiently, but not so large that the GPU runs out of memory
+  or that data loading becomes a bottleneck.
+- **Pinned Memory:** Setting `pin_memory=True` is recommended when transferring
+  data to CUDA. It allows DataLoader workers to allocate tensors in page-locked
+  memory, which accelerates the copy from host to GPU. In your training loop,
+  you can then use `non_blocking=True` when calling `.to(device)` to further
+  speed up transfers.
+- **Persistent Workers:** By enabling `persistent_workers=True`, the worker
+  processes will not be shut down after one epoch. This avoids the overhead of
+  spawning processes for each epoch, which is beneficial in a streaming scenario
+  (especially if each epoch still needs to scan a large dataset).
+- **Prefetching:** By default, each worker will preload a couple of batches
+  (`prefetch_factor=2` by default). You can tune this (e.g., increase it to 4)
+  if you find your GPU waiting on data, but note that prefetching too many
+  batches may consume extra memory.
+
+Now, consider how to send data to the GPU in the training loop. Assuming your
+transform returned `(data, label)` pairs as in our example, a training loop
+might look like:
+
+```py
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+model = ...  # your model
+model.to(device)
+optimizer = ...
+criterion = ...
+
+model.train()
+for epoch in range(num_epochs):
+    for batch_idx, (images, labels) in enumerate(loader):
+        # Move data to GPU
+        images = images.to(device, non_blocking=True)
+        labels = labels.to(device, non_blocking=True)
+
+        # Forward pass
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+
+        # Backprop and optimize
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        if batch_idx % 50 == 0:
+            print(f"Epoch {epoch} Batch {batch_idx}: Loss = {loss.item()}")
+```
+
+A few things to note in this loop:
+
+- We use `non_blocking=True` along with `pin_memory=True` (set in `DataLoader`)
+  for faster GPU transfers.
+- Each iteration fetches a batch of data from the S3IterableDataset. Under the
+  hood, each sample’s data was streamed directly from Tigris when the DataLoader
+  worker invoked our transform. This means your CPU workers might still be
+  reading from the network while your GPU is busy – which is fine and helps
+  overlap I/O and compute.
+- **Sharding in effect**: Because we set enable_sharding=True, each worker only
+  iterates over a portion of the dataset. This prevents duplicate data across
+  workers. Make sure not to manually shuffle or reseed the IterableDataset in a
+  way that breaks this – rely on the connector’s sharding. (If you need
+  full-data shuffling, you would use a map-style dataset or implement a custom
+  shuffle buffer, since pure streaming IterableDatasets generally don’t support
+  a global shuffle.)
+
+**Memory and Throughput Considerations**: The S3 connector is optimized to use
+multi-part downloads for large objects. By default it uses an 8 MiB part size
+for transfers, meaning it downloads data in 8MB chunks (and can do so in
+parallel threads for a single object to meet the throughput target). You can
+tune this via S3ClientConfig if needed – for example, using a larger part_size
+for very large files or adjusting throughput_target_gbps. In practice, the
+defaults (8 MiB parts, aiming for ~10 Gbps) work well for most scenarios. If you
+observe memory spikes, ensure you're not inadvertently reading too much data per
+sample (e.g., loading a huge object entirely into memory if you only need part
+of it). In such cases, you could use a range-based reader via
+`reader_constructor=S3ReaderConstructor.range_based()` to stream only needed
+byte ranges instead of full objects – an advanced technique that can save memory
+for extremely large objects.
+
+Finally, monitor your CPU and network utilization. If the GPU is underutilized
+(idle waiting for data), you can try increasing num_workers (to fetch more data
+in parallel) or increasing prefetch_factor. If the CPU or network is saturated,
+you might reduce num_workers or batch size. The goal is to keep the GPU fed with
+data without exhausting the system resources.

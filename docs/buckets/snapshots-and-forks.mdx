@@ -431,9 +431,9 @@ def create_bucket_fork(tigris, bucket_name):
 
 ### Retrieving Snapshot and Fork Info for a Bucket
 
-Snapshot and fork-related information for an existing bucket can be retrieved by
-making a HeadBucket request. The response of the request will include custom
-Tigris headers with the details:
+Information related to snapshots and forks for an existing bucket can be
+retrieved by making a HeadBucket request. The response of the request will
+include custom Tigris headers with the details:
 
 - The `X-Tigris-Enable-Snapshot` header will always be present and will be set
   to "true" for snapshot-enabled buckets.

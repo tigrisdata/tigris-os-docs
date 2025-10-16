@@ -193,6 +193,11 @@ const sidebars = {
           ],
         },
         {
+          type: "doc",
+          label: "PyTorch",
+          id: "quickstarts/pytorch",
+        },
+        {
           type: "category",
           label: "SkyPilot",
           items: [

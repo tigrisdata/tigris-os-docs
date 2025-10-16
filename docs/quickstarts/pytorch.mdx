@@ -124,7 +124,7 @@ default it’s tuned for high throughput (e.g. ~10 Gbps target with multi-part
 downloads) and typically doesn’t need adjustment. We enabled
 enable_sharding=True so that if we use multiple data-loading workers, the
 dataset will automatically partition the data among them (more on this in
-section 4).
+section 5).
 
 **Map-Style Example (optional)**: If you wanted to use a map-style dataset
 instead, you would call `S3MapDataset.from_prefix` similarly. For example:

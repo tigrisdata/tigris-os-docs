@@ -170,7 +170,7 @@ when creating the bucket.
 Example using the Go SDK `github.com/aws/aws-sdk-go-v2/service/s3`:
 
 ```go
-func createBucketWithSnapshottingEnabled(ctx context.Context, client *s3.Client, bucketName string) error {
+func createBucketWithSnapshotEnabled(ctx context.Context, client *s3.Client, bucketName string) error {
 	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
 		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Enable-Snapshot", "true"))
 	})
@@ -201,7 +201,7 @@ if (result.error) {
 Example using the Python SDK boto3:
 
 ```python
-def create_bucket_with_snapshotting_enabled(tigris, bucket_name):
+def create_bucket_with_snapshot_enabled(tigris, bucket_name):
     def add_header(request, **kwargs):
         request.headers["X-Tigris-Enable-Snapshot"] = "true"
     tigris.meta.events.register("before-sign.s3.CreateBucket", add_header)
@@ -429,14 +429,14 @@ def create_bucket_fork(tigris, bucket_name):
 </TabItem>
 </Tabs>
 
-### Retrieving Snapshotting and Forking Info for a Bucket
+### Retrieving Snapshot and Fork Info for a Bucket
 
-Snapshotting and forking related information for an existing bucket can be
+Information related to snapshots and forks for an existing bucket can be
 retrieved by making a HeadBucket request. The response of the request will
 include custom Tigris headers with the details:
 
 - The `X-Tigris-Enable-Snapshot` header will always be present and will be set
-  to "true" for snapshotting-enabled buckets.
+  to "true" for snapshot-enabled buckets.
 - `X-Tigris-Fork-Source-Bucket` and `X-Tigris-Fork-Source-Bucket-Snapshot` will
   only be set for fork buckets and will contain the fork parent bucket name and
   snapshot versions respectively.
@@ -445,14 +445,14 @@ include custom Tigris headers with the details:
 
 Note: These are not standard AWS S3 headers, and in order to retrieve them, the
 raw HTTP response will need to be used. Here is an example for checking whether
-snapshotting is enabled for a bucket:
+snapshot is enabled for a bucket:
 
 <Tabs groupId="languages">
 <TabItem value="go" label="Go">
 Example using the Go SDK `github.com/aws/aws-sdk-go-v2/service/s3`:
 
 ```go
-func hasSnapshottingEnabled(ctx context.Context, client *s3.Client, bucketName string) (bool, error) {
+func hasSnapshotEnabled(ctx context.Context, client *s3.Client, bucketName string) (bool, error) {
 	resp, err := client.HeadBucket(ctx, &s3.HeadBucketInput{Bucket: aws.String(bucketName)})
 	if err != nil {
 		return false, err
@@ -470,7 +470,7 @@ Example using the AWS SDK for JavaScript v3:
 ```js
 import { S3Client, HeadBucketCommand } from "@aws-sdk/client-s3";
 
-async function hasSnapshottingEnabled(s3Client, bucketName) {
+async function hasSnapshotEnabled(s3Client, bucketName) {
   const response = await s3Client.send(
     new HeadBucketCommand({ Bucket: bucketName }),
   );
@@ -484,7 +484,7 @@ async function hasSnapshottingEnabled(s3Client, bucketName) {
 Example using the Python SDK boto3:
 
 ```python
-def has_snapshotting_enabled(tigris, bucket_name):
+def has_snapshot_enabled(tigris, bucket_name):
     response = tigris.head_bucket(Bucket=bucket_name)
     headers = response.get("ResponseMetadata", {}).get("HTTPHeaders", {})
     return headers.get("x-tigris-enable-snapshot", "") == "true"
@@ -565,9 +565,9 @@ buckets depend on it.
 
 ### Authorization
 
-Snapshotting and forking operations on existing buckets are limited to users who
-are bucket owners, organization admins, or have `ReadOnly` (or `Editor`) access
-to the buckets. This includes all operations mentioned above, such as creating a
+Snapshot and fork operations on existing buckets are limited to users who are
+bucket owners, organization admins, or have `ReadOnly` (or `Editor`) access to
+the buckets. This includes all operations mentioned above, such as creating a
 snapshot, creating a fork from a specific parent bucket, or listing objects in a
 snapshot.
 
@@ -575,17 +575,15 @@ snapshot.
 
 ### Current Limitations
 
-Currently, bucket snapshotting and forking functionality have the following
+Currently, bucket snapshot and fork functionality have the following
 limitations:
 
-- Once snapshotting support is enabled for a bucket, it cannot be disabled.
-- Object expiration (TTL) cannot be enabled for buckets with snapshotting or
-  forking enabled.
+- Once snapshot support is enabled for a bucket, it cannot be disabled.
+- Object expiration (TTL) cannot be enabled for buckets with snapshot support.
 - Transitioning objects to different storage tiers cannot be configured for
-  buckets with snapshotting or forking enabled.
-- Only the standard storage tier is allowed for buckets with snapshotting or
-  forking enabled.
-- Snapshotting and forking cannot be enabled for existing buckets.
+  snapshot-enabled buckets.
+- Only the Standard storage tier is supported for snapshot-enabled buckets.
+- Snapshot support cannot be enabled for existing buckets.
 
 ### Upcoming Features
 

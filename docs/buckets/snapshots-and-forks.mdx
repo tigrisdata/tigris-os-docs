@@ -553,11 +553,55 @@ async function hasSnapshotEnabled(s3Client, bucketName) {
 <TabItem value="python" label="Python">
 Example using the Python SDK boto3:
 
+```shell
+pip install tigris-boto3-ext
+```
+
 ```python
-def has_snapshot_enabled(tigris, bucket_name):
-    response = tigris.head_bucket(Bucket=bucket_name)
-    headers = response.get("ResponseMetadata", {}).get("HTTPHeaders", {})
-    return headers.get("x-tigris-enable-snapshot", "") == "true"
+import boto3
+from tigris_boto3_ext import (
+    create_snapshot_bucket,
+    create_snapshot,
+    create_fork,
+    get_snapshot_version,
+    has_snapshot_enabled,
+    get_bucket_info,
+)
+
+# Initialize boto3 S3 client
+s3_client = boto3.client(
+    's3',
+    endpoint_url='https://t3.storage.dev',  # Tigris endpoint
+    aws_access_key_id='your-access-key',
+    aws_secret_access_key='your-secret-key',
+)
+
+# Check if a bucket has snapshots enabled
+bucket_name = 'my-bucket'
+
+create_snapshot_bucket(s3_client, bucket_name)
+
+if has_snapshot_enabled(s3_client, bucket_name):
+    print(f"✓ Snapshots are enabled for {bucket_name}")
+else:
+    print(f"✗ Snapshots are not enabled for {bucket_name}")
+
+# Example: Check fork lineage
+source_bucket = 'production-data'
+create_snapshot_bucket(s3_client, source_bucket)
+
+# Create a snapshot
+snapshot_result = create_snapshot(s3_client, source_bucket, snapshot_name='v1')
+snapshot_version = get_snapshot_version(snapshot_result)
+
+# Create a fork
+forked_bucket = 'test-data'
+create_fork(s3_client, forked_bucket, source_bucket, snapshot_version=snapshot_version)
+
+# Inspect the fork
+fork_info = get_bucket_info(s3_client, forked_bucket)
+print(f"Forked from: {fork_info['fork_source_bucket']}")
+print(f"Snapshot version: {fork_info['fork_source_snapshot']}")
 ```
 
 </TabItem>

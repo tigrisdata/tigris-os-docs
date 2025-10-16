@@ -200,15 +200,31 @@ if (result.error) {
 <TabItem value="python" label="Python">
 Example using the Python SDK boto3:
 
+```shell
+pip install tigris-boto3-ext
+```
+
 ```python
-def create_bucket_with_snapshot_enabled(tigris, bucket_name):
-    def add_header(request, **kwargs):
-        request.headers["X-Tigris-Enable-Snapshot"] = "true"
-    tigris.meta.events.register("before-sign.s3.CreateBucket", add_header)
-    try:
-        tigris.create_bucket(Bucket=bucket_name)
-    finally:
-        tigris.meta.events.unregister("before-sign.s3.CreateBucket", add_header)
+import boto3
+from tigris_boto3_ext import (
+    TigrisSnapshotEnabled,
+    create_snapshot_bucket,
+)
+
+# Initialize boto3 S3 client
+s3_client = boto3.client(
+    's3',
+    endpoint_url='https://t3.storage.dev',  # Tigris endpoint
+    aws_access_key_id='your-access-key',
+    aws_secret_access_key='your-secret-key',
+)
+
+# Create snapshot enabled bucket using context manager pattern
+with TigrisSnapshotEnabled(s3_client):
+    s3_client.create_bucket(Bucket='my-snapshot-bucket')
+
+# Or, create snapshot enabled bucket using helper function
+create_snapshot_bucket(s3_client, 'my-snapshot-bucket')
 ```
 
 </TabItem>
@@ -264,17 +280,32 @@ if (result.error) {
 <TabItem value="python" label="Python">
 Example using the Python SDK boto3:
 
+```shell
+pip install tigris-boto3-ext
+```
+
 ```python
-def create_bucket_snapshot(tigris, bucket_name, snapshot_name):
-    def add_header(request, **kwargs):
-        request.headers["X-Tigris-Snapshot"] = f"true; name={snapshot_name}"
-    tigris.meta.events.register("before-sign.s3.CreateBucket", add_header)
-    try:
-        response = tigris.create_bucket(Bucket=bucket_name)
-        headers = response.get("ResponseMetadata", {}).get("HTTPHeaders", {})
-        return headers.get("x-tigris-snapshot-version")
-    finally:
-        tigris.meta.events.unregister("before-sign.s3.CreateBucket", add_header)
+import boto3
+from tigris_boto3_ext import (
+    create_snapshot_bucket,
+    create_snapshot,
+    get_snapshot_version,
+)
+
+# Initialize boto3 S3 client
+s3_client = boto3.client(
+    's3',
+    endpoint_url='https://t3.storage.dev',  # Tigris endpoint
+    aws_access_key_id='your-access-key',
+    aws_secret_access_key='your-secret-key',
+)
+
+# Create snapshot-enabled bucket
+create_snapshot_bucket(s3_client, 'bucket-with-snapshots')
+
+# Create snapshots
+result = create_snapshot(s3_client, 'bucket-with-snapshots', snapshot_name='test-snapshot')
+version = get_snapshot_version(result)
 ```
 
 </TabItem>
@@ -321,16 +352,35 @@ if (listSnapshots.error) {
 <TabItem value="python" label="Python">
 Example using the Python SDK boto3:
 
+```shell
+pip install tigris-boto3-ext
+```
+
 ```python
-def list_snapshots_for_bucket(tigris, bucket_name):
-    def add_header(request, **kwargs):
-        request.headers["X-Tigris-Snapshot"] = bucket_name
-    tigris.meta.events.register("before-sign.s3.ListBuckets", add_header)
-    try:
-        snapshots = tigris.list_buckets()
-    finally:
-        tigris.meta.events.unregister("before-sign.s3.ListBuckets", add_header)
-    return snapshots
+import boto3
+from tigris_boto3_ext import (
+    TigrisSnapshot,
+    create_snapshot_bucket,
+    list_snapshots,
+)
+
+# Initialize boto3 S3 client
+s3_client = boto3.client(
+    's3',
+    endpoint_url='https://t3.storage.dev',  # Tigris endpoint
+    aws_access_key_id='your-access-key',
+    aws_secret_access_key='your-secret-key',
+)
+
+# Create snapshot-enabled bucket
+create_snapshot_bucket(s3_client, 'bucket-with-snapshots')
+
+# List snapshots for a bucket using context manager pattern
+with TigrisSnapshot(s3_client, 'bucket-with-snapshots'):
+    snapshots = s3_client.list_buckets()
+
+# Or, list snapshots via the helper function
+snapshots = list_snapshots(s3_client, 'bucket-with-snapshots')
 ```
 
 </TabItem>
@@ -385,7 +435,7 @@ Example using the Go SDK `github.com/aws/aws-sdk-go-v2/service/s3`:
 ```go
 func createBucketFork(ctx context.Context, client *s3.Client, bucketName string) error {
 	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
-		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Fork-Source-Bucket", "PARENT_BUCKET_NAME"))
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Fork-Source-Bucket", "source-bucket"))
 	})
 	return err
 }
@@ -400,8 +450,8 @@ Example using the Tigris SDK for JavaScript:
 import { createBucket } from "@tigrisdata/storage";
 
 const result = await createBucket("forked-bucket", {
-  sourceBucketName: "PARENT_BUCKET_NAME", // parent bucket name
-  sourceBucketSnapshot: "SNAPSHOT_VERSION", // optional snapshot version e.g. 1759343574493973169
+  sourceBucketName: "source-bucket", // source bucket name
+  sourceBucketSnapshot: "snapshot_version", // optional snapshot version e.g. 1759343574493973169
 });
 
 if (result.error) {
@@ -415,15 +465,35 @@ if (result.error) {
 <TabItem value="python" label="Python">
 Example using the Python SDK boto3:
 
+```shell
+pip install tigris-boto3-ext
+```
+
 ```python
-def create_bucket_fork(tigris, bucket_name):
-    def add_header(request, **kwargs):
-        request.headers["X-Tigris-Fork-Source-Bucket"] = "PARENT_BUCKET_NAME"
-    tigris.meta.events.register("before-sign.s3.CreateBucket", add_header)
-    try:
-        tigris.create_bucket(Bucket=bucket_name)
-    finally:
-        tigris.meta.events.unregister("before-sign.s3.CreateBucket", add_header)
+import boto3
+from tigris_boto3_ext import (
+    TigrisFork,
+    create_fork
+)
+
+# Initialize boto3 S3 client
+s3_client = boto3.client(
+    's3',
+    endpoint_url='https://t3.storage.dev',  # Tigris endpoint
+    aws_access_key_id='your-access-key',
+    aws_secret_access_key='your-secret-key',
+)
+
+# Fork from current state
+with TigrisFork(s3_client, 'source-bucket'):
+    s3_client.create_bucket(Bucket='forked-bucket')
+
+# Fork from specific snapshot
+with TigrisFork(s3_client, 'source-bucket', snapshot_version='1759343574493973169'):
+    s3_client.create_bucket(Bucket='forked-from-snapshot')
+
+# Or, use a helper function to create forks
+create_fork(s3_client, 'new-bucket', 'source-bucket', snapshot_version='1759343574493973169')
 ```
 
 </TabItem>
@@ -540,20 +610,64 @@ async function getObjectFromSnapshot(client, bucket, key, snapshotVersion) {
 <TabItem value="python" label="Python">
 Example using the Python SDK boto3:
 
+```shell
+pip install tigris-boto3-ext
+```
+
 ```python
-def get_object_from_snapshot(s3_client, bucket_name, object_key, snapshot_version):
-    def add_header(request, **kwargs):
-        request.headers["X-Tigris-Snapshot-Version"] = snapshot_version
-    s3_client.meta.events.register("before-sign.s3.GetObject", add_header)
-    try:
-        response = s3_client.get_object(Bucket=bucket_name, Key=object_key)
-        return response
-    finally:
-        s3_client.meta.events.unregister("before-sign.s3.GetObject", add_header)
+import boto3
+from tigris_boto3_ext import (
+    TigrisSnapshot,
+    create_snapshot_bucket,
+    create_snapshot,
+    get_object_from_snapshot,
+    get_snapshot_version,
+    head_object_from_snapshot,
+    list_objects_from_snapshot,
+)
+
+# Initialize boto3 S3 client
+s3_client = boto3.client(
+    's3',
+    endpoint_url='https://t3.storage.dev',  # Tigris endpoint
+    aws_access_key_id='your-access-key',
+    aws_secret_access_key='your-secret-key',
+)
+
+# First, ensure bucket has snapshots enabled
+create_snapshot_bucket(s3_client, 'my-bucket')
+s3_client.put_object(Bucket='my-bucket', Key='file.txt', Body=b'data')
+
+response = create_snapshot(
+    s3_client,
+    'my-bucket',
+    snapshot_name='daily-backup-2024-01-01'
+)
+snapshot_version = get_snapshot_version(response)
+print(f"Snapshot version: {snapshot_version}")
+
+# Read objects from a specific snapshot using context manager pattern
+with TigrisSnapshot(s3_client, 'my-bucket', snapshot_version=snapshot_version):
+    obj = s3_client.get_object(Bucket='my-bucket', Key='file.txt')
+    objects = s3_client.list_objects_v2(Bucket='my-bucket')
+
+# Or, use a helper function to access snapshot data
+obj = get_object_from_snapshot(s3_client, 'my-bucket', 'file.txt', snapshot_version)
+objects = list_objects_from_snapshot(s3_client, 'my-bucket', snapshot_version)
+metadata = head_object_from_snapshot(s3_client, 'my-bucket', 'file.txt', snapshot_version)
 ```
 
 </TabItem>
 </Tabs>
+
+:::note
+
+Check out the
+[examples](https://github.com/tigrisdata/tigris-boto3-ext/tree/main/examples) in
+the **tigris-boto3-ext** repo for more details on how to use the snapshot and
+forking feature with the Python boto3 SDK.
+
+:::
 
 ### Using a Forked Bucket
 

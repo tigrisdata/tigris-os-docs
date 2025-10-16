@@ -470,7 +470,10 @@ pip install tigris-boto3-ext
 
 ```python
 import boto3
-from tigris_boto3_ext import TigrisFork
+from tigris_boto3_ext import (
+    TigrisFork,
+    create_fork
+)
 
 # Initialize boto3 S3 client
 s3_client = boto3.client(
@@ -489,7 +492,7 @@ with TigrisFork(s3_client, 'source-bucket', snapshot_version='175934357449397316
     s3_client.create_bucket(Bucket='forked-from-snapshot')
 
 # Or, use a helper function to create forks
-create_fork(s3_client, 'new-bucket', 'source-bucket', snapshot_version=version)
+create_fork(s3_client, 'new-bucket', 'source-bucket', snapshot_version='1759343574493973169')
 ```
 
 </TabItem>
@@ -632,7 +635,7 @@ create_snapshot_bucket(s3_client, 'my-bucket')
 s3_client.put_object(Bucket='my-bucket', Key='file.txt', Body=b'data')
 
 response = create_snapshot(
-    s3,
+    s3_client,
     'my-bucket',
     snapshot_name='daily-backup-2024-01-01'
 )

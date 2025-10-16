@@ -360,6 +360,7 @@ pip install tigris-boto3-ext
 import boto3
 from tigris_boto3_ext import (
     TigrisSnapshot,
+    create_snapshot_bucket,
     list_snapshots,
 )
 
@@ -617,9 +618,12 @@ pip install tigris-boto3-ext
 import boto3
 from tigris_boto3_ext import (
     TigrisSnapshot,
+    create_snapshot_bucket,
+    create_snapshot,
     get_object_from_snapshot,
-    list_objects_from_snapshot,
+    get_snapshot_version,
     head_object_from_snapshot,
+    list_objects_from_snapshot,
 )
 
 # Initialize boto3 S3 client

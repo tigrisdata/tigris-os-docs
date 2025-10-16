@@ -182,8 +182,8 @@ def obj_to_tensor(obj):
     # (Optional) derive label from the S3 key if applicable
     key_path = obj.key  # e.g. "train/images/7/img123.png"
     # Assuming the directory name is the label (e.g. "7" for class 7):
-    label_str = key_path.split("/")[1]   # "7" in this example
-    label = int(label_str) if label_str.isdigit() else label_str
+    # Assuming the directory name is the label (e.g. "7" for class 7):
+    label_str = key_path.split("/")[2]   # "7" in this example
     return tensor, label
 ```
 

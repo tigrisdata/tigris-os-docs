@@ -74,13 +74,8 @@ const file = await get("object.txt", "string");`}</CodeBlock>
         />
 
         <h3>Bucket snapshots and forks</h3>
-        <video
-          src={require("./assets/2025/10/bucket-forking-ui.mp4").default}
-          autoPlay
-          loop
-          muted
-          playsInline
-          style={{ width: "100%", height: "auto" }}
+        <img
+          src={require("./assets/2025/10/bucket-forking-ui.avif").default}
           alt="A diagram of bucket forking and snapshotting."
         />
         <p>

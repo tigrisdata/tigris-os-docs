@@ -2,8 +2,229 @@ import React from "react";
 import styles from "./styles.module.css";
 import Timeline from "@site/src/components/Changelog";
 import BlogPostPreview from "@site/src/components/BlogPostPreview";
+import CodeBlock from "@theme/CodeBlock";
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 
 export const changelogData = [
+  {
+    date: "October 17, 2025",
+    title: "Bucket Snapshots & Forks",
+    content: (
+      <>
+        <img
+          src={require("./assets/2025/10/bucket-forking-ui.avif").default}
+          alt="A diagram of bucket forking and snapshotting."
+        />
+        <p>
+          Tigris now supports snapshots and forks for versioning and isolating
+          your data. Snapshots let you capture the exact state of a bucket at a
+          specific moment in time. Forks let you clone a snapshot instantly
+          using copy-on-write.
+        </p>
+
+        <p>
+          <strong>Why it matters</strong>
+        </p>
+        <ul>
+          <li>Isolated environments for safer experimentation</li>
+          <li>Built-in version control and reproducibility</li>
+          <li>Reliable A/B testing and multi-model training</li>
+          <li>Agent-friendly sandboxing</li>
+        </ul>
+
+        <p>
+          <strong>Example: Create a Snapshot Enabled Bucket and Fork It</strong>
+        </p>
+        <Tabs groupId="language">
+          <TabItem value="python" label="Python">
+            <CodeBlock language="python">{`from tigris_boto3_ext import (
+  create_snapshot_bucket,
+  create_snapshot,
+  get_snapshot_version,
+  create_fork,
+)
+
+# Create a bucket
+create_snapshot_bucket(s3, "my-bucket")
+
+# Create snapshot
+result = create_snapshot(s3_client, "my-bucket", snapshot_name='snappy-1')
+snapshot_version = get_snapshot_version(result)
+
+# Create a fork from the snapshot
+create_fork(s3_client, "my-forked-bucket", "my-bucket", snapshot_version=snapshot_version)`}</CodeBlock>
+          </TabItem>
+          <TabItem value="typescript" label="TypeScript" default>
+            <CodeBlock language="typescript">{`import { createBucket, createBucketSnapshot, listBucketSnapshots } from "@tigrisdata/storage";
+
+// Create a bucket
+const bucketResult = await createBucket("my-bucket", {
+  enableSnapshot: true,
+});
+
+if (bucketResult.error) {
+  console.error('Error creating seed bucket:', bucketResult.error);
+  return;
+}
+// We'll omit the error handling from now on for brevity, but you should check for errors!
+
+// Create snapshot
+const snapshotResult = await createSnapshot("my-bucket", { snapshotName: "snappy-1" });
+const snapshotVersion = getSnapshotVersion(snapshotResult);
+
+// Create a fork from the snapshot
+const forkResult = await createBucket("my-forked-bucket", {
+  sourceBucketName: "my-bucket"",
+  sourceBucketSnapshot: snapshotVersion,
+});
+`}</CodeBlock>
+          </TabItem>
+        </Tabs>
+
+        <p>
+          Learn more:{" "}
+          <a href="/docs/buckets/snapshots-and-forks/">
+            snapshots and forks documentation
+          </a>
+          .
+        </p>
+
+        <BlogPostPreview
+          href="https://www.tigrisdata.com/blog/fork-buckets-like-code/"
+          title="Fork Buckets Like Code"
+          description="Learn how to fork buckets like code in the Tigris web console."
+          imageSrc={require("./assets/2025/10/bucket-forking.webp").default}
+          imageAlt="A screenshot of the Tigris web console showing the bucket forking UI."
+          buttonText="Read the Blog"
+          author="Tigris Engineering"
+          date="October 17, 2025"
+        />
+      </>
+    ),
+  },
+  {
+    date: "September 17, 2025",
+    title: "Tigris JS/TS SDK",
+    content: (
+      <>
+        <p>
+          A new JavaScript/TypeScript SDK for managing Tigris buckets and
+          objects.
+        </p>
+
+        <p>
+          Manage your Tigris buckets and objects right from your JS/TS apps with
+          the new <code>@tigrisdata/storage</code> SDK.
+        </p>
+        <CodeBlock language="bash">npm install @tigrisdata/storage</CodeBlock>
+
+        <p>
+          <strong>Highlights</strong>
+        </p>
+        <ul>
+          <li>
+            Full CRUD for objects — put, get, list, and remove made simple.
+          </li>
+          <li>
+            Bucket management — create, list, and delete buckets
+            programmatically.
+          </li>
+          <li>
+            Browser uploads — upload files with built-in progress tracking.
+          </li>
+        </ul>
+
+        <p>
+          <strong>Example:</strong>
+        </p>
+        <CodeBlock language="typescript">{`import { put, get } from "@tigrisdata/storage";
+await put("object.txt", "Hello, world!");
+const file = await get("object.txt", "string");`}</CodeBlock>
+
+        <p>
+          <strong>Frontend upload example:</strong>
+        </p>
+        <CodeBlock language="typescript">{`import { upload } from "@tigrisdata/storage/client";`}</CodeBlock>
+
+        <p>
+          Read more about Tigris JS/TS SDK in the{" "}
+          <a href="/docs/sdks/tigris/using-sdk/">docs</a>.
+        </p>
+
+        <BlogPostPreview
+          href="https://www.tigrisdata.com/blog/storage-sdk/"
+          title="Announcing the Tigris Storage SDK"
+          description="Introducing the Tigris Storage SDK for JavaScript and TypeScript, a simplified alternative to AWS S3 SDK for object storage operations."
+          imageSrc={require("./assets/2025/10/rhadamanthus.webp").default}
+          imageAlt="Rhadamanthus, the Greek god of justice, holding a book with the text 'Tigris Storage SDK'."
+          buttonText="Read the Blog"
+          author="Tigris Engineering"
+          date="October 2025"
+        />
+      </>
+    ),
+    subcategories: [
+      {
+        title: "UI Improvements",
+        items: [
+          {
+            title: "Bucket Settings now organized into tabs",
+            description: (
+              <>
+                <p>
+                  Bucket Settings are now organized into tabs for a better
+                  experience.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+          {
+            title: "Billing invoices now available",
+            description: (
+              <>
+                <p>
+                  Invoices are now available under{" "}
+                  <a href="https://console.tigris.dev/billing">
+                    console.tigris.dev/billing
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+          {
+            title: "Custom Domains interface updated",
+            description: (
+              <>
+                <p>
+                  Updated interface under Bucket Settings now displays
+                  certificate details.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+        ],
+      },
+      {
+        title: "Backend Updates",
+        items: [
+          {
+            title: "Custom domain support for t3.storage.dev",
+            description: (
+              <>
+                <p>Custom domain support added for t3.storage.dev.</p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+        ],
+      },
+    ],
+  },
   {
     date: "August 15, 2025",
     title: "Org admins can enforce two-factor auth under organization settings",

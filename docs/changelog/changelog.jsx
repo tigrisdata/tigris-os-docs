@@ -58,7 +58,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
         <CodeBlock language="typescript">{`import { upload } from "@tigrisdata/storage/client";`}</CodeBlock>
 
         <p>
-          Read more about the Tigris JS/TS SDK in the{" "}
+          Read more about Tigris JS/TS SDK in the{" "}
           <a href="/docs/sdks/tigris/using-sdk/">docs</a>.
         </p>
 

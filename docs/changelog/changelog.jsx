@@ -62,9 +62,25 @@ const file = await get("object.txt", "string");`}</CodeBlock>
           <a href="/docs/sdks/tigris/using-sdk/">docs</a>.
         </p>
 
+        <BlogPostPreview
+          href="https://www.tigrisdata.com/blog/storage-sdk/"
+          title="Announcing the Tigris Storage SDK"
+          description="Introducing the Tigris Storage SDK for JavaScript and TypeScript, a simplified alternative to AWS S3 SDK for object storage operations."
+          imageSrc={require("./assets/2025/10/rhadamanthus.webp").default}
+          imageAlt="Rhadamanthus, the Greek god of justice, holding a book with the text 'Tigris Storage SDK'."
+          buttonText="Read the Blog"
+          author="Tigris Engineering"
+          date="October 2025"
+        />
+
         <h3>Bucket snapshots and forks</h3>
-        <img
-          src={require("./assets/2025/10/bucket-forking.webp").default}
+        <video
+          src={require("./assets/2025/10/bucket-forking-ui.mp4").default}
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{ width: "100%", height: "auto" }}
           alt="A diagram of bucket forking and snapshotting."
         />
         <p>

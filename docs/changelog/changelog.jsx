@@ -78,14 +78,17 @@ const createFork = await createBucket(
           date="October 17, 2025"
         />
       </>
-    )
+    ),
   },
   {
     date: "September 17, 2025",
     title: "Tigris JS/TS SDK",
     content: (
       <>
-        <p>A new JavaScript/TypeScript SDK for managing Tigris buckets and objects.</p>
+        <p>
+          A new JavaScript/TypeScript SDK for managing Tigris buckets and
+          objects.
+        </p>
 
         <p>
           Manage your Tigris buckets and objects right from your JS/TS apps with

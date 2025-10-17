@@ -12,30 +12,49 @@ export const changelogData = [
       <>
         <p>We're shipping two big updates today:</p>
         <ul>
-          <li>1. A new JavaScript/TypeScript SDK for managing Tigris buckets and objects.</li>
-          <li>2. Support for bucket snapshots and forks for versioning and isolated workflows.</li>
+          <li>
+            1. A new JavaScript/TypeScript SDK for managing Tigris buckets and
+            objects.
+          </li>
+          <li>
+            2. Support for bucket snapshots and forks for versioning and
+            isolated workflows.
+          </li>
         </ul>
 
         <h3>JS & TS SDK is available now</h3>
         <p>
-          Manage your Tigris buckets and objects right from your JS/TS apps with the new{" "}
-          <code>@tigrisdata/storage</code> SDK.
+          Manage your Tigris buckets and objects right from your JS/TS apps with
+          the new <code>@tigrisdata/storage</code> SDK.
         </p>
         <CodeBlock language="bash">npm install @tigrisdata/storage</CodeBlock>
 
-        <p><strong>Highlights</strong></p>
+        <p>
+          <strong>Highlights</strong>
+        </p>
         <ul>
-          <li>Full CRUD for objects — put, get, list, and remove made simple.</li>
-          <li>Bucket management — create, list, and delete buckets programmatically.</li>
-          <li>Browser uploads — upload files with built-in progress tracking.</li>
+          <li>
+            Full CRUD for objects — put, get, list, and remove made simple.
+          </li>
+          <li>
+            Bucket management — create, list, and delete buckets
+            programmatically.
+          </li>
+          <li>
+            Browser uploads — upload files with built-in progress tracking.
+          </li>
         </ul>
 
-        <p><strong>Example:</strong></p>
+        <p>
+          <strong>Example:</strong>
+        </p>
         <CodeBlock language="typescript">{`import { put, get } from "@tigrisdata/storage";
 await put("object.txt", "Hello, world!");
 const file = await get("object.txt", "string");`}</CodeBlock>
 
-        <p><strong>Frontend upload example:</strong></p>
+        <p>
+          <strong>Frontend upload example:</strong>
+        </p>
         <CodeBlock language="typescript">{`import { upload } from "@tigrisdata/storage/client";`}</CodeBlock>
 
         <p>
@@ -45,16 +64,19 @@ const file = await get("object.txt", "string");`}</CodeBlock>
 
         <h3>Bucket snapshots and forks</h3>
         <img
-            src={require("./assets/2025/10/bucket-forking.png").default}
-            alt='A diagram of bucket forking and snapshotting.'
-          />
+          src={require("./assets/2025/10/bucket-forking.png").default}
+          alt="A diagram of bucket forking and snapshotting."
+        />
         <p>
-          Tigris now supports snapshots and forks for versioning and isolating your data.
-          Snapshots let you capture the exact state of a bucket at a specific moment in time.
-          Forks let you clone a snapshot instantly using copy-on-write.
+          Tigris now supports snapshots and forks for versioning and isolating
+          your data. Snapshots let you capture the exact state of a bucket at a
+          specific moment in time. Forks let you clone a snapshot instantly
+          using copy-on-write.
         </p>
 
-        <p><strong>Why it matters</strong></p>
+        <p>
+          <strong>Why it matters</strong>
+        </p>
         <ul>
           <li>Isolated environments for safer experimentation</li>
           <li>Built-in version control and reproducibility</li>
@@ -62,7 +84,9 @@ const file = await get("object.txt", "string");`}</CodeBlock>
           <li>Agent-friendly sandboxing</li>
         </ul>
 
-        <p><strong>Example</strong></p>
+        <p>
+          <strong>Example</strong>
+        </p>
         <CodeBlock language="typescript">{`import { createBucket, createBucketSnapshot } from "@tigrisdata/storage";
 
 // Snapshot the current state
@@ -77,7 +101,9 @@ await createBucket(
   },
 );`}</CodeBlock>
 
-        <p><strong>Create a fork using the SDK:</strong></p>
+        <p>
+          <strong>Create a fork using the SDK:</strong>
+        </p>
         <CodeBlock language="typescript">{`import { createBucket } from "@tigrisdata/storage";
 
 const createFork = await createBucket(
@@ -88,7 +114,10 @@ const createFork = await createBucket(
 
         <p>
           Learn more:{" "}
-          <a href="/docs/buckets/snapshots-and-forks/">snapshots and forks documentation</a>.
+          <a href="/docs/buckets/snapshots-and-forks/">
+            snapshots and forks documentation
+          </a>
+          .
         </p>
       </>
     ),
@@ -101,7 +130,8 @@ const createFork = await createBucket(
             description: (
               <>
                 <p>
-                  Bucket Settings are now organized into tabs for a better experience.
+                  Bucket Settings are now organized into tabs for a better
+                  experience.
                 </p>
               </>
             ),
@@ -113,7 +143,10 @@ const createFork = await createBucket(
               <>
                 <p>
                   Invoices are now available under{" "}
-                  <a href="https://console.tigris.dev/billing">console.tigris.dev/billing</a>.
+                  <a href="https://console.tigris.dev/billing">
+                    console.tigris.dev/billing
+                  </a>
+                  .
                 </p>
               </>
             ),
@@ -124,7 +157,8 @@ const createFork = await createBucket(
             description: (
               <>
                 <p>
-                  Updated interface under Bucket Settings now displays certificate details.
+                  Updated interface under Bucket Settings now displays
+                  certificate details.
                 </p>
               </>
             ),
@@ -139,9 +173,7 @@ const createFork = await createBucket(
             title: "Custom domain support for t3.storage.dev",
             description: (
               <>
-                <p>
-                  Custom domain support added for t3.storage.dev.
-                </p>
+                <p>Custom domain support added for t3.storage.dev.</p>
               </>
             ),
             tag: { label: "API", color: "blue" },

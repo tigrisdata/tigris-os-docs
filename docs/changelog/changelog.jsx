@@ -7,73 +7,9 @@ import CodeBlock from "@theme/CodeBlock";
 export const changelogData = [
   {
     date: "October 17, 2025",
-    title: "Bucket Snapshots, Forks & Tigris JS/TS SDK",
+    title: "Bucket Snapshots & Forks",
     content: (
       <>
-        <p>We're shipping two big updates today:</p>
-        <ul>
-          <li>
-            1. A new JavaScript/TypeScript SDK for managing Tigris buckets and
-            objects.
-          </li>
-          <li>
-            2. Support for bucket snapshots and forks for versioning and
-            isolated workflows.
-          </li>
-        </ul>
-
-        <h3>JS & TS SDK is available now</h3>
-        <p>
-          Manage your Tigris buckets and objects right from your JS/TS apps with
-          the new <code>@tigrisdata/storage</code> SDK.
-        </p>
-        <CodeBlock language="bash">npm install @tigrisdata/storage</CodeBlock>
-
-        <p>
-          <strong>Highlights</strong>
-        </p>
-        <ul>
-          <li>
-            Full CRUD for objects — put, get, list, and remove made simple.
-          </li>
-          <li>
-            Bucket management — create, list, and delete buckets
-            programmatically.
-          </li>
-          <li>
-            Browser uploads — upload files with built-in progress tracking.
-          </li>
-        </ul>
-
-        <p>
-          <strong>Example:</strong>
-        </p>
-        <CodeBlock language="typescript">{`import { put, get } from "@tigrisdata/storage";
-await put("object.txt", "Hello, world!");
-const file = await get("object.txt", "string");`}</CodeBlock>
-
-        <p>
-          <strong>Frontend upload example:</strong>
-        </p>
-        <CodeBlock language="typescript">{`import { upload } from "@tigrisdata/storage/client";`}</CodeBlock>
-
-        <p>
-          Read more about Tigris JS/TS SDK in the{" "}
-          <a href="/docs/sdks/tigris/using-sdk/">docs</a>.
-        </p>
-
-        <BlogPostPreview
-          href="https://www.tigrisdata.com/blog/storage-sdk/"
-          title="Announcing the Tigris Storage SDK"
-          description="Introducing the Tigris Storage SDK for JavaScript and TypeScript, a simplified alternative to AWS S3 SDK for object storage operations."
-          imageSrc={require("./assets/2025/10/rhadamanthus.webp").default}
-          imageAlt="Rhadamanthus, the Greek god of justice, holding a book with the text 'Tigris Storage SDK'."
-          buttonText="Read the Blog"
-          author="Tigris Engineering"
-          date="October 2025"
-        />
-
-        <h3>Bucket snapshots and forks</h3>
         <img
           src={require("./assets/2025/10/bucket-forking-ui.avif").default}
           alt="A diagram of bucket forking and snapshotting."
@@ -130,6 +66,76 @@ const createFork = await createBucket(
           </a>
           .
         </p>
+
+        <BlogPostPreview
+          href="https://www.tigrisdata.com/blog/fork-buckets-like-code/"
+          title="Fork Buckets Like Code"
+          description="Learn how to fork buckets like code in the Tigris web console."
+          imageSrc={require("./assets/2025/10/bucket-forking.webp").default}
+          imageAlt="A screenshot of the Tigris web console showing the bucket forking UI."
+          buttonText="Read the Blog"
+          author="Tigris Engineering"
+          date="October 17, 2025"
+        />
+      </>
+    )
+  },
+  {
+    date: "September 17, 2025",
+    title: "Tigris JS/TS SDK",
+    content: (
+      <>
+        <p>A new JavaScript/TypeScript SDK for managing Tigris buckets and objects.</p>
+
+        <p>
+          Manage your Tigris buckets and objects right from your JS/TS apps with
+          the new <code>@tigrisdata/storage</code> SDK.
+        </p>
+        <CodeBlock language="bash">npm install @tigrisdata/storage</CodeBlock>
+
+        <p>
+          <strong>Highlights</strong>
+        </p>
+        <ul>
+          <li>
+            Full CRUD for objects — put, get, list, and remove made simple.
+          </li>
+          <li>
+            Bucket management — create, list, and delete buckets
+            programmatically.
+          </li>
+          <li>
+            Browser uploads — upload files with built-in progress tracking.
+          </li>
+        </ul>
+
+        <p>
+          <strong>Example:</strong>
+        </p>
+        <CodeBlock language="typescript">{`import { put, get } from "@tigrisdata/storage";
+await put("object.txt", "Hello, world!");
+const file = await get("object.txt", "string");`}</CodeBlock>
+
+        <p>
+          <strong>Frontend upload example:</strong>
+        </p>
+        <CodeBlock language="typescript">{`import { upload } from "@tigrisdata/storage/client";`}</CodeBlock>
+
+        <p>
+          Read more about Tigris JS/TS SDK in the{" "}
+          <a href="/docs/sdks/tigris/using-sdk/">docs</a>.
+        </p>
+
+        <BlogPostPreview
+          href="https://www.tigrisdata.com/blog/storage-sdk/"
+          title="Announcing the Tigris Storage SDK"
+          description="Introducing the Tigris Storage SDK for JavaScript and TypeScript, a simplified alternative to AWS S3 SDK for object storage operations."
+          imageSrc={require("./assets/2025/10/rhadamanthus.webp").default}
+          imageAlt="Rhadamanthus, the Greek god of justice, holding a book with the text 'Tigris Storage SDK'."
+          buttonText="Read the Blog"
+          author="Tigris Engineering"
+          date="October 2025"
+        />
       </>
     ),
     subcategories: [

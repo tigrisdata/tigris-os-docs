@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./styles.module.css";
 import Timeline from "@site/src/components/Changelog";
 import BlogPostPreview from "@site/src/components/BlogPostPreview";
+import CodeBlock from "@theme/CodeBlock";
 
 export const changelogData = [
   {
@@ -20,7 +21,7 @@ export const changelogData = [
           Manage your Tigris buckets and objects right from your JS/TS apps with the new{" "}
           <code>@tigrisdata/storage</code> SDK.
         </p>
-        <pre><code>npm install @tigrisdata/storage</code></pre>
+        <CodeBlock language="bash">npm install @tigrisdata/storage</CodeBlock>
 
         <p><strong>Highlights</strong></p>
         <ul>
@@ -30,12 +31,12 @@ export const changelogData = [
         </ul>
 
         <p><strong>Example:</strong></p>
-        <pre><code>{`import { put, get } from "@tigrisdata/storage";
+        <CodeBlock language="typescript">{`import { put, get } from "@tigrisdata/storage";
 await put("object.txt", "Hello, world!");
-const file = await get("object.txt", "string");`}</code></pre>
+const file = await get("object.txt", "string");`}</CodeBlock>
 
         <p><strong>Frontend upload example:</strong></p>
-        <pre><code>{`import { upload } from "@tigrisdata/storage/client";`}</code></pre>
+        <CodeBlock language="typescript">{`import { upload } from "@tigrisdata/storage/client";`}</CodeBlock>
 
         <p>
           Read more about the Tigris JS/TS SDK in the{" "}
@@ -43,6 +44,10 @@ const file = await get("object.txt", "string");`}</code></pre>
         </p>
 
         <h3>Bucket snapshots and forks</h3>
+        <img
+            src={require("./assets/2025/10/bucket-forking.png").default}
+            alt='A diagram of bucket forking and snapshotting.'
+          />
         <p>
           Tigris now supports snapshots and forks for versioning and isolating your data.
           Snapshots let you capture the exact state of a bucket at a specific moment in time.
@@ -58,7 +63,7 @@ const file = await get("object.txt", "string");`}</code></pre>
         </ul>
 
         <p><strong>Example</strong></p>
-        <pre><code>{`import { createBucket, createBucketSnapshot } from "@tigrisdata/storage";
+        <CodeBlock language="typescript">{`import { createBucket, createBucketSnapshot } from "@tigrisdata/storage";
 
 // Snapshot the current state
 await createBucketSnapshot("parent-bucket", {
@@ -70,16 +75,16 @@ await createBucket(
   "my-fork",  {
     sourceBucketName: "parent-bucket"  
   },
-);`}</code></pre>
+);`}</CodeBlock>
 
         <p><strong>Create a fork using the SDK:</strong></p>
-        <pre><code>{`import { createBucket } from "@tigrisdata/storage";
+        <CodeBlock language="typescript">{`import { createBucket } from "@tigrisdata/storage";
 
 const createFork = await createBucket(
   "my-fork",  {
     sourceBucketName: "parent-bucket"  
   },
-);`}</code></pre>
+);`}</CodeBlock>
 
         <p>
           Learn more:{" "}

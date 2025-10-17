@@ -64,7 +64,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
 
         <h3>Bucket snapshots and forks</h3>
         <img
-          src={require("./assets/2025/10/bucket-forking.png").default}
+          src={require("./assets/2025/10/bucket-forking.webp").default}
           alt="A diagram of bucket forking and snapshotting."
         />
         <p>

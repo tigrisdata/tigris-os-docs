@@ -7,7 +7,7 @@ import CodeBlock from "@theme/CodeBlock";
 export const changelogData = [
   {
     date: "October 17, 2025",
-    title: "Bucket Snapshots, Forks & the Tigris JS/TS SDK",
+    title: "Bucket Snapshots, Forks & Tigris JS/TS SDK",
     content: (
       <>
         <p>We're shipping two big updates today:</p>

@@ -34,51 +34,51 @@ export const changelogData = [
         </ul>
 
         <p>
-          <strong>Example</strong>
+          <strong>Example: Create a Snapshot Enabled Bucket and Fork It</strong>
         </p>
         <Tabs groupId="language">
           <TabItem value="python" label="Python">
             <CodeBlock language="python">{`from tigris_boto3_ext import (
   create_snapshot_bucket,
   create_snapshot,
-  create_fork
+  get_snapshot_version,
+  create_fork,
 )
 
-# Create a seed bucket
-seed_bucket_name = 'agent-seed'
-create_snapshot_bucket(s3, seed_bucket_name)
+# Create a bucket
+create_snapshot_bucket(s3, "my-bucket")
 
 # Create snapshot
-result = create_snapshot(s3_client, seed_bucket_name, snapshot_name='agent-seed-v1')`}</CodeBlock>
+result = create_snapshot(s3_client, "my-bucket", snapshot_name='snappy-1')
+snapshot_version = get_snapshot_version(result)
+
+# Create a fork from the snapshot
+create_fork(s3_client, "my-forked-bucket", "my-bucket", snapshot_version=snapshot_version)`}</CodeBlock>
           </TabItem>
           <TabItem value="typescript" label="TypeScript" default>
-            <CodeBlock language="typescript">{`import { createBucket, createBucketSnapshot } from "@tigrisdata/storage";
+            <CodeBlock language="typescript">{`import { createBucket, createBucketSnapshot, listBucketSnapshots } from "@tigrisdata/storage";
 
-// Snapshot the current state
-await createBucketSnapshot("parent-bucket", {
-  name: "pre-finetune", // optional name for the snapshot
+// Create a bucket
+const bucketResult = await createBucket("my-bucket", {
+  enableSnapshot: true,
+});
+
+if (bucketResult.error) {
+  console.error('Error creating seed bucket:', bucketResult.error);
+  return;
+}
+// We'll omit the error handling from now on for brevity, but you should check for errors!
+
+// Create snapshot
+const snapshotResult = await createSnapshot("my-bucket", { snapshotName: "snappy-1" });
+const snapshotVersion = getSnapshotVersion(snapshotResult);
+
+// Create a fork from the snapshot
+const forkResult = await createBucket("my-forked-bucket", {
+  sourceBucketName: "my-bucket"",
+  sourceBucketSnapshot: snapshotVersion,
 });
 `}</CodeBlock>
-          </TabItem>
-        </Tabs>
-
-        <p>
-          <strong>Create a fork using the SDK:</strong>
-        </p>
-        <Tabs groupId="language">
-          <TabItem value="python" label="Python">
-            <CodeBlock language="python">{`# Fork the bucket from the snapshot for a new agent
-agent_bucket_name = f"{seed_bucket_name}-agent-{agent_id}";
-create_fork(s3_client, agent_bucket_name, seed_bucket_name, snapshot_version=snapshot_version)`}</CodeBlock>
-          </TabItem>
-          <TabItem value="typescript" label="TypeScript" default>
-            <CodeBlock language="typescript">{`import { createBucket } from "@tigrisdata/storage";
-
-const createFork = await createBucket(
-  "my-fork",  {
-    sourceBucketName: "parent-bucket"  
-  },
-);`}</CodeBlock>
           </TabItem>
         </Tabs>
 

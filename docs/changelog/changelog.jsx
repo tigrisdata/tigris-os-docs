@@ -5,6 +5,147 @@ import BlogPostPreview from "@site/src/components/BlogPostPreview";
 
 export const changelogData = [
   {
+    date: "October 17, 2025",
+    title: "Bucket Snapshots, Forks & the Tigris JS/TS SDK",
+    content: (
+      <>
+        <p>We're shipping two big updates today:</p>
+        <ul>
+          <li>1. A new JavaScript/TypeScript SDK for managing Tigris buckets and objects.</li>
+          <li>2. Support for bucket snapshots and forks for versioning and isolated workflows.</li>
+        </ul>
+
+        <h3>JS & TS SDK is available now</h3>
+        <p>
+          Manage your Tigris buckets and objects right from your JS/TS apps with the new{" "}
+          <code>@tigrisdata/storage</code> SDK.
+        </p>
+        <pre><code>npm install @tigrisdata/storage</code></pre>
+
+        <p><strong>Highlights</strong></p>
+        <ul>
+          <li>Full CRUD for objects — put, get, list, and remove made simple.</li>
+          <li>Bucket management — create, list, and delete buckets programmatically.</li>
+          <li>Browser uploads — upload files with built-in progress tracking.</li>
+        </ul>
+
+        <p><strong>Example:</strong></p>
+        <pre><code>{`import { put, get } from "@tigrisdata/storage";
+await put("object.txt", "Hello, world!");
+const file = await get("object.txt", "string");`}</code></pre>
+
+        <p><strong>Frontend upload example:</strong></p>
+        <pre><code>{`import { upload } from "@tigrisdata/storage/client";`}</code></pre>
+
+        <p>
+          Read more about the Tigris JS/TS SDK in the{" "}
+          <a href="/docs/sdks/tigris/using-sdk/">docs</a>.
+        </p>
+
+        <h3>Bucket snapshots and forks</h3>
+        <p>
+          Tigris now supports snapshots and forks for versioning and isolating your data.
+          Snapshots let you capture the exact state of a bucket at a specific moment in time.
+          Forks let you clone a snapshot instantly using copy-on-write.
+        </p>
+
+        <p><strong>Why it matters</strong></p>
+        <ul>
+          <li>Isolated environments for safer experimentation</li>
+          <li>Built-in version control and reproducibility</li>
+          <li>Reliable A/B testing and multi-model training</li>
+          <li>Agent-friendly sandboxing</li>
+        </ul>
+
+        <p><strong>Example</strong></p>
+        <pre><code>{`import { createBucket, createBucketSnapshot } from "@tigrisdata/storage";
+
+// Snapshot the current state
+await createBucketSnapshot("parent-bucket", {
+  name: "pre-finetune", // optional name for the snapshot
+});
+
+// Fork a bucket
+await createBucket(
+  "my-fork",  {
+    sourceBucketName: "parent-bucket"  
+  },
+);`}</code></pre>
+
+        <p><strong>Create a fork using the SDK:</strong></p>
+        <pre><code>{`import { createBucket } from "@tigrisdata/storage";
+
+const createFork = await createBucket(
+  "my-fork",  {
+    sourceBucketName: "parent-bucket"  
+  },
+);`}</code></pre>
+
+        <p>
+          Learn more:{" "}
+          <a href="/docs/buckets/snapshots-and-forks/">snapshots and forks documentation</a>.
+        </p>
+      </>
+    ),
+    subcategories: [
+      {
+        title: "UI Improvements",
+        items: [
+          {
+            title: "Bucket Settings now organized into tabs",
+            description: (
+              <>
+                <p>
+                  Bucket Settings are now organized into tabs for a better experience.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+          {
+            title: "Billing invoices now available",
+            description: (
+              <>
+                <p>
+                  Invoices are now available under{" "}
+                  <a href="https://console.tigris.dev/billing">console.tigris.dev/billing</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+          {
+            title: "Custom Domains interface updated",
+            description: (
+              <>
+                <p>
+                  Updated interface under Bucket Settings now displays certificate details.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+        ],
+      },
+      {
+        title: "Backend Updates",
+        items: [
+          {
+            title: "Custom domain support for t3.storage.dev",
+            description: (
+              <>
+                <p>
+                  Custom domain support added for t3.storage.dev.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+        ],
+      },
+    ],
+  },
+  {
     date: "August 15, 2025",
     title: "Org admins can enforce two-factor auth under organization settings",
     content: (

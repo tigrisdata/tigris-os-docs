@@ -292,12 +292,16 @@ const config = {
       liveCodeBlock: {
         playgroundPosition: "bottom",
       },
-      algolia: {
-        appId: process.env.NEXT_ALGOLIA_APPID,
-        apiKey: process.env.NEXT_ALGOLIA_APIKEY,
-        indexName: "tigrisdata",
-        contextualSearch: true,
-      },
+      ...(process.env.NEXT_ALGOLIA_APPID && process.env.NEXT_ALGOLIA_APIKEY
+        ? {
+            algolia: {
+              appId: process.env.NEXT_ALGOLIA_APPID,
+              apiKey: process.env.NEXT_ALGOLIA_APIKEY,
+              indexName: "tigrisdata",
+              contextualSearch: true,
+            },
+          }
+        : {}),
       mermaid: {
         theme: { light: "neutral", dark: "dark" },
       },

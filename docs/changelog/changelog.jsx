@@ -3,6 +3,8 @@ import styles from "./styles.module.css";
 import Timeline from "@site/src/components/Changelog";
 import BlogPostPreview from "@site/src/components/BlogPostPreview";
 import CodeBlock from "@theme/CodeBlock";
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 
 export const changelogData = [
   {
@@ -34,30 +36,51 @@ export const changelogData = [
         <p>
           <strong>Example</strong>
         </p>
-        <CodeBlock language="typescript">{`import { createBucket, createBucketSnapshot } from "@tigrisdata/storage";
+        <Tabs groupId="language">
+          <TabItem value="python" label="Python">
+            <CodeBlock language="python">{`from tigris_boto3_ext import (
+  create_snapshot_bucket,
+  create_snapshot,
+  create_fork
+)
+
+# Create a seed bucket
+seed_bucket_name = 'agent-seed'
+create_snapshot_bucket(s3, seed_bucket_name)
+
+# Create snapshot
+result = create_snapshot(s3_client, seed_bucket_name, snapshot_name='agent-seed-v1')`}</CodeBlock>
+          </TabItem>
+          <TabItem value="typescript" label="TypeScript" default>
+            <CodeBlock language="typescript">{`import { createBucket, createBucketSnapshot } from "@tigrisdata/storage";
 
 // Snapshot the current state
 await createBucketSnapshot("parent-bucket", {
   name: "pre-finetune", // optional name for the snapshot
 });
-
-// Fork a bucket
-await createBucket(
-  "my-fork",  {
-    sourceBucketName: "parent-bucket"  
-  },
-);`}</CodeBlock>
+`}</CodeBlock>
+          </TabItem>
+        </Tabs>
 
         <p>
           <strong>Create a fork using the SDK:</strong>
         </p>
-        <CodeBlock language="typescript">{`import { createBucket } from "@tigrisdata/storage";
+        <Tabs groupId="language">
+          <TabItem value="python" label="Python">
+            <CodeBlock language="python">{`# Fork the bucket from the snapshot for a new agent
+agent_bucket_name = f"{seed_bucket_name}-agent-{agent_id}";
+create_fork(s3_client, agent_bucket_name, seed_bucket_name, snapshot_version=snapshot_version)`}</CodeBlock>
+          </TabItem>
+          <TabItem value="typescript" label="TypeScript" default>
+            <CodeBlock language="typescript">{`import { createBucket } from "@tigrisdata/storage";
 
 const createFork = await createBucket(
   "my-fork",  {
     sourceBucketName: "parent-bucket"  
   },
 );`}</CodeBlock>
+          </TabItem>
+        </Tabs>
 
         <p>
           Learn more:{" "}

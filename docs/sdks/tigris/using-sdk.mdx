@@ -469,6 +469,133 @@ if (currentPage.data) {
 console.log(allFiles);
 ```
 
+## Creating a bucket
+
+`createBucket` function can be used to create a new bucket.
+
+### `createBucket`
+
+```ts
+createBucket(bucketName: string, options?: CreateBucketOptions): Promise<TigrisStorageResponse<CreateBucketResponse, Error>>;
+```
+
+`createBucket` accepts the following parameters:
+
+- `bucketName`: (Required) A string specifying the name of the bucket to create
+- `options`: (Optional) A JSON object with the following optional parameters:
+
+#### `options`
+
+| **Parameter**        | **Required** | **Values**                                                                       |
+| -------------------- | ------------ | -------------------------------------------------------------------------------- |
+| enableSnapshot       | No           | Enable snapshot functionality for the bucket. Default is `false`.                |
+| sourceBucketName     | No           | The name of the source bucket to fork from.                                      |
+| sourceBucketSnapshot | No           | The snapshot version of the source bucket to fork from.                          |
+| config               | No           | A configuration object to override the [default configuration](#authentication). |
+
+In case of successful `createBucket`, the `data` property will be set and
+contains the following properties:
+
+- `isSnapshotEnabled`: Whether snapshot functionality is enabled for the bucket
+- `hasForks`: Whether the bucket has forks
+- `sourceBucketName`: The name of the source bucket (if this is a fork bucket)
+- `sourceBucketSnapshot`: The snapshot version of the source bucket (if this is
+  a fork bucket)
+
+### Examples
+
+#### Create a regular bucket
+
+```ts
+const result = await createBucket("my-new-bucket");
+
+if (result.error) {
+  console.error("Error creating bucket:", result.error);
+} else {
+  console.log("Bucket created successfully:", result.data);
+}
+```
+
+#### Create a bucket with snapshot enabled
+
+```ts
+const result = await createBucket("my-snapshot-bucket", {
+  enableSnapshot: true,
+});
+
+if (result.error) {
+  console.error("Error creating bucket:", result.error);
+} else {
+  console.log("Bucket created with snapshot enabled:", result.data);
+}
+```
+
+#### Create a bucket as a fork of another bucket
+
+```ts
+const result = await createBucket("my-forked-bucket", {
+  sourceBucketName: "parent-bucket",
+  sourceBucketSnapshot: "1751631910169675092",
+});
+
+if (result.error) {
+  console.error("Error creating forked bucket:", result.error);
+} else {
+  console.log("Forked bucket created:", result.data);
+}
+```
+
+## Getting bucket information
+
+`getBucketInfo` function can be used to retrieve information about a specific
+bucket.
+
+### `getBucketInfo`
+
+```ts
+getBucketInfo(bucketName: string, options?: GetBucketInfoOptions): Promise<TigrisStorageResponse<BucketInfoResponse, Error>>;
+```
+
+`getBucketInfo` accepts the following parameters:
+
+- `bucketName`: (Required) A string specifying the name of the bucket
+- `options`: (Optional) A JSON object with the following optional parameters:
+
+#### `options`
+
+| **Parameter** | **Required** | **Values**                                                                       |
+| ------------- | ------------ | -------------------------------------------------------------------------------- |
+| config        | No           | A configuration object to override the [default configuration](#authentication). |
+
+In case of successful `getBucketInfo`, the `data` property will be set and
+contains the following properties:
+
+- `isSnapshotEnabled`: Whether snapshot is enabled for the bucket
+- `hasForks`: Whether the bucket has forks
+- `sourceBucketName`: The name of the source bucket (if the bucket is a fork)
+- `sourceBucketSnapshot`: The snapshot version of the source bucket (if the
+  bucket is a fork)
+
+### Examples
+
+#### Get bucket information
+
+```ts
+const result = await getBucketInfo("my-bucket");
+
+if (result.error) {
+  console.error("Error getting bucket info:", result.error);
+} else {
+  console.log("Bucket info:", result.data);
+  // output: {
+  //   isSnapshotEnabled: true,
+  //   hasForks: false,
+  //   sourceBucketName: undefined,
+  //   sourceBucketSnapshot: undefined
+  // }
+}
+```
+
 ## Listing buckets
 
 `listBuckets` function can be used to list all buckets that the user has access

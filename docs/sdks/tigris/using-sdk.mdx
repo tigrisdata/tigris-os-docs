@@ -530,21 +530,6 @@ if (result.error) {
 }
 ```
 
-#### Create a bucket as a fork of another bucket
-
-```ts
-const result = await createBucket("my-forked-bucket", {
-  sourceBucketName: "parent-bucket",
-  sourceBucketSnapshot: "1751631910169675092",
-});
-
-if (result.error) {
-  console.error("Error creating forked bucket:", result.error);
-} else {
-  console.log("Forked bucket created:", result.data);
-}
-```
-
 ## Getting bucket information
 
 `getBucketInfo` function can be used to retrieve information about a specific

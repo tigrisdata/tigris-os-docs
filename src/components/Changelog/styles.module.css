@@ -187,8 +187,12 @@
 .entryTitle {
   font-size: 1.5rem;
   font-weight: 700;
-  color: rgb(241 245 249); /* slate-100 */
+  color: #333;
   margin-bottom: 0.75rem;
+}
+
+html[data-theme="dark"] .entryTitle {
+  color: rgb(241 245 249); /* slate-100 */
 }
 
 /* Tag styles */
@@ -258,6 +262,10 @@
 /* Content styles */
 .entryContent {
   margin-top: 1rem;
+  color: #333; /* slate-100 */
+}
+
+html[data-theme="dark"] .entryContent {
   color: rgb(148 163 184); /* slate-400 */
 }
 
@@ -289,6 +297,10 @@
 
 .entryContent strong {
   font-weight: 600;
+  color: #333; /* slate-100 */
+}
+
+html[data-theme="dark"] .entryContent strong {
   color: rgb(203 213 225); /* slate-300 */
 }
 
@@ -485,8 +497,12 @@
 .subcategoryTitle {
   font-size: 1rem;
   font-weight: 600;
-  color: rgb(203 213 225); /* slate-300 */
   margin: 0;
+  color: #333;
+}
+
+html[data-theme="dark"] .subcategoryTitle {
+  color: rgb(203 213 225); /* slate-300 */
 }
 
 .subcategoryContent {
@@ -513,9 +529,13 @@
 .subcategoryItemTitle {
   font-size: 0.875rem;
   font-weight: 500;
-  color: rgb(241 245 249); /* slate-100 */
+  color: #333;
   margin: 0;
   flex-grow: 1;
+}
+
+html[data-theme="dark"] .subcategoryItemTitle {
+  color: rgb(241 245 249); /* slate-100 */
 }
 
 .subcategoryItemDescription {

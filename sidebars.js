@@ -172,6 +172,11 @@ const sidebars = {
           id: "quickstarts/duckdb",
         },
         {
+          type: "doc",
+          label: "Bufstream",
+          id: "quickstarts/bufstream",
+        },
+        {
           type: "category",
           label: "Fly.io",
           items: [

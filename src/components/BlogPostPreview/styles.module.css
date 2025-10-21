@@ -69,7 +69,7 @@
 .title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #333; /* slate-100 */
+  color: #333;
   margin: 0;
   line-height: 1.4;
   transition: color 0.2s ease;
@@ -89,7 +89,7 @@ html[data-theme="dark"] .title {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: #333; /* slate-100 */
+  color: #333;
 }
 
 html[data-theme="dark"] .metadata {
@@ -111,7 +111,7 @@ html[data-theme="dark"] .metadata {
 /* Description */
 .description {
   font-size: 0.95rem;
-  color: #333; /* slate-100 */
+  color: #333;
   line-height: 1.6;
   margin: 0;
 }

@@ -262,6 +262,10 @@ html[data-theme="dark"] .entryTitle {
 /* Content styles */
 .entryContent {
   margin-top: 1rem;
+  color: #333; /* slate-100 */
+}
+
+html[data-theme="dark"] .entryContent {
   color: rgb(148 163 184); /* slate-400 */
 }
 
@@ -293,6 +297,10 @@ html[data-theme="dark"] .entryTitle {
 
 .entryContent strong {
   font-weight: 600;
+  color: #333; /* slate-100 */
+}
+
+html[data-theme="dark"] .entryContent strong {
   color: rgb(203 213 225); /* slate-300 */
 }
 

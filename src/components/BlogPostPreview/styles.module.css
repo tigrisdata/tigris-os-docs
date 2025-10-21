@@ -69,10 +69,14 @@
 .title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: rgb(241 245 249); /* slate-100 */
+  color: #333; /* slate-100 */
   margin: 0;
   line-height: 1.4;
   transition: color 0.2s ease;
+}
+
+html[data-theme="dark"] .title {
+  color: #f1f5f9; /* slate-100 */
 }
 
 .titleLink:hover .title {
@@ -85,6 +89,10 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
+  color: #333; /* slate-100 */
+}
+
+html[data-theme="dark"] .metadata {
   color: rgb(148 163 184); /* slate-400 */
 }
 
@@ -103,9 +111,13 @@
 /* Description */
 .description {
   font-size: 0.95rem;
-  color: rgb(203 213 225); /* slate-300 */
+  color: #333; /* slate-100 */
   line-height: 1.6;
   margin: 0;
+}
+
+html[data-theme="dark"] .description {
+  color: #f1f5f9; /* slate-100 */
 }
 
 /* Call to Action Button - matching Get Started style */

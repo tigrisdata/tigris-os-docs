@@ -229,13 +229,22 @@ paths:
     post:
       tags:
         - buckets
-      summary: Set or replace a custom domain for a bucket
+      summary: Attach a custom domain to bucket
       description: |
         Sets a custom domain for a bucket. If the domain is already set, it will be replaced.
 
         :::note
         The custom domain must have a CNAME record that points to the bucket URL.
         :::
+
+        ##### Example:
+        If your bucket is `my-bucket` and you want to use `images.example.com`,
+        create a CNAME record pointing `images.example.com` to `my-bucket.t3.storage.dev`.
+
+        After setting the custom domain, objects will be accessible via:
+        - `https://images.example.com/object.jpg`
+        - `https://my-bucket.t3.storage.dev/object.jpg` (original URL still works)
+
       operationId: Tigris_SetCustomDomain
       parameters:
         - $ref: "#/components/parameters/provider_id"
@@ -263,9 +272,10 @@ paths:
     delete:
       tags:
         - buckets
-      summary: Remove associated custom domain from a bucket
+      summary: Remove custom domain from bucket
       description: |
-        Removes the custom domain from a bucket.
+        Removes the custom domain from a bucket. After removal, the bucket will only be accessible via its default Tigris URL. 
+        The CNAME DNS record can be safely deleted after the custom domain is removed.
       operationId: Tigris_DeleteCustomDomain
       parameters:
         - $ref: "#/components/parameters/provider_id"
@@ -287,9 +297,10 @@ paths:
     get:
       tags:
         - buckets
-      summary: Get a custom domain for a bucket
+      summary: Get custom domain settings for a bucket
       description: |
-        Gets a custom domain for a bucket.
+        Returns the currently configured custom domain for the bucket, or an empty
+        object if no custom domain is set.
       operationId: Tigris_GetCustomDomain
       parameters:
         - $ref: "#/components/parameters/provider_id"
@@ -674,7 +685,10 @@ components:
       properties:
         domain_name:
           type: string
-          description: Domain name to be set
+          example: "images.example.com"
+          description: |
+            Custom domain name for the bucket. Must be a valid fully-qualified domain name (FQDN) and 
+            have a CNAME record pointing to the bucket URL.
     SetCustomDomainRequest:
       type: object
       additionalProperties: false

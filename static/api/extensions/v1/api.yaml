@@ -232,7 +232,7 @@ paths:
       summary: Set or replace a custom domain for a bucket
       description: |
         Sets a custom domain for a bucket. If the domain is already set, it will be replaced.
-        
+
         :::note
         The custom domain must have a CNAME record that points to the bucket URL.
         :::
@@ -265,7 +265,7 @@ paths:
         - buckets
       summary: Remove associated custom domain from a bucket
       description: |
-         Removes the custom domain from a bucket.
+        Removes the custom domain from a bucket.
       operationId: Tigris_DeleteCustomDomain
       parameters:
         - $ref: "#/components/parameters/provider_id"

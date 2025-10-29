@@ -1,24 +1,35 @@
 # AutoMQ on Tigris
 
-[AutoMQ](https://www.automq.com) is an [Apache Kafka-compatible](https://kafka.apache.org/documentation/) streaming engine that stores all durability and log data in object storage. When paired with Tigris, AutoMQ can run as fully stateless brokers with no attached disks or replication overhead, and benefit from Tigris' globally distributed object storage with zero egress fees. 
+[AutoMQ](https://www.automq.com) is an
+[Apache Kafka-compatible](https://kafka.apache.org/documentation/) streaming
+engine that stores all durability and log data in object storage. When paired
+with Tigris, AutoMQ can run as fully stateless brokers with no attached disks or
+replication overhead, and benefit from Tigris' globally distributed object
+storage with zero egress fees.
 
 ## Quick Start with Docker Compose
 
-The easiest way to run AutoMQ with Tigris is using Docker Compose. This guide will walk you through setting up a single-node AutoMQ cluster backed by Tigris storage.
+The easiest way to run AutoMQ with Tigris is using Docker Compose. This guide
+will walk you through setting up a single-node AutoMQ cluster backed by Tigris
+storage.
 
-:::tip
-This guide is based on the [official AutoMQ Docker Compose setup](https://github.com/AutoMQ/automq-labs/blob/main/opensource-setup/docker-compose/docker-compose.yaml). For more deployment options, see the [AutoMQ Deployment Overview](https://www.automq.com/docs/automq/deployment/overview).
+:::tip This guide is based on the
+[official AutoMQ Docker Compose setup](https://github.com/AutoMQ/automq-labs/blob/main/opensource-setup/docker-compose/docker-compose.yaml).
+For more deployment options, see the
+[AutoMQ Deployment Overview](https://www.automq.com/docs/automq/deployment/overview).
 :::
 
 ### 1. Prerequisites
 
 - **Docker** and **Docker Compose** installed
-- A **Tigris account** - create one at [https://storage.new](https://storage.new)
+- A **Tigris account** - create one at
+  [https://storage.new](https://storage.new)
 - **Tigris credentials** - Access Key and Secret Key from your Tigris dashboard
 
 ### 2. Create Buckets in Tigris
 
-AutoMQ requires two buckets: one for data storage and one for operational metadata. You can create them via the Tigris console or using the AWS CLI:
+AutoMQ requires two buckets: one for data storage and one for operational
+metadata. You can create them via the Tigris console or using the AWS CLI:
 
 ```bash
 # Configure credentials
@@ -34,7 +45,8 @@ aws s3api create-bucket --bucket your-automq-ops --endpoint-url https://t3.stora
 
 ### 3. Configure Docker Compose
 
-Edit the `docker-compose.yaml` file and update the Tigris credentials and bucket names:
+Edit the `docker-compose.yaml` file and update the Tigris credentials and bucket
+names:
 
 ```yaml
 services:
@@ -46,7 +58,8 @@ services:
       # Replace with your Tigris credentials
       - KAFKA_S3_ACCESS_KEY=tid_YOUR_ACCESS_KEY_HERE
       - KAFKA_S3_SECRET_KEY=tsec_YOUR_SECRET_KEY_HERE
-      - KAFKA_HEAP_OPTS=-Xms1g -Xmx4g -XX:MetaspaceSize=96m -XX:MaxDirectMemorySize=1G
+      - KAFKA_HEAP_OPTS=-Xms1g -Xmx4g -XX:MetaspaceSize=96m
+        -XX:MaxDirectMemorySize=1G
       - CLUSTER_ID=3D4fXN-yS1-vsQ8aJ_q4Mg
     command:
       - bash
@@ -71,12 +84,15 @@ services:
 - `KAFKA_S3_ACCESS_KEY` - Your Tigris Access Key (starts with `tid_`)
 - `KAFKA_S3_SECRET_KEY` - Your Tigris Secret Key (starts with `tsec_`)
 - `s3.data.buckets` - Your data bucket name in the S3 URL (stores Kafka data)
-- `s3.ops.buckets` - Your ops bucket name in the S3 URL (stores operational metadata)
+- `s3.ops.buckets` - Your ops bucket name in the S3 URL (stores operational
+  metadata)
 - `s3.wal.path` - Write-Ahead Log path (typically same as data bucket)
 - `endpoint=https://t3.storage.dev` - Tigris S3-compatible endpoint
 - `region=auto` - Tigris automatically routes to the nearest region
 
-For detailed information on these Tigris and S3 configuration parameters, refer to the [AutoMQ Broker and Controller Configuration guide](https://www.automq.com/docs/automq/configuration/broker-and-controller-configuration#s3-data-buckets).
+For detailed information on these Tigris and S3 configuration parameters, refer
+to the
+[AutoMQ Broker and Controller Configuration guide](https://www.automq.com/docs/automq/configuration/broker-and-controller-configuration#s3-data-buckets).
 
 ### 4. Start AutoMQ
 
@@ -93,6 +109,7 @@ docker-compose logs -f
 ```
 
 You should see messages indicating:
+
 - `Readiness check pass! (ObjectStorageReadinessCheck)` - Connected to Tigris
 - `The broker has been unfenced` - Broker is ready
 - `Kafka Server started` - AutoMQ is running
@@ -156,6 +173,7 @@ docker run --network automq_net automqinc/automq:1.6.0-rc0 \
 ```
 
 ### AutoMQ Resources
+
 - [AutoMQ Documentation](https://www.automq.com/docs/automq/)
 - [AutoMQ Deployment Overview](https://www.automq.com/docs/automq/deployment/overview)
 - [AutoMQ Broker and Controller Configuration](https://www.automq.com/docs/automq/configuration/broker-and-controller-configuration)

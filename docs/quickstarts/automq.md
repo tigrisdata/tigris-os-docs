@@ -76,8 +76,11 @@ services:
         --override s3.ops.buckets='1@s3://your-automq-ops?region=auto&endpoint=https://t3.storage.dev' \
         --override s3.wal.path='0@s3://your-automq-data?region=auto&endpoint=https://t3.storage.dev'
     networks:
-      automq_net:
-```
+      - automq_net
+
+networks:
+  automq_net:
+    driver: bridge
 
 **Key Configuration Parameters:**
 

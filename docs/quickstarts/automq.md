@@ -35,6 +35,7 @@ metadata. You can create them via the Tigris console or using the AWS CLI:
 # Configure credentials
 export AWS_ACCESS_KEY_ID=YOUR_TIGRIS_ACCESS_KEY
 export AWS_SECRET_ACCESS_KEY=YOUR_TIGRIS_SECRET_KEY
+export AWS_ENDPOINT_URL_S3=https://t3.storage.dev
 
 # Create buckets for AutoMQ data and operations storage
 aws s3api create-bucket --bucket your-automq-data --endpoint-url https://t3.storage.dev

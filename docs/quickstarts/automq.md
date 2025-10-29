@@ -24,7 +24,7 @@ For more deployment options, see the
 - **Docker** and **Docker Compose** installed
 - A **Tigris account** - create one at
   [https://storage.new](https://storage.new)
-- **Tigris credentials** - Access Key and Secret Key from your Tigris dashboard
+- **Tigris credentials** - create Access Key and Secret Key from your Tigris dashboard at [https://console.tigris.dev/createaccesskey](https://console.tigris.dev/createaccesskey)
 
 ### 2. Create Buckets in Tigris
 
@@ -175,6 +175,20 @@ docker run --network automq_net automqinc/automq:1.6.0-rc0 \
   --from-beginning \
   --max-messages 10"
 ```
+
+## Congratulations! 🎉
+
+You've successfully deployed AutoMQ with Tigris as the storage backend! In this guide, you:
+
+- Created Tigris buckets for data and operational storage
+- Configured and launched a single-node AutoMQ cluster using Docker Compose
+- Connected AutoMQ to Tigris using S3-compatible endpoints
+- Created a Kafka topic with multiple partitions
+- Produced and consumed messages through AutoMQ
+
+Your AutoMQ cluster is now running entirely stateless with all data durably stored in Tigris object storage. You can scale brokers up or down without worrying about data migration, and benefit from Tigris' global distribution and zero egress fees.
+
+## Learn More
 
 ### AutoMQ Resources
 

@@ -51,7 +51,7 @@ aws s3api create-bucket --bucket your-automq-ops --endpoint-url https://t3.stora
 Edit the `docker-compose.yaml` file and update the Tigris credentials and bucket
 names:
 
-```yaml
+````yaml
 services:
   server1:
     container_name: "automq-server1"
@@ -106,7 +106,7 @@ Start the AutoMQ cluster with Docker Compose:
 
 ```bash
 docker-compose up -d
-```
+````
 
 Check the logs to verify AutoMQ is running:
 

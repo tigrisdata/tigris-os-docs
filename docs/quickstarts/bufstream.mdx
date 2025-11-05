@@ -1,0 +1,167 @@
+# Getting Started with Bufstream on Tigris
+
+Learn how to configure [Bufstream](https://buf.build/product/bufstream), a
+Kafka-compatible message queue, to use Tigris Object Storage as its backend.
+
+### What is Bufstream?
+
+[Bufstream](https://buf.build/product/bufstream) is the Kafka-compatible message
+queue built for the data lakehouse era. It's a drop-in replacement for Apache
+Kafka®, but instead of requiring expensive machines with large attached disks,
+Bufstream builds on top of off-the-shelf technologies like Object Storage and
+Postgres, providing a Kafka implementation designed for the cloud-native era.
+
+**Tigris** is a globally distributed, multi-cloud object storage platform with:
+
+- Native **S3 API** support
+- **Zero egress fees**
+- **Globally distributed**
+
+When combined, Bufstream and Tigris provide:
+
+- Unlimited message retention
+- Global scalability
+- Cost-efficient and resilient data pipelines
+
+### **Requirements**
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) or
+  [Podman Desktop](https://podman-desktop.io/)
+- A [Tigris account](https://storage.new)
+
+### **Tools Used**
+
+- **Bufstream** — Kafka-compatible broker
+- **kafkactl** — CLI for Kafka and compatible tools
+- **Docker** — to containerize the setup
+
+---
+
+## **Step 1: Clone the Example Repository**
+
+Clone the demo project to your local machine:
+
+```bash
+git clone https://github.com/tigrisdata-community/bufstream-tigris
+cd bufstream-tigris
+```
+
+This repository includes configuration files and sample data for testing.
+
+## **Step 2: Create a Tigris Bucket**
+
+1. Go to [storage.new](https://storage.new) and create a **new bucket** in the
+   **Standard** access tier.
+
+2. Copy the **bucket name** for later.
+
+3. Create an **Access Key** with **Editor** permissions:
+   [storage.new/accesskey](https://storage.new/accesskey)
+
+4. In the repository’s `.env` file, add your credentials:
+
+```bash
+# .env
+TIGRIS_ACCESS_KEY_ID=<your-access-key-id>
+TIGRIS_SECRET_ACCESS_KEY=<your-secret-access-key>
+```
+
+## **Step 3: Configure Bufstream**
+
+Open the `bufstream.yaml` file in your cloned repo and update the `bucket` field
+with your Tigris bucket name. Leave `region` set to `auto` to let Tigris route
+to the nearest region.
+
+```yaml
+storage:
+  provider: S3
+  region: auto
+  bucket: <your-tigris-bucket-name>
+  endpoint: https://t3.storage.dev
+  access_key_id:
+    env_var: TIGRIS_ACCESS_KEY_ID
+  secret_access_key:
+    env_var: TIGRIS_SECRET_ACCESS_KEY
+```
+
+## **Step 4: Start Bufstream**
+
+Start the Docker environment:
+
+```bash
+docker compose up -d
+```
+
+You should see output similar to:
+
+```text
+ ✔ Network bufstream-on-tigris_bufstream_net  Created
+ ✔ Container cli                              Started
+ ✔ Container postgres                         Healthy
+ ✔ Container bufstream                        Started
+```
+
+## **Step 5: Create a Topic**
+
+Use `kafkactl` to create a topic:
+
+```bash
+docker exec cli kafkactl create topic bufstream-on-tigris
+```
+
+Expected output:
+
+```text
+topic created: bufstream-on-tigris
+```
+
+## **Step 6: Produce Messages**
+
+A sample message file (`messages.txt`) is included in the repository. To publish
+its contents to your topic, run:
+
+```bash
+docker exec cli kafkactl produce bufstream-on-tigris --file=/messages.txt
+```
+
+Expected output:
+
+```text
+7 messages produced
+```
+
+## **Step 7: Consume Messages**
+
+Read the last 100 messages from the topic:
+
+```bash
+docker exec cli kafkactl consume bufstream-on-tigris --tail=100
+```
+
+Example output:
+
+```text
+Hello, world!
+This
+is
+Bufstream
+running
+on
+Tigris!
+```
+
+## **Verify in the Tigris Console**
+
+Open your Tigris Console and navigate to your bucket. You’ll see
+Bufstream-created keys representing your topic data.
+
+Bufstream now uses Tigris for:
+
+- Durable message storage
+- Unlimited retention
+- Globally accessible streams
+
+You can continue producing and consuming messages using `kafkactl` or integrate
+with your existing Kafka-compatible apps.
+
+:tada: Congratulations, you’ve successfully deployed Bufstream on Tigris.

@@ -177,6 +177,11 @@ const sidebars = {
           id: "quickstarts/bufstream",
         },
         {
+          type: "doc",
+          label: "AutoMQ",
+          id: "quickstarts/automq",
+        },
+        {
           type: "category",
           label: "Fly.io",
           items: [

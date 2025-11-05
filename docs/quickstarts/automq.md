@@ -7,7 +7,7 @@ with Tigris, AutoMQ can run as fully stateless brokers with no attached disks or
 replication overhead, and benefit from Tigris' globally distributed object
 storage with zero egress fees.
 
-## Quick Start with Docker Compose
+## Quick Start with Docker Compose:
 
 The easiest way to run AutoMQ with Tigris is using Docker Compose. This guide
 will walk you through setting up a single-node AutoMQ cluster backed by Tigris

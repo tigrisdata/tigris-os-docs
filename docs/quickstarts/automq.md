@@ -1,11 +1,11 @@
 # AutoMQ on Tigris
 
-[AutoMQ](https://www.automq.com) is an
-[Apache Kafka-compatible](https://kafka.apache.org/documentation/) streaming
-engine that stores all durability and log data in object storage. When paired
-with Tigris, AutoMQ can run as fully stateless brokers with no attached disks or
-replication overhead, and benefit from Tigris' globally distributed object
-storage with zero egress fees.
+[AutoMQ](https://www.automq.com) is a new generation of Diskless Kafka that is
+fully compatible with [Apache Kafka](https://kafka.apache.org/documentation/),
+solving the cost and operational challenges of Apache Kafka without sacrificing
+Kafka's features and performance. When paired with Tigris, AutoMQ can run as
+fully stateless brokers with no attached disks or replication overhead, and
+benefit from Tigris' globally distributed object storage with zero egress fees.
 
 ## Quick Start with Docker Compose:
 
@@ -30,8 +30,8 @@ For more deployment options, see the
 
 ### 2. Create Buckets in Tigris
 
-AutoMQ requires two buckets: one for data storage and one for operational
-metadata. You can create them via the Tigris console or using the AWS CLI:
+AutoMQ requires two buckets: one for data storage and one for cluster's metrics
+and logs. You can create them via the Tigris console or using the AWS CLI:
 
 ```bash
 # Configure credentials

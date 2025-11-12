@@ -84,8 +84,10 @@ npm run lint
 ### Commit Message Convention
 
 Follow conventional commit format:
+
 - Use lowercase for commit body text
-- Examples: `fix: correct header title`, `docs: add new guide`, `feat: implement feature`
+- Examples: `fix: correct header title`, `docs: add new guide`,
+  `feat: implement feature`
 
 ### Attribution Requirements
 

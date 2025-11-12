@@ -21,8 +21,6 @@ jobs:
       - name: Check types + linting + build
         run: |
           npm install
-          npm run lint:apidocs
+          npm run lint
           npm run build:apidocs # ensure the api docs generate without errors
-          npx prettier --check .
-          npx eslint .
           npm run build

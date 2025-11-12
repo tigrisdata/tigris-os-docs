@@ -81,6 +81,12 @@ npm run lint
   `<details><summary>` blocks
 - **Code Blocks**: Standard Markdown code blocks with language specifiers
 
+### Commit Message Convention
+
+Follow conventional commit format:
+- Use lowercase for commit body text
+- Examples: `fix: correct header title`, `docs: add new guide`, `feat: implement feature`
+
 ### Attribution Requirements
 
 AI agents must disclose what tool and model they are using in the "Assisted-by"

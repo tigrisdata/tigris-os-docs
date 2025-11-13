@@ -34,6 +34,18 @@ Here’s how Tigris handles data migration under the hood:
 - When an object is deleted, it’s removed from both the Tigris and shadow
   buckets.
 
+<!-- prettier-ignore -->
+:::note
+Object listing behavior depends on whether write-through mode is
+enabled. When write-through is enabled, the list API returns the full contents
+of the shadow bucket. When write-through is disabled, the list API only includes
+objects that have already been migrated into Tigris; objects that exist solely
+in the shadow bucket are not listed until they are accessed and migrated.
+
+  <!-- prettier-ignore -->
+
+:::
+
 ## Enable Data Migration in the Tigris Dashboard
 
 To enable data migration from a S3-Compatible bucket:
@@ -91,8 +103,10 @@ permissions to access your S3 bucket:
 - If you're using an existing user, go to the `Security credentials` tab and
   click `Create access key` under the `Access keys` section.
 
-Make sure the access keys you generate have permissions to list, read, write,
-and delete objects in the relevant S3 bucket.
+Make sure the access keys you generate have permissions to list and read objects
+in the relevant S3 bucket. Additionally, if migration is configured in
+write-through mode, the keys should have permissions to write and delete
+objects.
 
 ### Create Google Cloud Storage Access Keys for Migration
 

@@ -641,6 +641,74 @@ components:
           type: boolean
           description:
             If set to true, per object ACL will be enabled. Default is false.
+        object_notifications:
+          $ref: "#/components/schemas/ObjectNotifications"
+    ObjectNotifications:
+      type: object
+      description: |
+        Configuration for object event notifications via webhook. Receive HTTP callbacks when objects are created, updated, or deleted in your bucket.
+        
+        **Update behavior (partial updates supported):**
+        - **Omit field entirely**: Keeps existing settings unchanged
+        - **Include only `enabled`**: Toggles notifications on/off while preserving all other config
+        - **Include any field**: Updates specified fields, preserves others (auth not re-required)
+        - **Remove completely**: Send `{"enabled": false}` with no other fields
+        
+        **Common operations:**
+        ```json
+        // Enable notifications (preserves webhook, filter, auth)
+        {"enabled": true}
+        
+        // Disable temporarily (keeps all config for later)
+        {"enabled": false, "webhook": "https://..."}
+        
+        // Update webhook only (preserves auth, filter)
+        {"webhook": "https://new-endpoint.com"}
+        
+        // Change auth type (replaces entire auth object)
+        {"auth": {"token": "new-token"}}
+        
+        // Remove all notifications
+        {"enabled": false}
+        ```
+        
+        **Note:** Auth credentials are masked in responses. You don't need to re-send them when updating other fields.
+      required:
+        - enabled
+      properties:
+        enabled:
+          type: boolean
+          description: Enable or disable notifications (webhook required when true)
+        webhook:
+          type: string
+          format: uri
+          description: HTTPS endpoint to receive notification events
+          example: "https://webhook.example.com/tigris-events"
+        filter:
+          type: string
+          description: SQL WHERE clause to filter which objects trigger notifications (e.g., size comparisons)
+          example: "size > 1000000"
+        region:
+          type: string
+          description: Region to process notifications from (defaults to server region)
+          example: "iad"
+        auth:
+          $ref: "#/components/schemas/ObjectNotificationAuth"
+    ObjectNotificationAuth:
+      type: object
+      description: Authentication credentials for webhook endpoint
+      properties:
+        basic_user:
+          type: string
+          description: Basic auth username
+        basic_pass:
+          type: string
+          description: Basic auth password
+          format: password
+        token:
+          type: string
+          description: Bearer token for authorization
+          format: password
     ProvisioningResponse:
       type: object
     UpdateBucketRequest:
@@ -656,6 +724,8 @@ components:
           type: boolean
           description:
             If set to true, per object ACL will be enabled. Default is false.
+        object_notifications:
+          $ref: "#/components/schemas/ObjectNotifications"
     UpdateBucketResponse:
       type: object
     DeleteBucketResponse:
@@ -866,6 +936,8 @@ components:
           description: If set to true, per object ACL is enabled
         website:
           $ref: "#/components/schemas/BucketWebsiteSettings"
+        object_notifications:
+          $ref: "#/components/schemas/ObjectNotifications"
     GetUsageResponse:
       type: object
       properties:

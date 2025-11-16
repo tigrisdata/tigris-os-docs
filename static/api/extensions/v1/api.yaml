@@ -679,7 +679,8 @@ components:
         enabled:
           type: boolean
           description:
-            Enable or disable notifications. When true, webhook must be provided.
+            Enable or disable notifications. When true, webhook must be
+            provided.
         webhook:
           type: string
           format: uri

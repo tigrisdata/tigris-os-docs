@@ -648,25 +648,25 @@ components:
       description: |
         Configuration for object event notifications via webhook. Receive HTTP callbacks when objects are created, updated, or deleted in your bucket.
 
-        **Update behavior (partial updates supported):**
-        - **Omit field entirely**: Keeps existing settings unchanged
-        - **Include only `enabled`**: Toggles notifications on/off while preserving all other config
-        - **Include any field**: Updates specified fields, preserves others (auth not re-required)
-        - **Remove completely**: Send `{"enabled": false}` with no other fields
+        **Update behavior:**
+        - `enabled` is required in all requests
+        - Other fields (webhook, filter, region, auth) are optional and only update when included
+        - Omitted optional fields preserve their existing values
+        - Auth credentials are masked in responses and don't need to be re-sent
 
         **Common operations:**
         ```json
-        // Enable notifications (preserves webhook, filter, auth)
-        {"enabled": true}
+        // Enable notifications (must provide webhook on first enable)
+        {"enabled": true, "webhook": "https://webhook.example.com/events"}
 
-        // Disable temporarily (keeps all config for later)
-        {"enabled": false, "webhook": "https://..."}
+        // Disable temporarily (preserves all config for re-enabling later)
+        {"enabled": false}
 
-        // Update webhook only (preserves auth, filter)
-        {"webhook": "https://new-endpoint.com"}
+        // Update webhook while keeping enabled state
+        {"enabled": true, "webhook": "https://new-endpoint.com"}
 
-        // Change auth type (replaces entire auth object)
-        {"auth": {"token": "new-token"}}
+        // Change filter only
+        {"enabled": true, "filter": "size > 1000000"}
 
         // Remove all notifications
         {"enabled": false}
@@ -679,7 +679,7 @@ components:
         enabled:
           type: boolean
           description:
-            Enable or disable notifications (webhook required when true)
+            Enable or disable notifications. When true, webhook must be provided.
         webhook:
           type: string
           format: uri

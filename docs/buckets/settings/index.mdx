@@ -110,7 +110,7 @@ mandate data residency in specific regions. However, it's important to note that
 restricting your bucket to a single region (or a few regions) may impact
 performance, particularly in a globally distributed environment. It can lead to
 higher latency for users located far from the selected regions, as all requests
-must be routed to the restricted location..
+must be routed to the restricted locations.
 
 For more information see the [region restriction](/docs/objects/object_regions/)
 documentation.
@@ -130,7 +130,7 @@ public objects, but you can set an implicit default here.
 
 You can configure additional headers for objects stored in your buckets. This
 can be useful when your tools set incorrect headers or you need to set custom
-headers. Right now the only setting implemented is to set the
+headers. Right now, the only setting implemented is to set the
 `X-Content-Type-Options` header to `nosniff`, which prevents browsers from
 performing "content sniffing" and guessing the MIME type of the content based on
 the content itself.

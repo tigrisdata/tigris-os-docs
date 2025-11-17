@@ -12,7 +12,7 @@ settings page under the "Regions" section.
 
 :::note
 
-Please consult the [Pricing](/docs/pricing/index.md#multi-region-buckets) page
+Please consult the [Pricing](/docs/pricing/index.mdx#multi-region-buckets) page
 for more details on how the storage cost is calculated when multiple copies are
 stored.
 

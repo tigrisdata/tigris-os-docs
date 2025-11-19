@@ -11,7 +11,7 @@ endpoint set to Tigris. If you are using Tigris outside of Fly, use the endpoint
 [https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
 within Fly, use the endpoint
 [https://fly.storage.tigris.dev](https://fly.storage.tigris.dev). Also make sure
-that `s3ForcePathStyle` is set to `false`.
+that `forcePathStyle` is set to `false`.
 
 ```js
 import { S3Client } from "@aws-sdk/client-s3";
@@ -20,7 +20,7 @@ const S3 = new S3Client({
   region: "auto",
   endpoint: "https://t3.storage.dev",
   // highlight-start
-  s3ForcePathStyle: false,
+  forcePathStyle: false,
   // highlight-end
 });
 ```

@@ -1,6 +1,6 @@
 # Data Processing Addendum
 
-_Last updated: March 24, 2024_
+_Last updated: November 18, 2025_
 
 Pursuant to the Tigris Subscription Agreement (“**the Agreement**”), Customer,
 on behalf of itself and its affiliates, and Tigris Data Inc. (referred in herein
@@ -440,12 +440,13 @@ parties as sub-processors to Process certain Customer Personal Data. This
 Appendix C provides information about the sub-processors used by Vendor as of
 the date of this DPA.
 
-| Sub-Processor Name                   | Location      | Sub-Processing Activities                               |
-| ------------------------------------ | ------------- | ------------------------------------------------------- |
-| [Fly.io](https://fly.io/)            | United States | Hosting provider                                        |
-| [AWS](https://aws.amazon.com/)       | United States | Account management, backup storage, engineering support |
-| [OCI](https://www.oracle.com/cloud/) | United States | Account management, backup storage, engineering support |
-| [Slack](https://slack.com/)          | United States | Internal communication                                  |
-| [Plain](https://www.plain.com/)      | United States | Customer support communication                          |
-| [Stripe](https://stripe.com/)        | United States | Payment processing                                      |
-| [Loops](https://loops.so/)           | United States | Email communication                                     |
+| Sub-Processor Name                            | Location      | Sub-Processing Activities                               |
+| --------------------------------------------- | ------------- | ------------------------------------------------------- |
+| [Equinix](https://www.equinix.com/)           | United States | Hosting provider                                        |
+| [Oracle Cloud](https://www.oracle.com/cloud/) | United States | Hosting provider                                        |
+| [Fly.io](https://fly.io/)                     | United States | Hosting provider                                        |
+| [AWS](https://aws.amazon.com/)                | United States | Account management, backup storage, engineering support |
+| [Slack](https://slack.com/)                   | United States | Internal communication                                  |
+| [Plain](https://www.plain.com/)               | United States | Customer support communication                          |
+| [Stripe](https://stripe.com/)                 | United States | Payment processing                                      |
+| [Loops](https://loops.so/)                    | United States | Email communication                                     |

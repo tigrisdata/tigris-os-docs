@@ -3,6 +3,13 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
+[Pixeltable](https://www.pixeltable.com/) is declarative data infrastructure for
+building multimodal AI applications. It allows you to create and manage tables
+similar to how you create and use tables with database engines like Postgres.
+When you combine Pixeltable and Tigris, you get unlimited media storage with no
+egress fees and truly global scalability. This guide will tell you how to
+configure Pixeltable to work with Tigris.
+
 Pixeltable contains a storage integration for Tigris as of
 [version 0.5.0](https://github.com/pixeltable/pixeltable/releases/tag/v0.5.0).
 This allows you to store your structured data in Pixeltable and have references
@@ -37,7 +44,8 @@ tigris_profile = "tigris"
   </TabItem>
 </Tabs>
 
-Then when you insert a video into a table:
+Then when you insert a video into a
+[table](https://docs.pixeltable.com/datastore/tables-and-operations):
 
 ```py
 import pixeltable as pxt
@@ -61,7 +69,7 @@ videos.insert(
 )
 ```
 
-Pixeltable will automatically upload the media file to Tigris.
+Pixeltable will automatically upload the media file to Tigris as it ingests it.
 
 If you create an image with the
 [OpenAI `image_generation` user-defined function](https://docs.pixeltable.com/sdk/v0.5.1/openai#udf-image-generations),
@@ -92,3 +100,7 @@ wallpapers.add_computed_column(
 ```
 
 You can then browse the generated images in Tigris.
+
+From here, go
+[read the Pixeltable documentation](https://docs.pixeltable.com/overview/pixeltable)
+so you can get started building your next multimodal app.

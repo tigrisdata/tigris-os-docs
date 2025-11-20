@@ -204,6 +204,11 @@ const sidebars = {
         },
         {
           type: "doc",
+          label: "Pixeltable",
+          id: "quickstarts/pixeltable",
+        },
+        {
+          type: "doc",
           label: "PyTorch",
           id: "quickstarts/pytorch",
         },

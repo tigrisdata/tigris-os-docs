@@ -637,7 +637,9 @@ components:
         limit_bytes:
           type: integer
           format: int64
-          description: The number of bytes that the organization is allowed to store across all of its buckets. Zero means no limit.
+          description:
+            The number of bytes that the organization is allowed to store across
+            all of its buckets. Zero means no limit.
     BucketOptions:
       type: object
       properties:
@@ -660,38 +662,39 @@ components:
       type: object
       description: |
         Configuration for object event notifications via webhook. Receive HTTP callbacks when objects are created, updated, or deleted in your bucket.
-        
+
         **Update behavior (partial updates supported):**
         - **Omit field entirely**: Keeps existing settings unchanged
         - **Include only `enabled`**: Toggles notifications on/off while preserving all other config
         - **Include any field**: Updates specified fields, preserves others (auth not re-required)
         - **Remove completely**: Send `{"enabled": false}` with no other fields
-        
+
         **Common operations:**
         ```json
         // Enable notifications (preserves webhook, filter, auth)
         {"enabled": true}
-        
+
         // Disable temporarily (keeps all config for later)
         {"enabled": false, "webhook": "https://..."}
-        
+
         // Update webhook only (preserves auth, filter)
         {"webhook": "https://new-endpoint.com"}
-        
+
         // Change auth type (replaces entire auth object)
         {"auth": {"token": "new-token"}}
-        
+
         // Remove all notifications
         {"enabled": false}
         ```
-        
+
         **Note:** Auth credentials are masked in responses. You don't need to re-send them when updating other fields.
       required:
         - enabled
       properties:
         enabled:
           type: boolean
-          description: Enable or disable notifications (webhook required when true)
+          description:
+            Enable or disable notifications (webhook required when true)
         webhook:
           type: string
           format: uri
@@ -699,11 +702,14 @@ components:
           example: "https://webhook.example.com/tigris-events"
         filter:
           type: string
-          description: SQL WHERE clause to filter which objects trigger notifications (e.g., size comparisons)
+          description:
+            SQL WHERE clause to filter which objects trigger notifications
+            (e.g., size comparisons)
           example: "size > 1000000"
         region:
           type: string
-          description: Region to process notifications from (defaults to server region)
+          description:
+            Region to process notifications from (defaults to server region)
           example: "iad"
         auth:
           $ref: "#/components/schemas/ObjectNotificationAuth"
@@ -1223,7 +1229,11 @@ components:
       enum: [STANDARD, STANDARD_IA, GLACIER, GLACIER_IR]
     Regions:
       type: string
-      description: Restricts the regions where bucket data is stored. Default is empty, which means no restrictions. See https://www.tigrisdata.com/docs/objects/object_regions/ for more details.
+      description:
+        Restricts the regions where bucket data is stored. Default is empty,
+        which means no restrictions. See
+        https://www.tigrisdata.com/docs/objects/object_regions/ for more
+        details.
     GenericError:
       type: object
       properties:
@@ -1256,7 +1266,7 @@ components:
       type: apiKey
       in: header
       name: X-Tigris-Nonce
-      description: | 
+      description: |
         Random unique string to identify the request and prevent replay attacks. Example: "f8d133cb-5a42-47b1-9ef2-874bb55bab72"
     Timestamp:
       type: apiKey

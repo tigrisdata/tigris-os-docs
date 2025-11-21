@@ -9,7 +9,7 @@ info:
 
     ## Authentication
 
-    To authenticate with Tigris Object Store, you need to sign your requests with the signing key following simple steps:
+    To authenticate with Tigris Object Store, you need to sign your requests with the signing key by following these steps:
 
     :::note
     Reach out to [help@tigrisdata.com](mailto:help@tigrisdata.com) to request a:
@@ -18,13 +18,13 @@ info:
     :::
 
     ### 1. Generate current timestamp
-    Set the `X-Tigris-Time` header to the current timestamp in milliseconds since epoch. Ex - `1731703213870`
+    Set the `X-Tigris-Time` header to the current timestamp in milliseconds since epoch. Example: `1731703213870`
     ```
     X-Tigris-Time: 1731703213870
     ```
 
     ### 2. Generate a unique nonce
-    Set the `X-Tigris-Nonce` header to a unique random string to identify the request and prevent replay attacks. Ex - `f8d133cb-5a42-47b1-9ef2-874bb55bab72`
+    Set the `X-Tigris-Nonce` header to a unique random string to identify the request and prevent replay attacks. Example: `f8d133cb-5a42-47b1-9ef2-874bb55bab72`
     ```
     X-Tigris-Nonce: f8d133cb-5a42-47b1-9ef2-874bb55bab72
     ```
@@ -39,7 +39,7 @@ info:
     ```
 
     :::tip
-    The `CanonicalURI` is the path of the request URL including the host and query parameters.
+    The `CanonicalURI` is the full request URL including the scheme, host, path, and query parameters.
 
     For example, for a `POST` request to `/provider/laravel/orgs/my-org/provision`, the `CanonicalURI` would be:
     ```
@@ -54,7 +54,7 @@ info:
 
 
     ### 4. Generate request signature
-    Calculate the HMAC-SHA256 of the canonical request using the shared secret as the signing key. Ex -
+    Calculate the HMAC-SHA256 of the canonical request using the shared secret as the signing key. Example:
     ```
     Signature = hex(sha256sign(canonical_request, "signing_key"))
     ```
@@ -88,7 +88,7 @@ paths:
         - buckets
       summary: Provision a new bucket
       description: |
-        Provision a new bucket in the organization account, also creates the organization account if it doesn't exist. This is an
+        Provisions a new bucket in the organization account and also creates the organization account if it doesn't exist. This is an
         idempotent operation, and calling it multiple times with the same parameters will not create duplicate buckets.
 
         Provisioning API responds with an access key and secret to access the newly provisioned bucket.
@@ -229,7 +229,7 @@ paths:
     post:
       tags:
         - buckets
-      summary: Attach a custom domain to bucket
+      summary: Attach a custom domain to a bucket
       description: |
         Sets a custom domain for a bucket. If the domain is already set, it will be replaced.
 
@@ -274,7 +274,7 @@ paths:
         - buckets
       summary: Remove custom domain from bucket
       description: |
-        Removes the custom domain from a bucket. After removal, the bucket will only be accessible via its default Tigris URL. 
+        Removes the custom domain from a bucket. After removal, the bucket will only be accessible via its default Tigris URL.
         The CNAME DNS record can be safely deleted after the custom domain is removed.
       operationId: Tigris_DeleteCustomDomain
       parameters:
@@ -324,7 +324,7 @@ paths:
     post:
       tags:
         - iam
-      summary: Rotates Access Key secret
+      summary: Rotate Access Key secret
       description: |
         Rotates the access key secret for a user. The old secret will be invalidated, and the new secret will be returned in the response.
       operationId: Tigris_RotateAccessKey
@@ -616,6 +616,8 @@ components:
           type: string
           description:
             Name of the organization where the bucket should be provisioned
+        org_quota:
+          $ref: "#/components/schemas/OrgQuota"
         user_id:
           type: string
           description: ID of the user who is requesting the bucket
@@ -627,6 +629,17 @@ components:
       type: string
       description: Role assigned to the user in the organization
       enum: [Admin, Member]
+    OrgQuota:
+      type: object
+      required:
+        - limit_bytes
+      properties:
+        limit_bytes:
+          type: integer
+          format: int64
+          description:
+            The number of bytes that the organization is allowed to store across
+            all of its buckets. Zero means no limit.
     BucketOptions:
       type: object
       properties:
@@ -637,6 +650,8 @@ components:
             false.
         storage_class:
           $ref: "#/components/schemas/StorageClass"
+        regions:
+          $ref: "#/components/schemas/Regions"
         enable_object_acl:
           type: boolean
           description:
@@ -648,25 +663,25 @@ components:
       description: |
         Configuration for object event notifications via webhook. Receive HTTP callbacks when objects are created, updated, or deleted in your bucket.
 
-        **Update behavior:**
-        - `enabled` is required in all requests
-        - Other fields (webhook, filter, region, auth) are optional and only update when included
-        - Omitted optional fields preserve their existing values
-        - Auth credentials are masked in responses and don't need to be re-sent
+        **Update behavior (partial updates supported):**
+        - **Omit field entirely**: Keeps existing settings unchanged
+        - **Include only `enabled`**: Toggles notifications on/off while preserving all other config
+        - **Include any field**: Updates specified fields, preserves others (auth not re-required)
+        - **Remove completely**: Send `{"enabled": false}` with no other fields
 
         **Common operations:**
         ```json
-        // Enable notifications (must provide webhook on first enable)
-        {"enabled": true, "webhook": "https://webhook.example.com/events"}
+        // Enable notifications (preserves webhook, filter, auth)
+        {"enabled": true}
 
-        // Disable temporarily (preserves all config for re-enabling later)
-        {"enabled": false}
+        // Disable temporarily (keeps all config for later)
+        {"enabled": false, "webhook": "https://..."}
 
-        // Update webhook while keeping enabled state
-        {"enabled": true, "webhook": "https://new-endpoint.com"}
+        // Update webhook only (preserves auth, filter)
+        {"webhook": "https://new-endpoint.com"}
 
-        // Change filter only
-        {"enabled": true, "filter": "size > 1000000"}
+        // Change auth type (replaces entire auth object)
+        {"auth": {"token": "new-token"}}
 
         // Remove all notifications
         {"enabled": false}
@@ -679,8 +694,7 @@ components:
         enabled:
           type: boolean
           description:
-            Enable or disable notifications. When true, webhook must be
-            provided.
+            Enable or disable notifications (webhook required when true)
         webhook:
           type: string
           format: uri
@@ -731,6 +745,8 @@ components:
             If set to true, per object ACL will be enabled. Default is false.
         object_notifications:
           $ref: "#/components/schemas/ObjectNotifications"
+        regions:
+          $ref: "#/components/schemas/Regions"
     UpdateBucketResponse:
       type: object
     DeleteBucketResponse:
@@ -936,6 +952,8 @@ components:
           description: If set to true, the bucket is publicly accessible
         storage_class:
           $ref: "#/components/schemas/StorageClass"
+        regions:
+          $ref: "#/components/schemas/Regions"
         object_acl_enabled:
           type: boolean
           description: If set to true, per object ACL is enabled
@@ -1043,13 +1061,12 @@ components:
         role:
           type: string
           description: |
-            The role assigned to the access key defines the permissions (read,
-            write, admin) for the associated bucket.
+            The role defines the permissions for the associated bucket:
 
             - `ReadOnly`: Read-only access to the bucket.
             - `Editor`: Read and write access to the bucket.
-            - `Admin`: Full access to all the buckets in org, including management of
-              permissions. Since, this access key manages all the buckets, the value of `bucket_name`
+            - `Admin`: Full access to all the buckets in the org, including management of
+              permissions. Since this access key manages all the buckets, the value of `bucket_name`
               field should always be `*`.
 
               Example:
@@ -1177,6 +1194,8 @@ components:
             If set to false, the organization will be deactivated and no new
             resources can be provisioned. Existing resources will be
             inaccessible.
+        org_quota:
+          $ref: "#/components/schemas/OrgQuota"
     UpdateOrganizationResponse:
       type: object
     ListOrganizationsResponse:
@@ -1202,10 +1221,19 @@ components:
         active:
           type: boolean
           description: If set to false, the organization is deactivated
+        quota:
+          $ref: "#/components/schemas/OrgQuota"
     StorageClass:
       type: string
       description: Storage class for the bucket. Default is `STANDARD`.
       enum: [STANDARD, STANDARD_IA, GLACIER, GLACIER_IR]
+    Regions:
+      type: string
+      description:
+        Restricts the regions where bucket data is stored. Default is empty,
+        which means no restrictions. See
+        https://www.tigrisdata.com/docs/objects/object_regions/ for more
+        details.
     GenericError:
       type: object
       properties:
@@ -1238,33 +1266,33 @@ components:
       type: apiKey
       in: header
       name: X-Tigris-Nonce
-      description:
-        Random unique string to identifying the request and prevent replay
-        attacks. Ex - "f8d133cb-5a42-47b1-9ef2-874bb55bab72"
+      description: |
+        Random unique string to identify the request and prevent replay attacks. Example: "f8d133cb-5a42-47b1-9ef2-874bb55bab72"
     Timestamp:
       type: apiKey
       in: header
       name: X-Tigris-Time
-      description: Unix timestamp in millis of the request. Ex - 1731703213870
+      description: |
+        Unix timestamp in milliseconds of the request. Example: 1731703213870
     Signature:
       type: apiKey
       in: header
       name: X-Tigris-Signature
       description: |
-        HMAC-SHA256 of the request method, url, along with the unique nonce and timestamp signed using signing key.
-        To create the signature, concatenate the method, url, nonce, and timestamp with a newline character in between.
-        Then, calculate the HMAC-SHA256 of the concatenated string using the signing key. Ex -
+        HMAC-SHA256 of the canonical request signed using the signing key.
+        To create the signature, concatenate the HTTP method, URL, timestamp, and nonce with a newline character in between.
+        Then, calculate the HMAC-SHA256 of the concatenated string using the signing key. Example:
 
-        Created `canonical_request` as:
+        Create the `canonical_request` as:
         ```
         POST
-        https://fly.mgnt.storage.tigris.dev/provider/laravel/orgs/my-org/provision
+        https://mgmt.storage.dev/provider/your-provider-id/orgs/user-org-id/provision
         1731703213870
         f8d133cb-5a42-47b1-9ef2-874bb55bab72
         ```
         Then, calculate HMAC-SHA256 of the canonical request using the signing key as:
         ```
-        Signature = hex(sha256sign(canonical_request, "signing key"))
+        Signature = hex(sha256sign(canonical_request, "signing_key"))
         ```
 security:
   - Signature: []

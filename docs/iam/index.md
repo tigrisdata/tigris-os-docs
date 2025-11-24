@@ -94,7 +94,6 @@ Tigris also supports many common S3-compatible actions such as:
 For a full list of supported actions, examples, and conditions, see the
 [Policies Documentation](/docs/iam/policies/). Also see these example policies:
 
-- [Creating a limited access key](./policies/examples/limited-access-key.md)
 - [Enforcing IP restrictions](./policies/examples/ip-restrictions.md)
 - [Enforcing date/time restrictions](./policies/examples/date-time-restrictions.md)
   (automatic expiration)

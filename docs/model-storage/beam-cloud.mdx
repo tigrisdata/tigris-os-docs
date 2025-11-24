@@ -141,17 +141,14 @@ python scripts/prepare_model.py KBlueLeaf/Kohaku-XL-Zeta model-storage
 
 ## Access keys
 
-Create a new access key in the [Tigris Dashboard](https://console.tigris.dev).
-Don't assign any permissions to it.
+Create a new access key in the [Tigris Dashboard](https://console.tigris.dev)
+and grant it access to the required buckets (e.g., `model-storage-demo` and
+`generated-images`).
 
 Copy the access key ID and secret access keys into either your notes or a
 password manager, you will not be able to see them again. These credentials will
 be used later to deploy your app in the cloud. This keypair will be referred to
 as the `workload-keypair` in this tutorial.
-
-[Limit the scope of this access key](/docs/iam/policies/examples/limited-access-key.md)
-to only the `model-storage-demo` (or a custom bucket if you're uploading your
-own models) and `generated-images` buckets.
 
 ## Deploying it to Beam
 

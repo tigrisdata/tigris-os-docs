@@ -274,8 +274,8 @@ import { getPresignedUrl } from "@tigrisdata/storage";
 
 export async function POST(request: NextRequest) {
   try {
-    const { path, contentType } = await request.json();
-    const result = await getPresignedUrl(path, {
+    const { name, contentType } = await request.json();
+    const result = await getPresignedUrl(name, {
       operation: "put",
       expiresIn: 3600, // 1 hour
     });

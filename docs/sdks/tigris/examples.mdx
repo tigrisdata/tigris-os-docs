@@ -169,12 +169,12 @@ import {
 
 export async function POST(request: NextRequest) {
   try {
-    const { path, operation, action, contentType, uploadId, parts, partIds } =
+    const { name, operation, action, contentType, uploadId, parts, partIds } =
       await request.json();
 
     switch (action) {
       case UploadAction.MultipartInit: {
-        const result = await initMultipartUpload(path, {});
+        const result = await initMultipartUpload(name, {});
         return NextResponse.json({ data: result.data });
       }
 
@@ -185,7 +185,7 @@ export async function POST(request: NextRequest) {
             { status: 400 },
           );
         }
-        const result = await getPartsPresignedUrls(path, parts, uploadId, {});
+        const result = await getPartsPresignedUrls(name, parts, uploadId, {});
         return NextResponse.json({ data: result.data });
       }
 
@@ -197,7 +197,7 @@ export async function POST(request: NextRequest) {
               { status: 400 },
             );
           }
-          const result = await completeMultipartUpload(path, uploadId, partIds);
+          const result = await completeMultipartUpload(name, uploadId, partIds);
           return NextResponse.json({ data: result.data });
         }
 

@@ -542,6 +542,27 @@ paths:
                 $ref: "#/components/schemas/GenericError"
 
   /v1/providers/{provider_id}/orgs/{org_id}:
+    get:
+      tags:
+        - organizations
+      summary: Get organization
+      operationId: Tigris_GetOrganization
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetOrganizationResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
     put:
       tags:
         - organizations
@@ -1207,6 +1228,11 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/OrgInfo"
+    GetOrganizationResponse:
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/OrgInfo"
     OrgInfo:
       type: object
       required:

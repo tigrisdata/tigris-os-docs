@@ -8,8 +8,107 @@ import TabItem from "@theme/TabItem";
 
 export const changelogData = [
   {
+    date: "December 3, 2025",
+    title: "Bucket Snapshots",
+    content: (
+      <>
+        <img
+          src={require("./assets/2025/12/bucket-snapshots.avif").default}
+          alt="A cartoon tiger taking pictures of a bucket of data as it changes."
+        />
+        <p>
+          Tigris now lets you take point-in-time snapshots of your data so that
+          you can undelete critical files, make backups of your backups, and
+          create the base state for bucket forks. Snapshots capture the state of
+          a bucket as it exists at a single point in time so that you can get
+          data back later if you need to.
+        </p>
+
+        <p>
+          <strong>Why it matters</strong>
+        </p>
+        <p>
+          To err is human; to plan for that and give you a way out is Tigris. We
+          want to make it easy for you to undo mistakes, make auditable backups
+          of your backups, and{" "}
+          <a href="https://www.tigrisdata.com/blog/dataset-experimentation/">
+            fork your data
+          </a>{" "}
+          to enable new and exciting ways to use object storage.
+        </p>
+        <img
+          src={require("./assets/2025/12/bucket-snapshot-demo.avif").default}
+          alt="A demo showing the bucket snapshot UI in the admin console."
+        />
+        <p>
+          You can also do this from the{" "}
+          <a href="https://www.tigrisdata.com/docs/sdks/tigris/">
+            Tigris SDK for JavaScript and TypeScript
+          </a>
+          :
+        </p>
+        <CodeBlock language="javascript">{`import { createBucketSnapshot } from "@tigrisdata/storage";
+
+const { data, error } = await createBucketSnapshot();
+
+if (error) {
+  console.error('Error creating snapshot:', error);
+} else {
+  console.log('Snapshot created:', data);
+  // output: { snapshotVersion: "1751631910169675092" }
+}`}</CodeBlock>
+        <p>The cloud's the limit!</p>
+      </>
+    ),
+    subcategories: [
+      {
+        title: "Features",
+        items: [
+          {
+            title: "New onboarding flow at storage.new",
+            description: (
+              <>
+                <img
+                  src={require("./assets/2025/12/storage-dot-new.avif").default}
+                  alt="A wizard helping you create new buckets."
+                />
+                <p>
+                  Onboarding has been re-imagined so that we cut to the chase
+                  and make it easy for you to create a new bucket <em>now</em>.
+                  Check it out at <a href="https://storage.new">storage.new</a>.
+                  If you're already a Tigris user, you can check it out by
+                  opening it in a private browsing window or on a friend's
+                  computer to help them get started.
+                </p>
+              </>
+            ),
+          },
+          {
+            title: "New bucket creation flow",
+            description: (
+              <>
+                <p>
+                  We've rebuilt the bucket creation flow from the ground up so
+                  that you can focus on making buckets and assigning access
+                  keys.
+                </p>
+                <img
+                  src={
+                    require("./assets/2025/12/new-bucket-creation-flow.webp")
+                      .default
+                  }
+                  alt="A modal dialogue box asking how you want to create a new bucket."
+                />
+              </>
+            ),
+          },
+        ],
+      },
+    ],
+  },
+  {
     date: "October 17, 2025",
-    title: "Bucket Snapshots & Forks",
+    title: "Bucket Forking",
     content: (
       <>
         <img

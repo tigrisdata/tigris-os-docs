@@ -225,3 +225,36 @@ export default function ClientUpload() {
 </TabItem>
 
 </Tabs>
+
+## React Package
+
+Alternatively, you can use the `Uploader` component from the `@tigrisdata/react`
+package to render a file uploader component that integrates with the Tigris
+Storage SDK.
+
+```tsx
+import { Uploader } from "@tigrisdata/react";
+import "@tigrisdata/react/styles.css"; // Optional: import default styles
+
+export default function ClientUpload() {
+  return (
+    <div className="bg-white shadow rounded-lg p-6 mb-6">
+      <h2 className="text-lg font-medium text-gray-900 mb-2">Client Uploads</h2>
+      <Uploader
+        className="mt-4 tigris-uploader"
+        accept="image/*"
+        multiple={true}
+        multipart={true}
+        concurrency={3}
+        url="/api/upload"
+        onUploadComplete={(file, response) => {
+          console.log("Uploaded:", response.url);
+        }}
+        onUploadError={(file, error) => {
+          console.error("Failed:", error.message);
+        }}
+      />
+    </div>
+  );
+}
+```

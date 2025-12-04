@@ -45,16 +45,6 @@ export const changelogData = [
             Claude Code, Cursor, OpenAI Codex, and VS Code
           </li>
         </ul>
-
-        <p>
-          One of the roughest edges of using MCP servers is needing to install
-          and update the MCP server in order to run it. By hosting it ourselves,
-          we eliminate that entire problem. You don&apos;t need to run the MCP
-          server locally, and you always have access to the most recent version
-          without taking the risk involved with running software published by a
-          third party.
-        </p>
-
         <p>
           Get started at <a href="https://mcp.storage.dev">mcp.storage.dev</a>{" "}
           and connect Tigris to your AI agents today.

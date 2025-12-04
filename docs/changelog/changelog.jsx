@@ -13,8 +13,8 @@ export const changelogData = [
     content: (
       <>
         <p>
-          We&apos;ve made it easier to integrate Tigris into your AI workflows by
-          removing the most complicated part of getting started with the MCP
+          We&apos;ve made it easier to integrate Tigris into your AI workflows
+          by removing the most complicated part of getting started with the MCP
           server: installing it. Our hosted MCP server at{" "}
           <a href="https://mcp.storage.dev">mcp.storage.dev</a> lets you
           integrate Tigris into your ChatGPT, Claude, and agentic coding
@@ -41,8 +41,8 @@ export const changelogData = [
             organizations from a single connection
           </li>
           <li>
-            Works everywhere — integrate with ChatGPT web, Claude Desktop, Claude
-            Code, Cursor, OpenAI Codex, and VS Code
+            Works everywhere — integrate with ChatGPT web, Claude Desktop,
+            Claude Code, Cursor, OpenAI Codex, and VS Code
           </li>
         </ul>
 
@@ -56,9 +56,8 @@ export const changelogData = [
         </p>
 
         <p>
-          Get started at{" "}
-          <a href="https://mcp.storage.dev">mcp.storage.dev</a> and connect
-          Tigris to your AI agents today.
+          Get started at <a href="https://mcp.storage.dev">mcp.storage.dev</a>{" "}
+          and connect Tigris to your AI agents today.
         </p>
 
         <BlogPostPreview
@@ -66,7 +65,7 @@ export const changelogData = [
           title="Tigris' MCP Server Goes Global"
           description="We've made it easier to integrate Tigris into your AI workflows by removing the most complicated part of getting started with the MCP server: installing it."
           imageSrc={require("./assets/2025/12/hosted-mcp.webp").default}
-          imageAlt="A digital illustration of a cartoon bengal tiger high-fiveing a robot on a backdrop of the astral plane with floating mountains."
+          imageAlt="A digital illustration of a cartoon bengal tiger high-fiving a robot on a backdrop of the astral plane with floating mountains."
           buttonText="Read the Blog"
           author="Tigris Engineering"
           date="December 2025"
@@ -82,10 +81,10 @@ export const changelogData = [
             description: (
               <>
                 <p>
-                  The hosted MCP server implements the MCP OAuth flow, meaning
-                  you don&apos;t even need to load API keys into your
-                  agent&apos;s configuration. This reduces the attack surface
-                  and makes setup even easier.
+                  The hosted MCP server implements the OAuth 2 flow, meaning you
+                  don&apos;t even need to load API keys into your agent&apos;s
+                  configuration. This reduces the attack surface and makes setup
+                  even easier.
                 </p>
               </>
             ),
@@ -97,8 +96,8 @@ export const changelogData = [
               <>
                 <p>
                   Access buckets across all your Tigris organizations from a
-                  single MCP connection. When you ask your agent to list buckets,
-                  it&apos;ll list them across all your organizations.
+                  single MCP connection. When you ask your agent to list
+                  buckets, it&apos;ll list them across all your organizations.
                 </p>
               </>
             ),

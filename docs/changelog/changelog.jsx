@@ -8,7 +8,97 @@ import TabItem from "@theme/TabItem";
 
 export const changelogData = [
   {
-    date: "December 3, 2025",
+    date: "December 1, 2025",
+    title: "Hosted MCP Server",
+    content: (
+      <>
+        <p>
+          We&apos;ve made it easier to integrate Tigris into your AI workflows
+          by removing the most complicated part of getting started with the MCP
+          server: installing it. Our hosted MCP server at{" "}
+          <a href="https://mcp.storage.dev">mcp.storage.dev</a> lets you
+          integrate Tigris into your ChatGPT, Claude, and agentic coding
+          workflows in a snap.
+        </p>
+
+        <p>
+          <strong>Why it matters</strong>
+        </p>
+        <ul>
+          <li>
+            No installation required — always have access to the most recent
+            version of the MCP server
+          </li>
+          <li>
+            OAuth authentication — no need to load API keys into your
+            agent&apos;s configuration, reducing the attack surface.{" "}
+            <a href="https://www.tigrisdata.com/blog/mcp-oauth/">
+              Learn how we implemented OAuth with a man-in-the-middle pattern.
+            </a>
+          </li>
+          <li>
+            Multi-organization support — access buckets across all your
+            organizations from a single connection
+          </li>
+          <li>
+            Works everywhere — integrate with ChatGPT web, Claude Desktop,
+            Claude Code, Cursor, OpenAI Codex, and VS Code
+          </li>
+        </ul>
+        <p>
+          Get started at <a href="https://mcp.storage.dev">mcp.storage.dev</a>{" "}
+          and connect Tigris to your AI agents today.
+        </p>
+
+        <BlogPostPreview
+          href="https://www.tigrisdata.com/blog/hosted-mcp/"
+          title="Tigris' MCP Server Goes Global"
+          description="We've made it easier to integrate Tigris into your AI workflows by removing the most complicated part of getting started with the MCP server: installing it."
+          imageSrc={require("./assets/2025/12/hosted-mcp.webp").default}
+          imageAlt="A digital illustration of a cartoon bengal tiger high-fiving a robot on a backdrop of the astral plane with floating mountains."
+          buttonText="Read the Blog"
+          author="Tigris Engineering"
+          date="December 2025"
+        />
+      </>
+    ),
+    subcategories: [
+      {
+        title: "Features",
+        items: [
+          {
+            title: "OAuth authentication flow",
+            description: (
+              <>
+                <p>
+                  The hosted MCP server implements the OAuth 2 flow, meaning you
+                  don&apos;t even need to load API keys into your agent&apos;s
+                  configuration. This reduces the attack surface and makes setup
+                  even easier.
+                </p>
+              </>
+            ),
+            tag: { label: "Security", color: "green" },
+          },
+          {
+            title: "Multi-organization access",
+            description: (
+              <>
+                <p>
+                  Access buckets across all your Tigris organizations from a
+                  single MCP connection. When you ask your agent to list
+                  buckets, it&apos;ll list them across all your organizations.
+                </p>
+              </>
+            ),
+            tag: { label: "MCP", color: "blue" },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    date: "November 15, 2025",
     title: "Bucket Snapshots",
     content: (
       <>

@@ -3,7 +3,7 @@
 When you first sign up with Tigris, whether you're signing up on your own or
 you're invited to join, you start with a native Tigris Account. Tigris also
 supports logging in with a Fly.io account through Single Sign-On (SSO), see the
-[Fly.io integration guide](../sdks/fly/) for details.
+[Fly.io integration guide](/sdks/fly/) for details.
 
 ## Create an account
 
@@ -54,7 +54,7 @@ GitHub, email, and Fly.io SSO). Make sure you're using the same login method you
 used when you created your account and buckets.
 
 - **Using Fly.io?** See the
-  [Fly.io troubleshooting section](../sdks/fly/#troubleshooting)
+  [Fly.io troubleshooting section](/sdks/fly/#troubleshooting)
 - **Using native Tigris?** Verify you're using the correct Google/GitHub/email
   account
 
@@ -64,6 +64,6 @@ in the Tigris console (top-right dropdown).
 **Still having issues?** Contact
 [help@tigrisdata.com](mailto:help@tigrisdata.com) with:
 
-- Your login email or Fly organization name
+- Your login email
 - The bucket names you're trying to access
-- Which login method you u
+- Which login method you are using

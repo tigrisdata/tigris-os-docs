@@ -119,7 +119,9 @@ fly storage destroy bucket-name
 
 ## Accessing the Tigris Console
 
-While `flyctl` provides command-line management for your buckets, you can also use the Tigris web console for a visual interface to manage your buckets, upload objects, view analytics, and more.
+While `flyctl` provides command-line management for your buckets, you can also
+use the Tigris web console for a visual interface to manage your buckets, upload
+objects, view analytics, and more.
 
 ### Logging in to the Console
 
@@ -131,9 +133,11 @@ To access the Tigris console with your Fly-provisioned buckets:
 
 :::warning Important: Use the Fly.io Login
 
-You **must** click the **Fly.io** button on the login page to access your Fly-provisioned buckets. 
+You **must** click the **Fly.io** button on the login page to access your
+Fly-provisioned buckets.
 
-Do not use Google, GitHub, or email login, as those will create a separate native Tigris account that won't have access to your Fly buckets.
+Do not use Google, GitHub, or email login, as those will create a separate
+native Tigris account that won't have access to your Fly buckets.
 
 :::
 
@@ -146,4 +150,6 @@ Do not use Google, GitHub, or email login, as those will create a separate nativ
 - Manage access keys and permissions
 - Configure bucket notifications and snapshots
 
-For more information about managing your account and understanding the difference between Fly and native Tigris accounts, see the [Accounts documentation](../../account-management/accounts/).
+For more information about managing your account and understanding the
+difference between Fly and native Tigris accounts, see the
+[Accounts documentation](../../account-management/accounts/).

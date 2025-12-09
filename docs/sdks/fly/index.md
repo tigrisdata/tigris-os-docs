@@ -121,7 +121,7 @@ fly storage destroy bucket-name
 
 While `flyctl` provides command-line management for your buckets, you can also
 use the Tigris web console for a visual interface to manage your buckets, upload
-objects, view analytics, and more.
+objects, view usage, and more.
 
 ### Logging in to the Console
 
@@ -131,7 +131,7 @@ To access the Tigris console with your Fly-provisioned buckets:
 2. Click the **Fly.io** button to log in
 3. This will connect to your Fly organization and show all your buckets
 
-:::warning Important: Use the Fly.io Login
+:::info Important: Use the Fly.io Login
 
 You **must** click the **Fly.io** button on the login page to access your
 Fly-provisioned buckets.
@@ -140,6 +140,26 @@ Do not use Google, GitHub, or email login, as those will create a separate
 native Tigris account that won't have access to your Fly buckets.
 
 :::
+
+### Fly Organizations and Billing
+
+When you use Fly.io to access Tigris:
+
+- **Billing:** Your Tigris usage is billed through Fly.io, not directly through
+  Tigris
+- **Team management:** You must manage team members through
+  [Fly Organizations](https://fly.io/dashboard), not through Tigris
+  Organizations
+- **Organization access:** The Tigris console will reflect the permissions and
+  access from your Fly Organization
+- **All changes to Fly Organizations** are automatically reflected in Tigris
+  access controls
+
+To manage your team:
+
+1. Go to the [Fly Dashboard](https://fly.io/dashboard)
+2. Click on `Account` → `Organizations`
+3. Select your organization and manage team members under the `Team` section
 
 ### What you can do in the Console
 
@@ -153,3 +173,79 @@ native Tigris account that won't have access to your Fly buckets.
 For more information about managing your account and understanding the
 difference between Fly and native Tigris accounts, see the
 [Accounts documentation](../../account-management/accounts/).
+
+### Migrating to Native Tigris
+
+If you want to migrate your Fly account to a native Tigris account:
+
+- Contact [help@tigrisdata.com](mailto:help@tigrisdata.com) to initiate the
+  migration
+- Your data will not move
+- Your access keys will continue to work as normal
+- You'll receive a separate Tigris bill instead of billing through Fly.io
+
+## Troubleshooting
+
+### I can't see my buckets in the Tigris console
+
+**Problem:** You log into the Tigris console but see an empty dashboard with no
+buckets, even though you created them using `fly storage create`.
+
+**Cause:** You're logged into a native Tigris account instead of your Fly.io
+account. These are completely separate systems.
+
+**Solution:**
+
+1. **Log out** of the Tigris console completely
+2. **Go to** [console.tigris.dev/signin](https://console.tigris.dev/signin)
+3. **Click the Fly.io button** (not Google, GitHub, or email)
+4. Your Fly-provisioned buckets should now appear
+
+:::danger Common Mistake
+
+If you previously logged in with Google/GitHub/email, you accidentally created a
+**second, separate native Tigris account** that has no buckets. Your Fly buckets
+still exist—you just need to log in with the Fly.io button to see them.
+
+:::
+
+### I accidentally created a native Tigris account
+
+If you created buckets through Fly.io but also logged in with
+Google/GitHub/email, you now have two separate accounts:
+
+- Your Fly.io account (with your buckets)
+- A native Tigris account (empty)
+
+Your Fly buckets are safe. Just log in with the Fly.io button to access them.
+
+If you want to consolidate accounts or migrate, contact
+[help@tigrisdata.com](mailto:help@tigrisdata.com).
+
+### Where is the Fly.io login button?
+
+On the [Tigris login page](https://console.tigris.dev/signin), you'll see three
+SSO buttons at the top:
+
+- Google
+- GitHub
+- **Fly.io** ← Click this one
+
+### My buckets appear but are empty
+
+If you can see your buckets but they appear empty or you're missing some
+buckets:
+
+- **Check your Fly organization:** Ensure you're logged in with the correct Fly
+  account that owns the buckets
+- **Verify buckets exist:** Run `fly storage list` from your terminal to confirm
+- **Browser issues:** Try clearing your browser cache or using an
+  incognito/private window
+
+### Still need help?
+
+Contact [help@tigrisdata.com](mailto:help@tigrisdata.com) with:
+
+- Your Fly organization name
+- The bucket names you're trying to access
+- Screenshots of what you're seeing in the console

@@ -31,7 +31,7 @@ Users can have one of three roles:
 
 ## Logging in with Fly
 
-:::warning Important: Accessing Fly-Provisioned Buckets
+:::info Important: Accessing Fly-Provisioned Buckets
 
 If you created your Tigris buckets through Fly.io (using `fly storage create`),
 you **must** log into the Tigris console by clicking the **Fly.io** button on

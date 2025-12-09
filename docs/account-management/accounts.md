@@ -31,10 +31,21 @@ Users can have one of three roles:
 
 ## Logging in with Fly
 
+:::warning Important: Accessing Fly-Provisioned Buckets
+
+If you created your Tigris buckets through Fly.io (using `fly storage create`),
+you **must** log into the Tigris console by clicking the **Fly.io** button on
+the [login page](https://console.tigris.dev/signin).
+
+Logging in with Google, GitHub, or email will create a separate Tigris account
+that won't have access to your Fly-provisioned buckets.
+
+:::
+
 Tigris supports logging in with Fly accounts. Fly Accounts are billed through
 Fly, and Tigris Accounts are billed directly through Tigris. Users who log in
 with a Fly account cannot join nor manage a Tigris Organization and must use Fly
-Organizations. Regardless of your login method, you’ll be able to manage Tigris
+Organizations. Regardless of your login method, you'll be able to manage Tigris
 buckets and track your usage in the Tigris Dashboard.
 
 ## Migrating your Fly Account to Tigris
@@ -60,6 +71,47 @@ All Tigris accounts require multi-factor authentication (MFA). On sign up,
 you’ll be prompted to setup MFA and save a recovery code. If you lose your MFA
 device, you can use your recovery code to access your account.
 
-If a former employee owned a Tigris Account and didn’t shut it down or transfer
+If a former employee owned a Tigris Account and didn't shut it down or transfer
 access before leaving, you can recover access to the account by emailing
 [help@tigrisdata.com](mailto:help@tigrisdata.com).
+
+## Troubleshooting
+
+### I can't see my buckets in the Tigris console
+
+The most common reason is logging in with the wrong account type. Tigris has two
+separate account systems:
+
+**Fly.io Accounts** - If you created buckets through Fly.io (using
+`fly storage create`):
+
+- Click the **Fly.io** button on the
+  [login page](https://console.tigris.dev/signin)
+
+**Native Tigris Accounts** - If you created your account directly at Tigris:
+
+- Use Google, GitHub, or email login
+
+**How to fix:**
+
+1. Log out of the Tigris console
+2. Go to [console.tigris.dev/signin](https://console.tigris.dev/signin)
+3. Click the **Fly.io** button if you use Fly.io
+4. Or use Google/GitHub/email if you have a native Tigris account
+
+### My buckets are empty or missing
+
+If you can see some buckets but not others, or buckets appear empty:
+
+- **Check your organization:** Make sure you've selected the correct
+  organization in the Tigris console (top-right dropdown)
+- **Verify using the correct Fly org:** If using Fly.io, ensure you're logged in
+  with the Fly account that owns the buckets
+- **Check bucket permissions:** Verify you have the correct access permissions
+  for the bucket
+- **Contact support:** Email [help@tigrisdata.com](mailto:help@tigrisdata.com)
+  with:
+  - Your login email or Fly organization name
+  - The bucket names you're trying to access
+  - Which login method you used
+  - Screenshots if helpful

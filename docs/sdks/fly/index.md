@@ -116,3 +116,40 @@ To delete a bucket, run the following command:
 ```bash
 fly storage destroy bucket-name
 ```
+
+## Accessing the Tigris Console
+
+While `flyctl` provides command-line management for your buckets, you can also
+use the Tigris web console for a visual interface to manage your buckets, upload
+objects, view analytics, and more.
+
+### Logging in to the Console
+
+To access the Tigris console with your Fly-provisioned buckets:
+
+1. Go to [console.tigris.dev/signin](https://console.tigris.dev/signin)
+2. Click the **Fly.io** button to log in
+3. This will connect to your Fly organization and show all your buckets
+
+:::warning Important: Use the Fly.io Login
+
+You **must** click the **Fly.io** button on the login page to access your
+Fly-provisioned buckets.
+
+Do not use Google, GitHub, or email login, as those will create a separate
+native Tigris account that won't have access to your Fly buckets.
+
+:::
+
+### What you can do in the Console
+
+- Browse and manage your buckets and objects
+- Upload and download files through the web interface
+- View bucket settings and configure CORS, custom domains, and lifecycle rules
+- Monitor usage and analytics
+- Manage access keys and permissions
+- Configure bucket notifications and snapshots
+
+For more information about managing your account and understanding the
+difference between Fly and native Tigris accounts, see the
+[Accounts documentation](../../account-management/accounts/).

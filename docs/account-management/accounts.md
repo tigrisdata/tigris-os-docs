@@ -1,8 +1,9 @@
 # Accounts
 
-When you first sign up with Tigris, whether you’re signing up on your own or
-you’re invited to join, you start with a native Tigris Account. Tigris also
-supports logging in with a Fly account.
+When you first sign up with Tigris, whether you're signing up on your own or
+you're invited to join, you start with a native Tigris Account. Tigris also
+supports logging in with a Fly.io account through Single Sign-On (SSO), see the
+[Fly.io integration guide](/sdks/fly/) for details.
 
 ## Create an account
 
@@ -29,37 +30,6 @@ Users can have one of three roles:
   an Admin but cannot be removed from the Organization or downgraded from Admin
   to Member. The Owner is also responsible for the Organization’s billing.
 
-## Logging in with Fly
-
-:::warning Important: Accessing Fly-Provisioned Buckets
-
-If you created your Tigris buckets through Fly.io (using `fly storage create`),
-you **must** log into the Tigris console by clicking the **Fly.io** button on
-the [login page](https://console.tigris.dev/signin).
-
-Logging in with Google, GitHub, or email will create a separate Tigris account
-that won't have access to your Fly-provisioned buckets.
-
-:::
-
-Tigris supports logging in with Fly accounts. Fly Accounts are billed through
-Fly, and Tigris Accounts are billed directly through Tigris. Users who log in
-with a Fly account cannot join nor manage a Tigris Organization and must use Fly
-Organizations. Regardless of your login method, you'll be able to manage Tigris
-buckets and track your usage in the Tigris Dashboard.
-
-## Migrating your Fly Account to Tigris
-
-If you sign up for a native Tigris account and have an existing Fly account that
-you use to login to Tigris, you’ll be prompted to switch to your Fly account to
-access your buckets.
-
-If you would like to use Tigris natively, you can migrate your Fly Account to a
-native Tigris Account. To initiate an account migration, contact us at
-[help@tigrisdata.com](mailto:help@tigrisdata.com). Your data will not move, your
-access keys will continue to work as normal, and you’ll get a separate Tigris
-bill.
-
 ## Deleting your account
 
 To permanently delete your account and purge the data, please contact us at
@@ -79,39 +49,21 @@ access before leaving, you can recover access to the account by emailing
 
 ### I can't see my buckets in the Tigris console
 
-The most common reason is logging in with the wrong account type. Tigris has two
-separate account systems:
+**Check your login method:** Tigris supports multiple login methods (Google,
+GitHub, email, and Fly.io SSO). Make sure you're using the same login method you
+used when you created your account and buckets.
 
-**Fly.io Accounts** - If you created buckets through Fly.io (using
-`fly storage create`):
+- **Using Fly.io?** See the
+  [Fly.io troubleshooting section](/sdks/fly/#troubleshooting)
+- **Using native Tigris?** Verify you're using the correct Google/GitHub/email
+  account
 
-- Click the **Fly.io** button on the
-  [login page](https://console.tigris.dev/signin)
+**Check your organization:** Make sure you've selected the correct organization
+in the Tigris console (top-right dropdown).
 
-**Native Tigris Accounts** - If you created your account directly at Tigris:
+**Still having issues?** Contact
+[help@tigrisdata.com](mailto:help@tigrisdata.com) with:
 
-- Use Google, GitHub, or email login
-
-**How to fix:**
-
-1. Log out of the Tigris console
-2. Go to [console.tigris.dev/signin](https://console.tigris.dev/signin)
-3. Click the **Fly.io** button if you use Fly.io
-4. Or use Google/GitHub/email if you have a native Tigris account
-
-### My buckets are empty or missing
-
-If you can see some buckets but not others, or buckets appear empty:
-
-- **Check your organization:** Make sure you've selected the correct
-  organization in the Tigris console (top-right dropdown)
-- **Verify using the correct Fly org:** If using Fly.io, ensure you're logged in
-  with the Fly account that owns the buckets
-- **Check bucket permissions:** Verify you have the correct access permissions
-  for the bucket
-- **Contact support:** Email [help@tigrisdata.com](mailto:help@tigrisdata.com)
-  with:
-  - Your login email or Fly organization name
-  - The bucket names you're trying to access
-  - Which login method you used
-  - Screenshots if helpful
+- Your login email
+- The bucket names you're trying to access
+- Which login method you are using

@@ -120,8 +120,8 @@ fly storage destroy bucket-name
 ## Accessing the Tigris Console
 
 While `flyctl` provides command-line management for your buckets, you can also
-use the Tigris web console for a visual interface to manage your buckets, upload
-objects, view analytics, and more.
+use the Tigris web console for a visual interface to manage your buckets, access
+keys, upload objects, view usage, and more.
 
 ### Logging in to the Console
 
@@ -131,7 +131,7 @@ To access the Tigris console with your Fly-provisioned buckets:
 2. Click the **Fly.io** button to log in
 3. This will connect to your Fly organization and show all your buckets
 
-:::warning Important: Use the Fly.io Login
+:::info Important: Use the Fly.io Login
 
 You **must** click the **Fly.io** button on the login page to access your
 Fly-provisioned buckets.
@@ -141,15 +141,68 @@ native Tigris account that won't have access to your Fly buckets.
 
 :::
 
-### What you can do in the Console
+### Fly Organizations and Billing
 
-- Browse and manage your buckets and objects
-- Upload and download files through the web interface
-- View bucket settings and configure CORS, custom domains, and lifecycle rules
-- Monitor usage and analytics
-- Manage access keys and permissions
-- Configure bucket notifications and snapshots
+When you use Fly.io to access Tigris:
 
-For more information about managing your account and understanding the
-difference between Fly and native Tigris accounts, see the
-[Accounts documentation](../../account-management/accounts/).
+- **Billing:** Your Tigris usage is billed through Fly.io, not directly through
+  Tigris
+- **Team management:** You must manage team members through
+  [Fly Organizations](https://fly.io/dashboard), not through Tigris
+  Organizations
+- **Organization access:** The Tigris console will reflect the permissions and
+  access from your Fly Organization
+- **All changes to Fly Organizations** are automatically reflected in Tigris
+  access controls
+
+To manage your team:
+
+1. Go to the [Fly Dashboard](https://fly.io/dashboard)
+2. Click on `Account` → `Organizations`
+3. Select your organization and manage team members under the `Team` section
+
+### Migrating to Native Tigris
+
+If you want to migrate your Fly account to a native Tigris account:
+
+- Contact [help@tigrisdata.com](mailto:help@tigrisdata.com) to initiate the
+  migration
+- Your data will not move
+- Your access keys will continue to work as normal
+- You'll receive a separate Tigris bill instead of billing through Fly.io
+
+## Troubleshooting
+
+### I can't see my buckets in the Tigris console
+
+**Problem:** You log into the Tigris console but see an empty dashboard with no
+buckets, even though you created them using `fly storage create`.
+
+**Cause:** You're logged into a native Tigris account instead of your Fly.io
+account. These are completely separate systems.
+
+**Solution:**
+
+1. **Log out** of the Tigris console completely
+2. **Go to** [console.tigris.dev/signin](https://console.tigris.dev/signin)
+3. **Click the Fly.io button** (not Google, GitHub, or email)
+4. Your Fly-provisioned buckets should now appear
+
+### My buckets appear but are empty
+
+If you can see your buckets but they appear empty or you're missing some
+buckets:
+
+- **Check your Fly organization:** Ensure you're logged in with the correct Fly
+  account that owns the buckets
+- **Verify buckets exist:** Run `fly storage list` from your terminal to confirm
+- **Browser issues:** Try clearing your browser cache or using an
+  incognito/private window
+
+### Still need help?
+
+Contact [help@tigrisdata.com](mailto:help@tigrisdata.com) with:
+
+- Your Fly organization name
+- The bucket names you're trying to access
+- Screenshots of what you're seeing in the console

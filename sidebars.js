@@ -149,7 +149,7 @@ const sidebars = {
           label: "Remote MCP Server",
           id: "mcp/remote",
         },
-      ]
+      ],
     },
     {
       type: "category",

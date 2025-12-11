@@ -135,6 +135,24 @@ const sidebars = {
     },
     {
       type: "category",
+      label: "MCP",
+      collapsible: true,
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          label: "Local MCP Server",
+          id: "mcp/local",
+        },
+        {
+          type: "doc",
+          label: "Remote MCP Server",
+          id: "mcp/remote",
+        },
+      ]
+    },
+    {
+      type: "category",
       label: "Integrations",
       collapsible: true,
       collapsed: false,

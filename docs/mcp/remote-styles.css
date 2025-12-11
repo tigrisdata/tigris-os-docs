@@ -1,0 +1,27 @@
+img.install-btn {
+  max-width: 22px;
+}
+
+.install-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin-right: 0.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+  margin-bottom: 0;
+}
+
+.install-btn:hover {
+  background: rgba(98, 254, 181, 0.15);
+  border-color: rgba(98, 254, 181, 0.3);
+  color: #fff;
+}

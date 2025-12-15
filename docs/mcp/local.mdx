@@ -1,0 +1,99 @@
+# Local MCP Server
+
+:::note
+
+Please prefer using the [Remote MCP server whenever possible](./remote.mdx).
+Using the local MCP server employs a significantly different threat model than
+the remote MCP server. Please consult with your local systems administrator if
+you need a better understanding of the risks involved.
+
+:::
+
+The **Tigris MCP Server** implements the
+[MCP specification](https://modelcontextprotocol.io/) to create a seamless
+connection between AI agents and Tigris key features like bucket and object
+management.
+
+## Features
+
+The Tigris MCP server provides your agents context to your Tigris buckets and
+objects. That allows you to use Tigris in your AI editor workflows.
+
+Here are some example prompts you can try:
+
+### Buckets
+
+- List my tigris buckets
+- Create a new tigris bucket and call it `my-bucket`
+- Delete my tigris bucket called `my-bucket`
+
+### Objects
+
+- List my objects in bucket `my-bucket`
+- Upload `/Users/ME/tigris-mcp-server/myfile.txt` to `my-bucket`
+- Create a folder named `test` in `my-bucket`
+- Create a file `test.txt` with content `Hello World` in `my-bucket`
+- Give me a link to share for `test.txt`
+- Delete `myfile.txt` from `my-bucket`
+
+Checkout our blog post about
+[Vibe coding](https://www.tigrisdata.com/blog/vibes-off/) with Tigris MCP Server
+and more tips on
+[sharing files](https://www.tigrisdata.com/blog/mcp-server-sharing/) using the
+Tigris MCP Server.
+
+## Installation
+
+As every tool has its own setup flows for MCP servers, each will be explained in
+detail in its own subsection:
+
+### Claude Desktop
+
+Run
+[our setup script](https://github.com/tigrisdata/tigris-mcp-server/blob/main/src/init.ts)
+to automate setup:
+
+```text
+npx -y @tigrisdata/tigris-mcp-server init
+```
+
+### Cursor AI
+
+Run
+[our setup script](https://github.com/tigrisdata/tigris-mcp-server/blob/main/src/init.ts)
+to automate setup:
+
+```text
+npx -y @tigrisdata/tigris-mcp-server init
+```
+
+### OpenAI Codex
+
+Run `codex mcp add` to add the Tigris MCP server:
+
+```text
+codex mcp add tigris --env AWS_PROFILE=tigris -- npx -y @tigrisdata/tigris-mcp-server run
+```
+
+Be sure that your credentials are configured
+[in your AWS configuration](../sdks/s3/aws-cli.md#setting-the-endpoint-url-in-credentials-file)
+and replace the AWS profile name as appropriate.
+
+### VS Code (and VS Code Insiders)
+
+Run
+[our setup script](https://github.com/tigrisdata/tigris-mcp-server/blob/main/src/init.ts)
+to automate setup:
+
+```text
+npx -y @tigrisdata/tigris-mcp-server init
+```
+
+Or do the following:
+
+1. Press Control+Shift+P or Command+Shift+P to open the command palette.
+2. Search for "MCP: Add Server".
+3. Create a Command (stdio) MCP server.
+4. Enter the command `npx -y @tigrisdata/tigris-mcp-server run`.
+5. Name the MCP server `tigris`.
+6. Authenticate with Tigris and get off to work!

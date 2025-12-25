@@ -8,7 +8,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const S3 = new S3Client({
   region: "auto",
-  s3ForcePathStyle: false,
+  forcePathStyle: false,
 });
 
 // Presigned GET, allows users to download objects without making the bucket public.

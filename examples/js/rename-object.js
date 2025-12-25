@@ -34,7 +34,7 @@ export const renameObject = async (S3, bucket, oldKey, newKey) => {
 
 const S3 = new S3Client({
   region: "auto",
-  s3ForcePathStyle: false,
+  forcePathStyle: false,
   endpoint: "https://t3.storage.dev",
 });
 

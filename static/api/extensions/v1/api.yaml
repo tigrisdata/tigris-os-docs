@@ -320,6 +320,113 @@ paths:
               schema:
                 $ref: "#/components/schemas/GenericError"
 
+  /v1/providers/{provider_id}/orgs/{org_id}/buckets/{bucket_name}/lifecycle:
+    put:
+      tags:
+        - buckets
+      summary: Set lifecycle rules for a bucket
+      description: |
+        Sets lifecycle rules for automatic object transitions and expiration. If lifecycle rules already exist,
+        they will be completely replaced with the new configuration.
+
+        ## Lifecycle Rules Overview
+
+        Lifecycle rules allow you to automatically:
+        - **Transition** objects to cheaper storage classes after a specified time
+        - **Expire** (permanently delete) objects after a specified time
+
+        ## Examples
+
+        ### Archive old logs and delete after 1 year
+        ```json
+        {
+          "rules": [
+            {
+              "id": "archive-and-cleanup-logs",
+              "enabled": true,
+              "transitions": [
+                { "days": 90, "storage_class": "GLACIER" }
+              ],
+              "expiration": { "days": 365 }
+            }
+          ]
+        }
+        ```
+      operationId: Tigris_SetLifecycleRules
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/bucket_name"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetLifecycleRulesRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SetLifecycleRulesResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+    get:
+      tags:
+        - buckets
+      summary: Get lifecycle rules for a bucket
+      description: |
+        Returns the currently configured lifecycle rules for the bucket. Returns an empty rules array
+        if no lifecycle rules are configured.
+      operationId: Tigris_GetLifecycleRules
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/bucket_name"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetLifecycleRulesResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+    delete:
+      tags:
+        - buckets
+      summary: Remove all lifecycle rules from a bucket
+      description: |
+        Removes all lifecycle rules from the bucket. Objects will no longer be automatically
+        transitioned or expired. This is equivalent to sending a PUT request with an empty rules array.
+      operationId: Tigris_DeleteLifecycleRules
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/bucket_name"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteLifecycleRulesResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
   /v1/providers/{provider_id}/orgs/{org_id}/key/rotate:
     post:
       tags:
@@ -679,6 +786,8 @@ components:
             If set to true, per object ACL will be enabled. Default is false.
         object_notifications:
           $ref: "#/components/schemas/ObjectNotifications"
+        lifecycle_rules:
+          $ref: "#/components/schemas/LifecycleRules"
     ObjectNotifications:
       type: object
       description: |
@@ -749,6 +858,135 @@ components:
           type: string
           description: Bearer token for authorization
           format: password
+    LifecycleRules:
+      type: object
+      description: |
+        Lifecycle rules to automatically transition objects to different storage classes or permanently delete (expire) them.
+
+        - **Transitions**: Automatically move objects to a cheaper storage class after a specified time or on a specific date.
+          Use this for data that is accessed less frequently over time (e.g., logs, backups, archives).
+        - **Expiration**: Automatically and permanently delete objects after a specified time or on a specific date.
+          Use this for temporary data, logs with retention policies, or any data that should be cleaned up automatically.
+
+        ## Example: Archive old logs and delete after 1 year
+
+        ```json
+        {
+          "rules": [
+            {
+              "id": "archive-and-cleanup-logs",
+              "enabled": true,
+              "transitions": [
+                { "days": 90, "storage_class": "GLACIER" }
+              ],
+              "expiration": { "days": 365 }
+            }
+          ]
+        }
+        ```
+
+        This rule transitions objects to `GLACIER` after 90 days, and permanently deletes them after 365 days.
+
+        ## Update Behavior (Partial Updates Supported)
+
+        - **Omit field entirely**: Keeps existing lifecycle rules unchanged
+        - **Include empty rules array `[]`**: Removes all lifecycle rules
+        - **Include rules**: Replaces all lifecycle rules with the provided set
+
+        Note: When updating rules, you must provide the complete rule configuration. To preserve existing rules while making changes, first retrieve the current bucket configuration, modify the desired fields, and submit the complete updated rules.
+      properties:
+        rules:
+          type: array
+          items:
+            $ref: "#/components/schemas/LifecycleRule"
+    LifecycleRule:
+      type: object
+      required:
+        - id
+        - enabled
+      properties:
+        id:
+          type: string
+          description: |
+            Unique identifier for the rule (max 255 chars). Use a descriptive name like `archive-old-logs` or `expire-temp-uploads`.
+          maxLength: 255
+        enabled:
+          type: boolean
+          description: |
+            Whether the rule is currently active. Set to `false` to temporarily disable a rule without deleting it.
+            When disabled, objects will not be transitioned or expired by this rule.
+        expiration:
+          $ref: "#/components/schemas/LifecycleExpiration"
+        transitions:
+          type: array
+          description: |
+            List of storage class transitions. Objects will transition through each defined step.
+            Transitions must be in chronological order (earlier days/dates first).
+          items:
+            $ref: "#/components/schemas/LifecycleTransition"
+    LifecycleExpiration:
+      type: object
+      description: |
+        Configuration for automatic object deletion (expiration).
+
+        When the expiration condition is met, objects matching this rule are **permanently deleted**.
+
+        ## Specify ONE Condition (Not Both)
+
+        - `days`: Delete objects N days after their creation date
+        - `date`: Delete all matching objects on a specific date
+        ```
+      properties:
+        days:
+          type: integer
+          description: |
+            Number of days after object creation when the object will be deleted.
+            The deletion happens at midnight UTC on the calculated expiration date.
+
+            Example: If `days: 30` and an object was created on Dec 1, it expires on Dec 31.
+        date:
+          type: string
+          format: date-time
+          description: |
+            Specific date (at midnight UTC) when all matching objects will be deleted, regardless of when they were created.
+            Use this for one-time cleanup operations or compliance deadlines.
+
+            Must be a future date in RFC3339 format with midnight UTC time.
+          example: "2025-01-01T00:00:00Z"
+    LifecycleTransition:
+      type: object
+      required:
+        - storage_class
+      description: |
+        Configuration for transitioning objects to a different storage class.
+
+        When the transition condition is met, objects are moved to the specified storage class.
+        This is useful for reducing storage costs by moving infrequently accessed data to cheaper tiers.
+
+        ## Specify ONE Condition (Not Both)
+
+        - `days`: Transition objects N days after their creation date
+        - `date`: Transition all matching objects on a specific date
+        ```
+      properties:
+        days:
+          type: integer
+          description: |
+            Number of days after object creation when the transition occurs.
+            The transition happens at midnight UTC on the calculated date.
+
+            Example: If `days: 60` and an object was created on Jan 1, it transitions on Mar 2.
+        date:
+          type: string
+          format: date-time
+          description: |
+            Specific date (at midnight UTC) when all matching objects will be transitioned, regardless of when they were created.
+            Use this for planned migrations or cost optimization deadlines.
+
+            Must be a future date in RFC3339 format with midnight UTC time.
+          example: "2025-06-01T00:00:00Z"
+        storage_class:
+          $ref: "#/components/schemas/StorageClass"
     ProvisioningResponse:
       type: object
     UpdateBucketRequest:
@@ -821,6 +1059,34 @@ components:
       properties:
         website:
           $ref: "#/components/schemas/BucketWebsiteSettings"
+    SetLifecycleRulesRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - rules
+      properties:
+        rules:
+          type: array
+          description: |
+            List of lifecycle rules to apply to the bucket.
+          items:
+            $ref: "#/components/schemas/LifecycleRule"
+    SetLifecycleRulesResponse:
+      type: object
+    GetLifecycleRulesResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - rules
+      properties:
+        rules:
+          type: array
+          description: |
+            Currently configured lifecycle rules for the bucket. Empty array if no rules are configured.
+          items:
+            $ref: "#/components/schemas/LifecycleRule"
+    DeleteLifecycleRulesResponse:
+      type: object
     Invoice:
       type: object
       properties:
@@ -982,6 +1248,8 @@ components:
           $ref: "#/components/schemas/BucketWebsiteSettings"
         object_notifications:
           $ref: "#/components/schemas/ObjectNotifications"
+        lifecycle_rules:
+          $ref: "#/components/schemas/LifecycleRules"
     GetUsageResponse:
       type: object
       properties:

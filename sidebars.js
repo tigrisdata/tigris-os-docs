@@ -345,6 +345,11 @@ const sidebars = {
       },
       items: [
         {
+          type: "doc",
+          label: "Multi-Tenant Architecture",
+          id: "partner-integrations/architecture",
+        },
+        {
           type: "category",
           label: "API reference",
           link: {

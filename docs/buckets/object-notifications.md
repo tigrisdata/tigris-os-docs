@@ -126,7 +126,7 @@ WHERE `Event-Type` = "OBJECT_DELETED"
 
 ## Pricing
 
-See [Pricing](/docs/pricing/index.md) for how object notifications are charged.
+See [Pricing](/docs/pricing/index.mdx) for how object notifications are charged.
 
 ## Notification ordering guarantees and delivery
 

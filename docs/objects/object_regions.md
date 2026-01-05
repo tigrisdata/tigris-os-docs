@@ -62,7 +62,7 @@ making the request.
 
 :::note
 
-Please consult the [Pricing](/docs/pricing/index.md) page for more details on
+Please consult the [Pricing](/docs/pricing/index.mdx) page for more details on
 how the storage cost is calculated when multiple copies are stored.
 
 :::

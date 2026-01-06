@@ -339,11 +339,18 @@ const sidebars = {
     {
       type: "category",
       label: "Partner Integration Program",
-      link: {
-        type: "doc",
-        id: "partner-integrations/index",
-      },
+      collapsed: true,
       items: [
+        {
+          type: "doc",
+          label: "Overview",
+          id: "partner-integrations/index",
+        },
+        {
+          type: "doc",
+          label: "Multi-Tenant Architecture",
+          id: "partner-integrations/architecture",
+        },
         {
           type: "category",
           label: "API reference",

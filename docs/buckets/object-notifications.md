@@ -141,5 +141,6 @@ single region then collates those events and sends them to the webhook. The
 
 ## Next steps
 
-- Check out the [Example Webhook](/docs/sdks/s3/aws-go-sdk.mdx#object-notifications) for more
+- Check out the
+  [Example Webhook](/docs/sdks/s3/aws-go-sdk.mdx#object-notifications) for more
   details on how to use them in your application.

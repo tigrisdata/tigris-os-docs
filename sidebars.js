@@ -339,8 +339,7 @@ const sidebars = {
     {
       type: "category",
       label: "Partner Integration Program",
-      collapsible: true,
-      collapsed: false,
+      collapsed: true,
       items: [
         {
           type: "doc",

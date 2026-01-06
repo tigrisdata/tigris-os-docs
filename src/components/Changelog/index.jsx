@@ -2,6 +2,24 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import styles from "./styles.module.css";
 
+// --- Helper function to truncate month names ---
+// This function truncates month names to 3 characters (e.g., "November 15, 2025" becomes "Nov 15, 2025")
+const formatDate = (dateString) => {
+  // Input validation
+  if (!dateString || typeof dateString !== "string") {
+    return dateString;
+  }
+
+  // Parse the date string
+  const parts = dateString.split(" ");
+  if (parts.length >= 2 && parts[0].length > 3) {
+    // Truncate the month name to 3 characters
+    const month = parts[0].substring(0, 3);
+    return `${month} ${parts.slice(1).join(" ")}`;
+  }
+  return dateString;
+};
+
 // --- Helper function for tag colors ---
 // This is used by subcategory items only.
 const getTagColorClasses = (color) => {
@@ -142,12 +160,12 @@ export const ChangelogItem = ({
 
       {/* Date on the left */}
       <div className={styles.dateContainer}>
-        <p className={styles.dateText}>{date}</p>
+        <p className={styles.dateText}>{formatDate(date)}</p>
       </div>
 
       {/* Content on the right */}
       <div className={styles.content}>
-        <div className={styles.dateMobile}>{date}</div>
+        <div className={styles.dateMobile}>{formatDate(date)}</div>
 
         {/* Header area */}
         <div className={styles.itemHeader}>

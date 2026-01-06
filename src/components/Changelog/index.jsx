@@ -5,9 +5,14 @@ import styles from "./styles.module.css";
 // --- Helper function to truncate month names ---
 // This function truncates month names to 3 characters (e.g., "November 15, 2025" becomes "Nov 15, 2025")
 const formatDate = (dateString) => {
+  // Input validation
+  if (!dateString || typeof dateString !== "string") {
+    return dateString;
+  }
+
   // Parse the date string
   const parts = dateString.split(" ");
-  if (parts.length >= 2) {
+  if (parts.length >= 2 && parts[0].length > 3) {
     // Truncate the month name to 3 characters
     const month = parts[0].substring(0, 3);
     return `${month} ${parts.slice(1).join(" ")}`;

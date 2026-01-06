@@ -42,27 +42,22 @@ At the beginning, the bucket contains two objects (Object 1 = `foo`, Object 2 =
 `bar`).
 
 1. **T1** → Snapshot 1 is created.
-
    - Bucket contains _Object 1 = `foo`_ and _Object 2 = `bar`_.
    - Both are preserved in Snapshot 1.
 
 2. **T2** → Object 2 is updated to `quux`.
-
    - Snapshot 1 remains unchanged.
 
 3. **T3** → Snapshot 2 is created.
-
    - It records _Object 1 = `foo`_ and _Object 2 = `quux`_.
 
 4. **T4** → Object 3 is added with value `baz`.
 
 5. **T5** → Snapshot 3 is created.
-
    - It preserves _Object 1 = `foo`_, _Object 2 = `quux`_, and _Object 3 =
      `baz`_.
 
 6. **T6** → Object 1 is deleted from the live bucket.
-
    - Past snapshots (1, 2, 3) still retain Object 1.
 
 7. **T7** → Snapshot 4 is created.

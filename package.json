@@ -28,9 +28,9 @@
     "format": "prettier -w ."
   },
   "dependencies": {
-    "@docusaurus/core": "^3.9.1",
-    "@docusaurus/preset-classic": "^3.9.1",
-    "@docusaurus/theme-mermaid": "^3.9.1",
+    "@docusaurus/core": "^3.9.2",
+    "@docusaurus/preset-classic": "^3.9.2",
+    "@docusaurus/theme-mermaid": "^3.9.2",
     "@mdx-js/react": "^3.0.0",
     "@social-embed/wc": "^0.0.4-next.0",
     "clsx": "^1.1.1",
@@ -62,9 +62,9 @@
     ]
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "^3.9.1",
-    "@docusaurus/tsconfig": "^3.9.1",
-    "@docusaurus/types": "^3.9.1",
+    "@docusaurus/module-type-aliases": "^3.9.2",
+    "@docusaurus/tsconfig": "^3.9.2",
+    "@docusaurus/types": "^3.9.2",
     "@redocly/cli": "^2.12.7",
     "@types/react": "^18.2.29",
     "@typescript-eslint/eslint-plugin": "^6.11.0",

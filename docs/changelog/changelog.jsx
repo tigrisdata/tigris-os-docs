@@ -8,6 +8,51 @@ import TabItem from "@theme/TabItem";
 
 export const changelogData = [
   {
+    date: "January 13, 2026",
+    title: "MCP OIDC Provider & llms.txt Support",
+    content: (
+      <>
+        <p>
+          We&apos;ve released the <strong>mcp-oidc-provider</strong> package and
+          added llms.txt support to make Tigris more agent-friendly.
+        </p>
+
+        <p>
+          <strong>mcp-oidc-provider Package</strong>
+        </p>
+        <p>
+          A new{" "}
+          <a href="https://www.npmjs.com/package/mcp-oidc-provider">
+            mcp-oidc-provider
+          </a>{" "}
+          package is now available on npm. This package provides OIDC authentication
+          for MCP (Model Context Protocol) servers, making it easier to build
+          secure, OAuth-enabled MCP integrations. Read more in the{" "}
+          <a href="https://www.tigrisdata.com/blog/mcp-oidc-provider/">
+            announcement blog post
+          </a>
+          .
+        </p>
+
+        <p>
+          <strong>llms.txt Support</strong>
+        </p>
+        <p>
+          Tigris documentation now supports{" "}
+          <a href="https://www.tigrisdata.com/llms.txt">llms.txt</a>, making it
+          easier for AI agents to find and use our documentation. You can add this to
+          your agent configuration files (like <code>AGENTS.md</code> or{" "}
+          <code>CLAUDE.md</code>):
+        </p>
+        <CodeBlock language="markdown">{`## Helpful Documentation
+
+When asked about various services or tools, use these resources to help you:
+
+- **Tigris** or **Tigris Data**: https://www.tigrisdata.com/docs/llms.txt or https://www.tigrisdata.com/llms.txt`}</CodeBlock>
+      </>
+    ),
+  },
+  {
     date: "December 1, 2025",
     title: "Hosted MCP Server",
     content: (

@@ -11,9 +11,7 @@ Tigris access keys authenticate programmatic access to your object storage
 buckets. You can manage them via the Tigris Dashboard or programmatically using
 the AWS CLI.
 
----
-
-## 🔑 Create an Access Key
+## Create an Access Key
 
 ### From the Dashboard
 
@@ -50,8 +48,6 @@ the AWS CLI.
    export AWS_REGION=auto
    ```
 
----
-
 ### Programmatically
 
 1. **Set Environment Variables**
@@ -70,9 +66,7 @@ the AWS CLI.
    aws iam create-access-key --endpoint-url "$AWS_ENDPOINT_URL_IAM"
    ```
 
----
-
-## 🗑️ Delete an Access Key
+## Delete an Access Key
 
 ### From the Dashboard
 
@@ -83,11 +77,9 @@ the AWS CLI.
 2. **Find the Key**  
    In the list, locate the access key you want to delete.
 
-3. **Delete the Key**  
+3. **Delete the Key**
    Click the 🗑️ icon next to the key. A confirmation modal will appear—click
    **Delete** to confirm.
-
----
 
 ### Programmatically
 

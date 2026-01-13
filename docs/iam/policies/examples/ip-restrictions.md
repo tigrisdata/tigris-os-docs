@@ -3,14 +3,10 @@
 This guide shows you how to restrict access to a bucket using IAM policies that
 only allow access from specific IP addresses or IP ranges.
 
----
-
 ## Use Case
 
 Grant read-only access to an S3 bucket—but only from trusted IPs such as a
 corporate VPN or known static address.
-
----
 
 ## Example Policy
 
@@ -47,8 +43,6 @@ the request comes from the IP address `1.2.3.4` or the CIDR block
   ]
 }
 ```
-
----
 
 ## Explanation
 

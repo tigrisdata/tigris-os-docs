@@ -3,8 +3,6 @@
 This guide shows how to restrict access to a bucket during specific time windows
 using IAM policy conditions with `aws:CurrentTime`.
 
----
-
 ## Use Cases
 
 You can use date-time restrictions to enforce time-bound access to your storage.
@@ -18,8 +16,6 @@ Common examples include:
   date range.
 - **Scheduled maintenance** — limit read/write operations during designated
   timeframes.
-
----
 
 ## Example Policy: Access Only on a Specific Day
 
@@ -47,8 +43,6 @@ The following policy allows `s3:GetObject` and `s3:ListBucket` access to the
   ]
 }
 ```
-
----
 
 ## Example Policy: Nightly Backup Window
 
@@ -81,8 +75,6 @@ external scheduler to attach/detach access.
 To apply this daily, update the date values programmatically via your CI/CD
 pipeline or other scheduler.
 
----
-
 ## Explanation
 
 | Field         | Description                                                     |
@@ -91,8 +83,6 @@ pipeline or other scheduler.
 | `Resource`    | Applies to both the bucket and its contents.                    |
 | `Condition`   | Uses `aws:CurrentTime` to define the valid access window.       |
 | `Time Format` | Must be in ISO 8601 format, UTC (e.g., `2025-01-14T00:00:00Z`). |
-
----
 
 ## Supported Date-Time Conditions
 

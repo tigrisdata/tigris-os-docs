@@ -13,9 +13,7 @@ You can:
 - Use wildcards (e.g. `s3:Get*` or `s3:*`)
 - Mix with conditions and resource ARNs for fine-grained access control
 
----
-
-## 📋 Action Reference Table
+## Action Reference Table
 
 The table below lists supported IAM policy actions and what APIs they control
 (allow or deny).

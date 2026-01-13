@@ -4,8 +4,33 @@ Tigris is a globally distributed S3-compatible object storage service that
 allows you to store and access any amount of data for a wide range of use cases.
 Tigris automatically and intelligently distributes your data close to the users,
 and removes the need for you to worry about the complexities of data
-replication, and caching. Besides that, Tigris supports the S3 API, which means
-you can use the wide range of available S3 tools, libraries, and extensions.
+replication, and caching.
+
+## How to use Tigris
+
+Most teams adopt Tigris by configuring existing
+[AWS S3 or Google Cloud Storage SDKs](/docs/sdks/s3/) with Tigris
+[access keys](/docs/iam/manage-access-key/) and a
+[Tigris endpoint](/docs/sdks/s3/aws-cli/#service-endpoints). In many cases,
+applications can switch to Tigris with no code changes beyond configuration.
+
+Tigris also offers [native Storage SDKs](/docs/sdks/tigris/) that provide direct
+access to Tigris-specific features like
+[client uploads](/docs/sdks/tigris/client-uploads/) and
+[bucket forks and snapshots](/docs/buckets/snapshots-and-forks/). For
+AI-assisted development, the [Tigris MCP server](/docs/mcp/local/) lets AI
+coding agents interact with your Tigris buckets directly.
+
+## What Tigris stores
+
+Tigris stores objects—such as application assets, model weights, media files,
+and ML artifacts—that are consumed by databases, analytics systems, vector
+search engines, and AI pipelines. Tigris focuses on durable object storage and
+does not currently provide databases or query engines. However, Tigris can
+replace a traditional CDN for many use cases due to its automatic global
+replication.
+
+## Use cases
 
 You can use Tigris for a wide range of use cases, such as:
 
@@ -14,87 +39,72 @@ You can use Tigris for a wide range of use cases, such as:
 - Storage for IoT applications
 - Data analytics, big data and batch processing
 - Storage for machine learning models and datasets
+- Large AI artifacts such as model weights, checkpoints, and embeddings
+- Multi-cloud dataset access without egress fees for training and inference
 - Backups and archives
 
 ## Features of Tigris
 
-### Single Global Endpoint
+### Global Low-Latency Access
 
-In Tigris, buckets are inherently global entities. This means that the objects
-within your bucket are stored in the region where the initial requests are made.
-To optimize performance and reduce latency, these objects are intelligently
-distributed to other regions based on the access patterns observed over time.
+Tigris automatically distributes your data close to users worldwide. Access your
+buckets from any region using a single global endpoint—Tigris handles data
+placement and replication automatically based on access patterns.
 
-This means that you can access your bucket from any region by using a single
-global endpoint. If you are using Tigris outside of Fly, use the endpoint
-[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
-within Fly, use the endpoint
-[https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
+When users access data from a new region, Tigris creates a durable copy in that
+region. As access patterns persist, data is automatically relocated to where
+it's most frequently accessed. No configuration required.
 
-![Global Endpoint](/img/tigris-os-global-endpoint.png)
+See [Regions](/docs/concepts/regions/) and
+[Architecture](/docs/concepts/architecture/) for more details.
 
-The global endpoint provides a unified entry point for accessing your Tigris
-buckets globally, while the dynamic distribution of objects based on access
-patterns, results in optimized latency, providing faster access to your data.
+### S3-Compatible API
 
-### Globally Distributed Data
-
-Tigris dynamically places the data close to the users and distributes it to
-regions globally based on the request pattern. There is no configuration
-required to enable this feature.
-
-What this means is, if a request comes from a user in Frankfurt, Germany, the
-data is stored in the closest region in EU. If a request comes from a user in
-New York, US, the data is stored in the closest US region.
-
-![Data Storage](/img/tigris-os-arch-block-store.png)
-
-Tigris employs **"access-based rebalancing"** to optimize data placement
-dynamically. When a user begins accessing data from a region where it is not
-currently stored, Tigris seamlessly retrieves the data from its original
-location and temporarily caches it in the accessing region. Over time, as access
-patterns persist, the data is automatically relocated to the region where it is
-most frequently accessed, ensuring improved performance and reduced latency for
-end users.
-
-### S3-compatible API
-
-Tigris provides an S3-compatible API which allows you to access the wide range
-of available S3 tools, libraries, and extensions. See the
-[S3 API Compatibility](../api/s3/) section for more details. We also have
-[language specific guides](../sdks/s3/) on how to use the AWS S3 SDKs with
+Tigris supports the majority of the AWS S3 API that developers commonly use,
+enabling broad interoperability with S3-compatible tooling. See the
+[S3 API Compatibility](/docs/api/s3/) section for more details. We also have
+[language specific guides](/docs/sdks/s3/) on how to use the AWS S3 SDKs with
 Tigris.
+
+### Zero Egress Fees
+
+Tigris does not charge for data transfer in or out. This makes Tigris
+well-suited for multi-cloud architectures and AI/ML workloads where data is
+frequently moved between environments. See [Pricing](/docs/pricing/) for
+details.
+
+### Bucket Forks and Snapshots
+
+Fork buckets like code. Create instant, copy-on-write clones for AI agents or
+experimentation. Agents get isolated copies to prevent collisions, and
+petabyte-scale datasets can be forked instantly. See
+[Bucket Forks and Snapshots](/docs/buckets/snapshots-and-forks/) for details.
+
+### Zero-Downtime Migration
+
+Shadow Buckets enable seamless migration from existing S3-compatible storage.
+Configure a shadow bucket to automatically sync reads and writes between your
+old and new storage, eliminating risky hard cutover migrations. See
+[Migration](/docs/migration/) for details.
 
 ### Strong Consistency
 
-By default, Tigris offers strict read-after-write consistency within the same
-region and eventual consistency globally. In most cases, global eventual
-consistency is preferred for performance reasons, as it allows for lower latency
-and better scalability.
-
-However, for use cases where a single object can be modified from any region,
-Tigris provides global strong consistency option which ensures that all
-operations for a bucket are globally consistent. See the
-[Consistency](../concepts/consistency/) section for more details.
+By default, Tigris offers read-after-write consistency within the same region
+and eventual consistency globally. For use cases where objects can be modified
+from any region, Tigris provides a global strong consistency option. See
+[Consistency](/docs/concepts/consistency/) for more details.
 
 ### Flexible Storage Tiers
 
-Tigris offers object storage tiers to optimize storage costs based on the access
-patterns of your data. The standard tier allows for high durability,
-availability, and performance for frequently accessed data. While the infrequent
-access, and archive tiers provide lower-cost storage for data that is accessed
-less frequently.
+Tigris offers storage tiers to optimize costs based on access patterns. The
+standard tier provides high durability and performance for frequently accessed
+data, while infrequent access and archive tiers offer lower-cost storage for
+less frequently accessed data. See [Storage Tiers](/docs/objects/tiers/) for
+details.
 
-See the [Storage Tiers](../objects/tiers/) section for more details.
+### Security and Compliance
 
-### Fast Small Object Retrieval
-
-Tigris provides significantly lower latency for small objects as compared to S3.
-This allows you to use the same data storage for both small and large objects.
-
-Small objects storage is optimized by using a combination of inlining and
-coalescing techniques. Access to small objects is further optimized by caching
-frequently accessed objects in a LSM-based on-disk cache.
-
-You don't need to do anything special to take advantage of this feature. It is
-enabled by default for all buckets.
+Tigris is SOC 2 Type II compliant with encryption at rest and in transit.
+Fine-grained [IAM policies](/docs/iam/policies/) let you control access to
+buckets and objects. See
+[Authentication and Authorization](/docs/concepts/authnz/) for details.

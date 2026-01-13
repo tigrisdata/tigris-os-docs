@@ -31,11 +31,12 @@ const sidebars = {
       label: "Overview",
       collapsible: true,
       collapsed: true,
-      link: {
-        type: "doc",
-        id: "overview/index",
-      },
       items: [
+        {
+          type: "doc",
+          label: "What is Tigris?",
+          id: "overview/index",
+        },
         "concepts/architecture",
         "concepts/authnz",
         "api/s3/index",

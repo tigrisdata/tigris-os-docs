@@ -1,0 +1,83 @@
+# Performance Metrics
+
+This page describes the benchmarking methodology used to evaluate Tigris against
+other object storage providers for small object workloads.
+
+## Benchmark Tool
+
+The [Yahoo Cloud Serving Benchmark (YCSB)](https://en.wikipedia.org/wiki/YCSB)
+was used to evaluate all systems. We
+[added support](https://github.com/pingcap/go-ycsb/pull/307) for S3-compatible
+object storage systems (such as Tigris and Cloudflare R2), which was merged
+shortly after publishing.
+
+## Test Environment
+
+We ran these benchmarks on compute that was not colocated with storage (i.e.,
+not within Tigris or AWS), matching the workload pattern we see with many of our
+customers: highly distributed compute across neoclouds.
+
+| Component         | Specification                      |
+| ----------------- | ---------------------------------- |
+| Instance type     | VM.Standard.A1.Flex (Oracle Cloud) |
+| Region            | us-sanjose-1 (West Coast)          |
+| vCPU cores        | 32                                 |
+| Memory            | 32 GiB                             |
+| Network bandwidth | 32 Gbps                            |
+
+## YCSB Configuration
+
+We benchmarked a dataset of **10 million objects**, each **1 KB** in size. The
+configuration is available in the
+[tigrisdata-community/ycsb-benchmarks](https://github.com/tigrisdata-community/ycsb-benchmarks)
+GitHub repo, specifically at
+[results/10m-1kb/workloads3](https://github.com/tigrisdata-community/ycsb-benchmarks/blob/main/results/10m-1kb/workloads3).
+
+## Bucket Regions
+
+Buckets were placed in the following regions per provider to ensure fair
+comparison with geographically proximate endpoints:
+
+| Provider      | Region                                                               |
+| :------------ | :------------------------------------------------------------------- |
+| Tigris        | `auto` (globally replicated, but operating against the `sjc` region) |
+| AWS S3        | `us-west-1` (Northern California)                                    |
+| Cloudflare R2 | `WNAM` (Western North America)                                       |
+
+## Test Phases
+
+Using YCSB, we evaluated two distinct phases:
+
+### Phase 1: Bulk Load
+
+Loading **10 million 1 KB objects** into each storage system. This tests raw
+write performance and system scalability under sustained load.
+
+### Phase 2: Mixed Workload
+
+A mixed workload of **1 million operations** composed of:
+
+- **80% reads** - Simulating typical read-heavy access patterns
+- **20% writes** - Representing ongoing data updates
+
+This phase measures real-world performance under typical application workloads.
+
+## Metrics Collected
+
+For each test phase, we collected:
+
+| Metric      | Description                                     |
+| ----------- | ----------------------------------------------- |
+| P50 Latency | Median latency (50th percentile)                |
+| P90 Latency | Tail latency (90th percentile)                  |
+| Runtime     | Total time to complete all operations           |
+| Throughput  | Operations per second sustained during the test |
+
+## Next Steps
+
+View the detailed comparison results for each provider:
+
+- [Comparison: AWS S3](./aws-s3)
+- [Comparison: Cloudflare R2](./cloudflare-r2)
+
+Or jump to the [Benchmark Summary](./summary) for complete results.

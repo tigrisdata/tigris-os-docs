@@ -50,9 +50,34 @@ const sidebars = {
       id: "get-started/index",
     },
     {
-      type: "doc",
+      type: "category",
       label: "Benchmarks",
-      id: "overview/benchmarks/index",
+      link: {
+        type: "doc",
+        id: "overview/benchmarks/index",
+      },
+      items: [
+        {
+          type: "doc",
+          label: "Performance Metrics",
+          id: "overview/benchmarks/metrics",
+        },
+        {
+          type: "doc",
+          label: "Comparison: AWS S3",
+          id: "overview/benchmarks/aws-s3",
+        },
+        {
+          type: "doc",
+          label: "Comparison: Cloudflare R2",
+          id: "overview/benchmarks/cloudflare-r2",
+        },
+        {
+          type: "doc",
+          label: "Benchmark Summary",
+          id: "overview/benchmarks/summary",
+        },
+      ],
     },
     {
       type: "category",

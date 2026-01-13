@@ -1524,7 +1524,6 @@ components:
 
         Accepted values:
         - Specific region(s): "iad", "sjc", "iad,sjc,lhr" (comma-separated)
-        - Replication group: "usa", "eur"
         - No restrictions (global distribution): "global"
 
         If you want to remove existing region restrictions, you can set the value to "global".

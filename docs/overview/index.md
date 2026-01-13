@@ -40,7 +40,7 @@ where it's accessed, reducing latency and eliminating egress fees when data
 moves between clouds.
 
 **You need a shared data layer for AI systems.** Tigris is commonly used to
-store model weights, checkpoints, embeddings files, feature data stored as
+store model weights, checkpoints, embedding files, feature data stored as
 objects, and training datasets that are consumed by external training
 frameworks, inference services, vector databases, and analytics systems. Because
 Tigris does not charge egress fees, large datasets can be reused freely across

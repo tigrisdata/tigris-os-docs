@@ -836,11 +836,6 @@ components:
             SQL WHERE clause to filter which objects trigger notifications
             (e.g., size comparisons)
           example: "size > 1000000"
-        region:
-          type: string
-          description:
-            Region to process notifications from (defaults to server region)
-          example: "iad"
         auth:
           $ref: "#/components/schemas/ObjectNotificationAuth"
     ObjectNotificationAuth:
@@ -1523,11 +1518,17 @@ components:
       enum: [STANDARD, STANDARD_IA, GLACIER, GLACIER_IR]
     Regions:
       type: string
-      description:
+      description: |
         Restricts the regions where bucket data is stored. Default is empty,
-        which means no restrictions. See
-        https://www.tigrisdata.com/docs/objects/object_regions/ for more
-        details.
+        which means no restrictions (global distribution).
+
+        Accepted values:
+        - Specific region(s): "iad", "sjc", "iad,sjc,lhr" (comma-separated)
+        - No restrictions (global distribution): "global"
+
+        If you want to remove existing region restrictions, you can set the value to "global".
+
+        See https://www.tigrisdata.com/docs/objects/object_regions/ for more details.
     GenericError:
       type: object
       properties:

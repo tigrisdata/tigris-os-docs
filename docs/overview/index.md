@@ -30,17 +30,43 @@ does not currently provide databases or query engines. However, Tigris can
 replace a traditional CDN for many use cases due to its automatic global
 replication.
 
-## Use cases
+## When to choose Tigris
 
-You can use Tigris for a wide range of use cases, such as:
+**You're building AI and data-intensive workloads that span clouds or
+providers.** If you train on GPU neoclouds, run inference across multiple
+providers, or want to avoid lock-in to a single cloud, Tigris gives you a
+single, globally replicated object store. Data is stored and replicated close to
+where it's accessed, reducing latency and eliminating egress fees when data
+moves between clouds.
 
-- Storage for real-time applications
-- Web content and media (images, videos, etc.)
-- Storage for IoT applications
-- Data analytics, big data and batch processing
+**You need a shared data layer for AI systems.** Tigris is commonly used to
+store model weights, checkpoints, embeddings files, feature data stored as
+objects, and training datasets that are consumed by external training
+frameworks, inference services, vector databases, and analytics systems. Because
+Tigris does not charge egress fees, large datasets can be reused freely across
+environments.
+
+**You want isolated environments for agents and experiments.** Bucket forks let
+AI agents, experiments, and evaluation runs work against isolated copies of the
+same underlying data without collisions. Even very large datasets can be forked
+instantly, making it practical to run parallel experiments at scale.
+
+**You care about predictable costs for data-heavy workloads.** With no egress
+fees, Tigris lets you move and reuse data without surprise bills. This is
+especially valuable for AI training, batch processing, analytics, and media
+workloads where data movement dominates cost.
+
+**You're migrating from another S3-compatible provider.** Shadow buckets keep
+your existing storage and Tigris synchronized, enabling zero-downtime migration.
+Applications can switch over gradually, often with only configuration changes.
+
+Typical use cases include:
+
 - Storage for machine learning models and datasets
-- Large AI artifacts such as model weights, checkpoints, and embeddings
-- Multi-cloud dataset access without egress fees for training and inference
+- Storage for real-time applications and AI-powered services
+- Web content and media (images, video, static assets)
+- Storage for IoT applications and globally distributed data ingestion
+- Data analytics, big data, and batch processing
 - Backups and archives
 
 ## Features of Tigris

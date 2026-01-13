@@ -133,3 +133,10 @@ docs are configured through the `docusaurus-plugin-openapi-docs` plugin.
 
 Local development requires copying `.env.local.example` to `.env.local` and
 configuring any necessary environment variables.
+
+## Helpful Documentation
+
+When asked about various services or tools, use these resources to help you:
+
+- **Tigris** or **Tigris Data**: https://www.tigrisdata.com/docs/llms.txt or
+  https://www.tigrisdata.com/llms.txt

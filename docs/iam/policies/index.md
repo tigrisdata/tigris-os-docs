@@ -6,9 +6,7 @@ resources, optionally under conditions like IP address or time of day.
 Tigris uses a simplified, S3-compatible subset of AWS IAM. Policies are attached
 directly to **Access Keys**, not users or roles.
 
----
-
-## ✅ Supported IAM Policy Operations
+## Supported IAM Policy Operations
 
 Tigris supports the following IAM operations for managing access policies:
 
@@ -27,9 +25,7 @@ Tigris supports the following IAM operations for managing access policies:
 > **Note:** Tigris does not support IAM users. When these operations refer to
 > "user", they apply to **access keys only**.
 
----
-
-## 🧱 Supported IAM Policy Blocks
+## Supported IAM Policy Blocks
 
 IAM policies in Tigris use a subset of the AWS IAM specification. The following
 blocks are supported:
@@ -45,9 +41,7 @@ blocks are supported:
 | `Statement.Resource`  | ✅         | Specific ARNs or wildcard patterns       |
 | `Statement.Condition` | 🔶 Partial | Limited to the condition keys below      |
 
----
-
-## 🔐 Supported Condition Keys
+## Supported Condition Keys
 
 Tigris supports the following condition operators in IAM policies:
 
@@ -62,9 +56,7 @@ Tigris supports the following condition operators in IAM policies:
 
 > Only `aws:CurrentTime` is supported as a variable in date-based conditions.
 
----
-
-## 🧪 Example: Read-Only IAM Policy
+## Example: Read-Only IAM Policy
 
 This example grants read-only access to all objects in the `images` bucket:
 
@@ -81,23 +73,17 @@ This example grants read-only access to all objects in the `images` bucket:
 }
 ```
 
----
-
-## ⚙️ Supported Actions in `Action` Block
+## Supported Actions in `Action` Block
 
 Tigris supports a wide range of `s3:` IAM actions. You can:
 
 - Use exact action names (`s3:GetObject`)
 - Use wildcards (`s3:Put*`, `s3:*`)
 
-For the full list of actions Tigris supports, see:
+For the full list of actions Tigris supports, see the
+[Full List of Supported S3-Compatible Actions](/docs/iam/policies/supported-actions).
 
-👉
-[Full List of Supported S3-Compatible Actions](/docs/iam/policies/supported-actions)
-
----
-
-## 🧠 Summary
+## Summary
 
 - IAM policies define access for **access keys**, not users or roles.
 - Tigris supports a subset of AWS IAM JSON policy structure.

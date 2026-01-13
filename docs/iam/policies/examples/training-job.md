@@ -5,8 +5,6 @@ training job. The policy grants fine-grained access to specific buckets used
 during training—ensuring isolation between jobs and minimizing potential impact
 in case of a credential leak.
 
----
-
 ## Use Case
 
 This example demonstrates how to:
@@ -23,8 +21,6 @@ If the access key is compromised, the blast radius is minimal:
   writable).
 - The only write target is the dedicated finetuned model bucket.
 - Other datasets and model jobs remain protected.
-
----
 
 ## Example Policy: Dataset Read, Model Output Write, Time + IP Restricted
 
@@ -89,8 +85,6 @@ This policy allows the training job to:
 - Only during a 3-hour window
 - Only from a specific machine or IP block
 
----
-
 ## Explanation
 
 | Field         | Description                                                               |
@@ -101,9 +95,7 @@ This policy allows the training job to:
 | `Time Format` | ISO 8601 in UTC (e.g., `2025-07-16T01:00:00Z`).                           |
 | `IpAddress`   | Limits access to your job runner, GPU node, or secure NAT address.        |
 
----
-
-## ✅ Next Steps
+## Next Steps
 
 - **Rotate the key** once the job is complete.
 - **Use a scheduler** to dynamically apply time- and IP-based conditions per

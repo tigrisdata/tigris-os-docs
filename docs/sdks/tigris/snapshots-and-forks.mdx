@@ -1,16 +1,9 @@
-# Snapshots and Forks
+# Snapshots and forks with the Tigris SDK
 
-Snapshots and forks extend traditional object versioning beyond individual
-objects.
-
-- **Snapshots** capture the state of an entire bucket at a specific point in
-  time.
-- **Forks** let you clone a snapshot of a bucket, reusing objects without
-  copying data.
-
-Together, they provide powerful tools for data recovery, branching workflows, AI
-agent workflows, and efficient experimentation.
-[Read more about snapshots and forks in the buckets documentation](/docs/buckets/snapshots-and-forks).
+This page covers using snapshots and forks with the Tigris JavaScript SDK. For
+an overview of the concepts, see [Snapshots](/docs/snapshots) and
+[Forks](/docs/forks). For using snapshots and forks with other SDKs (Go,
+Python), see [Bucket Snapshots and Forks](/docs/buckets/snapshots-and-forks).
 
 Tigris SDK provides a way to create and manage snapshots and forks using a
 simple API.
@@ -97,7 +90,7 @@ import { createBucket } from "@tigrisdata/storage";
 const createFork = await createBucket(
   "llm-fork", // name of the fork bucket being created
   {
-    sourceBucketName: "llm-base", // name of the fork parent bucket
+    sourceBucketName: "llm-base", // name of the source bucket
   },
 );
 

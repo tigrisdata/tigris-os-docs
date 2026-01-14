@@ -158,7 +158,7 @@ const sidebars = {
             },
             {
               type: "doc",
-              label: "Snapshots and Forks",
+              label: "Use with the Tigris SDK",
               id: "sdks/tigris/snapshots-and-forks",
             },
           ],
@@ -314,7 +314,11 @@ const sidebars = {
         },
         "sdks/tigris/using-sdk",
         "sdks/tigris/client-uploads",
-        "sdks/tigris/snapshots-and-forks",
+        {
+          type: "doc",
+          label: "Snapshots and Forks",
+          id: "sdks/tigris/snapshots-and-forks",
+        },
         "sdks/tigris/examples",
       ],
     },

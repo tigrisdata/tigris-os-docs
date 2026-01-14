@@ -129,7 +129,7 @@ const sidebars = {
           type: "category",
           label: "Snapshots and Forks",
           collapsible: true,
-          collapsed: false,
+          collapsed: true,
           items: [
             {
               type: "doc",

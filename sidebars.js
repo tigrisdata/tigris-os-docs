@@ -83,6 +83,11 @@ const sidebars = {
             "buckets/object-notifications",
             "buckets/settings/index",
             "buckets/sharing",
+            {
+              type: "doc",
+              label: "Snapshots and Forks",
+              id: "buckets/snapshots-and-forks",
+            },
           ],
         },
         {
@@ -148,12 +153,12 @@ const sidebars = {
             },
             {
               type: "doc",
-              label: "Enable and manage on buckets",
+              label: "How to Use Snapshots and Forks",
               id: "buckets/snapshots-and-forks",
             },
             {
               type: "doc",
-              label: "Use with the Tigris SDK",
+              label: "Snapshots and Forks",
               id: "sdks/tigris/snapshots-and-forks",
             },
           ],

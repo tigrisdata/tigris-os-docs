@@ -98,7 +98,7 @@ Example using the Go SDK `github.com/aws/aws-sdk-go-v2/service/s3`:
 ```go
 func createBucketSnapshot(ctx context.Context, client *s3.Client, bucketName string, snapshotName string) (string, error) {
 	resp, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
-		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Snapshot", fmt.Sprintf("true; name=%s", snapshotName))
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Snapshot", fmt.Sprintf("true; name=%s", snapshotName)))
 	})
 	if err != nil {
 		return "", err

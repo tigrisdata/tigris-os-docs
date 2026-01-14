@@ -3,7 +3,7 @@
 S3-compatible, globally distributed, zero egress fees. Fast, flexible object
 storage built for modern AI workloads. Access your data freely, in any cloud.
 
-## Why teams choose Tigris over S3 and R2
+## Why teams choose Tigris
 
 - **Global performance without complexity:** Automatically optimizes for global
   low-latency access - no need to configure replication or placement.
@@ -15,20 +15,6 @@ storage built for modern AI workloads. Access your data freely, in any cloud.
 
 - **Optimized for AI workloads:** Serve massive datasets for training,
   inference, and vector search - reliably and fast.
-
-### A Quick Comparison
-
-|                           |           |          |               |
-| ------------------------- | --------- | -------- | ------------- |
-|                           | Tigris    | S3       | Cloudflare R2 |
-| Global low-latency access | Y         | N        | N             |
-| Egress fees               | $0        | $$$      | $0            |
-| S3-compatible             | Y         | Y        | Y             |
-| Multi-region included     | Y         | N        | N             |
-| IAM support               | Extensive | Complete | Limited       |
-| Availability              | 99.99     | 99.99    | 99.9          |
-| Low cost storage tiers    | Y         | Y        | N             |
-| Enterprise Support        | Included  | $$$      | $             |
 
 ## Pricing Components
 
@@ -72,7 +58,7 @@ bandwidth requirements are extraordinary, please reach out to us at
 [sales@tigrisdata.com](mailto:sales@tigrisdata.com) to discuss your
 requirements.
 
-## Multi-Region Buckets
+## Multi-region bucket pricing
 
 Tigris, by default, manages the data distribution for you, ensuring data is
 stored close to the users to ensure low latency and high availability. However,
@@ -120,6 +106,23 @@ will be charged as follows:
 - GET Requests: 100,000 x $0/1000 requests + 900,000 x $0.0005/1000 requests =
   $0.45
 - Data Transfer: $0
+
+### A Quick Comparison: Tigris vs Other Providers
+
+Tigris offers zero egress fee storage without compromising on performance and
+control.
+
+|                           |           |          |               |
+| ------------------------- | --------- | -------- | ------------- |
+|                           | Tigris    | S3       | Cloudflare R2 |
+| Global low-latency access | Y         | N        | N             |
+| Egress fees               | $0        | $$$      | $0            |
+| S3-compatible             | Y         | Y        | Y             |
+| Multi-region included     | Y         | N        | N             |
+| IAM support               | Extensive | Complete | Limited       |
+| Availability              | 99.99     | 99.99    | 99.9          |
+| Low cost storage tiers    | Y         | Y        | N             |
+| Enterprise Support        | Included  | $$$      | $             |
 
 ## Frequently asked questions
 

@@ -3,7 +3,7 @@
 S3-compatible, globally distributed, zero egress fees. Fast, flexible object
 storage built for modern AI workloads. Access your data freely, in any cloud.
 
-## Why teams choose Tigris
+## Why Teams Choose Tigris
 
 - **Global performance without complexity:** Automatically optimizes for global
   low-latency access - no need to configure replication or placement.
@@ -58,7 +58,7 @@ bandwidth requirements are extraordinary, please reach out to us at
 [sales@tigrisdata.com](mailto:sales@tigrisdata.com) to discuss your
 requirements.
 
-## Multi-region bucket pricing
+## Multi-Region Bucket Pricing
 
 Tigris, by default, manages the data distribution for you, ensuring data is
 stored close to the users to ensure low latency and high availability. However,

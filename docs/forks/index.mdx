@@ -1,0 +1,176 @@
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Forks
+
+A **fork** creates a new bucket from a snapshot or the current state of a
+bucket, sharing objects by reference with zero copying. Unlike copying a bucket
+which duplicates all data, forks share the baseline data and only store new or
+modified objects.
+
+- Forks are instant: no data is copied at creation time.
+- Writes to the fork are isolated; the source bucket is never affected.
+- You can fork from the current bucket state or from any
+  [snapshot](/docs/snapshots).
+- Forked buckets diverge from the source bucket at the moment of the fork.
+
+## How forks work
+
+Traditional object storage forces a tradeoff: share buckets and risk corruption,
+or copy them and pay for expensive duplication. Tigris's append-only
+architecture eliminates this tradeoff. When you create a fork, Tigris creates
+new metadata pointers that reference the existing object versions. Writes to the
+fork create new versions: the forked bucket diverges from the source bucket at
+the moment of the fork.
+
+A fork uses a [snapshot](/docs/snapshots) as its starting point. When you create
+a fork, Tigris either uses a snapshot you specify or automatically creates one
+from the current bucket state.
+
+<video
+  controls
+  width="100%"
+  autoPlay
+  playsInline
+  loop
+  muted
+  aria-label="A source dataset in a bucket that is forked into Test A and Test B with identical data. Test B diverges and adds new data, isolated from the source and Test A."
+>
+  <source src={require("/img/fork-animation.mp4").default} type="video/mp4" />
+</video>
+
+## Billing
+
+You only pay for new object versions written to forks. Forks themselves incur no
+extra charges—you don't pay for the shared baseline data.
+
+## Use cases
+
+Forks enable safe experimentation with production data:
+
+- **Isolated testing**: Fork production data for each developer, CI job, or
+  staging environment. If something breaks, delete the fork.
+- **Agent workflows**: Give each AI agent its own fork to work in parallel
+  without collisions. Each agent operates in isolation, preventing data
+  corruption.
+- **A/B testing**: Fork datasets to run different models or training
+  configurations on identical, immutable data splits.
+- **Safe experimentation**: Test transformations, migrations, or schema changes
+  without touching production. If it goes wrong, delete the fork and start over.
+
+## How to create forks
+
+Create a fork and view its forking history from the Tigris Console:
+
+<center style={{ marginLeft: "auto", marginRight: "auto" }}>
+  <video
+    controls
+    autoPlay
+    playsInline
+    loop
+    muted
+    style={{ maxWidth: "40rem", minWidth: "12rem" }}
+    aria-label="A demo of creating a fork in the Tigris Console."
+  >
+    <source
+      src={require("/img/forking-demo-docs.mp4").default}
+      type="video/mp4"
+    />
+  </video>
+</center>
+
+You can also create forks programmatically:
+
+<Tabs groupId="languages">
+<TabItem value="js" label="JavaScript">
+Example using the Tigris SDK for JavaScript:
+
+```js
+import { createBucket } from "@tigrisdata/storage";
+
+const result = await createBucket("my-fork", {
+  sourceBucketName: "my-source-bucket",
+  sourceBucketSnapshot: "1760550614083112540", // optional snapshot version
+});
+
+if (result.error) {
+  console.error("Error creating fork:", result.error);
+} else {
+  console.log("Fork created");
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+Example using the Python SDK boto3:
+
+```shell
+pip install tigris-boto3-ext
+```
+
+```python
+import boto3
+from tigris_boto3_ext import (
+    TigrisFork,
+    create_fork
+)
+
+# Initialize boto3 S3 client
+s3_client = boto3.client(
+    's3',
+    endpoint_url='https://t3.storage.dev',  # Tigris endpoint
+    aws_access_key_id='your-access-key',
+    aws_secret_access_key='your-secret-key',
+)
+
+# Fork from current state
+with TigrisFork(s3_client, 'source-bucket'):
+    s3_client.create_bucket(Bucket='my-fork')
+
+# Fork from specific snapshot
+with TigrisFork(s3_client, 'source-bucket', snapshot_version='1760550614083112540'):
+    s3_client.create_bucket(Bucket='my-fork-from-snapshot')
+
+# Or, use a helper function to create forks
+create_fork(s3_client, 'my-fork', 'source-bucket', snapshot_version='1760550614083112540')
+```
+
+</TabItem>
+<TabItem value="go" label="Go">
+Example using the Go SDK `github.com/aws/aws-sdk-go-v2/service/s3`:
+
+```go
+func createBucketFork(ctx context.Context, client *s3.Client, bucketName string) error {
+	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Fork-Source-Bucket", "source-bucket"))
+	})
+	return err
+}
+```
+
+</TabItem>
+</Tabs>
+
+For detailed instructions:
+
+- [Enable and manage forks on buckets](/docs/buckets/snapshots-and-forks)
+- [Use the Tigris SDK for forks](/docs/sdks/tigris/snapshots-and-forks)
+
+## FAQ
+
+### Can I fork a fork?
+
+Yes. Each fork is independent and can be further forked or snapshotted.
+
+### What happens if I delete the source bucket?
+
+Source buckets cannot be deleted while forks depend on them. You must delete all
+forks first before deleting the source bucket.
+
+### Do I need to enable snapshots to use forks?
+
+Yes. Snapshot support must be enabled at bucket creation to use forks.
+
+### Do forks affect performance?
+
+No. Forks are metadata-only operations and don't slow down reads or writes.

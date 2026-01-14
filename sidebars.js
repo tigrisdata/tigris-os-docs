@@ -81,7 +81,6 @@ const sidebars = {
             "buckets/objects-expiration",
             "buckets/object-lifecycle-rules",
             "buckets/object-notifications",
-            "buckets/snapshots-and-forks",
             "buckets/settings/index",
             "buckets/sharing",
           ],
@@ -123,6 +122,39 @@ const sidebars = {
                 "iam/policies/examples/date-time-restrictions",
                 "iam/policies/examples/training-job",
               ],
+            },
+          ],
+        },
+        {
+          type: "category",
+          label: "Snapshots and Forks",
+          collapsible: true,
+          collapsed: false,
+          items: [
+            {
+              type: "doc",
+              label: "About Snapshots and Forks",
+              id: "snapshots-and-forks/index",
+            },
+            {
+              type: "doc",
+              label: "Snapshots",
+              id: "snapshots/index",
+            },
+            {
+              type: "doc",
+              label: "Forks",
+              id: "forks/index",
+            },
+            {
+              type: "doc",
+              label: "Enable and manage on buckets",
+              id: "buckets/snapshots-and-forks",
+            },
+            {
+              type: "doc",
+              label: "Use with the Tigris SDK",
+              id: "sdks/tigris/snapshots-and-forks",
             },
           ],
         },

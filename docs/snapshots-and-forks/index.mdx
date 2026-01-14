@@ -1,0 +1,60 @@
+# Snapshots and Forks
+
+With Tigris, you can instantly create an isolated, zero-copy clone of your data
+for development, testing, or experimentation. You can also access a prior state
+of your entire bucket to recover from mistakes or analyze historical states.
+
+## What are snapshots and forks?
+
+Tigris snapshots and forks bring Git-style workflows to your data:
+
+- **[Snapshots](/docs/snapshots)** capture the state of an entire bucket at a
+  specific point in time—immutable, instant, and zero-copy.
+- **[Forks](/docs/forks)** clone a bucket from a snapshot or the current state,
+  sharing objects by reference with zero copying.
+
+Forked buckets are isolated. Their timelines diverge from the source bucket at
+the moment of the fork. It's like forking a Git repository.
+
+<video
+  controls
+  width="100%"
+  autoPlay
+  playsInline
+  loop
+  muted
+  aria-label="A source dataset in a bucket that is forked into Test A and Test B with identical data. Test B diverges and adds new data, isolated from the source and Test A."
+>
+  <source src={require("/img/fork-animation.mp4").default} type="video/mp4" />
+</video>
+
+## How snapshots and forks work together
+
+A snapshot captures a point-in-time view; a fork uses that snapshot as its
+starting point. When you create a fork, Tigris either uses a snapshot you
+specify or automatically creates one from the current bucket state.
+
+| Concept  | What it is                        | What you do with it                           |
+| -------- | --------------------------------- | --------------------------------------------- |
+| Snapshot | Immutable point-in-time record    | Read from it, or use it to seed a fork        |
+| Fork     | New bucket seeded from a snapshot | Write to it, experiment, then keep or discard |
+
+## Why this matters
+
+Traditional object storage forces a tradeoff: share buckets and risk corruption,
+or copy them and pay for expensive duplication. Tigris's append-only
+architecture eliminates this tradeoff:
+
+- **Snapshots are O(1)** because they capture references, not data.
+- **Forks are instant** because they share objects until modified.
+- **Version-based consistency** means readers never block writers.
+- **You only pay for changes**, nothing additional for the shared baseline data.
+
+## Next steps
+
+- [Snapshots](/docs/snapshots) — freeze bucket state for versioning, auditing,
+  and recovery
+- [Forks](/docs/forks) — isolated copies for testing, agents, and
+  experimentation
+- [Enable and manage snapshots and forks on buckets](/docs/buckets/snapshots-and-forks)
+- [Use the Tigris SDK for snapshots and forks](/docs/sdks/tigris/snapshots-and-forks)

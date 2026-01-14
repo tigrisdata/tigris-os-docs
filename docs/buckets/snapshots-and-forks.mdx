@@ -1,166 +1,16 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-# Snapshots and Forks
+# Bucket snapshots and forks
 
-Snapshots and forks extend traditional object versioning beyond individual
-objects.
+This page covers how to enable and use snapshots and forks on your Tigris
+buckets. For an overview of the concepts, see
+[Snapshots and Forks](/docs/snapshots-and-forks).
 
-- **Snapshots** capture the state of an entire bucket at a specific point in
-  time.
-- **Forks** let you branch a bucket into a new one, reusing objects without
-  copying data.
+Snapshots and forks are opt-in features. To enable them on a bucket, you must
+set a special header at creation time.
 
-Together, they provide powerful tools for data recovery, branching workflows, AI
-agent workflows, and efficient experimentation.
-
-## Key Terminology
-
-| Term          | Definition                                                                   |
-| ------------- | ---------------------------------------------------------------------------- |
-| Snapshot      | An immutable, point-in-time view of all objects in a bucket.                 |
-| Live bucket   | The current, writable version of a bucket.                                   |
-| Fork          | A new bucket created from an existing one, sharing data without duplication. |
-| Parent bucket | The source bucket from which a fork is created.                              |
-| Child bucket  | The new bucket that inherits objects from its parent at the time of forking. |
-
-## Snapshots
-
-A **snapshot** freezes the entire state of a bucket at creation time.
-
-- Immutable: once created, snapshots cannot be modified.
-- Writes always go to the live bucket, not to snapshots.
-- Snapshots provide consistent recovery points and reproducibility.
-
-### How Snapshots Work
-
-The diagram below shows how snapshots capture bucket state over time:
-
-![Snapshot Timeline](/img/bucket-snapshotting.png)
-
-At the beginning, the bucket contains two objects (Object 1 = `foo`, Object 2 =
-`bar`).
-
-1. **T1** → Snapshot 1 is created.
-
-   - Bucket contains _Object 1 = `foo`_ and _Object 2 = `bar`_.
-   - Both are preserved in Snapshot 1.
-
-2. **T2** → Object 2 is updated to `quux`.
-
-   - Snapshot 1 remains unchanged.
-
-3. **T3** → Snapshot 2 is created.
-
-   - It records _Object 1 = `foo`_ and _Object 2 = `quux`_.
-
-4. **T4** → Object 3 is added with value `baz`.
-
-5. **T5** → Snapshot 3 is created.
-
-   - It preserves _Object 1 = `foo`_, _Object 2 = `quux`_, and _Object 3 =
-     `baz`_.
-
-6. **T6** → Object 1 is deleted from the live bucket.
-
-   - Past snapshots (1, 2, 3) still retain Object 1.
-
-7. **T7** → Snapshot 4 is created.
-   - It records the live state: _Object 2 = `quux`_ and _Object 3 = `baz`_.
-
-#### Key Takeaways
-
-- **Snapshots are immutable:** once created, they never change.
-- **Deletions in the live bucket do not affect prior snapshots.**
-- **Each snapshot reflects the exact bucket contents at its creation time.**
-
-### Use Cases
-
-- Backup & recovery: restore data to a known state.
-- Audit & compliance: maintain point-in-time records.
-- Experimentation: compare different dataset versions.
-- **Agent workflows**: give AI agents a consistent snapshot to work on without
-  interference from ongoing changes in the live bucket. For example, an agent
-  can reliably process or analyze a dataset without being affected by concurrent
-  writes.
-
-## Forks
-
-A **fork** creates a new bucket from an existing one:
-
-- Shares objects with its parent (no data copy).
-- New objects written to the child bucket do not affect the parent(same object
-  modification only reflects in child bucket).
-- Enables isolated experimentation with minimal storage overhead.
-
-### Forking Example
-
-The diagram below illustrates how forking works across multiple buckets and
-timelines:
-
-![Forking Example](/img/bucket-forking.png)
-
-1. **T1** → **Bucket A** starts with two objects (Object 1 = `foo`, Object 2 =
-   `bar`).
-2. **T2** → Snapshot A1 is created.
-3. **T3** → Object 1 is deleted in Bucket A (but remains in Snapshot A1).
-4. **T4** → Snapshot A2 is created.
-5. **T5** → **Bucket B is forked from Bucket A**. Initially, Bucket B contains
-   Object 2 (`bar`).
-6. **T6** → a new Object 3 (`baz`) is added to Bucket B.
-7. **T7** → Snapshot B1 is created containing two objects: Object 2 (`bar`
-   inherited from Bucket A) and Object 3 (`baz`).
-8. **T8** → Object 3 in Bucket B is updated to `foo`.
-9. **T9** → **Bucket C is forked from Bucket A with Snapshot A1**. It starts
-   with objects (Object 1 = `foo`, Object 2 = `bar`).
-10. **T10** → Object 1 in Bucket C is updated to `baz`.
-    - Bucket C now has Object 1 (`baz` its own copy) and Object 2 (`bar`
-      inherited from Bucket A)
-11. **T11** → **Bucket D is forked from Bucket B** with Snapshot B1. It starts
-    with objects - Object 2 = `bar` (inherited from bucket 'A') and Object 3 =
-    `baz` (inherited from bucket B).
-12. **T12** → Object 2 in Bucket D is updated to `quux`.
-13. **T13** → Object 1 in Bucket D is added with value `baz`.
-    - Bucket D now has three objects: Object 1 = `baz` (its own data), Object 2
-      = `quux` (its own copy), and Object 3 = `baz` (inherited from bucket B).
-
-#### Key Takeaways
-
-- Forks always inherit the current state of their parent bucket at the time of
-  forking.
-- Subsequent changes in either the parent or child bucket are isolated.
-- Snapshots (e.g., A1, A2, B1) preserve historical states, while forks (Buckets
-  B, C, D) enable branching evolution.
-
-### Use Cases
-
-- **Branching datasets**: run experiments on a fork without affecting
-  production.
-- **Multi-tenant scenarios**: give each team a forked bucket.
-- **Efficient testing**: avoid costly full copies of large buckets.
-- **Agent workflows**: fork a bucket for each agent so they can work in parallel
-  on isolated copies. This enables agents to test strategies, train models, or
-  generate outputs without interfering with each other or with the parent
-  dataset.
-
-## Snapshots vs. Forks
-
-The table below summarizes the key differences between snapshots and forks at a
-glance.
-
-| Feature    | Snapshots                           | Forks                                                   |
-| ---------- | ----------------------------------- | ------------------------------------------------------- |
-| Mutability | Immutable                           | Mutable                                                 |
-| Scope      | Point-in-time state of a bucket     | Independent bucket derived from another                 |
-| Storage    | Minimal (metadata + references)     | Minimal (shared objects, new objects stored separately) |
-| Best for   | Recovery, auditing, reproducibility | Experimentation, branching workflows                    |
-
-## Using Snapshots and Forks
-
-Snapshots and forks are opt-in. To enable them on a bucket, you must set a
-special header at creation time.
-
-### Enabling Snapshots and Forks
+## Enabling snapshots and forks
 
 To enable snapshots and forks, set the `X-Tigris-Enable-Snapshot: true` header
 when creating the bucket.
@@ -230,7 +80,7 @@ create_snapshot_bucket(s3_client, 'my-snapshot-bucket')
 </TabItem>
 </Tabs>
 
-### Creating a Snapshot
+## Creating a snapshot
 
 Snapshots are created with the same CreateBucket API call, with an additional
 header: `X-Tigris-Snapshot: true`.
@@ -311,7 +161,7 @@ version = get_snapshot_version(result)
 </TabItem>
 </Tabs>
 
-### Listing Snapshots
+## Listing snapshots
 
 Snapshots are listed with the same ListBuckets API call, with an additional
 header: `X-Tigris-Snapshot: <BUCKET_NAME>`.
@@ -386,7 +236,7 @@ snapshots = list_snapshots(s3_client, 'bucket-with-snapshots')
 </TabItem>
 </Tabs>
 
-#### Example List Snapshots Response
+### Example list snapshots response
 
 The response will contain the list of snapshots for the bucket including the
 name and creation date of the snapshot. The response format is S3-compatible.
@@ -413,20 +263,20 @@ creation time.
 </ListAllMyBucketsResult>
 ```
 
-### Creating a Forked Bucket
+## Creating a forked bucket
 
-Forks are also created via the CreateBucket API, specifying a parent bucket (and
+Forks are also created via the CreateBucket API, specifying a source bucket (and
 optionally a snapshot).
 
 To create a bucket which is a fork of another bucket, specify the
 `X-Tigris-Fork-Source-Bucket: <BUCKET_NAME>` header where `<BUCKET_NAME>` is the
-name of the bucket you want to use as the fork parent.
+name of the bucket you want to use as the fork source.
 
 Add the `X-Tigris-Fork-Source-Bucket-Snapshot: <SNAPSHOT_VERSION>` header (e.g.
 `X-Tigris-Fork-Source-Bucket-Snapshot: 1751631910140685342`) if you want to use
-a specific snapshot of the parent bucket for the fork. If this header is not
-set, then a new snapshot of the parent will be created at the current time and
-used for creating the fork bucket.
+a specific snapshot of the source bucket for the fork. If this header is not
+set, then a new snapshot of the source bucket will be created at the current
+time and used for creating the fork bucket.
 
 <Tabs groupId="languages">
 <TabItem value="go" label="Go">
@@ -499,7 +349,7 @@ create_fork(s3_client, 'new-bucket', 'source-bucket', snapshot_version='17593435
 </TabItem>
 </Tabs>
 
-### Retrieving Snapshot and Fork Info for a Bucket
+## Retrieving snapshot and fork info for a bucket
 
 Information related to snapshots and forks for an existing bucket can be
 retrieved by making a HeadBucket request. The response of the request will
@@ -508,10 +358,10 @@ include custom Tigris headers with the details:
 - The `X-Tigris-Enable-Snapshot` header will always be present and will be set
   to "true" for snapshot-enabled buckets.
 - `X-Tigris-Fork-Source-Bucket` and `X-Tigris-Fork-Source-Bucket-Snapshot` will
-  only be set for fork buckets and will contain the fork parent bucket name and
+  only be set for fork buckets and will contain the source bucket name and
   snapshot versions respectively.
-- `X-Tigris-Is-Fork-Parent` will only be present for fork parent buckets and
-  will be set to "true".
+- `X-Tigris-Is-Fork-Parent` will only be present for source buckets that have
+  forks and will be set to "true".
 
 Note: These are not standard AWS S3 headers, and in order to retrieve them, the
 raw HTTP response will need to be used. Here is an example for checking whether
@@ -607,7 +457,7 @@ print(f"Snapshot version: {fork_info['fork_source_snapshot']}")
 </TabItem>
 </Tabs>
 
-### Listing and Retrieving Objects from a Snapshot
+## Listing and retrieving objects from a snapshot
 
 Objects can be listed in a snapshot with the same ListObjectsV2 API call, with
 an additional header: `X-Tigris-Snapshot-Version: SNAPSHOT_VERSION`. Similarly,
@@ -713,66 +563,18 @@ forking feature with the Python boto3 SDK.
 
 :::
 
-### Using a Forked Bucket
+## Using a forked bucket
 
 Forked buckets behave the same as regular buckets, and you can use the usual
 tooling (AWS CLI or SDK) to work with them.
 
-The only restriction is that the parent bucket cannot be deleted while forked
+The only restriction is that the source bucket cannot be deleted while forked
 buckets depend on it.
 
-### Authorization
+## Authorization
 
 Snapshot and fork operations on existing buckets are limited to users who are
 bucket owners, organization admins, or have `ReadOnly` (or `Editor`) access to
 the buckets. This includes all operations mentioned above, such as creating a
-snapshot, creating a fork from a specific parent bucket, or listing objects in a
+snapshot, creating a fork from a specific source bucket, or listing objects in a
 snapshot.
-
-## Limitations and Upcoming Functionality
-
-### Current Limitations
-
-Currently, bucket snapshot and fork functionality have the following
-limitations:
-
-- Once snapshot support is enabled for a bucket, it cannot be disabled.
-- Object expiration (TTL) cannot be enabled for buckets with snapshot support.
-- Transitioning objects to different storage tiers cannot be configured for
-  snapshot-enabled buckets.
-- Only the Standard storage tier is supported for snapshot-enabled buckets.
-- Snapshot support cannot be enabled for existing buckets.
-
-### Upcoming Features
-
-- Listing all versions of an object.
-- Snapshot and fork management in the Tigris Dashboard.
-- Deletion of old snapshots.
-- Restoring a bucket to a specific snapshot.
-
-## Billing
-
-You only pay for the additional object versions created over time. Snapshots and
-forks themselves do not incur extra charges, making them a cost-efficient way to
-manage bucket history, power agent workflows, and experiment safely.
-
-## FAQ
-
-**Can I fork a fork?**
-
-Yes. You can fork a bucket that is itself a fork. Each fork becomes an
-independent bucket that can be further forked or snapshotted.
-
-**What happens if I delete the parent bucket?**
-
-The parent bucket cannot be deleted while forked buckets depend on it. You must
-delete the forks first.
-
-**Do snapshots affect performance?**
-
-No. Snapshots are metadata-only constructs and do not slow down read or write
-operations to the live bucket.
-
-**Can I restore a bucket to a previous snapshot?**
-
-Not yet, but this feature is on the roadmap.

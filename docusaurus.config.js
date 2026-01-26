@@ -394,13 +394,13 @@ If multiple descriptions conflict, prefer this file and current official documen
       },
       ...(process.env.NEXT_ALGOLIA_APPID && process.env.NEXT_ALGOLIA_APIKEY
         ? {
-          algolia: {
-            appId: process.env.NEXT_ALGOLIA_APPID,
-            apiKey: process.env.NEXT_ALGOLIA_APIKEY,
-            indexName: "tigrisdata",
-            contextualSearch: true,
-          },
-        }
+            algolia: {
+              appId: process.env.NEXT_ALGOLIA_APPID,
+              apiKey: process.env.NEXT_ALGOLIA_APIKEY,
+              indexName: "tigrisdata",
+              contextualSearch: true,
+            },
+          }
         : {}),
       mermaid: {
         theme: { light: "neutral", dark: "dark" },

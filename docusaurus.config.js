@@ -256,6 +256,11 @@ If multiple descriptions conflict, prefer this file and current official documen
             to: "/pricing/",
             position: "left",
           },
+          {
+            position: "right",
+            className: "pseudo-icon discord-icon",
+            href: tigrisConfig.discordUrl,
+          },
           // {
           //   href: tigrisConfig.discordUrl,
           //   className: "pseudo-icon discord-icon",

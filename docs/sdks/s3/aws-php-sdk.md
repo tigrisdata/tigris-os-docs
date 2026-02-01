@@ -6,7 +6,7 @@ available.
 
 You may continue to use the AWS PHP SDK as you normally would, but with the
 endpoint set to Tigris. If you are using Tigris outside of Fly, use the endpoint
-[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
+[https://t3.storageapi.dev](https://t3.storageapi.dev). If you are using Tigris from
 within Fly, use the endpoint
 [https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
 
@@ -25,7 +25,7 @@ default credentials file or the environment variables `AWS_ACCESS_KEY_ID` and
 
     $s3 = new Aws\S3\S3Client([
         'region' => 'auto',
-        'endpoint' => 'https://t3.storage.dev',
+        'endpoint' => 'https://t3.storageapi.dev',
         'version' => 'latest',
     ]);
 
@@ -94,7 +94,7 @@ Presigned URLs can be used with the AWS PHP SDK as follows:
 
     $s3 = new Aws\S3\S3Client([
         'region' => 'auto',
-        'endpoint' => 'https://t3.storage.dev',
+        'endpoint' => 'https://t3.storageapi.dev',
         'version' => 'latest',
     ]);
 
@@ -130,6 +130,6 @@ You can also use a
 by replacing the Tigris domain name with your custom domain name:
 
 ```php
-$brandedURL = str_replace("t3.storage.dev", "your-domain.example.com", $presignedUrl);
+$brandedURL = str_replace("t3.storageapi.dev", "your-domain.example.com", $presignedUrl);
 echo "Presigned URL for GET (custom domain): " . $brandedURL . "\n";
 ```

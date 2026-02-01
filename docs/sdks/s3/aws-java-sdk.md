@@ -6,7 +6,7 @@ available.
 
 You may continue to use the AWS Java SDK as you normally would, but with the
 endpoint set to Tigris. If you are using Tigris outside of Fly, use the endpoint
-[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
+[https://t3.storageapi.dev](https://t3.storageapi.dev). If you are using Tigris from
 within Fly, use the endpoint
 [https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
 
@@ -38,7 +38,7 @@ public class AWSS3HelloWorld {
 
     private final S3Client s3Client;
 
-    private static final URI TIGRIS_ENDPOINT_URI = URI.create("https://t3.storage.dev");
+    private static final URI TIGRIS_ENDPOINT_URI = URI.create("https://t3.storageapi.dev");
     private static final Logger log = LoggerFactory.getLogger(AWSS3HelloWorld.class);
 
     public AWSS3HelloWorld() {
@@ -93,7 +93,7 @@ public class AWSS3PresignedURLs {
 
     private final S3Presigner presigner;
 
-    private static final URI TIGRIS_ENDPOINT_URI = URI.create("https://t3.storage.dev");
+    private static final URI TIGRIS_ENDPOINT_URI = URI.create("https://t3.storageapi.dev");
     private static final Logger log = LoggerFactory.getLogger(AWSS3PresignedURLs.class);
 
     public AWSS3PresignedURLs() {
@@ -136,6 +136,6 @@ You can also use a
 by replacing the Tigris domain name with your custom domain name:
 
 ```java
-String brandedUrl = url.replace("t3.storage.dev", "your-domain.example.com");
+String brandedUrl = url.replace("t3.storageapi.dev", "your-domain.example.com");
 System.out.println("Presigned URL for GET (custom domain): " + brandedUrl);
 ```

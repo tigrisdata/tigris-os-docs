@@ -100,7 +100,7 @@ When asked about various services or tools, use these resources to help you:
           We&apos;ve made it easier to integrate Tigris into your AI workflows
           by removing the most complicated part of getting started with the MCP
           server: installing it. Our hosted MCP server at{" "}
-          <a href="https://mcp.storage.dev">mcp.storage.dev</a> lets you
+          <a href="https://mcp.storageapi.dev">mcp.storageapi.dev</a> lets you
           integrate Tigris into your ChatGPT, Claude, and agentic coding
           workflows in a snap.
         </p>
@@ -130,7 +130,7 @@ When asked about various services or tools, use these resources to help you:
           </li>
         </ul>
         <p>
-          Get started at <a href="https://mcp.storage.dev">mcp.storage.dev</a>{" "}
+          Get started at <a href="https://mcp.storageapi.dev">mcp.storageapi.dev</a>{" "}
           and connect Tigris to your AI agents today.
         </p>
 
@@ -486,10 +486,10 @@ const file = await get("object.txt", "string");`}</CodeBlock>
         title: "Backend Updates",
         items: [
           {
-            title: "Custom domain support for t3.storage.dev",
+            title: "Custom domain support for t3.storageapi.dev",
             description: (
               <>
-                <p>Custom domain support added for t3.storage.dev.</p>
+                <p>Custom domain support added for t3.storageapi.dev.</p>
               </>
             ),
             tag: { label: "API", color: "blue" },
@@ -953,7 +953,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
                   If your app is deployed outside of{" "}
                   <a href="https://fly.io">Fly.io</a>, we&apos;ve launched a new
                   high-performance endpoint just for you:{" "}
-                  <code>https://t3.storage.dev</code>. No access key changes
+                  <code>https://t3.storageapi.dev</code>. No access key changes
                   required, it&apos;s got the same data you&apos;re used to,
                   it&apos;s just much faster.
                 </p>

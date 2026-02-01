@@ -42,7 +42,7 @@ for your credentials:
 ```bash
 export AWS_ACCESS_KEY_ID="tid_..."
 export AWS_SECRET_ACCESS_KEY="tsec_..."
-export AWS_ENDPOINT_URL="https://t3.storage.dev"
+export AWS_ENDPOINT_URL="https://t3.storageapi.dev"
 ```
 
 Or pass credentials directly in Python.
@@ -58,7 +58,7 @@ s3 = boto3.client(
     "s3",
     aws_access_key_id="tid_...",
     aws_secret_access_key="tsec_...",
-    endpoint_url="https://t3.storage.dev",
+    endpoint_url="https://t3.storageapi.dev",
 )
 
 # Upload model weights
@@ -79,7 +79,7 @@ import torch
 fs = s3fs.S3FileSystem(
     key="tid_...",
     secret="tsec_...",
-    client_kwargs={"endpoint_url": "https://t3.storage.dev"},
+    client_kwargs={"endpoint_url": "https://t3.storageapi.dev"},
 )
 
 with fs.open("my-models/gpt2-finetuned/pytorch_model.bin", "rb") as f:
@@ -130,7 +130,7 @@ import torch
 fs = s3fs.S3FileSystem(
     key="tid_...",
     secret="tsec_...",
-    client_kwargs={"endpoint_url": "https://t3.storage.dev"},
+    client_kwargs={"endpoint_url": "https://t3.storageapi.dev"},
 )
 
 with fs.open("models/llama2-7b-quantized/model.safetensors", "rb") as f:

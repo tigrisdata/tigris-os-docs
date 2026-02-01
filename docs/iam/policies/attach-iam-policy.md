@@ -27,7 +27,7 @@ Then, create an IAM policy. Assuming you have already created a policy file
 command:
 
 ```bash
-aws --profile=tigris iam --endpoint-url=https://iam.storage.dev create-policy --policy-name <example-org-level-unique-policy-name> --policy-document file:///path/to/policy.json
+aws --profile=tigris iam --endpoint-url=https://iam.storageapi.dev create-policy --policy-name <example-org-level-unique-policy-name> --policy-document file:///path/to/policy.json
 ```
 
 This command creates a new IAM policy using the specified JSON file. Make sure
@@ -58,7 +58,7 @@ details to find its `arn`—you’ll need this for Step 3.
 Next, attach the IAM policy to the access key using the following command:
 
 ```bash
-aws --profile=tigris iam --endpoint-url=https://iam.storage.dev attach-user-policy --policy-arn <generated_policy_arn_from_previous_step> --user-name <tid_>
+aws --profile=tigris iam --endpoint-url=https://iam.storageapi.dev attach-user-policy --policy-arn <generated_policy_arn_from_previous_step> --user-name <tid_>
 ```
 
 This command attaches the IAM policy to the access key, allowing it to perform

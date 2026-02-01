@@ -72,7 +72,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.LANG_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.LANG_AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: auto
-          AWS_ENDPOINT_URL_S3: https://t3.storage.dev
+          AWS_ENDPOINT_URL_S3: https://t3.storageapi.dev
   python:
     name: "Python"
     runs-on: ubuntu-latest

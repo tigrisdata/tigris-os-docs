@@ -8,7 +8,7 @@ available.
 
 You may continue to use the AWS Ruby SDK as you normally would, but with the
 endpoint set to Tigris. If you are using Tigris outside of Fly, use the endpoint
-[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
+[https://t3.storageapi.dev](https://t3.storageapi.dev). If you are using Tigris from
 within Fly, use the endpoint
 [https://fly.storage.tigris.dev](https://fly.storage.tigris.dev). Also make sure
 `force_path_style` is set to false:
@@ -17,7 +17,7 @@ within Fly, use the endpoint
 s3 = Aws::S3::Client.new(
     region: "auto",
     # highlight-start
-    endpoint: "https://t3.storage.dev",
+    endpoint: "https://t3.storageapi.dev",
     force_path_style: false,
     # highlight-end
 )
@@ -33,7 +33,7 @@ import Gemfile from "!!raw-loader!../../../examples/ruby/Gemfile";
 
 Then you can use the SDK as you normally would, but with the endpoint set to
 Tigris. If you are using Tigris outside of Fly, use the endpoint
-[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
+[https://t3.storageapi.dev](https://t3.storageapi.dev). If you are using Tigris from
 within Fly, use the endpoint
 [https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
 
@@ -57,6 +57,6 @@ You can also use a
 by replacing the Tigris domain name with your custom domain name:
 
 ```ruby
-branded_url = presigned_url.gsub("t3.storage.dev", "your-domain.example.com")
+branded_url = presigned_url.gsub("t3.storageapi.dev", "your-domain.example.com")
 puts "Presigned URL for GET (custom domain): #{branded_url}"
 ```

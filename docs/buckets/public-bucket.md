@@ -11,11 +11,11 @@ Assuming you have the AWS CLI configured as shown in the
 follows:
 
 ```bash
-aws s3api --endpoint-url https://t3.storage.dev create-bucket --bucket foo-public-bucket --acl public-read
+aws s3api --endpoint-url https://t3.storageapi.dev create-bucket --bucket foo-public-bucket --acl public-read
 ```
 
 ```text
-$ aws s3api --endpoint-url https://t3.storage.dev create-bucket --bucket foo-public-bucket --acl public-read
+$ aws s3api --endpoint-url https://t3.storageapi.dev create-bucket --bucket foo-public-bucket --acl public-read
 {
     "Location": "/foo-public-bucket"
 }
@@ -32,7 +32,7 @@ However, only those with access to the bucket can write objects.
 Let's upload a file to our public bucket:
 
 ```bash
-$ aws s3api --endpoint-url https://t3.storage.dev put-object --bucket foo-public-bucket --key bar.txt --body bar.txt
+$ aws s3api --endpoint-url https://t3.storageapi.dev put-object --bucket foo-public-bucket --key bar.txt --body bar.txt
 {
     "ETag": "\"c157a79031e1c40f85931829bc5fc552\""
 }
@@ -77,13 +77,13 @@ virtual-hosted style URLs as it provides a unique subdomain per bucket.
 Path-style URLs use the following format:
 
 ```text
-https://t3.storage.dev/bucket-name/key-name
+https://t3.storageapi.dev/bucket-name/key-name
 ```
 
 So for the object we just uploaded, the path-style URL would be:
 
 ```bash
-$ wget https://t3.storage.dev/foo-public-bucket/bar.txt -O- -q
+$ wget https://t3.storageapi.dev/foo-public-bucket/bar.txt -O- -q
 bar
 ```
 

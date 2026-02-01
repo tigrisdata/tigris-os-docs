@@ -43,11 +43,11 @@ info:
 
     For example, for a `POST` request to `/provider/laravel/orgs/my-org/provision`, the `CanonicalURI` would be:
     ```
-    https://mgmt.storage.dev/provider/your-provider-id/orgs/user-org-id/provision
+    https://mgmt.storageapi.dev/provider/your-provider-id/orgs/user-org-id/provision
     ```
     And for a `GET` request with query parameters:
     ```
-    https://mgmt.storage.dev/provider/your-provider-id/orgs/?include_inactive=true
+    https://mgmt.storageapi.dev/provider/your-provider-id/orgs/?include_inactive=true
     ```
     :::
 
@@ -66,7 +66,7 @@ info:
     ```
   version: 0.0.1
 servers:
-  - url: https://mgmt.storage.dev
+  - url: https://mgmt.storageapi.dev
     description: Tigris production server
 tags:
   - name: buckets
@@ -239,11 +239,11 @@ paths:
 
         ##### Example:
         If your bucket is `my-bucket` and you want to use `images.example.com`,
-        create a CNAME record pointing `images.example.com` to `my-bucket.t3.storage.dev`.
+        create a CNAME record pointing `images.example.com` to `my-bucket.t3.storageapi.dev`.
 
         After setting the custom domain, objects will be accessible via:
         - `https://images.example.com/object.jpg`
-        - `https://my-bucket.t3.storage.dev/object.jpg` (original URL still works)
+        - `https://my-bucket.t3.storageapi.dev/object.jpg` (original URL still works)
 
       operationId: Tigris_SetCustomDomain
       parameters:
@@ -693,6 +693,35 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UpdateOrganizationResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+    post:
+      tags:
+        - organizations
+      summary: Create a new organization
+      description: |
+        Creates a new organization account
+      operationId: Tigris_CreateOrganization
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrganizationRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateOrganizationResponse"
         default:
           description: Unexpected error
           content:
@@ -1461,6 +1490,23 @@ components:
           $ref: "#/components/schemas/OrgMembership"
     DeleteAccessKeyResponse:
       type: object
+    CreateOrganizationRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - org_name
+        - user_id
+      properties:
+        org_name:
+          type: string
+          description: Name of the organization to be created
+        user_id:
+          type: string
+          description: ID of the user who is creating the organization
+        org_quota:
+          $ref: "#/components/schemas/OrgQuota"
+    CreateOrganizationResponse:
+      type: object
     UpdateOrganizationRequest:
       type: object
       additionalProperties: false
@@ -1581,7 +1627,7 @@ components:
         Create the `canonical_request` as:
         ```
         POST
-        https://mgmt.storage.dev/provider/your-provider-id/orgs/user-org-id/provision
+        https://mgmt.storageapi.dev/provider/your-provider-id/orgs/user-org-id/provision
         1731703213870
         f8d133cb-5a42-47b1-9ef2-874bb55bab72
         ```

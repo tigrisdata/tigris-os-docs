@@ -110,7 +110,7 @@ cfg = S3ClientConfig()  # default config (10 Gbps target, 8 MiB part size, etc.)
 dataset = S3IterableDataset.from_prefix(
     dataset_uri,
     region="auto",                     # Region parameter (Tigris is global, so use "auto")
-    endpoint="https://t3.storage.dev",      # Tigris S3 endpoint
+    endpoint="https://t3.storageapi.dev",      # Tigris S3 endpoint
     transform=None,                        # we'll set a transform in the next step
     s3client_config=cfg,
     enable_sharding=True                   # enable sharding across DataLoader workers (explained later)
@@ -118,7 +118,7 @@ dataset = S3IterableDataset.from_prefix(
 ```
 
 In the code above, we pass the S3 URI of our dataset and specify the custom
-endpoint and region. The connector will connect to t3.storage.dev instead of
+endpoint and region. The connector will connect to t3.storageapi.dev instead of
 Amazon, using our provided credentials. The s3client_config=cfg is optional – by
 default it’s tuned for high throughput (e.g. ~10 Gbps target with multi-part
 downloads) and typically doesn’t need adjustment. We enabled
@@ -133,7 +133,7 @@ instead, you would call `S3MapDataset.from_prefix` similarly. For example:
 map_dataset = S3MapDataset.from_prefix(
     dataset_uri,
     region="auto",
-    endpoint="https://t3.storage.dev",
+    endpoint="https://t3.storageapi.dev",
     s3client_config=cfg,
 )
 
@@ -201,7 +201,7 @@ creation or set it afterward. It’s easiest to pass it in the `from_prefix` cal
 dataset = S3IterableDataset.from_prefix(
     dataset_uri,
     region="auto",
-    endpoint="https://t3.storage.dev",
+    endpoint="https://t3.storageapi.dev",
     transform=obj_to_tensor,      # apply our custom transform to each S3 object
     enable_sharding=True,
     s3client_config=cfg

@@ -37,11 +37,11 @@ and logs. You can create them via the Tigris console or using the AWS CLI:
 # Configure credentials
 export AWS_ACCESS_KEY_ID=YOUR_TIGRIS_ACCESS_KEY
 export AWS_SECRET_ACCESS_KEY=YOUR_TIGRIS_SECRET_KEY
-export AWS_ENDPOINT_URL_S3=https://t3.storage.dev
+export AWS_ENDPOINT_URL_S3=https://t3.storageapi.dev
 
 # Create buckets for AutoMQ data and operations storage
-aws s3api create-bucket --bucket your-automq-data --endpoint-url https://t3.storage.dev
-aws s3api create-bucket --bucket your-automq-ops --endpoint-url https://t3.storage.dev
+aws s3api create-bucket --bucket your-automq-data --endpoint-url https://t3.storageapi.dev
+aws s3api create-bucket --bucket your-automq-ops --endpoint-url https://t3.storageapi.dev
 ```
 
 **Note**: Bucket names must be globally unique across all Tigris users.
@@ -75,9 +75,9 @@ services:
         --override controller.quorum.voters=0@server1:9093 \
         --override controller.quorum.bootstrap.servers=server1:9093 \
         --override advertised.listeners=PLAINTEXT://server1:9092 \
-        --override s3.data.buckets='0@s3://your-automq-data?region=auto&endpoint=https://t3.storage.dev' \
-        --override s3.ops.buckets='1@s3://your-automq-ops?region=auto&endpoint=https://t3.storage.dev' \
-        --override s3.wal.path='0@s3://your-automq-data?region=auto&endpoint=https://t3.storage.dev'
+        --override s3.data.buckets='0@s3://your-automq-data?region=auto&endpoint=https://t3.storageapi.dev' \
+        --override s3.ops.buckets='1@s3://your-automq-ops?region=auto&endpoint=https://t3.storageapi.dev' \
+        --override s3.wal.path='0@s3://your-automq-data?region=auto&endpoint=https://t3.storageapi.dev'
     networks:
       - automq_net
 
@@ -93,7 +93,7 @@ networks:
 - `s3.ops.buckets` - Your ops bucket name in the S3 URL (stores operational
   metadata)
 - `s3.wal.path` - Write-Ahead Log path (typically same as data bucket)
-- `endpoint=https://t3.storage.dev` - Tigris S3-compatible endpoint
+- `endpoint=https://t3.storageapi.dev` - Tigris S3-compatible endpoint
 - `region=auto` - Tigris automatically routes to the nearest region
 
 For detailed information on these Tigris and S3 configuration parameters, refer

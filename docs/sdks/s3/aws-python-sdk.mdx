@@ -8,7 +8,7 @@ available.
 
 You may continue to use the AWS Python SDK as you normally would, but with the
 endpoint set to Tigris. If you are using Tigris outside of Fly, use the endpoint
-[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
+[https://t3.storageapi.dev](https://t3.storageapi.dev). If you are using Tigris from
 within Fly, use the endpoint
 [https://fly.storage.tigris.dev](https://fly.storage.tigris.dev). Also ensure
 that the addressing style is set to `virtual`.
@@ -17,7 +17,7 @@ that the addressing style is set to `virtual`.
 # Create S3 service client
 svc = boto3.client(
     's3',
-    endpoint_url='https://t3.storage.dev',
+    endpoint_url='https://t3.storageapi.dev',
     # highlight-start
     config=Config(s3={'addressing_style': 'virtual'}),
     # highlight-end
@@ -57,7 +57,7 @@ aws_secret_access_key=<access_key_secret>
 [tigris]
 aws_access_key_id=<access_key_id>
 aws_secret_access_key=<access_key_secret>
-endpoint_url=https://t3.storage.dev
+endpoint_url=https://t3.storageapi.dev
 ```
 
 To switch profiles while using `boto3`, you can set the `profile` on the
@@ -88,7 +88,7 @@ You can also use a
 by replacing the Tigris domain name with your custom domain name:
 
 ```python
-branded_url = presigned_url.replace("t3.storage.dev", "your-domain.example.com")
+branded_url = presigned_url.replace("t3.storageapi.dev", "your-domain.example.com")
 print(f"Presigned URL for GET (custom domain): {branded_url}")
 ```
 

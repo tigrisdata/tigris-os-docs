@@ -70,7 +70,7 @@ shell or in a `.env` file:
 ```bash
 export AWS_ACCESS_KEY_ID=tid_access_key_id
 export AWS_SECRET_ACCESS_KEY=tsec_secret_access_key
-export AWS_ENDPOINT_URL_S3=https://t3.storage.dev
+export AWS_ENDPOINT_URL_S3=https://t3.storageapi.dev
 export AWS_REGION=auto
 ```
 
@@ -80,7 +80,7 @@ export AWS_REGION=auto
 ```sh
 AWS_ACCESS_KEY_ID=tid_access_key_id
 AWS_SECRET_ACCESS_KEY=tsec_secret_access_key
-AWS_ENDPOINT_URL_S3=https://t3.storage.dev AWS_REGION=auto
+AWS_ENDPOINT_URL_S3=https://t3.storageapi.dev AWS_REGION=auto
 ```
 
   </TabItem>
@@ -126,7 +126,7 @@ const bucketName = process.env.BUCKET_NAME || "my-bucket";
 // Connect to LanceDB database in a Tigris bucket (s3-compatible URI for Tigris)
 const db = await lancedb.connect(`s3://${bucketName}/ml-datasets/food101`, {
   storageOptions: {
-    endpoint: "https://t3.storage.dev", // Tigris storage endpoint
+    endpoint: "https://t3.storageapi.dev", // Tigris storage endpoint
     region: "auto", // auto region for global routing
     // If you are not using env vars, you can also specify credentials here:
     // accessKeyId: "tid_access_key_id",
@@ -145,7 +145,7 @@ import lancedb
 db = lancedb.connect(
     "s3://my-bucket/ml-datasets/food101",
     storage_options={
-        "endpoint": "https://t3.storage.dev", # Tigris storage endpoint
+        "endpoint": "https://t3.storageapi.dev", # Tigris storage endpoint
         "region": "auto",                     # auto region for global routing
         # If you are not using env vars, you can also specify credentials here:
         # "aws_access_key_id": "tid_access_key_id",
@@ -165,7 +165,7 @@ const bucketName: string = process.env.BUCKET_NAME || "my-bucket";
 // Connect to LanceDB database in a Tigris bucket (s3-compatible URI for Tigris)
 const db = await lancedb.connect(`s3://${bucketName}/ml-datasets/food101`, {
   storageOptions: {
-    endpoint: "https://t3.storage.dev", // Tigris storage endpoint
+    endpoint: "https://t3.storageapi.dev", // Tigris storage endpoint
     region: "auto", // auto region for global routing
     // If you are not using env vars, you can also specify credentials here:
     // accessKeyId: "tid_access_key_id",
@@ -181,7 +181,7 @@ In this example, we connected to the path `s3://my-bucket/ml-datasets/food101`
 with the Tigris endpoint and region we specified. The `db` object is a handle to
 a LanceDB database stored remotely on Tigris. We’ve configured it to talk to
 Tigris instead of S3 by setting the the endpoint to Tigris’
-[`https://t3.storage.dev`](https://t3.storage.dev), so even though the path
+[`https://t3.storageapi.dev`](https://t3.storageapi.dev), so even though the path
 starts with `s3://`, it’s actually talking to Tigris.
 
 ## Creating a dataset

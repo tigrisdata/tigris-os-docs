@@ -4,23 +4,23 @@ aws configure set aws_secret_access_key <secret-key>
 aws configure set region auto
 
 # List buckets
-aws s3 ls --endpoint-url https://t3.storage.dev
+aws s3 ls --endpoint-url https://t3.storageapi.dev
 
 # Create a bucket
-aws s3api create-bucket --bucket <bucket-name> --endpoint-url https://t3.storage.dev
+aws s3api create-bucket --bucket <bucket-name> --endpoint-url https://t3.storageapi.dev
 
 # Put an object in the bucket
-aws s3api put-object --bucket <bucket-name> --key <key> --body <file> --endpoint-url https://t3.storage.dev
+aws s3api put-object --bucket <bucket-name> --key <key> --body <file> --endpoint-url https://t3.storageapi.dev
 
 # Get an object from the bucket
-aws s3api get-object --bucket <bucket-name> --key <key> <file> --endpoint-url https://t3.storage.dev
+aws s3api get-object --bucket <bucket-name> --key <key> <file> --endpoint-url https://t3.storageapi.dev
 `;
 
 const javascript = `import { S3Client, paginateListBuckets } from "@aws-sdk/client-s3";
 
 const S3 = new S3Client({
   region: "auto",
-  endpoint: "https://t3.storage.dev",
+  endpoint: "https://t3.storageapi.dev",
   s3ForcePathStyle: false,
 });
 
@@ -35,7 +35,7 @@ const listBuckets = async () => {
 };`;
 
 const go = `svc := s3.NewFromConfig(sdkConfig, func(o *s3.Options) {
-  o.BaseEndpoint = aws.String("https://t3.storage.dev")
+  o.BaseEndpoint = aws.String("https://t3.storageapi.dev")
   o.Region = "auto"
   o.UsePathStyle = false
 })
@@ -74,7 +74,7 @@ func main() {
 
 	// Create S3 service client
 	svc := s3.NewFromConfig(sdkConfig, func(o *s3.Options) {
-		o.BaseEndpoint = aws.String("https://t3.storage.dev")
+		o.BaseEndpoint = aws.String("https://t3.storageapi.dev")
 		o.Region = "auto"
 		o.UsePathStyle = false
 	})
@@ -110,7 +110,7 @@ public class AWSS3HelloWorld {
 
     private final S3Client s3Client;
 
-    private static final URI TIGRIS_ENDPOINT_URI = URI.create("https://t3.storage.dev");
+    private static final URI TIGRIS_ENDPOINT_URI = URI.create("https://t3.storageapi.dev");
     private static final Logger log = LoggerFactory.getLogger(AWSS3HelloWorld.class);
 
     public AWSS3HelloWorld() {
@@ -149,7 +149,7 @@ from botocore.client import Config
 # Create S3 service client
 svc = boto3.client(
     's3',
-    endpoint_url='https://t3.storage.dev',
+    endpoint_url='https://t3.storageapi.dev',
     config=Config(s3={'addressing_style': 'virtual'}),
 )
 
@@ -166,7 +166,7 @@ const php = `<?php
 
     $s3 = new Aws\\S3\\S3Client([
         'region' => 'auto',
-        'endpoint' => 'https://t3.storage.dev',
+        'endpoint' => 'https://t3.storageapi.dev',
         'version' => 'latest',
     ]);
 
@@ -210,7 +210,7 @@ end`;
 const ruby = `s3 = Aws::S3::Client.new(
     region: "auto",
     # highlight-start
-    endpoint: "https://t3.storage.dev",
+    endpoint: "https://t3.storageapi.dev",
     force_path_style: false,
     # highlight-end
 )
@@ -221,7 +221,7 @@ bucket_name = "tigris-example"
 
 s3 = Aws::S3::Client.new(
     region: "auto",
-    endpoint: "https://t3.storage.dev",
+    endpoint: "https://t3.storageapi.dev",
 )
 
 # Lists all of your buckets
@@ -238,7 +238,7 @@ using Amazon.S3;
 using Amazon.S3.Model;
 
 IAmazonS3 s3Client = new AmazonS3Client(
-    new AmazonS3Config { ForcePathStyle = false, ServiceURL = "https://t3.storage.dev" }
+    new AmazonS3Config { ForcePathStyle = false, ServiceURL = "https://t3.storageapi.dev" }
 );
 
 var bucketName = "tigris-example";

@@ -37,8 +37,8 @@ os.environ['AWS_ACCESS_KEY_ID'] = 'tid_access_key_id'
 os.environ['AWS_SECRET_ACCESS_KEY'] = 'tsec_secret_access_key'
 
 # Leave these at the default settings.
-os.environ['AWS_ENDPOINT_URL_S3'] = 'https://t3.storage.dev'
-os.environ['AWS_ENDPOINT_URL_IAM'] = 'https://iam.storage.dev'
+os.environ['AWS_ENDPOINT_URL_S3'] = 'https://t3.storageapi.dev'
+os.environ['AWS_ENDPOINT_URL_IAM'] = 'https://iam.storageapi.dev'
 os.environ['AWS_REGION'] = 'auto'
 ```
 
@@ -62,7 +62,7 @@ from botocore.client import Config
 # Create object storage service client
 svc = boto3.client(
     's3',
-    endpoint_url='https://t3.storage.dev',
+    endpoint_url='https://t3.storageapi.dev',
     config=Config(s3={'addressing_style': 'virtual'}),
 )
 ```

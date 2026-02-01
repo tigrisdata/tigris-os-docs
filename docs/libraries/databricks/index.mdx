@@ -13,7 +13,7 @@ Make sure you have the following information from your Tigris account:
 
 - Tigris **Access Key ID**
 - Tigris **Secret Access Key**
-- Tigris **Endpoint** (e.g., `https://t3.storage.dev`)
+- Tigris **Endpoint** (e.g., `https://t3.storageapi.dev`)
 - Tigris **Bucket Name**
 
 If you don't yet have access credentials, follow the steps in the
@@ -59,7 +59,7 @@ tigris_client = boto3.client(
     's3',
     aws_access_key_id='YOUR-ACCESS-KEY-ID',
     aws_secret_access_key='SECRET-ACCESS-KEY-ID',
-    endpoint_url='https://t3.storage.dev',
+    endpoint_url='https://t3.storageapi.dev',
     region_name='auto'  # Use 'auto' if Tigris shows your region as 'Global'
 )
 ```

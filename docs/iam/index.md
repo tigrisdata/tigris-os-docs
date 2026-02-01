@@ -50,7 +50,7 @@ the following:
   to your Tigris credentials
 - Set the environment variable `AWS_REGION` to `auto`
 - Set the environment variable `AWS_ENDPOINT_URL_IAM` to
-  `https://iam.storage.dev` for IAM operations
+  `https://iam.storageapi.dev` for IAM operations
 
 Refer to the [AWS CLI](/docs/sdks/s3/aws-cli/) and
 [SDK documentation](/docs/sdks/s3/) for configuration details.

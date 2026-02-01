@@ -40,7 +40,7 @@ func main() {
 
 	// Create S3 service client
 	client := s3.NewFromConfig(cfg, func(o *s3.Options) {
-		o.BaseEndpoint = aws.String("https://t3.storage.dev")
+		o.BaseEndpoint = aws.String("https://t3.storageapi.dev")
 		o.Region = "auto"
 		o.UsePathStyle = false
 	})

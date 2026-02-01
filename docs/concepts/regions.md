@@ -3,7 +3,7 @@
 We are deployed around the world in multiple regions. As of now, we are deployed
 in the following regions:
 
-| Region ID | Region Location            | fly.storage.tigris.dev | t3.storage.dev |
+| Region ID | Region Location            | fly.storage.tigris.dev | t3.storageapi.dev |
 | --------- | -------------------------- | ---------------------- | -------------- |
 | ams       | Amsterdam, Netherlands     | ✅                     | ✅             |
 | fra       | Frankfurt, Germany         | ✅                     | ✅             |

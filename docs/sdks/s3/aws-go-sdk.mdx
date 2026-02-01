@@ -8,7 +8,7 @@ available.
 
 You may continue to use the AWS Go SDK as you normally would, but with the
 endpoint set to Tigris. If you are using Tigris outside of Fly, use the endpoint
-[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
+[https://t3.storageapi.dev](https://t3.storageapi.dev). If you are using Tigris from
 within Fly, use the endpoint
 [https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
 
@@ -18,14 +18,14 @@ reads the default credentials file or the environment variables
 
 When you create your client, make sure to enable the following settings:
 
-- `BaseEndpoint` should be set to `https://t3.storage.dev`.
+- `BaseEndpoint` should be set to `https://t3.storageapi.dev`.
 - `Region` should be set to `auto`.
 - `UsePathStyle` should be set to `false`.
 
 ```go
 svc := s3.NewFromConfig(sdkConfig, func(o *s3.Options) {
   // highlight-start
-  o.BaseEndpoint = aws.String("https://t3.storage.dev")
+  o.BaseEndpoint = aws.String("https://t3.storageapi.dev")
   o.Region = "auto"
   o.UsePathStyle = false
   // highlight-end
@@ -98,7 +98,7 @@ You can also use a
 by replacing the Tigris domain name with your custom domain name:
 
 ```go
-brandedURL := strings.ReplaceAll(presignedGetReq.URL, "tigris-example.t3.storage.dev", "your-domain.example.com")
+brandedURL := strings.ReplaceAll(presignedGetReq.URL, "tigris-example.t3.storageapi.dev", "your-domain.example.com")
 fmt.Printf("Presigned URL for GET (custom domain): %s\n", brandedURL)
 ```
 

@@ -8,7 +8,7 @@ available.
 
 You may continue to use the AWS .Net SDK as you normally would, but with the
 endpoint set to Tigris. If you are using Tigris outside of Fly, use the endpoint
-[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
+[https://t3.storageapi.dev](https://t3.storageapi.dev). If you are using Tigris from
 within Fly, use the endpoint
 [https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
 
@@ -28,7 +28,7 @@ dotnet add package AWSSDK.SSOOIDC
 
 Then you can use the SDK as you normally would, but with the endpoint set to
 Tigris. If you are using Tigris outside of Fly, use the endpoint
-[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
+[https://t3.storageapi.dev](https://t3.storageapi.dev). If you are using Tigris from
 within Fly, use the endpoint
 [https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
 
@@ -71,6 +71,6 @@ You can also use a
 by replacing the Tigris domain name with your custom domain name:
 
 ```csharp
-string brandedURL = presignedUrl.Replace("t3.storage.dev", "your-domain.example.com");
+string brandedURL = presignedUrl.Replace("t3.storageapi.dev", "your-domain.example.com");
 Console.WriteLine($"Presigned URL for GET (custom domain): {brandedURL}");
 ```

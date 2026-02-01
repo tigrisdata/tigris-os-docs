@@ -4,7 +4,7 @@ from botocore.client import Config
 # Create S3 service client
 svc = boto3.client(
     's3',
-    endpoint_url='https://t3.storage.dev',
+    endpoint_url='https://t3.storageapi.dev',
     config=Config(s3={'addressing_style': 'virtual'}),
 )
 

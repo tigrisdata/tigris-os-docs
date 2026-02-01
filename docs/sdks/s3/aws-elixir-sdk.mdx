@@ -8,7 +8,7 @@ available.
 
 You may continue to use the ExAWS SDK as you normally would, but with the
 endpoint set to Tigris. If you are using Tigris outside of Fly, use the endpoint
-[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
+[https://t3.storageapi.dev](https://t3.storageapi.dev). If you are using Tigris from
 within Fly, use the endpoint
 [https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
 
@@ -48,7 +48,7 @@ secret_access_key. In this case we use AWS_ACCESS_KEY_ID and
 AWS_SECRET_ACCESS_KEY environment variables to store the access keys we will use
 to access Tigris.
 
-Then we configure the S3 API endpoint, which is "t3.storage.dev".
+Then we configure the S3 API endpoint, which is "t3.storageapi.dev".
 
 ### Runtime configuration
 
@@ -69,7 +69,7 @@ if config_env() == :prod do
 
   config :ex_aws, :s3,
     scheme: "https://",
-    host: "t3.storage.dev",
+    host: "t3.storageapi.dev",
     region: "auto"
 
 end
@@ -96,6 +96,6 @@ You can also use a
 by replacing the Tigris domain name with your custom domain name:
 
 ```elixir
-branded_url = String.replace(presigned_url, "t3.storage.dev", "your-domain.example.com")
+branded_url = String.replace(presigned_url, "t3.storageapi.dev", "your-domain.example.com")
 IO.puts("Presigned URL for GET (custom domain): #{branded_url}")
 ```

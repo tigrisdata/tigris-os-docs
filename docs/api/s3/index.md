@@ -90,7 +90,7 @@ status within Tigris.
 
 ## IAM APIs
 
-Note: IAM APIs are served at `https://iam.storage.dev` for now.
+Note: IAM APIs are served at `https://iam.storageapi.dev` for now.
 
 | IAM API                                                                                           | Supported in Tigris |
 | ------------------------------------------------------------------------------------------------- | ------------------- |

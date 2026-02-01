@@ -4,7 +4,7 @@ bucket_name = "tigris-example"
 
 s3 = Aws::S3::Client.new(
     region: "auto",
-    endpoint: "https://t3.storage.dev",
+    endpoint: "https://t3.storageapi.dev",
 )
 
 # Lists all of your buckets

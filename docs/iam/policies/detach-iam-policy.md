@@ -5,7 +5,7 @@ Assuming you have already created an IAM policy by following the steps in the
 key, you can detach the policy from the access key as follows:
 
 ```bash
-aws --profile=tigris iam --endpoint-url=https://iam.storage.dev detach-user-policy --policy-arn <generated_policy_arn_from_previous_step> --user-name <tid_>
+aws --profile=tigris iam --endpoint-url=https://iam.storageapi.dev detach-user-policy --policy-arn <generated_policy_arn_from_previous_step> --user-name <tid_>
 ```
 
 This command detaches the IAM policy from the access key, removing the

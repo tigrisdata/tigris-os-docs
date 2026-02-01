@@ -143,8 +143,8 @@ bucket. Copy the environment details into your `.env` file:
 ## Tigris credentials
 AWS_ACCESS_KEY_ID=tid_access_key_id
 AWS_SECRET_ACCESS_KEY=tsec_secret_access_key
-AWS_ENDPOINT_URL_S3=https://t3.storage.dev
-AWS_ENDPOINT_URL_IAM=https://iam.storage.dev
+AWS_ENDPOINT_URL_S3=https://t3.storageapi.dev
+AWS_ENDPOINT_URL_IAM=https://iam.storageapi.dev
 AWS_REGION=auto
 ```
 
@@ -160,7 +160,7 @@ If your bucket is named `xe-warpstream-demo`, your bucket URL should look like
 this:
 
 ```text
-s3://xe-warpstream-demo?region=auto&endpoint=https://t3.storage.dev
+s3://xe-warpstream-demo?region=auto&endpoint=https://t3.storageapi.dev
 ```
 
 Altogether, put these credentials in your `.env` file:
@@ -168,7 +168,7 @@ Altogether, put these credentials in your `.env` file:
 ```sh
 ## Warpstream credentials
 WARPSTREAM_AGENT_KEY=aks_agent_key
-WARPSTREAM_BUCKET_URL='s3://xe-warpstream-demo?region=auto&endpoint=https://t3.storage.dev'
+WARPSTREAM_BUCKET_URL='s3://xe-warpstream-demo?region=auto&endpoint=https://t3.storageapi.dev'
 WARPSTREAM_DEFAULT_VIRTUAL_CLUSTER_ID=vci_cluster_id
 WARPSTREAM_REGION=us-east-1
 ```

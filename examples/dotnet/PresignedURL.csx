@@ -7,7 +7,7 @@ using Amazon.S3.Model;
 AWSConfigsS3.UseSignatureVersion4 = true;
 
 IAmazonS3 s3Client = new AmazonS3Client(
-    new AmazonS3Config { ForcePathStyle = false, ServiceURL = "https://t3.storage.dev" }
+    new AmazonS3Config { ForcePathStyle = false, ServiceURL = "https://t3.storageapi.dev" }
 );
 
 var bucketName = "tigris-example";

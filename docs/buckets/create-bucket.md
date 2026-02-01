@@ -54,18 +54,18 @@ Assuming you have the AWS CLI configured as shown in the
 :::note
 
 If you are using Tigris outside of Fly, use the endpoint
-[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
+[https://t3.storageapi.dev](https://t3.storageapi.dev). If you are using Tigris from
 within Fly, use the endpoint
 [https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
 
 :::
 
 ```bash
-aws s3api --endpoint-url https://t3.storage.dev create-bucket --bucket foo-bucket
+aws s3api --endpoint-url https://t3.storageapi.dev create-bucket --bucket foo-bucket
 ```
 
 ```text
-$ aws s3api --endpoint-url https://t3.storage.dev create-bucket --bucket foo-bucket
+$ aws s3api --endpoint-url https://t3.storageapi.dev create-bucket --bucket foo-bucket
 {
     "Location": "/foo-bucket"
 }
@@ -106,7 +106,7 @@ $ fly storage create
 Your  project (polished-thunder-5646) is ready. See details and next steps with:
 
 Set one or more of the following secrets on your target app.
-AWS_ENDPOINT_URL_S3: https://t3.storage.dev
+AWS_ENDPOINT_URL_S3: https://t3.storageapi.dev
 AWS_ACCESS_KEY_ID: xxxxxxxxxxxxxxxxxxxx
 AWS_SECRET_ACCESS_KEY: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 BUCKET_NAME: polished-thunder-5646

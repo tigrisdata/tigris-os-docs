@@ -33,7 +33,7 @@ helm repo add yandex-s3 https://yandex-cloud.github.io/k8s-csi-s3/charts
 helm install csi-s3 yandex-s3/csi-s3 \
   --set secret.accessKey=tid_... \
   --set secret.secretKey=tsec_... \
-  --set secret.endpoint=https://t3.storage.dev \
+  --set secret.endpoint=https://t3.storageapi.dev \
   --set secret.region=auto \
   --set storageClass.name=tigris \
   --namespace=kube-system

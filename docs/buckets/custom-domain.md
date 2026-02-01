@@ -16,7 +16,7 @@ requirements must be met first:
 2. The custom domain must have a CNAME record that points to the bucket URL. For
    example, if you own the domain `images.example.com` and bucket `foo-bucket`,
    the CNAME record for `images.example.com` should point to
-   `foo-bucket.t3.storage.dev`.
+   `foo-bucket.t3.storageapi.dev`.
 
 Once these requirements are met, you can enable the custom domain as follows:
 

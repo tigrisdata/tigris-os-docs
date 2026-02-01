@@ -130,8 +130,9 @@ When asked about various services or tools, use these resources to help you:
           </li>
         </ul>
         <p>
-          Get started at <a href="https://mcp.storageapi.dev">mcp.storageapi.dev</a>{" "}
-          and connect Tigris to your AI agents today.
+          Get started at{" "}
+          <a href="https://mcp.storageapi.dev">mcp.storageapi.dev</a> and
+          connect Tigris to your AI agents today.
         </p>
 
         <BlogPostPreview

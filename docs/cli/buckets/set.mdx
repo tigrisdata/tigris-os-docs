@@ -1,0 +1,37 @@
+# tigris buckets set
+
+Update bucket settings.
+
+**Alias:** `s`
+
+## Usage
+
+```bash
+tigris buckets set <name> [flags]
+t3 b s <name> [flags]
+```
+
+## Flags
+
+| Name                          | Required | Default | Description                                                                                                                                          |
+| ----------------------------- | -------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--access`                    | No       | —       | Bucket access level. Options: `public`, `private`                                                                                                    |
+| `--region`                    | No       | —       | Allowed regions (can specify multiple). Options: `global`, `usa`, `eur`, `ams`, `fra`, `gru`, `iad`, `jnb`, `lhr`, `nrt`, `ord`, `sin`, `sjc`, `syd` |
+| `--allow-object-acl`          | No       | —       | Enable object-level ACL                                                                                                                              |
+| `--disable-directory-listing` | No       | —       | Disable directory listing                                                                                                                            |
+| `--cache-control`             | No       | —       | Default cache-control header value                                                                                                                   |
+| `--custom-domain`             | No       | —       | Custom domain for the bucket                                                                                                                         |
+| `--enable-delete-protection`  | No       | —       | Enable delete protection                                                                                                                             |
+
+## Examples
+
+```bash
+# Make a bucket public
+tigris buckets set my-bucket --access public
+
+# Set region restrictions
+tigris buckets set my-bucket --region iad --region fra
+
+# Enable delete protection
+tigris buckets set my-bucket --enable-delete-protection true
+```

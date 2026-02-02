@@ -1,0 +1,27 @@
+# tigris objects list
+
+List objects in a bucket.
+
+**Alias:** `l`
+
+## Usage
+
+```bash
+tigris objects list <bucket> [flags]
+t3 o l <bucket> [flags]
+```
+
+## Flags
+
+| Name             | Required | Default | Description                                    |
+| ---------------- | -------- | ------- | ---------------------------------------------- |
+| `--prefix`, `-p` | No       | —       | Filter objects by prefix                       |
+| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+
+## Examples
+
+```bash
+tigris objects list my-bucket
+tigris objects list my-bucket --prefix images/
+tigris objects list my-bucket --format json
+```

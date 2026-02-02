@@ -1,0 +1,29 @@
+# tigris objects get
+
+Get an object.
+
+**Alias:** `g`
+
+## Usage
+
+```bash
+tigris objects get <bucket> <key> [flags]
+t3 o g <bucket> <key> [flags]
+```
+
+## Flags
+
+| Name             | Required | Default | Description                                                                                |
+| ---------------- | -------- | ------- | ------------------------------------------------------------------------------------------ |
+| `--output`, `-o` | No       | —       | Output file path (if not specified, prints to stdout)                                      |
+| `--mode`, `-m`   | No       | —       | Response mode (auto-detected from extension if not specified). Options: `string`, `stream` |
+
+## Examples
+
+```bash
+# Print object to stdout
+tigris objects get my-bucket my-file.txt
+
+# Save object to a file
+tigris objects get my-bucket my-file.txt --output ./local-file.txt
+```

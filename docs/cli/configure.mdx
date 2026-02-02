@@ -1,0 +1,31 @@
+# tigris configure
+
+Save credentials permanently. After running this, all commands work
+automatically.
+
+**Alias:** `c`
+
+## Usage
+
+```bash
+tigris configure [flags]
+t3 c [flags]
+```
+
+## Flags
+
+| Name                         | Required | Default                  | Description                   |
+| ---------------------------- | -------- | ------------------------ | ----------------------------- |
+| `--access-key`, `-key`       | No       | —                        | Your Tigris access key ID     |
+| `--access-secret`, `-secret` | No       | —                        | Your Tigris secret access key |
+| `--endpoint`, `-e`           | No       | `https://t3.storage.dev` | Tigris API endpoint           |
+
+## Examples
+
+```bash
+# Save credentials interactively
+tigris configure
+
+# Save credentials directly
+tigris configure --access-key tid_mykey --access-secret tsec_mysecret
+```

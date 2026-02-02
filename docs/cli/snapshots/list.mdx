@@ -1,0 +1,25 @@
+# tigris snapshots list
+
+List snapshots of a bucket.
+
+**Alias:** `l`
+
+## Usage
+
+```bash
+tigris snapshots list <name> [flags]
+t3 s l <name> [flags]
+```
+
+## Flags
+
+| Name             | Required | Default | Description                                    |
+| ---------------- | -------- | ------- | ---------------------------------------------- |
+| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+
+## Examples
+
+```bash
+tigris snapshots list my-bucket
+tigris snapshots list my-bucket --format json
+```

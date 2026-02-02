@@ -1,0 +1,33 @@
+# tigris login
+
+Start a session. Use OAuth (default) or temporary credentials that override your
+saved config.
+
+**Alias:** `l`
+
+## Usage
+
+```bash
+tigris login [operation] [flags]
+t3 l [operation] [flags]
+```
+
+## Flags
+
+| Name                         | Required | Default | Description                                                                    |
+| ---------------------------- | -------- | ------- | ------------------------------------------------------------------------------ |
+| `--access-key`, `-key`       | No       | —       | Use temporary credentials instead of OAuth (useful for testing different keys) |
+| `--access-secret`, `-secret` | No       | —       | Secret for temporary credentials                                               |
+
+## Examples
+
+```bash
+# Login interactively (choose method)
+tigris login
+
+# Login via OAuth
+tigris login oauth
+
+# Login with credentials
+tigris login credentials --access-key tid_mykey --access-secret tsec_mysecret
+```

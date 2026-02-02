@@ -1,0 +1,29 @@
+# tigris organizations list
+
+List organizations.
+
+**Alias:** `l`
+
+## Usage
+
+```bash
+tigris organizations list [flags]
+t3 orgs l [flags]
+```
+
+## Flags
+
+| Name             | Required | Default  | Description                                              |
+| ---------------- | -------- | -------- | -------------------------------------------------------- |
+| `--format`, `-f` | No       | `select` | Output format. Options: `json`, `table`, `xml`, `select` |
+| `--select`, `-i` | No       | —        | Interactive selection mode                               |
+
+## Examples
+
+```bash
+# List and select an organization interactively
+tigris orgs list
+
+# List organizations as JSON
+tigris orgs list --format json
+```

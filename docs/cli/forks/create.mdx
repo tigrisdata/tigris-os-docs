@@ -1,0 +1,28 @@
+# tigris forks create
+
+Create a fork of a bucket.
+
+**Alias:** `c`
+
+## Usage
+
+```bash
+tigris forks create <name> <fork-name> [flags]
+t3 f c <name> <fork-name> [flags]
+```
+
+## Flags
+
+| Name               | Required | Default | Description                          |
+| ------------------ | -------- | ------- | ------------------------------------ |
+| `--snapshot`, `-s` | No       | —       | Create fork from a specific snapshot |
+
+## Examples
+
+```bash
+# Create a fork
+tigris forks create my-bucket my-fork
+
+# Create a fork from a specific snapshot
+tigris forks create my-bucket my-fork --snapshot snap-123
+```

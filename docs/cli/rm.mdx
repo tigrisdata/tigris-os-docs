@@ -1,0 +1,34 @@
+# tigris rm
+
+Remove a bucket, folder, or object.
+
+**Alias:** `remove`
+
+## Usage
+
+```bash
+tigris rm <path> [flags]
+t3 remove <path> [flags]
+```
+
+## Flags
+
+| Name            | Required | Default | Description              |
+| --------------- | -------- | ------- | ------------------------ |
+| `--force`, `-f` | No       | —       | Skip confirmation prompt |
+
+## Examples
+
+```bash
+# Remove an object
+tigris rm my-bucket/my-path/my-object.json
+
+# Remove a folder
+tigris rm my-bucket/my-path
+
+# Remove with wildcard (skip confirmation)
+tigris rm my-bucket/my-path/* --force
+
+# Remove a bucket
+tigris rm my-bucket
+```

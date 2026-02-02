@@ -1,0 +1,22 @@
+# tigris snapshots take
+
+Take a snapshot of a bucket.
+
+**Alias:** `t`
+
+## Usage
+
+```bash
+tigris snapshots take <name> [snapshot-name]
+t3 s t <name> [snapshot-name]
+```
+
+## Examples
+
+```bash
+# Take a snapshot with auto-generated name
+tigris snapshots take my-bucket
+
+# Take a named snapshot
+tigris snapshots take my-bucket my-snapshot
+```

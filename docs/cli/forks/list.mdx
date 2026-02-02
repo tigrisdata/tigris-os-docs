@@ -1,0 +1,25 @@
+# tigris forks list
+
+List forks of a bucket.
+
+**Alias:** `l`
+
+## Usage
+
+```bash
+tigris forks list <name> [flags]
+t3 f l <name> [flags]
+```
+
+## Flags
+
+| Name             | Required | Default | Description                                    |
+| ---------------- | -------- | ------- | ---------------------------------------------- |
+| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+
+## Examples
+
+```bash
+tigris forks list my-bucket
+tigris forks list my-bucket --format json
+```

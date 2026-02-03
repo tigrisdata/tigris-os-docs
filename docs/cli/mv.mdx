@@ -1,0 +1,31 @@
+# tigris mv
+
+Move a folder or an object.
+
+**Alias:** `move`
+
+## Usage
+
+```bash
+tigris mv <src> <dest> [flags]
+t3 move <src> <dest> [flags]
+```
+
+## Flags
+
+| Name            | Required | Default | Description              |
+| --------------- | -------- | ------- | ------------------------ |
+| `--force`, `-f` | No       | —       | Skip confirmation prompt |
+
+## Examples
+
+```bash
+# Move an object
+tigris mv my-bucket/my-path/my-object.json my-bucket/new-path/my-object.json
+
+# Move a folder
+tigris mv my-bucket/my-path my-bucket/new-path
+
+# Move with wildcard (skip confirmation)
+tigris mv my-bucket/my-path/* my-bucket/new-path --force
+```

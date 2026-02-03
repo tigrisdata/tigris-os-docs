@@ -1,0 +1,70 @@
+# Tigris CLI
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+Tigris CLI provides a simple and powerful command line interface to manage your
+Tigris resources such as buckets, objects, and access keys.
+
+Get started with Tigris CLI by installing it globally using npm:
+
+### Installation
+
+```bash
+npm install -g @tigrisdata/cli
+```
+
+### Usage
+
+```bash
+tigris <command> [flags]
+```
+
+Run `tigris help` to see all available commands, or `tigris <command> help` to
+get details on a specific command.
+
+### Authentication
+
+The quickest way to get started is to login via your browser:
+
+```bash
+tigris login
+```
+
+This opens a browser window for OAuth authentication. Once complete, your
+session is active and you can start using all commands. If you have multiple
+organizations, you'll be prompted to select one.
+
+To login with an access key and secret instead:
+
+```bash
+tigris login credentials --access-key <your-key> --access-secret <your-secret>
+```
+
+Sessions created with `tigris login` are temporary — they are cleared when you
+run `tigris logout`.
+
+Sessions created with `tigris login oauth` will automatically expire in about an
+hour. If you need to end such a session sooner, run tigris logout.
+
+To save credentials permanently so they persist across sessions:
+
+```bash
+tigris configure --access-key <your-key> --access-secret <your-secret>
+```
+
+This writes your credentials to `~/.tigris/config.json`. After configuring, all
+commands work automatically without needing to login each time.
+
+You can verify your authentication status at any time:
+
+```bash
+tigris whoami
+```
+
+To test that your credentials have access to a specific bucket:
+
+```bash
+tigris credentials test
+tigris credentials test --bucket my-bucket
+```

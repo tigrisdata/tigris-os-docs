@@ -1,0 +1,25 @@
+# tigris buckets list
+
+List buckets.
+
+**Alias:** `l`
+
+## Usage
+
+```bash
+tigris buckets list [flags]
+t3 b l [flags]
+```
+
+## Flags
+
+| Name             | Required | Default | Description                                    |
+| ---------------- | -------- | ------- | ---------------------------------------------- |
+| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+
+## Examples
+
+```bash
+tigris buckets list
+tigris buckets list --format json
+```

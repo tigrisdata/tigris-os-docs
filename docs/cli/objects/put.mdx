@@ -1,0 +1,30 @@
+# tigris objects put
+
+Upload an object.
+
+**Alias:** `p`
+
+## Usage
+
+```bash
+tigris objects put <bucket> <key> <file> [flags]
+t3 o p <bucket> <key> <file> [flags]
+```
+
+## Flags
+
+| Name                   | Required | Default   | Description                                    |
+| ---------------------- | -------- | --------- | ---------------------------------------------- |
+| `--access`, `-a`       | No       | `private` | Access level. Options: `public`, `private`     |
+| `--content-type`, `-t` | No       | —         | Content type                                   |
+| `--format`, `-f`       | No       | `table`   | Output format. Options: `json`, `table`, `xml` |
+
+## Examples
+
+```bash
+# Upload a file
+tigris objects put my-bucket my-file.txt ./local-file.txt
+
+# Upload with public access
+tigris objects put my-bucket my-file.txt ./local-file.txt --access public
+```

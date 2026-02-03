@@ -1,0 +1,25 @@
+# tigris cp
+
+Copy a folder or an object.
+
+**Alias:** `copy`
+
+## Usage
+
+```bash
+tigris cp <src> <dest>
+t3 copy <src> <dest>
+```
+
+## Examples
+
+```bash
+# Copy an object
+tigris cp my-bucket/my-path/my-object.json my-bucket/new-path/my-object.json
+
+# Copy a folder
+tigris cp my-bucket/my-path my-bucket/new-path
+
+# Copy with wildcard
+tigris cp my-bucket/my-path/* my-bucket/new-path/
+```

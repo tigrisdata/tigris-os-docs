@@ -1,0 +1,37 @@
+# tigris access-keys assign
+
+Assign bucket roles to an access key.
+
+**Alias:** `a`
+
+## Usage
+
+```bash
+tigris access-keys assign <id> [flags]
+t3 keys a <id> [flags]
+```
+
+## Flags
+
+| Name             | Required | Default | Description                                                                               |
+| ---------------- | -------- | ------- | ----------------------------------------------------------------------------------------- |
+| `--bucket`, `-b` | No       | —       | Bucket name (can specify multiple)                                                        |
+| `--role`, `-r`   | No       | —       | Role to assign (can specify multiple to pair with buckets). Options: `Editor`, `ReadOnly` |
+| `--admin`        | No       | —       | Grant admin access to all buckets in the organization                                     |
+| `--revoke-roles` | No       | —       | Revoke all bucket roles from the access key                                               |
+
+## Examples
+
+```bash
+# Assign editor role to a bucket
+tigris access-keys assign tid_mykey --bucket my-bucket --role Editor
+
+# Assign read-only role to multiple buckets
+tigris access-keys assign tid_mykey --bucket bucket1 --role ReadOnly --bucket bucket2 --role ReadOnly
+
+# Grant admin access
+tigris access-keys assign tid_mykey --admin
+
+# Revoke all roles
+tigris access-keys assign tid_mykey --revoke-roles
+```

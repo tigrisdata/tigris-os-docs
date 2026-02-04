@@ -65,7 +65,7 @@
     "@docusaurus/module-type-aliases": "^3.9.2",
     "@docusaurus/tsconfig": "^3.9.2",
     "@docusaurus/types": "^3.9.2",
-    "@redocly/cli": "^2.12.7",
+    "@redocly/cli": "^2.15.1",
     "@types/react": "^18.2.29",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
     "@typescript-eslint/parser": "^6.0.0",

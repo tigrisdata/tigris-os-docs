@@ -25,8 +25,10 @@ get details on a specific command.
 
 ## Authentication
 
-Tigris CLI supports multiple login methods. It allows you to login via your browser (human-friendly) or with an access key and secret (machine-friendly). `tigris login` allows you to select between the two methods.
+Tigris CLI supports multiple login methods. It allows you to login via your
 browser (human-friendly) or with an access key and secret (machine-friendly).
+`tigris login` allows you to select between the two methods. browser
+(human-friendly) or with an access key and secret (machine-friendly).
 `tigris login` allows you to select between the two methods.
 
 ### OAuth authentication
@@ -37,12 +39,14 @@ authentication):
 ```bash
 tigris login oauth
 ```
-organizations, the first organization in the list will be selected automatically. You can select a different organization by running `tigris organizations list`.
-This opens a browser window for OAuth authentication. Once complete, your
-session is active and you can start using all commands. If you have multiple
+
 organizations, the first organization in the list will be selected
 automatically. You can select a different organization by running
-`tigris organizations list`.
+`tigris organizations list`. This opens a browser window for OAuth
+authentication. Once complete, your session is active and you can start using
+all commands. If you have multiple organizations, the first organization in the
+list will be selected automatically. You can select a different organization by
+running `tigris organizations list`.
 
 Sessions created with `tigris login oauth` will automatically expire in about an
 hour. If you need to end such a session sooner, run `tigris logout`.
@@ -51,7 +55,7 @@ hour. If you need to end such a session sooner, run `tigris logout`.
 
 To login with an access key and secret:
 
-```bash
+````bash
 tigris login credentials --access-key <your-key> --access-secret <your-secret>
 
 #### Saving credentials permanently
@@ -65,7 +69,7 @@ To save credentials permanently so they persist across sessions:
 
 ```bash
 tigris configure --access-key <your-key> --access-secret <your-secret>
-```
+````
 
 This writes your credentials to `~/.tigris/config.json`. After configuring, all
 commands uses these credentials without needing to login each time.

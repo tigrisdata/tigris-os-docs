@@ -699,6 +699,35 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GenericError"
+    post:
+      tags:
+        - organizations
+      summary: Create a new organization
+      description: |
+        Creates a new organization account
+      operationId: Tigris_CreateOrganization
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrganizationRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateOrganizationResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
 
   /v1/providers/{provider_id}/orgs:
     get:
@@ -1460,6 +1489,23 @@ components:
         user_role:
           $ref: "#/components/schemas/OrgMembership"
     DeleteAccessKeyResponse:
+      type: object
+    CreateOrganizationRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - org_name
+        - user_id
+      properties:
+        org_name:
+          type: string
+          description: Name of the organization to be created
+        user_id:
+          type: string
+          description: ID of the user who is creating the organization
+        org_quota:
+          $ref: "#/components/schemas/OrgQuota"
+    CreateOrganizationResponse:
       type: object
     UpdateOrganizationRequest:
       type: object

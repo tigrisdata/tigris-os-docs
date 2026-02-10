@@ -7,19 +7,40 @@ Copy a folder or an object.
 ## Usage
 
 ```bash
-tigris cp <src> <dest>
-t3 copy <src> <dest>
+tigris cp <src> <dest> [flags]
+t3 copy <src> <dest> [flags]
 ```
+
+Paths use the `t3://` (or `tigris://`) prefix for remote Tigris paths. Bare
+paths are treated as local files. At least one side must be remote.
+
+## Flags
+
+| Name                | Required | Default | Description              |
+| ------------------- | -------- | ------- | ------------------------ |
+| `--recursive`, `-r` | No       | —       | Copy folders recursively |
 
 ## Examples
 
 ```bash
-# Copy an object
-tigris cp my-bucket/my-path/my-object.json my-bucket/new-path/my-object.json
+# Copy a remote object to a new location
+tigris cp t3://my-bucket/my-path/my-object.json t3://my-bucket/new-path/my-object.json
 
-# Copy a folder
-tigris cp my-bucket/my-path my-bucket/new-path
+# Copy a remote folder recursively
+tigris cp -r t3://my-bucket/my-path/ t3://my-bucket/new-path/
 
 # Copy with wildcard
-tigris cp my-bucket/my-path/* my-bucket/new-path/
+tigris cp t3://my-bucket/my-path/*.json t3://my-bucket/new-path/
+
+# Download a remote object to local
+tigris cp t3://my-bucket/my-file.txt ./local-file.txt
+
+# Download a folder to local
+tigris cp -r t3://my-bucket/my-path/ ./local-dir/
+
+# Upload a local file to remote
+tigris cp ./local-file.txt t3://my-bucket/my-file.txt
+
+# Upload a local folder to remote
+tigris cp -r ./local-dir/ t3://my-bucket/my-path/
 ```

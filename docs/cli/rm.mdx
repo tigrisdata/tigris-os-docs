@@ -11,24 +11,33 @@ tigris rm <path> [flags]
 t3 remove <path> [flags]
 ```
 
+Paths support the optional `t3://` (or `tigris://`) prefix (e.g.
+`t3://my-bucket/path` or just `my-bucket/path`).
+
 ## Flags
 
-| Name            | Required | Default | Description              |
-| --------------- | -------- | ------- | ------------------------ |
-| `--force`, `-f` | No       | —       | Skip confirmation prompt |
+| Name                | Required | Default | Description                |
+| ------------------- | -------- | ------- | -------------------------- |
+| `--recursive`, `-r` | No       | —       | Remove folders recursively |
+| `--force`, `-f`     | No       | —       | Skip confirmation prompt   |
 
 ## Examples
 
 ```bash
 # Remove an object
+tigris rm t3://my-bucket/my-path/my-object.json
 tigris rm my-bucket/my-path/my-object.json
 
-# Remove a folder
-tigris rm my-bucket/my-path
+# Remove a folder recursively
+tigris rm -r t3://my-bucket/my-path/
 
 # Remove with wildcard (skip confirmation)
-tigris rm my-bucket/my-path/* --force
+tigris rm t3://my-bucket/my-path/*.jpg --force
+
+# Remove all contents of a bucket
+tigris rm -r t3://my-bucket/ --force
 
 # Remove a bucket
+tigris rm t3://my-bucket
 tigris rm my-bucket
 ```

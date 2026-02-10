@@ -11,12 +11,17 @@ tigris mk <path>
 t3 create <path>
 ```
 
+Paths support the optional `t3://` (or `tigris://`) prefix (e.g.
+`t3://my-bucket/path` or just `my-bucket/path`).
+
 ## Examples
 
 ```bash
 # Create a bucket
+tigris mk t3://my-bucket
 tigris mk my-bucket
 
 # Create a folder in a bucket
+tigris mk t3://my-bucket/my-path
 tigris mk my-bucket/my-path
 ```

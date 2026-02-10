@@ -9,15 +9,21 @@ tigris stat <path>
 t3 stat <path>
 ```
 
+Paths support the optional `t3://` (or `tigris://`) prefix (e.g.
+`t3://my-bucket/path` or just `my-bucket/path`).
+
 ## Examples
 
 ```bash
 # Get bucket details
+tigris stat t3://my-bucket
 tigris stat my-bucket
 
 # Get folder details
+tigris stat t3://my-bucket/my-path
 tigris stat my-bucket/my-path
 
 # Get object details
+tigris stat t3://my-bucket/my-path/my-object.json
 tigris stat my-bucket/my-path/my-object.json
 ```

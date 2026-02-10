@@ -8,6 +8,203 @@ import TabItem from "@theme/TabItem";
 
 export const changelogData = [
   {
+    date: "February 10, 2026",
+    title: "Tigris CLI",
+    content: (
+      <>
+        <p>
+          We&apos;ve released the{" "}
+          <a href="https://www.npmjs.com/package/@tigrisdata/cli">Tigris CLI</a>
+          , a new command-line interface for managing your Tigris object storage
+          buckets directly from the terminal. Commands follow UNIX conventions
+          and are designed to be intuitive for both humans and AI assistants.
+        </p>
+
+        <BlogPostPreview
+          href="https://www.tigrisdata.com/blog/tigris-cli/"
+          title="Introducing the Tigris CLI"
+          description="A new command-line interface for Tigris object storage, following UNIX conventions with commands like ls, cp, rm, and mk."
+          imageSrc={require("./assets/2026/02/tigris-cli.webp").default}
+          imageAlt="Hero image for the Tigris CLI announcement blog post"
+          buttonText="Read the Blog"
+          author="Abdullah Ibrahim & Xe Iaso"
+          date="February 2026"
+        />
+
+        <p>
+          <strong>Installation</strong>
+        </p>
+        <CodeBlock language="bash">{`npm install -g @tigrisdata/cli`}</CodeBlock>
+
+        <p>
+          <strong>Getting started</strong>
+        </p>
+        <CodeBlock language="bash">{`# Log in to your Tigris account
+tigris login
+
+# List your buckets
+tigris ls
+
+# Copy files to and from Tigris
+tigris cp ./local-file.txt t3://my-bucket/file.txt
+tigris cp t3://my-bucket/file.txt ./local-file.txt
+
+# Recursively copy a directory
+tigris cp -r ./local-dir/ t3://my-bucket/my-path/`}</CodeBlock>
+      </>
+    ),
+    subcategories: [
+      {
+        title: "Features",
+        items: [
+          {
+            title: "UNIX-style commands",
+            description: (
+              <>
+                <p>
+                  Familiar commands like <code>ls</code>, <code>cp</code>,{" "}
+                  <code>rm</code>, <code>mk</code>, and <code>touch</code> for
+                  managing buckets and objects.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+          {
+            title: "t3:// URL scheme",
+            description: (
+              <>
+                <p>
+                  A custom <code>t3://</code> URL scheme for referencing buckets
+                  and objects, making copy operations between local and remote
+                  storage straightforward.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+          {
+            title: "Cross-platform support",
+            description: (
+              <>
+                <p>
+                  Works on Windows, macOS, and Linux via Node.js. Authenticate
+                  with <code>tigris login</code> for temporary access or{" "}
+                  <code>tigris configure</code> for long-lived keypairs.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    date: "February 3, 2026",
+    title: "Go SDK",
+    content: (
+      <>
+        <p>
+          We&apos;ve released an official Go SDK for Tigris:{" "}
+          <a href="https://github.com/tigrisdata/storage-go">storage-go</a>. It
+          provides a Go-native interface for interacting with Tigris object
+          storage, focusing on developer ergonomics and intent over wire
+          protocol details.
+        </p>
+
+        <BlogPostPreview
+          href="https://www.tigrisdata.com/blog/storage-go-announcement/"
+          title="Deriving the Tigris Go SDK"
+          description="An official Go SDK for Tigris with two packages: a drop-in AWS S3 wrapper with Tigris-specific features, and a higher-level simplestorage interface."
+          imageSrc={require("./assets/2026/02/storage-go.webp").default}
+          imageAlt="Hero image for the Tigris Go SDK announcement blog post"
+          buttonText="Read the Blog"
+          author="Xe Iaso"
+          date="February 2026"
+        />
+
+        <p>
+          <strong>Installation</strong>
+        </p>
+        <CodeBlock language="bash">{`go get github.com/tigrisdata/storage-go@latest`}</CodeBlock>
+
+        <p>The SDK includes two packages for different use cases:</p>
+
+        <p>
+          <strong>storage package</strong> — An unopinionated wrapper around the
+          AWS S3 client that maintains compatibility with existing code while
+          exposing Tigris-specific features like{" "}
+          <a href="/docs/objects/bucket-snapshots">snapshots</a> and{" "}
+          <a href="/docs/objects/bucket-forking">bucket forking</a>:
+        </p>
+        <CodeBlock language="go">{`tigris, err := storage.New(ctx)
+if err != nil {
+    log.Fatal(err)
+}
+
+result, err := tigris.ListBucketSnapshots(ctx, "my-bucket")`}</CodeBlock>
+
+        <p>
+          <strong>simplestorage package</strong> — A higher-level, opinionated
+          interface that treats Buckets, Keys, and Objects as first-class
+          concepts:
+        </p>
+        <CodeBlock language="go">{`tigris, err := simplestorage.New(ctx)
+if err != nil {
+    log.Fatal(err)
+}
+
+result, err := tigris.Put(ctx, &simplestorage.Object{
+    Key:         "file.txt",
+    ContentType: "text/plain",
+    Size:        st.Size(),
+    Body:        fin,
+})`}</CodeBlock>
+
+        <p>
+          The <code>simplestorage</code> package reads the default bucket from
+          the <code>TIGRIS_STORAGE_BUCKET</code> environment variable, mirroring
+          the approach used by the JavaScript SDK.
+        </p>
+      </>
+    ),
+    subcategories: [
+      {
+        title: "Features",
+        items: [
+          {
+            title: "AWS S3 compatible wrapper",
+            description: (
+              <>
+                <p>
+                  The <code>storage</code> package provides a drop-in
+                  replacement for the AWS S3 SDK while adding methods for
+                  Tigris-specific features like bucket snapshots and bucket
+                  forking.
+                </p>
+              </>
+            ),
+            tag: { label: "SDK", color: "blue" },
+          },
+          {
+            title: "Higher-level simplestorage interface",
+            description: (
+              <>
+                <p>
+                  The <code>simplestorage</code> package offers an opinionated,
+                  intent-focused API that simplifies common object storage
+                  operations with Go-native conventions.
+                </p>
+              </>
+            ),
+            tag: { label: "SDK", color: "blue" },
+          },
+        ],
+      },
+    ],
+  },
+  {
     date: "January 13, 2026",
     title: "MCP OIDC Provider & llms.txt Support",
     content: (

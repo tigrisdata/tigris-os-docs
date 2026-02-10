@@ -11,6 +11,9 @@ tigris ls [path]
 t3 list [path]
 ```
 
+Paths support the optional `t3://` (or `tigris://`) prefix (e.g.
+`t3://my-bucket/path` or just `my-bucket/path`).
+
 ## Examples
 
 ```bash
@@ -18,8 +21,10 @@ t3 list [path]
 tigris ls
 
 # List objects in a bucket
+tigris ls t3://my-bucket
 tigris ls my-bucket
 
 # List objects in a path
+tigris ls t3://my-bucket/my-path
 tigris ls my-bucket/my-path
 ```

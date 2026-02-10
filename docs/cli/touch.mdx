@@ -9,8 +9,12 @@ tigris touch <path>
 t3 touch <path>
 ```
 
+Paths support the optional `t3://` (or `tigris://`) prefix (e.g.
+`t3://my-bucket/file.txt` or just `my-bucket/file.txt`).
+
 ## Examples
 
 ```bash
+tigris touch t3://my-bucket/my-file.txt
 tigris touch my-bucket/my-file.txt
 ```

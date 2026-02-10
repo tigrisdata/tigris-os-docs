@@ -254,7 +254,7 @@ const sidebars = {
         "cli/ls",
         "cli/mk",
         "cli/touch",
-        "cli/stat",
+        //"cli/stat",
         "cli/cp",
         "cli/mv",
         "cli/rm",

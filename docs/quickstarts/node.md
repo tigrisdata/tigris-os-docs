@@ -1,8 +1,10 @@
 # Node Quickstart
 
-This project is a simple web application that demonstrates how to upload objects
-to a Tigris storage bucket and manage them. It's built using Next.js router and
-includes implementation of both apis and client.
+Tigris is a globally distributed S3-compatible object storage service that
+provides zero egress fees and automatic multi-region replication. This project
+is a simple web application that demonstrates how to upload objects to a Tigris
+bucket and manage them using Node.js. It's built using Next.js router and
+includes implementation of both APIs and client.
 
 ![Node Quickstart](/img/quickstart/app.png)
 
@@ -21,7 +23,8 @@ git clone https://github.com/tigrisdata-community/storage-sdk-examples
    ```
 
 2. **Configure environment variables:** Copy `.env.example` to `.env` and update
-   with your Tigris credentials:
+   with your Tigris credentials. These credentials allow your Node.js
+   application to authenticate with Tigris's S3-compatible API:
 
    ```bash
    TIGRIS_STORAGE_ACCESS_KEY_ID=your-tigris-key-id
@@ -40,7 +43,10 @@ git clone https://github.com/tigrisdata-community/storage-sdk-examples
 
 ## How to deploy this project
 
-This project is designed to be easily deployed to Vercel.
+This project is designed to be easily deployed to Vercel. Since Tigris is
+globally distributed with a single global endpoint, your deployed application
+will automatically connect to the nearest region for low-latency object storage
+access.
 
 To deploy on Vercel:
 

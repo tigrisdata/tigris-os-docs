@@ -1,13 +1,17 @@
 # rclone Quickstart
 
-[rclone](https://rclone.org/) is an open-source command line tool that lets you
-manage files in Tigris, AWS S3, Google Drive, Dropbox, and
-[many other storage providers](https://rclone.org/#providers) with the same
-interface. rclone has built-in support for encrypting your files, managing
-versioned backups, incrementally transferring only what changed, and even
-mounting your cloud storage to your computer like a virtual flash drive.
+Tigris is a globally distributed S3-compatible object storage service that
+provides high-performance object storage with automatic multi-region replication
+and zero egress fees. [rclone](https://rclone.org/) is an open-source command
+line tool that lets you manage objects in Tigris, AWS S3, Google Drive, Dropbox,
+and [many other storage providers](https://rclone.org/#providers) with the same
+S3-compatible interface. rclone has built-in support for encrypting your
+objects, managing versioned backups, incrementally transferring only what
+changed, and even mounting your cloud object storage to your computer like a
+virtual flash drive.
 
-To get started uploading data to rclone, you need to do the following things:
+To get started uploading objects to Tigris using rclone, you need to do the
+following things:
 
 - Create a new bucket at [storage.new](https://storage.new)
 - Create an access keypair for that bucket at
@@ -48,7 +52,7 @@ Click "Create".
 
 Copy the Access Key ID, Secret Access Key, and other values into a safe place
 such as your password manager. Tigris will not show you the Secret Access Key
-again.
+again for security purposes.
 
 ## 3. Configure rclone to use Tigris
 
@@ -161,7 +165,7 @@ $ rclone ls tigris:example-bucket/
 5460387840 bigfile.tar.gz
 ```
 
-And that's it! You've successfully configured rclone to manage your files on
+And that's it! You've successfully configured rclone to manage your objects on
 Tigris! For further customization, advanced configuration options, or
 troubleshooting, refer to the
 [official rclone documentation](https://rclone.org/docs/). Happy copying!

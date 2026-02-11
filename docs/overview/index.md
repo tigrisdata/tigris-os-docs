@@ -96,8 +96,8 @@ Tigris.
 
 Tigris does not charge for data transfer in or out. This makes Tigris
 well-suited for multi-cloud architectures and AI/ML workloads where data is
-frequently moved between environments. See [Pricing](/docs/pricing/) for
-details.
+frequently moved between environments. See
+[Pricing](https://www.tigrisdata.com/pricing/) for details.
 
 ### Bucket Forks and Snapshots
 

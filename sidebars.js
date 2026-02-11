@@ -516,9 +516,9 @@ const sidebars = {
       ],
     },
     {
-      type: "doc",
+      type: "link",
       label: "Pricing",
-      id: "pricing/index",
+      href: "https://www.tigrisdata.com/pricing/",
     },
     {
       type: "doc",

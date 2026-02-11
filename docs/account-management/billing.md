@@ -1,13 +1,13 @@
 # Billing
 
-Tigris follows a [usage-based pricing](../../pricing/) model, so you are only
-charged for the resources you use. All charges are billed in USD on a monthly
-basis, following a calendar month billing cycle. Invoices are generated at the
-end of each billing period and are due upon issuance. You are required to have a
-valid payment card on file, which will be charged automatically when the invoice
-is issued. Charges are calculated based on your actual usage each month. You can
-view and download your invoices directly from the Dashboard. Supported payment
-methods are listed below.
+Tigris follows a [usage-based pricing](https://www.tigrisdata.com/pricing/)
+model, so you are only charged for the resources you use. All charges are billed
+in USD on a monthly basis, following a calendar month billing cycle. Invoices
+are generated at the end of each billing period and are due upon issuance. You
+are required to have a valid payment card on file, which will be charged
+automatically when the invoice is issued. Charges are calculated based on your
+actual usage each month. You can view and download your invoices directly from
+the Dashboard. Supported payment methods are listed below.
 
 ## Monitor usage
 

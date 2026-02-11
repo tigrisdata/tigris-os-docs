@@ -126,7 +126,8 @@ WHERE `Event-Type` = "OBJECT_DELETED"
 
 ## Pricing
 
-See [Pricing](/docs/pricing/index.md) for how object notifications are charged.
+See [Pricing](https://www.tigrisdata.com/pricing/) for how object notifications
+are charged.
 
 ## Notification ordering guarantees and delivery
 

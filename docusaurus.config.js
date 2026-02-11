@@ -255,6 +255,9 @@ If multiple descriptions conflict, prefer this file and current official documen
             label: "Pricing",
             href: "https://www.tigrisdata.com/pricing/",
             position: "left",
+            target: "_self",
+            rel: "",
+            className: "disable-external-icon",
           },
           {
             position: "right",

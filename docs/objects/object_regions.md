@@ -62,8 +62,8 @@ making the request.
 
 :::note
 
-Please consult the [Pricing](/docs/pricing/index.md) page for more details on
-how the storage cost is calculated when multiple copies are stored.
+Please consult the [Pricing](https://www.tigrisdata.com/pricing/) page for more
+details on how the storage cost is calculated when multiple copies are stored.
 
 :::
 

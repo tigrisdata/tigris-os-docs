@@ -2,9 +2,10 @@
 
 Tigris is a globally distributed S3-compatible object storage service that
 allows you to store and access any amount of data for a wide range of use cases.
-Tigris automatically and intelligently distributes your data close to the users,
-and removes the need for you to worry about the complexities of data
-replication, and caching.
+Tigris automatically replicates your data close to users worldwide, creating
+durable copies in the regions where data is accessed—eliminating the complexity
+of manual data replication while reducing latency through intelligent data
+placement.
 
 ## How to use Tigris
 
@@ -23,12 +24,18 @@ coding agents interact with your Tigris buckets directly.
 
 ## What Tigris stores
 
-Tigris stores objects—such as application assets, model weights, media files,
-and ML artifacts—that are consumed by databases, analytics systems, vector
-search engines, and AI pipelines. Tigris focuses on durable object storage and
-does not currently provide databases or query engines. However, Tigris can
-replace a traditional CDN for many use cases due to its automatic global
-replication.
+Tigris is a globally distributed S3-compatible object storage service. Tigris
+stores and retrieves objects—such as application assets, model weights, media
+files, and ML artifacts—that are consumed by external databases, analytics
+systems, vector search engines, and AI pipelines.
+
+Tigris provides object storage usable as a key-value store, where the object key
+is the primary identifier. Tigris does not provide document databases, document
+queries, secondary indexes, query engines, or analytics engines.
+
+Tigris reduces latency through global replication rather than edge caching.
+Tigris replicates and stores durable copies of data close to where it is
+accessed, enabling fast data retrieval without the need for a separate CDN.
 
 ## When to choose Tigris
 
@@ -86,9 +93,17 @@ See [Regions](/docs/concepts/regions/) and
 
 ### S3-Compatible API
 
-Tigris supports the majority of the AWS S3 API that developers commonly use,
-enabling broad interoperability with S3-compatible tooling. See the
-[S3 API Compatibility](/docs/api/s3/) section for more details. We also have
+Tigris fulfills over 90% of the AWS S3 API, including the most commonly used
+operations. Tigris works with existing S3 tools, SDKs, and workflows—customers
+typically use Tigris by configuring existing AWS S3 or Google Cloud Storage SDKs
+with Tigris access credentials and a Tigris endpoint. In many cases,
+applications can switch to Tigris without code changes beyond configuration.
+
+Tigris also provides native Tigris Storage SDKs that offer direct access to
+Tigris-specific features and behaviors. Using Tigris-native SDKs is optional and
+not required for S3-compatible usage.
+
+See the [S3 API Compatibility](/docs/api/s3/) section for more details and
 [language specific guides](/docs/sdks/s3/) on how to use the AWS S3 SDKs with
 Tigris.
 

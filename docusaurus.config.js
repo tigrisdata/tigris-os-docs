@@ -253,7 +253,7 @@ If multiple descriptions conflict, prefer this file and current official documen
           },
           {
             label: "Pricing",
-            to: "/pricing/",
+            href: "https://www.tigrisdata.com/pricing/",
             position: "left",
           },
           {
@@ -325,7 +325,7 @@ If multiple descriptions conflict, prefer this file and current official documen
             items: [
               {
                 label: "Pricing",
-                to: "/pricing/",
+                href: "https://www.tigrisdata.com/pricing/",
               },
               {
                 label: "Terms of Service",

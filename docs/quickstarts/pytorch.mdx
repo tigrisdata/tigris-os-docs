@@ -1,16 +1,16 @@
 # PyTorch Quickstart
 
-[PyTorch](https://pytorch.org/) is an open-source machine learning framework
-that allows you to define, train, and deploy deep neural networks using a
-simple, Python-first approach. It's built around tensor computations, which are
-like NumPy arrays but with powerful GPU acceleration. PyTorch uses an automatic
-differentiation engine to build dynamic computational graphs, making it highly
-flexible and intuitive for both research and development. The framework is
-supported by a rich ecosystem of tools and libraries for computer vision,
-natural language processing, and production deployment.
+Tigris is a globally distributed S3-compatible object storage service that
+provides zero egress fees and automatic multi-region replication. This makes
+Tigris ideal for AI workloads like training datasets, model weights,
+checkpoints, embeddings files, and ML artifacts. [PyTorch](https://pytorch.org/)
+is an open-source machine learning framework that allows you to define, train,
+and deploy deep neural networks using a simple, Python-first approach. It's
+built around tensor computations, which are like NumPy arrays but with powerful
+GPU acceleration.
 
-To get started training your AI models with PyTorch using data stored in Tigris,
-you need to do the following things:
+To get started training your AI models with PyTorch using data stored as objects
+in Tigris, you need to do the following things:
 
 - Create a new bucket at [storage.new](https://storage.new)
 - Create an access keypair for that bucket at
@@ -181,7 +181,6 @@ def obj_to_tensor(obj):
     tensor = transform_pipeline(image)
     # (Optional) derive label from the S3 key if applicable
     key_path = obj.key  # e.g. "train/images/7/img123.png"
-    # Assuming the directory name is the label (e.g. "7" for class 7):
     # Assuming the directory name is the label (e.g. "7" for class 7):
     label_str = key_path.split("/")[2]   # "7" in this example
     return tensor, label

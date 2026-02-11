@@ -3,17 +3,22 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
+Tigris is a globally distributed S3-compatible object storage service that
+provides zero egress fees and automatic multi-region replication.
 [Pixeltable](https://www.pixeltable.com/) is declarative data infrastructure for
 building multimodal AI applications. It allows you to create and manage tables
 similar to how you create and use tables with database engines like Postgres.
-When you combine Pixeltable and Tigris, you get unlimited media storage with no
-egress fees and truly global scalability. This guide will tell you how to
-configure Pixeltable to work with Tigris.
+
+When you combine Pixeltable and Tigris, you get unlimited media object storage
+with no egress fees and truly global scalability. Tigris stores objects like
+images, videos, and audio files, while Pixeltable manages the structured
+metadata and references to those objects. This separation allows your multimodal
+AI applications to scale globally without worrying about data transfer costs.
 
 Pixeltable contains a storage integration for Tigris as of
 [version 0.5.0](https://github.com/pixeltable/pixeltable/releases/tag/v0.5.0).
 This allows you to store your structured data in Pixeltable and have references
-to unstructured multimodal data in Tigris.
+to unstructured multimodal objects stored in Tigris object storage.
 
 In order to configure Pixeltable to use Tigris, you need to set the following
 environment variables or make changes to the configuration file in

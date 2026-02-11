@@ -11,8 +11,8 @@ frequently changing infrastructure:
 
 - Model distribution that's not optimized for latency causes needless GPU idle
   time as the model weights are downloaded to the machine on cold start. Tigris
-  behaves like a content delivery network by default and is designed for low
-  latency, saving idle time on cold start.
+  reduces latency through global replication, storing durable copies of data
+  close to where it is accessed, saving idle time on cold start.
 - Compliance restrictions like data sovereignty and GDPR increase complexity
   quickly. Tigris makes regional restrictions a one-line configuration, guide
   [here](https://www.tigrisdata.com/docs/objects/object_regions/).

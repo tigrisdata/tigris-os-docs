@@ -218,34 +218,22 @@ If multiple descriptions conflict, prefer this file and current official documen
         },
         items: [
           {
+            label: "About",
+            href: "https://www.tigrisdata.com/about",
+            position: "left",
+            target: "_self",
+            rel: "",
+            className: "disable-external-icon",
+          },
+          {
             label: "Docs",
             to: "/",
             position: "left",
             activeBaseRegex: "^\\/docs\\/$",
           },
           {
-            label: "Overview",
-            to: "/overview/",
-            position: "left",
-          },
-          {
-            label: "Get Started",
-            to: "/get-started/",
-            position: "left",
-          },
-          {
-            label: "AWS S3 SDKs",
-            to: "/sdks/s3/",
-            position: "left",
-          },
-          {
-            label: "Migration",
-            to: "/migration/",
-            position: "left",
-          },
-          {
-            href: tigrisConfig.blogUrl,
             label: "Blog",
+            href: tigrisConfig.blogUrl,
             position: "left",
             target: "_self",
             rel: "",
@@ -254,6 +242,14 @@ If multiple descriptions conflict, prefer this file and current official documen
           {
             label: "Pricing",
             href: "https://www.tigrisdata.com/pricing/",
+            position: "left",
+            target: "_self",
+            rel: "",
+            className: "disable-external-icon",
+          },
+          {
+            label: "Community",
+            href: tigrisConfig.discordUrl,
             position: "left",
             target: "_self",
             rel: "",

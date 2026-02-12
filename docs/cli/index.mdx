@@ -1,34 +1,56 @@
 # Tigris CLI
 
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
-
 Tigris CLI provides a simple and powerful command line interface to manage your
 Tigris resources such as buckets, objects, and access keys.
 
-Get started with Tigris CLI by installing it globally using npm:
+## Setup
 
-## Installation
+<div className="cli-setup-steps">
+<div className="step">
+<div className="step-header">
+  <span className="step-number">1</span>
+  <span className="step-title">Install</span>
+</div>
+
+<p>Install the Codex CLI with npm.</p>
 
 ```bash
 npm install -g @tigrisdata/cli
 ```
 
-## Usage
+</div>
+<div className="step">
+<div className="step-header">
+  <span className="step-number">2</span>
+  <span className="step-title">Run</span>
+</div>
+
+<p>Get started by logging in:</p>
 
 ```bash
-tigris <command> [flags]
+tigris login
 ```
 
-Run `tigris help` to see all available commands, or `tigris <command> help` to
-get details on a specific command.
+</div>
+<div className="step">
+<div className="step-header">
+  <span className="step-number">3</span>
+  <span className="step-title">Upgrade</span>
+</div>
+
+<p>We release updates regularly. Get the latest:</p>
+
+```bash
+npm install -g @tigrisdata/cli@latest
+```
+
+</div>
+</div>
 
 ## Authentication
 
 Tigris CLI supports multiple login methods. It allows you to login via your
 browser (human-friendly) or with an access key and secret (machine-friendly).
-`tigris login` allows you to select between the two methods. browser
-(human-friendly) or with an access key and secret (machine-friendly).
 `tigris login` allows you to select between the two methods.
 
 ### OAuth authentication
@@ -40,13 +62,11 @@ authentication):
 tigris login oauth
 ```
 
+This opens a browser window for OAuth authentication. Once complete, your
+session is active and you can start using all commands. If you have multiple
 organizations, the first organization in the list will be selected
 automatically. You can select a different organization by running
-`tigris organizations list`. This opens a browser window for OAuth
-authentication. Once complete, your session is active and you can start using
-all commands. If you have multiple organizations, the first organization in the
-list will be selected automatically. You can select a different organization by
-running `tigris organizations list`.
+`tigris organizations list`.
 
 Sessions created with `tigris login oauth` will automatically expire in about an
 hour. If you need to end such a session sooner, run `tigris logout`.
@@ -59,11 +79,8 @@ To login with an access key and secret:
 tigris login credentials --access-key <your-key> --access-secret <your-secret>
 ```
 
-#### Saving credentials permanently
-
-To save credentials permanently so they persist across sessions: Sessions
-created with `tigris login credentials` are also temporary and they are cleared
-when you run `tigris logout`.
+Sessions created with `tigris login credentials` are also temporary and are
+cleared when you run `tigris logout`.
 
 ### Saving credentials permanently
 

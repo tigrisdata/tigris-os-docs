@@ -1,6 +1,6 @@
 # tigris objects list
 
-List objects in a bucket.
+List objects in a bucket, optionally filtered by a key prefix.
 
 **Alias:** `l`
 
@@ -13,10 +13,10 @@ t3 o l <bucket> [flags]
 
 ## Flags
 
-| Name             | Required | Default | Description                                    |
-| ---------------- | -------- | ------- | ---------------------------------------------- |
-| `--prefix`, `-p` | No       | —       | Filter objects by prefix                       |
-| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+| Name             | Required | Default | Description                                                       |
+| ---------------- | -------- | ------- | ----------------------------------------------------------------- |
+| `--prefix`, `-p` | No       | —       | Filter objects by key prefix (e.g. "images/" to list only images) |
+| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml`                    |
 
 ## Examples
 

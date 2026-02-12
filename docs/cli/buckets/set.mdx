@@ -1,6 +1,7 @@
 # tigris buckets set
 
-Update bucket settings.
+Update settings on an existing bucket such as access level, region, caching, or
+custom domain.
 
 **Alias:** `s`
 
@@ -29,9 +30,9 @@ t3 b s <name> [flags]
 # Make a bucket public
 tigris buckets set my-bucket --access public
 
-# Set region restrictions
-tigris buckets set my-bucket --region iad --region fra
+# Set region restrictions and cache control
+tigris buckets set my-bucket --region iad,fra --cache-control 'max-age=3600'
 
-# Enable delete protection
-tigris buckets set my-bucket --enable-delete-protection true
+# Set a custom domain
+tigris buckets set my-bucket --custom-domain assets.example.com
 ```

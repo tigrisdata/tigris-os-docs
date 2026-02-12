@@ -861,3 +861,60 @@ table td {
   font-size: 14px;
   font-weight: 400;
 }
+
+/* CLI setup steps */
+
+.cli-setup-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 1.5rem 0;
+}
+
+.cli-setup-steps .step {
+  border: 1px solid var(--docs-color-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.cli-setup-steps .step-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0.75rem;
+}
+
+.cli-setup-steps .step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--ifm-color-primary);
+  color: #000;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.cli-setup-steps .step-title {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.cli-setup-steps .step p {
+  color: var(--docs-color-text-100);
+  font-size: 14px;
+  margin-bottom: 0.75rem;
+}
+
+.cli-setup-steps .step pre {
+  margin-bottom: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .cli-setup-steps {
+    grid-template-columns: 1fr;
+  }
+}

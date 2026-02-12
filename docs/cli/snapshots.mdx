@@ -1,6 +1,7 @@
 # tigris snapshots
 
-Manage snapshots.
+List and take snapshots. A snapshot is a point-in-time, read-only copy of a
+bucket's state.
 
 **Alias:** `s`
 
@@ -9,4 +10,11 @@ Manage snapshots.
 ```bash
 tigris snapshots <operation> [flags]
 t3 s <operation> [flags]
+```
+
+## Examples
+
+```bash
+tigris snapshots list my-bucket
+tigris snapshots take my-bucket
 ```

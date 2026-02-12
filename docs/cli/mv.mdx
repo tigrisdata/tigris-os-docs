@@ -1,6 +1,7 @@
 # tigris mv
 
-Move a folder or an object.
+Move (rename) objects within Tigris. Both source and destination must be remote
+`t3://` paths.
 
 **Alias:** `move`
 
@@ -11,28 +12,28 @@ tigris mv <src> <dest> [flags]
 t3 move <src> <dest> [flags]
 ```
 
-Both source and destination must be remote Tigris paths using the `t3://` (or
-`tigris://`) prefix.
+Both source and destination must be remote Tigris paths. The `t3://` (or
+`tigris://`) prefix is optional.
 
 ## Flags
 
-| Name                | Required | Default | Description              |
-| ------------------- | -------- | ------- | ------------------------ |
-| `--recursive`, `-r` | No       | —       | Move folders recursively |
-| `--force`, `-f`     | No       | —       | Skip confirmation prompt |
+| Name                | Required | Default | Description                  |
+| ------------------- | -------- | ------- | ---------------------------- |
+| `--recursive`, `-r` | No       | —       | Move directories recursively |
+| `--force`, `-f`     | No       | —       | Skip confirmation prompt     |
 
 ## Examples
 
 ```bash
-# Move an object
-tigris mv t3://my-bucket/my-path/my-object.json t3://my-bucket/new-path/my-object.json
+# Move (rename) an object
+tigris mv t3://my-bucket/old.txt t3://my-bucket/new.txt -f
 
 # Move a folder recursively
-tigris mv -r t3://my-bucket/my-path/ t3://my-bucket/new-path/
+tigris mv t3://my-bucket/old-dir/ t3://my-bucket/new-dir/ -rf
+
+# Move without t3:// prefix
+tigris mv my-bucket/a.txt my-bucket/b.txt -f
 
 # Move with wildcard (skip confirmation)
-tigris mv t3://my-bucket/my-path/*.jpg t3://my-bucket/new-path/ --force
-
-# Move all contents of a bucket to another bucket
-tigris mv -r t3://my-bucket/ t3://other-bucket/ --force
+tigris mv "t3://my-bucket/my-path/*.jpg" t3://my-bucket/new-path/ --force
 ```

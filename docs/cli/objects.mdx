@@ -1,6 +1,7 @@
 # tigris objects
 
-Manage objects.
+Low-level object operations for listing, downloading, uploading, and deleting
+individual objects in a bucket.
 
 **Alias:** `o`
 
@@ -9,4 +10,13 @@ Manage objects.
 ```bash
 tigris objects <operation> [flags]
 t3 o <operation> [flags]
+```
+
+## Examples
+
+```bash
+tigris objects list my-bucket
+tigris objects get my-bucket report.pdf --output ./report.pdf
+tigris objects put my-bucket report.pdf ./report.pdf
+tigris objects delete my-bucket report.pdf
 ```

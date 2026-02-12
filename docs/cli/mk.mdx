@@ -1,6 +1,7 @@
 # tigris mk
 
-Create a bucket or a folder in a bucket.
+Create a bucket (bare name) or a folder inside a bucket (bucket/folder/ with
+trailing slash).
 
 **Alias:** `create`
 
@@ -12,16 +13,18 @@ t3 create <path>
 ```
 
 Paths support the optional `t3://` (or `tigris://`) prefix (e.g.
-`t3://my-bucket/path` or just `my-bucket/path`).
+`t3://my-bucket/path` or just `my-bucket/path`). A trailing slash creates a
+folder inside the bucket.
 
 ## Examples
 
 ```bash
 # Create a bucket
-tigris mk t3://my-bucket
 tigris mk my-bucket
 
 # Create a folder in a bucket
-tigris mk t3://my-bucket/my-path
-tigris mk my-bucket/my-path
+tigris mk my-bucket/images/
+
+# Using t3:// prefix
+tigris mk t3://my-bucket
 ```

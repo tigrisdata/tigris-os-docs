@@ -1,6 +1,6 @@
 # tigris objects delete
 
-Delete an object.
+Delete one or more objects by key from the given bucket.
 
 **Alias:** `d`
 
@@ -15,8 +15,8 @@ t3 o d <bucket> <key>
 
 ```bash
 # Delete a single object
-tigris objects delete my-bucket my-file.txt
+tigris objects delete my-bucket old-file.txt
 
 # Delete multiple objects
-tigris objects delete my-bucket file1.txt,file2.txt
+tigris objects delete my-bucket file-a.txt,file-b.txt
 ```

@@ -1,6 +1,7 @@
 # tigris cp
 
-Copy a folder or an object.
+Copy files between local filesystem and Tigris, or between paths within Tigris.
+At least one side must be a remote `t3://` path.
 
 **Alias:** `copy`
 
@@ -11,36 +12,30 @@ tigris cp <src> <dest> [flags]
 t3 copy <src> <dest> [flags]
 ```
 
-Paths use the `t3://` (or `tigris://`) prefix for remote Tigris paths. Bare
-paths are treated as local files. At least one side must be remote.
+Use the `t3://` (or `tigris://`) prefix for remote Tigris paths. Bare paths are
+treated as local files. At least one side must be remote.
 
 ## Flags
 
-| Name                | Required | Default | Description              |
-| ------------------- | -------- | ------- | ------------------------ |
-| `--recursive`, `-r` | No       | —       | Copy folders recursively |
+| Name                | Required | Default | Description                  |
+| ------------------- | -------- | ------- | ---------------------------- |
+| `--recursive`, `-r` | No       | —       | Copy directories recursively |
 
 ## Examples
 
 ```bash
-# Copy a remote object to a new location
-tigris cp t3://my-bucket/my-path/my-object.json t3://my-bucket/new-path/my-object.json
-
-# Copy a remote folder recursively
-tigris cp -r t3://my-bucket/my-path/ t3://my-bucket/new-path/
-
-# Copy with wildcard
-tigris cp t3://my-bucket/my-path/*.json t3://my-bucket/new-path/
+# Upload a local file to remote
+tigris cp ./file.txt t3://my-bucket/file.txt
 
 # Download a remote object to local
-tigris cp t3://my-bucket/my-file.txt ./local-file.txt
+tigris cp t3://my-bucket/file.txt ./local-copy.txt
 
-# Download a folder to local
-tigris cp -r t3://my-bucket/my-path/ ./local-dir/
-
-# Upload a local file to remote
-tigris cp ./local-file.txt t3://my-bucket/my-file.txt
+# Copy a remote folder recursively
+tigris cp t3://my-bucket/src/ t3://my-bucket/dest/ -r
 
 # Upload a local folder to remote
-tigris cp -r ./local-dir/ t3://my-bucket/my-path/
+tigris cp ./images/ t3://my-bucket/images/ -r
+
+# Copy with wildcard
+tigris cp "t3://my-bucket/my-path/*.json" t3://my-bucket/new-path/
 ```

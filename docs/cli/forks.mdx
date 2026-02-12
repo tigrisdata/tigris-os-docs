@@ -1,6 +1,7 @@
 # tigris forks
 
-Manage forks.
+List and create forks. A fork is a writable copy-on-write clone of a bucket,
+useful for testing or branching data.
 
 **Alias:** `f`
 
@@ -9,4 +10,11 @@ Manage forks.
 ```bash
 tigris forks <operation> [flags]
 t3 f <operation> [flags]
+```
+
+## Examples
+
+```bash
+tigris forks list my-bucket
+tigris forks create my-bucket my-fork
 ```

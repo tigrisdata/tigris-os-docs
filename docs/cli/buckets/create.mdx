@@ -1,6 +1,7 @@
 # tigris buckets create
 
-Create a bucket.
+Create a new bucket with optional access, tier, consistency, and region
+settings.
 
 **Alias:** `c`
 
@@ -29,4 +30,7 @@ tigris buckets create my-bucket
 
 # Create a public bucket in a specific region
 tigris buckets create my-bucket --access public --region iad
+
+# Create with snapshots and infrequent access tier
+tigris buckets create my-bucket --enable-snapshots --default-tier STANDARD_IA
 ```

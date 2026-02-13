@@ -1,6 +1,7 @@
 # tigris objects get
 
-Get an object.
+Download an object by key. Prints to stdout by default, or saves to a file with
+`--output`.
 
 **Alias:** `g`
 
@@ -13,17 +14,17 @@ t3 o g <bucket> <key> [flags]
 
 ## Flags
 
-| Name             | Required | Default | Description                                                                                |
-| ---------------- | -------- | ------- | ------------------------------------------------------------------------------------------ |
-| `--output`, `-o` | No       | —       | Output file path (if not specified, prints to stdout)                                      |
-| `--mode`, `-m`   | No       | —       | Response mode (auto-detected from extension if not specified). Options: `string`, `stream` |
+| Name             | Required | Default | Description                                                                                                          |
+| ---------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------- |
+| `--output`, `-o` | No       | —       | Output file path (if not specified, prints to stdout)                                                                |
+| `--mode`, `-m`   | No       | —       | Response mode: "string" loads into memory, "stream" writes in chunks (auto-detected from extension if not specified) |
 
 ## Examples
 
 ```bash
 # Print object to stdout
-tigris objects get my-bucket my-file.txt
+tigris objects get my-bucket config.json
 
-# Save object to a file
-tigris objects get my-bucket my-file.txt --output ./local-file.txt
+# Save object to a file (streaming for large files)
+tigris objects get my-bucket archive.zip --output ./archive.zip --mode stream
 ```

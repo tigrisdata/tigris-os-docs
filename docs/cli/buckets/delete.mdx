@@ -1,6 +1,7 @@
 # tigris buckets delete
 
-Delete a bucket.
+Delete one or more buckets by name. The bucket must be empty or
+delete-protection must be off.
 
 **Alias:** `d`
 
@@ -18,5 +19,5 @@ t3 b d <name>
 tigris buckets delete my-bucket
 
 # Delete multiple buckets
-tigris buckets delete bucket1,bucket2
+tigris buckets delete bucket-a,bucket-b
 ```

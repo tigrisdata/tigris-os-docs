@@ -1,6 +1,7 @@
 # tigris ls
 
-List buckets or objects in a bucket or path.
+List all buckets (no arguments) or objects under a bucket/prefix path. Accepts
+bare names or `t3://` URIs.
 
 **Alias:** `list`
 
@@ -21,10 +22,11 @@ Paths support the optional `t3://` (or `tigris://`) prefix (e.g.
 tigris ls
 
 # List objects in a bucket
-tigris ls t3://my-bucket
 tigris ls my-bucket
 
-# List objects in a path
-tigris ls t3://my-bucket/my-path
-tigris ls my-bucket/my-path
+# List objects under a prefix
+tigris ls my-bucket/images/
+
+# Using t3:// prefix
+tigris ls t3://my-bucket/prefix/
 ```

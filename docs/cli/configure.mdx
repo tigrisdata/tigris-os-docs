@@ -1,7 +1,7 @@
 # tigris configure
 
-Save credentials permanently. After running this, all commands work
-automatically.
+Save access-key credentials to `~/.tigris/config.json` for persistent use across
+all commands.
 
 **Alias:** `c`
 
@@ -27,5 +27,8 @@ t3 c [flags]
 tigris configure
 
 # Save credentials directly
-tigris configure --access-key tid_mykey --access-secret tsec_mysecret
+tigris configure --access-key tid_AaBb --access-secret tsec_XxYy
+
+# Use a custom endpoint
+tigris configure --endpoint https://custom.endpoint.dev
 ```

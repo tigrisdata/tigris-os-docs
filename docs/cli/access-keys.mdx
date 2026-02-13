@@ -1,6 +1,7 @@
 # tigris access-keys
 
-Manage access keys.
+Create, list, inspect, delete, and assign roles to access keys. Access keys are
+credentials used for programmatic API access.
 
 **Alias:** `keys`
 
@@ -9,4 +10,12 @@ Manage access keys.
 ```bash
 tigris access-keys <operation> [flags]
 t3 keys <operation> [flags]
+```
+
+## Examples
+
+```bash
+tigris access-keys list
+tigris access-keys create my-ci-key
+tigris access-keys assign tid_AaBb --bucket my-bucket --role Editor
 ```

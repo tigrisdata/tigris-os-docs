@@ -1,6 +1,7 @@
 # tigris organizations
 
-Manage organizations.
+List, create, and switch between organizations. An organization is a workspace
+that contains your resources like buckets and access keys.
 
 **Alias:** `orgs`
 
@@ -9,4 +10,12 @@ Manage organizations.
 ```bash
 tigris organizations <operation> [flags]
 t3 orgs <operation> [flags]
+```
+
+## Examples
+
+```bash
+tigris orgs list
+tigris orgs create my-org
+tigris orgs select my-org
 ```

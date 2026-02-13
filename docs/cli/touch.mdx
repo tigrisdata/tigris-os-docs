@@ -1,6 +1,6 @@
 # tigris touch
 
-Create an empty object in a bucket.
+Create an empty (zero-byte) object at the given bucket/key path.
 
 ## Usage
 
@@ -15,6 +15,9 @@ Paths support the optional `t3://` (or `tigris://`) prefix (e.g.
 ## Examples
 
 ```bash
-tigris touch t3://my-bucket/my-file.txt
-tigris touch my-bucket/my-file.txt
+# Create an empty object
+tigris touch my-bucket/placeholder.txt
+
+# Using t3:// prefix
+tigris touch t3://my-bucket/logs/
 ```

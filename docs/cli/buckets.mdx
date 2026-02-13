@@ -1,6 +1,7 @@
 # tigris buckets
 
-Manage buckets.
+Create, inspect, update, and delete buckets. Buckets are top-level containers
+that hold objects.
 
 **Alias:** `b`
 
@@ -9,4 +10,13 @@ Manage buckets.
 ```bash
 tigris buckets <operation> [flags]
 t3 b <operation> [flags]
+```
+
+## Examples
+
+```bash
+tigris buckets list
+tigris buckets create my-bucket
+tigris buckets get my-bucket
+tigris buckets delete my-bucket
 ```

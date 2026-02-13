@@ -1,6 +1,7 @@
 # tigris access-keys assign
 
-Assign bucket roles to an access key.
+Assign per-bucket roles to an access key. Pair each `--bucket` with a `--role`
+(Editor or ReadOnly), or use `--admin` for org-wide access.
 
 **Alias:** `a`
 
@@ -13,25 +14,25 @@ t3 keys a <id> [flags]
 
 ## Flags
 
-| Name             | Required | Default | Description                                                                               |
-| ---------------- | -------- | ------- | ----------------------------------------------------------------------------------------- |
-| `--bucket`, `-b` | No       | —       | Bucket name (can specify multiple)                                                        |
-| `--role`, `-r`   | No       | —       | Role to assign (can specify multiple to pair with buckets). Options: `Editor`, `ReadOnly` |
-| `--admin`        | No       | —       | Grant admin access to all buckets in the organization                                     |
-| `--revoke-roles` | No       | —       | Revoke all bucket roles from the access key                                               |
+| Name             | Required | Default | Description                                                                                                                                  |
+| ---------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--bucket`, `-b` | No       | —       | Bucket name (can specify multiple, comma-separated). Each bucket is paired positionally with a --role value                                  |
+| `--role`, `-r`   | No       | —       | Role to assign (can specify multiple, comma-separated). Each role pairs with the corresponding --bucket value. Options: `Editor`, `ReadOnly` |
+| `--admin`        | No       | —       | Grant admin access to all buckets in the organization                                                                                        |
+| `--revoke-roles` | No       | —       | Revoke all bucket roles from the access key                                                                                                  |
 
 ## Examples
 
 ```bash
 # Assign editor role to a bucket
-tigris access-keys assign tid_mykey --bucket my-bucket --role Editor
+tigris access-keys assign tid_AaBb --bucket my-bucket --role Editor
 
-# Assign read-only role to multiple buckets
-tigris access-keys assign tid_mykey --bucket bucket1 --role ReadOnly --bucket bucket2 --role ReadOnly
+# Assign different roles to multiple buckets
+tigris access-keys assign tid_AaBb --bucket a,b --role Editor,ReadOnly
 
 # Grant admin access
-tigris access-keys assign tid_mykey --admin
+tigris access-keys assign tid_AaBb --admin
 
 # Revoke all roles
-tigris access-keys assign tid_mykey --revoke-roles
+tigris access-keys assign tid_AaBb --revoke-roles
 ```

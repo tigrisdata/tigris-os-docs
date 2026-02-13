@@ -1,6 +1,7 @@
 # tigris forks create
 
-Create a fork of a bucket.
+Create a new fork (copy-on-write clone) of the source bucket. Optionally fork
+from a specific snapshot.
 
 **Alias:** `c`
 
@@ -24,5 +25,5 @@ t3 f c <name> <fork-name> [flags]
 tigris forks create my-bucket my-fork
 
 # Create a fork from a specific snapshot
-tigris forks create my-bucket my-fork --snapshot snap-123
+tigris forks create my-bucket my-fork --snapshot snap-2025-01-01
 ```

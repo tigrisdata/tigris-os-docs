@@ -1,52 +1,33 @@
 # Consistency
 
-By default, Tigris offers strict read-after-write consistency within the same
-region and eventual consistency globally. However, there may be situations where
-a single object can be modified from any region, making global strong
-consistency the only viable option.
+The consistency model in Tigris depends on your chosen
+[bucket location type](/docs/buckets/multi-region.md). Different location types
+provide different consistency guarantees:
 
-## Configuring Consistency
+| Location Type    | Consistency                              |
+| ---------------- | ---------------------------------------- |
+| Multi-Region     | Strong consistency globally              |
+| Dual Region      | Strong in same region, eventual globally |
+| Single Region    | Strong consistency globally              |
+| Global (Default) | Strong in same region, eventual globally |
 
-Tigris allows configuring consistency options at both the request level and at
-the bucket level.
+For location types with eventual consistency globally, if you write data in one
+region and immediately read from a different region, there is a possibility that
+an older version could be served. Within the same region, reads are always
+strongly consistent.
 
-## Bucket Level Consistency
+See [Bucket Location Types](/docs/buckets/multi-region.md) for details on
+configuring your bucket's location type.
 
-At the bucket level, you can set the consistency model for all operations within
-that bucket. The default is strict read-after-write consistency within the same
-region. But you can choose to set it to global strong consistency. The bucket
-consistency can be specified in the
-[bucket configuration](../buckets/create-bucket.md#bucket-consistency) during
-bucket creation time, or by updating the bucket settings later.
+:::caution[Deprecated Consistency Options]
 
-## Request Level Consistency
+The following consistency options are deprecated. They will continue to work for
+existing configurations, but we recommend switching to the appropriate
+[bucket location type](/docs/buckets/multi-region.md) instead.
 
-At the request level, you can enforce global strong consistency for specific
-operations by using the `X-Tigris-Consistent:true` header. This is particularly
-useful when only certain requests need to be globally strongly consistent, as
-setting the entire bucket to strong consistency can increase latencies for all
-operations.
+| Option                               | Status           | Recommendation                                                                           |
+| ------------------------------------ | ---------------- | ---------------------------------------------------------------------------------------- |
+| Bucket-level `consistency` setting   | Deprecated       | Use a location type with built-in strong consistency (`Multi-Region` or `Single Region`) |
+| `X-Tigris-Consistent` request header | Deprecating soon | Use a location type with built-in strong consistency (`Multi-Region` or `Single Region`) |
 
-To use this feature, include the `X-Tigris-Consistent:true` header in every
-request that requires global strong consistency. For example, if you need a PUT
-operation for key 'a' to be globally strongly consistent, add this header to the
-request. Similarly, include the header in any subsequent operations, such as GET
-or DELETE requests, where you need read-your-write guarantees globally.
-
-By using this header selectively, you can balance the need for strong
-consistency with the performance benefits of eventual consistency for other
-operations.
-
-## Combining Consistency with Region Control
-
-While Tigris provides global strong consistency option, it is important to note
-that global strong consistency is achieved by routing all operations through a
-single leader. This can lead to higher latencies for users located far from the
-leader's region, as requests must be directed to that leader.
-
-To mitigate this, you can combine consistency configuration with region
-restriction. This can be done either by setting the `X-Tigris-Regions` header in
-your requests or by specifying the region when creating the bucket. This allows
-you to control which region serves as the leader for strong consistency,
-ensuring that requests are routed to a region that is closer to your users,
-thereby reducing latency.
+:::

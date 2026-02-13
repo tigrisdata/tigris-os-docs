@@ -25,14 +25,19 @@ uploaded to it. The default tier can be one of the following:
 The default tier can be overridden at the object level. For more information,
 see the [Storage Tiers](../objects/tiers.md) guide.
 
-## Bucket consistency
+## Bucket regions
 
-When you create a bucket, you can choose the consistency model for the bucket.
-The consistency model can be one of the following:
+When you create a bucket in the console, you choose a location type from the
+region picker. This controls where data is stored and replicated:
 
-- Strict read-after-write consistency within the same region (default)
-- Strict read-after-write consistency globally (strong consistency). Latency
-  will be higher than the default.
+- Global (default)
+- Multi-region
+- Dual regions
+- Single region
+
+For details on each option, see the [Bucket Location Types](./multi-region.md)
+guide. You can update the location type later from the bucket settings page
+using the same region picker.
 
 ## Creating a bucket using the Dashboard
 
@@ -40,11 +45,21 @@ To create a bucket using the Tigris Dashboard, follow these steps:
 
 1. Go to [storage.new](https://storage.new/).
 2. Enter a unique bucket name. ([Rules](./bucket-rules.md))
-3. Choose the default tier for the bucket.
-4. Choose the consistency model for the bucket.
+3. Choose the default tier for the bucket under
+   [Advanced settings](#advanced-settings-default-tier).
+4. Choose a location type in the region picker under
+   [Advanced settings](#advanced-settings-region-picker).
 5. Click **Create Bucket**.
 
 ![Create Tigris Bucket](/img/create-bucket.png)
+
+### Advanced settings: default tier {#advanced-settings-default-tier}
+
+![Create Tigris Bucket advanced settings - default tier](/img/create-bucket-adv-1.png)
+
+### Advanced settings: region picker {#advanced-settings-region-picker}
+
+![Create Tigris Bucket advanced settings - region picker](/img/create-bucket-adv-2.png)
 
 ## Creating a bucket using the AWS CLI
 

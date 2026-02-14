@@ -2,13 +2,14 @@
 
 ## Overview
 
-The Tigris MCP Server implements the
+Tigris is a globally distributed S3-compatible object storage service that
+provides zero egress fees and automatic multi-region replication. The Tigris MCP
+Server implements the
 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) on top of
-Tigris’s high-performance, S3-compatible object storage. By deploying this
-server alongside your AI agents, you can manage buckets and objects directly
-from your editor or workflow—upload training data, share model artifacts, or
-serve large files with zero egress fees, all without leaving your development
-environment.
+Tigris's high-performance object storage. By deploying this server alongside
+your AI agents, you can manage buckets and objects directly from your editor or
+workflow—upload training data, share model artifacts, or serve large objects
+with zero egress fees, all without leaving your development environment.
 
 You can view the source code
 [on GitHub](https://github.com/tigrisdata/tigris-mcp-server). We strongly
@@ -16,12 +17,12 @@ recommend reviewing the source code before employing this MCP server.
 
 ## Key Features
 
-- **Bucket Management** Create, list and delete Tigris buckets from your AI
+- **Bucket Management** Create, list, and delete Tigris buckets from your AI
   agent or editor.
-- **Object Operations** Upload, list, download, move and delete individual
+- **Object Operations** Upload, list, download, move, and delete individual
   objects or folders in any bucket.
 - **Pre-signed URLs** Generate shareable links for objects to grant temporary,
-  secure access.
+  secure access without exposing credentials.
 
 ## Example Prompts
 
@@ -46,6 +47,10 @@ Create test.txt with content "Hello World" in my-bucket
 Generate a shareable link for test.txt
 Delete myfile.txt from my-bucket
 ```
+
+All objects are stored as key-value pairs where the object key is the primary
+identifier, and Tigris automatically handles durability and replication across
+multiple regions.
 
 ## Prerequisites
 

@@ -1,13 +1,18 @@
 # Kubernetes Quickstart
 
-If you have a workload in your Kubernetes cluster that uses S3, using Tigris is
-a snap! If it works with S3, it'll work on Tigris. At a high level, here’s what
-you need to do to get started:
+Tigris is a globally distributed S3-compatible object storage service. If you
+have a workload in your Kubernetes cluster that uses S3, using Tigris is
+straightforward! If it works with S3, it'll work on Tigris. At a high level,
+here's what you need to do to get started:
 
 - Create a bucket
 - Create a keypair with editor permissions on that bucket
 - Put the keypair in a Kubernetes Secret
-- Attach that secret to your Kubernetes Deployment’s environment variables
+- Attach that secret to your Kubernetes Deployment's environment variables
+
+Tigris fulfills over 90% of the AWS S3 API, including the most commonly used
+operations, so your existing Kubernetes workloads can typically switch to Tigris
+without code changes beyond configuration.
 
 ## Create a bucket
 
@@ -70,4 +75,6 @@ Then apply the changes with `kubectl apply`:
 kubectl apply -f deployment-myapp.yaml
 ```
 
-That's it! Now your workload is running fast without egress fees on Tigris.
+That's it! Now your workload is running fast without egress fees on Tigris. Your
+data is automatically replicated to multiple regions close to where it's
+accessed, providing low latency globally.

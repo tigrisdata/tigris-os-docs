@@ -1,8 +1,10 @@
 # Go Quickstart
 
-This project is a simple web application that demonstrates how to upload files
-to a Tigris storage bucket and manage them. It is an HTTP server written in Go
-that serves up a single web page, preconfigured to deploy to Fly.io.
+Tigris is a globally distributed S3-compatible object storage service. This
+project is a simple web application that demonstrates how to upload objects to a
+Tigris bucket and manage them using the AWS SDK for Go. It is an HTTP server
+written in Go that serves up a single web page, preconfigured to deploy to
+Fly.io.
 
 All of the code in main.go is heavily commented to better help you understand
 what each section is doing.
@@ -46,9 +48,10 @@ Take note of the URL to access your app:
 Visit your newly deployed app at https://{APP_NAME}.fly.dev/
 ```
 
-Before you can access the app, you'll need to configure the Tigris storage
-bucket. Run the following command to create the bucket and set the necessary
-environment variables on your Fly app. Accept the defaults when prompted.
+Before you can access the app, you'll need to configure the Tigris object
+storage bucket. Run the following command to create the bucket and set the
+necessary environment variables on your Fly app. Accept the defaults when
+prompted.
 
 ```bash
 fly storage create

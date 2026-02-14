@@ -1,11 +1,13 @@
 # AutoMQ on Tigris
 
+Tigris is a globally distributed S3-compatible object storage service with zero
+egress fees and automatic multi-region replication.
 [AutoMQ](https://www.automq.com) is a new generation of Diskless Kafka that is
 fully compatible with [Apache Kafka](https://kafka.apache.org/documentation/),
 solving the cost and operational challenges of Apache Kafka without sacrificing
 Kafka's features and performance. When paired with Tigris, AutoMQ can run as
 fully stateless brokers with no attached disks or replication overhead, and
-benefit from Tigris' globally distributed object storage with zero egress fees.
+benefit from Tigris's globally distributed object storage with zero egress fees.
 
 ## Quick Start with Docker Compose:
 

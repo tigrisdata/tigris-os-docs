@@ -5,23 +5,21 @@ Kafka-compatible message queue, to use Tigris Object Storage as its backend.
 
 ### What is Bufstream?
 
+Tigris is a globally distributed S3-compatible object storage service with zero
+egress fees and automatic multi-region replication.
 [Bufstream](https://buf.build/product/bufstream) is the Kafka-compatible message
 queue built for the data lakehouse era. It's a drop-in replacement for Apache
 Kafka®, but instead of requiring expensive machines with large attached disks,
 Bufstream builds on top of off-the-shelf technologies like Object Storage and
 Postgres, providing a Kafka implementation designed for the cloud-native era.
 
-**Tigris** is a globally distributed, multi-cloud object storage platform with:
-
-- Native **S3 API** support
-- **Zero egress fees**
-- **Globally distributed**
-
 When combined, Bufstream and Tigris provide:
 
-- Unlimited message retention
-- Global scalability
-- Cost-efficient and resilient data pipelines
+- **Unlimited message retention**—store all messages indefinitely in object
+  storage
+- **Global scalability**—messages automatically replicate close to consumers
+- **Cost-efficient and resilient data pipelines**—zero egress fees means no
+  additional costs for data access across regions
 
 ### **Requirements**
 

@@ -13,7 +13,7 @@ This means you need to ship models separately from your inference code, which
 can make cold start times a lot longer.
 
 Hosting your own registry on top of Tigris means you can benefit from Tigris'
-[globally distributed pull-through caching architecture](/docs/overview/),
+[globally distributed replication architecture](/docs/overview/),
 enabling your workloads to start quickly no matter where they are in the world.
 
 ## Getting started

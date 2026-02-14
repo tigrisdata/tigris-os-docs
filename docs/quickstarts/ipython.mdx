@@ -1,9 +1,15 @@
 # iPython / Jupyter Quickstart
 
-To get started using your iPython notebooks with Tigris, you can check out our
+Tigris is a globally distributed S3-compatible object storage service that
+provides zero egress fees and automatic multi-region replication. To get started
+using your iPython notebooks with Tigris, you can check out our
 [example notebook](https://github.com/tigrisdata-community/ipython-notebooks/blob/main/quickstart.ipynb)
 or
 [run it on Google Colab](https://colab.research.google.com/drive/1AFr9vyERpQWhdXbLt-wrLNH7w7N4SbzI).
+
+The example notebook demonstrates how to use boto3, the AWS SDK for Python, to
+interact with Tigris's S3-compatible API for storing and retrieving objects in
+your Jupyter workflows.
 
 To run it you will need the following:
 
@@ -20,13 +26,16 @@ be installed for you and all you need are your Tigris credentials.
 
 First, install
 [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html), the
-library for accessing object storage from Python programs:
+library for accessing S3-compatible object storage from Python programs. Tigris
+fulfills over 90% of the AWS S3 API, so boto3 works seamlessly with Tigris by
+simply configuring the endpoint URL:
 
 ```sh
 uv pip install boto3
 ```
 
-Then set your access key details in the notebook environment:
+Then set your Tigris access key details in the notebook environment. These
+credentials allow your notebook to authenticate with Tigris's S3-compatible API:
 
 ```python
 import os
@@ -53,13 +62,13 @@ import os
 os.environ['AWS_PROFILE'] = 'tigris'
 ```
 
-Then create a storage client:
+Then create an object storage client configured for Tigris:
 
 ```python
 import boto3
 from botocore.client import Config
 
-# Create object storage service client
+# Create Tigris object storage client using boto3 with S3-compatible endpoint
 svc = boto3.client(
     's3',
     endpoint_url='https://t3.storage.dev',

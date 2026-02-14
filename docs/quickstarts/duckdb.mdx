@@ -1,12 +1,14 @@
-# DuckDB
+# DuckDB Quickstart
 
+Tigris is a globally distributed S3-compatible object storage service that
+provides zero egress fees and automatic multi-region replication.
 [DuckDB](https://duckdb.org) is an in-process embedded analytical database
 optimized for fast queries, ease of use, and embedding efficient analytics
 inside existing applications. It's the SQLite for analytics, but with a stronger
 focus on data analytics, aggregation, and Online Analytical Processing (OLAP)
 queries. Tigris dynamically distributes your data based on access patterns and
-handles lots of small files efficiently, enabling additional performance gains
-while using DuckDB.
+handles lots of small objects efficiently, enabling additional performance gains
+while using DuckDB for analytics workloads.
 
 Tigris is also compatible with [DuckLake](https://github.com/duckdb/ducklake), a
 lakehouse format that simplifies lakehouses by using a standard SQL database for
@@ -53,11 +55,12 @@ CREATE OR REPLACE SECRET tigris
   );
 ```
 
-## Query files in DuckDB
+## Query objects in DuckDB
 
-Once you're in, you can query files in your bucket like you would normally, just
-open them with the `s3://<bucketname>` prefix. For example, you can import the
-data from the
+Once you're in, you can query objects in your bucket like you would normally,
+just open them with the `s3://<bucketname>` prefix. DuckDB reads Parquet, CSV,
+and other data formats directly from Tigris object storage using the
+S3-compatible API. For example, you can import the data from the
 [LinkedIn Data Jobs Dataset](https://www.kaggle.com/datasets/joykimaiyo18/linkedin-data-jobs-dataset)
 by creating a local table like this:
 

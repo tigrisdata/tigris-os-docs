@@ -455,7 +455,22 @@ const sidebars = {
       label: "Guides",
       collapsed: false,
       items: [
-        "migration/index",
+        {
+          type: "category",
+          label: "Data Migration",
+          collapsed: false,
+          link: {
+            type: "doc",
+            id: "migration/index",
+          },
+          items: [
+            "migration/aws-s3",
+            "migration/gcs",
+            "migration/cloudflare-r2",
+            "migration/minio",
+            "migration/s3-compatible",
+          ],
+        },
         {
           type: "category",
           label: "Model Storage",

@@ -10,6 +10,11 @@
       "source": "/docs/training/geesefs-linux/",
       "destination": "/docs/training/tigrisfs/",
       "permanent": true
+    },
+    {
+      "source": "/docs/pricing/",
+      "destination": "https://www.tigrisdata.com/pricing/",
+      "permanent": true
     }
   ]
 }

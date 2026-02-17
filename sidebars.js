@@ -319,6 +319,22 @@ const sidebars = {
     },
     {
       type: "category",
+      label: "Migrate to Tigris",
+      collapsed: true,
+      link: {
+        type: "doc",
+        id: "migration/index",
+      },
+      items: [
+        "migration/aws-s3",
+        "migration/gcs",
+        "migration/cloudflare-r2",
+        "migration/minio",
+        "migration/s3-compatible",
+      ],
+    },
+    {
+      type: "category",
       label: "Integrations",
       collapsible: true,
       collapsed: false,
@@ -455,22 +471,6 @@ const sidebars = {
       label: "Guides",
       collapsed: false,
       items: [
-        {
-          type: "category",
-          label: "Data Migration",
-          collapsed: false,
-          link: {
-            type: "doc",
-            id: "migration/index",
-          },
-          items: [
-            "migration/aws-s3",
-            "migration/gcs",
-            "migration/cloudflare-r2",
-            "migration/minio",
-            "migration/s3-compatible",
-          ],
-        },
         {
           type: "category",
           label: "Model Storage",

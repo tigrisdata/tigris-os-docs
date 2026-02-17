@@ -47,7 +47,17 @@ Before starting, make sure you have:
 - If using write-through mode, the credentials also need write and delete
   permissions
 
-## Provider endpoints and credentials
+## What you need from your provider
+
+To configure migration, you need three things from your current storage
+provider:
+
+1. An S3-compatible endpoint URL
+2. An access key ID and secret access key
+3. The region (if the provider uses regions; otherwise set to `auto`)
+
+Check your provider's documentation for S3 compatibility or interoperability
+settings. Below are instructions for some common providers.
 
 ### Backblaze B2
 
@@ -117,17 +127,6 @@ Set the region to `auto` in the shadow bucket configuration.
 
 Use the cluster region (e.g. `us-east-1`) as the region in the shadow bucket
 configuration.
-
-### Other S3-compatible providers
-
-For any provider not listed above, you need three things:
-
-1. An S3-compatible endpoint URL
-2. An access key ID and secret access key
-3. The region (if the provider uses regions; otherwise set to `auto`)
-
-Check your provider's documentation for S3 compatibility or interoperability
-settings.
 
 ## Configure the shadow bucket
 

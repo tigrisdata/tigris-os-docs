@@ -432,6 +432,16 @@ const sidebars = {
             },
           ],
         },
+        {
+          type: "doc",
+          label: "Warpstream",
+          id: "guides/warpstream",
+        },
+        {
+          type: "doc",
+          label: "Databricks",
+          id: "libraries/databricks/index",
+        },
       ],
     },
     {
@@ -445,6 +455,7 @@ const sidebars = {
         "quickstarts/mcp",
         "quickstarts/node",
         "quickstarts/rclone",
+        "terraform/index",
       ],
     },
     {
@@ -491,15 +502,7 @@ const sidebars = {
             },
           ],
         },
-        "training/csi-s3/index",
         "apps/docker-registry",
-        "libraries/databricks/index",
-        "terraform/index",
-        {
-          type: "doc",
-          label: "Warpstream",
-          id: "guides/warpstream",
-        },
       ],
     },
     {

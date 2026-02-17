@@ -1,19 +1,16 @@
-# Terraform
+# Terraform Quickstart
 
-If you use Terraform to manage your infrastructure, you can use the
+Use the
 [Tigris Terraform provider](https://registry.terraform.io/providers/tigrisdata/tigris/latest/docs)
-to manage your Tigris buckets.
+to manage your Tigris buckets as infrastructure-as-code.
 
-This guide assumes that you have followed the steps in the
-[Getting Started](/docs/get-started/index.md) guide, and have the access keys
-available.
+This guide assumes you have followed the
+[Getting Started](/docs/get-started/index.md) guide and have your access keys
+ready.
 
-## How to use the provider
+## Set up the provider
 
-Below is an example of how to use the Tigris provider in your Terraform
-configuration.
-
-### Setting up the provider
+Add the Tigris provider to your Terraform configuration:
 
 ```hcl
 terraform {
@@ -30,12 +27,10 @@ provider "tigris" {
 }
 ```
 
-Replace `your-access-key` and `your-secret-key` with your Tigris Access Key and
-Secret Access Key values you generated.
+Replace `your-access-key` and `your-secret-key` with your Tigris access key and
+secret key.
 
-### Configuring the bucket
-
-Below is an example of how to configure the bucket.
+## Create a bucket
 
 ```hcl
 resource "tigris_bucket" "example_bucket" {
@@ -49,13 +44,9 @@ resource "tigris_bucket_public_access" "example_bucket_public_access" {
 }
 ```
 
-If you want to configure the bucket to be public, you can set the `acl` to
-`public-read`.
+Set `acl` to `public-read` if you want the bucket to be publicly accessible.
 
-### Configuring the custom domain name for the bucket
-
-To configure a custom domain name for the bucket, you can use the
-`tigris_bucket_website_config` resource.
+## Add a custom domain
 
 ```hcl
 resource "tigris_bucket_website_config" "example_website_config" {
@@ -64,10 +55,9 @@ resource "tigris_bucket_website_config" "example_website_config" {
 }
 ```
 
-### Configuring the shadow bucket
+## Configure a shadow bucket for migration
 
-If you want to migrate data from an existing bucket to the Tigris bucket, you
-can use the `tigris_bucket_shadow_config` resource.
+To migrate data from an existing bucket, configure a shadow bucket:
 
 ```hcl
 resource "tigris_bucket_shadow_config" "example_shadow_config" {
@@ -81,5 +71,10 @@ resource "tigris_bucket_shadow_config" "example_shadow_config" {
 }
 ```
 
-You can find more information about the Tigris Terraform provider in the
-[Tigris Terraform provider documentation](https://registry.terraform.io/providers/tigrisdata/tigris/latest/docs).
+See the [migration guide](/docs/migration/) for more on shadow bucket migration.
+
+## Next steps
+
+See the full
+[Tigris Terraform provider documentation](https://registry.terraform.io/providers/tigrisdata/tigris/latest/docs)
+for all available resources and data sources.

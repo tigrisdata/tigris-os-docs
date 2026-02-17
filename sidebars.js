@@ -319,6 +319,22 @@ const sidebars = {
     },
     {
       type: "category",
+      label: "Migrate to Tigris",
+      collapsed: true,
+      link: {
+        type: "doc",
+        id: "migration/index",
+      },
+      items: [
+        "migration/aws-s3",
+        "migration/gcs",
+        "migration/cloudflare-r2",
+        "migration/minio",
+        "migration/s3-compatible",
+      ],
+    },
+    {
+      type: "category",
       label: "Integrations",
       collapsible: true,
       collapsed: false,
@@ -416,6 +432,16 @@ const sidebars = {
             },
           ],
         },
+        {
+          type: "doc",
+          label: "Warpstream",
+          id: "guides/warpstream",
+        },
+        {
+          type: "doc",
+          label: "Databricks",
+          id: "libraries/databricks/index",
+        },
       ],
     },
     {
@@ -429,6 +455,7 @@ const sidebars = {
         "quickstarts/mcp",
         "quickstarts/node",
         "quickstarts/rclone",
+        "terraform/index",
       ],
     },
     {
@@ -455,7 +482,6 @@ const sidebars = {
       label: "Guides",
       collapsed: false,
       items: [
-        "migration/index",
         {
           type: "category",
           label: "Model Storage",
@@ -476,15 +502,7 @@ const sidebars = {
             },
           ],
         },
-        "training/csi-s3/index",
         "apps/docker-registry",
-        "libraries/databricks/index",
-        "terraform/index",
-        {
-          type: "doc",
-          label: "Warpstream",
-          id: "guides/warpstream",
-        },
       ],
     },
     {

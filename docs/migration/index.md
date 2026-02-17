@@ -64,8 +64,9 @@ Under the hood:
 - When an object is requested, Tigris checks its own bucket first. If the object
   is not found, Tigris fetches it from the shadow bucket, returns it, and
   asynchronously copies it for future access.
-- When uploading an object, it's first written to the shadow bucket, then copied
-  to the Tigris bucket to ensure data is available in both locations.
+- When uploading an object with write-through enabled, Tigris writes it to both
+  the shadow bucket and the Tigris bucket at the same time, keeping both in
+  sync.
 - Objects in the Tigris bucket are stored in the region closest to the user.
 - When an object is deleted, it's removed from both the Tigris and shadow
   buckets.

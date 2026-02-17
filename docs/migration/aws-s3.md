@@ -64,16 +64,14 @@ Before starting, make sure you have:
    the **IAM** service.
 2. In the sidebar, click **Users**, then select an existing user or click **Add
    users** to create a new one.
-3. If creating a new user, enable **Programmatic access** to generate an access
-   key and secret.
-4. Attach a policy that grants access to your S3 bucket. You can use
+3. Attach a policy that grants access to your S3 bucket. You can use
    `AmazonS3ReadOnlyAccess` for read-only migration, or create a custom policy
    scoped to your specific bucket. If you plan to use write-through mode, use
    `AmazonS3FullAccess` or a custom policy with write and delete permissions.
-5. Complete the user creation process. On the final screen, copy the **Access
-   key ID** and **Secret access key**. The secret won't be shown again.
-6. For an existing user, go to the **Security credentials** tab and click
-   **Create access key** under the **Access keys** section.
+4. Go to the user's **Security credentials** tab and click **Create access key**
+   under the **Access keys** section.
+5. Select **Third-party service** as the use case, then copy the **Access key
+   ID** and **Secret access key**. The secret won't be shown again.
 
 ### Step 2: Configure the shadow bucket
 

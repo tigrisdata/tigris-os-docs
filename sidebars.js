@@ -502,6 +502,17 @@ const sidebars = {
             },
           ],
         },
+        {
+          type: "category",
+          label: "Agents",
+          items: [
+            {
+              type: "doc",
+              label: "CrewAI",
+              id: "agents/agent-crewai",
+            },
+          ],
+        },
         "apps/docker-registry",
       ],
     },

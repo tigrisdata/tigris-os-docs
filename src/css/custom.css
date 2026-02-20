@@ -825,7 +825,7 @@ table td {
   border-radius: 10px;
   display: flex;
   justify-content: center;
-  max-height: 180px;
+  max-height: 220px;
   overflow: hidden;
 
   color: var(--docs-color-text);

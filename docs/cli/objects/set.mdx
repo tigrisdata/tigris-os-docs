@@ -1,0 +1,29 @@
+# tigris objects set
+
+Update settings on an existing object such as access level.
+
+**Alias:** `s`
+
+## Usage
+
+```bash
+tigris objects set <bucket> <key> [flags]
+t3 o s <bucket> <key> [flags]
+```
+
+## Flags
+
+| Name              | Required | Default | Description                                |
+| ----------------- | -------- | ------- | ------------------------------------------ |
+| `--access`, `-a`  | Yes      | —       | Access level. Options: `public`, `private` |
+| `--new-key`, `-n` | No       | —       | Rename the object to a new key             |
+
+## Examples
+
+```bash
+# Make an object public
+tigris objects set my-bucket my-file.txt --access public
+
+# Make an object private
+tigris objects set my-bucket my-file.txt --access private
+```

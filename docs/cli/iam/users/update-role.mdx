@@ -1,0 +1,35 @@
+# tigris iam users update-role
+
+Update user roles in the organization. If no user ID is provided, shows
+interactive selection.
+
+**Alias:** `ur`
+
+## Usage
+
+```bash
+tigris iam users update-role [resource] [flags]
+t3 iam u ur [resource] [flags]
+```
+
+## Flags
+
+| Name           | Required | Default | Description                                                                                                     |
+| -------------- | -------- | ------- | --------------------------------------------------------------------------------------------------------------- |
+| `--role`, `-r` | Yes      | —       | Role(s) to assign (comma-separated). Each role pairs with the corresponding user ID. Options: `admin`, `member` |
+
+## Examples
+
+```bash
+# Interactive selection
+tigris iam users update-role --role admin
+
+# Update specific user
+tigris iam users update-role user_id --role member
+
+# Update multiple users
+tigris iam users update-role id1,id2 --role admin
+
+# Different roles for each user
+tigris iam users update-role id1,id2 --role admin,member
+```

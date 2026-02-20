@@ -1,7 +1,10 @@
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
 # Tigris CLI
 
 Tigris CLI provides a simple and powerful command line interface to manage your
-Tigris resources such as buckets, objects, and access keys.
+Tigris resources such as buckets, objects, access keys, and IAM policies.
 
 ## Setup
 
@@ -12,7 +15,7 @@ Tigris resources such as buckets, objects, and access keys.
   <span className="step-title">Install</span>
 </div>
 
-<p>Install the Tigris CLI with npm.</p>
+<p>Install the Tigris CLI with npm:</p>
 
 ```bash
 npm install -g @tigrisdata/cli
@@ -38,7 +41,7 @@ tigris login
   <span className="step-title">Upgrade</span>
 </div>
 
-<p>We release updates regularly. Get the latest:</p>
+<p>Get the latest updates using:</p>
 
 ```bash
 npm install -g @tigrisdata/cli@latest
@@ -46,6 +49,27 @@ npm install -g @tigrisdata/cli@latest
 
 </div>
 </div>
+
+:::note
+
+Tigris CLI is now available as standalone binary without the dependency on
+nodejs runtime.
+
+:::
+
+{/* prettier-ignore */}
+<Tabs groupId="platform" label="Download">
+  <TabItem value="linux" label="macOS / Linux">
+    ```bash
+    curl -fsSL https://raw.githubusercontent.com/tigrisdata/cli/main/scripts/install.sh | sh
+    ```
+  </TabItem>
+  <TabItem value="macos" label="Windows">
+    ```bash
+    irm https://raw.githubusercontent.com/tigrisdata/cli/main/scripts/install.ps1 | iex
+    ```
+  </TabItem>
+</Tabs>
 
 ## Authentication
 

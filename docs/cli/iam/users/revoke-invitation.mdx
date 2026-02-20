@@ -1,0 +1,26 @@
+# tigris iam users revoke-invitation
+
+Revoke pending invitations. If no invitation ID is provided, shows interactive
+selection.
+
+**Alias:** `ri`
+
+## Usage
+
+```bash
+tigris iam users revoke-invitation [resource]
+t3 iam u ri [resource]
+```
+
+## Examples
+
+```bash
+# Interactive selection
+tigris iam users revoke-invitation
+
+# Revoke specific invitation
+tigris iam users revoke-invitation invitation_id
+
+# Revoke multiple invitations
+tigris iam users revoke-invitation id1,id2,id3
+```

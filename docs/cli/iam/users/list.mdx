@@ -1,0 +1,25 @@
+# tigris iam users list
+
+List all users and pending invitations in the organization.
+
+**Alias:** `l`
+
+## Usage
+
+```bash
+tigris iam users list [flags]
+t3 iam u l [flags]
+```
+
+## Flags
+
+| Name             | Required | Default | Description                                    |
+| ---------------- | -------- | ------- | ---------------------------------------------- |
+| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+
+## Examples
+
+```bash
+tigris iam users list
+tigris iam users list --format json
+```

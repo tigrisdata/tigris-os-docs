@@ -1,0 +1,22 @@
+# tigris iam policies delete
+
+Delete a policy. If no ARN is provided, shows interactive selection.
+
+**Alias:** `d`
+
+## Usage
+
+```bash
+tigris iam policies delete [resource]
+t3 iam p d [resource]
+```
+
+## Examples
+
+```bash
+# Interactive selection
+tigris iam policies delete
+
+# Delete specific policy by ARN
+tigris iam policies delete arn:aws:iam::org_id:policy/my-policy
+```

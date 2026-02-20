@@ -1,13 +1,9 @@
 /* Container styles */
 .container {
-  min-height: 100vh;
   font-family:
     system-ui,
     -apple-system,
     sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .wrapper {

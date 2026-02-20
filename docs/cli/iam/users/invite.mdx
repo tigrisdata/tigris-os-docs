@@ -1,0 +1,31 @@
+# tigris iam users invite
+
+Invite users to the organization by email.
+
+**Alias:** `i`
+
+## Usage
+
+```bash
+tigris iam users invite <email> [flags]
+t3 iam u i <email> [flags]
+```
+
+## Flags
+
+| Name           | Required | Default  | Description                                                       |
+| -------------- | -------- | -------- | ----------------------------------------------------------------- |
+| `--role`, `-r` | No       | `member` | Role to assign to the invited user(s). Options: `admin`, `member` |
+
+## Examples
+
+```bash
+# Invite a single user
+tigris iam users invite user@example.com
+
+# Invite with admin role
+tigris iam users invite user@example.com --role admin
+
+# Invite multiple users
+tigris iam users invite user1@example.com,user2@example.com
+```

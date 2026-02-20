@@ -1,0 +1,25 @@
+# tigris iam
+
+Identity and Access Management - manage policies, users, and permissions.
+
+## Usage
+
+```bash
+tigris iam <resource> <operation> [flags]
+t3 iam <resource> <operation> [flags]
+```
+
+## Resources
+
+- [`tigris iam policies`](/docs/cli/iam/policies) - Manage IAM policies
+- [`tigris iam users`](/docs/cli/iam/users) - Manage organization users and
+  invitations
+
+## Examples
+
+```bash
+tigris iam policies list
+tigris iam policies create my-policy --document policy.json
+tigris iam users list
+tigris iam users invite user@example.com --role member
+```

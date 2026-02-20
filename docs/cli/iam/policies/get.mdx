@@ -1,0 +1,29 @@
+# tigris iam policies get
+
+Show details for a policy including its document and attached users. If no ARN
+is provided, shows interactive selection.
+
+**Alias:** `g`
+
+## Usage
+
+```bash
+tigris iam policies get [resource] [flags]
+t3 iam p g [resource] [flags]
+```
+
+## Flags
+
+| Name             | Required | Default | Description                                    |
+| ---------------- | -------- | ------- | ---------------------------------------------- |
+| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+
+## Examples
+
+```bash
+# Interactive selection
+tigris iam policies get
+
+# Get specific policy by ARN
+tigris iam policies get arn:aws:iam::org_id:policy/my-policy
+```

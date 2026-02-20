@@ -1,0 +1,33 @@
+# tigris iam policies edit
+
+Update an existing policy's document. Document can be provided via file, inline
+JSON, or stdin. If no ARN is provided, shows interactive selection.
+
+**Alias:** `e`
+
+## Usage
+
+```bash
+tigris iam policies edit [resource] [flags]
+t3 iam p e [resource] [flags]
+```
+
+## Flags
+
+| Name               | Required | Default | Description                                                                       |
+| ------------------ | -------- | ------- | --------------------------------------------------------------------------------- |
+| `--document`, `-d` | No       | —       | New policy document (JSON file path or inline JSON). If omitted, reads from stdin |
+| `--description`    | No       | —       | Update policy description                                                         |
+
+## Examples
+
+```bash
+# Interactive selection with file
+tigris iam policies edit --document policy.json
+
+# Edit specific policy by ARN
+tigris iam policies edit arn:aws:iam::org_id:policy/my-policy --document policy.json
+
+# Edit from stdin
+cat policy.json | tigris iam policies edit arn:aws:iam::org_id:policy/my-policy
+```

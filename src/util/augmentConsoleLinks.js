@@ -24,6 +24,7 @@ export function onRouteDidUpdate({ location, previousLocation }) {
       const pid = existingPid || posthog.get_distinct_id();
       const sid = existingSid || posthog.get_session_id();
       allSignupLinks.forEach((el) => {
+        // eslint-disable-next-line no-undef
         const href = new URL(el.getAttribute("href"));
 
         if (href.searchParams.has("pid") === false) {
@@ -38,6 +39,9 @@ export function onRouteDidUpdate({ location, previousLocation }) {
       });
     }
   } catch (e) {
-    console.warn("Error augmenting Tigris Console links with pid query param");
+    console.warn(
+      "Error augmenting Tigris Console links with pid query param",
+      e,
+    );
   }
 }

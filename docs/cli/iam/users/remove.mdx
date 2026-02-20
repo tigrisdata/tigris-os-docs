@@ -1,0 +1,26 @@
+# tigris iam users remove
+
+Remove users from the organization. If no user ID is provided, shows interactive
+selection.
+
+**Alias:** `rm`
+
+## Usage
+
+```bash
+tigris iam users remove [resource]
+t3 iam u rm [resource]
+```
+
+## Examples
+
+```bash
+# Interactive selection
+tigris iam users remove
+
+# Remove specific user
+tigris iam users remove user@example.com
+
+# Remove multiple users
+tigris iam users remove user@example.com,user@example.net
+```

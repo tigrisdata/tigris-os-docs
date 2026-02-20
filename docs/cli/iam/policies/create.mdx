@@ -1,0 +1,33 @@
+# tigris iam policies create
+
+Create a new policy with the given name and policy document. Document can be
+provided via file, inline JSON, or stdin.
+
+**Alias:** `c`
+
+## Usage
+
+```bash
+tigris iam policies create <name> [flags]
+t3 iam p c <name> [flags]
+```
+
+## Flags
+
+| Name               | Required | Default | Description                                                                   |
+| ------------------ | -------- | ------- | ----------------------------------------------------------------------------- |
+| `--document`, `-d` | No       | —       | Policy document (JSON file path or inline JSON). If omitted, reads from stdin |
+| `--description`    | No       | —       | Policy description                                                            |
+
+## Examples
+
+```bash
+# Create from a JSON file
+tigris iam policies create my-policy --document policy.json
+
+# Create with inline JSON
+tigris iam policies create my-policy --document '{"Version":"2012-10-17","Statement":[...]}'
+
+# Create from stdin
+cat policy.json | tigris iam policies create my-policy
+```

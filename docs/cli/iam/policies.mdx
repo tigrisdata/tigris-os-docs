@@ -1,0 +1,22 @@
+# tigris iam policies
+
+Manage IAM policies. Policies define permissions for access keys.
+
+**Alias:** `p`
+
+## Usage
+
+```bash
+tigris iam policies <operation> [flags]
+t3 iam p <operation> [flags]
+```
+
+## Examples
+
+```bash
+tigris iam policies list
+tigris iam policies get
+tigris iam policies create my-policy --document policy.json
+tigris iam policies edit arn:aws:iam::org_id:policy/my-policy --document policy.json
+tigris iam policies delete arn:aws:iam::org_id:policy/my-policy
+```

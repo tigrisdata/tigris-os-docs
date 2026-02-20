@@ -1,0 +1,22 @@
+# tigris iam users
+
+Manage organization users and invitations.
+
+**Alias:** `u`
+
+## Usage
+
+```bash
+tigris iam users <operation> [flags]
+t3 iam u <operation> [flags]
+```
+
+## Examples
+
+```bash
+tigris iam users list
+tigris iam users invite user@example.com --role member
+tigris iam users remove user@example.com
+tigris iam users update-role user_id --role admin
+tigris iam users revoke-invitation invitation_id
+```

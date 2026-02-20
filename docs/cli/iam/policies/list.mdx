@@ -1,0 +1,25 @@
+# tigris iam policies list
+
+List all policies in the current organization.
+
+**Alias:** `l`
+
+## Usage
+
+```bash
+tigris iam policies list [flags]
+t3 iam p l [flags]
+```
+
+## Flags
+
+| Name             | Required | Default | Description                                    |
+| ---------------- | -------- | ------- | ---------------------------------------------- |
+| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+
+## Examples
+
+```bash
+tigris iam policies list
+tigris iam policies list --format json
+```

@@ -1,30 +1,32 @@
 # tigris stat
 
-Show metadata (size, last-modified, content-type, storage tier) for a bucket,
-folder, or object.
+Show storage stats (no args), bucket info, or object metadata.
 
 ## Usage
 
 ```bash
-tigris stat <path>
-t3 stat <path>
+tigris stat [path]
+t3 stat [path]
 ```
 
 Paths support the optional `t3://` (or `tigris://`) prefix (e.g.
 `t3://my-bucket/path` or just `my-bucket/path`).
 
+## Flags
+
+| Name             | Required | Default | Description                                    |
+| ---------------- | -------- | ------- | ---------------------------------------------- |
+| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+
 ## Examples
 
 ```bash
-# Get bucket details
+# Show overall storage stats
+tigris stat
+
+# Show bucket info
 tigris stat t3://my-bucket
-tigris stat my-bucket
 
-# Get folder details
-tigris stat t3://my-bucket/my-path
-tigris stat my-bucket/my-path
-
-# Get object details
-tigris stat t3://my-bucket/my-path/my-object.json
-tigris stat my-bucket/my-path/my-object.json
+# Show object metadata
+tigris stat t3://my-bucket/my-object.json
 ```

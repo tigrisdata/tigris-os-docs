@@ -5,10 +5,7 @@ import "./styles.css";
 
 const sdkCode = `npm install @tigris/sdk`;
 
-const cliOutput = `$ tigris create-bucket assets
-  Creating bucket 'assets'...
-  ✓ Bucket created successfully`;
-
+/* eslint-disable react/prop-types */
 function ToolCard({ icon, title, description, to, children }) {
   return (
     <Link to={to} className="tool-card">

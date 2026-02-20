@@ -70,7 +70,7 @@ export default function ToolCards() {
               </div>
               <div className="tool-card-terminal-line">&nbsp;</div>
               <div className="tool-card-terminal-line tool-card-comment">
-                // Initialize client
+                {"// Initialize client"}
               </div>
               <div className="tool-card-terminal-line">
                 <span className="tool-card-keyword">const</span> client ={" "}

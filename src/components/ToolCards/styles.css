@@ -1,0 +1,174 @@
+.tool-cards-section {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 4rem 0 0 0;
+}
+
+.tool-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--docs-color-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: var(--docs-color-text);
+  --ifm-link-hover-decoration: none;
+  --ifm-link-hover-color: inherit;
+  transition: background-color 0.15s ease;
+  overflow: hidden;
+}
+
+.tool-card:hover {
+  background-color: var(--docs-color-background-100);
+  text-decoration: none;
+  color: var(--docs-color-text);
+}
+
+.tool-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.tool-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background-color: var(--docs-color-primary-tint);
+  color: var(--docs-color-primary);
+  flex-shrink: 0;
+}
+
+.tool-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.tool-card-description {
+  font-size: 14px;
+  color: var(--docs-color-text-100);
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.tool-card-preview {
+  margin-top: auto;
+}
+
+/* SDK code preview */
+.tool-card-code {
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--docs-color-code-background);
+  border: 1px solid var(--docs-color-border);
+}
+
+.tool-card-code-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background-color: var(--docs-color-background-200);
+  border-bottom: 1px solid var(--docs-color-border);
+}
+
+.tool-card-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.tool-card-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--docs-color-background-300);
+}
+
+.tool-card-filename {
+  font-size: 12px;
+  color: var(--docs-color-text-100);
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.tool-card-code .tool-card-codeblock {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  font-size: 12px;
+}
+
+.tool-card-code .tool-card-codeblock pre {
+  border: none;
+  margin: 0;
+  padding: 12px;
+  font-size: 12px;
+}
+
+
+/* MCP buttons */
+.tool-card-mcp-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.tool-card-mcp-btn {
+  flex: 1;
+  justify-content: center;
+}
+
+.tool-card-mcp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.tool-card-mcp-btn:hover {
+  background: rgba(98, 254, 181, 0.15);
+  border-color: rgba(98, 254, 181, 0.3);
+  color: #fff;
+  text-decoration: none;
+}
+
+[data-theme="light"] .tool-card-mcp-btn {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--docs-color-border);
+  color: var(--docs-color-text);
+}
+
+[data-theme="light"] .tool-card-mcp-btn:hover {
+  background: rgba(56, 172, 140, 0.1);
+  border-color: rgba(56, 172, 140, 0.3);
+  color: var(--docs-color-text);
+}
+
+@media screen and (max-width: 1200px) {
+  .tool-cards-section {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .tool-cards-section {
+    grid-template-columns: 1fr;
+  }
+
+  .tool-card-mcp-buttons {
+    flex-direction: column;
+  }
+}

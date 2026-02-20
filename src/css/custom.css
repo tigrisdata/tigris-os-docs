@@ -821,10 +821,12 @@ table td {
 
 .homepage-card-pic .img {
   width: 100%;
-  padding: 20px 20px 0px 20px;
+  padding: 0;
   border-radius: 10px;
   display: flex;
   justify-content: center;
+  max-height: 180px;
+  overflow: hidden;
 
   color: var(--docs-color-text);
   background-color: var(--docs-color-background-100);
@@ -832,6 +834,13 @@ table td {
 
 .homepage-card-pic .img a {
   display: flex;
+  width: 100%;
+}
+
+.homepage-card-pic .img img {
+  width: 100%;
+  object-fit: cover;
+  object-position: top;
 }
 
 .homepage-card-pic .text {

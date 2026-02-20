@@ -428,7 +428,7 @@ if (error) {
   console.log('Snapshot created:', data);
   // output: { snapshotVersion: "1751631910169675092" }
 }`}</CodeBlock>
-        <p>The cloud's the limit!</p>
+        <p>The cloud&apos;s the limit!</p>
       </>
     ),
     subcategories: [
@@ -447,8 +447,8 @@ if (error) {
                   Onboarding has been re-imagined so that we cut to the chase
                   and make it easy for you to create a new bucket <em>now</em>.
                   Check it out at <a href="https://storage.new">storage.new</a>.
-                  If you're already a Tigris user, you can check it out by
-                  opening it in a private browsing window or on a friend's
+                  If you&apos;re already a Tigris user, you can check it out by
+                  opening it in a private browsing window or on a friend&apos;s
                   computer to help them get started.
                 </p>
               </>
@@ -459,7 +459,7 @@ if (error) {
             description: (
               <>
                 <p>
-                  We've rebuilt the bucket creation flow from the ground up so
+                  We&apos;ve rebuilt the bucket creation flow from the ground up so
                   that you can focus on making buckets and assigning access
                   keys.
                 </p>
@@ -706,7 +706,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
           Tigris organization, not one created with fly.io.
         </p>
         <p>
-          {/* eslint-disable-next-line @typescript-eslint/no-var-requires */}
+          { }
           <img
             src={require("./assets/2025/08/mfa-enforcement.webp").default}
             alt='A screen recording of clicking the "Enable MFA" button in the Web Console. Clicking on it triggers a toast that says MFA settings are updated successfully.'
@@ -753,7 +753,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
             title: "IAM Policies can now be directly attached to keys",
             description: (
               <>
-                {/* eslint-disable-next-line @typescript-eslint/no-var-requires */}
+                { }
                 <img
                   src={
                     require("./assets/2025/08/iam-access-key-linking.webp")
@@ -769,7 +769,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
               "Each bucket has a breakdown of how much data is stored in each storage tier",
             description: (
               <>
-                {/* eslint-disable-next-line @typescript-eslint/no-var-requires */}
+                { }
                 <img
                   className={styles.deemphasize}
                   src={
@@ -790,7 +790,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
     content: (
       <>
         <p>
-          We've been hearing from a lot of teams using Tigris for low-latency
+          We&apos;ve been hearing from a lot of teams using Tigris for low-latency
           workloads consisting of billions of tiny files--think logs, AI feature
           payloads, or metadata. We published a benchmark comparing Tigris to
           AWS S3 and Cloudflare R2 using a mixed workload of 10 million 1 KB
@@ -920,7 +920,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
           </li>
         </ul>
         <p>
-          Just mount your bucket and work with your data like it's stored
+          Just mount your bucket and work with your data like it&apos;s stored
           locally.
         </p>
 
@@ -1064,7 +1064,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
           accessed.
         </p>
         <p>
-          {/* eslint-disable-next-line @typescript-eslint/no-var-requires */}
+          { }
           <img
             src={require("./assets/2025/04/storage-tiers.webp").default}
             alt="The storage tiers selection page in the web console."
@@ -1096,7 +1096,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
           we&apos;re happy to simplify your workflow.
         </p>
         <p>
-          {/* eslint-disable-next-line @typescript-eslint/no-var-requires */}
+          { }
           <img
             src={require("./assets/2025/04/bucket-sharing.webp").default}
             alt='A screen recording of adding a user to a bucket and hitting the "save" button.'

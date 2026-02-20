@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */
-import React, { ReactNode } from "react";
+import React, { JSX, ReactNode } from "react";
 import clsx from "clsx";
 import styles from "./styles.module.css";
 

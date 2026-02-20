@@ -10,7 +10,7 @@ import { randomUUID } from "node:crypto";
 export const renameObject = async (S3, bucket, oldKey, newKey) => {
   S3.middlewareStack.add(
     (next) => async (args) => {
-      // eslint-disable-next-line no-param-reassign
+       
       args.request.headers["X-Tigris-Rename"] = "true";
       return next(args);
     },

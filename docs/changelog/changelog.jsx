@@ -459,8 +459,8 @@ if (error) {
             description: (
               <>
                 <p>
-                  We&apos;ve rebuilt the bucket creation flow from the ground up so
-                  that you can focus on making buckets and assigning access
+                  We&apos;ve rebuilt the bucket creation flow from the ground up
+                  so that you can focus on making buckets and assigning access
                   keys.
                 </p>
                 <img
@@ -706,7 +706,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
           Tigris organization, not one created with fly.io.
         </p>
         <p>
-          { }
+          {}
           <img
             src={require("./assets/2025/08/mfa-enforcement.webp").default}
             alt='A screen recording of clicking the "Enable MFA" button in the Web Console. Clicking on it triggers a toast that says MFA settings are updated successfully.'
@@ -753,7 +753,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
             title: "IAM Policies can now be directly attached to keys",
             description: (
               <>
-                { }
+                {}
                 <img
                   src={
                     require("./assets/2025/08/iam-access-key-linking.webp")
@@ -769,7 +769,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
               "Each bucket has a breakdown of how much data is stored in each storage tier",
             description: (
               <>
-                { }
+                {}
                 <img
                   className={styles.deemphasize}
                   src={
@@ -790,11 +790,11 @@ const file = await get("object.txt", "string");`}</CodeBlock>
     content: (
       <>
         <p>
-          We&apos;ve been hearing from a lot of teams using Tigris for low-latency
-          workloads consisting of billions of tiny files--think logs, AI feature
-          payloads, or metadata. We published a benchmark comparing Tigris to
-          AWS S3 and Cloudflare R2 using a mixed workload of 10 million 1 KB
-          objects, 80% reads and 20% writes.
+          We&apos;ve been hearing from a lot of teams using Tigris for
+          low-latency workloads consisting of billions of tiny files--think
+          logs, AI feature payloads, or metadata. We published a benchmark
+          comparing Tigris to AWS S3 and Cloudflare R2 using a mixed workload of
+          10 million 1 KB objects, 80% reads and 20% writes.
         </p>
         <p>The results are compelling:</p>
         <ul>
@@ -1064,7 +1064,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
           accessed.
         </p>
         <p>
-          { }
+          {}
           <img
             src={require("./assets/2025/04/storage-tiers.webp").default}
             alt="The storage tiers selection page in the web console."
@@ -1096,7 +1096,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
           we&apos;re happy to simplify your workflow.
         </p>
         <p>
-          { }
+          {}
           <img
             src={require("./assets/2025/04/bucket-sharing.webp").default}
             alt='A screen recording of adding a user to a bucket and hitting the "save" button.'

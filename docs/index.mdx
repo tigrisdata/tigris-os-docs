@@ -9,7 +9,8 @@ import {
 } from "@site/src/components/HomepageComponents.jsx";
 import { YellowStar } from "@site/src/icons";
 import SDKCards from "@site/src/components/SDKCards";
-import WorldMap from "@site/static/img/world.png";
+import ToolCards from "@site/src/components/ToolCards";
+import WorldMap from "@site/static/img/globe-final-frame.png";
 import TigrisStorageSDK from "@site/static/img/tigris-sdk.png";
 import Link from "@docusaurus/Link";
 
@@ -29,7 +30,11 @@ import Link from "@docusaurus/Link";
   <div className="homepage-card-pic">
     <div className="img">
       <Link to="/overview/">
-        <img src={WorldMap} alt="Global" />
+        <img
+          src={WorldMap}
+          alt="Global"
+          style={{ objectFit: "contain", padding: "10px" }}
+        />
       </Link>
     </div>
     <div className="text">
@@ -54,42 +59,44 @@ import Link from "@docusaurus/Link";
   </div>
 </div>
 
+<ToolCards />
+
 <Section title="Features" id="features" HeadingTag="h2">
   <Card
     title="Globally Distributed Data"
     description="Data stored close to the users automatically ensuring low latency everywhere."
-    to="/overview/#globally-distributed-data"
-    icon="img/spark"
+    to="/overview/#global-low-latency-access"
+    icon="img/lightning"
   />
   <Card
     title="S3 Compatible API"
     description="Global and fast object storage with familiar AWS S3 tools, libraries, and extensions."
     to="/api/s3/"
-    icon="img/spark"
+    icon="img/lightning"
   />
   <Card
     title="Zero Egress Fees"
     description="Free data egress ensures seamless and unrestricted access to your data whenever you need it."
     to="https://www.tigrisdata.com/pricing/#zero-egress-fees"
-    icon="img/spark"
+    icon="img/lightning"
   />
   <Card
     title="Strong Consistency"
     description="Strong consistency ensures that you always get the correct version of your data."
     to="/concepts/consistency/"
-    icon="img/spark"
+    icon="img/lightning"
   />
   <Card
     title="Flexible Storage Tiers"
     description="Choose the right storage tier for your data to optimize costs and performance."
     to="/objects/tiers/"
-    icon="img/spark"
+    icon="img/lightning"
   />
   <Card
-    title="Public Buckets"
-    description="Public buckets allow you to share data with anyone, anywhere."
-    to="/buckets/public-bucket/"
-    icon="img/spark"
+    title="Snapshots and Forks"
+    description="Instantly create zero-copy clones of your data for development, testing, or rollback with Git-style workflows."
+    to="/snapshots-and-forks/"
+    icon="img/lightning"
   />
 </Section>
 

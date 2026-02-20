@@ -804,8 +804,8 @@ table td {
 }
 
 .homepage-card-container {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   margin-top: 4em;
   gap: 24px;
 }
@@ -813,18 +813,17 @@ table td {
 .homepage-card-pic {
   display: flex;
   align-items: flex-start;
-  align-self: stretch;
-  width: 50%;
   flex-direction: column;
-  justify-content: space-around;
 }
 
 .homepage-card-pic .img {
   width: 100%;
-  padding: 20px 20px 0px 20px;
+  padding: 0;
   border-radius: 10px;
   display: flex;
   justify-content: center;
+  height: 220px;
+  overflow: hidden;
 
   color: var(--docs-color-text);
   background-color: var(--docs-color-background-100);
@@ -832,6 +831,13 @@ table td {
 
 .homepage-card-pic .img a {
   display: flex;
+  width: 100%;
+}
+
+.homepage-card-pic .img img {
+  width: 100%;
+  object-fit: cover;
+  object-position: top;
 }
 
 .homepage-card-pic .text {

@@ -110,7 +110,6 @@
   font-size: 12px;
 }
 
-
 /* MCP buttons */
 .tool-card-mcp-buttons {
   display: flex;
@@ -119,12 +118,9 @@
 
 .tool-card-mcp-btn {
   flex: 1;
-  justify-content: center;
-}
-
-.tool-card-mcp-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   padding: 0.6rem 1rem;
   background: rgba(255, 255, 255, 0.08);

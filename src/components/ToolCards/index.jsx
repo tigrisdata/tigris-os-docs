@@ -54,17 +54,10 @@ export default function ToolCards() {
         to="/sdks/tigris/"
       >
         <div className="tool-card-code">
-          <div className="tool-card-code-header">
-            <div className="tool-card-dots">
-              <span />
-              <span />
-              <span />
-            </div>
-            <span className="tool-card-filename">bash</span>
-          </div>
           <CodeBlock language="bash" className="tool-card-codeblock">
             {sdkCode}
           </CodeBlock>
+          <div className="tool-card-code-gradient" />
         </div>
       </ToolCard>
 
@@ -102,17 +95,10 @@ export default function ToolCards() {
         to="/cli/"
       >
         <div className="tool-card-code">
-          <div className="tool-card-code-header">
-            <div className="tool-card-dots">
-              <span />
-              <span />
-              <span />
-            </div>
-            <span className="tool-card-filename">bash</span>
-          </div>
           <CodeBlock language="bash" className="tool-card-codeblock">
             {"npm install -g @tigrisdata/tigris"}
           </CodeBlock>
+          <div className="tool-card-code-gradient" />
         </div>
       </ToolCard>
 

@@ -61,53 +61,35 @@
   margin-top: auto;
 }
 
-/* SDK code preview */
+/* Code preview with gradient border */
 .tool-card-code {
   border-radius: 8px;
   overflow: hidden;
-  background-color: var(--docs-color-code-background);
-  border: 1px solid var(--docs-color-border);
-}
-
-.tool-card-code-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
-  background-color: var(--docs-color-background-200);
-  border-bottom: 1px solid var(--docs-color-border);
-}
-
-.tool-card-dots {
-  display: flex;
-  gap: 6px;
-}
-
-.tool-card-dots span {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: var(--docs-color-background-300);
-}
-
-.tool-card-filename {
-  font-size: 12px;
-  color: var(--docs-color-text-100);
-  font-family: var(--ifm-font-family-monospace);
+  position: relative;
 }
 
 .tool-card-code .tool-card-codeblock {
   margin: 0;
-  border: none;
-  border-radius: 0;
-  font-size: 12px;
+  border: 1px solid var(--docs-color-border);
+  border-radius: 8px;
+  font-size: 13px;
 }
 
 .tool-card-code .tool-card-codeblock pre {
   border: none;
   margin: 0;
-  padding: 12px;
-  font-size: 12px;
+  padding: 12px 14px;
+  font-size: 13px;
+}
+
+.tool-card-code-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ifm-color-primary), #7c5cfc);
+  border-radius: 0 0 8px 8px;
 }
 
 /* MCP buttons */

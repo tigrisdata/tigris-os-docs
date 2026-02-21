@@ -61,9 +61,8 @@ export default function ToolCards() {
             </div>
             <div className="tool-card-terminal">
               <div className="tool-card-terminal-line">
-                <span className="tool-card-keyword">import</span> {"{"} get,
-                put {"}"}{" "}
-                <span className="tool-card-keyword">from</span>{" "}
+                <span className="tool-card-keyword">import</span> {"{"} get, put{" "}
+                {"}"} <span className="tool-card-keyword">from</span>{" "}
                 <span className="tool-card-string">
                   &apos;@tigrisdata/storage&apos;
                 </span>
@@ -79,9 +78,7 @@ export default function ToolCards() {
               </div>
               <div className="tool-card-terminal-line">
                 <span className="tool-card-keyword">await</span> put(
-                <span className="tool-card-string">
-                  &apos;object.txt&apos;
-                </span>
+                <span className="tool-card-string">&apos;object.txt&apos;</span>
                 ,{" "}
                 <span className="tool-card-string">
                   &apos;Hello, World!&apos;

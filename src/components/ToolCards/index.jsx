@@ -61,34 +61,30 @@ export default function ToolCards() {
             </div>
             <div className="tool-card-terminal">
               <div className="tool-card-terminal-line">
-                <span className="tool-card-keyword">import</span> {"{"} Tigris{" "}
+                <span className="tool-card-keyword">import</span> {"{"} get, put{" "}
                 {"}"} <span className="tool-card-keyword">from</span>{" "}
                 <span className="tool-card-string">
-                  &apos;@tigris/sdk&apos;
+                  &apos;@tigrisdata/storage&apos;
                 </span>
                 ;
               </div>
               <div className="tool-card-terminal-line">&nbsp;</div>
-              <div className="tool-card-terminal-line tool-card-comment">
-                {"// Initialize client"}
-              </div>
               <div className="tool-card-terminal-line">
-                <span className="tool-card-keyword">const</span> client ={" "}
-                <span className="tool-card-keyword">new</span> Tigris();
-              </div>
-              <div className="tool-card-terminal-line">&nbsp;</div>
-              <div className="tool-card-terminal-line">
-                <span className="tool-card-keyword">const</span> bucket ={" "}
-                <span className="tool-card-keyword">await</span>{" "}
-                client.getBucket(
-              </div>
-              <div className="tool-card-terminal-line">
-                {"  "}
+                <span className="tool-card-keyword">await</span> get(
                 <span className="tool-card-string">
-                  &apos;user-uploads&apos;
+                  &apos;my-file.jpg&apos;
                 </span>
+                , <span className="tool-card-string">&apos;file&apos;</span>);
               </div>
-              <div className="tool-card-terminal-line">);</div>
+              <div className="tool-card-terminal-line">
+                <span className="tool-card-keyword">await</span> put(
+                <span className="tool-card-string">&apos;object.txt&apos;</span>
+                ,{" "}
+                <span className="tool-card-string">
+                  &apos;Hello, World!&apos;
+                </span>
+                );
+              </div>
             </div>
           </div>
         </ToolCard>

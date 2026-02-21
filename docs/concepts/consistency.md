@@ -1,51 +1,56 @@
-# Consistency Model
+# Consistency
 
-Tigris is a globally distributed object storage service that ensures your data
-is stored close to users, eliminating the complexities of data replication and
-caching.
+Tigris provides strong consistency guarantees for all object storage operations.
+Every read returns the most recent successful write, there are no stale reads
+within the consistency boundary defined by your bucket's
+[location type](/docs/buckets/locations/).
 
-## Default Consistency
+## How Consistency Works
 
-By default, Tigris offers strict read-after-write consistency within the same
-region and eventual consistency globally. This means that if you write data in,
-for example, the San Jose region and read from the same region, the data will be
-strongly consistent. However, if you read from a different region, such as
-Washington, there is a possibility that the data may be stale, and an older
-version could be served. This is the default consistency model.
+Data consistency depends on where replicas exist relative to the request origin:
 
-## Global Strong Consistency
+- **Same-region requests**: All location types provide strong consistency. A
+  read issued from the same region as the data will always return the latest
+  write.
+- **Cross-region requests**: The consistency guarantee depends on the location
+  type.
 
-In most cases, global eventual consistency (default) is preferred for
-performance reasons, as it allows for lower latency and better scalability
-across regions. However, there are situations where a single object can be
-modified from any region, making global strong consistency the only viable
-option. Additionally, some use cases may require global consistency for all
-requests, while others may only need it for a specific subset of requests. To
-address this, Tigris provides global consistency options at both the request
-level and at the bucket level.
+### Consistency by Location Type
 
-### Strong Consistency Options
+| Location Type     | Same-region | Cross-region | How it works                                                                                                     |
+| ----------------- | ----------- | ------------ | ---------------------------------------------------------------------------------------------------------------- |
+| **Global**        | Strong      | Eventual     | Cross-region reads may serve a cached or on-demand copy that is eventually consistent.                           |
+| **Multi-region**  | Strong      | Strong       | Any region can serve a strongly consistent read.                                                                 |
+| **Dual-region**   | Strong      | Eventual     | Reads from within same region as the data are strongly consistent. Reads from outside are eventually consistent. |
+| **Single-region** | Strong      | Strong       | All requests, regardless of origin, are routed to one region, providing strong consistency globally.             |
 
-- **At the bucket level**: All operations for this bucket will be strongly
-  consistent, meaning all requests go through a single leader and there will be
-  no caching.
-- **At the request level**: If you prefer consistency for individual requests,
-  use the `X-Tigris-Consistent:true` header. This option is ideal if you only
-  need certain requests to be strongly consistent, as marking the entire bucket
-  for strong consistency can introduce higher latencies across all operations.
-  Remember to include this header for every operation that requires strong
-  consistency. For example, if a `PUT` operation for key 'a' needs strong
-  consistency, set this header, and then also set it for any subsequent
-  operations where you need read-your-write guarantees, such as later `GET` or
-  `DELETE` operations.
+## What Strong Consistency Means in Practice
 
-## Performance Considerations
+When Tigris guarantees strong consistency for a request, the following holds:
 
-It's **important** to note, however, that choosing strong consistency may impact
-performance at a global scale because strong consistency is achieved by serving
-all operations through a single leader globally. This can result in higher
-latency for users located far from the leader's region, as requests must be
-routed to that leader. The default global setting is generally preferable for
-optimal performance and lower latency, especially in a globally distributed
-environment. While this introduces eventual consistency in some scenarios, the
-benefits in performance usually outweigh the tradeoffs.
+- **Read-after-write**: A GET immediately after a PUT returns the new object.
+- **Read-after-delete**: A GET immediately after a DELETE returns a 404.
+- **Read-after-update**: A GET immediately after an overwrite returns the new
+  version.
+- **List-after-write**: A LIST immediately after a PUT includes the new object.
+- **Conditional operations**: Compare-and-set (If-Match, If-None-Match) and
+  other conditional operations always evaluate against the latest state.
+
+When consistency is eventual (cross-region reads for Global and Dual-region
+buckets), there is a brief window where a read may return a previous version of
+the object. The replication lag is typically sub-second.
+
+## Choosing a Location Type for Consistency
+
+If your application requires strong consistency for every read regardless of
+where the request originates, choose **Multi-region** or **Single-region**.
+
+If your application can tolerate brief cross-region staleness in exchange for
+lower latency or global data distribution, **Global** is a good choice.
+
+For most workloads that need both geographic redundancy and strong global
+consistency, we recommend **Multi-region**. It provides the highest
+availability, and strong consistency globally.
+
+For full details on all location types, including data placement, availability,
+and consistency, see [Bucket Locations](/docs/buckets/locations/).

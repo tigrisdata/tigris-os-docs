@@ -17,5 +17,5 @@ in the following regions:
 | sjc       | San Jose, California (US)  | ✅                     | ✅             |
 | syd       | Sydney, Australia          | ✅                     | ❌             |
 
-If you have a specific region you would like us to be available in, please reach
-out to us at [help@tigrisdata.com](mailto:help@tigrisdata.com).
+Regions define Tigris's points of presence. To control how your data is
+distributed across regions, see [Bucket Locations](/docs/buckets/locations.md).

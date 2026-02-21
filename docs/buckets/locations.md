@@ -9,12 +9,12 @@ model** for all objects in that bucket.
 
 Tigris supports four bucket location types:
 
-| Location Type                   | Description                                                  |
-| ------------------------------- | ------------------------------------------------------------ |
-| [Global](#global)               | Data distributed globally (default)                          |
-| [Multi-region](#multi-region)   | Highest availability across regions in a chosen geography    |
-| [Dual-region](#dual-region)     | High availability across two specific regions of your choice |
-| [Single-region](#single-region) | Data redundancy across availability zones in one region      |
+| Location Type                   | Description                                               |
+| ------------------------------- | --------------------------------------------------------- |
+| [Global](#global)               | Data distributed globally (default)                       |
+| [Multi-region](#multi-region)   | Highest availability across regions in a chosen geography |
+| [Dual-region](#dual-region)     | High availability across specific regions of your choice  |
+| [Single-region](#single-region) | Data redundancy across availability zones in one region   |
 
 ## Location Types
 
@@ -98,9 +98,9 @@ over exactly which regions store your data.
 | Cross-continent (Americas + Asia) | `sjc` + `sin` |
 
 **Best for:** Compliance or policy requirements that mandate data residency in
-exactly two specific regions. If your primary goal is geographic redundancy
-without a strict two-region constraint, consider [multi-region](#multi-region)
-for higher availability, stronger consistency, and better cost-effectiveness.
+specific regions. If your primary goal is geographic redundancy without a strict
+two-region constraint, consider [multi-region](#multi-region) for higher
+availability, stronger consistency, and better cost-effectiveness.
 
 ### Single-Region
 
@@ -133,15 +133,14 @@ storage are co-located in the same region.
 | Geographic redundancy at the best price                     | **Multi-region**          |
 | Mission-critical, cannot tolerate regional outages          | **Multi-region**          |
 | Strict data residency in a single geography                 | **Single-region**         |
-| Compliance requiring data in exactly two specific regions   | **Dual-region**           |
+| Compliance requiring data in specific regions               | **Dual-region**           |
 
 :::info
 
 For most workloads that need geographic redundancy, we recommend
 **multi-region** over dual-region. Multi-region provides higher availability,
 strong global consistency, and is typically more cost-effective. Choose
-dual-region only when compliance or policy requires data in exactly two specific
-regions.
+dual-region only when compliance or policy requires data in specific regions.
 
 :::
 

@@ -1,5 +1,4 @@
 ---
-title: "Migrate from Any S3-Compatible Storage to Tigris"
 description:
   "Step-by-step guide to migrate from Backblaze B2, DigitalOcean Spaces, Wasabi,
   Hetzner, or any S3-compatible storage provider to Tigris with zero downtime."

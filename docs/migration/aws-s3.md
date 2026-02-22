@@ -1,5 +1,4 @@
 ---
-title: "Migrate from AWS S3 to Tigris"
 description:
   "Step-by-step guide to migrate from AWS S3 to Tigris object storage with zero
   downtime. Uses lazy migration with shadow buckets. S3-compatible API, zero
@@ -29,12 +28,12 @@ endpoint and credential change.
 - **Faster small object performance in multicloud setups.** For workloads
   running outside of AWS, Tigris delivers roughly
   [4x the throughput and sub-10ms P90 read latency](/docs/overview/benchmarks/aws-s3)
-  for small objects. With global replication and an S3-compatible interface,
-  Tigris can replace a separate caching layer in front of S3.
-- **Automatic global distribution.** A single endpoint (`t3.storage.dev`)
-  handles routing. Objects are stored
-  [close to the users](/docs/objects/object_regions/) accessing them, without
-  manual replication setup.
+  for small objects.
+- **Flexible data placement.** A single endpoint (`t3.storage.dev`) handles
+  routing. Choose from [four bucket location types](/docs/buckets/locations/) —
+  global distribution that follows access patterns, multi-region geo-redundancy,
+  dual-region, or single-region — each with built-in consistency and
+  availability guarantees.
 - **S3 API compatible.** Tigris supports
   [over 90% of the S3 API](/docs/api/s3/), so most applications need only an
   endpoint and credential change.

@@ -470,6 +470,17 @@ const sidebars = {
           id: "guides/warpstream",
         },
         {
+          type: "category",
+          label: "Agents",
+          items: [
+            {
+              type: "doc",
+              label: "CrewAI",
+              id: "agents/agent-crewai",
+            },
+          ],
+        },
+        {
           type: "doc",
           label: "Databricks",
           id: "libraries/databricks/index",

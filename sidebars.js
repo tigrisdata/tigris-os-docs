@@ -438,6 +438,17 @@ const sidebars = {
           id: "guides/warpstream",
         },
         {
+          type: "category",
+          label: "Agents",
+          items: [
+            {
+              type: "doc",
+              label: "CrewAI",
+              id: "agents/agent-crewai",
+            },
+          ],
+        },
+        {
           type: "doc",
           label: "Databricks",
           id: "libraries/databricks/index",
@@ -499,17 +510,6 @@ const sidebars = {
               type: "doc",
               label: "Vast.ai",
               id: "model-storage/vast-ai",
-            },
-          ],
-        },
-        {
-          type: "category",
-          label: "Agents",
-          items: [
-            {
-              type: "doc",
-              label: "CrewAI",
-              id: "agents/agent-crewai",
             },
           ],
         },

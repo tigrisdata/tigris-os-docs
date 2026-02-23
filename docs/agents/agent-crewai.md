@@ -81,16 +81,17 @@ s3://<bucket>/crewai/<crew_name>/<run_id>/
   └─ run.json
 ```
 
+## Tutorial
+
 ### 1. Install dependencies
 
 ```bash
 pip install crewai boto3 python-dotenv
 ```
 
-- **Set `.env` with Tigris + LLM keys**:
+- **Create a `.env` with shared credentials** (used by both options):
 
 ```bash
-S3_ENDPOINT=https://t3.storage.dev
 ACCESS_KEY=your_tigris_access_key
 SECRET_ACCESS_KEY=your_tigris_secret_key
 OPENAI_API_KEY=your_openai_key
@@ -110,8 +111,6 @@ pip install crewai-tools
 
 ```bash
 AWS_ENDPOINT_URL_S3=https://t3.storage.dev
-ACCESS_KEY=your_tigris_access_key
-SECRET_ACCESS_KEY=your_tigris_secret_key
 CREW_AWS_REGION=auto    # any string; Tigris ignores region
 CREW_AWS_ACCESS_KEY_ID=${ACCESS_KEY}
 CREW_AWS_SEC_ACCESS_KEY=${SECRET_ACCESS_KEY}
@@ -125,9 +124,11 @@ This example lets the agent:
 - and produce a natural-language summary as its final answer.
 
 ```python
-import os
+from dotenv import load_dotenv
 from crewai import Agent, Task, Crew
 from crewai_tools.aws.s3 import S3ReaderTool
+
+load_dotenv()
 
 # Initialize the tool – it will use CREW_AWS_* env vars
 s3_reader_tool = S3ReaderTool()
@@ -160,7 +161,13 @@ print(result)
 
 ### 3. Option B – simple custom S3 tool
 
-Use this if you want to control the `boto3` client yourself or add extra logic (e.g., custom listing/filters, writing, or metadata). Create `simple_agent.py` with a single tool that lists objects in a Tigris bucket:
+Use this if you want to control the `boto3` client yourself or add extra logic (e.g., custom listing/filters, writing, or metadata). In addition to the shared `.env` values above, set the Tigris S3 endpoint:
+
+```bash
+S3_ENDPOINT=https://t3.storage.dev
+```
+
+Then create `simple_agent.py` with a single tool that lists objects in a Tigris bucket:
 
 ```python
 import os
@@ -185,6 +192,7 @@ def make_s3_client():
 def list_bucket_objects(bucket_name: str) -> str:
     """Return a simple text listing of keys in a Tigris bucket."""
     s3 = make_s3_client()
+    # Note: returns up to 1,000 objects; use a paginator for larger buckets
     resp = s3.list_objects_v2(Bucket=bucket_name)
     contents = resp.get("Contents", [])
     if not contents:

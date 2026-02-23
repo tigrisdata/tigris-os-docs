@@ -55,7 +55,6 @@ func main() {
 			Key:    aws.String(keyName),
 			Body:   bytes.NewReader([]byte("hello world")),
 		},
-		WithHeader("X-Tigris-Consistent", "true"),
 	)
 	if err != nil {
 		log.Fatalf("unable to put object: %v", err)
@@ -67,7 +66,6 @@ func main() {
 			Bucket: aws.String(bucketName),
 			Key:    aws.String(keyName),
 		},
-		WithHeader("X-Tigris-Consistent", "true"),
 	)
 	if err != nil {
 		log.Fatalf("unable to read object: %v", err)
@@ -86,7 +84,6 @@ func main() {
 			Body:   bytes.NewBuffer(body),
 		},
 		WithHeader("If-Match", *out.ETag),
-		WithHeader("X-Tigris-Consistent", "true"),
 	)
 	if err != nil {
 		log.Fatalf("unable to put object, %v", err)

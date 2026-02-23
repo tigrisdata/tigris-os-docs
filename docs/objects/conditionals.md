@@ -1,85 +1,109 @@
 # Conditional Operations (preconditions)
 
-When conditions are specified, the request will only proceed if the condition is
-satisfied. Conditional checks ensure that the object is in the expected state,
-allowing you to perform safe read-modify-write operations.
+Tigris supports conditional operations through standard HTTP precondition
+headers. These headers let you execute read or write operations only when
+specific conditions are met, for example, writing an object only if it hasn't
+been modified since you last read it.
 
-Conditional operations are often used to prevent race conditions during object
-mutations such as uploads, deletes, or metadata updates. Race conditions can
-occur when multiple clients are trying to modify the same object at the same
-time, or when the same request is being sent repeatedly.
+Conditional operations are commonly used to implement optimistic concurrency
+control: the client reads an object, captures its ETag or last-modified
+timestamp, performs some computation, and writes the result back only if the
+object hasn't changed in the meantime.
 
-Conditions are also often used to implement optimistic concurrency control. This
-is a strategy where the client assumes that the object has not been modified
-since it was last read, and proceeds with the operation only if the assumption
-holds true.
+## Supported Condition Headers
 
-Conditions are provided through request headers. Attach the
-`X-Tigris-Consistent:true` header in your conditional request to ensure Tigris
-performs the conditional operation on the leader. The same applies to reads, to
-ensure you get consistent read results.
+### ETag-based conditions
 
-## Supported Conditions
+| Header          | Behavior                                                                                                                                                                                                                                  |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `If-Match`      | Request proceeds only if the object's ETag matches the provided value. Returns `412 Precondition Failed` otherwise.                                                                                                                       |
+| `If-None-Match` | Request proceeds only if the object's ETag does **not** match. Use `If-None-Match: "*"` to write only if the object does not already exist. Returns `304 Not Modified` on a matching GET, or `412 Precondition Failed` on a matching PUT. |
 
-The following conditions are supported:
+### Date-based conditions
 
-### Etag based conditions
+| Header                | Behavior                                                                                                                          |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `If-Modified-Since`   | Request proceeds only if the object was modified after the provided date (RFC 1123 format). Returns `304 Not Modified` otherwise. |
+| `If-Unmodified-Since` | Request proceeds only if the object was **not** modified after the provided date. Returns `412 Precondition Failed` otherwise.    |
 
-#### Proceed with operation only if Etag matches (i.e. object is unchanged)
+### Combining conditions
 
-The condition is specified using the `If-Match` header:
+Multiple condition headers can be specified in a single request. The request
+proceeds only if **all** conditions are met. If any condition fails, the request
+is rejected with the appropriate error status code.
 
-- `If-Match: "etag value"`
-- `If-Match: ""` - (empty etag) creates only if object not exists
+## Consistency and Conditional Operations
 
-Request fails with HTTP status code 412 (Precondition Failed) if there is no
-match.
+Conditional operations always evaluate against the latest state of the object
+within the consistency model defined by your bucket's
+[location type](/docs/buckets/locations/).
 
-#### Proceed with operation if Etag doesn't match (i.e. object has been changed)
+- **Multi-region** and **Single-region** buckets provide strong consistency
+  globally. Conditional operations are guaranteed to evaluate against the most
+  recent write, regardless of which region the request originates from.
+- **Global** and **Dual-region** buckets provide strong consistency within the
+  same region and eventual consistency globally. For conditional operations that
+  may span regions, use a Multi-region or Single-region bucket to ensure
+  conditions are always evaluated against the latest state.
 
-The condition is specified using the `If-None-Match` header.
+:::note
 
-- `If-None-Match: "etag value"`
-- `If-None-Match: ""` - (empty etag) replace only if object exists
-- `If-None-Match: "*"` - Matches no etag, i.e. create only
+If your workload requires conditional writes from multiple regions on the same
+objects, we recommend using a **Multi-region** or **Single-region** bucket. This
+guarantees that preconditions are always evaluated against the globally
+consistent latest state, without any additional configuration.
 
-Request fails with HTTP status code 304 (Not Modified) if there is a match on
-GET. Request fails with HTTP status code 412 (Precondition Failed) if there is a
-match on PUT.
+:::
 
-### Date based conditions
+## Use Cases
 
-#### Proceed with operation if object was modified after provided date
+### Create-if-not-exists
 
-The condition is specified using the `If-Modified-Since` header.
+Upload an object only if it doesn't already exist:
 
-- `If-Modified-Since: <date in RFC1123 format>`
+```text
+PUT /my-object HTTP/1.1
+If-None-Match: "*"
+```
 
-Request fails with HTTP status code 304 (Not Modified) if the object has not
-been modified since the provided date.
+If the object already exists, the request fails with `412 Precondition Failed`.
 
-#### Proceed with operation if object wasn't modified after
+### Compare-and-swap (optimistic concurrency)
 
-The condition is specified using the `If-Unmodified-Since` header.
+Read an object, modify it, and write it back only if no one else has changed it:
 
-- `If-Unmodified-Since: <date in RFC1123 format>`
+1. **Read** the object and capture its ETag from the response.
+2. **Write** the modified object with `If-Match` set to the captured ETag.
 
-Request fails with HTTP status code 412 (Precondition Failed) if the object was
-modified since provided date.
+```text
+PUT /my-object HTTP/1.1
+If-Match: "etag-from-previous-read"
+```
 
-Multiple conditions can be specified in a single request. The request fails if
-any of the conditions are not met.
+If the object was modified between the read and the write, the request fails
+with `412 Precondition Failed`. The client can then re-read and retry.
 
-Don't forget to attach `X-Tigris-Consistent:true` header as that ensures the
-conditions are evaluated and conditional operation will be performed on leader.
+### Conditional GET (cache validation)
 
-### Reads (GET request)
+Fetch an object only if it has changed since you last retrieved it:
 
-During reads, specifying the `X-Tigris-Consistent:true` header will direct
-Tigris to read from the leader. This ensures consistent reads.
+```text
+GET /my-object HTTP/1.1
+If-None-Match: "etag-from-cached-copy"
+```
+
+If the object hasn't changed, the response is `304 Not Modified` with no body.
+
+## Error Responses
+
+| Status Code               | Meaning                                                             |
+| ------------------------- | ------------------------------------------------------------------- |
+| `304 Not Modified`        | The condition indicates the object hasn't changed (GET requests).   |
+| `412 Precondition Failed` | One or more conditions were not met (PUT, DELETE, or GET requests). |
 
 ## Next steps
 
-- Check out the
-  [Example usage](/docs/sdks/s3/aws-go-sdk.mdx#conditional-operations) for more
-  details on how to use them in your application.
+- [Bucket Locations](/docs/buckets/locations/) — Understand how your bucket's
+  location type determines consistency behavior
+- [AWS Go SDK](/docs/sdks/s3/aws-go-sdk.mdx#conditional-operations) — Example of
+  conditional operations using the Go SDK

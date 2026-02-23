@@ -2,18 +2,29 @@
 
 ![CrewAI integration header](/img/agents/crewai-integration.png)
 
-_This is the official CrewAI integration. Your agents can use the `S3ReaderTool` to access Tigris Object Storage and read and write artifacts over an S3‑compatible API._
+_This is the official CrewAI integration. Your agents can use the `S3ReaderTool`
+to access Tigris Object Storage and read and write artifacts over an
+S3‑compatible API._
 
 ## Overview
 
-Tigris gives you an S3-compatible store where agents can keep **artifacts** (outputs, logs, JSON, embeddings) and **multimodal data** (images, PDFs, videos) next to each other, with versioned buckets you can treat as experiment runs or workspaces. This makes it a natural backing store for CrewAI agents that need to read/write files, remember context across runs, or share rich artifacts with other tools.
+Tigris gives you an S3-compatible store where agents can keep **artifacts**
+(outputs, logs, JSON, embeddings) and **multimodal data** (images, PDFs, videos)
+next to each other, with versioned buckets you can treat as experiment runs or
+workspaces. This makes it a natural backing store for CrewAI agents that need to
+read/write files, remember context across runs, or share rich artifacts with
+other tools.
 
-This is the primary getting-started tutorial for building a [CrewAI](https://www.crewai.com/) agent that talks to Tigris over its S3-compatible API.
+This is the primary getting-started tutorial for building a
+[CrewAI](https://www.crewai.com/) agent that talks to Tigris over its
+S3-compatible API.
 
 You will:
+
 - **configure** Tigris and CrewAI credentials,
 - **add one tool** that can read from a Tigris bucket over S3,
-- **wrap it in an agent + task** so you can ask “read this file and summarize it”.
+- **wrap it in an agent + task** so you can ask “read this file and summarize
+  it”.
 
 ## Prerequisites
 
@@ -24,9 +35,15 @@ You will:
 
 ## Workflow overview
 
-`S3ReaderTool` is a built-in [CrewAI](https://www.crewai.com/) tool that takes an S3-style path like `s3://bucket/key`, uses your `CREW_AWS_*` credentials and the standard `AWS_ENDPOINT_URL_S3` override to talk to Tigris’ S3-compatible API, and returns the raw file contents to the agent. You can then let the agent read, summarize, or transform that content while keeping the actual data in Tigris rather than in prompts.
+`S3ReaderTool` is a built-in [CrewAI](https://www.crewai.com/) tool that takes
+an S3-style path like `s3://bucket/key`, uses your `CREW_AWS_*` credentials and
+the standard `AWS_ENDPOINT_URL_S3` override to talk to Tigris’ S3-compatible
+API, and returns the raw file contents to the agent. You can then let the agent
+read, summarize, or transform that content while keeping the actual data in
+Tigris rather than in prompts.
 
-At a high level, you can treat a Tigris bucket as the backing store for a Crew “workspace” per run. The pattern looks like this:
+At a high level, you can treat a Tigris bucket as the backing store for a Crew
+“workspace” per run. The pattern looks like this:
 
 ```text
 Workflow visualized
@@ -100,8 +117,8 @@ s3://<bucket>/crewai/<crew_name>/<run_id>/
 
 These variables control how CrewAI and `boto3` talk to Tigris in this guide:
 
-| Variable                   | Description                                      | Example                   |
-| -------------------------- | ------------------------------------------------ | ------------------------- |
+| Variable                  | Description                                      | Example                  |
+| ------------------------- | ------------------------------------------------ | ------------------------ |
 | `ACCESS_KEY`              | Tigris access key ID                             | `tid_access_key_id`      |
 | `SECRET_ACCESS_KEY`       | Tigris secret access key                         | `tsec_secret_access_key` |
 | `OPENAI_API_KEY`          | LLM provider API key                             | `sk-...`                 |
@@ -114,26 +131,27 @@ These variables control how CrewAI and `boto3` talk to Tigris in this guide:
 
 - **Install dependencies** with:
 
-   ```bash
-   pip install crewai boto3 python-dotenv crewai-tools
-   ```
+  ```bash
+  pip install crewai boto3 python-dotenv crewai-tools
+  ```
 
 - **Create a `.env`** with the shared credentials above plus these variables:
 
-   ```bash
-   ACCESS_KEY=your_tigris_access_key
-   SECRET_ACCESS_KEY=your_tigris_secret_key
-   OPENAI_API_KEY=your_openai_key
+  ```bash
+  ACCESS_KEY=your_tigris_access_key
+  SECRET_ACCESS_KEY=your_tigris_secret_key
+  OPENAI_API_KEY=your_openai_key
 
-   AWS_ENDPOINT_URL_S3=https://t3.storage.dev
-   CREW_AWS_REGION=auto
-   CREW_AWS_ACCESS_KEY_ID=${ACCESS_KEY}
-   CREW_AWS_SEC_ACCESS_KEY=${SECRET_ACCESS_KEY}
-   ```
+  AWS_ENDPOINT_URL_S3=https://t3.storage.dev
+  CREW_AWS_REGION=auto
+  CREW_AWS_ACCESS_KEY_ID=${ACCESS_KEY}
+  CREW_AWS_SEC_ACCESS_KEY=${SECRET_ACCESS_KEY}
+  ```
 
 ### 2. Build the agent
 
 This example lets the agent:
+
 - call `S3ReaderTool` with an S3-style Tigris path,
 - get back the raw file contents,
 - and produce a natural-language summary as its final answer.
@@ -174,16 +192,21 @@ result = crew.kickoff(
 print(result)
 ```
 
-This pattern keeps the agent “LLM-first”: Tigris remains your durable backing store, and CrewAI tools like `S3ReaderTool` bring objects into the agent’s context only when needed.
+This pattern keeps the agent “LLM-first”: Tigris remains your durable backing
+store, and CrewAI tools like `S3ReaderTool` bring objects into the agent’s
+context only when needed.
 
 ## Troubleshooting
 
-- **Auth errors from S3ReaderTool**  
-  - Check that `CREW_AWS_ACCESS_KEY_ID`, `CREW_AWS_SEC_ACCESS_KEY`, and `CREW_AWS_REGION` are set and that `load_dotenv()` runs before the Crew starts.
-- **Requests going to AWS instead of Tigris**  
+- **Auth errors from S3ReaderTool**
+  - Check that `CREW_AWS_ACCESS_KEY_ID`, `CREW_AWS_SEC_ACCESS_KEY`, and
+    `CREW_AWS_REGION` are set and that `load_dotenv()` runs before the Crew
+    starts.
+- **Requests going to AWS instead of Tigris**
   - Verify `AWS_ENDPOINT_URL_S3=https://t3.storage.dev` is set.
-- **Bucket or key not found**  
-  - Confirm the bucket exists in Tigris, the key path is correct, and your access key has permission to read it.
+- **Bucket or key not found**
+  - Confirm the bucket exists in Tigris, the key path is correct, and your
+    access key has permission to read it.
 
 ## Further reading
 

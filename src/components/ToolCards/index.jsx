@@ -21,7 +21,7 @@ function ToolCard({ icon, title, description, to, children }) {
 export default function ToolCards() {
   return (
     <div className="tool-cards-wrapper">
-      <h2 className="tool-cards-title">Developer Tools</h2>
+      <h2 className="tool-cards-title">Getting Started</h2>
       <div className="tool-cards-section">
         <ToolCard
           icon={

@@ -52,9 +52,10 @@ location type, it will be Global.
 
 ### Multi-Region
 
-Multi-region provides the highest availability by maintaining data residency
-across multiple regions within a chosen geography. Tigris selects the optimal
-regions within the geography for data placement.
+Multi-region provides the highest availability by maintaining two or more copies
+of your data across regions within a chosen geography. You select the geography
+(USA or EUR) when creating the bucket — Tigris automatically selects the regions
+within that geography where data is stored.
 
 | Property           | Detail                                                               |
 | ------------------ | -------------------------------------------------------------------- |
@@ -65,10 +66,10 @@ regions within the geography for data placement.
 
 **Supported geographies:**
 
-| Geography | Regions                                              |
+| Geography | Candidate Regions                                    |
 | --------- | ---------------------------------------------------- |
-| Americas  | `sjc` (San Jose), `ord` (Chicago), `iad` (Ashburn)   |
-| Europe    | `ams` (Amsterdam), `fra` (Frankfurt), `lhr` (London) |
+| USA       | `sjc` (San Jose), `ord` (Chicago), `iad` (Ashburn)   |
+| EUR       | `ams` (Amsterdam), `fra` (Frankfurt), `lhr` (London) |
 
 **Best for:** Mission-critical data requiring the highest availability,
 enterprise workloads where regional failures cannot cause downtime, and

@@ -2,15 +2,44 @@
 
 To upload your data to Tigris, you must first create a bucket. When you create a
 bucket, you must choose a bucket name. After you create a bucket, you cannot
-change the bucket name. Buckets are global, and Tigris automatically stores the
-data close to your users. If your users move to a different region, the data
-moves with them.
+change the bucket name.
 
 The user that creates the bucket owns it. You can upload any number of objects
 to a bucket.
 
 Buckets and the objects in them are private and can be accessed only via access
 keys that you explicitly grant access permissions to.
+
+## Bucket location type
+
+When you create a bucket, you can choose a location type that controls how and
+where your data is stored:
+
+- **Multi-Region**: Maintains multiple copies within a geographic area (e.g.,
+  USA or EUR). Highest availability among all location types with strong
+  consistency globally.
+- **Dual Region**: You choose specific regions and Tigris maintains copies in
+  each. Useful for data residency requirements or disaster recovery with control
+  over exact replica locations.
+- **Single Region**: Restricts data to one region of your choice. Best for
+  strict data residency compliance or workloads co-located with compute in a
+  single region.
+- **Global (Default)**: Data is automatically distributed close to your users.
+  Best for most workloads where you want low-latency access without managing
+  regions.
+
+#### Bucket consistency
+
+The consistency behavior of a bucket depends on its location type:
+
+- **Multi-Region and Single Region** Strong read-after-write consistency
+  globally. Latency may be higher than the default.
+- **Global and Dual Region** Strong read-after-write consistency within the same
+  region, eventual consistency globally (default behavior).
+
+For detailed information on each location type, including availability,
+consistency behavior, and pricing considerations, see the
+[Bucket Location Types](./multi-region.md) guide.
 
 ## Bucket tier
 
@@ -25,26 +54,27 @@ uploaded to it. The default tier can be one of the following:
 The default tier can be overridden at the object level. For more information,
 see the [Storage Tiers](../objects/tiers.md) guide.
 
-## Bucket consistency
-
-When you create a bucket, you can choose the consistency model for the bucket.
-The consistency model can be one of the following:
-
-- Strict read-after-write consistency within the same region (default)
-- Strict read-after-write consistency globally (strong consistency). Latency
-  will be higher than the default.
-
 ## Creating a bucket using the Dashboard
 
 To create a bucket using the Tigris Dashboard, follow these steps:
 
 1. Go to [storage.new](https://storage.new/).
 2. Enter a unique bucket name. ([Rules](./bucket-rules.md))
-3. Choose the default tier for the bucket.
-4. Choose the consistency model for the bucket.
+3. Choose the default tier for the bucket under
+   [Advanced settings](#advanced-settings-default-tier).
+4. Choose a location type in the region picker under
+   [Advanced settings](#advanced-settings-region-picker).
 5. Click **Create Bucket**.
 
 ![Create Tigris Bucket](/img/create-bucket.png)
+
+### Advanced settings: default tier {#advanced-settings-default-tier}
+
+![Create Tigris Bucket advanced settings - default tier](/img/create-bucket-adv-1.png)
+
+### Advanced settings: region picker {#advanced-settings-region-picker}
+
+![Create Tigris Bucket advanced settings - region picker](/img/create-bucket-adv-2.png)
 
 ## Creating a bucket using the AWS CLI
 
@@ -69,6 +99,19 @@ $ aws s3api --endpoint-url https://t3.storage.dev create-bucket --bucket foo-buc
 {
     "Location": "/foo-bucket"
 }
+```
+
+To create a bucket with a specific location type, use the Tigris CLI instead:
+
+```bash
+# Multi-region bucket in the USA
+tigris buckets create foo-bucket --region usa
+
+# Dual region bucket
+tigris buckets create foo-bucket --region iad,sjc
+
+# Single region bucket
+tigris buckets create foo-bucket --region sjc
 ```
 
 ## Creating a bucket using flyctl

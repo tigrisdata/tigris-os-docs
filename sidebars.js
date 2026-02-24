@@ -99,8 +99,8 @@ const sidebars = {
           items: [
             "buckets/create-bucket",
             "buckets/bucket-rules",
+            "buckets/locations",
             "buckets/public-bucket",
-            "buckets/multi-region",
             "buckets/cors",
             "buckets/custom-domain",
             "buckets/objects-expiration",
@@ -116,8 +116,6 @@ const sidebars = {
           items: [
             "objects/tiers",
             "objects/caching",
-            "objects/object_regions",
-            "objects/consistency",
             "objects/conditionals",
             "objects/query-metadata",
             "objects/presigned",

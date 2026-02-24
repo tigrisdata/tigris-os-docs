@@ -12,6 +12,21 @@
       "permanent": true
     },
     {
+      "source": "/docs/buckets/multi-region/",
+      "destination": "/docs/buckets/locations/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/objects/object_regions/",
+      "destination": "/docs/buckets/locations/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/objects/consistency/",
+      "destination": "/docs/buckets/locations/",
+      "permanent": true
+    },
+    {
       "source": "/docs/pricing/",
       "destination": "https://www.tigrisdata.com/pricing/",
       "permanent": true

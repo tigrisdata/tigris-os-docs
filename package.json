@@ -65,16 +65,19 @@
     "@docusaurus/module-type-aliases": "^3.9.2",
     "@docusaurus/tsconfig": "^3.9.2",
     "@docusaurus/types": "^3.9.2",
+    "@eslint/js": "^9.39.3",
     "@redocly/cli": "^2.19.1",
     "@types/react": "^19.2.14",
     "@typescript-eslint/eslint-plugin": "^8.56.0",
     "@typescript-eslint/parser": "^8.56.0",
-    "eslint": "^9.7.0",
+    "eslint": "^9.39.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "follow-redirects": ">=1.15.11",
+    "globals": "^17.3.0",
     "prettier": "3.8.1",
     "typescript": "~5.9.3",
+    "typescript-eslint": "^8.56.0",
     "webpack-dev-middleware": ">=7.4.5"
   }
 }

@@ -6,20 +6,21 @@ Here's an overview of the settings you can configure:
 - Bucket Sharing: Share buckets between your organization members or outside
   collaborators.
 - Public / Private Access: Set the default access rules for a bucket.
+- Bucket Location: Set the location type for a bucket to control where your data
+  is stored.
 - Storage Tier: Set the storage tier for a bucket.
-- Custom Domains: Configure a custom domain to serve your bucket content.
-- Object Notifications: Subscribe to events on your buckets.
-- Data Migration: Migrate data from one bucket to another.
-- Region Restriction: Restrict the regions where your bucket data is stored.
-- Cache Control: Set the default `Cache-Control` header for objects in the
+- Cache Control: Set the default _Cache-Control_ header for objects in the
   bucket.
-- Additional Headers: Configure implicit response headers for objects stored in
-  your buckets.
+- Data Migration: Migrate data from one bucket to another.
 - TTL Configuration: Set the default time-to-live (TTL) for objects in the
   bucket.
 - Object Lifecycle: Set an Object Lifecycle rule for objects in the bucket.
+- Custom Domains: Configure a custom domain to serve your bucket content.
+- Additional Headers: Configure implicit response headers for objects stored in
+  your buckets.
 - CORS Configuration: Configure Cross-Origin Resource Sharing (CORS) rules for
   your bucket.
+- Object Notifications: Subscribe to events on your buckets.
 - Deletion Protection: Prevent accidental deletion of your bucket by enabling
   this setting.
 - Delete This Bucket: Permanently delete a bucket.
@@ -42,6 +43,14 @@ public or private). You can optionally enable "Allow Object ACL" to let you
 customize public/private status
 [for individual objects](/docs/objects/acl/#applying-acls-to-objects).
 
+## Bucket Location
+
+![Bucket Locations](./bucket-locations.webp)
+
+You can set the location type for your bucket to control where your data is
+stored and how it is replicated across regions. For more information, please see
+the [bucket locations](/docs/buckets/locations/) documentation.
+
 ## Storage Tier
 
 This is set on bucket creation and cannot be changed. For more information,
@@ -51,34 +60,14 @@ You can set the storage tier for individual objects when you upload them. For
 more information, please see the storage tiers page:
 [Storage Tiers: Setting object tier](/docs/objects/tiers/#setting-object-tier)
 
-## Custom Domains
+## Cache Control
 
-![Custom domain settings](./bucket-custom-domain.webp)
+![Cache control](./cache-control.webp)
 
-You can configure a custom domain to serve your bucket content. The custom
-domain must have a CNAME record that points to the bucket URL. For example, if
-you own the domain `images.example.com` and bucket `foo-bucket`, the CNAME
-record for `images.example.com` should point to `foo-bucket.t3.storage.dev`.
-
-For more information see the [Custom Domains](/docs/buckets/custom-domain/)
-documentation.
-
-## Object Notifications
-
-![Object Notifications](./object-notifications.webp)
-
-Object notifications allow you to subscribe to events on your buckets. For more
-information see the [Object Notifications](/docs/buckets/object-notifications/)
-documentation. You can configure the following settings:
-
-- Webhook URL: The URL to send the notification to.
-- Authentication type: None, token or password.
-- Filter: SQL style filtering for objects.
-
-Tigris will notify you on the following events:
-
-- New objects being put into buckets.
-- Existing objects being deleted from buckets.
+This lets you set the default `Cache-Control` header for objects in the bucket.
+Tigris will set some
+[cache control headers by default](/docs/objects/caching/#cache-headers) for
+public objects, but you can set an implicit default here.
 
 ## Data Migration
 
@@ -98,42 +87,6 @@ following migration strategy:
 If you enable the write-through option, Tigris will write the object to your
 source bucket and Tigris bucket at the same time. This is useful for keeping
 your source bucket in sync with Tigris.
-
-## Region Restriction
-
-![Region restriction](./region-restriction.webp)
-
-You can restrict the regions where your bucket data is stored, ensuring that all
-requests are directed to a single region or a few selected regions. This setup
-is especially useful for compliance with data protection regulations that
-mandate data residency in specific regions. However, it's important to note that
-restricting your bucket to a single region (or a few regions) may impact
-performance, particularly in a globally distributed environment. It can lead to
-higher latency for users located far from the selected regions, as all requests
-must be routed to the restricted locations.
-
-For more information see the [region restriction](/docs/objects/object_regions/)
-documentation.
-
-## Cache Control
-
-![Cache control](./cache-control.webp)
-
-This lets you set the default `Cache-Control` header for objects in the bucket.
-Tigris will set some
-[cache control headers by default](/docs/objects/caching/#cache-headers) for
-public objects, but you can set an implicit default here.
-
-## Additional Headers
-
-![Bucket additional headers](./bucket-additional-headers.webp)
-
-You can configure additional headers for objects stored in your buckets. This
-can be useful when your tools set incorrect headers or you need to set custom
-headers. Right now, the only setting implemented is to set the
-`X-Content-Type-Options` header to `nosniff`, which prevents browsers from
-performing "content sniffing" and guessing the MIME type of the content based on
-the content itself.
 
 ## TTL Configuration
 
@@ -164,6 +117,29 @@ They can be transitioned to a different storage tier after a certain period of
 time. For more information see the
 [Object Lifecycle](/docs/buckets/object-lifecycle-rules/) documentation.
 
+## Custom Domains
+
+![Custom domain settings](./bucket-custom-domain.webp)
+
+You can configure a custom domain to serve your bucket content. The custom
+domain must have a CNAME record that points to the bucket URL. For example, if
+you own the domain `images.example.com` and bucket `foo-bucket`, the CNAME
+record for `images.example.com` should point to `foo-bucket.t3.storage.dev`.
+
+For more information see the [Custom Domains](/docs/buckets/custom-domain/)
+documentation.
+
+## Additional Headers
+
+![Bucket additional headers](./bucket-additional-headers.webp)
+
+You can configure additional headers for objects stored in your buckets. This
+can be useful when your tools set incorrect headers or you need to set custom
+headers. Right now, the only setting implemented is to set the
+`X-Content-Type-Options` header to `nosniff`, which prevents browsers from
+performing "content sniffing" and guessing the MIME type of the content based on
+the content itself.
+
 ## CORS Configuration
 
 ![CORS Configuration](./cors.webp)
@@ -173,6 +149,23 @@ You can configure
 rules for your bucket. This allows you to have a website dynamically fetch data
 from Tigris. For more information see the
 [CORS Configuration](/docs/buckets/cors/) documentation.
+
+## Object Notifications
+
+![Object Notifications](./object-notifications.webp)
+
+Object notifications allow you to subscribe to events on your buckets. For more
+information see the [Object Notifications](/docs/buckets/object-notifications/)
+documentation. You can configure the following settings:
+
+- Webhook URL: The URL to send the notification to.
+- Authentication type: None, token or password.
+- Filter: SQL style filtering for objects.
+
+Tigris will notify you on the following events:
+
+- New objects being put into buckets.
+- Existing objects being deleted from buckets.
 
 ## Delete Protection
 

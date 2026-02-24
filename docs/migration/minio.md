@@ -1,5 +1,4 @@
 ---
-title: "Migrate from MinIO to Tigris"
 description:
   "Replace self-hosted MinIO with Tigris managed object storage. Zero egress
   fees, S3-compatible API, zero downtime migration. HIPAA and SOC 2 Type II
@@ -35,9 +34,11 @@ savings without running infrastructure.
 
 - **No infrastructure to manage.** No servers to provision, no disks to monitor,
   no clusters to scale.
-- **Global performance automatically.** A single endpoint (`t3.storage.dev`)
-  with [automatic data placement](/docs/objects/object_regions/) close to your
-  users, instead of manually configuring MinIO replication across data centers.
+- **Flexible data placement.** A single endpoint (`t3.storage.dev`) handles
+  routing. Choose from [four bucket location types](/docs/buckets/locations/) —
+  global distribution that follows access patterns, multi-region geo-redundancy,
+  dual-region, or single-region — each with built-in consistency and
+  availability guarantees.
 - **S3 compatibility.** Tigris supports
   [over 90% of the AWS S3 API](/docs/api/s3/), so applications that work with
   MinIO typically need only an endpoint and credential change.

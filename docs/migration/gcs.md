@@ -1,5 +1,4 @@
 ---
-title: "Migrate from Google Cloud Storage to Tigris"
 description:
   "Step-by-step guide to migrate from Google Cloud Storage (GCS) to Tigris with
   zero downtime. Uses HMAC credentials and lazy migration with shadow buckets."
@@ -25,13 +24,15 @@ using GCS's S3-compatible XML API need only an endpoint and credential change.
 - **Zero egress fees.** GCS charges for data transfer out of a region and to the
   internet. Tigris has no data transfer charges for regional, cross-region, or
   internet egress.
-- **Automatic global distribution.** A single endpoint (`t3.storage.dev`)
-  replaces per-region bucket configuration. No need to choose between
-  single-region and multi-region storage classes.
+- **Flexible data placement.** A single endpoint (`t3.storage.dev`) handles
+  routing. Choose from [four bucket location types](/docs/buckets/locations/) —
+  global distribution that follows access patterns, multi-region geo-redundancy,
+  dual-region, or single-region — each with built-in consistency and
+  availability guarantees.
 - **Faster small object performance in multicloud setups.** For workloads
-  running outside of Google Cloud, Tigris's global replication delivers low
-  latency without a separate caching layer. Tigris uses the same S3-compatible
-  interface your application already speaks.
+  running outside of Google Cloud, Tigris's global data distribution delivers
+  low latency without a separate caching layer. Tigris uses the same
+  S3-compatible interface your application already speaks.
 - **S3 API compatible.** Tigris supports
   [over 90% of the S3 API](/docs/api/s3/). Applications using GCS's
   S3-compatible interface need only an endpoint and credential change.

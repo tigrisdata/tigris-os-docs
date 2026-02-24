@@ -1,5 +1,4 @@
 ---
-title: "Migrate from Cloudflare R2 to Tigris"
 description:
   "Step-by-step guide to migrate from Cloudflare R2 to Tigris with zero
   downtime. Automatic global distribution, storage tiers, and better IAM."
@@ -26,12 +25,13 @@ APIs. The differences are in performance, global distribution, and features.
 - **Faster for small objects.** Tigris delivers roughly
   [20x the throughput and 86x lower P90 read latency](/docs/overview/benchmarks/cloudflare-r2)
   for small object workloads. R2's performance degrades with high request rates.
-- **Automatic global distribution.** R2 stores data in a single location per
-  bucket. Tigris automatically places objects
-  [close to the users](/docs/objects/object_regions/) accessing them, with a
-  single global endpoint and no manual replication.
-- **Storage tiers.** R2 offers a single storage class. Tigris provides Standard
-  ($0.02/GB), Infrequent Access ($0.01/GB), and Archive ($0.004/GB) tiers.
+- **Flexible data placement.** A single endpoint (`t3.storage.dev`) handles
+  routing. Choose from [four bucket location types](/docs/buckets/locations/) —
+  global distribution that follows access patterns, multi-region geo-redundancy,
+  dual-region, or single-region — each with built-in consistency and
+  availability guarantees. R2 does not offer configurable data placement.
+- **Storage tiers.** R2 offers a single storage class. Tigris provides Standard,
+  Infrequent Access, and Archive tiers.
 - **IAM policies.** R2 has limited access control. Tigris provides
   [fine-grained IAM policies](/docs/iam/) with IP-based restrictions, time-based
   conditions, and per-key policy attachments.

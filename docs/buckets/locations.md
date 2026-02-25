@@ -66,10 +66,10 @@ within that geography where data is stored.
 
 **Supported geographies:**
 
-| Geography | Candidate Regions                                    |
-| --------- | ---------------------------------------------------- |
-| USA       | `sjc` (San Jose), `ord` (Chicago), `iad` (Ashburn)   |
-| EUR       | `ams` (Amsterdam), `fra` (Frankfurt), `lhr` (London) |
+| Geography | Candidate Regions                                  |
+| --------- | -------------------------------------------------- |
+| USA       | `sjc` (San Jose), `ord` (Chicago), `iad` (Ashburn) |
+| EUR       | `ams` (Amsterdam), `fra` (Frankfurt)               |
 
 **Best for:** Mission-critical data requiring the highest availability,
 enterprise workloads where regional failures cannot cause downtime, and
@@ -192,8 +192,8 @@ dual-region only when compliance or policy requires data in specific regions.
   replication.
 - **Dual-region** is billed at the single-region price for **each** underlying
   region. For example, a dual-region bucket spanning `iad` and `ord` is billed
-  at $0.02/GB/month for `iad` **plus** $0.02/GB/month for `ord` — effectively
-  doubling your storage cost compared to a single-region bucket.
+  for `iad` and for `ord` — effectively doubling your storage cost compared to a
+  single-region bucket.
 - **Multi-region** has a higher per-GB storage price than single-region, but you
   are billed once — not per underlying region. For most workloads requiring
   geographic redundancy, multi-region is **more cost-effective** than

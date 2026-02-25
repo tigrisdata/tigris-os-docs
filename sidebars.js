@@ -371,105 +371,82 @@ const sidebars = {
       items: [
         {
           type: "category",
-          label: "LanceDB",
+          label: "Multimodal AI",
+          collapsible: true,
+          collapsed: false,
           items: [
             {
-              type: "doc",
-              label: "Getting Started",
-              id: "libraries/lancedb/index",
+              type: "category",
+              label: "LanceDB",
+              items: [
+                {
+                  type: "doc",
+                  label: "Getting Started",
+                  id: "libraries/lancedb/index",
+                },
+                {
+                  type: "doc",
+                  label: "Choosing a Lance Dataset Type",
+                  id: "libraries/lancedb/choosing-dataset-type",
+                },
+                {
+                  type: "doc",
+                  label: "Vector Database Tutorial",
+                  id: "libraries/lancedb/vector-database",
+                },
+                {
+                  type: "doc",
+                  label: "Example: Document Search",
+                  id: "libraries/lancedb/docs-search",
+                },
+              ],
             },
             {
               type: "doc",
-              label: "Choosing a Lance Dataset Type",
-              id: "libraries/lancedb/choosing-dataset-type",
-            },
-            {
-              type: "doc",
-              label: "Vector Database Tutorial",
-              id: "libraries/lancedb/vector-database",
-            },
-            {
-              type: "doc",
-              label: "Example: Document Search",
-              id: "libraries/lancedb/docs-search",
+              label: "Pixeltable",
+              id: "quickstarts/pixeltable",
             },
           ],
         },
         {
-          type: "doc",
-          label: "DuckDB",
-          id: "quickstarts/duckdb",
-        },
-        {
-          type: "doc",
-          label: "Bufstream",
-          id: "quickstarts/bufstream",
-        },
-        {
-          type: "doc",
-          label: "AutoMQ",
-          id: "quickstarts/automq",
-        },
-        {
           type: "category",
-          label: "Fly.io",
+          label: "AI & ML Training",
+          collapsible: true,
+          collapsed: false,
           items: [
             {
               type: "doc",
-              label: "Getting Started",
-              id: "sdks/fly/index",
+              label: "PyTorch",
+              id: "quickstarts/pytorch",
             },
             {
-              type: "doc",
-              label: "Data Migration with Flyctl",
-              id: "sdks/fly/data-migration-with-flyctl",
-            },
-            {
-              type: "doc",
-              label: "Model Storage",
-              id: "model-storage/fly-io",
+              type: "category",
+              label: "SkyPilot",
+              items: [
+                {
+                  type: "doc",
+                  label: "Getting Started",
+                  id: "quickstarts/skypilot",
+                },
+                {
+                  type: "doc",
+                  label: "Model Storage",
+                  id: "model-storage/skypilot",
+                },
+                {
+                  type: "doc",
+                  label: "Training With Big Data",
+                  id: "training/big-data-skypilot/index",
+                },
+              ],
             },
           ],
         },
         {
-          type: "doc",
-          label: "Pixeltable",
-          id: "quickstarts/pixeltable",
-        },
-        {
-          type: "doc",
-          label: "PyTorch",
-          id: "quickstarts/pytorch",
-        },
-        {
           type: "category",
-          label: "SkyPilot",
-          items: [
-            {
-              type: "doc",
-              label: "Getting Started",
-              id: "quickstarts/skypilot",
-            },
-            {
-              type: "doc",
-              label: "Model Storage",
-              id: "model-storage/skypilot",
-            },
-            {
-              type: "doc",
-              label: "Training With Big Data",
-              id: "training/big-data-skypilot/index",
-            },
-          ],
-        },
-        {
-          type: "doc",
-          label: "Warpstream",
-          id: "guides/warpstream",
-        },
-        {
-          type: "category",
-          label: "Agents",
+          label: "AI Agents",
+          collapsible: true,
+          collapsed: false,
           items: [
             {
               type: "doc",
@@ -479,9 +456,74 @@ const sidebars = {
           ],
         },
         {
-          type: "doc",
-          label: "Databricks",
-          id: "libraries/databricks/index",
+          type: "category",
+          label: "Data",
+          collapsible: true,
+          collapsed: false,
+          items: [
+            {
+              type: "doc",
+              label: "DuckDB",
+              id: "quickstarts/duckdb",
+            },
+            {
+              type: "doc",
+              label: "Databricks",
+              id: "libraries/databricks/index",
+            },
+          ],
+        },
+        {
+          type: "category",
+          label: "Streaming & Messaging",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              label: "Bufstream",
+              id: "quickstarts/bufstream",
+            },
+            {
+              type: "doc",
+              label: "AutoMQ",
+              id: "quickstarts/automq",
+            },
+            {
+              type: "doc",
+              label: "Warpstream",
+              id: "guides/warpstream",
+            },
+          ],
+        },
+        {
+          type: "category",
+          label: "Deployment & Infrastructure",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "category",
+              label: "Fly.io",
+              items: [
+                {
+                  type: "doc",
+                  label: "Getting Started",
+                  id: "sdks/fly/index",
+                },
+                {
+                  type: "doc",
+                  label: "Data Migration with Flyctl",
+                  id: "sdks/fly/data-migration-with-flyctl",
+                },
+                {
+                  type: "doc",
+                  label: "Model Storage",
+                  id: "model-storage/fly-io",
+                },
+              ],
+            },
+          ],
         },
       ],
     },

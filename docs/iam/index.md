@@ -83,7 +83,11 @@ standard `Action`, `Effect`, `Resource`, and `Condition` blocks. This makes it
 easy to reuse existing IAM policies or migrate from AWS without learning new
 syntax.
 
-Just as in AWS IAM, in the `Resource` field you can specify a bucket (`arn:aws:s3:::my-bucket`), all objects in a bucket (`arn:aws:s3:::my-bucket/*`), a specific object (`arn:aws:s3:::my-bucket/file.txt`), or a prefix (`arn:aws:s3:::my-bucket/uploads/*`), enabling fine-grained access control.
+Just as in AWS IAM, in the `Resource` field you can specify a bucket
+(`arn:aws:s3:::my-bucket`), all objects in a bucket
+(`arn:aws:s3:::my-bucket/*`), a specific object
+(`arn:aws:s3:::my-bucket/file.txt`), or a prefix
+(`arn:aws:s3:::my-bucket/uploads/*`), enabling fine-grained access control.
 
 Tigris also supports many common S3-compatible actions such as:
 

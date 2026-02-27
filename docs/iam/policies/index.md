@@ -67,7 +67,27 @@ This example grants read-only access to all objects in the `images` bucket:
     {
       "Effect": "Allow",
       "Action": ["s3:GetObject", "s3:ListBucket"],
-      "Resource": ["arn:aws:s3:::images", "arn:aws:s3:::images/*"]
+      "Resource": [
+        "arn:aws:s3:::images",
+        "arn:aws:s3:::images/*"
+      ]
+    }
+  ]
+}
+```
+
+This example allows `s3:GetObject` only for objects in the `nature/mountains` directory within the `images` bucket, as well as for a specific file, `pets/Scooby-Doo.jpg`, in the same bucket:
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["s3:GetObject"],
+      "Resource": [
+        "arn:aws:s3:::images/nature/mountains/*",
+        "arn:aws:s3:::images/pets/Scooby-Doo.jpg"
+      ]
     }
   ]
 }

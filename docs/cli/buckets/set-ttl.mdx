@@ -1,0 +1,33 @@
+# tigris buckets set-ttl
+
+Configure object expiration (TTL) on a bucket. Objects expire after a number of
+days or on a specific date.
+
+## Usage
+
+```bash
+tigris buckets set-ttl <name> [flags]
+t3 b set-ttl <name> [flags]
+```
+
+## Flags
+
+| Name        | Required | Default | Description                                              |
+| ----------- | -------- | ------- | -------------------------------------------------------- |
+| `--days`    | No       | —       | Expire objects after this many days                      |
+| `--date`    | No       | —       | Expire objects on this date (ISO-8601, e.g. 2026-06-01)  |
+| `--enable`  | No       | —       | Enable TTL on the bucket (uses existing lifecycle rules) |
+| `--disable` | No       | —       | Disable TTL on the bucket                                |
+
+## Examples
+
+```bash
+# Expire objects after 30 days
+tigris buckets set-ttl my-bucket --days 30
+
+# Expire objects on a specific date
+tigris buckets set-ttl my-bucket --date 2026-06-01
+
+# Disable TTL
+tigris buckets set-ttl my-bucket --disable
+```

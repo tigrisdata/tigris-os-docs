@@ -1,0 +1,37 @@
+# tigris buckets set-transition
+
+Configure a lifecycle transition rule on a bucket. Automatically move objects to
+a different storage class after a number of days or on a specific date.
+
+## Usage
+
+```bash
+tigris buckets set-transition <name> [flags]
+t3 b set-transition <name> [flags]
+```
+
+## Flags
+
+| Name              | Required | Default | Description                                                                                                                     |
+| ----------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `--storage-class` | No       | —       | Target storage class. Options: `STANDARD_IA` (Infrequent Access), `GLACIER` (Archive), `GLACIER_IR` (Instant Retrieval Archive) |
+| `--days`          | No       | —       | Transition objects after this many days                                                                                         |
+| `--date`          | No       | —       | Transition objects on this date (ISO-8601, e.g. 2026-06-01)                                                                     |
+| `--enable`        | No       | —       | Enable lifecycle transition rules on the bucket                                                                                 |
+| `--disable`       | No       | —       | Disable lifecycle transition rules on the bucket                                                                                |
+
+## Examples
+
+```bash
+# Move objects to Infrequent Access after 30 days
+tigris buckets set-transition my-bucket --storage-class STANDARD_IA --days 30
+
+# Archive objects on a specific date
+tigris buckets set-transition my-bucket --storage-class GLACIER --date 2026-06-01
+
+# Enable existing transition rules
+tigris buckets set-transition my-bucket --enable
+
+# Disable transition rules
+tigris buckets set-transition my-bucket --disable
+```

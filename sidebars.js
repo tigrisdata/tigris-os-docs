@@ -224,6 +224,7 @@ const sidebars = {
           id: "sdks/tigris/snapshots-and-forks",
         },
         "sdks/tigris/examples",
+        "sdks/tigris/api",
       ],
     },
     {
@@ -276,6 +277,11 @@ const sidebars = {
             "cli/buckets/get",
             "cli/buckets/delete",
             "cli/buckets/set",
+            "cli/buckets/set-ttl",
+            "cli/buckets/set-migration",
+            "cli/buckets/set-transition",
+            "cli/buckets/set-notifications",
+            "cli/buckets/set-cors",
           ],
         },
         {

@@ -12,11 +12,27 @@ tigris buckets <operation> [flags]
 t3 b <operation> [flags]
 ```
 
+## Commands
+
+| Command                                          | Description                                      |
+| ------------------------------------------------ | ------------------------------------------------ |
+| [`list`](buckets/list)                           | List all buckets                                 |
+| [`create`](buckets/create)                       | Create a new bucket                              |
+| [`get`](buckets/get)                             | Show details for a bucket                        |
+| [`delete`](buckets/delete)                       | Delete a bucket                                  |
+| [`set`](buckets/set)                             | Update bucket settings                           |
+| [`set-ttl`](buckets/set-ttl)                     | Configure object expiration (TTL)                |
+| [`set-migration`](buckets/set-migration)         | Configure data migration from an external source |
+| [`set-transition`](buckets/set-transition)       | Configure lifecycle storage class transitions    |
+| [`set-notifications`](buckets/set-notifications) | Configure object event notifications             |
+| [`set-cors`](buckets/set-cors)                   | Configure CORS rules                             |
+
 ## Examples
 
 ```bash
 tigris buckets list
 tigris buckets create my-bucket
 tigris buckets get my-bucket
+tigris buckets set my-bucket --access public
 tigris buckets delete my-bucket
 ```

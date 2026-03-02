@@ -7,11 +7,8 @@ import {
   HomepageCard as Card,
   HomepageSection as Section,
 } from "@site/src/components/HomepageComponents.jsx";
-import { YellowStar } from "@site/src/icons";
 import SDKCards from "@site/src/components/SDKCards";
 import ToolCards from "@site/src/components/ToolCards";
-import WorldMap from "@site/static/img/globe-final-frame.png";
-import TigrisStorageSDK from "@site/static/img/tigris-sdk.png";
 import Link from "@docusaurus/Link";
 
 <div style={{ textAlign: 'center', margin: "2em auto 0 auto", width: '80%' }}>
@@ -24,39 +21,10 @@ import Link from "@docusaurus/Link";
   low-latency access worldwide — without the need to manage replication or caching.
 
 </div>
-</div>
 
-<div className="homepage-card-container">
-  <div className="homepage-card-pic">
-    <div className="img">
-      <Link to="/overview/">
-        <img
-          src={WorldMap}
-          alt="Global"
-          style={{ objectFit: "contain", padding: "10px" }}
-        />
-      </Link>
-    </div>
-    <div className="text">
-      <Link to="/overview/">
-        <h3>Overview</h3>
-        <span>Learn about the core Tigris concepts</span>
-      </Link>
-    </div>
-  </div>
-  <div className="homepage-card-pic">
-    <div className="img">
-      <Link to="/get-started/">
-        <img src="img/console-preview.svg" alt="Console Preview" />
-      </Link>
-    </div>
-    <div className="text">
-      <Link to="/get-started/">
-        <h3>Get Started</h3>
-        <span>Essential guide to get you up and running quickly</span>
-      </Link>
-    </div>
-  </div>
+<div style={{ textAlign: 'center', marginTop: '1.5em' }}>
+  <Link to="/overview/" className="button button--primary button--lg">Learn about Tigris &rarr;</Link>
+</div>
 </div>
 
 <ToolCards />

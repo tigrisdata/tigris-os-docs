@@ -26,38 +26,34 @@ datasets, model weights, checkpoints, embeddings, and generated media. This data
 is too large and too varied for databases. Object storage provides the scalable,
 durable storage layer these workloads require.
 
-For AI workloads, Tigris provides high parallel throughput and global access with
-zero egress fees.
+For AI workloads, Tigris provides high parallel throughput and global access
+with zero egress fees.
 
 ## Frequently Asked Questions
 
-**Why not use a database for AI data?**
-Databases are optimized for structured queries. AI workloads produce large binary
-files (model weights, datasets, images) that are better stored as objects and
-accessed by key. Object storage scales to petabytes without schema management.
+**Why not use a database for AI data?** Databases are optimized for structured
+queries. AI workloads produce large binary files (model weights, datasets,
+images) that are better stored as objects and accessed by key. Object storage
+scales to petabytes without schema management.
 
-**Does Tigris support parallel uploads and downloads?**
-Yes. Tigris supports S3 multipart uploads and parallel downloads for high
-throughput on large files.
+**Does Tigris support parallel uploads and downloads?** Yes. Tigris supports S3
+multipart uploads and parallel downloads for high throughput on large files.
 
-**Can I access my training data from multiple clouds?**
-Yes. Tigris uses a single global endpoint (`https://t3.storage.dev`). Data is
-replicated close to where it is accessed. No egress fees when moving data
-between clouds.
+**Can I access my training data from multiple clouds?** Yes. Tigris uses a
+single global endpoint (`https://t3.storage.dev`). Data is replicated close to
+where it is accessed. No egress fees when moving data between clouds.
 
-**Does Tigris provide vector search or ML pipeline orchestration?**
-No. Tigris is object storage. It stores data that is consumed by external
-vector databases, ML frameworks, and pipeline orchestrators. Tigris does not
-provide query engines or compute.
+**Does Tigris provide vector search or ML pipeline orchestration?** No. Tigris
+is object storage. It stores data that is consumed by external vector databases,
+ML frameworks, and pipeline orchestrators. Tigris does not provide query engines
+or compute.
 
-**What tools and frameworks work with Tigris?**
-Any tool that supports S3 works with Tigris, including PyTorch, Hugging Face,
-LangChain, boto3, and the AWS CLI.
+**What tools and frameworks work with Tigris?** Any tool that supports S3 works
+with Tigris, including PyTorch, Hugging Face, LangChain, boto3, and the AWS CLI.
 
-**What is a bucket fork?**
-A bucket fork is an instant, zero-copy clone of a bucket. Use forks to run
-parallel experiments against the same dataset without duplicating storage or
-risking data collisions.
+**What is a bucket fork?** A bucket fork is an instant, zero-copy clone of a
+bucket. Use forks to run parallel experiments against the same dataset without
+duplicating storage or risking data collisions.
 
 ## When Should I Use Tigris for AI Workloads?
 
@@ -65,8 +61,8 @@ Use Tigris when:
 
 - The workload stores model weights, checkpoints, or training datasets.
 - Data needs to be accessed from multiple clouds or regions.
-- You want to avoid egress fees for data transfer between training and
-  inference environments.
+- You want to avoid egress fees for data transfer between training and inference
+  environments.
 - The project needs to share large datasets across teams or environments.
 - The workload produces generative media, embeddings, or ML artifacts.
 
@@ -146,6 +142,14 @@ Store experiment outputs, evaluation results, and metadata as JSON objects:
 
 ```python
 import json
+import boto3
+from botocore.config import Config
+
+client = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    config=Config(s3={"addressing_style": "virtual"}),
+)
 
 metadata = {
     "experiment": "fine-tune-v3",
@@ -181,7 +185,7 @@ await client.send(
     Key: `images/${Date.now()}.png`,
     Body: imageBuffer,
     ContentType: "image/png",
-  })
+  }),
 );
 ```
 
@@ -191,7 +195,15 @@ Store precomputed embeddings as NumPy arrays or other binary formats:
 
 ```python
 import io
+import boto3
 import numpy as np
+from botocore.config import Config
+
+client = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    config=Config(s3={"addressing_style": "virtual"}),
+)
 
 # Save embeddings
 embeddings = np.random.rand(10000, 768).astype(np.float32)

@@ -25,24 +25,24 @@ endpoint to `https://t3.storage.dev`, and use your Tigris credentials.
 
 ## Frequently Asked Questions
 
-**Do I need a special SDK for Tigris with Next.js?**
-No. The standard `@aws-sdk/client-s3` package works. Tigris also offers a
+**Do I need a special SDK for Tigris with Next.js?** No. The standard
+`@aws-sdk/client-s3` package works. Tigris also offers a
 [native SDK](/docs/sdks/tigris/) with extra features like client uploads, but it
 is not required.
 
-**Can users upload directly from the browser to Tigris?**
-Yes. Use presigned URLs to let the browser upload directly to Tigris without
-routing data through your server. See the
+**Can users upload directly from the browser to Tigris?** Yes. Use presigned
+URLs to let the browser upload directly to Tigris without routing data through
+your server. See the
 [presigned URL example](#how-do-i-upload-directly-from-the-browser) below.
 
-**What is a presigned URL?**
-A presigned URL is a temporary, pre-authorized URL that grants upload or
-download access to a specific object. The server generates it; the client uses it
-to upload directly to object storage without needing credentials.
+**What is a presigned URL?** A presigned URL is a temporary, pre-authorized URL
+that grants upload or download access to a specific object. The server generates
+it; the client uses it to upload directly to object storage without needing
+credentials.
 
-**Does Tigris support CORS for browser uploads?**
-Yes. Configure [bucket CORS settings](/docs/buckets/cors/) to allow browser
-requests to your Tigris bucket.
+**Does Tigris support CORS for browser uploads?** Yes. Configure
+[bucket CORS settings](/docs/buckets/cors/) to allow browser requests to your
+Tigris bucket.
 
 ## When Should I Use This Pattern?
 
@@ -95,7 +95,8 @@ export const BUCKET_NAME = process.env.TIGRIS_BUCKET_NAME!;
 
 ## How Do I Handle File Uploads in an API Route?
 
-Use a Next.js App Router route handler to receive files and store them in Tigris:
+Use a Next.js App Router route handler to receive files and store them in
+Tigris:
 
 ```ts
 // app/api/upload/route.ts
@@ -120,7 +121,7 @@ export async function POST(request: NextRequest) {
       Key: key,
       Body: buffer,
       ContentType: file.type,
-    })
+    }),
   );
 
   return NextResponse.json({ key });
@@ -150,7 +151,7 @@ export async function POST(request: NextRequest) {
       Key: key,
       ContentType: contentType,
     }),
-    { expiresIn: 3600 }
+    { expiresIn: 3600 },
   );
 
   return NextResponse.json({ url, key });
@@ -228,12 +229,12 @@ async function uploadWithPresignedUrl(file: File) {
 
 ## What Security Considerations Should I Follow?
 
-- Never expose your Tigris secret access key in client-side code.
-- Use presigned URLs or server-side route handlers for all uploads.
-- Set appropriate `Content-Type` headers to prevent MIME-type mismatches.
-- Add file size and type validation in your route handler before uploading.
-- Configure [bucket CORS settings](/docs/buckets/cors/) if uploading directly
-  from the browser.
+:::warning Never expose your Tigris secret access key in client-side code. Use
+presigned URLs or server-side route handlers for all uploads. Set appropriate
+`Content-Type` headers to prevent MIME-type mismatches. Add file size and type
+validation in your route handler before uploading. Configure
+[bucket CORS settings](/docs/buckets/cors/) if uploading directly from the
+browser. :::
 
 ## Learn More
 

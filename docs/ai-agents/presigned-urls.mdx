@@ -24,20 +24,18 @@ the Tigris SDK, and any AWS S3 SDK.
 
 ## Frequently Asked Questions
 
-**What is a presigned URL?**
-A URL that includes a cryptographic signature granting temporary GET or PUT
-access to a specific object. Anyone with the URL can access the object until it
-expires.
+**What is a presigned URL?** A URL that includes a cryptographic signature
+granting temporary GET or PUT access to a specific object. Anyone with the URL
+can access the object until it expires.
 
-**How long can a presigned URL last?**
-Up to 90 days. The default is 1 hour (3600 seconds).
+**How long can a presigned URL last?** Up to 90 days. The default is 1 hour
+(3600 seconds).
 
-**Can I generate presigned URLs for uploads?**
-Yes. Generate a PUT presigned URL and the client can upload directly to that URL
-without needing credentials.
+**Can I generate presigned URLs for uploads?** Yes. Generate a PUT presigned URL
+and the client can upload directly to that URL without needing credentials.
 
-**Do presigned URLs work with custom domains?**
-Yes. Replace the Tigris domain in the generated URL with your custom domain.
+**Do presigned URLs work with custom domains?** Yes. Replace the Tigris domain
+in the generated URL with your custom domain.
 
 ## When Should I Use Presigned URLs?
 
@@ -95,7 +93,11 @@ const result = await getPresignedUrl("file.txt", {
 ## How Do I Generate a Presigned URL with JavaScript (AWS SDK)?
 
 ```js
-import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  GetObjectCommand,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const client = new S3Client({
@@ -107,7 +109,7 @@ const client = new S3Client({
 const getUrl = await getSignedUrl(
   client,
   new GetObjectCommand({ Bucket: "my-bucket", Key: "file.txt" }),
-  { expiresIn: 3600 }
+  { expiresIn: 3600 },
 );
 
 // Presigned PUT URL
@@ -118,7 +120,7 @@ const putUrl = await getSignedUrl(
     Key: "uploads/new-file.txt",
     ContentType: "application/pdf",
   }),
-  { expiresIn: 3600 }
+  { expiresIn: 3600 },
 );
 ```
 

@@ -24,25 +24,23 @@ to the Tigris endpoint immediately, and data migrates lazily as it is accessed.
 
 ## Frequently Asked Questions
 
-**Is migration zero-downtime?**
-Yes. Shadow buckets serve objects from the source bucket while migration is in
-progress. Your application continues working without interruption.
+**Is migration zero-downtime?** Yes. Shadow buckets serve objects from the
+source bucket while migration is in progress. Your application continues working
+without interruption.
 
-**What is a shadow bucket?**
-A Tigris bucket configured to pull objects on demand from an external
-S3-compatible source. Objects are cached in Tigris after the first access.
+**What is a shadow bucket?** A Tigris bucket configured to pull objects on
+demand from an external S3-compatible source. Objects are cached in Tigris after
+the first access.
 
-**What is write-through mode?**
-When enabled, new writes to Tigris are also synced back to the source bucket.
-This keeps both systems in sync during migration, so you can roll back if
-needed.
+**What is write-through mode?** When enabled, new writes to Tigris are also
+synced back to the source bucket. This keeps both systems in sync during
+migration, so you can roll back if needed.
 
-**Which providers can I migrate from?**
-AWS S3, Google Cloud Storage, Cloudflare R2, MinIO, and any S3-compatible
-storage service.
+**Which providers can I migrate from?** AWS S3, Google Cloud Storage, Cloudflare
+R2, MinIO, and any S3-compatible storage service.
 
-**Do I need to change my application code?**
-In most cases, only the endpoint and credentials. See
+**Do I need to change my application code?** In most cases, only the endpoint
+and credentials. See
 [Replace AWS S3 with Tigris](/docs/ai-agents/replace-s3-with-tigris/).
 
 ## How Does Shadow Bucket Migration Work?
@@ -107,7 +105,8 @@ Use GCS interoperability credentials (HMAC keys):
 ## How Do I Migrate from MinIO?
 
 1. Get your MinIO access key and secret
-2. Configure the shadow bucket with your MinIO endpoint (e.g., `https://minio.example.com`)
+2. Configure the shadow bucket with your MinIO endpoint (e.g.,
+   `https://minio.example.com`)
 
 ## Learn More
 

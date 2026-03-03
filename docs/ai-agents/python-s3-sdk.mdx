@@ -22,19 +22,17 @@ boto3 S3 operations work with Tigris. No other code changes required.
 
 ## Frequently Asked Questions
 
-**Which Python SDK should I use?**
-Use boto3 (the AWS SDK for Python). It is the standard S3 SDK for Python and
-works with Tigris by changing the endpoint.
+**Which Python SDK should I use?** Use boto3 (the AWS SDK for Python). It is the
+standard S3 SDK for Python and works with Tigris by changing the endpoint.
 
-**Do I need to install a Tigris-specific Python package?**
-No. Standard `boto3` works. Set the endpoint to `https://t3.storage.dev`.
+**Do I need to install a Tigris-specific Python package?** No. Standard `boto3`
+works. Set the endpoint to `https://t3.storage.dev`.
 
-**What addressing style should I use?**
-Virtual hosted-style addressing. Set `s3.addressing_style` to `virtual` in the
-boto3 config.
+**What addressing style should I use?** Virtual hosted-style addressing. Set
+`s3.addressing_style` to `virtual` in the boto3 config.
 
-**Can I use Tigris and AWS S3 in the same application?**
-Yes. Create separate boto3 clients or use AWS profiles to distinguish them.
+**Can I use Tigris and AWS S3 in the same application?** Yes. Create separate
+boto3 clients or use AWS profiles to distinguish them.
 
 ## How Do I Install and Configure boto3?
 

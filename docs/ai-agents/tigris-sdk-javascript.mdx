@@ -1,7 +1,8 @@
 ---
 description:
   "Use the Tigris JavaScript SDK to upload, download, and manage objects and
-  buckets. Simpler API than AWS SDK with progress tracking and multipart support."
+  buckets. Simpler API than AWS SDK with progress tracking and multipart
+  support."
 keywords:
   [
     tigris javascript sdk,
@@ -23,22 +24,22 @@ multipart transfers, presigned URLs, bucket management, and snapshots/forks.
 
 ## Frequently Asked Questions
 
-**Should I use the Tigris SDK or the AWS SDK?**
-Either works. The Tigris SDK provides a simpler API with built-in progress
-tracking, client-side uploads, and snapshot/fork support. The AWS SDK works if
-you want cross-provider compatibility. Both connect to the same storage.
+**Should I use the Tigris SDK or the AWS SDK?** Either works. The Tigris SDK
+provides a simpler API with built-in progress tracking, client-side uploads, and
+snapshot/fork support. The AWS SDK works if you want cross-provider
+compatibility. Both connect to the same storage.
 
-**What languages does the Tigris SDK support?**
-JavaScript and TypeScript. For Python, Go, and other languages, use the
-[AWS S3 SDKs](/docs/sdks/s3/) configured with the Tigris endpoint.
+**What languages does the Tigris SDK support?** JavaScript and TypeScript. For
+Python, Go, and other languages, use the [AWS S3 SDKs](/docs/sdks/s3/)
+configured with the Tigris endpoint.
 
-**Does the Tigris SDK work in the browser?**
-Yes. The `@tigrisdata/storage/client` module provides browser-compatible upload
+**Does the Tigris SDK work in the browser?** Yes. The
+`@tigrisdata/storage/client` module provides browser-compatible upload
 functions. See [Client-Side Uploads](/docs/ai-agents/client-side-uploads/).
 
-**What is the Tigris endpoint?**
-The SDK reads credentials from environment variables automatically. No endpoint
-configuration is needed — it connects to `https://t3.storage.dev` by default.
+**What is the Tigris endpoint?** The SDK reads credentials from environment
+variables automatically. No endpoint configuration is needed — it connects to
+`https://t3.storage.dev` by default.
 
 ## When Should I Use the Tigris SDK?
 
@@ -188,7 +189,12 @@ const url = await getPresignedUrl("file.txt", {
 ## How Do I Manage Buckets?
 
 ```ts
-import { createBucket, listBuckets, removeBucket, getBucketInfo } from "@tigrisdata/storage";
+import {
+  createBucket,
+  listBuckets,
+  removeBucket,
+  getBucketInfo,
+} from "@tigrisdata/storage";
 
 // Create a bucket
 await createBucket("my-new-bucket");

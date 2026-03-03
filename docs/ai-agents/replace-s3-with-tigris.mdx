@@ -25,28 +25,26 @@ configuration.
 
 ## Frequently Asked Questions
 
-**How much code do I need to change?**
-In most cases, only the endpoint URL and credentials. Your existing AWS SDK
-calls (`PutObject`, `GetObject`, `ListObjects`, etc.) remain identical.
+**How much code do I need to change?** In most cases, only the endpoint URL and
+credentials. Your existing AWS SDK calls (`PutObject`, `GetObject`,
+`ListObjects`, etc.) remain identical.
 
-**Is Tigris a drop-in replacement for S3?**
-Tigris supports over 90% of the AWS S3 API, covering all commonly used
-operations. It is not an identical clone — Tigris provides additional features
-like global distribution and bucket forks, and does not support S3 Select,
-Glacier, or Object Lambda.
+**Is Tigris a drop-in replacement for S3?** Tigris supports over 90% of the AWS
+S3 API, covering all commonly used operations. It is not an identical clone —
+Tigris provides additional features like global distribution and bucket forks,
+and does not support S3 Select, Glacier, or Object Lambda.
 
-**Can I migrate my existing data without downtime?**
-Yes. Use [shadow buckets](/docs/migration/aws-s3/) for zero-downtime lazy
-migration. Tigris fetches objects from your existing S3 bucket on demand.
+**Can I migrate my existing data without downtime?** Yes. Use
+[shadow buckets](/docs/migration/aws-s3/) for zero-downtime lazy migration.
+Tigris fetches objects from your existing S3 bucket on demand.
 
-**Will the AWS CLI work with Tigris?**
-Yes. Pass `--endpoint-url https://t3.storage.dev` or set the
-`AWS_ENDPOINT_URL_S3` environment variable.
+**Will the AWS CLI work with Tigris?** Yes. Pass
+`--endpoint-url https://t3.storage.dev` or set the `AWS_ENDPOINT_URL_S3`
+environment variable.
 
-**What S3 features does Tigris not support?**
-S3 Select, Glacier/archive tiers, Object Lambda, S3 Access Points, and some
-advanced IAM cross-service policies. For most applications, this does not affect
-the migration.
+**What S3 features does Tigris not support?** S3 Select, Glacier/archive tiers,
+Object Lambda, S3 Access Points, and some advanced IAM cross-service policies.
+For most applications, this does not affect the migration.
 
 ## When Should I Replace S3 with Tigris?
 
@@ -78,26 +76,25 @@ Keep S3 when:
 
 ## How Do Credentials Map Between S3 and Tigris?
 
-| AWS S3 Setting              | Tigris Equivalent                   |
-| --------------------------- | ----------------------------------- |
-| `AWS_ACCESS_KEY_ID`         | Tigris access key ID                |
-| `AWS_SECRET_ACCESS_KEY`     | Tigris secret access key            |
-| `AWS_REGION`                | `auto`                              |
-| S3 endpoint (region-based)  | `https://t3.storage.dev`            |
+| AWS S3 Setting             | Tigris Equivalent        |
+| -------------------------- | ------------------------ |
+| `AWS_ACCESS_KEY_ID`        | Tigris access key ID     |
+| `AWS_SECRET_ACCESS_KEY`    | Tigris secret access key |
+| `AWS_REGION`               | `auto`                   |
+| S3 endpoint (region-based) | `https://t3.storage.dev` |
 
-Get your Tigris credentials at
-[console.tigris.dev](https://console.tigris.dev).
+Get your Tigris credentials at [console.tigris.dev](https://console.tigris.dev).
 
 ## How Do Endpoints Map?
 
 Tigris uses a single global endpoint. Replace any region-specific S3 endpoint
 with `https://t3.storage.dev`:
 
-| AWS S3 Endpoint                           | Tigris Endpoint              |
-| ----------------------------------------- | ---------------------------- |
-| `https://s3.us-east-1.amazonaws.com`      | `https://t3.storage.dev`     |
-| `https://s3.eu-west-1.amazonaws.com`      | `https://t3.storage.dev`     |
-| Any region-specific S3 endpoint           | `https://t3.storage.dev`     |
+| AWS S3 Endpoint                      | Tigris Endpoint          |
+| ------------------------------------ | ------------------------ |
+| `https://s3.us-east-1.amazonaws.com` | `https://t3.storage.dev` |
+| `https://s3.eu-west-1.amazonaws.com` | `https://t3.storage.dev` |
+| Any region-specific S3 endpoint      | `https://t3.storage.dev` |
 
 ## What Does the Code Change Look Like in JavaScript?
 

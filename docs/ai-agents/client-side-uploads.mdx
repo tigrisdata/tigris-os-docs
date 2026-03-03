@@ -18,28 +18,26 @@ keywords:
 # How Do I Upload Files Directly from the Browser to Tigris?
 
 Use the Tigris SDK client upload module or presigned URLs. Both let the browser
-upload files directly to Tigris without routing data through your server,
-saving bandwidth costs.
+upload files directly to Tigris without routing data through your server, saving
+bandwidth costs.
 
 ## Frequently Asked Questions
 
-**Why upload from the browser instead of the server?**
-Server-side uploads mean your server pays for bandwidth twice — once to receive
-the file, once to forward it to storage. Client-side uploads send the file
-directly from the browser to Tigris, reducing server load and bandwidth costs.
+**Why upload from the browser instead of the server?** Server-side uploads mean
+your server pays for bandwidth twice — once to receive the file, once to forward
+it to storage. Client-side uploads send the file directly from the browser to
+Tigris, reducing server load and bandwidth costs.
 
-**Is it secure to upload from the browser?**
-Yes. The browser never sees your secret keys. The server generates a presigned
-URL or handles the authorization handshake, and the browser uses that temporary
-authorization to upload directly.
+**Is it secure to upload from the browser?** Yes. The browser never sees your
+secret keys. The server generates a presigned URL or handles the authorization
+handshake, and the browser uses that temporary authorization to upload directly.
 
-**Do I need the Tigris SDK for client uploads?**
-No. You can also use presigned URLs generated with the AWS SDK. The Tigris SDK
-provides a simpler API with built-in progress tracking and multipart support.
+**Do I need the Tigris SDK for client uploads?** No. You can also use presigned
+URLs generated with the AWS SDK. The Tigris SDK provides a simpler API with
+built-in progress tracking and multipart support.
 
-**Does this work with React?**
-Yes. Tigris provides a `@tigrisdata/react` package with a ready-made `<Uploader>`
-component.
+**Does this work with React?** Yes. Tigris provides a `@tigrisdata/react`
+package with a ready-made `<Uploader>` component.
 
 ## When Should I Use Client-Side Uploads?
 
@@ -93,13 +91,13 @@ async function handleFileUpload(file: File) {
 
 ### Upload Options
 
-| Option             | Default | Description                                  |
-| ------------------ | ------- | -------------------------------------------- |
-| `url`              | —       | Backend endpoint URL (required)              |
-| `access`           | —       | `"public"` or `"private"`                    |
-| `multipart`        | `false` | Split into parallel parts for large files    |
-| `partSize`         | 5 MiB   | Size of each multipart chunk                 |
-| `concurrency`      | 4       | Max concurrent part uploads                  |
+| Option             | Default | Description                                   |
+| ------------------ | ------- | --------------------------------------------- |
+| `url`              | —       | Backend endpoint URL (required)               |
+| `access`           | —       | `"public"` or `"private"`                     |
+| `multipart`        | `false` | Split into parallel parts for large files     |
+| `partSize`         | 5 MiB   | Size of each multipart chunk                  |
+| `concurrency`      | 4       | Max concurrent part uploads                   |
 | `onUploadProgress` | —       | Callback with `{ loaded, total, percentage }` |
 
 ## How Do I Use the React Uploader Component?
@@ -157,7 +155,7 @@ const url = await getSignedUrl(
     Key: `uploads/${filename}`,
     ContentType: contentType,
   }),
-  { expiresIn: 3600 }
+  { expiresIn: 3600 },
 );
 
 // Client: upload directly

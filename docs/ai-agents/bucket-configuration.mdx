@@ -23,21 +23,17 @@ configuration is available via the CLI, SDK, or dashboard.
 
 ## Frequently Asked Questions
 
-**Are buckets private by default?**
-Yes. All buckets and objects are private by default. Set access to `public` to
-make objects publicly accessible.
+**Are buckets private by default?** Yes. All buckets and objects are private by
+default. Set access to `public` to make objects publicly accessible.
 
-**Can I set CORS rules for browser access?**
-Yes. Configure CORS via the CLI or dashboard to allow browser requests to your
-bucket.
+**Can I set CORS rules for browser access?** Yes. Configure CORS via the CLI or
+dashboard to allow browser requests to your bucket.
 
-**Can I use a custom domain?**
-Yes. Map your domain to a Tigris bucket for branded URLs like
-`assets.example.com/image.png`.
+**Can I use a custom domain?** Yes. Map your domain to a Tigris bucket for
+branded URLs like `assets.example.com/image.png`.
 
-**What storage tiers are available?**
-Standard, Standard IA (Infrequent Access), Glacier IR (Instant Retrieval), and
-Glacier.
+**What storage tiers are available?** Standard, Standard IA (Infrequent Access),
+Glacier IR (Instant Retrieval), and Glacier.
 
 ## How Do I Create Public and Private Buckets?
 
@@ -113,12 +109,12 @@ tigris buckets set-transition my-bucket \
 
 ## What Storage Tiers Are Available?
 
-| Tier                      | Use Case                          | Cost     |
-| ------------------------- | --------------------------------- | -------- |
-| `STANDARD`                | Frequently accessed data          | Highest  |
-| `STANDARD_IA`             | Infrequent access, fast retrieval | Lower    |
-| `GLACIER_IR`              | Rare access, instant retrieval    | Lower    |
-| `GLACIER`                 | Archive, minutes to retrieve      | Lowest   |
+| Tier          | Use Case                          | Cost    |
+| ------------- | --------------------------------- | ------- |
+| `STANDARD`    | Frequently accessed data          | Highest |
+| `STANDARD_IA` | Infrequent access, fast retrieval | Lower   |
+| `GLACIER_IR`  | Rare access, instant retrieval    | Lower   |
+| `GLACIER`     | Archive, minutes to retrieve      | Lowest  |
 
 ## How Do I Enable Webhook Notifications?
 

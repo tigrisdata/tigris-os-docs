@@ -1,7 +1,8 @@
 ---
 description:
-  "Create instant, zero-copy forks and point-in-time snapshots of Tigris buckets.
-  Use for parallel experiments, agent isolation, and reproducible ML workflows."
+  "Create instant, zero-copy forks and point-in-time snapshots of Tigris
+  buckets. Use for parallel experiments, agent isolation, and reproducible ML
+  workflows."
 keywords:
   [
     bucket fork,
@@ -24,27 +25,24 @@ even for large datasets.
 
 ## Frequently Asked Questions
 
-**What is a bucket snapshot?**
-A snapshot is a read-only, point-in-time capture of all objects in a bucket. The
-original bucket continues to accept writes. Snapshots are instant regardless of
-bucket size.
+**What is a bucket snapshot?** A snapshot is a read-only, point-in-time capture
+of all objects in a bucket. The original bucket continues to accept writes.
+Snapshots are instant regardless of bucket size.
 
-**What is a bucket fork?**
-A fork is a new writable bucket that shares data with its source bucket via
-copy-on-write. Writes to the fork do not affect the source. Forks are instant
-and use no additional storage until objects are modified.
+**What is a bucket fork?** A fork is a new writable bucket that shares data with
+its source bucket via copy-on-write. Writes to the fork do not affect the
+source. Forks are instant and use no additional storage until objects are
+modified.
 
-**How much storage do forks use?**
-Zero additional storage at creation. Forks share the original data. Only modified
-or new objects in the fork consume extra storage.
+**How much storage do forks use?** Zero additional storage at creation. Forks
+share the original data. Only modified or new objects in the fork consume extra
+storage.
 
-**Can I fork from a specific snapshot?**
-Yes. You can fork from the latest state of a bucket or from a named snapshot
-version.
+**Can I fork from a specific snapshot?** Yes. You can fork from the latest state
+of a bucket or from a named snapshot version.
 
-**Which SDKs support forks and snapshots?**
-The Tigris JavaScript SDK, the Tigris CLI, and the AWS S3 SDKs (Go, Python, JS)
-via S3 API extensions. See
+**Which SDKs support forks and snapshots?** The Tigris JavaScript SDK, the
+Tigris CLI, and the AWS S3 SDKs (Go, Python, JS) via S3 API extensions. See
 [Bucket Snapshots and Forks](/docs/buckets/snapshots-and-forks/).
 
 ## When Should I Use Forks and Snapshots?

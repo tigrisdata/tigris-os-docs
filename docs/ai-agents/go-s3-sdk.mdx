@@ -23,16 +23,16 @@ metadata querying, and webhook notifications.
 
 ## Frequently Asked Questions
 
-**Which Go SDK should I use?**
-The AWS SDK for Go v2 (`github.com/aws/aws-sdk-go-v2`). It works with Tigris
-by setting the endpoint to `https://t3.storage.dev`.
+**Which Go SDK should I use?** The AWS SDK for Go v2
+(`github.com/aws/aws-sdk-go-v2`). It works with Tigris by setting the endpoint
+to `https://t3.storage.dev`.
 
-**Do I need path-style addressing?**
-No. Use virtual hosted-style (the default). Set `UsePathStyle` to `false`.
+**Do I need path-style addressing?** No. Use virtual hosted-style (the default).
+Set `UsePathStyle` to `false`.
 
-**Can I use conditional operations?**
-Yes. Tigris supports `If-Match`, `If-None-Match`, `If-Modified-Since`, and
-`If-Unmodified-Since` headers for conditional reads and writes.
+**Can I use conditional operations?** Yes. Tigris supports `If-Match`,
+`If-None-Match`, `If-Modified-Since`, and `If-Unmodified-Since` headers for
+conditional reads and writes.
 
 ## How Do I Configure the Go S3 Client?
 

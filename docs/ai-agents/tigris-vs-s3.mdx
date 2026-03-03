@@ -25,28 +25,27 @@ AWS integration and additional services like Glacier and S3 Select.
 
 ## Frequently Asked Questions
 
-**Is Tigris cheaper than S3?**
-For most workloads, yes. Tigris has zero egress fees. AWS S3 charges $0.09/GB
-for internet data transfer, which can dominate costs for data-intensive
-workloads. A workload transferring 5 TB/month saves over $450/month on egress
-alone.
+**Is Tigris cheaper than S3?** For most workloads, yes. Tigris has zero egress
+fees. AWS S3 charges $0.09/GB for internet data transfer, which can dominate
+costs for data-intensive workloads. A workload transferring 5 TB/month saves
+over $450/month on egress alone.
 
-**Is Tigris as fast as S3?**
-For workloads running outside of AWS, Tigris delivers roughly 4x the throughput
-and sub-10ms P90 read latency for small objects. For workloads running inside
-AWS, S3 has a latency advantage due to co-location.
+**Is Tigris as fast as S3?** For workloads running outside of AWS, Tigris
+delivers roughly 4x the throughput and sub-10ms P90 read latency for small
+objects. For workloads running inside AWS, S3 has a latency advantage due to
+co-location.
 
-**Can I use Tigris and S3 together?**
-Yes. Use shadow buckets to keep Tigris and S3 synchronized, or use both
-services for different buckets in the same application.
+**Can I use Tigris and S3 together?** Yes. Use shadow buckets to keep Tigris and
+S3 synchronized, or use both services for different buckets in the same
+application.
 
-**What S3 features does Tigris not support?**
-S3 Select, Glacier/archive tiers, Object Lambda, and S3 Access Points. Tigris
-supports over 90% of the S3 API, covering all commonly used operations.
+**What S3 features does Tigris not support?** S3 Select, Glacier/archive tiers,
+Object Lambda, and S3 Access Points. Tigris supports over 90% of the S3 API,
+covering all commonly used operations.
 
-**Do I need to change my code to switch from S3 to Tigris?**
-No. Change the endpoint to `https://t3.storage.dev` and update credentials. All
-SDK calls remain the same. See
+**Do I need to change my code to switch from S3 to Tigris?** No. Change the
+endpoint to `https://t3.storage.dev` and update credentials. All SDK calls
+remain the same. See
 [Replace AWS S3 with Tigris](/docs/ai-agents/replace-s3-with-tigris/).
 
 ## When Should I Choose Tigris Over S3?
@@ -73,27 +72,27 @@ SDK calls remain the same. See
 
 ## How Do Tigris and S3 Compare Feature by Feature?
 
-| Feature                     | Tigris                               | AWS S3                              |
-| --------------------------- | ------------------------------------ | ----------------------------------- |
-| **S3 API compatibility**    | Over 90% of S3 API                   | Full S3 API                         |
+| Feature                     | Tigris                               | AWS S3                                        |
+| --------------------------- | ------------------------------------ | --------------------------------------------- |
+| **S3 API compatibility**    | Over 90% of S3 API                   | Full S3 API                                   |
 | **Egress fees**             | None                                 | $0.09/GB internet, $0.01-0.02/GB cross-region |
-| **Storage pricing**         | $0.02/GB/month                       | $0.023/GB/month (S3 Standard)       |
-| **Global distribution**     | Automatic, single endpoint           | Manual cross-region replication     |
-| **Endpoint**                | `https://t3.storage.dev` (global)    | Region-specific endpoints           |
-| **Region model**            | Single global endpoint, auto-routing | Choose a region per bucket          |
-| **Data replication**        | Automatic, access-pattern-based      | Manual CRR/SRR configuration        |
-| **Bucket forks**            | Yes, instant zero-copy               | No                                  |
-| **Shadow bucket migration** | Yes, zero-downtime                   | N/A                                 |
-| **Multi-cloud support**     | Yes, vendor-neutral                  | AWS only                            |
-| **Free tier**               | 5 GB storage, 10K requests           | 5 GB storage, 20K GET, 2K PUT      |
-| **Multipart upload**        | Yes                                  | Yes                                 |
-| **Presigned URLs**          | Yes                                  | Yes                                 |
-| **Versioning**              | Yes                                  | Yes                                 |
-| **Lifecycle rules**         | Yes                                  | Yes                                 |
-| **Object notifications**    | Yes                                  | Yes (via EventBridge, SNS, SQS)     |
-| **S3 Select**               | No                                   | Yes                                 |
-| **Glacier/Archive tiers**   | No                                   | Yes                                 |
-| **Object Lambda**           | No                                   | Yes                                 |
+| **Storage pricing**         | $0.02/GB/month                       | $0.023/GB/month (S3 Standard)                 |
+| **Global distribution**     | Automatic, single endpoint           | Manual cross-region replication               |
+| **Endpoint**                | `https://t3.storage.dev` (global)    | Region-specific endpoints                     |
+| **Region model**            | Single global endpoint, auto-routing | Choose a region per bucket                    |
+| **Data replication**        | Automatic, access-pattern-based      | Manual CRR/SRR configuration                  |
+| **Bucket forks**            | Yes, instant zero-copy               | No                                            |
+| **Shadow bucket migration** | Yes, zero-downtime                   | N/A                                           |
+| **Multi-cloud support**     | Yes, vendor-neutral                  | AWS only                                      |
+| **Free tier**               | 5 GB storage, 10K requests           | 5 GB storage, 20K GET, 2K PUT                 |
+| **Multipart upload**        | Yes                                  | Yes                                           |
+| **Presigned URLs**          | Yes                                  | Yes                                           |
+| **Versioning**              | Yes                                  | Yes                                           |
+| **Lifecycle rules**         | Yes                                  | Yes                                           |
+| **Object notifications**    | Yes                                  | Yes (via EventBridge, SNS, SQS)               |
+| **S3 Select**               | No                                   | Yes                                           |
+| **Glacier/Archive tiers**   | No                                   | Yes                                           |
+| **Object Lambda**           | No                                   | Yes                                           |
 
 ## How Do Costs Compare?
 
@@ -102,11 +101,11 @@ Tigris eliminates this cost entirely.
 
 A workload that stores 1 TB and transfers 5 TB/month out to the internet:
 
-| Cost Component     | Tigris       | AWS S3 (us-east-1)     |
-| ------------------ | ------------ | ---------------------- |
-| Storage (1 TB)     | $20/month    | $23/month              |
-| Egress (5 TB)      | $0           | $450/month             |
-| **Total**          | **$20/month**| **$473/month**         |
+| Cost Component | Tigris        | AWS S3 (us-east-1) |
+| -------------- | ------------- | ------------------ |
+| Storage (1 TB) | $20/month     | $23/month          |
+| Egress (5 TB)  | $0            | $450/month         |
+| **Total**      | **$20/month** | **$473/month**     |
 
 ## How Do I Switch from S3 to Tigris?
 

@@ -12,6 +12,9 @@ keywords:
     boto3 endpoint url,
     python presigned url,
     aws sdk python tigris,
+    tigris-boto3-ext,
+    tigris snapshots python,
+    tigris forks python,
   ]
 ---
 
@@ -25,8 +28,10 @@ boto3 S3 operations work with Tigris. No other code changes required.
 **Which Python SDK should I use?** Use boto3 (the AWS SDK for Python). It is the
 standard S3 SDK for Python and works with Tigris by changing the endpoint.
 
-**Do I need to install a Tigris-specific Python package?** No. Standard `boto3`
-works. Set the endpoint to `https://t3.storage.dev`.
+**Do I need to install a Tigris-specific Python package?** For basic S3
+operations, standard `boto3` is all you need. For Tigris-specific features like
+snapshots and forks, install `tigris-boto3-ext`. It extends your existing boto3
+client with helper functions, context managers, and decorators.
 
 **What addressing style should I use?** Virtual hosted-style addressing. Set
 `s3.addressing_style` to `virtual` in the boto3 config.
@@ -37,7 +42,7 @@ boto3 clients or use AWS profiles to distinguish them.
 ## How Do I Install and Configure boto3?
 
 ```bash
-pip install boto3
+pip install boto3 tigris-boto3-ext
 ```
 
 ```python
@@ -170,10 +175,101 @@ client.delete_objects(
 )
 ```
 
+## How Do I Use Snapshots and Forks with Python?
+
+Install the `tigris-boto3-ext` package to access Tigris-specific features like
+snapshots and forks from Python. It works with your existing boto3 client:
+
+```bash
+pip install tigris-boto3-ext
+```
+
+Create a snapshot-enabled bucket and take a snapshot:
+
+```python
+import boto3
+from botocore.config import Config
+from tigris_boto3_ext import create_snapshot_bucket, create_snapshot, get_snapshot_version
+
+client = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    config=Config(s3={"addressing_style": "virtual"}),
+)
+
+# Create a bucket with snapshots enabled
+create_snapshot_bucket(client, "ml-datasets")
+
+# Upload some data
+client.put_object(Bucket="ml-datasets", Key="v1/data.parquet", Body=data)
+
+# Take a snapshot
+response = create_snapshot(client, "ml-datasets", snapshot_name="pre-training")
+snapshot_version = get_snapshot_version(response)
+```
+
+Read objects from a snapshot:
+
+```python
+from tigris_boto3_ext import get_object_from_snapshot, list_objects_from_snapshot
+
+# List objects in a snapshot
+objects = list_objects_from_snapshot(client, "ml-datasets", snapshot_version)
+for obj in objects.get("Contents", []):
+    print(obj["Key"])
+
+# Get an object from a snapshot
+response = get_object_from_snapshot(client, "ml-datasets", "v1/data.parquet", snapshot_version)
+body = response["Body"].read()
+```
+
+Create a fork for isolated experiments:
+
+```python
+from tigris_boto3_ext import create_fork
+
+# Fork from the current state
+create_fork(client, "experiment-a", "ml-datasets")
+
+# Fork from a specific snapshot
+create_fork(client, "experiment-b", "ml-datasets", snapshot_version=snapshot_version)
+```
+
+List snapshots:
+
+```python
+from tigris_boto3_ext import list_snapshots
+
+snapshots = list_snapshots(client, "ml-datasets")
+for snap in snapshots:
+    print(f"Version: {snap['version']}, Created: {snap['creationDate']}")
+```
+
+You can also use context managers for cleaner code:
+
+```python
+from tigris_boto3_ext import TigrisSnapshotEnabled, TigrisSnapshot, TigrisFork
+
+# Create a snapshot-enabled bucket using a context manager
+with TigrisSnapshotEnabled(client):
+    client.create_bucket(Bucket="my-data")
+
+# Work with a specific snapshot
+with TigrisSnapshot(client, "ml-datasets", snapshot_version):
+    response = client.get_object(Bucket="ml-datasets", Key="v1/data.parquet")
+
+# Work with a fork
+with TigrisFork(client, "ml-datasets", "experiment-c"):
+    # All operations target the fork
+    client.put_object(Bucket="experiment-c", Key="results.json", Body=b"{}")
+```
+
 ## Learn More
 
 - [Tigris Object Storage for AI Coding Agents](/docs/ai-agents/)
 - [Replace AWS S3 with Tigris](/docs/ai-agents/replace-s3-with-tigris/)
 - [Presigned URLs](/docs/ai-agents/presigned-urls/)
 - [Object Storage for AI Applications](/docs/ai-agents/object-storage-for-ai-applications/)
+- [Bucket Forks and Snapshots](/docs/ai-agents/bucket-forks-and-snapshots/)
 - [AWS Python SDK Documentation](/docs/sdks/s3/aws-python-sdk/)
+- [tigris-boto3-ext on GitHub](https://github.com/tigrisdata/tigris-boto3-ext)

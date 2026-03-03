@@ -234,6 +234,40 @@ clones of a bucket's data. Forks are useful for:
 Forks work even for very large datasets because they are copy-on-write — the
 original data is shared until modified.
 
+Use the `tigris-boto3-ext` package to create forks and snapshots from Python:
+
+```python
+import boto3
+from botocore.config import Config
+from tigris_boto3_ext import (
+    create_snapshot_bucket,
+    create_snapshot,
+    get_snapshot_version,
+    create_fork,
+)
+
+client = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    config=Config(s3={"addressing_style": "virtual"}),
+)
+
+# Create a snapshot-enabled bucket and upload training data
+create_snapshot_bucket(client, "ml-datasets")
+client.upload_file("training-data.parquet", "ml-datasets", "v1/data.parquet")
+
+# Take a snapshot before starting experiments
+response = create_snapshot(client, "ml-datasets", snapshot_name="baseline")
+snapshot_version = get_snapshot_version(response)
+
+# Fork for each experiment — instant, zero-copy
+create_fork(client, "experiment-lr-high", "ml-datasets", snapshot_version=snapshot_version)
+create_fork(client, "experiment-lr-low", "ml-datasets", snapshot_version=snapshot_version)
+```
+
+See [Bucket Forks and Snapshots](/docs/ai-agents/bucket-forks-and-snapshots/)
+for the full API.
+
 ## What Does Tigris Provide for AI Workloads?
 
 - **High parallel throughput.** Upload and download large files efficiently with

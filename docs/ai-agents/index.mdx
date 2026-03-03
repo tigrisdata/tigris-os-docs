@@ -188,10 +188,11 @@ const body = await response.Body.transformToString();
 
 ## How Do I Get Started with Python?
 
-Install boto3 and configure it with the Tigris endpoint:
+Install boto3 and configure it with the Tigris endpoint. Install
+`tigris-boto3-ext` for Tigris-specific features like snapshots and forks:
 
 ```bash
-pip install boto3
+pip install boto3 tigris-boto3-ext
 ```
 
 ```python

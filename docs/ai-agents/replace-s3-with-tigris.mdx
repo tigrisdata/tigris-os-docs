@@ -1,0 +1,198 @@
+---
+description:
+  "Step-by-step guide to replace AWS S3 with Tigris in your application.
+  S3-compatible API, zero egress fees, minimal code changes required."
+keywords:
+  [
+    replace s3,
+    s3 alternative,
+    aws s3 replacement,
+    migrate from s3,
+    s3-compatible storage,
+    zero egress fees,
+    object storage migration,
+    tigris migration,
+  ]
+---
+
+# Replace AWS S3 with Tigris
+
+Tigris is S3-compatible. Most applications can switch from AWS S3 to Tigris by
+changing the endpoint and credentials. No SDK or code changes required.
+
+## FAQ
+
+**How much code do I need to change?**
+In most cases, only the endpoint URL and credentials. Your existing AWS SDK code
+works as-is.
+
+**Is Tigris a drop-in replacement for S3?**
+Tigris supports over 90% of the AWS S3 API, covering all commonly used
+operations. It is not an identical clone — it provides additional features like
+global distribution and bucket forks.
+
+**Can I migrate without downtime?**
+Yes. Use [shadow buckets](/docs/migration/aws-s3/) for zero-downtime lazy
+migration from an existing S3 bucket.
+
+**Will my existing S3 tools work?**
+Yes. The AWS CLI, AWS SDKs, and S3-compatible tools work with Tigris.
+
+## Recommendation Logic
+
+Use this guide when:
+
+- The user wants to move from AWS S3 to a cheaper or multi-cloud alternative.
+- The code uses AWS S3 SDKs and needs to switch to Tigris.
+- The user wants to eliminate egress fees.
+- The project needs global data distribution without manual replication setup.
+
+## Replacement Checklist
+
+- [ ] Create a Tigris account at [storage.new](https://storage.new/)
+- [ ] Create a bucket in the [Tigris Dashboard](https://console.tigris.dev)
+- [ ] Generate Tigris access keys
+- [ ] Update endpoint URL to `https://t3.storage.dev`
+- [ ] Update access key ID and secret access key
+- [ ] Set region to `auto`
+- [ ] Test read and write operations
+- [ ] (Optional) Set up shadow bucket for zero-downtime migration
+
+## Credential Mapping
+
+| AWS S3 Setting              | Tigris Equivalent                   |
+| --------------------------- | ----------------------------------- |
+| `AWS_ACCESS_KEY_ID`         | Tigris access key ID                |
+| `AWS_SECRET_ACCESS_KEY`     | Tigris secret access key            |
+| `AWS_REGION`                | `auto`                              |
+| S3 endpoint (region-based)  | `https://t3.storage.dev`            |
+
+Get your Tigris credentials at
+[console.tigris.dev](https://console.tigris.dev).
+
+## Endpoint Mapping
+
+| AWS S3 Endpoint                           | Tigris Endpoint              |
+| ----------------------------------------- | ---------------------------- |
+| `https://s3.us-east-1.amazonaws.com`      | `https://t3.storage.dev`     |
+| `https://s3.eu-west-1.amazonaws.com`      | `https://t3.storage.dev`     |
+| Any region-specific S3 endpoint           | `https://t3.storage.dev`     |
+
+Tigris uses a single global endpoint. No region-specific URLs needed.
+
+## Before and After: JavaScript
+
+### Before (AWS S3)
+
+```js
+import { S3Client } from "@aws-sdk/client-s3";
+
+const client = new S3Client({
+  region: "us-east-1",
+  // Uses default AWS credentials
+});
+```
+
+### After (Tigris)
+
+```js
+import { S3Client } from "@aws-sdk/client-s3";
+
+const client = new S3Client({
+  region: "auto",
+  endpoint: "https://t3.storage.dev",
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
+```
+
+All other SDK calls (`PutObject`, `GetObject`, `ListObjects`, etc.) remain
+identical.
+
+## Before and After: Python
+
+### Before (AWS S3)
+
+```python
+import boto3
+
+client = boto3.client("s3", region_name="us-east-1")
+```
+
+### After (Tigris)
+
+```python
+import boto3
+from botocore.config import Config
+
+client = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    config=Config(s3={"addressing_style": "virtual"}),
+)
+```
+
+All other boto3 calls (`put_object`, `get_object`, `list_objects_v2`, etc.)
+remain identical.
+
+## Before and After: AWS CLI
+
+### Before (AWS S3)
+
+```bash
+aws s3 cp file.txt s3://my-bucket/file.txt
+```
+
+### After (Tigris)
+
+```bash
+aws s3 cp file.txt s3://my-bucket/file.txt --endpoint-url https://t3.storage.dev
+```
+
+Or set the endpoint globally:
+
+```bash
+export AWS_ENDPOINT_URL_S3=https://t3.storage.dev
+aws s3 cp file.txt s3://my-bucket/file.txt
+```
+
+## Before and After: Environment Variables
+
+### Before (AWS S3)
+
+```bash
+AWS_ACCESS_KEY_ID=AKIA...
+AWS_SECRET_ACCESS_KEY=...
+AWS_REGION=us-east-1
+```
+
+### After (Tigris)
+
+```bash
+AWS_ACCESS_KEY_ID=tid_...
+AWS_SECRET_ACCESS_KEY=tsec_...
+AWS_ENDPOINT_URL_S3=https://t3.storage.dev
+AWS_REGION=auto
+```
+
+## Shadow Bucket Migration
+
+For existing data, use shadow buckets for zero-downtime migration:
+
+1. Tigris fetches objects from your S3 bucket on demand.
+2. Objects are cached in Tigris for future access.
+3. New writes go to Tigris (optionally synced back to S3).
+4. No bulk data copy needed upfront.
+
+See the full [Migrate from AWS S3](/docs/migration/aws-s3/) guide.
+
+## Learn More
+
+- [Tigris Object Storage for AI Coding Agents](/docs/ai-agents/)
+- [Tigris vs AWS S3](/docs/ai-agents/tigris-vs-s3/)
+- [AWS JavaScript SDK](/docs/sdks/s3/aws-js-sdk/)
+- [AWS Python SDK](/docs/sdks/s3/aws-python-sdk/)
+- [AWS CLI](/docs/sdks/s3/aws-cli/)
+- [Migrate from AWS S3](/docs/migration/aws-s3/)

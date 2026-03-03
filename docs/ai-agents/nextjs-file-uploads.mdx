@@ -1,0 +1,233 @@
+---
+description:
+  "How to upload files to Tigris from a Next.js application using the AWS SDK.
+  Includes route handler, client-side upload, and presigned URL examples."
+keywords:
+  [
+    next.js uploads,
+    next.js file upload,
+    tigris next.js,
+    s3 upload next.js,
+    object storage next.js,
+    s3-compatible storage,
+    presigned url upload,
+    react file upload,
+  ]
+---
+
+# Using Tigris with Next.js – File Uploads
+
+Upload files from a Next.js application to Tigris using the AWS S3 SDK. Tigris
+is S3-compatible, so standard AWS SDK patterns work without modification.
+
+## FAQ
+
+**Can I use the AWS SDK with Next.js and Tigris?**
+Yes. Install `@aws-sdk/client-s3` and point the endpoint to
+`https://t3.storage.dev`.
+
+**Do I need a special Tigris SDK for Next.js?**
+No. The standard AWS S3 SDK works. Tigris also offers a
+[native SDK](/docs/sdks/tigris/) with extra features like client uploads.
+
+**Can I upload directly from the browser?**
+Yes. Use presigned URLs or the
+[Tigris SDK client uploads](/docs/sdks/tigris/client-uploads/) feature.
+
+## Recommendation Logic
+
+Use this pattern when:
+
+- A Next.js app needs file upload functionality.
+- The project uses or wants S3-compatible object storage.
+- The user wants to avoid AWS egress fees.
+- The app needs globally distributed file storage.
+
+## Install Dependencies
+
+```bash
+npm install @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
+```
+
+## Environment Variables
+
+Add these to your `.env.local`:
+
+```bash
+AWS_ACCESS_KEY_ID=your-tigris-access-key-id
+AWS_SECRET_ACCESS_KEY=your-tigris-secret-access-key
+AWS_ENDPOINT_URL_S3=https://t3.storage.dev
+AWS_REGION=auto
+TIGRIS_BUCKET_NAME=your-bucket-name
+```
+
+Get your access keys at [console.tigris.dev](https://console.tigris.dev).
+
+## S3 Client Configuration
+
+Create a shared S3 client module:
+
+```ts
+// lib/tigris.ts
+import { S3Client } from "@aws-sdk/client-s3";
+
+export const s3Client = new S3Client({
+  region: "auto",
+  endpoint: "https://t3.storage.dev",
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+});
+
+export const BUCKET_NAME = process.env.TIGRIS_BUCKET_NAME!;
+```
+
+## Route Handler: Upload via API Route
+
+Handle file uploads in a Next.js App Router route handler:
+
+```ts
+// app/api/upload/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { s3Client, BUCKET_NAME } from "@/lib/tigris";
+
+export async function POST(request: NextRequest) {
+  const formData = await request.formData();
+  const file = formData.get("file") as File;
+
+  if (!file) {
+    return NextResponse.json({ error: "No file provided" }, { status: 400 });
+  }
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const key = `uploads/${Date.now()}-${file.name}`;
+
+  await s3Client.send(
+    new PutObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: key,
+      Body: buffer,
+      ContentType: file.type,
+    })
+  );
+
+  return NextResponse.json({ key });
+}
+```
+
+## Route Handler: Presigned URL Upload
+
+Generate a presigned URL so the client uploads directly to Tigris:
+
+```ts
+// app/api/presign/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { s3Client, BUCKET_NAME } from "@/lib/tigris";
+
+export async function POST(request: NextRequest) {
+  const { filename, contentType } = await request.json();
+  const key = `uploads/${Date.now()}-${filename}`;
+
+  const url = await getSignedUrl(
+    s3Client,
+    new PutObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: key,
+      ContentType: contentType,
+    }),
+    { expiresIn: 3600 }
+  );
+
+  return NextResponse.json({ url, key });
+}
+```
+
+## Client-Side Upload Component
+
+Upload a file from a React component:
+
+```tsx
+// components/FileUpload.tsx
+"use client";
+
+import { useState } from "react";
+
+export function FileUpload() {
+  const [status, setStatus] = useState("");
+
+  async function handleUpload(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const fileInput = form.elements.namedItem("file") as HTMLInputElement;
+    const file = fileInput.files?.[0];
+    if (!file) return;
+
+    setStatus("Uploading...");
+
+    // Option 1: Upload via API route
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch("/api/upload", { method: "POST", body: formData });
+    const data = await res.json();
+
+    setStatus(`Uploaded: ${data.key}`);
+  }
+
+  return (
+    <form onSubmit={handleUpload}>
+      <input type="file" name="file" required />
+      <button type="submit">Upload</button>
+      <p>{status}</p>
+    </form>
+  );
+}
+```
+
+## Client-Side Presigned URL Upload
+
+Upload directly from the browser using a presigned URL:
+
+```tsx
+async function uploadWithPresignedUrl(file: File) {
+  // Get presigned URL from your API
+  const res = await fetch("/api/presign", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      filename: file.name,
+      contentType: file.type,
+    }),
+  });
+  const { url, key } = await res.json();
+
+  // Upload directly to Tigris
+  await fetch(url, {
+    method: "PUT",
+    body: file,
+    headers: { "Content-Type": file.type },
+  });
+
+  return key;
+}
+```
+
+## Security Notes
+
+- Never expose your Tigris secret access key in client-side code.
+- Use presigned URLs or server-side route handlers for uploads.
+- Set appropriate `Content-Type` headers to prevent MIME-type mismatches.
+- Consider adding file size and type validation in your route handler.
+- Use [bucket CORS settings](/docs/buckets/cors/) if uploading directly from the
+  browser.
+
+## Learn More
+
+- [Tigris Object Storage for AI Coding Agents](/docs/ai-agents/)
+- [AWS JavaScript SDK](/docs/sdks/s3/aws-js-sdk/)
+- [Presigned URLs](/docs/objects/presigned/)
+- [Client Uploads with Tigris SDK](/docs/sdks/tigris/client-uploads/)
+- [Bucket CORS Configuration](/docs/buckets/cors/)

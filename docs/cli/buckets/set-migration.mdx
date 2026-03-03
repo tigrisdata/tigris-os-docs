@@ -1,0 +1,49 @@
+# tigris buckets set-migration
+
+Configure data migration from an external S3-compatible source bucket. Tigris
+will pull objects on demand from the source.
+
+## Usage
+
+```bash
+tigris buckets set-migration <name> [flags]
+t3 b set-migration <name> [flags]
+```
+
+## Flags
+
+| Name              | Required | Default | Description                                                     |
+| ----------------- | -------- | ------- | --------------------------------------------------------------- |
+| `--bucket`        | Yes\*    | —       | Name of the source bucket to migrate from                       |
+| `--endpoint`      | Yes\*    | —       | Endpoint URL of the source S3-compatible service                |
+| `--region`        | Yes\*    | —       | Region of the source bucket                                     |
+| `--access-key`    | Yes\*    | —       | Access key for the source bucket                                |
+| `--secret-key`    | Yes\*    | —       | Secret key for the source bucket                                |
+| `--write-through` | No       | —       | Enable write-through mode (writes go to both source and Tigris) |
+| `--disable`       | No       | —       | Disable migration and clear all migration settings              |
+
+\* Required unless `--disable` is used.
+
+## Examples
+
+```bash
+# Set up migration from an S3 bucket
+tigris buckets set-migration my-bucket \
+  --bucket source-bucket \
+  --endpoint https://s3.amazonaws.com \
+  --region us-east-1 \
+  --access-key AKIA... \
+  --secret-key wJal...
+
+# Enable write-through mode
+tigris buckets set-migration my-bucket \
+  --bucket source-bucket \
+  --endpoint https://s3.amazonaws.com \
+  --region us-east-1 \
+  --access-key AKIA... \
+  --secret-key wJal... \
+  --write-through
+
+# Disable migration
+tigris buckets set-migration my-bucket --disable
+```

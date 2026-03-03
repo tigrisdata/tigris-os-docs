@@ -1,7 +1,7 @@
 # tigris buckets set
 
-Update settings on an existing bucket such as access level, region, caching, or
-custom domain.
+Update settings on an existing bucket such as access level, location, caching,
+or custom domain.
 
 **Alias:** `s`
 
@@ -14,15 +14,16 @@ t3 b s <name> [flags]
 
 ## Flags
 
-| Name                          | Required | Default | Description                                                                                                                                          |
-| ----------------------------- | -------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--access`                    | No       | —       | Bucket access level. Options: `public`, `private`                                                                                                    |
-| `--region`                    | No       | —       | Allowed regions (can specify multiple). Options: `global`, `usa`, `eur`, `ams`, `fra`, `gru`, `iad`, `jnb`, `lhr`, `nrt`, `ord`, `sin`, `sjc`, `syd` |
-| `--allow-object-acl`          | No       | —       | Enable object-level ACL                                                                                                                              |
-| `--disable-directory-listing` | No       | —       | Disable directory listing                                                                                                                            |
-| `--cache-control`             | No       | —       | Default cache-control header value                                                                                                                   |
-| `--custom-domain`             | No       | —       | Custom domain for the bucket                                                                                                                         |
-| `--enable-delete-protection`  | No       | —       | Enable delete protection                                                                                                                             |
+| Name                          | Required | Default | Description                                                                                                                                                                                                                                                                |
+| ----------------------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--access`                    | No       | —       | Bucket access level. Options: `public`, `private`                                                                                                                                                                                                                          |
+| `--locations`                 | No       | —       | Bucket location. Options: `global`, `usa`, `eur`, `ams`, `fra`, `gru`, `iad`, `jnb`, `lhr`, `nrt`, `ord`, `sin`, `sjc`, `syd`. Supports comma-separated values for dual region (e.g. `ams,fra`). See [locations docs](https://www.tigrisdata.com/docs/buckets/locations/). |
+| `--region`                    | No       | —       | **Deprecated.** Use `--locations` instead.                                                                                                                                                                                                                                 |
+| `--allow-object-acl`          | No       | —       | Enable object-level ACL                                                                                                                                                                                                                                                    |
+| `--disable-directory-listing` | No       | —       | Disable directory listing                                                                                                                                                                                                                                                  |
+| `--cache-control`             | No       | —       | Default cache-control header value                                                                                                                                                                                                                                         |
+| `--custom-domain`             | No       | —       | Custom domain for the bucket                                                                                                                                                                                                                                               |
+| `--enable-delete-protection`  | No       | —       | Enable delete protection                                                                                                                                                                                                                                                   |
 
 ## Examples
 
@@ -30,8 +31,8 @@ t3 b s <name> [flags]
 # Make a bucket public
 tigris buckets set my-bucket --access public
 
-# Set region restrictions and cache control
-tigris buckets set my-bucket --region iad,fra --cache-control 'max-age=3600'
+# Set location restrictions and cache control
+tigris buckets set my-bucket --locations iad,fra --cache-control 'max-age=3600'
 
 # Set a custom domain
 tigris buckets set my-bucket --custom-domain assets.example.com

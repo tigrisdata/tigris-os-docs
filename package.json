@@ -25,7 +25,8 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "format": "prettier -w ."
+    "format": "prettier -w .",
+    "build:sdk-api": "npx tsx docs/sdks/tigris/update-docs.tsx"
   },
   "dependencies": {
     "@docusaurus/core": "^3.9.2",
@@ -67,6 +68,7 @@
     "@docusaurus/types": "^3.9.2",
     "@eslint/js": "^9.39.3",
     "@redocly/cli": "^2.19.1",
+    "@tigrisdata/storage": "^2.15.0",
     "@types/react": "^19.2.14",
     "@typescript-eslint/eslint-plugin": "^8.56.0",
     "@typescript-eslint/parser": "^8.56.0",

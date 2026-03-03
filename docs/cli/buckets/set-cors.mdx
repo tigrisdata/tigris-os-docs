@@ -1,0 +1,43 @@
+# tigris buckets set-cors
+
+Configure CORS rules on a bucket. Each invocation adds a rule unless
+`--override` or `--reset` is used.
+
+## Usage
+
+```bash
+tigris buckets set-cors <name> [flags]
+t3 b set-cors <name> [flags]
+```
+
+## Flags
+
+| Name               | Required | Default | Description                                               |
+| ------------------ | -------- | ------- | --------------------------------------------------------- |
+| `--origins`        | No       | —       | Allowed origins (comma-separated, or `*` for all)         |
+| `--methods`        | No       | —       | Allowed HTTP methods (comma-separated, e.g. GET,POST,PUT) |
+| `--headers`        | No       | —       | Allowed request headers (comma-separated, or `*` for all) |
+| `--expose-headers` | No       | —       | Response headers to expose (comma-separated)              |
+| `--max-age`        | No       | 3600    | Preflight cache duration in seconds                       |
+| `--override`       | No       | —       | Replace all existing CORS rules instead of appending      |
+| `--reset`          | No       | —       | Clear all CORS rules on the bucket                        |
+
+## Examples
+
+```bash
+# Allow all origins for GET and HEAD
+tigris buckets set-cors my-bucket --origins '*' --methods GET,HEAD
+
+# Allow a specific origin with custom headers
+tigris buckets set-cors my-bucket \
+  --origins https://example.com \
+  --methods GET,POST \
+  --headers Content-Type,Authorization \
+  --max-age 3600
+
+# Replace all existing CORS rules
+tigris buckets set-cors my-bucket --origins https://example.com --override
+
+# Clear all CORS rules
+tigris buckets set-cors my-bucket --reset
+```

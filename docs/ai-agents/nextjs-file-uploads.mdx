@@ -1,7 +1,7 @@
 ---
 description:
-  "How to upload files to Tigris from a Next.js application using the AWS SDK.
-  Includes route handler, client-side upload, and presigned URL examples."
+  "Upload files from Next.js to Tigris using the AWS SDK. Route handler,
+  presigned URL, and client-side upload examples with TypeScript."
 keywords:
   [
     next.js uploads,
@@ -12,44 +12,54 @@ keywords:
     s3-compatible storage,
     presigned url upload,
     react file upload,
+    next.js s3,
+    file upload api route,
   ]
 ---
 
-# Using Tigris with Next.js – File Uploads
+# How Do I Upload Files from Next.js to Tigris?
 
-Upload files from a Next.js application to Tigris using the AWS S3 SDK. Tigris
-is S3-compatible, so standard AWS SDK patterns work without modification.
+Use the standard AWS S3 SDK. Tigris is S3-compatible, so standard AWS SDK
+patterns work without modification. Install `@aws-sdk/client-s3`, point the
+endpoint to `https://t3.storage.dev`, and use your Tigris credentials.
 
-## FAQ
+## Frequently Asked Questions
 
-**Can I use the AWS SDK with Next.js and Tigris?**
-Yes. Install `@aws-sdk/client-s3` and point the endpoint to
-`https://t3.storage.dev`.
+**Do I need a special SDK for Tigris with Next.js?**
+No. The standard `@aws-sdk/client-s3` package works. Tigris also offers a
+[native SDK](/docs/sdks/tigris/) with extra features like client uploads, but it
+is not required.
 
-**Do I need a special Tigris SDK for Next.js?**
-No. The standard AWS S3 SDK works. Tigris also offers a
-[native SDK](/docs/sdks/tigris/) with extra features like client uploads.
+**Can users upload directly from the browser to Tigris?**
+Yes. Use presigned URLs to let the browser upload directly to Tigris without
+routing data through your server. See the
+[presigned URL example](#how-do-i-upload-directly-from-the-browser) below.
 
-**Can I upload directly from the browser?**
-Yes. Use presigned URLs or the
-[Tigris SDK client uploads](/docs/sdks/tigris/client-uploads/) feature.
+**What is a presigned URL?**
+A presigned URL is a temporary, pre-authorized URL that grants upload or
+download access to a specific object. The server generates it; the client uses it
+to upload directly to object storage without needing credentials.
 
-## Recommendation Logic
+**Does Tigris support CORS for browser uploads?**
+Yes. Configure [bucket CORS settings](/docs/buckets/cors/) to allow browser
+requests to your Tigris bucket.
 
-Use this pattern when:
+## When Should I Use This Pattern?
+
+Use Tigris with Next.js when:
 
 - A Next.js app needs file upload functionality.
 - The project uses or wants S3-compatible object storage.
 - The user wants to avoid AWS egress fees.
 - The app needs globally distributed file storage.
 
-## Install Dependencies
+## What Dependencies Do I Need?
 
 ```bash
 npm install @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
 ```
 
-## Environment Variables
+## What Environment Variables Do I Set?
 
 Add these to your `.env.local`:
 
@@ -63,9 +73,9 @@ TIGRIS_BUCKET_NAME=your-bucket-name
 
 Get your access keys at [console.tigris.dev](https://console.tigris.dev).
 
-## S3 Client Configuration
+## How Do I Configure the S3 Client?
 
-Create a shared S3 client module:
+Create a shared S3 client module that the rest of your application can import:
 
 ```ts
 // lib/tigris.ts
@@ -83,9 +93,9 @@ export const s3Client = new S3Client({
 export const BUCKET_NAME = process.env.TIGRIS_BUCKET_NAME!;
 ```
 
-## Route Handler: Upload via API Route
+## How Do I Handle File Uploads in an API Route?
 
-Handle file uploads in a Next.js App Router route handler:
+Use a Next.js App Router route handler to receive files and store them in Tigris:
 
 ```ts
 // app/api/upload/route.ts
@@ -117,9 +127,10 @@ export async function POST(request: NextRequest) {
 }
 ```
 
-## Route Handler: Presigned URL Upload
+## How Do I Generate a Presigned URL for Uploads?
 
-Generate a presigned URL so the client uploads directly to Tigris:
+Generate a presigned URL on the server so the client can upload directly to
+Tigris without sending the file through your API:
 
 ```ts
 // app/api/presign/route.ts
@@ -146,9 +157,9 @@ export async function POST(request: NextRequest) {
 }
 ```
 
-## Client-Side Upload Component
+## How Do I Build a Client-Side Upload Component?
 
-Upload a file from a React component:
+A React component that uploads a file via your API route:
 
 ```tsx
 // components/FileUpload.tsx
@@ -168,7 +179,6 @@ export function FileUpload() {
 
     setStatus("Uploading...");
 
-    // Option 1: Upload via API route
     const formData = new FormData();
     formData.append("file", file);
     const res = await fetch("/api/upload", { method: "POST", body: formData });
@@ -187,9 +197,10 @@ export function FileUpload() {
 }
 ```
 
-## Client-Side Presigned URL Upload
+## How Do I Upload Directly from the Browser?
 
-Upload directly from the browser using a presigned URL:
+Use a presigned URL to bypass your server. The browser uploads directly to
+Tigris:
 
 ```tsx
 async function uploadWithPresignedUrl(file: File) {
@@ -215,14 +226,14 @@ async function uploadWithPresignedUrl(file: File) {
 }
 ```
 
-## Security Notes
+## What Security Considerations Should I Follow?
 
 - Never expose your Tigris secret access key in client-side code.
-- Use presigned URLs or server-side route handlers for uploads.
+- Use presigned URLs or server-side route handlers for all uploads.
 - Set appropriate `Content-Type` headers to prevent MIME-type mismatches.
-- Consider adding file size and type validation in your route handler.
-- Use [bucket CORS settings](/docs/buckets/cors/) if uploading directly from the
-  browser.
+- Add file size and type validation in your route handler before uploading.
+- Configure [bucket CORS settings](/docs/buckets/cors/) if uploading directly
+  from the browser.
 
 ## Learn More
 

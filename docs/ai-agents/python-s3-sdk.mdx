@@ -1,0 +1,181 @@
+---
+description:
+  "Use Tigris with Python and boto3. Configure the AWS Python SDK for Tigris,
+  upload and download files, generate presigned URLs, and query object metadata."
+keywords:
+  [
+    tigris python,
+    boto3 tigris,
+    python object storage,
+    s3 compatible python,
+    python file upload s3,
+    boto3 endpoint url,
+    python presigned url,
+    aws sdk python tigris,
+  ]
+---
+
+# How Do I Use Tigris with Python and boto3?
+
+Install boto3 and set the endpoint to `https://t3.storage.dev`. All standard
+boto3 S3 operations work with Tigris. No other code changes required.
+
+## Frequently Asked Questions
+
+**Which Python SDK should I use?**
+Use boto3 (the AWS SDK for Python). It is the standard S3 SDK for Python and
+works with Tigris by changing the endpoint.
+
+**Do I need to install a Tigris-specific Python package?**
+No. Standard `boto3` works. Set the endpoint to `https://t3.storage.dev`.
+
+**What addressing style should I use?**
+Virtual hosted-style addressing. Set `s3.addressing_style` to `virtual` in the
+boto3 config.
+
+**Can I use Tigris and AWS S3 in the same application?**
+Yes. Create separate boto3 clients or use AWS profiles to distinguish them.
+
+## How Do I Install and Configure boto3?
+
+```bash
+pip install boto3
+```
+
+```python
+import boto3
+from botocore.config import Config
+
+client = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    config=Config(s3={"addressing_style": "virtual"}),
+)
+```
+
+Or set environment variables:
+
+```bash
+AWS_ACCESS_KEY_ID=tid_your_access_key
+AWS_SECRET_ACCESS_KEY=tsec_your_secret_key
+AWS_ENDPOINT_URL_S3=https://t3.storage.dev
+AWS_REGION=auto
+```
+
+## How Do I Upload and Download Files?
+
+```python
+# Upload a file
+client.upload_file("local-file.txt", "my-bucket", "remote-file.txt")
+
+# Upload bytes
+client.put_object(
+    Bucket="my-bucket",
+    Key="data.json",
+    Body=b'{"key": "value"}',
+    ContentType="application/json",
+)
+
+# Download a file
+client.download_file("my-bucket", "remote-file.txt", "local-file.txt")
+
+# Get object as bytes
+response = client.get_object(Bucket="my-bucket", Key="data.json")
+body = response["Body"].read()
+```
+
+## How Do I List Objects?
+
+```python
+# List objects
+response = client.list_objects_v2(Bucket="my-bucket")
+for obj in response.get("Contents", []):
+    print(f"{obj['Key']} ({obj['Size']} bytes)")
+
+# List with prefix
+response = client.list_objects_v2(Bucket="my-bucket", Prefix="images/")
+
+# Paginate
+paginator = client.get_paginator("list_objects_v2")
+for page in paginator.paginate(Bucket="my-bucket"):
+    for obj in page.get("Contents", []):
+        print(obj["Key"])
+```
+
+## How Do I Generate Presigned URLs?
+
+```python
+# GET URL for downloads
+url = client.generate_presigned_url(
+    "get_object",
+    Params={"Bucket": "my-bucket", "Key": "report.pdf"},
+    ExpiresIn=3600,
+)
+
+# PUT URL for uploads
+url = client.generate_presigned_url(
+    "put_object",
+    Params={"Bucket": "my-bucket", "Key": "uploads/new.pdf"},
+    ExpiresIn=3600,
+)
+```
+
+## How Do I Use Multiple AWS Profiles?
+
+Add a Tigris profile to `~/.aws/credentials`:
+
+```text
+[default]
+aws_access_key_id=AKIA...
+aws_secret_access_key=...
+
+[tigris]
+aws_access_key_id=tid_your_key
+aws_secret_access_key=tsec_your_secret
+endpoint_url=https://t3.storage.dev
+```
+
+Switch profiles:
+
+```python
+import boto3
+
+session = boto3.Session(profile_name="tigris")
+client = session.client("s3")
+```
+
+## How Do I Query Object Metadata?
+
+```python
+# Get object metadata
+response = client.head_object(Bucket="my-bucket", Key="photo.jpg")
+print(f"Size: {response['ContentLength']}")
+print(f"Type: {response['ContentType']}")
+print(f"Modified: {response['LastModified']}")
+```
+
+## How Do I Delete Objects?
+
+```python
+# Delete a single object
+client.delete_object(Bucket="my-bucket", Key="old-file.txt")
+
+# Delete multiple objects
+client.delete_objects(
+    Bucket="my-bucket",
+    Delete={
+        "Objects": [
+            {"Key": "file1.txt"},
+            {"Key": "file2.txt"},
+        ]
+    },
+)
+```
+
+## Learn More
+
+- [Tigris Object Storage for AI Coding Agents](/docs/ai-agents/)
+- [Replace AWS S3 with Tigris](/docs/ai-agents/replace-s3-with-tigris/)
+- [Presigned URLs](/docs/ai-agents/presigned-urls/)
+- [Object Storage for AI Applications](/docs/ai-agents/object-storage-for-ai-applications/)
+- [AWS Python SDK Documentation](/docs/sdks/s3/aws-python-sdk/)

@@ -1,0 +1,157 @@
+---
+description:
+  "Use Tigris with Go and the AWS SDK v2. Configure the Go S3 client for Tigris,
+  upload files, generate presigned URLs, and use conditional operations."
+keywords:
+  [
+    tigris go,
+    go s3 sdk,
+    golang object storage,
+    aws go sdk tigris,
+    go file upload s3,
+    go presigned url,
+    s3 compatible go,
+    go object storage client,
+  ]
+---
+
+# How Do I Use Tigris with Go?
+
+Use the AWS SDK for Go v2 with the Tigris endpoint. All standard S3 operations
+work. Tigris also supports Go-specific features like conditional operations,
+metadata querying, and webhook notifications.
+
+## Frequently Asked Questions
+
+**Which Go SDK should I use?**
+The AWS SDK for Go v2 (`github.com/aws/aws-sdk-go-v2`). It works with Tigris
+by setting the endpoint to `https://t3.storage.dev`.
+
+**Do I need path-style addressing?**
+No. Use virtual hosted-style (the default). Set `UsePathStyle` to `false`.
+
+**Can I use conditional operations?**
+Yes. Tigris supports `If-Match`, `If-None-Match`, `If-Modified-Since`, and
+`If-Unmodified-Since` headers for conditional reads and writes.
+
+## How Do I Configure the Go S3 Client?
+
+```go
+package main
+
+import (
+    "context"
+    "github.com/aws/aws-sdk-go-v2/aws"
+    "github.com/aws/aws-sdk-go-v2/config"
+    "github.com/aws/aws-sdk-go-v2/service/s3"
+)
+
+func main() {
+    cfg, _ := config.LoadDefaultConfig(context.TODO())
+
+    client := s3.NewFromConfig(cfg, func(o *s3.Options) {
+        o.BaseEndpoint = aws.String("https://t3.storage.dev")
+        o.Region = "auto"
+        o.UsePathStyle = false
+    })
+}
+```
+
+Set environment variables:
+
+```bash
+AWS_ACCESS_KEY_ID=tid_your_key
+AWS_SECRET_ACCESS_KEY=tsec_your_secret
+AWS_ENDPOINT_URL_S3=https://t3.storage.dev
+AWS_REGION=auto
+```
+
+## How Do I Upload and Download Objects?
+
+```go
+import (
+    "strings"
+    "github.com/aws/aws-sdk-go-v2/aws"
+    "github.com/aws/aws-sdk-go-v2/service/s3"
+)
+
+// Upload
+_, err := client.PutObject(context.TODO(), &s3.PutObjectInput{
+    Bucket: aws.String("my-bucket"),
+    Key:    aws.String("hello.txt"),
+    Body:   strings.NewReader("Hello from Go!"),
+})
+
+// Download
+result, err := client.GetObject(context.TODO(), &s3.GetObjectInput{
+    Bucket: aws.String("my-bucket"),
+    Key:    aws.String("hello.txt"),
+})
+defer result.Body.Close()
+```
+
+## How Do I List Objects?
+
+```go
+result, err := client.ListObjectsV2(context.TODO(), &s3.ListObjectsV2Input{
+    Bucket: aws.String("my-bucket"),
+    Prefix: aws.String("images/"),
+})
+
+for _, obj := range result.Contents {
+    fmt.Printf("%s (%d bytes)\n", *obj.Key, *obj.Size)
+}
+```
+
+## How Do I Generate Presigned URLs?
+
+```go
+import (
+    "time"
+    "github.com/aws/aws-sdk-go-v2/service/s3"
+    "github.com/aws/aws-sdk-go-v2/service/s3/presign"
+)
+
+presigner := presign.NewPresignClient(client)
+
+// GET URL
+getReq, err := presigner.PresignGetObject(context.TODO(),
+    &s3.GetObjectInput{
+        Bucket: aws.String("my-bucket"),
+        Key:    aws.String("file.txt"),
+    },
+    presign.WithPresignExpires(time.Hour),
+)
+fmt.Println(getReq.URL)
+
+// PUT URL
+putReq, err := presigner.PresignPutObject(context.TODO(),
+    &s3.PutObjectInput{
+        Bucket: aws.String("my-bucket"),
+        Key:    aws.String("uploads/new.txt"),
+    },
+    presign.WithPresignExpires(time.Hour),
+)
+```
+
+## How Do I Rename Objects?
+
+Use the `X-Tigris-Rename` header with CopyObject:
+
+```go
+_, err := client.CopyObject(context.TODO(), &s3.CopyObjectInput{
+    Bucket:     aws.String("my-bucket"),
+    CopySource: aws.String("my-bucket/old-name.txt"),
+    Key:        aws.String("new-name.txt"),
+    Metadata: map[string]string{
+        "X-Tigris-Rename": "true",
+    },
+})
+```
+
+## Learn More
+
+- [Tigris Object Storage for AI Coding Agents](/docs/ai-agents/)
+- [Replace AWS S3 with Tigris](/docs/ai-agents/replace-s3-with-tigris/)
+- [Presigned URLs](/docs/ai-agents/presigned-urls/)
+- [AWS Go SDK Documentation](/docs/sdks/s3/aws-go-sdk/)

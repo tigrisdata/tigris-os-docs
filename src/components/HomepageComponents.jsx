@@ -30,8 +30,8 @@ export function HomepageSection({
 }
 
 export function HomepageCard({ id, icon, title, description, to, selected }) {
-  const darkIcon = icon ? useBaseUrl(`${icon}.svg`) : null;
-  const lightIcon = icon ? useBaseUrl(`${icon}-light.svg`) : null;
+  const darkIcon = useBaseUrl(icon ? `${icon}.svg` : null);
+  const lightIcon = useBaseUrl(icon ? `${icon}-light.svg` : null);
 
   return (
     <Link to={to} className={`homepage-card ${selected ? "selected" : ""}`}>

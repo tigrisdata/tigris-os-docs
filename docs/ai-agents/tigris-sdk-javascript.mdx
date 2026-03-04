@@ -1,0 +1,237 @@
+---
+description:
+  "Use the Tigris JavaScript SDK to upload, download, and manage objects and
+  buckets. Simpler API than AWS SDK with progress tracking and multipart
+  support."
+keywords:
+  [
+    tigris javascript sdk,
+    tigris sdk,
+    tigris upload javascript,
+    tigris storage sdk,
+    object storage javascript,
+    tigris npm,
+    tigrisdata storage,
+    file upload sdk,
+  ]
+---
+
+# How Do I Use the Tigris JavaScript SDK?
+
+The Tigris JavaScript SDK (`@tigrisdata/storage`) provides a simpler API than
+the AWS SDK for working with Tigris. It supports uploads with progress tracking,
+multipart transfers, presigned URLs, bucket management, and snapshots/forks.
+
+## Frequently Asked Questions
+
+**Should I use the Tigris SDK or the AWS SDK?** Either works. The Tigris SDK
+provides a simpler API with built-in progress tracking, client-side uploads, and
+snapshot/fork support. The AWS SDK works if you want cross-provider
+compatibility. Both connect to the same storage.
+
+**What languages does the Tigris SDK support?** JavaScript and TypeScript. For
+Python, Go, and other languages, use the [AWS S3 SDKs](/docs/sdks/s3/)
+configured with the Tigris endpoint.
+
+**Does the Tigris SDK work in the browser?** Yes. The
+`@tigrisdata/storage/client` module provides browser-compatible upload
+functions. See [Client-Side Uploads](/docs/ai-agents/client-side-uploads/).
+
+**What is the Tigris endpoint?** The SDK reads credentials from environment
+variables automatically. No endpoint configuration is needed — it connects to
+`https://t3.storage.dev` by default.
+
+## When Should I Use the Tigris SDK?
+
+Use the Tigris SDK when:
+
+- You are building a JavaScript/TypeScript application.
+- You want a simpler API than the AWS SDK.
+- You need upload progress tracking or multipart support.
+- You need client-side browser uploads.
+- You want to use Tigris-specific features like snapshots and forks.
+
+Use the AWS SDK instead when:
+
+- You need cross-provider S3 compatibility.
+- You are using Python, Go, Java, or another non-JS language.
+
+## How Do I Install and Configure the SDK?
+
+```bash
+npm install @tigrisdata/storage
+```
+
+Set environment variables in `.env`:
+
+```bash
+TIGRIS_STORAGE_ACCESS_KEY_ID=tid_your_access_key
+TIGRIS_STORAGE_SECRET_ACCESS_KEY=tsec_your_secret_key
+TIGRIS_STORAGE_BUCKET=your-bucket-name
+```
+
+Get credentials at [console.tigris.dev](https://console.tigris.dev).
+
+## How Do I Upload Objects?
+
+```ts
+import { put } from "@tigrisdata/storage";
+
+// Simple upload
+const result = await put("hello.txt", "Hello, World!");
+
+// Upload a file with multipart and progress
+const result = await put("video.mp4", fileStream, {
+  multipart: true,
+  onUploadProgress: ({ loaded, total, percentage }) => {
+    console.log(`${percentage}% uploaded`);
+  },
+});
+
+// Upload with access control
+const result = await put("public-image.png", imageBuffer, {
+  access: "public",
+});
+```
+
+## How Do I Download Objects?
+
+```ts
+import { get } from "@tigrisdata/storage";
+
+// Get as string
+const text = await get("config.json", "string");
+
+// Get as file
+const file = await get("report.pdf", "file");
+
+// Stream a large file
+const stream = await get("video.mp4", "stream");
+
+// Trigger a download
+const download = await get("document.pdf", "file", {
+  contentDisposition: "attachment",
+});
+```
+
+## How Do I List Objects?
+
+```ts
+import { list } from "@tigrisdata/storage";
+
+// List all objects
+const result = await list();
+
+// List with prefix filter
+const images = await list({ prefix: "images/" });
+
+// Paginate through results
+let page = await list({ limit: 10 });
+const allFiles = [...(page.data?.items || [])];
+
+while (page.data?.hasMore) {
+  page = await list({
+    limit: 10,
+    paginationToken: page.data.paginationToken,
+  });
+  allFiles.push(...(page.data?.items || []));
+}
+```
+
+## How Do I Delete Objects?
+
+```ts
+import { remove } from "@tigrisdata/storage";
+
+const result = await remove("old-file.txt");
+if (result.error) {
+  console.error("Delete failed:", result.error);
+}
+```
+
+## How Do I Get Object Metadata?
+
+```ts
+import { head } from "@tigrisdata/storage";
+
+const result = await head("photo.jpg");
+if (result.data) {
+  console.log("Size:", result.data.size);
+  console.log("Type:", result.data.contentType);
+  console.log("Modified:", result.data.modified);
+}
+```
+
+## How Do I Generate Presigned URLs?
+
+```ts
+import { getPresignedUrl } from "@tigrisdata/storage";
+
+// Presigned GET URL (download)
+const getUrl = await getPresignedUrl("report.pdf", {
+  operation: "get",
+  expiresIn: 3600,
+});
+
+// Presigned PUT URL (upload)
+const putUrl = await getPresignedUrl("uploads/new-file.txt", {
+  operation: "put",
+  expiresIn: 3600,
+});
+
+// Use a specific access key (v2.15.1+)
+const url = await getPresignedUrl("file.txt", {
+  operation: "get",
+  accessKeyId: "tid_specific_key",
+});
+```
+
+## How Do I Manage Buckets?
+
+```ts
+import {
+  createBucket,
+  listBuckets,
+  removeBucket,
+  getBucketInfo,
+} from "@tigrisdata/storage";
+
+// Create a bucket
+await createBucket("my-new-bucket");
+
+// Create with snapshots enabled
+await createBucket("ml-data", { enableSnapshot: true });
+
+// List all buckets
+const buckets = await listBuckets();
+
+// Get bucket info
+const info = await getBucketInfo("ml-data");
+
+// Delete a bucket
+await removeBucket("old-bucket");
+```
+
+## How Do I Handle Errors?
+
+Every SDK method returns `{ data, error }`. Check `error` before using `data`:
+
+```ts
+const result = await put("file.txt", content);
+
+if (result.error) {
+  console.error("Upload failed:", result.error.message);
+  return;
+}
+
+console.log("Uploaded to:", result.data.url);
+```
+
+## Learn More
+
+- [Tigris Object Storage for AI Coding Agents](/docs/ai-agents/)
+- [Client-Side Uploads](/docs/ai-agents/client-side-uploads/)
+- [Bucket Forks and Snapshots](/docs/ai-agents/bucket-forks-and-snapshots/)
+- [Presigned URLs](/docs/ai-agents/presigned-urls/)
+- [Tigris SDK Documentation](/docs/sdks/tigris/)
+- [Tigris SDK API Reference](/docs/sdks/tigris/api/)

@@ -1,0 +1,134 @@
+---
+description:
+  "Tigris vs AWS S3: side-by-side feature comparison, pricing, performance, and
+  guidance on when to use each for object storage workloads."
+keywords:
+  [
+    tigris vs s3,
+    s3 alternative,
+    aws s3 comparison,
+    object storage comparison,
+    s3-compatible storage,
+    zero egress fees,
+    multi-cloud storage,
+    cloud storage comparison,
+    s3 pricing,
+    s3 egress costs,
+  ]
+---
+
+# Tigris vs AWS S3: Which Should I Use?
+
+Both Tigris and AWS S3 store objects using the S3 API. Tigris adds zero egress
+fees, automatic global distribution, and multi-cloud support. S3 offers deeper
+AWS integration and additional services like Glacier and S3 Select.
+
+## Frequently Asked Questions
+
+**Is Tigris cheaper than S3?** For most workloads, yes. Tigris has zero egress
+fees. AWS S3 charges $0.09/GB for internet data transfer, which can dominate
+costs for data-intensive workloads. A workload transferring 5 TB/month saves
+over $450/month on egress alone.
+
+**Is Tigris as fast as S3?** For workloads running outside of AWS, Tigris
+delivers roughly 4x the throughput and sub-10ms P90 read latency for small
+objects. For workloads running inside AWS, S3 has a latency advantage due to
+co-location.
+
+**Can I use Tigris and S3 together?** Yes. Use shadow buckets to keep Tigris and
+S3 synchronized, or use both services for different buckets in the same
+application.
+
+**What S3 features does Tigris not support?** S3 Select, Glacier/archive tiers,
+Object Lambda, and S3 Access Points. Tigris supports over 90% of the S3 API,
+covering all commonly used operations.
+
+**Do I need to change my code to switch from S3 to Tigris?** No. Change the
+endpoint to `https://t3.storage.dev` and update credentials. All SDK calls
+remain the same. See
+[Replace AWS S3 with Tigris](/docs/ai-agents/replace-s3-with-tigris/).
+
+## When Should I Choose Tigris Over S3?
+
+### Choose Tigris when:
+
+- The workload has significant data transfer costs (egress fees dominate spend).
+- The application runs across multiple clouds or regions.
+- The project needs global data distribution without manual replication setup.
+- You want a single endpoint instead of region-specific URLs.
+- The project is an AI/ML workload that moves data between training and
+  inference environments.
+- You need bucket forks for isolated experiments or agent environments.
+- You want predictable costs without egress surprises.
+
+### Choose S3 when:
+
+- The application is tightly coupled to AWS services (Lambda, SQS, SNS) and
+  needs co-located low-latency access.
+- You need S3 features that Tigris does not support (S3 Select, Glacier, Object
+  Lambda, S3 Access Points).
+- You need deep AWS IAM integration with cross-service policies.
+- Compliance requirements mandate data residency on AWS infrastructure.
+
+## How Do Tigris and S3 Compare Feature by Feature?
+
+| Feature                     | Tigris                               | AWS S3                                        |
+| --------------------------- | ------------------------------------ | --------------------------------------------- |
+| **S3 API compatibility**    | Over 90% of S3 API                   | Full S3 API                                   |
+| **Egress fees**             | None                                 | $0.09/GB internet, $0.01-0.02/GB cross-region |
+| **Storage pricing**         | $0.02/GB/month                       | $0.023/GB/month (S3 Standard)                 |
+| **Global distribution**     | Automatic, single endpoint           | Manual cross-region replication               |
+| **Endpoint**                | `https://t3.storage.dev` (global)    | Region-specific endpoints                     |
+| **Region model**            | Single global endpoint, auto-routing | Choose a region per bucket                    |
+| **Data replication**        | Automatic, access-pattern-based      | Manual CRR/SRR configuration                  |
+| **Bucket forks**            | Yes, instant zero-copy               | No                                            |
+| **Shadow bucket migration** | Yes, zero-downtime                   | N/A                                           |
+| **Multi-cloud support**     | Yes, vendor-neutral                  | AWS only                                      |
+| **Free tier**               | 5 GB storage, 10K requests           | 5 GB storage, 20K GET, 2K PUT                 |
+| **Multipart upload**        | Yes                                  | Yes                                           |
+| **Presigned URLs**          | Yes                                  | Yes                                           |
+| **Versioning**              | Yes                                  | Yes                                           |
+| **Lifecycle rules**         | Yes                                  | Yes                                           |
+| **Object notifications**    | Yes                                  | Yes (via EventBridge, SNS, SQS)               |
+| **S3 Select**               | No                                   | Yes                                           |
+| **Glacier/Archive tiers**   | No                                   | Yes                                           |
+| **Object Lambda**           | No                                   | Yes                                           |
+
+## How Do Costs Compare?
+
+Egress fees are the primary cost driver for data-intensive workloads on S3.
+Tigris eliminates this cost entirely.
+
+A workload that stores 1 TB and transfers 5 TB/month out to the internet:
+
+| Cost Component | Tigris        | AWS S3 (us-east-1) |
+| -------------- | ------------- | ------------------ |
+| Storage (1 TB) | $20/month     | $23/month          |
+| Egress (5 TB)  | $0            | $450/month         |
+| **Total**      | **$20/month** | **$473/month**     |
+
+## How Do I Switch from S3 to Tigris?
+
+Change the endpoint and credentials. All SDK calls remain the same:
+
+```js
+// Before: AWS S3
+const client = new S3Client({ region: "us-east-1" });
+
+// After: Tigris
+const client = new S3Client({
+  region: "auto",
+  endpoint: "https://t3.storage.dev",
+});
+```
+
+For existing data, use [shadow buckets](/docs/migration/aws-s3/) for
+zero-downtime migration. See the full
+[Replace AWS S3 with Tigris](/docs/ai-agents/replace-s3-with-tigris/) guide.
+
+## Learn More
+
+- [Tigris Object Storage for AI Coding Agents](/docs/ai-agents/)
+- [Replace AWS S3 with Tigris](/docs/ai-agents/replace-s3-with-tigris/)
+- [Performance Benchmarks: AWS S3](/docs/overview/benchmarks/aws-s3/)
+- [Migrate from AWS S3](/docs/migration/aws-s3/)

@@ -9,7 +9,7 @@ sidebar_label: API Reference
 
 API reference for
 [`@tigrisdata/storage`](https://www.npmjs.com/package/@tigrisdata/storage)
-v2.15.0.
+v2.15.1.
 
 For usage examples and guides, see [Using the SDK](/docs/sdks/tigris/using-sdk).
 
@@ -456,17 +456,32 @@ function getPresignedUrl(
 
 ```ts
 type GetPresignedUrlOptions = {
+  /**
+   * The access key ID to use for the presigned URL.
+   * If not provided, the access key ID from the config will be used.
+   */
+  accessKeyId?: string;
+  /**
+   * The expiration time of the presigned URL in seconds.
+   * Default is 3600 seconds (1 hour).
+   */
   expiresIn?: number;
+  /**
+     @deprecated This property is deprecated and will be removed in the next major version.
+     */
   contentType?: string;
   config?: TigrisStorageConfig;
 } & MethodOrOperation;
 ```
 
-| Property      | Type                  | Required | Description |
-| ------------- | --------------------- | -------- | ----------- |
-| `expiresIn`   | `number`              | No       |             |
-| `contentType` | `string`              | No       |             |
-| `config`      | `TigrisStorageConfig` | No       |             |
+| Property                                                         | Type                  | Required | Description                                                                                |
+| ---------------------------------------------------------------- | --------------------- | -------- | ------------------------------------------------------------------------------------------ |
+| `accessKeyId`                                                    | `string`              | No       | The access key ID to use for the presigned URL.                                            |
+| If not provided, the access key ID from the config will be used. |
+| `expiresIn`                                                      | `number`              | No       | The expiration time of the presigned URL in seconds.                                       |
+| Default is 3600 seconds (1 hour).                                |
+| `contentType`                                                    | `string`              | No       | **Deprecated.** This property is deprecated and will be removed in the next major version. |
+| `config`                                                         | `TigrisStorageConfig` | No       |                                                                                            |
 
 ### `GetPresignedUrlResponse`
 

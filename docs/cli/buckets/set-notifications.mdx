@@ -12,16 +12,16 @@ t3 b set-notifications <name> [flags]
 
 ## Flags
 
-| Name         | Required | Default | Description                                                     |
-| ------------ | -------- | ------- | --------------------------------------------------------------- |
-| `--url`      | No       | —       | Webhook URL to send notifications to (must be http or https)    |
-| `--filter`   | No       | —       | Event filter pattern (e.g. `images/*`)                          |
-| `--token`    | No       | —       | Token for webhook authentication                                |
-| `--username` | No       | —       | Username for basic webhook authentication                       |
-| `--password` | No       | —       | Password for basic webhook authentication                       |
-| `--enable`   | No       | —       | Enable notifications on the bucket (uses existing config)       |
-| `--disable`  | No       | —       | Disable notifications on the bucket (preserves existing config) |
-| `--reset`    | No       | —       | Clear all notification settings on the bucket                   |
+| Name         | Required | Default | Description                                                                      |
+| ------------ | -------- | ------- | -------------------------------------------------------------------------------- |
+| `--url`      | No       | —       | Webhook URL to send notifications to (must be http or https)                     |
+| `--filter`   | No       | —       | SQL WHERE clause to filter events by key (e.g. ``WHERE `key` REGEXP "^images"``) |
+| `--token`    | No       | —       | Token for webhook authentication                                                 |
+| `--username` | No       | —       | Username for basic webhook authentication                                        |
+| `--password` | No       | —       | Password for basic webhook authentication                                        |
+| `--enable`   | No       | —       | Enable notifications on the bucket (uses existing config)                        |
+| `--disable`  | No       | —       | Disable notifications on the bucket (preserves existing config)                  |
+| `--reset`    | No       | —       | Clear all notification settings on the bucket                                    |
 
 ## Examples
 
@@ -35,8 +35,8 @@ tigris buckets set-notifications my-bucket --url https://example.com/webhook --t
 # With basic authentication
 tigris buckets set-notifications my-bucket --url https://example.com/webhook --username admin --password secret
 
-# Filter notifications to a prefix
-tigris buckets set-notifications my-bucket --url https://example.com/webhook --filter 'images/*'
+# Only receive notifications for keys with the prefix images/
+tigris buckets set-notifications my-bucket --url https://example.com/webhook --filter 'WHERE `key` REGEXP "^images"'
 
 # Enable existing notification config
 tigris buckets set-notifications my-bucket --enable

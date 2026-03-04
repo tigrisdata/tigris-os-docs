@@ -1,0 +1,45 @@
+# tigris presign
+
+Generate a presigned URL for temporary access to an object without credentials.
+
+## Usage
+
+```bash
+tigris presign <path> [flags]
+t3 presign <path> [flags]
+```
+
+Paths support the optional `t3://` (or `tigris://`) prefix (e.g.
+`t3://my-bucket/file.txt` or just `my-bucket/file.txt`).
+
+If no `--access-key` is provided, the key is resolved automatically from your
+current credentials. OAuth users are prompted to select an access key
+interactively (or can pass `--access-key` explicitly).
+
+## Flags
+
+| Name                 | Required | Default | Description                                                                                            |
+| -------------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------ |
+| `--method`, `-m`     | No       | `get`   | HTTP method for the presigned URL. Options: `get`, `put`                                               |
+| `--expires-in`, `-e` | No       | `3600`  | URL expiry time in seconds                                                                             |
+| `--access-key`       | No       |         | Access key ID to use for signing. If not provided, resolved from credentials or prompted interactively |
+| `--format`, `-f`     | No       | `url`   | Output format. Options: `url`, `json`                                                                  |
+
+## Examples
+
+```bash
+# Generate a presigned GET URL (default 1 hour expiry)
+tigris presign my-bucket/file.txt
+
+# Generate a presigned PUT URL with 2 hour expiry
+tigris presign t3://my-bucket/report.pdf --method put --expires-in 7200
+
+# Output as JSON
+tigris presign my-bucket/image.png --format json
+
+# Use a specific access key
+tigris presign my-bucket/data.csv --access-key tid_AaBb
+
+# Pipe the URL to clipboard
+tigris presign my-bucket/file.txt | pbcopy
+```

@@ -54,12 +54,12 @@ patterns of agent systems better than conventional S3.
   <Card
     title="Provision isolated storage for ephemeral sandboxes"
     description="Back each sandbox with its own bucket mounted via TigrisFS."
-    to="/agents-sandboxing/"
+    to="#provision-isolated-storage-for-ephemeral-sandboxes"
     icon="img/cube"
   />
 </Section>
 
-## 1. Persist agent memory globally
+## 1. Persist agent memory globally {#persist-agent-memory-globally}
 
 Agents generate memory artifacts continuously at runtime: embeddings, graph
 nodes, extracted text, and metadata indexes that are written on every step and
@@ -67,9 +67,9 @@ re-read on every query. Unlike static deployment assets, this data changes
 frequently and the read rate is high: a single retrieval pass might issue dozens
 of `GetObject` calls across the same keys.
 
-A [global bucket](/docs/buckets/multi-region/) serves every read from the nearest replica at no egress cost, so
-those read-heavy loops don't accumulate transfer fees regardless of which region
-the agent is running in. 
+A [global bucket](/docs/buckets/locations/) serves every read from the nearest
+replica at no egress cost, so those read-heavy loops don't accumulate transfer
+fees regardless of which region the agent is running in.
 
 <div className="mermaid-frame">
 ```mermaid
@@ -82,7 +82,8 @@ flowchart LR
     GB -->|local read| EU[Agent — EU]:::agent
     GB -->|local read| US[Agent — US]:::agent
     GB -->|local read| APAC[Agent — APAC]:::agent
-```
+
+````
 </div>
 <div className="mermaid-caption">
   Figure 1: One global bucket serves local reads for agents in every region.
@@ -95,18 +96,18 @@ plain `GetObject` calls against the same keys and automatically hit the nearest
 replica.
 
 For more information, see the docs:
-[Multi-region buckets](/docs/buckets/multi-region/) ·
+[Bucket locations](/docs/buckets/locations/) ·
 [Metadata querying](/docs/objects/query-metadata.md) ·
-[Object regions](/docs/objects/object_regions/) (per-object residency)
+[Bucket locations](/docs/buckets/locations/) (per-object residency)
 
 :::note
 
 Global buckets are [strongly consistent within a region](/docs/concepts/consistency/) and eventually consistent
-across regions. 
+across regions.
 
 :::
 
-## 2. Checkpoint and resume agents anywhere
+## 2. Checkpoint and resume agents anywhere {#checkpoint-and-resume-agents-anywhere}
 
 When you need agents to pick up exactly where they left off, you have to
 checkpoint their state somewhere durable.
@@ -116,7 +117,7 @@ can restart them after failures or migration. [Storing snapshots in Tigris](/doc
 them available from the nearest region to whichever machine picks up the resumed
 agent, with no cross-region prefetch and no egress cost on the read. Agents that
 need filesystem semantics can mount the bucket directly via [TigrisFS](/docs/training/tigrisfs/) and see a
-plain `/data` directory. 
+plain `/data` directory.
 
 <div className="mermaid-frame">
 ```mermaid
@@ -129,7 +130,8 @@ flowchart LR
     S -->|fork| B1[Sub-agent 1]:::agent
     S -->|fork| B2[Sub-agent 2]:::agent
     S -->|resume| R[Any machine]:::agent
-```
+````
+
 </div>
 <div className="mermaid-caption">
   Figure 2: Agents checkpoint into a snapshot, then either resume from it or
@@ -159,17 +161,18 @@ changed afterward.
 
 :::
 
-## 3. Trigger processing pipelines on upload
+## 3. Trigger processing pipelines on upload {#trigger-processing-pipelines-on-upload}
 
 If you want your agent to react to new uploads immediately, you need events
 instead of a slow polling loop. Tigris lets your storage layer call a webhook so
 your worker code can start processing as soon as a file lands.
 
 Polling buckets on a schedule creates indexing lag, wastes API quota on
-unchanged keys, and produces thundering-herd load during upload spikes. [Tigris
-Object Notifications](/docs/buckets/object-notifications/) replace the polling loop with a push model. An HTTP `POST`
-request fires to your webhook the moment an object lands, carrying the bucket,
-key, size, and ETag needed to begin processing immediately. 
+unchanged keys, and produces thundering-herd load during upload spikes.
+[Tigris Object Notifications](/docs/buckets/object-notifications/) replace the
+polling loop with a push model. An HTTP `POST` request fires to your webhook the
+moment an object lands, carrying the bucket, key, size, and ETag needed to begin
+processing immediately.
 
 <div className="mermaid-frame">
 ```mermaid
@@ -182,7 +185,8 @@ flowchart LR
     B -->|OBJECT_CREATED_PUT webhook| W[Webhook agent]:::agent
     W -->|GetObject| E[Extraction jobs]:::agent
     E -->|PutObject outputs| B
-```
+
+````
 </div>
 <div className="mermaid-caption">
   Figure 3: Each upload immediately triggers a webhook that starts the
@@ -205,7 +209,7 @@ Filter webhooks to exactly the events you need:
 
 ```sql
 WHERE `key` REGEXP "^raw/videos" AND `Event-Type` = "OBJECT_CREATED_PUT"
-```
+````
 
 :::
 
@@ -217,7 +221,7 @@ sequence events correctly, and design your handler to be idempotent.
 
 :::
 
-## 4. Fork storage for isolated eval runs
+## 4. Fork storage for isolated eval runs {#fork-storage-for-isolated-eval-runs}
 
 When you run lots of evals over the same dataset, you typically want each run
 isolated without copying all the data. With Tigris, each run gets its own
@@ -225,9 +229,9 @@ lightweight forked view so you can write freely without worrying about breaking
 the shared source.
 
 Copying a full dataset bucket before each eval run is slow and expensive at
-scale. [Tigris forks](/docs/buckets/snapshots-and-forks/) create a copy-on-write snapshot of a bucket instantly. Each
-run gets full isolation, mutations in one fork never affect another, and the
-source dataset stays unchanged for replay. 
+scale. [Tigris forks](/docs/buckets/snapshots-and-forks/) create a copy-on-write
+snapshot of a bucket instantly. Each run gets full isolation, mutations in one
+fork never affect another, and the source dataset stays unchanged for replay.
 
 <div className="mermaid-frame">
 ```mermaid
@@ -244,7 +248,8 @@ flowchart LR
     F1 --- AG1[agent-1]:::agent
     F2 --- AG2[agent-2]:::agent
     F3 --- AG3[agent-3]:::agent
-```
+
+````
 </div>
 <div className="mermaid-caption">
   Figure 4: A reference bucket forks into isolated views so each eval run can
@@ -260,7 +265,7 @@ For more information, see the docs:
 [Bucket snapshots and forks](/docs/buckets/snapshots-and-forks/) ·
 [Using a forked bucket](/docs/buckets/snapshots-and-forks/#using-a-forked-bucket)
 
-## 5. Distribute agent artifacts to a global fleet
+## 5. Distribute agent artifacts to a global fleet {#distribute-agent-artifacts-to-a-global-fleet}
 
 Deployment artifacts such as model weights, compiled binaries, and config
 bundles are the opposite of runtime memory: they change rarely, are written once
@@ -285,33 +290,36 @@ flowchart LR
     GB -->|local read| N1[Fleet node — US]:::node
     GB -->|local read| N2[Fleet node — EU]:::node
     GB -->|local read| N3[Fleet node — APAC]:::node
-```
+````
+
 </div>
 <div className="mermaid-caption">
   Figure 5: CI uploads an artifact once and fleet nodes fetch it from the
   nearest replica.
 </div>
 
-In CI, a release job requests a [presigned `PUT` URL for a versioned key](/docs/objects/presigned/) such as
+In CI, a release job requests a
+[presigned `PUT` URL for a versioned key](/docs/objects/presigned/) such as
 `artifacts/{service}/{version}.tar.zst` and uploads the build output directly.
 This keeps credentials off the runner and avoids routing traffic through your
 own servers. Fleet nodes learn the key from your control plane and pull from the
-bucket on startup or rollout. 
+bucket on startup or rollout.
 
 **Documentation:** [Presigned URLs](/docs/objects/presigned/) ·
 [Custom domains](/docs/buckets/custom-domain/) ·
-[Object regions](/docs/objects/object_regions/) (per-artifact residency)
+[Bucket locations](/docs/buckets/locations/) (per-artifact residency)
 
-## 6. Provision isolated storage for ephemeral sandboxes
+## 6. Provision isolated storage for ephemeral sandboxes {#provision-isolated-storage-for-ephemeral-sandboxes}
 
 If you run agents inside sandboxes, you often want their storage to feel like a
 simple directory while still being durable and global.
 
-Each sandbox gets its own Tigris bucket mounted via [TigrisFS](/docs/training/tigrisfs/). Your agents read
-and write files under the mount point while your platform maps that to buckets
-and snapshots behind the scenes. The agent sees a plain `/data` directory while
-the platform stores everything as globally distributed objects. Snapshots and
-forks handle mid-run checkpoints and sub-agent fan-out.
+Each sandbox gets its own Tigris bucket mounted via
+[TigrisFS](/docs/training/tigrisfs/). Your agents read and write files under the
+mount point while your platform maps that to buckets and snapshots behind the
+scenes. The agent sees a plain `/data` directory while the platform stores
+everything as globally distributed objects. Snapshots and forks handle mid-run
+checkpoints and sub-agent fan-out.
 
 <div className="mermaid-frame">
 ```mermaid
@@ -328,6 +336,7 @@ flowchart LR
     SNAP -->|fork| F1[(Sub-agent 1)]:::fork
     SNAP -->|fork| F2[(Sub-agent 2)]:::fork
     SNAP -->|resume| R[Resumed sandbox]:::agent
+
 ```
 </div>
 <div className="mermaid-caption">
@@ -345,8 +354,9 @@ when you need checkpoints, replay, or sub-agent fan-out.
 | Topic                                                       | What you'll find there                                                                     |
 | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | [Get started with Tigris](/docs/get-started/)               | A guided walkthrough for creating buckets, uploading objects, and running basic workloads. |
-| [Multi-region buckets](/docs/buckets/multi-region/)         | Details on available regions, replication behavior, and how to choose locations.           |
+| [Bucket locations](/docs/buckets/locations/)                | Details on available regions, replication behavior, and how to choose locations.           |
 | [Snapshots and forks](/docs/buckets/snapshots-and-forks/)   | Concepts and API flows for creating snapshots, forking buckets, and managing versions.     |
 | [Object notifications](/docs/buckets/object-notifications/) | How to configure webhooks, filter events, and build event-driven pipelines.                |
 | [TigrisFS](/docs/training/tigrisfs/)                        | Instructions for mounting buckets as filesystems and working with `/data` inside agents.   |
 | [Presigned URLs](/docs/objects/presigned/)                  | Patterns for generating scoped URLs for upload/download in CI and production apps.         |
+```

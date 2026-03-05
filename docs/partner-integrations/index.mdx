@@ -1,16 +1,13 @@
 # Partner Integration Program
 
-Tigris is an object storage service that allows users to store and retrieve any
-amount of data without egress fees. As Tigris is S3-compatible, existing S3 SDKs
-and tools work simply by configuring them to point to Tigris.
+Tigris is an S3-compatible object storage service with no egress fees. Partners
+can integrate with Tigris to offer object storage to their customers using the
+Partner Integrations API and the Partner Dashboard.
 
-For partners who wish to integrate with Tigris to offer object storage as a
-service to their customers, there is an additional API for managing billing,
-buckets, authorization, and organizations. The Partner Integrations API is
-designed for **platforms and SaaS applications** that want to offer object
-storage to their users.
+The Partner Integration Program is built for **platforms and SaaS applications**
+that want to provide object storage to their users.
 
-**Examples of good use cases:**
+**Good use cases:**
 
 - **Cloud platforms** extending their offering to include object storage
 - **Developer tools** that need per-user or per-project storage
@@ -18,21 +15,37 @@ storage to their users.
 - **Content platforms** isolating media storage per tenant
 - **Backup services** managing storage on behalf of end users
 
-If you just need object storage for your own application or buckets for your
-teams, check out our [Getting Started Guide](/docs/get-started) instead.
+If you need object storage for your own application, see the
+[Getting Started Guide](/docs/get-started) instead.
+
+## Partner Dashboard
+
+Manage your integration from
+[partners.storage.dev](https://partners.storage.dev). The dashboard gives you
+direct control over organizations, buckets, access keys, and billing without
+writing any code.
+
+Most partner platforms require you to build everything against an API from day
+one. Tigris Partner Dashboard lets you manage your customers' storage
+immediately, and automate with the API when you're ready.
+
+See the [Partner Dashboard guide](/docs/partner-integrations/dashboard) for a
+full walkthrough.
 
 ## Getting Started
 
-Ready to integrate? Here's how to begin:
-
-1. **Understand the architecture** - Read our
+1. **Request partner access** -- Visit the
+   [partners page](https://www.tigrisdata.com/partners/) to request your
+   Provider ID and signing key; we'll send an invite to the dashboard.
+2. **Log in to the dashboard** -- Go to
+   [partners.storage.dev](https://partners.storage.dev) to start managing
+   organizations and buckets
+3. **Understand the architecture** -- Read the
    [Multi-Tenant Architecture guide](/docs/partner-integrations/architecture) to
    learn how to map your customers to Tigris Organizations
-2. **Review the API** - Explore the
-   [Partner Integrations API reference](/docs/partner-integrations/api/) for
-   authentication and endpoints
-3. **Contact us** - Email [help@tigrisdata.com](mailto:help@tigrisdata.com) to
-   kick off your partnership. We'll provide your Provider ID and signing key.
+4. **Automate with the API** -- Use the
+   [Partner Integrations API](/docs/partner-integrations/api/) to integrate
+   provisioning and billing into your platform
 
 ## White Label Use
 
@@ -42,22 +55,20 @@ customized to `https://tigris-example-bucket.<CUSTOM_URL>/bar.txt`
 
 ## Identity and Access Management
 
-Our goal is to provide simple and effective access controls.
-
 Organizations provide strong isolation between end users. An organization is
 created for each end user, and an organization may consist of one or more users.
 A user may have `Admin` or `Member` privileges.
 
 Endpoints for rotating and revoking access keys are available, as well as a
-recommended process for off boarding end users. Off boarding consists of
+recommended process for offboarding end users. Offboarding consists of
 deactivating the organization and its associated access keys.
 
 ## Billing
 
-You are able to run your own billing logic. Tigris provides billing totals given
-a date range with granularity to the day per organization.
+You can run your own billing logic. Tigris provides billing totals given a date
+range with granularity to the day per organization.
 
 ## Partnerships
 
-For further questions surrounding partnerships, please reach out to us at
-[help@tigrisdata.com](mailto:help@tigrisdata.com). We're happy to help!
+For questions about partnerships, visit the
+[partners page](https://www.tigrisdata.com/partners/).

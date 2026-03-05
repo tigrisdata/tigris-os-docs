@@ -607,6 +607,11 @@ const sidebars = {
         },
         {
           type: "doc",
+          label: "Partner Dashboard",
+          id: "partner-integrations/dashboard",
+        },
+        {
+          type: "doc",
           label: "Multi-Tenant Architecture",
           id: "partner-integrations/architecture",
         },

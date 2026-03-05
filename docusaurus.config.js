@@ -24,6 +24,50 @@ const config = {
   onBrokenLinks: "throw",
   trailingSlash: true,
 
+  headTags: [
+    {
+      tagName: "script",
+      attributes: { type: "application/ld+json" },
+      innerHTML: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: "Tigris Data",
+        url: "https://www.tigrisdata.com",
+        logo: "https://www.tigrisdata.com/docs/logo/dark.png",
+        description:
+          "Tigris is a globally distributed, S3-compatible object storage service with zero egress fees. Store, access, and distribute data worldwide with automatic global replication and caching.",
+        sameAs: [
+          "https://github.com/tigrisdata",
+          "https://twitter.com/TigrisData",
+        ],
+        foundingDate: "2022",
+        knowsAbout: [
+          "S3-compatible object storage",
+          "globally distributed storage",
+          "cloud object storage",
+          "zero egress fee storage",
+        ],
+      }),
+    },
+    {
+      tagName: "script",
+      attributes: { type: "application/ld+json" },
+      innerHTML: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "Tigris Object Storage Documentation",
+        url: "https://www.tigrisdata.com/docs/",
+        description:
+          "Documentation for Tigris, a globally distributed S3-compatible object storage service with zero egress fees, automatic global replication, and bucket forks.",
+        publisher: {
+          "@type": "Organization",
+          name: "Tigris Data",
+          url: "https://www.tigrisdata.com",
+        },
+      }),
+    },
+  ],
+
   clientModules: [require.resolve("./src/util/augmentConsoleLinks.js")],
 
   presets: [

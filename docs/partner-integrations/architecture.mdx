@@ -56,7 +56,9 @@ operational model.
 
 ### Provisioning Flow
 
-When a user signs up in your system:
+When a user signs up in your system, you can create their organization and
+initial bucket via the API below, or through the
+[Partner Dashboard](/docs/partner-integrations/dashboard).
 
 **1. Create their organization and initial bucket** in a single API call:
 
@@ -127,7 +129,8 @@ Content-Type: application/json
 ### Offboarding Tenants
 
 To offboard a tenant, deactivate their organization. This immediately revokes
-access for all users and access keys:
+access for all users and access keys. You can deactivate an organization from
+the [Partner Dashboard](/docs/partner-integrations/dashboard) or via the API:
 
 ```http
 PUT /v1/providers/{provider_id}/orgs/{org_id}

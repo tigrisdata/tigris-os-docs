@@ -924,3 +924,20 @@ table td {
     grid-template-columns: 1fr;
   }
 }
+
+/* Partner Dashboard doc: screenshot styling */
+.dashboard-screenshot {
+  margin: 1.5rem 0;
+}
+
+.dashboard-screenshot img {
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+[data-theme="dark"] .dashboard-screenshot img {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}

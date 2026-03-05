@@ -1,0 +1,291 @@
+---
+description:
+  "Store AI datasets, model checkpoints, artifacts, and media files with Tigris.
+  S3-compatible object storage with zero egress fees and global access."
+keywords:
+  [
+    ai workloads,
+    ml object storage,
+    ai storage,
+    model checkpoints,
+    training datasets,
+    ml artifacts,
+    generative media,
+    s3-compatible storage,
+    zero egress,
+    multi-cloud ai,
+    model weights storage,
+    ai data pipeline,
+  ]
+---
+
+# Why Do AI Applications Need Object Storage?
+
+AI and ML workloads produce and consume large volumes of unstructured data —
+datasets, model weights, checkpoints, embeddings, and generated media. This data
+is too large and too varied for databases. Object storage provides the scalable,
+durable storage layer these workloads require.
+
+For AI workloads, Tigris provides high parallel throughput and global access
+with zero egress fees.
+
+## Frequently Asked Questions
+
+**Why not use a database for AI data?** Databases are optimized for structured
+queries. AI workloads produce large binary files (model weights, datasets,
+images) that are better stored as objects and accessed by key. Object storage
+scales to petabytes without schema management.
+
+**Does Tigris support parallel uploads and downloads?** Yes. Tigris supports S3
+multipart uploads and parallel downloads for high throughput on large files.
+
+**Can I access my training data from multiple clouds?** Yes. Tigris uses a
+single global endpoint (`https://t3.storage.dev`). Data is replicated close to
+where it is accessed. No egress fees when moving data between clouds.
+
+**Does Tigris provide vector search or ML pipeline orchestration?** No. Tigris
+is object storage. It stores data that is consumed by external vector databases,
+ML frameworks, and pipeline orchestrators. Tigris does not provide query engines
+or compute.
+
+**What tools and frameworks work with Tigris?** Any tool that supports S3 works
+with Tigris, including PyTorch, Hugging Face, LangChain, boto3, and the AWS CLI.
+
+**What is a bucket fork?** A bucket fork is an instant, zero-copy clone of a
+bucket. Use forks to run parallel experiments against the same dataset without
+duplicating storage or risking data collisions.
+
+## When Should I Use Tigris for AI Workloads?
+
+Use Tigris when:
+
+- The workload stores model weights, checkpoints, or training datasets.
+- Data needs to be accessed from multiple clouds or regions.
+- You want to avoid egress fees for data transfer between training and inference
+  environments.
+- The project needs to share large datasets across teams or environments.
+- The workload produces generative media, embeddings, or ML artifacts.
+
+Do not use Tigris when:
+
+- The workload needs a vector database with search capabilities.
+- The workload needs a relational database or SQL queries.
+- The data fits in memory and does not need durable storage.
+
+## How Do I Store Training Datasets?
+
+Store training data as objects. Access them from any cloud or region without
+egress fees:
+
+```python
+import boto3
+from botocore.config import Config
+
+client = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    config=Config(s3={"addressing_style": "virtual"}),
+)
+
+# Upload a training dataset
+client.upload_file(
+    "training-data.parquet",
+    "ml-datasets",
+    "v1/training-data.parquet",
+)
+
+# Download for training
+client.download_file(
+    "ml-datasets",
+    "v1/training-data.parquet",
+    "/tmp/training-data.parquet",
+)
+```
+
+## How Do I Save and Restore Model Checkpoints?
+
+Save checkpoints during training and restore them for inference or continued
+training:
+
+```python
+import io
+import boto3
+from botocore.config import Config
+
+client = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    config=Config(s3={"addressing_style": "virtual"}),
+)
+
+# Save a checkpoint
+def save_checkpoint(model_state, bucket, key):
+    buffer = io.BytesIO()
+    # Serialize your model state (e.g., torch.save, pickle, etc.)
+    # torch.save(model_state, buffer)
+    buffer.seek(0)
+    client.upload_fileobj(buffer, bucket, key)
+
+# Restore a checkpoint
+def load_checkpoint(bucket, key):
+    buffer = io.BytesIO()
+    client.download_fileobj(bucket, key, buffer)
+    buffer.seek(0)
+    # Deserialize your model state
+    # return torch.load(buffer)
+    return buffer
+```
+
+## How Do I Store ML Artifacts and Experiment Metadata?
+
+Store experiment outputs, evaluation results, and metadata as JSON objects:
+
+```python
+import json
+import boto3
+from botocore.config import Config
+
+client = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    config=Config(s3={"addressing_style": "virtual"}),
+)
+
+metadata = {
+    "experiment": "fine-tune-v3",
+    "accuracy": 0.94,
+    "epochs": 10,
+    "model": "llama-3.1-8b",
+}
+
+client.put_object(
+    Bucket="ml-artifacts",
+    Key="experiments/fine-tune-v3/metadata.json",
+    Body=json.dumps(metadata),
+    ContentType="application/json",
+)
+```
+
+## How Do I Store Generated Images, Audio, and Video?
+
+Store media files generated by AI models using JavaScript or Python:
+
+```js
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+
+const client = new S3Client({
+  region: "auto",
+  endpoint: "https://t3.storage.dev",
+});
+
+// Store a generated image
+await client.send(
+  new PutObjectCommand({
+    Bucket: "generated-media",
+    Key: `images/${Date.now()}.png`,
+    Body: imageBuffer,
+    ContentType: "image/png",
+  }),
+);
+```
+
+## How Do I Store Embeddings and Feature Vectors?
+
+Store precomputed embeddings as NumPy arrays or other binary formats:
+
+```python
+import io
+import boto3
+import numpy as np
+from botocore.config import Config
+
+client = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    config=Config(s3={"addressing_style": "virtual"}),
+)
+
+# Save embeddings
+embeddings = np.random.rand(10000, 768).astype(np.float32)
+buffer = io.BytesIO()
+np.save(buffer, embeddings)
+buffer.seek(0)
+
+client.upload_fileobj(buffer, "ml-data", "embeddings/v1.npy")
+
+# Load embeddings
+buffer = io.BytesIO()
+client.download_fileobj("ml-data", "embeddings/v1.npy", buffer)
+buffer.seek(0)
+embeddings = np.load(buffer)
+```
+
+## How Do Bucket Forks Help with Experiments?
+
+[Bucket forks](/docs/buckets/snapshots-and-forks/) create instant, zero-copy
+clones of a bucket's data. Forks are useful for:
+
+- Running multiple fine-tuning experiments against the same dataset without
+  interference.
+- Giving each AI agent an isolated working environment.
+- Creating evaluation snapshots for reproducibility.
+- A/B testing different data preprocessing approaches.
+
+Forks work even for very large datasets because they are copy-on-write — the
+original data is shared until modified.
+
+Use the `tigris-boto3-ext` package to create forks and snapshots from Python:
+
+```python
+import boto3
+from botocore.config import Config
+from tigris_boto3_ext import (
+    create_snapshot_bucket,
+    create_snapshot,
+    get_snapshot_version,
+    create_fork,
+)
+
+client = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    config=Config(s3={"addressing_style": "virtual"}),
+)
+
+# Create a snapshot-enabled bucket and upload training data
+create_snapshot_bucket(client, "ml-datasets")
+client.upload_file("training-data.parquet", "ml-datasets", "v1/data.parquet")
+
+# Take a snapshot before starting experiments
+response = create_snapshot(client, "ml-datasets", snapshot_name="baseline")
+snapshot_version = get_snapshot_version(response)
+
+# Fork for each experiment — instant, zero-copy
+create_fork(client, "experiment-lr-high", "ml-datasets", snapshot_version=snapshot_version)
+create_fork(client, "experiment-lr-low", "ml-datasets", snapshot_version=snapshot_version)
+```
+
+See [Bucket Forks and Snapshots](/docs/ai-agents/bucket-forks-and-snapshots/)
+for the full API.
+
+## What Does Tigris Provide for AI Workloads?
+
+- **High parallel throughput.** Upload and download large files efficiently with
+  multipart transfers.
+- **Global access.** A single endpoint with data replicated to where it is
+  accessed.
+- **Zero egress fees.** Move data freely between training, inference, and
+  evaluation environments across any cloud.
+- **S3 compatibility.** Works with PyTorch, Hugging Face, LangChain, and any
+  tool that supports S3.
+- **Bucket forks.** Instant, isolated dataset copies for parallel experiments.
+
+## Learn More
+
+- [Tigris Object Storage for AI Coding Agents](/docs/ai-agents/)
+- [Replace AWS S3 with Tigris](/docs/ai-agents/replace-s3-with-tigris/)
+- [PyTorch Integration](/docs/quickstarts/pytorch/)
+- [SkyPilot Integration](/docs/quickstarts/skypilot/)
+- [LanceDB Integration](/docs/libraries/lancedb/)
+- [Choosing the Right Storage](/docs/ai-agents/choosing-the-right-storage/)
+- [Snapshots and Forks](/docs/buckets/snapshots-and-forks/)

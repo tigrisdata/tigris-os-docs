@@ -34,3 +34,6 @@ static/llms.txt
 static/llms-full.txt
 
 *.sln
+
+# Generated agent-readable markdown
+static/ai-agents/

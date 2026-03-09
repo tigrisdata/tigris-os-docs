@@ -131,7 +131,9 @@ for a separate CDN.
 ### How Do Tigris and PostgreSQL Work Together?
 
 The most common pattern: PostgreSQL stores metadata and a storage key, Tigris
-stores the file.
+stores the file. For JavaScript, use the
+[Tigris SDK](/docs/ai-agents/tigris-sdk-javascript/). For Python, use boto3 with
+the Tigris endpoint:
 
 ```python
 import boto3

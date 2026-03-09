@@ -143,52 +143,34 @@ For a detailed comparison, see
 
 ## How Do I Get Started with Node.js?
 
-Install the AWS SDK and configure it with the Tigris endpoint:
+Install the Tigris SDK:
 
 ```bash
-npm install @aws-sdk/client-s3
+npm install @tigrisdata/storage
 ```
 
 ```js
-import {
-  S3Client,
-  PutObjectCommand,
-  GetObjectCommand,
-} from "@aws-sdk/client-s3";
-
-const client = new S3Client({
-  region: "auto",
-  endpoint: "https://t3.storage.dev",
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
+import { put, get, list } from "@tigrisdata/storage";
 ```
 
 Upload an object:
 
 ```js
-await client.send(
-  new PutObjectCommand({
-    Bucket: "my-bucket",
-    Key: "hello.txt",
-    Body: "Hello from Tigris!",
-  }),
-);
+await put("hello.txt", "Hello from Tigris!");
 ```
 
 Download an object:
 
 ```js
-const response = await client.send(
-  new GetObjectCommand({
-    Bucket: "my-bucket",
-    Key: "hello.txt",
-  }),
-);
-const body = await response.Body.transformToString();
+const data = await get("hello.txt", "string");
 ```
+
+The SDK reads credentials from environment variables automatically. See the
+[Tigris JavaScript SDK reference](/docs/ai-agents/tigris-sdk-javascript/) for
+the full API including presigned URLs, progress tracking, and bucket management.
+
+If you need cross-provider S3 compatibility, you can also use the
+[AWS SDK](/docs/sdks/s3/) with the Tigris endpoint (`https://t3.storage.dev`).
 
 ## How Do I Get Started with Python?
 

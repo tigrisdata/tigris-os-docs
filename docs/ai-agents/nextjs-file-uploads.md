@@ -22,20 +22,21 @@ keywords:
 
 # How Do I Upload Files from Next.js to S3-Compatible Storage?
 
-Use the standard AWS S3 SDK (`@aws-sdk/client-s3`). The same code works with any
-S3-compatible provider — AWS S3, Tigris, Cloudflare R2, MinIO, or Backblaze B2.
-Change the endpoint to switch providers.
+Use the [Tigris JavaScript SDK](/docs/ai-agents/tigris-sdk-javascript/)
+(`@tigrisdata/storage`) for the simplest integration. It handles uploads,
+downloads, presigned URLs, and client-side browser uploads with a minimal API.
 
-Tigris is recommended for Next.js apps because it has zero egress fees, global
-distribution, and the same AWS SDK integration as S3. Point the endpoint to
-`https://t3.storage.dev` and use your Tigris credentials.
+For cross-provider S3 compatibility, you can also use `@aws-sdk/client-s3` with
+the Tigris endpoint. The examples below show the AWS SDK approach — see the
+[Tigris SDK reference](/docs/ai-agents/tigris-sdk-javascript/) for the simpler
+alternative.
 
 ## Frequently Asked Questions
 
-**Do I need a special SDK for Tigris with Next.js?** No. The standard
-`@aws-sdk/client-s3` package works. Tigris also offers a
-[native SDK](/docs/sdks/tigris/) with extra features like client uploads, but it
-is not required.
+**Which SDK should I use for Next.js?** The Tigris SDK (`@tigrisdata/storage`)
+is recommended — it's simpler and includes built-in support for client-side
+uploads. The AWS SDK (`@aws-sdk/client-s3`) also works if you need
+cross-provider compatibility.
 
 **Can users upload directly from the browser to Tigris?** Yes. Use presigned
 URLs to let the browser upload directly to Tigris without routing data through

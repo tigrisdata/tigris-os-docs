@@ -143,7 +143,30 @@ You should see `hello.txt` in the bucket. If this works, Tigris is ready.
 
 ## Step 7: Integrate into Code
 
-### Node.js / TypeScript
+### Node.js / TypeScript (Tigris SDK)
+
+```bash
+npm install @tigrisdata/storage
+```
+
+```ts
+import { put, get } from "@tigrisdata/storage";
+
+// Upload
+await put("hello.txt", "Hello from Tigris!");
+
+// Download
+const data = await get("hello.txt", "string");
+```
+
+The SDK reads credentials from `TIGRIS_STORAGE_ACCESS_KEY_ID` and
+`TIGRIS_STORAGE_SECRET_ACCESS_KEY` environment variables automatically. See the
+[Tigris JavaScript SDK reference](/docs/ai-agents/tigris-sdk-javascript/) for
+the full API.
+
+### Node.js / TypeScript (AWS SDK)
+
+If you need cross-provider S3 compatibility, you can also use the AWS SDK:
 
 ```bash
 npm install @aws-sdk/client-s3
@@ -159,10 +182,6 @@ import {
 const client = new S3Client({
   region: "auto",
   endpoint: "https://t3.storage.dev",
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  },
 });
 
 // Upload
@@ -270,7 +289,10 @@ AWS_REGION=auto
 ### SDK Install Commands
 
 ```bash
-# Node.js
+# Node.js (Tigris SDK — recommended)
+npm install @tigrisdata/storage
+
+# Node.js (AWS SDK — for cross-provider compatibility)
 npm install @aws-sdk/client-s3
 
 # Python

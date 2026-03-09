@@ -1,0 +1,180 @@
+---
+description:
+  "Generate presigned URLs with Tigris for temporary file access. Examples for
+  CLI, JavaScript, Python, and the Tigris SDK. GET and PUT support."
+keywords:
+  [
+    presigned url,
+    presigned url s3,
+    temporary download link,
+    presigned upload url,
+    tigris presign,
+    secure file sharing,
+    temporary url object storage,
+    signed url,
+  ]
+---
+
+# How Do I Generate Presigned URLs with Tigris?
+
+A presigned URL grants temporary access to a private object without requiring
+credentials. Use presigned URLs to share files, enable browser uploads, or
+provide time-limited download links. Tigris supports presigned URLs via the CLI,
+the Tigris SDK, and any AWS S3 SDK.
+
+## Frequently Asked Questions
+
+**What is a presigned URL?** A URL that includes a cryptographic signature
+granting temporary GET or PUT access to a specific object. Anyone with the URL
+can access the object until it expires.
+
+**How long can a presigned URL last?** Up to 90 days. The default is 1 hour
+(3600 seconds).
+
+**Can I generate presigned URLs for uploads?** Yes. Generate a PUT presigned URL
+and the client can upload directly to that URL without needing credentials.
+
+**Do presigned URLs work with custom domains?** Yes. Replace the Tigris domain
+in the generated URL with your custom domain.
+
+## When Should I Use Presigned URLs?
+
+Use presigned URLs when:
+
+- You need to share a private file without making it public.
+- The browser needs to upload directly to Tigris.
+- You want time-limited access to objects.
+- You need to generate download links in an API response.
+
+## How Do I Generate a Presigned URL with the Tigris CLI?
+
+```bash
+# GET URL with default 1 hour expiry
+tigris presign my-bucket/report.pdf
+
+# PUT URL for uploads with 2 hour expiry
+tigris presign my-bucket/upload.pdf --method put --expires-in 7200
+
+# JSON output with metadata
+tigris presign my-bucket/image.png --format json
+
+# Use a specific access key
+tigris presign my-bucket/data.csv --access-key tid_AaBb
+
+# Copy to clipboard (macOS)
+tigris presign my-bucket/file.txt | pbcopy
+```
+
+## How Do I Generate a Presigned URL with the Tigris SDK?
+
+```ts
+import { getPresignedUrl } from "@tigrisdata/storage";
+
+// GET URL (download)
+const getResult = await getPresignedUrl("report.pdf", {
+  operation: "get",
+  expiresIn: 3600,
+});
+console.log(getResult.data?.url);
+
+// PUT URL (upload)
+const putResult = await getPresignedUrl("uploads/new-file.txt", {
+  operation: "put",
+  expiresIn: 7200,
+});
+
+// Use a specific access key (v2.15.1+)
+const result = await getPresignedUrl("file.txt", {
+  operation: "get",
+  accessKeyId: "tid_specific_key",
+});
+```
+
+## How Do I Generate a Presigned URL with JavaScript (AWS SDK)?
+
+```js
+import {
+  S3Client,
+  GetObjectCommand,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+
+const client = new S3Client({
+  region: "auto",
+  endpoint: "https://t3.storage.dev",
+});
+
+// Presigned GET URL
+const getUrl = await getSignedUrl(
+  client,
+  new GetObjectCommand({ Bucket: "my-bucket", Key: "file.txt" }),
+  { expiresIn: 3600 },
+);
+
+// Presigned PUT URL
+const putUrl = await getSignedUrl(
+  client,
+  new PutObjectCommand({
+    Bucket: "my-bucket",
+    Key: "uploads/new-file.txt",
+    ContentType: "application/pdf",
+  }),
+  { expiresIn: 3600 },
+);
+```
+
+## How Do I Generate a Presigned URL with Python (boto3)?
+
+```python
+import boto3
+from botocore.config import Config
+
+client = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    config=Config(s3={"addressing_style": "virtual"}),
+)
+
+# Presigned GET URL
+get_url = client.generate_presigned_url(
+    "get_object",
+    Params={"Bucket": "my-bucket", "Key": "file.txt"},
+    ExpiresIn=3600,
+)
+
+# Presigned PUT URL
+put_url = client.generate_presigned_url(
+    "put_object",
+    Params={"Bucket": "my-bucket", "Key": "uploads/new-file.txt"},
+    ExpiresIn=3600,
+)
+```
+
+## How Do I Generate a Presigned URL with the AWS CLI?
+
+```bash
+# GET URL
+aws s3 presign s3://my-bucket/file.txt \
+  --endpoint-url https://t3.storage.dev \
+  --expires-in 3600
+```
+
+## How Do I Use Presigned URLs with Custom Domains?
+
+Replace the Tigris domain with your custom domain:
+
+```js
+const presignedUrl = "https://t3.storage.dev/my-bucket/file.txt?X-Amz-...";
+const customUrl = presignedUrl.replace("t3.storage.dev", "cdn.example.com");
+```
+
+See [Custom Domains](/docs/buckets/custom-domain/) for setup instructions.
+
+## Learn More
+
+- [Tigris Object Storage for AI Coding Agents](/docs/ai-agents/)
+- [Client-Side Uploads](/docs/ai-agents/client-side-uploads/)
+- [Next.js File Uploads](/docs/ai-agents/nextjs-file-uploads/)
+- [Tigris CLI Quickstart](/docs/ai-agents/tigris-cli-quickstart/)
+- [Presigned URLs Documentation](/docs/objects/presigned/)

@@ -117,7 +117,7 @@ the CLI.
 For agents that support the
 [Model Context Protocol](https://modelcontextprotocol.io/), the Tigris MCP
 server provides structured tool access beyond what context files offer. See the
-[MCP Server documentation](/docs/mcp/) for setup instructions.
+[MCP Server documentation](/docs/mcp/local/) for setup instructions.
 
 ## How Agents Discover Tigris
 

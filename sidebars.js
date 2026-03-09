@@ -38,6 +38,11 @@ const sidebars = {
           id: "overview/index",
         },
         "concepts/architecture",
+        {
+          type: "doc",
+          label: "Use Cases - AI Agents",
+          id: "agents-use-cases",
+        },
         "concepts/authnz",
         "api/s3/index",
         "concepts/regions",

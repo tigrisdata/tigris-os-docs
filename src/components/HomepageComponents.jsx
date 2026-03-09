@@ -3,6 +3,7 @@ import React from "react";
 import { paramCase } from "param-case";
 import Link from "@docusaurus/Link";
 import clsx from "clsx";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 
 export function HomepageSection({
   id,
@@ -29,12 +30,15 @@ export function HomepageSection({
 }
 
 export function HomepageCard({ id, icon, title, description, to, selected }) {
+  const darkIcon = useBaseUrl(icon ? `${icon}.svg` : null);
+  const lightIcon = useBaseUrl(icon ? `${icon}-light.svg` : null);
+
   return (
     <Link to={to} className={`homepage-card ${selected ? "selected" : ""}`}>
       {icon && (
         <div className="icon">
-          <img src={`${icon}.svg`} className="dark" />
-          <img src={`${icon}-light.svg`} className="light" />
+          <img src={darkIcon} className="dark" />
+          <img src={lightIcon} className="light" />
         </div>
       )}
       <div className="card-content">

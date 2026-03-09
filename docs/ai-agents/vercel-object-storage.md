@@ -19,14 +19,17 @@ keywords:
 # How Do I Use Object Storage with Vercel?
 
 Use Tigris as the object storage backend for Vercel apps. Set environment
-variables in Vercel, use the AWS SDK in your serverless or edge functions, and
-upload files to Tigris. No egress fees, global distribution included.
+variables in Vercel, use the
+[Tigris SDK](/docs/ai-agents/tigris-sdk-javascript/) or AWS SDK in your
+serverless or edge functions, and upload files to Tigris. No egress fees, global
+distribution included.
 
 ## Frequently Asked Questions
 
-**Does Tigris work with Vercel serverless functions?** Yes. Use the AWS SDK
-(`@aws-sdk/client-s3`) in any Vercel serverless function. Set your Tigris
-credentials as Vercel environment variables.
+**Does Tigris work with Vercel serverless functions?** Yes. Use the Tigris SDK
+(`@tigrisdata/storage`) or AWS SDK (`@aws-sdk/client-s3`) in any Vercel
+serverless function. Set your Tigris credentials as Vercel environment
+variables.
 
 **Does Tigris work with Vercel Edge Functions?** Yes. The AWS SDK v3 works in
 Vercel's Edge Runtime.
@@ -86,6 +89,10 @@ tigris mk your-bucket-name
 ### Step 4: Install the SDK
 
 ```bash
+# Tigris SDK (recommended)
+npm install @tigrisdata/storage
+
+# Or AWS SDK (for cross-provider compatibility)
 npm install @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
 ```
 

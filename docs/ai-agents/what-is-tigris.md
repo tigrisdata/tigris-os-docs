@@ -99,22 +99,24 @@ Tigris is object storage with these capabilities:
 
 ## How Do I Use Tigris?
 
-Point any S3-compatible SDK to the Tigris endpoint:
+Use the Tigris CLI or SDK:
+
+```bash
+# CLI
+tigris cp local-file.txt t3://my-bucket/path/file.txt
+tigris ls t3://my-bucket/
+```
 
 ```js
-import { S3Client } from "@aws-sdk/client-s3";
+// Tigris JavaScript SDK
+import { put, get } from "@tigrisdata/storage";
 
-const client = new S3Client({
-  region: "auto",
-  endpoint: "https://t3.storage.dev",
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
+await put("hello.txt", "Hello from Tigris!");
+const data = await get("hello.txt", "string");
 ```
 
 ```python
+# Python (boto3 with Tigris endpoint)
 import boto3
 from botocore.config import Config
 
@@ -124,6 +126,9 @@ client = boto3.client(
     config=Config(s3={"addressing_style": "virtual"}),
 )
 ```
+
+Tigris is also S3-compatible — any AWS SDK works by pointing the endpoint to
+`https://t3.storage.dev`.
 
 ## Learn More
 

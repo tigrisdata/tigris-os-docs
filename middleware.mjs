@@ -20,20 +20,20 @@ export default function middleware(request) {
   const accept = request.headers.get("accept") || "";
 
   if (accept.includes("text/markdown")) {
-    // The docusaurus-plugin-llms generates .md files under a docs/ subdirectory
-    // within the build output. With baseUrl "/docs/", the .md files are served at
-    // /docs/docs/<path>.md on the deployed site.
+    // The @signalwire/docusaurus-plugin-llms-txt generates .md files at the
+    // route path (e.g., build/overview.md). With baseUrl "/docs/", these are
+    // served at /docs/<path>.md on the deployed site.
     //
     // Rewrite HTML URL to its .md equivalent:
-    // /docs/overview/ -> /docs/docs/overview.md
-    // /docs/cli/cp/   -> /docs/docs/cli/cp.md
-    // /docs/          -> /docs/docs/index.md
+    // /docs/overview/ -> /docs/overview.md
+    // /docs/cli/cp/   -> /docs/cli/cp.md
+    // /docs/          -> /docs/index.md
     const subpath = pathname.replace(/^\/docs\/?/, "").replace(/\/+$/, "");
     let mdPath;
     if (!subpath) {
-      mdPath = "/docs/docs/index.md";
+      mdPath = "/docs/index.md";
     } else {
-      mdPath = `/docs/docs/${subpath}.md`;
+      mdPath = `/docs/${subpath}.md`;
     }
 
     return new Response(null, {

@@ -20,20 +20,11 @@
       ]
     },
     {
-      "source": "/docs/llms-agents.txt",
+      "source": "/docs/:path*.md",
       "headers": [
         {
           "key": "Content-Type",
-          "value": "text/plain; charset=utf-8"
-        }
-      ]
-    },
-    {
-      "source": "/docs/llms-sdks.txt",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/plain; charset=utf-8"
+          "value": "text/markdown; charset=utf-8"
         }
       ]
     }

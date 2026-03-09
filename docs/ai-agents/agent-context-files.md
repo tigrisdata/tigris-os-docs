@@ -69,15 +69,19 @@ tigris forks create your-bucket-name --name experiment-fork
 
 ## SDK Usage
 
-This project uses the AWS S3 SDK with the Tigris endpoint:
+This project uses the Tigris Storage SDK:
 
 ```javascript
-import { S3Client } from "@aws-sdk/client-s3";
+import { put, get, list } from "@tigrisdata/storage";
 
-const client = new S3Client({
-  region: "auto",
-  endpoint: "https://t3.storage.dev",
-});
+// Upload a file
+await put("path/file.txt", content);
+
+// Download a file
+const data = await get("path/file.txt");
+
+// List objects
+const objects = await list();
 ```
 
 ## Conventions
@@ -112,10 +116,8 @@ the CLI.
 
 For agents that support the
 [Model Context Protocol](https://modelcontextprotocol.io/), the Tigris MCP
-server provides structured tool access beyond what context files offer. See:
-
-- [Local MCP Server](/docs/mcp/local/) — for Claude Desktop, Cursor, VS Code
-- [Remote MCP Server](/docs/mcp/remote/) — for ChatGPT, Claude Code, Goose
+server provides structured tool access beyond what context files offer. See the
+[MCP Server documentation](/docs/mcp/) for setup instructions.
 
 ## How Agents Discover Tigris
 

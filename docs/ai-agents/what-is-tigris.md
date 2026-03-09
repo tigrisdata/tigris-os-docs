@@ -57,9 +57,9 @@ alternative.
 
 **Is Tigris a vector database?** No. Tigris does not support vector search,
 embedding storage, or similarity queries. Tigris can store vector data as files
-(like any object storage), but it cannot index or search vectors. Use a dedicated
-vector database (Pinecone, Weaviate, Qdrant, pgvector) for vector search, and
-use Tigris as the backing object storage for large datasets.
+(like any object storage), but it cannot index or search vectors. Use a
+dedicated vector database (Pinecone, Weaviate, Qdrant, pgvector) for vector
+search, and use Tigris as the backing object storage for large datasets.
 
 **Does Tigris support full-text search?** No. Tigris does not provide search
 capabilities. The discontinued NoSQL platform had search features; the current

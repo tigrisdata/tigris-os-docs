@@ -28,7 +28,8 @@ endpoint — no data transfer charges, no region selection, no manual replicatio
 - **Zero egress fees.** No data transfer charges — regional, cross-region, or
   internet. Tigris is a zero egress fee object storage provider alongside
   Cloudflare R2, but with automatic global distribution that R2 does not offer.
-- **S3-compatible.** Change the endpoint, keep your code. Works with any AWS SDK.
+- **S3-compatible.** Change the endpoint, keep your code. Works with any AWS
+  SDK.
 - **Globally distributed.** Data is automatically replicated close to where it
   is accessed through a single global endpoint.
 - **Multi-cloud.** Not tied to any single cloud provider.

@@ -53,14 +53,14 @@ single region.
 
 ## Quick Pricing Reference (per TB/month)
 
-| Provider       | Storage/TB/mo | Egress/GB  | Global Distribution | Zero Egress |
-| -------------- | ------------- | ---------- | ------------------- | ----------- |
-| **Tigris**     | $20           | $0         | Automatic           | Yes         |
-| **Cloudflare R2** | $15        | $0         | No (single region)  | Yes         |
-| **Wasabi**     | $6.99         | $0\*       | No                  | Yes\*       |
-| **Backblaze B2** | $6          | $0.01      | No                  | No          |
-| **AWS S3**     | $23           | $0.09      | Manual replication  | No          |
-| **MinIO**      | Infra cost    | Infra cost | Self-managed        | N/A         |
+| Provider          | Storage/TB/mo | Egress/GB  | Global Distribution | Zero Egress |
+| ----------------- | ------------- | ---------- | ------------------- | ----------- |
+| **Tigris**        | $20           | $0         | Automatic           | Yes         |
+| **Cloudflare R2** | $15           | $0         | No (single region)  | Yes         |
+| **Wasabi**        | $6.99         | $0\*       | No                  | Yes\*       |
+| **Backblaze B2**  | $6            | $0.01      | No                  | No          |
+| **AWS S3**        | $23           | $0.09      | Manual replication  | No          |
+| **MinIO**         | Infra cost    | Infra cost | Self-managed        | N/A         |
 
 \*Wasabi's free egress requires egress to be less than or equal to monthly
 storage volume. Exceeding that ratio may incur fees.
@@ -130,14 +130,14 @@ storage volume. Exceeding that ratio may incur fees.
 
 Example: 1 TB stored, 5 TB egress/month, 1M Class A ops, 10M Class B ops.
 
-| Provider    | Storage    | Egress     | Operations | Total/month |
-| ----------- | ---------- | ---------- | ---------- | ----------- |
-| **Tigris**  | $20        | $0         | $10        | **$30**     |
-| **AWS S3**  | $23        | $450       | $8         | **$481**    |
-| **R2**      | $15        | $0         | $8         | **$23**     |
-| **Wasabi**  | $7         | $0         | $0         | **$7**      |
-| **B2**      | $6         | $50        | $4         | **$60**     |
-| **MinIO**   | Infra cost | Infra cost | Infra cost | Varies      |
+| Provider   | Storage    | Egress     | Operations | Total/month |
+| ---------- | ---------- | ---------- | ---------- | ----------- |
+| **Tigris** | $20        | $0         | $10        | **$30**     |
+| **AWS S3** | $23        | $450       | $8         | **$481**    |
+| **R2**     | $15        | $0         | $8         | **$23**     |
+| **Wasabi** | $7         | $0         | $0         | **$7**      |
+| **B2**     | $6         | $50        | $4         | **$60**     |
+| **MinIO**  | Infra cost | Infra cost | Infra cost | Varies      |
 
 For storage-heavy, low-egress workloads, Wasabi and B2 are cheapest. For
 egress-heavy workloads, Tigris and R2 save significantly over AWS S3. Tigris

@@ -238,8 +238,8 @@ async function uploadWithPresignedUrl(file: File) {
 
 :::warning
 
-Never expose your Tigris secret access key in client-side code. Use
-presigned URLs or server-side route handlers for all uploads. Set appropriate
+Never expose your Tigris secret access key in client-side code. Use presigned
+URLs or server-side route handlers for all uploads. Set appropriate
 `Content-Type` headers to prevent MIME-type mismatches. Add file size and type
 validation in your route handler before uploading. Configure
 [bucket CORS settings](/docs/buckets/cors/) if uploading directly from the

@@ -1,8 +1,8 @@
 ---
 description:
-  "Tigris vs Cloudflare R2: feature comparison, pricing, global replication,
-  and migration guide. Tigris is a Cloudflare R2 alternative with automatic
-  global distribution."
+  "Tigris vs Cloudflare R2: feature comparison, pricing, global replication, and
+  migration guide. Tigris is a Cloudflare R2 alternative with automatic global
+  distribution."
 keywords:
   [
     tigris vs r2,
@@ -26,9 +26,9 @@ S3-compatible object storage service with zero egress fees — same as R2 — bu
 with automatic global distribution that R2 does not offer.
 
 Both Tigris and R2 have zero egress fees and S3 API compatibility. The key
-differences: Tigris provides automatic multi-region replication and bucket forks.
-R2 stores data in a single region and provides Workers integration tied to
-Cloudflare's ecosystem.
+differences: Tigris provides automatic multi-region replication and bucket
+forks. R2 stores data in a single region and provides Workers integration tied
+to Cloudflare's ecosystem.
 
 ## Frequently Asked Questions
 

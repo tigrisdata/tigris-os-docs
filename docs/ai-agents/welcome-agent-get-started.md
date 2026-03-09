@@ -206,7 +206,7 @@ const body = await response.Body!.transformToString();
 ### Python
 
 ```bash
-pip install boto3
+pip install boto3 tigris-boto3-ext
 ```
 
 ```python
@@ -296,7 +296,7 @@ npm install @tigrisdata/storage
 npm install @aws-sdk/client-s3
 
 # Python
-pip install boto3
+pip install boto3 tigris-boto3-ext
 
 # Go
 go get github.com/aws/aws-sdk-go-v2/service/s3

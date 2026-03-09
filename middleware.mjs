@@ -1,3 +1,4 @@
+/* global URL, Response */
 import { next } from "@vercel/edge";
 
 const STATIC_EXTENSIONS =
@@ -13,7 +14,7 @@ export default function middleware(request) {
 
   // Skip static assets
   if (STATIC_EXTENSIONS.test(pathname)) {
-    return;
+    return next();
   }
 
   const accept = request.headers.get("accept") || "";
@@ -48,6 +49,7 @@ export default function middleware(request) {
   return next({
     headers: {
       Link: '</docs/llms.txt>; rel="alternate"; type="text/plain"',
+      Vary: "Accept",
     },
   });
 }

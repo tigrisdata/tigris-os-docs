@@ -31,7 +31,7 @@ configuration automatically.
 
 Here's a template you can customize for your project:
 
-```markdown
+`````markdown
 # Tigris Object Storage
 
 This project uses Tigris for object storage.
@@ -85,7 +85,7 @@ const client = new S3Client({
 - All uploads go to the `uploads/` prefix
 - Use presigned URLs for client-side uploads
 - Create bucket forks before running destructive operations
-```
+`````
 
 Customize the bucket name, prefixes, SDK language, and conventions to match your
 project. Agents will read this file alongside your `README.md` and other context

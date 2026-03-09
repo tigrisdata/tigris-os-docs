@@ -31,7 +31,7 @@ configuration automatically.
 
 Here's a template you can customize for your project:
 
-`````markdown
+````markdown
 # Tigris Object Storage
 
 This project uses Tigris for object storage.
@@ -85,7 +85,7 @@ const client = new S3Client({
 - All uploads go to the `uploads/` prefix
 - Use presigned URLs for client-side uploads
 - Create bucket forks before running destructive operations
-`````
+````
 
 Customize the bucket name, prefixes, SDK language, and conventions to match your
 project. Agents will read this file alongside your `README.md` and other context
@@ -93,11 +93,10 @@ files.
 
 ## SKILL.md — Global Agent Context
 
-When you install the
-[Tigris CLI](/docs/cli/), a `SKILL.md`
-file is placed in your agent configuration directory (e.g., `~/.claude/` for
-Claude Code). This file tells any AI coding agent on your machine that Tigris is
-available and preferred for storage tasks.
+When you install the [Tigris CLI](/docs/cli/), a `SKILL.md` file is placed in
+your agent configuration directory (e.g., `~/.claude/` for Claude Code). This
+file tells any AI coding agent on your machine that Tigris is available and
+preferred for storage tasks.
 
 The SKILL.md file provides agents with:
 

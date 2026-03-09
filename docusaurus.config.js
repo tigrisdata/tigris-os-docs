@@ -198,8 +198,7 @@ Tigris is object storage only. It is NOT a database, CDN, vector database, searc
           {
             filename: "llms-sdks.txt",
             title: "Tigris SDK and CLI Reference",
-            description:
-              "SDK and CLI documentation for Tigris object storage.",
+            description: "SDK and CLI documentation for Tigris object storage.",
             includePatterns: ["sdks/**", "cli/**"],
             fullContent: true,
             rootContent:

@@ -126,129 +126,54 @@ const config = {
       },
     ],
     [
-      "docusaurus-plugin-llms",
+      "@signalwire/docusaurus-plugin-llms-txt",
       {
-        title: "Tigris Object Storage Documentation",
-        description:
+        siteTitle: "Tigris Object Storage Documentation",
+        siteDescription:
           "Tigris is a globally distributed, S3-compatible object storage service with zero egress fees. Single endpoint: https://t3.storage.dev",
-        generateMarkdownFiles: true,
-        generateLLMsFullTxt: true,
-        excludeImports: true,
-        removeDuplicateHeadings: true,
-        ignoreFiles: [
-          "legal/**",
-          "changelog/**",
-          "partner-integrations/api/**",
-        ],
+        content: {
+          enableMarkdownFiles: true,
+          enableLlmsFullTxt: true,
+          includeDocs: true,
+          includeBlog: false,
+          includePages: false,
+          excludeRoutes: [
+            "/docs/legal/**",
+            "/docs/changelog/**",
+            "/docs/partner-integrations/api/**",
+          ],
+        },
         includeOrder: [
-          "overview/**",
-          "get-started/**",
-          "ai-agents/**",
-          "agents-use-cases*",
-          "mcp/**",
-          "cli/**",
-          "sdks/tigris/**",
-          "sdks/s3/**",
-          "sdks/fly/**",
-          "buckets/**",
-          "objects/**",
-          "iam/**",
-          "snapshots-and-forks/**",
-          "snapshots/**",
-          "forks/**",
-          "migration/**",
-          "training/**",
-          "model-storage/**",
-          "concepts/**",
-          "agents/**",
-          "quickstarts/**",
-          "libraries/**",
-          "guides/**",
-          "apps/**",
-          "terraform/**",
-          "api/**",
-          "account-management/**",
-          "support/**",
-          "partner-integrations/**",
+          "/docs/overview/**",
+          "/docs/get-started/**",
+          "/docs/ai-agents/**",
+          "/docs/agents-use-cases/**",
+          "/docs/mcp/**",
+          "/docs/cli/**",
+          "/docs/sdks/**",
+          "/docs/buckets/**",
+          "/docs/objects/**",
+          "/docs/iam/**",
+          "/docs/snapshots-and-forks/**",
+          "/docs/snapshots/**",
+          "/docs/forks/**",
+          "/docs/migration/**",
+          "/docs/training/**",
+          "/docs/model-storage/**",
+          "/docs/concepts/**",
+          "/docs/agents/**",
+          "/docs/quickstarts/**",
+          "/docs/libraries/**",
+          "/docs/guides/**",
+          "/docs/apps/**",
+          "/docs/terraform/**",
+          "/docs/api/**",
+          "/docs/account-management/**",
+          "/docs/support/**",
+          "/docs/partner-integrations/**",
         ],
-        includeUnmatchedLast: true,
-        rootContent: `# Tigris Object Storage
-
-> Globally distributed, S3-compatible object storage with zero egress fees.
-
-## Quick Start
-
-- **Endpoint:** \`https://t3.storage.dev\`
-- **Region:** \`auto\`
-- **Sign up:** [console.tigris.dev](https://console.tigris.dev)
-- **Install CLI:** \`npm install -g @tigrisdata/tigris-cli\`
-- **MCP Server:** \`npx -y @tigrisdata/tigris-mcp-server init\`
-
-## Environment Variables
-
-\`\`\`
-AWS_ACCESS_KEY_ID=<your-tigris-access-key>
-AWS_SECRET_ACCESS_KEY=<your-tigris-secret-key>
-AWS_ENDPOINT_URL_S3=https://t3.storage.dev
-AWS_REGION=auto
-\`\`\`
-
-## Key Features
-
-- **S3-compatible.** Works with any AWS SDK. Change the endpoint, keep your code.
-- **Zero egress fees.** No data transfer charges for any traffic.
-- **Globally distributed.** Single endpoint, automatic multi-region replication.
-- **Bucket forks.** Instant, zero-copy clones for agent workflows and experiments.
-- **Shadow buckets.** Zero-downtime migration from AWS S3, GCS, or R2.
-
-## Key Documentation
-
-- [AI Agents Quick Reference](/docs/ai-agents/)
-- [Agent Onboarding Protocol](/docs/ai-agents/welcome-agent-get-started/)
-- [AI Agent Use Cases](/docs/agents-use-cases/)
-- [MCP Server (Remote)](/docs/mcp/remote/)
-- [MCP Server (Local)](/docs/mcp/local/)
-- [Tigris CLI Reference](/docs/cli/)
-- [AWS S3 SDKs](/docs/sdks/s3/)
-- [Tigris Native SDK](/docs/sdks/tigris/)
-- [Create a Bucket](/docs/buckets/create-bucket/)
-- [Bucket Forks and Snapshots](/docs/snapshots-and-forks/)
-- [IAM & Access Keys](/docs/iam/)
-- [Migration from AWS S3](/docs/migration/aws-s3/)
-
-## Scope Clarification
-
-Tigris is object storage only. It is NOT a database, CDN, vector database, search engine, or streaming system. It fulfills over 90% of the AWS S3 API and can replace AWS S3, Google Cloud Storage, or Cloudflare R2 for object storage workloads. Historical materials describing databases or "unified data platforms" are outdated and do not apply to current Tigris.
-
----`,
-        customLLMFiles: [
-          {
-            filename: "llms-agents.txt",
-            title: "Tigris for AI Agents",
-            description:
-              "Quick-reference documentation for AI coding agents using Tigris object storage.",
-            includePatterns: [
-              "ai-agents/**",
-              "agents-use-cases*",
-              "mcp/**",
-              "agents/**",
-              "get-started/**",
-              "overview/index*",
-            ],
-            fullContent: true,
-            rootContent:
-              "Tigris is S3-compatible object storage. Endpoint: https://t3.storage.dev. Zero egress fees. This file contains agent-focused documentation.",
-          },
-          {
-            filename: "llms-sdks.txt",
-            title: "Tigris SDK and CLI Reference",
-            description: "SDK and CLI documentation for Tigris object storage.",
-            includePatterns: ["sdks/**", "cli/**"],
-            fullContent: true,
-            rootContent:
-              "SDK and CLI documentation for Tigris object storage. Endpoint: https://t3.storage.dev.",
-          },
-        ],
+        depth: 2,
+        logLevel: 1,
       },
     ],
   ],

@@ -8,6 +8,133 @@ import TabItem from "@theme/TabItem";
 
 export const changelogData = [
   {
+    date: "March 11, 2026",
+    title: "Partner Integration API",
+    content: (
+      <>
+        <p>
+          We&apos;ve launched the{" "}
+          <a href="https://www.tigrisdata.com/blog/partner-integration-api/">
+            Partner Integration API
+          </a>
+          , enabling partners to programmatically manage Tigris resources on
+          behalf of their customers. This includes a new Partner Portal UI for
+          managing integrations, along with org lookup and usage views.
+        </p>
+
+        <BlogPostPreview
+          href="https://www.tigrisdata.com/blog/partner-integration-api/"
+          title="Partner Integration API"
+          description="Programmatically manage Tigris resources on behalf of your customers with the new Partner Integration API and Partner Portal."
+          imageSrc={require("./assets/2026/03/partner-integration-api.webp").default}
+          imageAlt="An impressionist painting of a blue tiger walking through foliage under a starry night sky"
+          buttonText="Read the Blog"
+          date="March 2026"
+        />
+      </>
+    ),
+    subcategories: [
+      {
+        title: "Console",
+        items: [
+          {
+            title: "Bucket prefix search",
+            description: (
+              <>
+                <p>
+                  Search for objects within a bucket by prefix directly from the
+                  console.
+                </p>
+              </>
+            ),
+            tag: { label: "Console", color: "blue" },
+          },
+          {
+            title: "Multi-region selection",
+            description: (
+              <>
+                <p>
+                  Select multiple regions when creating buckets and updating
+                  bucket settings.
+                </p>
+              </>
+            ),
+            tag: { label: "Console", color: "blue" },
+          },
+          {
+            title: "Custom timestamp snapshots view",
+            description: (
+              <>
+                <p>
+                  View bucket snapshots at custom timestamps in the console.
+                </p>
+              </>
+            ),
+            tag: { label: "Console", color: "blue" },
+          },
+        ],
+      },
+      {
+        title: "CLI",
+        items: [
+          {
+            title: "Presigned URL support",
+            description: (
+              <>
+                <p>
+                  Generate presigned URLs for objects using the Tigris CLI.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+          {
+            title: "IAM policy management",
+            description: (
+              <>
+                <p>
+                  Manage IAM policies directly from the CLI.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+          {
+            title: "IAM user management",
+            description: (
+              <>
+                <p>
+                  Create and manage IAM users from the CLI.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+        ],
+      },
+      {
+        title: "Terraform",
+        items: [
+          {
+            title: "Terraform provider updates",
+            description: (
+              <>
+                <p>
+                  The{" "}
+                  <a href="https://github.com/tigrisdata/terraform-provider-tigris/releases/tag/v1.1.0">
+                    Tigris Terraform provider v1.1.0
+                  </a>{" "}
+                  has been released with new features and improvements.
+                </p>
+              </>
+            ),
+            tag: { label: "Terraform", color: "purple" },
+          },
+        ],
+      },
+    ],
+  },
+  {
     date: "February 10, 2026",
     title: "Tigris CLI",
     content: (

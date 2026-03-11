@@ -35,6 +35,7 @@ availability guarantees, and cost — see
 | EUR          | `fra` | Frankfurt, Germany     |
 | EUR          | `lhr` | London, United Kingdom |
 | Asia-Pacific | `sin` | Singapore              |
+| Asia-Pacific | `nrt` | Tokyo, Japan           |
 
 ### fly.storage.tigris.dev
 

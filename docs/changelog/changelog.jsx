@@ -26,7 +26,9 @@ export const changelogData = [
           href="https://www.tigrisdata.com/blog/partner-integration-api/"
           title="Partner Integration API"
           description="Programmatically manage Tigris resources on behalf of your customers with the new Partner Integration API and Partner Portal."
-          imageSrc={require("./assets/2026/03/partner-integration-api.webp").default}
+          imageSrc={
+            require("./assets/2026/03/partner-integration-api.webp").default
+          }
           imageAlt="An impressionist painting of a blue tiger walking through foliage under a starry night sky"
           buttonText="Read the Blog"
           date="March 2026"
@@ -76,9 +78,7 @@ export const changelogData = [
             title: "Presigned URL support",
             description: (
               <>
-                <p>
-                  Generate presigned URLs for objects using the Tigris CLI.
-                </p>
+                <p>Generate presigned URLs for objects using the Tigris CLI.</p>
               </>
             ),
             tag: { label: "CLI", color: "green" },
@@ -87,9 +87,7 @@ export const changelogData = [
             title: "IAM policy management",
             description: (
               <>
-                <p>
-                  Manage IAM policies directly from the CLI.
-                </p>
+                <p>Manage IAM policies directly from the CLI.</p>
               </>
             ),
             tag: { label: "CLI", color: "green" },
@@ -98,9 +96,7 @@ export const changelogData = [
             title: "IAM user management",
             description: (
               <>
-                <p>
-                  Create and manage IAM users from the CLI.
-                </p>
+                <p>Create and manage IAM users from the CLI.</p>
               </>
             ),
             tag: { label: "CLI", color: "green" },

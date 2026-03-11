@@ -47,7 +47,7 @@ export const changelogData = [
                 </p>
               </>
             ),
-            tag: { label: "Console", color: "blue" },
+            tag: { label: "Web Console", color: "orange" },
           },
           {
             title: "Multi-region selection",
@@ -59,7 +59,7 @@ export const changelogData = [
                 </p>
               </>
             ),
-            tag: { label: "Console", color: "blue" },
+            tag: { label: "Web Console", color: "orange" },
           },
           {
             title: "Custom timestamp snapshots view",
@@ -70,7 +70,7 @@ export const changelogData = [
                 </p>
               </>
             ),
-            tag: { label: "Console", color: "blue" },
+            tag: { label: "Web Console", color: "orange" },
           },
           {
             title: "Presigned URL support",

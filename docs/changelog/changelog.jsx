@@ -35,7 +35,7 @@ export const changelogData = [
     ),
     subcategories: [
       {
-        title: "Console",
+        title: "Improvements",
         items: [
           {
             title: "Bucket prefix search",
@@ -72,11 +72,6 @@ export const changelogData = [
             ),
             tag: { label: "Console", color: "blue" },
           },
-        ],
-      },
-      {
-        title: "CLI",
-        items: [
           {
             title: "Presigned URL support",
             description: (
@@ -110,11 +105,6 @@ export const changelogData = [
             ),
             tag: { label: "CLI", color: "green" },
           },
-        ],
-      },
-      {
-        title: "Terraform",
-        items: [
           {
             title: "Terraform provider updates",
             description: (

@@ -35,7 +35,7 @@ export const changelogData = [
     ),
     subcategories: [
       {
-        title: "Improvements",
+        title: "Features",
         items: [
           {
             title: "Bucket prefix search",

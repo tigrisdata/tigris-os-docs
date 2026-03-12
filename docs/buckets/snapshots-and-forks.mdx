@@ -465,6 +465,14 @@ specific versions of an object in a particular snapshot can be retrieved with
 the same GetObject API call and header. The same approach also applies to
 HeadObject requests.
 
+:::note
+
+Any UNIX nanosecond-precision timestamp (e.g., 1765889000501544464) can be used
+as snapshot parameter value for ListObjectsV2, GetObject and HeadObject API
+calls, even if there is no snapshot created at that particular time.
+
+:::
+
 Below is an example of retrieving an object from a snapshot:
 
 <Tabs groupId="languages">

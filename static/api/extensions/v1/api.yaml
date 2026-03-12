@@ -81,6 +81,9 @@ tags:
   - name: organizations
     description: Organization management
     x-displayName: Organizations
+  - name: account
+    description: Provider account management
+    x-displayName: Account
 paths:
   /v1/providers/{provider_id}/orgs/{org_id}/provision:
     post:

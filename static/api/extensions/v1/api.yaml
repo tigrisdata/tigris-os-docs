@@ -81,6 +81,9 @@ tags:
   - name: organizations
     description: Organization management
     x-displayName: Organizations
+  - name: account
+    description: Provider account management
+    x-displayName: Account
 paths:
   /v1/providers/{provider_id}/orgs/{org_id}/provision:
     post:
@@ -212,6 +215,17 @@ paths:
       parameters:
         - $ref: "#/components/parameters/provider_id"
         - $ref: "#/components/parameters/org_id"
+        - name: limit
+          in: query
+          description:
+            Maximum number of buckets to return. Defaults to 500, max 5000.
+          schema:
+            type: integer
+        - name: continuation_token
+          in: query
+          description: Token from previous response to fetch next page
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -577,6 +591,37 @@ paths:
               schema:
                 $ref: "#/components/schemas/GenericError"
 
+  /v1/providers/{provider_id}/account/invoices/{month}:
+    get:
+      tags:
+        - account
+      summary: Get provider account invoice for a month
+      description: |
+        Returns the provider's consolidated invoice for the specified month. This invoice
+        aggregates charges across all member organizations under the provider.
+      operationId: Tigris_GetAccountInvoice
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - name: month
+          in: path
+          required: true
+          description: Month in format YYYY-MM
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetInvoiceResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
   /v1/providers/{provider_id}/orgs/{org_id}/invoices/{month}:
     get:
       tags:
@@ -740,9 +785,22 @@ paths:
         - name: include_inactive
           in: query
           description:
-            If set to true, includes inactive organizations in the response
+            If set to true, includes inactive organizations in the response.
+            Defaults to false.
           schema:
             type: boolean
+        - name: limit
+          in: query
+          description:
+            Maximum number of organizations to return. Defaults to 1000, max
+            5000.
+          schema:
+            type: integer
+        - name: continuation_token
+          in: query
+          description: Token from previous response to fetch next page
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -805,6 +863,11 @@ components:
           description:
             If set to true, the bucket will be publicly accessible. Default is
             false.
+        enable_public_list_objects:
+          type: boolean
+          description:
+            If set to true, anonymous users can list objects in public buckets.
+            Default is false for new buckets. Only applicable to public buckets.
         storage_class:
           $ref: "#/components/schemas/StorageClass"
         regions:
@@ -1026,6 +1089,11 @@ components:
           type: boolean
           description:
             If set to true, per object ACL will be enabled. Default is false.
+        enable_public_list_objects:
+          type: boolean
+          description:
+            If set to true, anonymous users can list objects in public buckets.
+            Only applicable to public buckets.
         object_notifications:
           $ref: "#/components/schemas/ObjectNotifications"
         regions:
@@ -1048,6 +1116,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/BucketInfo"
+        next_continuation_token:
+          type: string
+          description:
+            Pass as continuation_token for next page. Empty if no more results.
     GetInvoiceResponse:
       type: object
       properties:
@@ -1162,9 +1234,26 @@ components:
           description: |
             * `DRAFT` - Invoice can be modified as the billing period progresses
             * `FINALIZED` - Invoice is locked and can't be modified
+            * `PAID` - Payment has been collected
+            * `PAST_DUE` - Payment is overdue
           enum:
             - DRAFT
             - FINALIZED
+            - PAID
+            - PAST_DUE
+        memo:
+          type: string
+          description:
+            Human-readable description explaining the billing context for this
+            invoice
+        minimum_commit:
+          type: number
+          description: Volume commitment amount applied to the invoice
+          format: double
+        credits:
+          type: number
+          description: Credits applied to the invoice
+          format: double
       required:
         - org_id
         - charges
@@ -1268,6 +1357,10 @@ components:
         object_acl_enabled:
           type: boolean
           description: If set to true, per object ACL is enabled
+        public_list_objects_enabled:
+          type: boolean
+          description:
+            If true, anonymous users can list objects in this public bucket
         website:
           $ref: "#/components/schemas/BucketWebsiteSettings"
         object_notifications:
@@ -1537,6 +1630,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/OrgInfo"
+        next_continuation_token:
+          type: string
+          description:
+            Pass as continuation_token for next page. Empty if no more results.
     GetOrganizationResponse:
       type: object
       properties:

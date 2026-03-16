@@ -8,12 +8,20 @@ import TabItem from "@theme/TabItem";
 
 # Agent Memory with Cognee on Tigris S3 Storage
 
+AI agents are stateless by default. Each conversation starts from scratch unless
+you add a memory layer to store and recall what the agent has learned. Cognee
+solves that.
 
-AI agents are stateless by default. Each conversation starts from scratch unless you add a memory layer to store and recall what the agent has learned. Cognee solves that.
+**Cognee** is an open-source memory engine for AI agents. Feed it text, files,
+or URLs and it builds a knowledge graph: entities, relationships, and embeddings
+your agent can search. The API is three steps: `add` data, `cognify` it into
+structured knowledge, and `search` to recall what matters.
 
-**Cognee** is an open-source memory engine for AI agents. Feed it text, files, or URLs and it builds a knowledge graph: entities, relationships, and embeddings your agent can search. The API is three steps: `add` data, `cognify` it into structured knowledge, and `search` to recall what matters.
-
-Point Cognee at a Tigris bucket and your agent's memory (vector indexes, knowledge graphs, raw data) is stored on S3 with automatic global distribution. No database servers, no region config. This guide uses Cognee's file-based defaults, which work natively with S3. See the [Cognee documentation](https://docs.cognee.ai/) for other backends.
+Point Cognee at a Tigris bucket and your agent's memory (vector indexes,
+knowledge graphs, raw data) is stored on S3 with automatic global distribution.
+No database servers, no region config. This guide uses Cognee's file-based
+defaults, which work natively with S3. See the
+[Cognee documentation](https://docs.cognee.ai/) for other backends.
 
 Here is a basic Agent Memory architecture:
 
@@ -38,6 +46,7 @@ flowchart TB
         edge["Edge caching · zero egress fees"]:::tigris
     end
     Agent --> Cognee --> Tigris
+
 ````
 </div>
 <div className="mermaid-caption">
@@ -289,3 +298,4 @@ ENABLE_BACKEND_ACCESS_CONTROL=True  # Per-agent isolation
 - [Cognee Documentation](https://docs.cognee.ai/)
 - [Cognee GitHub Repository](https://github.com/topoteretes/cognee)
 - [Tigris Object Storage Documentation](https://www.tigrisdata.com/docs/)
+````

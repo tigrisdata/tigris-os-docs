@@ -465,6 +465,11 @@ const sidebars = {
               label: "CrewAI",
               id: "agents/agent-crewai",
             },
+            {
+              type: "doc",
+              label: "Cognee",
+              id: "agents/agent-cognee",
+            },
           ],
         },
         {

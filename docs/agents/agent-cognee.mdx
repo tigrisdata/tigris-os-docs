@@ -111,7 +111,7 @@ Tigris requires `virtual` addressing style when using boto3. The endpoint is `ht
 Create a `.env` file in your project root:
 
 :::tip
-This single file configures credentials, the LLM provider, and tells Cognee to store everything on Tigris instead of the local filesystem. Call `load_dotenv()` before any Cognee imports so these variables are available.
+This single file configures credentials, the LLM provider, and tells Cognee to store everything on Tigris instead of the local filesystem. Cognee loads `.env` automatically on import.
 :::
 
 ```bash
@@ -119,7 +119,7 @@ This single file configures credentials, the LLM provider, and tells Cognee to s
 AWS_ACCESS_KEY_ID=tid_YOUR_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY=tsec_YOUR_SECRET_ACCESS_KEY
 AWS_REGION=auto
-aws_endpoint_url=https://t3.storage.dev
+AWS_ENDPOINT_URL=https://t3.storage.dev
 
 # LLM provider
 LLM_API_KEY=sk-your-openai-api-key
@@ -127,6 +127,7 @@ LLM_MODEL=openai/gpt-4o-mini
 
 # Cognee storage (all on Tigris)
 STORAGE_BACKEND=s3
+STORAGE_BUCKET_NAME=my-agent-memory should also be added here
 DATA_ROOT_DIRECTORY=s3://my-agent-memory/cognee/data
 SYSTEM_ROOT_DIRECTORY=s3://my-agent-memory/cognee/system
 ```
@@ -135,8 +136,9 @@ SYSTEM_ROOT_DIRECTORY=s3://my-agent-memory/cognee/system
 |---|---|
 | `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | Tigris credentials. Cognee and boto3 read these automatically. |
 | `AWS_REGION` | Set to `auto` -- Tigris handles region routing for you. |
-| `aws_endpoint_url` | Points S3 requests at Tigris instead of AWS. Required for any S3-compatible endpoint. |
+| `AWS_ENDPOINT_URL` | Points S3 requests at Tigris instead of AWS. Required for any S3-compatible endpoint. |
 | `STORAGE_BACKEND` | Use S3 instead of the local filesystem. Without this, Cognee writes to disk even if you've set S3 URIs elsewhere. |
+| `STORAGE_BUCKET_NAME` | Your Tigris bucket name. Cognee uses this to auto-configure the cache directory on S3 (e.g. `s3://my-bucket/cognee/cache`). Without it, cache operations may fail when the rest of storage is on S3. |
 | `DATA_ROOT_DIRECTORY` | Where Cognee stores raw ingested data and file uploads. |
 | `SYSTEM_ROOT_DIRECTORY` | Where Cognee stores its databases: vector indexes (LanceDB), the knowledge graph (Kuzu), and metadata (SQLite). |
 
@@ -147,9 +149,6 @@ Here's a complete example that teaches your agent about some topics and then que
 ```python
 import asyncio
 import cognee
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 async def main():
@@ -208,17 +207,14 @@ Your agent can learn from local files, S3 objects, or a mix of both. This is use
 ```python
 import asyncio
 import cognee
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 async def feed_documents():
     # Local file -- gets uploaded to Tigris
-    await cognee.add("./research-paper.pdf")
+    await cognee.add("/path/to/research-paper.pdf")
 
     # Entire directory
-    await cognee.add("./documents/")
+    await cognee.add("/path/to/documents/")
 
     # File already on Tigris
     await cognee.add("s3://my-agent-memory/uploads/report.txt")
@@ -251,7 +247,7 @@ An `s3://` URI pointing to a single file fetches that file. A prefix URI (ending
 ## Per-agent memory isolation
 
 :::tip
-When building multi-agent or multi-user systems, set `ENABLE_BACKEND_ACCESS_CONTROL=True`. Cognee will create separate databases for each user and dataset on Tigris, so agents can't read each other's memory. This is the right default for any production system where different users or agent instances should have distinct knowledge bases. No extra configuration needed beyond the flag.
+When building multi-agent or multi-user systems, Cognee's `ENABLE_BACKEND_ACCESS_CONTROL` is `True` by default. Cognee creates separate databases for each user and dataset on Tigris, so agents can't read each other's memory. No extra configuration needed.
 :::
 
 ## Production considerations
@@ -281,17 +277,15 @@ ENABLE_BACKEND_ACCESS_CONTROL=True  # Per-agent isolation
 
 ## Troubleshooting
 
-**Authentication errors** -- Verify `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are set. Tigris keys start with `tid_` and `tsec_`. If you're copy-pasting from the dashboard, check for accidental whitespace.
-
-**Region errors** -- Set `AWS_REGION=auto`. Tigris handles routing automatically and does not require a real AWS region name.
-
-**Wrong S3 endpoint** -- Cognee uses `aws_endpoint_url` for S3-compatible services. If requests are still hitting AWS, confirm that `aws_endpoint_url=https://t3.storage.dev` is present in your `.env` file and that `load_dotenv()` is called before any Cognee imports.
-
-**Cognee uses local storage** -- Check that `STORAGE_BACKEND=s3` is in your `.env` file. Also verify that `DATA_ROOT_DIRECTORY` and `SYSTEM_ROOT_DIRECTORY` use `s3://` URIs pointing to your Tigris bucket. Cognee loads `.env` automatically on import, but environment variables set after import won't take effect.
-
-**Slow first query** -- The first read against cold data fetches from Tigris. Subsequent queries are faster due to edge caching. This is expected behavior and not a configuration problem.
-
-**boto3 addressing errors** -- Tigris requires `virtual` addressing style. Pass `Config(s3={"addressing_style": "virtual"})` when using boto3 directly. LanceDB and s3fs handle this automatically.
+| Issue | Solution |
+|-------|----------|
+| Environment variables not loaded | Call `load_dotenv()` before any Cognee imports so the environment variables are available when Cognee initializes. |
+| Authentication errors | Verify `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are set. Tigris keys start with `tid_` and `tsec_`. Check for accidental whitespace when copy-pasting from the dashboard. |
+| Region errors | Set `AWS_REGION=auto`. Tigris handles routing automatically. |
+| Wrong S3 endpoint | Confirm `AWS_ENDPOINT_URL=https://t3.storage.dev` is in your `.env` file. Cognee uses this for S3-compatible services. |
+| Cognee uses local storage | Ensure `STORAGE_BACKEND=s3` is set and that `DATA_ROOT_DIRECTORY` and `SYSTEM_ROOT_DIRECTORY` use `s3://` URIs. Cognee loads `.env` on import; variables set after import won't take effect. |
+| Slow first query | Expected. The first read fetches from Tigris; subsequent queries benefit from edge caching. |
+| boto3 addressing errors | Tigris requires `virtual` addressing style. Use `Config(s3={"addressing_style": "virtual"})` when using boto3 directly. LanceDB and s3fs handle this automatically. |
 
 ## References
 

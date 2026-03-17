@@ -11,7 +11,14 @@ function ToolCard({ icon, title, description, to, children }) {
         <div className="tool-card-title">{title}</div>
       </div>
       <div className="tool-card-description">{description}</div>
-      <div className="tool-card-preview" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="tool-card-preview"
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
+        onMouseDown={(e) => e.stopPropagation()}
+      >
         {children}
       </div>
     </Link>
@@ -53,6 +60,20 @@ export default function ToolCards() {
           to="/sdks/tigris/"
         >
           <div className="tool-card-code">
+            <div className="tool-card-code-header">
+              <div className="tool-card-dots">
+                <span />
+              </div>
+              <span className="tool-card-filename">terminal</span>
+            </div>
+            <div className="tool-card-terminal">
+              <div className="tool-card-terminal-line">
+                <span className="tool-card-prompt">$ </span>npm install
+                @tigrisdata/storage
+              </div>
+            </div>
+          </div>
+          <div className="tool-card-code" style={{ marginTop: "8px" }}>
             <div className="tool-card-code-header">
               <div className="tool-card-dots">
                 <span />
@@ -130,13 +151,21 @@ export default function ToolCards() {
               <span className="tool-card-filename">terminal</span>
             </div>
             <div className="tool-card-terminal">
-              <div className="tool-card-terminal-line">~ t3 mk my-bucket</div>
+              <div className="tool-card-terminal-line">
+                <span className="tool-card-prompt">$ </span>npm install -g
+                @tigrisdata/cli
+              </div>
+              <div className="tool-card-terminal-line">&nbsp;</div>
+              <div className="tool-card-terminal-line">
+                <span className="tool-card-prompt">$ </span>t3 mk my-bucket
+              </div>
               <div className="tool-card-terminal-line">
                 ✓ Bucket &apos;my-bucket&apos; created
               </div>
               <div className="tool-card-terminal-line">&nbsp;</div>
               <div className="tool-card-terminal-line">
-                ~ t3 touch my-bucket/key
+                <span className="tool-card-prompt">$ </span>t3 touch
+                my-bucket/key
               </div>
               <div className="tool-card-terminal-line">
                 ✓ Created &apos;my-bucket/key&apos;

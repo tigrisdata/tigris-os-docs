@@ -68,6 +68,8 @@
 
 .tool-card-preview {
   margin-top: auto;
+  user-select: text;
+  cursor: text;
 }
 
 /* Code preview with gradient border */
@@ -128,6 +130,11 @@
 .tool-card-comment {
   color: #5c6370;
   font-style: italic;
+}
+
+.tool-card-prompt {
+  color: #5c6370;
+  user-select: none;
 }
 
 [data-theme="light"] .tool-card-keyword {

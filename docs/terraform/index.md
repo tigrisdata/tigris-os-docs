@@ -5,7 +5,7 @@ Use the
 to manage your Tigris buckets as infrastructure-as-code.
 
 This guide assumes you have followed the
-[Getting Started](/docs/get-started/index.md) guide and have your access keys
+[Getting Started](/docs/get-started/index.mdx) guide and have your access keys
 ready.
 
 ## Set up the provider

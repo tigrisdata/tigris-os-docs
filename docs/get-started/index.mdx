@@ -2,13 +2,19 @@
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
-import styles from "!!raw-loader!../mcp/remote-styles.css";
+import mcpStyles from "!!raw-loader!./get-started-styles.css";
 
-<style>{styles}</style>
+<style>{mcpStyles}</style>
 
-Tigris is globally distributed, S3-compatible object storage. This guide will
-have you storing and retrieving objects in minutes — pick the tool that fits
-your workflow.
+Welcome to Tigris! Tigris stores data as objects within buckets. An object is a
+file with metadata, and a bucket is a container for objects. To use Tigris,
+create a bucket with a unique name and upload your data as objects. Each object
+has a unique key within the bucket. Tigris stores data close to your users and
+moves it if they change regions. Buckets and objects are private and accessible
+only via granted access keys.
+
+This guide will have you storing and retrieving objects in minutes — pick the
+tool that fits your workflow.
 
 ## Choose Your Tool
 
@@ -150,13 +156,6 @@ console.log(objects);
 </TabItem>
 <TabItem value="console" label="Web Console">
 
-Welcome to Tigris! Tigris stores data as objects within buckets. An object is a
-file with metadata, and a bucket is a container for objects. To use Tigris,
-create a bucket with a unique name and upload your data as objects. Each object
-has a unique key within the bucket. Tigris stores data close to your users and
-moves it if they change regions. Buckets and objects are private and accessible
-only via granted access keys.
-
 ### Getting Started
 
 1. To get started, create an account at [storage.new](https://storage.new/).
@@ -188,23 +187,11 @@ your buckets and objects via the
 
 **One-click install**
 
-<p>
-  <a
-    href="cursor://anysphere.cursor-deeplink/mcp/install?name=tigris&config=eyJ1cmwiOiJodHRwczovL21jcC5zdG9yYWdlLmRldi9tY3AifQ%3D%3D"
-    className="install-btn"
-  >
-    <span>Add to Cursor</span>
-  </a>
-</p>
-
-<p>
-  <a
-    href="vscode:mcp/install?%7B%22name%22%3A%22tigris%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.storage.dev%2Fmcp%22%7D"
-    className="install-btn"
-  >
-    <span>Add to VS Code</span>
-  </a>
-</p>
+{/* prettier-ignore */}
+<div className="get-started-mcp-btns">
+<a href="cursor://anysphere.cursor-deeplink/mcp/install?name=tigris&config=eyJ1cmwiOiJodHRwczovL21jcC5zdG9yYWdlLmRldi9tY3AifQ%3D%3D">Add to Cursor</a>
+<a href="vscode:mcp/install?%7B%22name%22%3A%22tigris%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.storage.dev%2Fmcp%22%7D">Add to VS Code</a>
+</div>
 
 Or add it to **Claude Code** from your terminal:
 

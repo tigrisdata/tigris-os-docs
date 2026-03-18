@@ -79,6 +79,11 @@ const sidebars = {
         },
         {
           type: "doc",
+          label: "Model Training on Tigris",
+          id: "overview/benchmarks/tag",
+        },
+        {
+          type: "doc",
           label: "Benchmark Summary",
           id: "overview/benchmarks/summary",
         },

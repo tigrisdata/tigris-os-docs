@@ -1,7 +1,7 @@
 # AWS Java SDK
 
 This guide assumes that you have followed the steps in the
-[Getting Started](/docs/get-started/index.md) guide, and have the access keys
+[Getting Started](/docs/get-started/index.mdx) guide, and have the access keys
 available.
 
 You may continue to use the AWS Java SDK as you normally would, but with the

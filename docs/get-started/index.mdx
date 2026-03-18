@@ -24,19 +24,25 @@ tool that fits your workflow.
 The [Tigris CLI](/cli/) lets you manage buckets, objects, and access keys from
 your terminal.
 
-**Install**
+### Install
 
 ```bash
 npm install -g @tigrisdata/cli
 ```
 
-**Authenticate**
+### Authenticate
 
 ```bash
 tigris login
 ```
 
-**Create a bucket and upload files**
+:::note
+
+`t3` is shorthand for `tigris` and can be used interchangeably.
+
+:::
+
+### Create a bucket and upload files
 
 ```bash
 # Create a bucket
@@ -49,7 +55,7 @@ t3 cp ./photo.jpg my-bucket/photo.jpg
 t3 cp ./images/ my-bucket/images/ -r
 ```
 
-**List and download objects**
+### List and download objects
 
 ```bash
 # List objects in a bucket
@@ -62,7 +68,7 @@ t3 ls my-bucket/images/
 t3 cp my-bucket/photo.jpg ./downloaded.jpg
 ```
 
-**Generate a presigned URL**
+### Generate a presigned URL
 
 ```bash
 # Shareable link, expires in 1 hour by default
@@ -72,7 +78,7 @@ t3 presign my-bucket/photo.jpg
 t3 presign my-bucket/report.pdf --method put --expires-in 7200
 ```
 
-**Remove objects**
+### Remove objects
 
 ```bash
 # Remove a single object
@@ -83,75 +89,6 @@ t3 rm my-bucket/logs/ -rf
 ```
 
 [Full CLI documentation &rarr;](/cli/)
-
-</TabItem>
-<TabItem value="sdk" label="Storage SDK">
-
-The [Tigris SDK](/sdks/tigris/) gives you type-safe access to object storage
-from TypeScript and Go.
-
-**Install**
-
-```bash
-npm install @tigrisdata/storage
-```
-
-**Configure environment variables**
-
-Add these to your `.env` file with the values from your
-[Tigris dashboard](https://console.tigris.dev/createaccesskey):
-
-```bash
-TIGRIS_STORAGE_ACCESS_KEY_ID=tid_your_key
-TIGRIS_STORAGE_SECRET_ACCESS_KEY=tsec_your_secret
-TIGRIS_STORAGE_BUCKET=my-bucket
-```
-
-**Upload objects**
-
-```ts
-import { put } from "@tigrisdata/storage";
-
-// Simple upload
-await put("hello.txt", "Hello, World!");
-
-// Upload a file
-await put("photo.jpg", file);
-
-// Upload a large file with progress tracking
-await put("video.mp4", file, {
-  multipart: true,
-  onUploadProgress: ({ loaded, total, percentage }) => {
-    console.log(`Uploaded ${percentage}%`);
-  },
-});
-```
-
-**Download objects**
-
-```ts
-import { get } from "@tigrisdata/storage";
-
-// Get as string
-const text = await get("hello.txt", "string");
-
-// Get as file
-await get("photo.jpg", "file");
-
-// Stream a video
-await get("video.mp4", "stream", { contentType: "video/mp4" });
-```
-
-**List objects**
-
-```ts
-import { list } from "@tigrisdata/storage";
-
-const objects = await list();
-console.log(objects);
-```
-
-[Full SDK documentation &rarr;](/sdks/tigris/)
 
 </TabItem>
 <TabItem value="console" label="Web Console">
@@ -179,13 +116,82 @@ Or, check out the [Dashboard](https://console.tigris.dev/) to manage your
 buckets and objects.
 
 </TabItem>
+<TabItem value="sdk" label="Storage SDK">
+
+The [Tigris SDK](/sdks/tigris/) gives you type-safe access to object storage
+from TypeScript and Go.
+
+### Install
+
+```bash
+npm install @tigrisdata/storage
+```
+
+### Configure environment variables
+
+Add these to your `.env` file with the values from your
+[Tigris dashboard](https://console.tigris.dev/createaccesskey):
+
+```bash
+TIGRIS_STORAGE_ACCESS_KEY_ID=tid_your_key
+TIGRIS_STORAGE_SECRET_ACCESS_KEY=tsec_your_secret
+TIGRIS_STORAGE_BUCKET=my-bucket
+```
+
+### Upload objects
+
+```ts
+import { put } from "@tigrisdata/storage";
+
+// Simple upload
+await put("hello.txt", "Hello, World!");
+
+// Upload a file
+await put("photo.jpg", file);
+
+// Upload a large file with progress tracking
+await put("video.mp4", file, {
+  multipart: true,
+  onUploadProgress: ({ loaded, total, percentage }) => {
+    console.log(`Uploaded ${percentage}%`);
+  },
+});
+```
+
+### Download objects
+
+```ts
+import { get } from "@tigrisdata/storage";
+
+// Get as string
+const text = await get("hello.txt", "string");
+
+// Get as file
+await get("photo.jpg", "file");
+
+// Stream a video
+await get("video.mp4", "stream", { contentType: "video/mp4" });
+```
+
+### List objects
+
+```ts
+import { list } from "@tigrisdata/storage";
+
+const objects = await list();
+console.log(objects);
+```
+
+[Full SDK documentation &rarr;](/sdks/tigris/)
+
+</TabItem>
 <TabItem value="mcp" label="MCP">
 
 The [Tigris MCP Server](/mcp/remote/) lets AI editors and assistants work with
 your buckets and objects via the
 [Model Context Protocol](https://modelcontextprotocol.io/).
 
-**One-click install**
+### One-click install
 
 {/* prettier-ignore */}
 <div className="get-started-mcp-btns">

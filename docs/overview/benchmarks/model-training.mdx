@@ -1,4 +1,4 @@
-# Model Training on Tigris with TAG Caching
+# Model Training on Tigris
 
 Training ML models directly from object storage works if the data pipeline can
 keep up. We
@@ -6,15 +6,17 @@ keep up. We
 against
 [AWS S3](https://aws.amazon.com/blogs/machine-learning/applying-data-loading-best-practices-for-ml-training-with-amazon-s3-clients/)
 on a standard image classification workload (ViT on 100k JPEGs, g5.8xlarge),
-then tested what changes when you add TAG, a local S3-compatible caching proxy.
+then tested what changes when you add **TAG (Tigris Acceleration Gateway)**, a
+local S3-compatible caching proxy.
 
 ## Summary
 
-Tigris reaches ~134 samples/sec at saturation, within 3% of the
+Tigris reaches ~99% GPU utilization with ~134 samples/sec at saturation, which
+is within 3% of the
 [~138 samples/sec AWS reported](https://aws.amazon.com/blogs/machine-learning/applying-data-loading-best-practices-for-ml-training-with-amazon-s3-clients/)
-on the same workload. With TAG's warm cache, warm epochs are **5.7x faster**,
-you need **4 workers instead of 16** to saturate the GPU, and data sharding is
-**not required**.
+on the same workload. With TAG's warm cache, warm epochs are **5.7x faster** and
+you need **4 workers instead of 16** to saturate the GPU. At peak entitlement,
+TAG's local cache delivers **~200x** the throughput the GPU can consume.
 
 ## How we ran the benchmarks
 
@@ -25,7 +27,7 @@ you need **4 workers instead of 16** to saturate the GPU, and data sharding is
 | Model     | ViT (Vision Transformer)                                                                                                                                                                                                                                    |
 | Tool      | [S3 Connector for PyTorch](https://github.com/tigrisdata/s3-connector-for-pytorch), same benchmark suite as the [AWS reference](https://aws.amazon.com/blogs/machine-learning/applying-data-loading-best-practices-for-ml-training-with-amazon-s3-clients/) |
 
-## 1. Baseline bottlenecks at 16 workers
+## 1. Tigris matches AWS S3 on raw images from object storage
 
 Each training image is stored as its own object in S3. The dataloader fetches
 one object at a time over the network, so that means a lot of waiting. The GPU
@@ -45,7 +47,7 @@ on this workload.
 **Fig. 1.** Throughput (samples/sec) vs. DataLoader worker count, and adding
 workers increases throughput until the GPU is saturated at 16 workers.
 
-## 2. Sharding data drops workers to 8
+## 2. Sharding halves the worker count
 
 Packing images into tar shards lets the dataloader issue a single GET request
 and stream many samples sequentially, shifting from latency-bound to
@@ -70,7 +72,7 @@ so fewer workers are needed to keep the GPU fed.
 
 **Fig. 2.** Samples/sec by shard size with 8 workers (Tigris direct).
 
-## 3. TAG Cache drops it to 4 workers
+## 3. TAG eliminates network latency after epoch 1
 
 TAG runs on the same machine as your training job. It sits between your app and
 S3. When the dataloader requests an object, TAG checks its local NVMe cache
@@ -100,7 +102,7 @@ Three things happen when you add TAG:
 
 **Fig. 3.** Epoch duration (seconds) across three training epochs with TAG.
 
-## 4. TAG: the opposite of bottleneck
+## 4. 200x headroom: storage is never the bottleneck
 
 During normal training, the GPU is busy computing. That makes it hard to see how
 fast the data pipeline can run. We swapped ViT for a no-op model that does no

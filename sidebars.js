@@ -90,12 +90,12 @@ const sidebars = {
         },
         {
           type: "category",
-          label: "ML Training Benchmark",
+          label: "Model Training Benchmark",
           items: [
             {
               type: "doc",
               label: "Model Training on Tigris",
-              id: "overview/benchmarks/tag",
+              id: "overview/benchmarks/model-training",
             },
           ],
         },

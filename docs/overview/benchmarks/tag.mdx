@@ -66,8 +66,7 @@ so fewer workers are needed to keep the GPU fed.
 
 ![Sequential Sharded Access (Tigris Direct) – Samples/sec](./tag-sharded-tigris-direct.webp "Sharded throughput across shard sizes with Tigris direct")
 
-**Fig. 2.** Throughput is flat across shard sizes. Sharding's benefit is fewer
-workers (8 vs 16), not higher throughput.
+**Fig. 2.** Samples/sec by shard size with 8 workers (Tigris direct).
 
 ## 3. TAG Cache drops it to 4 workers
 
@@ -80,11 +79,11 @@ The first epoch is cold: every object is a cache miss, so TAG fetches from S3
 and the network is still the bottleneck. After that, the cache is warm. Epochs 2
 and 3 read every object from local NVMe, so there are no network round-trips.
 
-| Metric (2 workers)  | Cold (Epoch 1) | Warm (Epoch 2+) |
-| ------------------- | -------------- | --------------- |
-| Epoch duration      | 4,197s         | 734s            |
-| Speedup             | —              | 5.7x faster     |
-| Workers to saturate | 16 (no cache)  | 4 (warm cache)  |
+| Metric                      | Cold (Epoch 1) | Warm (Epoch 2+) |
+| --------------------------- | -------------- | --------------- |
+| Epoch duration (2 workers)  | 4,197s         | 734s            |
+| Speedup (2 workers)         | —              | 5.7x faster     |
+| Workers to saturate the GPU | 16 (no cache)  | 4 (warm cache)  |
 
 Three things happen when you add TAG:
 
@@ -97,9 +96,7 @@ Three things happen when you add TAG:
 
 ![Three-Epoch Training with TAG – Duration per Epoch](./tag-epoch-duration.webp "Epoch duration comparison with TAG caching")
 
-**Fig. 3.** Epoch duration (seconds) across three epochs. Epoch 1 fills the
-cache, so it is slow, and epochs 2 and 3 read from cache and finish in about 735
-seconds each.
+**Fig. 3.** Epoch duration (seconds) across three training epochs with TAG.
 
 ## 4. TAG: the opposite of bottleneck
 
@@ -118,9 +115,7 @@ The GPU is the bottleneck in a well-configured pipeline, not storage.
 
 ![Tigris Direct vs TAG – Samples/sec by Shard Size](./tag-vs-tigris-direct-bar.webp "Raw throughput comparison between Tigris direct and TAG warm cache")
 
-**Fig. 4.** Raw throughput ceiling: TAG's local cache delivers about 4x more
-samples per second than reading directly from Tigris, and storage is not the
-bottleneck.
+**Fig. 4.** Raw throughput ceiling: Tigris direct vs. TAG warm cache.
 
 ## Main findings
 

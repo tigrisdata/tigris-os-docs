@@ -1,7 +1,9 @@
 # Model Training on Tigris with TAG Caching
 
 Training ML models directly from object storage works if the data pipeline can
-keep up. We [benchmarked](/blog/training-object-storage) Tigris against
+keep up. We
+[benchmarked](https://www.tigrisdata.com/blog/training-object-storage) Tigris
+against
 [AWS S3](https://aws.amazon.com/blogs/machine-learning/applying-data-loading-best-practices-for-ml-training-with-amazon-s3-clients/)
 on a standard image classification workload (ViT on 100k JPEGs, g5.8xlarge),
 then tested what changes when you add TAG, a local S3-compatible caching proxy.
@@ -128,8 +130,8 @@ The GPU is the bottleneck in a well-configured pipeline, not storage.
 
 ## What to read next
 
-- [Full benchmark post](/blog/training-object-storage) — Methodology, shard-size
-  sweeps, and per-configuration breakdowns
+- [Full benchmark post](https://www.tigrisdata.com/blog/training-object-storage)
+  — Methodology, shard-size sweeps, and per-configuration breakdowns
 - [Performance Metrics](./metrics.mdx) — Benchmark methodology
 - [Comparison: AWS S3](./aws-s3.mdx) — Small object workload comparison
 - [Comparison: Cloudflare R2](./cloudflare-r2.mdx) — Small object workload

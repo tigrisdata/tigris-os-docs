@@ -1,0 +1,585 @@
+---
+title: TAG Deployment Guide
+sidebar_label: Deployment Guide
+description:
+  Production deployment guide for Tigris Acceleration Gateway (TAG), including
+  configuration, clustering, TLS, and monitoring.
+---
+
+This guide covers production deployment of TAG (Tigris Acceleration Gateway):
+configuration, single-node and multi-node clustering, TLS, monitoring, and
+troubleshooting. For a fast setup, see the [Quick Start](./quickstart).
+
+TAG is available to Tigris customers as pre-built binaries and Docker images.
+
+## Configuration Reference
+
+TAG is configured through environment variables, a YAML config file, or both.
+Environment variables take precedence over config file values. Command-line
+flags take precedence over both.
+
+### Credentials
+
+| Variable                | Default      | Description             |
+| ----------------------- | ------------ | ----------------------- |
+| `AWS_ACCESS_KEY_ID`     | _(required)_ | TAG's Tigris access key |
+| `AWS_SECRET_ACCESS_KEY` | _(required)_ | TAG's Tigris secret key |
+
+These are TAG's service credentials with read-only access to all buckets. They
+are used for signing proxy headers and background cache operations. Client
+applications authenticate separately with their own credentials.
+
+### Server
+
+| Variable            | Default   | Description                  |
+| ------------------- | --------- | ---------------------------- |
+| `TAG_HTTP_PORT`     | `8080`    | HTTP server port             |
+| `TAG_BIND_IP`       | `0.0.0.0` | Bind address                 |
+| `TAG_PPROF_ENABLED` | `false`   | Enable pprof debug endpoints |
+
+### Upstream
+
+| Variable                      | Default                  | Description                                          |
+| ----------------------------- | ------------------------ | ---------------------------------------------------- |
+| `TAG_UPSTREAM_ENDPOINT`       | `https://t3.storage.dev` | Tigris S3 endpoint                                   |
+| `TAG_MAX_IDLE_CONNS_PER_HOST` | `100`                    | HTTP connection pool size to Tigris                  |
+| `TAG_TRANSPARENT_PROXY`       | `true`                   | Transparent proxy mode (default) versus signing mode |
+
+TAG validates the upstream endpoint at startup. Only `localhost`,
+`*.tigris.dev`, and `*.storage.dev` are allowed. Any other value is a fatal
+error.
+
+### Cache
+
+| Variable                   | Default          | Description                                  |
+| -------------------------- | ---------------- | -------------------------------------------- |
+| `TAG_CACHE_DISABLED`       | `false`          | Disable caching entirely (pass-through mode) |
+| `TAG_CACHE_DISK_PATH`      | `/var/cache/tag` | Directory for RocksDB cache data             |
+| `TAG_CACHE_MAX_DISK_USAGE` | `0` (unlimited)  | Maximum disk usage in bytes                  |
+| `TAG_CACHE_NODE_ID`        | _(auto)_         | Unique node identifier                       |
+
+### TLS
+
+| Variable            | Default  | Description                   |
+| ------------------- | -------- | ----------------------------- |
+| `TAG_TLS_CERT_FILE` | _(none)_ | Path to TLS certificate (PEM) |
+| `TAG_TLS_KEY_FILE`  | _(none)_ | Path to TLS private key (PEM) |
+
+Both must be set together or TAG will refuse to start.
+
+### Cluster
+
+| Variable                   | Default  | Description                         |
+| -------------------------- | -------- | ----------------------------------- |
+| `TAG_CACHE_CLUSTER_ADDR`   | `:7000`  | Memberlist gossip bind address      |
+| `TAG_CACHE_GRPC_ADDR`      | `:9000`  | gRPC server bind address            |
+| `TAG_CACHE_ADVERTISE_ADDR` | _(none)_ | Address advertised to other nodes   |
+| `TAG_CACHE_SEED_NODES`     | _(none)_ | Comma-separated seed node addresses |
+
+### Logging
+
+| Variable         | Default | Description                                 |
+| ---------------- | ------- | ------------------------------------------- |
+| `TAG_LOG_LEVEL`  | `info`  | Log level: `debug`, `info`, `warn`, `error` |
+| `TAG_LOG_FORMAT` | `json`  | Log format: `json` or `console`             |
+
+### YAML Configuration File
+
+For complex deployments, use a config file instead of (or alongside) environment
+variables:
+
+```yaml
+server:
+  http_port: 8080
+  bind_ip: "0.0.0.0"
+  tls_cert_file: ""
+  tls_key_file: ""
+
+upstream:
+  endpoint: "https://t3.storage.dev"
+  max_idle_conns_per_host: 100
+  transparent_proxy: true
+
+cache:
+  enabled: true
+  ttl: 60m
+  size_threshold: 1073741824 # 1 GiB - max object size to cache
+  disk_path: "/var/cache/tag"
+  max_disk_usage_bytes: 0 # 0 = unlimited
+
+broadcast:
+  chunk_size: 65536 # 64 KiB streaming chunk size
+  channel_buffer: 32 # Buffer per listener in chunks
+
+log:
+  level: "info"
+  format: "json"
+```
+
+Load with:
+
+```bash
+tag --config /etc/tag/config.yaml
+```
+
+Configuration precedence (highest to lowest): command-line flags -> environment
+variables -> config file -> defaults.
+
+## Production Deployment: Single Node
+
+A single TAG node is appropriate when your working set fits on one machine's
+storage and the node's network bandwidth is sufficient for your read throughput.
+
+### Sizing Guidelines
+
+TAG is typically NVMe-bound for large objects and CPU-bound for small objects.
+Benchmark reference points (single node, cache-warm):
+
+| Object Size | Ops/sec | Bandwidth   |
+| ----------- | ------- | ----------- |
+| 1 KiB       | ~75,000 | ~74 MiB/s   |
+| 100 KiB     | ~33,000 | ~3.2 GiB/s  |
+| 1 MiB       | ~11,000 | ~10.7 GiB/s |
+
+CPU utilization at peak throughput is around 12%, so a modest machine (4-8
+cores) is sufficient for most workloads. Memory is used primarily by RocksDB
+block cache and in-flight request buffers. 4-8 GiB is a reasonable starting
+point. NVMe storage is strongly recommended.
+
+For full benchmark runs (including thread scaling, `warp` tables, `go-ycsb`
+tables, and environment details), see
+[TAG Benchmarks](https://github.com/tigrisdata/tag-deploy/blob/main/docs/benchmarks.md).
+
+### Docker (Recommended)
+
+Create a `.env` file:
+
+```bash
+AWS_ACCESS_KEY_ID=<your-access-key>
+AWS_SECRET_ACCESS_KEY=<your-secret-key>
+TAG_LOG_LEVEL=info
+```
+
+Use the provided `docker-compose.yml`:
+
+```yaml
+services:
+  tag:
+    image: tigrisdata/tag:v1.8.0
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - TAG_CACHE_NODE_ID=tag-1
+      - TAG_CACHE_DISK_PATH=/data/cache
+    volumes:
+      - tag-cache:/data/cache
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  tag-cache:
+```
+
+Start with:
+
+```bash
+docker compose up -d
+```
+
+### Native Binary
+
+```bash
+# Install
+curl -sSL https://tag-releases.t3.storage.dev/install.sh | bash
+
+# Configure
+export AWS_ACCESS_KEY_ID=<your-access-key>
+export AWS_SECRET_ACCESS_KEY=<your-secret-key>
+export TAG_CACHE_DISK_PATH=/var/cache/tag
+export TAG_CACHE_MAX_DISK_USAGE=107374182400   # 100 GiB
+export TAG_LOG_LEVEL=info
+
+# Run
+tag --config /etc/tag/config.yaml
+```
+
+For production, run TAG under a process supervisor (systemd, supervisord, etc.)
+to handle restarts.
+
+### Example Production Config (Single Node)
+
+```yaml
+server:
+  http_port: 8080
+  bind_ip: "0.0.0.0"
+
+upstream:
+  endpoint: "https://t3.storage.dev"
+  max_idle_conns_per_host: 100
+
+cache:
+  enabled: true
+  ttl: 60m
+  size_threshold: 1073741824 # 1 GiB
+  disk_path: "/var/cache/tag"
+  max_disk_usage_bytes: 107374182400 # 100 GiB
+  node_id: "tag-prod-1"
+
+log:
+  level: "info"
+  format: "json"
+```
+
+## Production Deployment: Multi-Node Cluster
+
+Deploy multiple TAG nodes when you need more cache capacity or higher aggregate
+throughput than a single node provides. TAG nodes form a distributed cache
+cluster automatically. Each node owns a subset of cache keys via consistent
+hashing, and requests for remote keys are forwarded transparently over gRPC.
+
+### How Clustering Works
+
+**Discovery:** Nodes find each other via memberlist gossip protocol (port 7000).
+Configure one or more seed nodes; new nodes join by contacting any seed.
+
+**Key routing:** Each cache key is hashed to determine its owner node. GET
+requests check local cache first; if the key belongs to a remote node, the
+request is forwarded through gRPC (port 9000).
+
+**Consistency:** Write-through invalidation and tombstone markers ensure cache
+coherence. Tombstones prevent in-flight background writes from resurrecting
+deleted objects.
+
+### Ports
+
+| Port | Protocol   | Purpose                                |
+| ---- | ---------- | -------------------------------------- |
+| 8080 | HTTP/HTTPS | S3 API (client-facing)                 |
+| 7000 | TCP        | Memberlist gossip (cluster discovery)  |
+| 9000 | TCP        | gRPC (cache key routing between nodes) |
+
+### Docker Cluster (3 Nodes)
+
+The provided `docker-compose-cluster.yml` runs a 3-node cluster:
+
+```bash
+cd docker/
+docker compose -f docker-compose-cluster.yml up -d
+```
+
+This exposes three TAG nodes on ports 8081, 8082, and 8083. Place a load
+balancer in front for a single entry point.
+
+Key configuration per node:
+
+```yaml
+environment:
+  - TAG_CACHE_NODE_ID=tag-1 # Unique per node
+  - TAG_CACHE_CLUSTER_ADDR=:7000 # Gossip bind
+  - TAG_CACHE_GRPC_ADDR=:9000 # gRPC bind
+  - TAG_CACHE_ADVERTISE_ADDR=tag-1:9000 # Reachable by other nodes
+  - TAG_CACHE_SEED_NODES=tag-1:7000,tag-2:7000,tag-3:7000
+```
+
+### Kubernetes (Recommended for Production Clusters)
+
+The `kubernetes/base/` directory contains production-ready manifests managed
+with Kustomize.
+
+#### Step 1: Create Namespace and Credentials
+
+```bash
+kubectl create namespace tag
+
+kubectl create secret generic tag-credentials \
+  --from-literal=aws-access-key-id=<your-access-key> \
+  --from-literal=aws-secret-access-key=<your-secret-key> \
+  -n tag
+```
+
+#### Step 2: Deploy
+
+```bash
+kubectl apply -k kubernetes/base/ -n tag
+```
+
+This creates:
+
+| Resource                              | Description                                              |
+| ------------------------------------- | -------------------------------------------------------- |
+| **StatefulSet** (`tag`)               | 3 replicas, each with a 400 GiB PVC for cache storage    |
+| **Headless Service** (`tag-headless`) | DNS-based cluster discovery (gossip + gRPC)              |
+| **LoadBalancer Service** (`tag`)      | Client-facing S3 endpoint on port 8080                   |
+| **HorizontalPodAutoscaler**           | Scales 3-10 replicas based on CPU (70%) and memory (80%) |
+
+#### Step 3: Verify
+
+```bash
+# Check pods
+kubectl get pods -n tag
+# Expected: tag-0, tag-1, tag-2 all Running
+
+# Health check
+kubectl exec -n tag tag-0 -- curl -s http://localhost:8080/health
+
+# Test S3 access
+kubectl port-forward -n tag svc/tag 8080:8080
+aws s3 ls --endpoint-url http://localhost:8080
+```
+
+#### Kubernetes Architecture Details
+
+**StatefulSet configuration:**
+
+- Resource requests: 4 GiB memory, 2 CPU
+- Resource limits: 8 GiB memory, 4 CPU
+- Security: non-root (UID 1000), read-only root filesystem, all capabilities
+  dropped
+- Pod anti-affinity: prefers spreading across nodes
+- Liveness and readiness probes on `/health`
+
+**Cluster discovery:** Each pod advertises itself as
+`$(POD_NAME).tag-headless:9000` and uses `tag-headless:7000` as the seed node
+for gossip. The headless service resolves to all pod IPs, enabling automatic
+cluster formation.
+
+**Autoscaling:** The HPA scales conservatively: down by 10% every 60 seconds
+with a 5-minute stabilization window, and up by 100% every 15 seconds with no
+stabilization delay.
+
+#### Customizing the Deployment
+
+Use Kustomize overlays to customize without modifying base manifests:
+
+```yaml
+# kubernetes/overlays/production/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+images:
+  - name: tigrisdata/tag
+    newTag: v1.9.0
+```
+
+Apply with:
+
+```bash
+kubectl apply -k kubernetes/overlays/production/ -n tag
+```
+
+## TLS Configuration
+
+TAG supports HTTPS with TLS certificates for encrypted client connections.
+
+### Self-Signed Certificates (Testing)
+
+```bash
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout tag-key.pem -out tag-cert.pem \
+  -subj "/CN=localhost" \
+  -addext "subjectAltName=DNS:localhost,IP:127.0.0.1"
+```
+
+### Enabling TLS
+
+**Environment variables:**
+
+```bash
+export TAG_TLS_CERT_FILE=/etc/tag/tls/cert.pem
+export TAG_TLS_KEY_FILE=/etc/tag/tls/key.pem
+```
+
+**Config file:**
+
+```yaml
+server:
+  tls_cert_file: "/etc/tag/tls/cert.pem"
+  tls_key_file: "/etc/tag/tls/key.pem"
+```
+
+**Docker:** Mount certificate files into the container and set the environment
+variables.
+
+**Kubernetes:** Create a TLS secret and mount it in the StatefulSet:
+
+```bash
+kubectl create secret tls tag-tls \
+  --cert=tag-cert.pem --key=tag-key.pem -n tag
+```
+
+Then add a volume mount in the StatefulSet spec and update health-check probes
+to use HTTPS.
+
+### Verifying TLS
+
+```bash
+# Self-signed certificates require -k (insecure) flag
+curl -sk https://localhost:8080/health
+```
+
+For production, use certificates issued by a trusted CA and configure your load
+balancer or ingress accordingly.
+
+## Monitoring
+
+### Prometheus Metrics
+
+TAG exposes metrics at `GET /metrics` in Prometheus exposition format. The
+Kubernetes StatefulSet includes annotations for automatic scraping:
+
+```yaml
+annotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "8080"
+  prometheus.io/path: "/metrics"
+```
+
+### Key Metrics to Alert On
+
+**Error rate:**
+
+```promql
+rate(tag_requests_total{status="error"}[5m])
+  / rate(tag_requests_total[5m])
+```
+
+Alert if error rate exceeds 1% sustained over 5 minutes.
+
+**Cache hit ratio:**
+
+```promql
+rate(tag_cache_hits_total[5m])
+  / (rate(tag_cache_hits_total[5m]) + rate(tag_cache_misses_total[5m]))
+```
+
+A healthy hit ratio depends on your workload. For read-heavy workloads with a
+bounded working set, expect 80%+ after warmup.
+
+**Upstream latency:**
+
+```promql
+histogram_quantile(0.99, rate(tag_upstream_request_duration_seconds_bucket[5m]))
+```
+
+Alert if p99 upstream latency exceeds your SLO, which may indicate Tigris
+connectivity issues.
+
+**Authentication failures:**
+
+```promql
+rate(tag_auth_failures_total[5m])
+```
+
+Spikes indicate credential misconfiguration or unauthorized access attempts.
+
+### All Available Metrics
+
+**Request metrics:** `tag_requests_total` (by operation, status),
+`tag_request_duration_seconds` (histogram)
+
+**Cache metrics:** `tag_cache_hits_total`, `tag_cache_misses_total`,
+`tag_cache_operations_total` (by operation, result),
+`tag_range_from_cache_hits_total`
+
+**Broadcast (request coalescing):** `tag_broadcast_shared_total`,
+`tag_broadcast_fetches_total`, `tag_broadcast_slow_consumers_total`,
+`tag_active_broadcasts`
+
+**Background fetches:** `tag_background_fetches_triggered_total`,
+`tag_background_fetches_succeeded_total`, `tag_background_fetches_failed_total`,
+`tag_active_background_fetches`
+
+**Revalidation:** `tag_revalidations_triggered_total`,
+`tag_revalidations_not_modified_total`, `tag_revalidations_updated_total`,
+`tag_revalidations_failed_total`, `tag_revalidations_stale_served_total`
+
+**Upstream:** `tag_upstream_request_duration_seconds` (by method),
+`tag_upstream_errors_total` (by method)
+
+**Authentication:** `tag_auth_failures_total` (by reason),
+`tag_local_auth_validations_total` (by result), `tag_derived_key_store_size`,
+`tag_authz_cache_size`, `tag_proxy_signing_keys_received_total`
+
+**Connections:** `tag_active_connections`, `tag_bytes_transferred_total` (by
+direction)
+
+### Health Check
+
+`GET /health` returns `200 OK` when TAG is ready to accept requests. Use this
+for load balancer health checks, container orchestrator probes, and uptime
+monitoring.
+
+### Profiling
+
+Enable pprof for debugging performance issues:
+
+```bash
+export TAG_PPROF_ENABLED=true
+```
+
+Endpoints: `/debug/pprof/`, `/debug/pprof/profile`, `/debug/pprof/heap`,
+`/debug/pprof/goroutine`. Disable in production unless actively debugging
+because pprof endpoints expose internal state.
+
+## Troubleshooting
+
+### TAG Won't Start
+
+**"missing AWS credentials"** - Set both `AWS_ACCESS_KEY_ID` and
+`AWS_SECRET_ACCESS_KEY`. These are TAG's own credentials, not your
+application's.
+
+**"invalid upstream endpoint"** - TAG only allows connections to `localhost`,
+`*.tigris.dev`, or `*.storage.dev`. Check `TAG_UPSTREAM_ENDPOINT`.
+
+**"TLS certificate or key file not found"** - If either `TAG_TLS_CERT_FILE` or
+`TAG_TLS_KEY_FILE` is set, both must point to valid files.
+
+### Cache Not Working
+
+**All responses show `X-Cache: MISS`** - Check that caching is enabled
+(`TAG_CACHE_DISABLED` is not `true`) and that the cache directory is writable.
+Set `TAG_LOG_LEVEL=debug` and look for cache write errors.
+
+**Objects not being cached** - Objects must return HTTP 200 and be within the
+size threshold (default 1 GiB). Objects with `Cache-Control: no-store` or
+`private` are not cached.
+
+### Authentication Errors
+
+**403 on first request** - Verify your client credentials are valid for the
+requested bucket on Tigris. TAG forwards the request to Tigris, which performs
+authentication.
+
+**403 after credential rotation** - TAG caches derived signing keys for up to 48
+hours and authorization decisions for 10 minutes. After rotating credentials,
+either wait for TTL expiry or restart TAG to clear caches.
+
+### Cluster Issues
+
+**Nodes not discovering each other** - Verify seed nodes are reachable on port
+7000 (gossip). In Kubernetes, ensure the headless service resolves correctly:
+
+```bash
+nslookup tag-headless.tag.svc.cluster.local
+```
+
+**gRPC routing failures** - Verify port 9000 is open between nodes. Check that
+`TAG_CACHE_ADVERTISE_ADDR` is set to an address reachable by other nodes (not
+`localhost`).
+
+### High Latency
+
+**High p99 latency** - Check `tag_upstream_request_duration_seconds` to
+determine whether latency comes from Tigris or TAG. High request coalescing
+(`tag_broadcast_shared_total`) is normal and reduces upstream load. High
+`tag_broadcast_slow_consumers_total` indicates clients are reading too slowly.
+
+**Debug mode** - Set `TAG_LOG_LEVEL=debug` for detailed request-level logging.
+This is verbose; use it only during active debugging.

@@ -203,6 +203,72 @@ const sidebars = {
             },
           ],
         },
+        {
+          type: "category",
+          label: "Tigris Acceleration Gateway",
+          collapsible: true,
+          collapsed: false,
+          items: [
+            {
+              type: "doc",
+              label: "Overview",
+              id: "acceleration-gateway/index",
+            },
+            {
+              type: "doc",
+              label: "Quick Start",
+              id: "acceleration-gateway/quickstart",
+            },
+            {
+              type: "doc",
+              label: "Deployment Guide",
+              id: "acceleration-gateway/deployment-guide",
+            },
+            {
+              type: "category",
+              label: "Reference",
+              collapsible: true,
+              collapsed: true,
+              items: [
+                {
+                  type: "link",
+                  label: "Configuration",
+                  href: "https://github.com/tigrisdata/tag-deploy/blob/main/docs/configuration.md",
+                },
+                {
+                  type: "link",
+                  label: "Security",
+                  href: "https://github.com/tigrisdata/tag-deploy/blob/main/docs/security.md",
+                },
+                {
+                  type: "link",
+                  label: "Cache Control",
+                  href: "https://github.com/tigrisdata/tag-deploy/blob/main/docs/cache-control.md",
+                },
+                {
+                  type: "link",
+                  label: "S3 Client Usage",
+                  href: "https://github.com/tigrisdata/tag-deploy/blob/main/docs/usage.md",
+                },
+                {
+                  type: "link",
+                  label: "Metrics",
+                  href: "https://github.com/tigrisdata/tag-deploy/blob/main/docs/metrics.md",
+                },
+                {
+                  type: "link",
+                  label: "TLS",
+                  href: "https://github.com/tigrisdata/tag-deploy/blob/main/docs/tls.md",
+                },
+                {
+                  type: "link",
+                  label: "Benchmarks",
+                  href: "https://github.com/tigrisdata/tag-deploy/blob/main/docs/benchmarks.md",
+                },
+              ],
+            },
+          ],
+        },
         "training/tigrisfs",
         {
           type: "doc",

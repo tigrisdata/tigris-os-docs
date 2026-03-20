@@ -1,0 +1,192 @@
+---
+title: TAG Quick Start
+sidebar_label: Quick Start
+description: Install and run Tigris Acceleration Gateway (TAG) in minutes.
+---
+
+Get TAG (Tigris Acceleration Gateway) running in under 5 minutes. TAG is an
+S3-compatible caching proxy that accelerates reads from Tigris object storage by
+caching objects on local disk. TAG is available to all Tigris customers as a
+pre-built binary and Docker image.
+
+## Prerequisites
+
+You need a pair of Tigris credentials (`AWS_ACCESS_KEY_ID` /
+`AWS_SECRET_ACCESS_KEY`) with read-only access to all buckets in your Tigris
+organization. These are TAG's service credentials. Your application clients
+authenticate separately with their own credentials.
+
+## Install and Run
+
+Pick whichever method matches your environment.
+
+### Option A: Native Binary
+
+```bash
+# Download and install TAG
+curl -sSL https://tag-releases.t3.storage.dev/install.sh | bash
+
+# Set your Tigris credentials
+export AWS_ACCESS_KEY_ID=<your-access-key>
+export AWS_SECRET_ACCESS_KEY=<your-secret-key>
+
+# Start TAG
+tag
+```
+
+The install script auto-detects your OS (Linux/macOS) and architecture
+(amd64/arm64) and places the binary in `/usr/local/bin`.
+
+### Option B: Docker
+
+Create a `.env` file with your credentials:
+
+```bash
+AWS_ACCESS_KEY_ID=<your-access-key>
+AWS_SECRET_ACCESS_KEY=<your-secret-key>
+```
+
+Then start TAG:
+
+```bash
+cd docker/
+docker compose up -d
+```
+
+The Docker image (`tigrisdata/tag`) uses Alpine Linux, runs as a non-root user,
+and persists cache data in a named volume.
+
+### Option C: Process Manager (`run.sh`)
+
+For environments where you want simple process lifecycle management:
+
+```bash
+cd native/
+
+# Set credentials
+export AWS_ACCESS_KEY_ID=<your-access-key>
+export AWS_SECRET_ACCESS_KEY=<your-secret-key>
+
+# Start TAG (downloads binary if needed, waits for health check)
+./run.sh start
+
+# Check status
+./run.sh status
+
+# View logs
+./run.sh logs 100
+
+# Stop TAG
+./run.sh stop
+```
+
+Use `./run.sh stop --clean` to stop TAG and remove all cached data.
+
+## Verify It Works
+
+TAG is now listening on `http://localhost:8080`.
+
+```bash
+# Health check
+curl http://localhost:8080/health
+
+# List buckets
+aws s3 ls --endpoint-url http://localhost:8080
+
+# Download an object
+aws s3 cp s3://my-bucket/my-key ./local-file --endpoint-url http://localhost:8080
+```
+
+To confirm caching is working, request the same object twice and check the
+`X-Cache` response header:
+
+```bash
+# First request - fetches from Tigris
+curl -sI http://localhost:8080/my-bucket/my-key \
+  -H "Authorization: ..." | rg X-Cache
+# X-Cache: MISS
+
+# Second request - served from local cache
+curl -sI http://localhost:8080/my-bucket/my-key \
+  -H "Authorization: ..." | rg X-Cache
+# X-Cache: HIT
+```
+
+## Connect Your Application
+
+TAG is compatible with any S3 client. Change the endpoint URL to point at TAG
+and ensure path-style addressing is configured. No other code changes are
+needed.
+
+### AWS CLI
+
+```bash
+export AWS_ACCESS_KEY_ID=<your-client-key>
+export AWS_SECRET_ACCESS_KEY=<your-client-secret>
+
+aws s3 ls --endpoint-url http://<tag-host>:8080
+aws s3 cp s3://my-bucket/my-key ./local-file --endpoint-url http://<tag-host>:8080
+```
+
+Or configure a named profile in `~/.aws/config`:
+
+```ini
+[profile tag]
+endpoint_url = http://<tag-host>:8080
+```
+
+Then use `--profile tag` or set `AWS_PROFILE=tag`.
+
+### Python (boto3)
+
+```python
+import boto3
+from botocore.config import Config
+
+s3 = boto3.client(
+    "s3",
+    endpoint_url="http://<tag-host>:8080",
+    aws_access_key_id="<your-client-key>",
+    aws_secret_access_key="<your-client-secret>",
+    config=Config(s3={"addressing_style": "path"}),
+)
+
+s3.list_buckets()
+s3.download_file("my-bucket", "my-key", "local-file.txt")
+s3.upload_file("local-file.txt", "my-bucket", "my-key")
+```
+
+### Important: Path-Style Addressing Only
+
+TAG supports path-style addressing (`http://host:port/bucket/key`).
+Virtual-hosted style (`http://bucket.host:port/key`) is not supported. Ensure
+your S3 client is configured for path-style access.
+
+## Common Configuration
+
+A few environment variables you may want to set right away:
+
+| Variable                | Default                  | Description                                |
+| ----------------------- | ------------------------ | ------------------------------------------ |
+| `TAG_LOG_LEVEL`         | `info`                   | Set to `debug` for verbose request logging |
+| `TAG_CACHE_DISK_PATH`   | `/var/cache/tag`         | Where TAG stores cached objects            |
+| `TAG_UPSTREAM_ENDPOINT` | `https://t3.storage.dev` | Tigris S3 endpoint                         |
+
+For the full configuration reference, production deployment, clustering, TLS,
+and monitoring, see the [Deployment Guide](./deployment-guide).
+
+## Quick Troubleshooting
+
+**TAG won't start ("missing AWS credentials"):** Set both `AWS_ACCESS_KEY_ID`
+and `AWS_SECRET_ACCESS_KEY`. These are TAG's own credentials, not your
+application's.
+
+**403 on first request:** Verify your client credentials are valid for the
+requested bucket on Tigris. TAG forwards the first request to Tigris for
+authentication.
+
+**All responses show `X-Cache: MISS`:** Check that `TAG_CACHE_DISABLED` is not
+set to `true` and that the cache directory is writable.
+
+For more troubleshooting, see the
+[Deployment Guide](./deployment-guide#troubleshooting).

@@ -29,7 +29,7 @@ contents of the bucket `foo-public-bucket`.
 Objects in a public bucket (by default) can be read without any authentication.
 However, only those with access to the bucket can write objects.
 
-Let's upload a file to our public bucket:
+Let’s upload a file to our public bucket:
 
 ```bash
 $ aws s3api --endpoint-url https://t3.storage.dev put-object --bucket foo-public-bucket --key bar.txt --body bar.txt
@@ -40,6 +40,28 @@ $ aws s3api --endpoint-url https://t3.storage.dev put-object --bucket foo-public
 
 Now, anyone can read this file without authentication.
 
+### Public bucket domains
+
+Every public bucket is automatically served over three Tigris-managed domains.
+Using `foo-public-bucket` as an example, the bucket is accessible at:
+
+| Domain                           | Example URL                                            |
+| -------------------------------- | ------------------------------------------------------ |
+| `BUCKET_NAME.t3.tigrisblob.io`   | `https://foo-public-bucket.t3.tigrisblob.io/bar.txt`   |
+| `BUCKET_NAME.t3.tigrisfiles.io`  | `https://foo-public-bucket.t3.tigrisfiles.io/bar.txt`  |
+| `BUCKET_NAME.t3.tigrisbucket.io` | `https://foo-public-bucket.t3.tigrisbucket.io/bar.txt` |
+
+All three domains serve the same content and are interchangeable.
+
+:::warning
+
+The public bucket domains don’t work with dots in bucket names because the SSL
+wildcard certificate only matches bucket names that do not contain dots. Dots
+create multiple subdomain levels that a single wildcard certificate doesn’t
+cover. Use a [custom domain](#custom-domain) if your bucket name contains dots.
+
+:::
+
 ### Virtual-hosted–style request
 
 Virtual host style URLs are the default way of referencing your objects. In a
@@ -48,22 +70,22 @@ virtual-hosted–style URI, the bucket name is part of the domain name in the UR
 Virtual-hosted–style URLs use the following format:
 
 ```text
-https://bucket-name.fly.storage.tigris.dev/key-name
+https://bucket-name.t3.tigrisbucket.io/key-name
 ```
 
 So for the object we just uploaded, the virtual-hosted–style URL would be:
 
 ```bash
-$ wget https://foo-public-bucket.fly.storage.tigris.dev/bar.txt -O- -q
+$ wget https://foo-public-bucket.t3.tigrisbucket.io/bar.txt -O- -q
 bar
 ```
 
 :::warning
 
-The virtual hosted style access doesn’t work with dot in the bucket names due to
-the fact that the SSL wildcard certificate matches only buckets that do not
-contain dots (. ) because dots in your bucket name create what appears to be
-multiple subdomain levels, which a single wildcard certificate doesn’t cover.
+Virtual-hosted–style access doesn’t work with dots in bucket names because the
+SSL wildcard certificate only matches bucket names that do not contain dots.
+Dots create multiple subdomain levels that a single wildcard certificate doesn’t
+cover. Use a [custom domain](#custom-domain) if your bucket name contains dots.
 
 :::
 
@@ -77,13 +99,13 @@ virtual-hosted style URLs as it provides a unique subdomain per bucket.
 Path-style URLs use the following format:
 
 ```text
-https://t3.storage.dev/bucket-name/key-name
+https://t3.tigrisbucket.io/bucket-name/key-name
 ```
 
 So for the object we just uploaded, the path-style URL would be:
 
 ```bash
-$ wget https://t3.storage.dev/foo-public-bucket/bar.txt -O- -q
+$ wget https://t3.tigrisbucket.io/foo-public-bucket/bar.txt -O- -q
 bar
 ```
 
@@ -96,3 +118,21 @@ an object private, you can set the object ACL to `private`. See the
 [Object ACLs](../objects/acl.md) guide for more information.
 
 :::
+
+## Custom domain
+
+For production use, we recommend configuring a
+[custom domain](./custom-domain.md) for your public bucket. A custom domain
+gives you:
+
+- **Brand consistency** — serve content from your own domain (e.g.,
+  `assets.example.com`) instead of a Tigris-managed domain.
+- **Portability** — your URLs stay stable if you ever change your underlying
+  storage configuration.
+- **No dot-in-name restrictions** — custom domains work regardless of whether
+  your bucket name contains dots.
+
+To set up a custom domain, create a CNAME record pointing your domain to
+`foo-public-bucket.t3.storage.dev` and then configure the domain in your bucket
+settings. See the [Custom Domains](./custom-domain.md) guide for full
+instructions.

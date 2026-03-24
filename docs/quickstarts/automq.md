@@ -26,7 +26,7 @@ For more deployment options, see the
   [https://storage.new](https://storage.new)
 - **Tigris credentials** - create Access Key and Secret Key from your Tigris
   dashboard at
-  [https://console.tigris.dev/createaccesskey](https://console.tigris.dev/createaccesskey)
+  [https://console.storage.dev/createaccesskey](https://console.storage.dev/createaccesskey)
 
 ### 2. Create Buckets in Tigris
 

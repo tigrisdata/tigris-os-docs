@@ -16,7 +16,7 @@ Deployment as environment variables. This is the most common approach.
 ### Create a bucket and access key
 
 1. Create a Tigris bucket at [storage.new](https://storage.new).
-2. Create an access key in the [dashboard](https://console.tigris.dev). Give it
+2. Create an access key in the [dashboard](https://console.storage.dev). Give it
    editor permissions on your bucket and copy the credentials.
 
 ### Create a Secret
@@ -87,8 +87,8 @@ If you don't already have Helm installed:
 brew install helm
 ```
 
-Create an access key in the [Tigris dashboard](https://console.tigris.dev), then
-install the csi-s3 Helm chart:
+Create an access key in the [Tigris dashboard](https://console.storage.dev),
+then install the csi-s3 Helm chart:
 
 ```text
 helm repo add yandex-s3 https://yandex-cloud.github.io/k8s-csi-s3/charts

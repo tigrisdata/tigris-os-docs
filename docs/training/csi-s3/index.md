@@ -22,7 +22,7 @@ manager:
 brew install helm
 ```
 
-Create an admin token in the [Tigris Dash](https://console.tigris.dev). Its
+Create an admin token in the [Tigris Dash](https://console.storage.dev). Its
 credentials will be used in the next step.
 
 With that admin token, install the csi-s3 operator:

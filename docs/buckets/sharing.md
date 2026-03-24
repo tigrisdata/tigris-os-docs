@@ -15,7 +15,7 @@ organization with other users in that organization.
 
 To share a bucket with another user in your organization:
 
-- Go to the [Tigris Dashboard](https://console.tigris.dev).
+- Go to the [Tigris Dashboard](https://console.storage.dev).
 - Click on the bucket you want to share.
 - Click on the `Share` button.
 - Select the users you want to share the bucket with and the role you want to
@@ -41,7 +41,7 @@ You can also share your buckets with your entire organization.
 
 To share a bucket with all users in your organization:
 
-- Go to the [Tigris Dashboard](https://console.tigris.dev).
+- Go to the [Tigris Dashboard](https://console.storage.dev).
 - Click on the bucket you want to share.
 - Click on the `Share` button.
 - Modify the "Organization Access" settings to your desired permissions (Editor
@@ -66,7 +66,7 @@ To share a bucket with users from another organization:
 
 - Receive the access key ID (starts with `tid_`) from the user outside your
   organization you want to share the bucket.
-- Go to the [Tigris Dashboard](https://console.tigris.dev).
+- Go to the [Tigris Dashboard](https://console.storage.dev).
 - Click on the bucket you want to share.
 - Click on the `Share` button.
 - Expand the `External Sharing` section.

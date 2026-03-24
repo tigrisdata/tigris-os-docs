@@ -13,7 +13,7 @@ the Dashboard. Supported payment methods are listed below.
 
 You can easily monitor your organization’s usage and spending in the Dashboard:
 
-1. Log in to the [Tigris Dashboard](https://console.tigris.dev).
+1. Log in to the [Tigris Dashboard](https://console.storage.dev).
 2. Go to **Usage** in the left-hand navigation bar.
 3. View your current month’s usage and total charges on the main page.
 4. To see usage for previous months, use the timeframe selector in the top right
@@ -28,7 +28,7 @@ to your billing email address. Please ensure this address is always up to date.
 
 To update your billing email:
 
-1. Log in to the [Tigris Dashboard](https://console.tigris.dev).
+1. Log in to the [Tigris Dashboard](https://console.storage.dev).
 2. Open the **Organization picker** in the upper right corner and select the
    correct organization.
 3. Select **Billing** from the dropdown menu.
@@ -40,7 +40,7 @@ To update your billing email:
 
 To update your billing address:
 
-1. Log in to the [Tigris Dashboard](https://console.tigris.dev).
+1. Log in to the [Tigris Dashboard](https://console.storage.dev).
 2. Open the **Organization picker** in the upper right corner and select your
    organization.
 3. Select **Billing** from the dropdown menu.
@@ -58,7 +58,7 @@ This ensures you see the supported payment options for your location.
 
 You can manage your payment methods directly from the Dashboard:
 
-1. Log in to the [Tigris Dashboard](https://console.tigris.dev).
+1. Log in to the [Tigris Dashboard](https://console.storage.dev).
 2. Open the **Organization picker** in the upper right corner and select your
    organization.
 3. Select **Billing** from the dropdown menu.

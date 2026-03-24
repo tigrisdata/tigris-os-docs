@@ -44,7 +44,7 @@ these three storage tiers:
 ### Specifying an Object Lifecycle rule via the Tigris Dashboard
 
 You can specify lifecycle transition rules for your bucket using the
-[Tigris Dashboard](https://console.tigris.dev/).
+[Tigris Dashboard](https://console.storage.dev/).
 
 Here's a short video that demonstrates how to specify Object Lifecycle rule for
 a bucket:

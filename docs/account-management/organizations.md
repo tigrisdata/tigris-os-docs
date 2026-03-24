@@ -37,7 +37,7 @@ to Member. The Owner is also responsible for the Organization’s billing.
 
 To create a new Organization:
 
-- Go to the [Tigris Dashboard](https://console.tigris.dev).
+- Go to the [Tigris Dashboard](https://console.storage.dev).
 
 - Click on your account name in the upper right corner and select
   `+ Add Organization`.
@@ -48,7 +48,7 @@ To create a new Organization:
 
 To invite a new member to an Organization:
 
-- Go to the [Tigris Dashboard](https://console.tigris.dev).
+- Go to the [Tigris Dashboard](https://console.storage.dev).
 
 - Click on your account name in the upper right corner and select `Members`.
 
@@ -99,7 +99,7 @@ Users who login with Fly must use Fly Organizations.
 
 To change permissions for a Member:
 
-- Go to the [Tigris Dashboard](https://console.tigris.dev).
+- Go to the [Tigris Dashboard](https://console.storage.dev).
 
 - Click on your account name in the upper right corner and select `Members`.
 
@@ -115,7 +115,7 @@ The Organization owner cannot be downgraded to a Member.
 
 To share a bucket with all users in your organization:
 
-- Go to the [Tigris Dashboard](https://console.tigris.dev).
+- Go to the [Tigris Dashboard](https://console.storage.dev).
 
 - Click on the bucket you want to share.
 

@@ -23,8 +23,8 @@ setting the object ACL.
 ## Enabling Object ACLs
 
 By default, object ACLs are disabled. Object ACLs can be enabled at the bucket
-level through the [Tigris Dashboard](https://console.tigris.dev) from the bucket
-settings.
+level through the [Tigris Dashboard](https://console.storage.dev) from the
+bucket settings.
 
 <a href="https://www.loom.com/share/747c12e19f524c97b88083355077de26" target="_blank">
     <img src="https://cdn.loom.com/sessions/thumbnails/747c12e19f524c97b88083355077de26-cb147c715a920c8d-full-play.gif" />

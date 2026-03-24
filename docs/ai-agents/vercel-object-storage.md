@@ -48,8 +48,8 @@ functions.
 
 ### Step 1: Get Tigris Credentials
 
-Sign up at [console.storage.dev](https://console.storage.dev) and create an access
-key. Or use the CLI:
+Sign up at [console.storage.dev](https://console.storage.dev) and create an
+access key. Or use the CLI:
 
 ```bash
 npm install -g @tigrisdata/tigris-cli

@@ -83,7 +83,8 @@ Keep S3 when:
 | `AWS_REGION`               | `auto`                   |
 | S3 endpoint (region-based) | `https://t3.storage.dev` |
 
-Get your Tigris credentials at [console.storage.dev](https://console.storage.dev).
+Get your Tigris credentials at
+[console.storage.dev](https://console.storage.dev).
 
 ## How Do Endpoints Map?
 

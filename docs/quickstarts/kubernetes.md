@@ -87,8 +87,8 @@ If you don't already have Helm installed:
 brew install helm
 ```
 
-Create an access key in the [Tigris dashboard](https://console.storage.dev), then
-install the csi-s3 Helm chart:
+Create an access key in the [Tigris dashboard](https://console.storage.dev),
+then install the csi-s3 Helm chart:
 
 ```text
 helm repo add yandex-s3 https://yandex-cloud.github.io/k8s-csi-s3/charts

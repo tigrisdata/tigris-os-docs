@@ -54,7 +54,8 @@ waiting on storage. With Tigris you can stream objects straight into PyTorch
 DataLoaders without staging anything locally, and the same bucket works from any
 cloud or region.
 
-The [S3 Connector for PyTorch](https://github.com/awslabs/s3-connector-for-pytorch)
+The
+[S3 Connector for PyTorch](https://github.com/awslabs/s3-connector-for-pytorch)
 reads objects directly from Tigris into your training loop. `S3IterableDataset`
 streams sequentially for large-scale runs; `S3MapDataset` gives random access
 when you need shuffling or indexed lookups. With `enable_sharding=True`, each
@@ -74,7 +75,8 @@ flowchart LR
     DL --> GPU[GPU]:::gpu
 
     SKY[SkyPilot — any cloud]:::cloud -.->|launches| DL
-```
+
+````
 </div>
 <div className="mermaid-caption">
   Figure 1: Training data streams from a global bucket through optional TAG
@@ -138,7 +140,8 @@ flowchart LR
     S -->|fork| F1[(Experiment A — lr=1e-4)]:::fork
     S -->|fork| F2[(Experiment B — lr=3e-5)]:::fork
     S -->|fork| F3[(Experiment C — lr=1e-3)]:::fork
-```
+````
+
 </div>
 <div className="mermaid-caption">
   Figure 2: A training job checkpoints into a snapshot, then either resumes from
@@ -154,8 +157,7 @@ let each fork write independently.
 
 For more information, see the docs:
 [Bucket snapshots and forks](/docs/buckets/snapshots-and-forks/) ·
-[Model storage](/docs/model-storage/) ·
-[TigrisFS](/docs/training/tigrisfs/)
+[Model storage](/docs/model-storage/) · [TigrisFS](/docs/training/tigrisfs/)
 
 :::tip
 
@@ -180,12 +182,12 @@ work usually follows: evaluation, quantization, conversion to a serving format,
 or deployment to an inference fleet. Polling the bucket for new objects adds
 latency, wastes API calls, and complicates orchestration.
 
-[Tigris Object Notifications](/docs/buckets/object-notifications/)
-replace the polling loop with a push model. An HTTP `POST` fires to your webhook
-the moment a new object lands, carrying the bucket, key, size, and ETag. Your
-pipeline handler can start immediately — run evals against the new checkpoint,
-kick off ONNX or TensorRT conversion, or trigger a rolling deploy to your
-inference fleet.
+[Tigris Object Notifications](/docs/buckets/object-notifications/) replace the
+polling loop with a push model. An HTTP `POST` fires to your webhook the moment
+a new object lands, carrying the bucket, key, size, and ETag. Your pipeline
+handler can start immediately — run evals against the new checkpoint, kick off
+ONNX or TensorRT conversion, or trigger a rolling deploy to your inference
+fleet.
 
 <div className="mermaid-frame">
 ```mermaid
@@ -199,7 +201,8 @@ flowchart LR
     W --> E[Run evals]:::pipe
     W --> Q[Quantize / convert]:::pipe
     W --> D[Deploy to inference]:::pipe
-```
+
+````
 </div>
 <div className="mermaid-caption">
   Figure 3: A training job uploads weights, triggering a webhook that fans out
@@ -220,7 +223,7 @@ Filter webhooks to the keys that matter:
 
 ```sql
 WHERE `key` REGEXP "^final/" AND `Event-Type` = "OBJECT_CREATED_PUT"
-```
+````
 
 :::
 
@@ -240,8 +243,8 @@ set up, expensive to maintain, and drifts when you forget to sync after a
 retrain.
 
 A single `PutObject` to a [global Tigris bucket](/docs/buckets/locations/) makes
-the weights available worldwide. Inference nodes read from the nearest replica at
-no egress cost. Because weights are immutable per version, conditional
+the weights available worldwide. Inference nodes read from the nearest replica
+at no egress cost. Because weights are immutable per version, conditional
 `GetObject` calls with `If-None-Match` let nodes skip the download entirely if
 they already have the current version — useful for rolling deploys where most
 nodes are already warm.
@@ -257,6 +260,7 @@ flowchart LR
     GB -->|local read| I1[Inference — US]:::infer
     GB -->|local read| I2[Inference — EU]:::infer
     GB -->|local read| I3[Inference — APAC]:::infer
+
 ```
 </div>
 <div className="mermaid-caption">
@@ -288,3 +292,4 @@ For more information, see the docs:
 | [Training with big data](/docs/training/big-data-skypilot/)        | Multi-cloud LoRA fine-tuning walkthrough with SkyPilot and Tigris.                            |
 | [Snapshots and forks](/docs/buckets/snapshots-and-forks/)          | Concepts and API flows for creating snapshots, forking buckets, and managing versions.        |
 | [Model storage](/docs/model-storage/)                              | Patterns for storing, versioning, and serving model weights with boto3, s3fs, and TigrisFS.   |
+```

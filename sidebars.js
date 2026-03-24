@@ -43,6 +43,11 @@ const sidebars = {
           label: "Use Cases - AI Agents",
           id: "agents-use-cases",
         },
+        {
+          type: "doc",
+          label: "Use Cases - Model Training",
+          id: "training-use-cases",
+        },
         "concepts/authnz",
         "api/s3/index",
         "concepts/regions",

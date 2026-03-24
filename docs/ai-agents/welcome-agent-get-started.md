@@ -81,7 +81,7 @@ tigris whoami
 
 You should see their account info. If `tigris login` doesn't work in your
 environment (no browser), have the human go to
-[console.tigris.dev](https://console.tigris.dev), create access keys manually,
+[console.storage.dev](https://console.storage.dev), create access keys manually,
 and use:
 
 ```bash
@@ -310,7 +310,7 @@ go get github.com/aws/aws-sdk-go-v2/service/s3
 
 **`tigris login` hangs or no browser opens** — The environment may not support
 browser-based auth. Have the human create access keys at
-[console.tigris.dev](https://console.tigris.dev) and use
+[console.storage.dev](https://console.storage.dev) and use
 `tigris login credentials`.
 
 **`AccessDenied` errors** — Check that `AWS_ACCESS_KEY_ID` and

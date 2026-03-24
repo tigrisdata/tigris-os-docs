@@ -66,7 +66,7 @@ Keep S3 when:
 ## What Are the Steps to Replace S3?
 
 - [ ] Create a Tigris account at [storage.new](https://storage.new/)
-- [ ] Create a bucket in the [Tigris Dashboard](https://console.tigris.dev)
+- [ ] Create a bucket in the [Tigris Dashboard](https://console.storage.dev)
 - [ ] Generate Tigris access keys
 - [ ] Update endpoint URL to `https://t3.storage.dev`
 - [ ] Update access key ID and secret access key
@@ -83,7 +83,7 @@ Keep S3 when:
 | `AWS_REGION`               | `auto`                   |
 | S3 endpoint (region-based) | `https://t3.storage.dev` |
 
-Get your Tigris credentials at [console.tigris.dev](https://console.tigris.dev).
+Get your Tigris credentials at [console.storage.dev](https://console.storage.dev).
 
 ## How Do Endpoints Map?
 

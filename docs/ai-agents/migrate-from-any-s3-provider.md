@@ -67,7 +67,7 @@ grant write access too.
 
 ### Step 2: Configure the shadow bucket
 
-In the [Tigris Dashboard](https://console.tigris.dev):
+In the [Tigris Dashboard](https://console.storage.dev):
 
 1. Select your bucket > Settings
 2. Enable "Data Migration"

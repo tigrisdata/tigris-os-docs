@@ -79,7 +79,7 @@ AWS_REGION=auto
 TIGRIS_BUCKET_NAME=your-bucket-name
 ```
 
-Get your access keys at [console.tigris.dev](https://console.tigris.dev).
+Get your access keys at [console.storage.dev](https://console.storage.dev).
 
 ## How Do I Configure the S3 Client?
 

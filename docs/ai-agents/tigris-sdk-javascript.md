@@ -70,7 +70,7 @@ TIGRIS_STORAGE_SECRET_ACCESS_KEY=tsec_your_secret_key
 TIGRIS_STORAGE_BUCKET=your-bucket-name
 ```
 
-Get credentials at [console.tigris.dev](https://console.tigris.dev).
+Get credentials at [console.storage.dev](https://console.storage.dev).
 
 ## How Do I Upload Objects?
 

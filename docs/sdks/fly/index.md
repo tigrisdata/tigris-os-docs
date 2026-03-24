@@ -127,7 +127,7 @@ keys, upload objects, view usage, and more.
 
 To access the Tigris console with your Fly-provisioned buckets:
 
-1. Go to [console.tigris.dev/signin](https://console.tigris.dev/signin)
+1. Go to [console.storage.dev/signin](https://console.storage.dev/signin)
 2. Click the **Fly.io** button to log in
 3. This will connect to your Fly organization and show all your buckets
 
@@ -184,7 +184,7 @@ account. These are completely separate systems.
 **Solution:**
 
 1. **Log out** of the Tigris console completely
-2. **Go to** [console.tigris.dev/signin](https://console.tigris.dev/signin)
+2. **Go to** [console.storage.dev/signin](https://console.storage.dev/signin)
 3. **Click the Fly.io button** (not Google, GitHub, or email)
 4. Your Fly-provisioned buckets should now appear
 

@@ -76,7 +76,7 @@ cutover.
 
 Before starting, make sure you have:
 
-- A [Tigris account](https://console.tigris.dev) with a bucket created
+- A [Tigris account](https://console.storage.dev) with a bucket created
 - Your MinIO endpoint URL (e.g., `https://minio.example.com` or
   `http://minio-host:9000`)
 - MinIO access credentials (access key and secret key) with read and list
@@ -96,7 +96,7 @@ instead.
 
 ### Step 1: Configure the shadow bucket
 
-1. Go to the [Tigris Dashboard](https://console.tigris.dev)
+1. Go to the [Tigris Dashboard](https://console.storage.dev)
 2. Click **Buckets** in the left menu
 3. Select the bucket you want to migrate data into
 4. Click **Settings**

@@ -52,7 +52,7 @@ migration, and you can take as long as you need before completing the cutover.
 
 Before starting, make sure you have:
 
-- A [Tigris account](https://console.tigris.dev) with a bucket created
+- A [Tigris account](https://console.storage.dev) with a bucket created
 - Cloudflare R2 API credentials with read access to the source bucket
 - Your Cloudflare account-specific R2 endpoint
 
@@ -72,7 +72,7 @@ Before starting, make sure you have:
 
 ### Step 2: Configure the shadow bucket
 
-1. Go to the [Tigris Dashboard](https://console.tigris.dev)
+1. Go to the [Tigris Dashboard](https://console.storage.dev)
 2. Click **Buckets** in the left menu
 3. Select the bucket you want to migrate data into
 4. Click **Settings**

@@ -15,10 +15,10 @@ stream terabytes to GPUs without becoming a bottleneck, persist checkpoints that
 let you resume on a different machine or cloud, and deliver finished weights to
 inference endpoints worldwide — all without surprise egress bills.
 
-This page covers four patterns where Tigris's architecture fits the access
+This page covers five patterns where Tigris's architecture fits the access
 patterns of model training better than conventional S3.
 
-## Four Core Use Cases
+## Five Core Use Cases
 
 <Section>
   <Card
@@ -26,6 +26,12 @@ patterns of model training better than conventional S3.
     description="Feed datasets directly into PyTorch DataLoaders from a global bucket, with local caching for repeat epochs."
     to="#stream-training-data-to-gpus"
     icon="img/atom"
+  />
+  <Card
+    title="Hydrate datasets to local storage"
+    description="Sync datasets from Tigris to local NVMe or a parallel filesystem before training, keeping Tigris as the durable source of truth."
+    to="#hydrate-datasets-to-local-storage"
+    icon="img/lightning"
   />
   <Card
     title="Checkpoint, resume, and fork training runs"
@@ -58,8 +64,8 @@ The
 [S3 Connector for PyTorch](https://github.com/awslabs/s3-connector-for-pytorch)
 reads objects directly from Tigris into your training loop. `S3IterableDataset`
 streams sequentially for large-scale runs; `S3MapDataset` gives random access
-when you need shuffling or indexed lookups. With `enable_sharding=True`, each
-DataLoader worker gets a distinct partition automatically.
+when you need shuffling or indexed lookups. Each DataLoader worker automatically
+gets a distinct partition of the iterable dataset.
 
 <div className="mermaid-frame">
 ```mermaid
@@ -111,7 +117,149 @@ faster host-to-GPU transfers and lower worker startup overhead between epochs.
 
 :::
 
-## 2. Checkpoint, resume, and fork training runs {#checkpoint-resume-and-fork-training-runs}
+## 2. Hydrate datasets to local storage {#hydrate-datasets-to-local-storage}
+
+Streaming directly from object storage works for fine-tuning and lighter
+workloads, but large-scale pre-training with heavy random I/O needs the dataset
+on fast local storage before training starts. Tigris acts as the durable,
+globally accessible source of truth: you hydrate data out of it into local NVMe
+or a parallel filesystem for the duration of a job, then write results back.
+This keeps you from paying for expensive filesystem storage around the clock
+while still getting full disk-speed reads during training.
+
+Two patterns are common in production.
+
+### Kubernetes init container
+
+An init container copies the dataset from Tigris into ephemeral node-local
+storage before the training container starts. The volume is then mounted into
+the training pod.
+
+<div className="mermaid-frame">
+```mermaid
+flowchart LR
+    classDef bucket fill:#0d47a1,stroke:#42a5f5,color:#fff
+    classDef init   fill:#1b5e20,stroke:#81c784,color:#fff
+    classDef vol    fill:#bf360c,stroke:#ff8a65,color:#fff
+    classDef gpu    fill:#4a148c,stroke:#ce93d8,color:#fff
+
+    GB[(Tigris bucket)]:::bucket -->|s3 sync| IC[Init container]:::init
+    IC -->|write| V[Ephemeral NVMe volume]:::vol
+    V -->|mount| T[Training container]:::gpu
+    T --> GPU[GPU]:::gpu
+    T -->|write checkpoints| GB
+````
+
+</div>
+<div className="mermaid-caption">
+  Figure 2a: An init container hydrates an ephemeral volume from Tigris before
+  the training container starts.
+</div>
+
+```yaml
+initContainers:
+  - name: hydrate-dataset
+    image: amazon/aws-cli
+    command:
+      - sh
+      - -c
+      - aws s3 sync s3://my-dataset /data/dataset --endpoint-url
+        https://t3.storage.dev
+    volumeMounts:
+      - name: dataset
+        mountPath: /data/dataset
+    env:
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef: { name: tigris-creds, key: access-key-id }
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef: { name: tigris-creds, key: secret-access-key }
+containers:
+  - name: train
+    image: my-training-image
+    command:
+      [
+        "torchrun",
+        "--nproc_per_node=8",
+        "train.py",
+        "--data-dir",
+        "/data/dataset",
+      ]
+    volumeMounts:
+      - name: dataset
+        mountPath: /data/dataset
+volumes:
+  - name: dataset
+    emptyDir: {} # backed by root disk; use a hostPath or local PV for NVMe
+```
+
+Because Tigris serves reads from the nearest region, the sync saturates the
+available link regardless of where the job is scheduled. For datasets that don't
+change between runs, the sync is incremental — only new or modified objects
+transfer.
+
+NVIDIA's
+[GPUDirect Storage](https://docs.nvidia.com/gpudirect-storage/overview-guide/)
+can further reduce overhead by enabling direct NVMe-to-GPU data paths, bypassing
+the CPU during data loading.
+
+### Parallel filesystem (Weka, VAST, Lustre)
+
+A separate ingestion job copies data from Tigris into a high-performance
+parallel filesystem. The training container then mounts the filesystem through
+its CSI driver and reads at full filesystem speed.
+
+<div className="mermaid-frame">
+```mermaid
+flowchart LR
+    classDef bucket fill:#0d47a1,stroke:#42a5f5,color:#fff
+    classDef ingest fill:#1b5e20,stroke:#81c784,color:#fff
+    classDef fs     fill:#bf360c,stroke:#ff8a65,color:#fff
+    classDef gpu    fill:#4a148c,stroke:#ce93d8,color:#fff
+
+    GB[(Tigris bucket)]:::bucket -->|ingest job| W[Weka / VAST / Lustre]:::fs
+    W -->|CSI mount| T[Training container]:::gpu
+    T --> GPU[GPU]:::gpu
+    T -->|write checkpoints| GB
+
+````
+</div>
+<div className="mermaid-caption">
+  Figure 2b: A separate job ingests data from Tigris into a parallel filesystem.
+  The training container mounts the filesystem via CSI.
+</div>
+
+Object storage stays the persistent store. The parallel filesystem is
+provisioned only for the duration of training, so you avoid paying for
+high-performance storage around the clock. Weka, VAST, and other vendors
+provide S3 data-import features and Kubernetes CSI plugins that make the
+hydrate-mount-train cycle straightforward.
+
+```bash
+# Hydrate Weka from Tigris (run as a separate k8s job or CLI step)
+aws s3 sync s3://my-dataset /mnt/weka/dataset --endpoint-url https://t3.storage.dev
+
+# Training container sees /mnt/weka/dataset via CSI mount
+torchrun --nproc_per_node=8 train.py --data-dir /mnt/weka/dataset
+
+# Write results back to Tigris
+aws s3 cp /mnt/weka/checkpoints/ s3://my-checkpoints/ --recursive --endpoint-url https://t3.storage.dev
+````
+
+For more information, see the docs: [TigrisFS](/docs/training/tigrisfs/) ·
+[Bucket locations](/docs/buckets/locations/) ·
+[rclone quickstart](/docs/quickstarts/rclone/)
+
+:::tip
+
+For datasets that change infrequently, run `aws s3 sync` with `--size-only` to
+skip unchanged files based on size rather than checksumming every object. This
+cuts hydration time on repeat runs.
+
+:::
+
+## 3. Checkpoint, resume, and fork training runs {#checkpoint-resume-and-fork-training-runs}
 
 Long training jobs fail. Spot instances get preempted, nodes crash, and
 hyperparameters need revising. If you're not checkpointing to durable storage,
@@ -140,11 +288,12 @@ flowchart LR
     S -->|fork| F1[(Experiment A — lr=1e-4)]:::fork
     S -->|fork| F2[(Experiment B — lr=3e-5)]:::fork
     S -->|fork| F3[(Experiment C — lr=1e-3)]:::fork
+
 ````
 
 </div>
 <div className="mermaid-caption">
-  Figure 2: A training job checkpoints into a snapshot, then either resumes from
+  Figure 3: A training job checkpoints into a snapshot, then either resumes from
   it or forks into parallel experiments with different hyperparameters.
 </div>
 
@@ -175,7 +324,7 @@ changed afterward.
 
 :::
 
-## 3. Trigger post-training pipelines on upload {#trigger-post-training-pipelines-on-upload}
+## 4. Trigger post-training pipelines on upload {#trigger-post-training-pipelines-on-upload}
 
 After a training job writes a checkpoint or a final set of weights, downstream
 work usually follows: evaluation, quantization, conversion to a serving format,
@@ -203,9 +352,10 @@ flowchart LR
     W --> D[Deploy to inference]:::pipe
 
 ````
+
 </div>
 <div className="mermaid-caption">
-  Figure 3: A training job uploads weights, triggering a webhook that fans out
+  Figure 4: A training job uploads weights, triggering a webhook that fans out
   to evaluation, conversion, and deployment.
 </div>
 
@@ -223,7 +373,7 @@ Filter webhooks to the keys that matter:
 
 ```sql
 WHERE `key` REGEXP "^final/" AND `Event-Type` = "OBJECT_CREATED_PUT"
-````
+```
 
 :::
 
@@ -235,7 +385,7 @@ sequence events correctly, and design your handler to be idempotent.
 
 :::
 
-## 4. Store and serve model weights globally {#store-and-serve-model-weights-globally}
+## 5. Store and serve model weights globally {#store-and-serve-model-weights-globally}
 
 Once training is done, the weights need to reach inference endpoints that may be
 spread across regions and clouds. Copying files to per-region buckets is slow to
@@ -264,7 +414,7 @@ flowchart LR
 ```
 </div>
 <div className="mermaid-caption">
-  Figure 4: Training uploads weights once and inference nodes load them from the
+  Figure 5: Training uploads weights once and inference nodes load them from the
   nearest replica.
 </div>
 

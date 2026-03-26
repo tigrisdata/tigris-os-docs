@@ -38,11 +38,6 @@ const sidebars = {
           id: "overview/index",
         },
         "concepts/architecture",
-        {
-          type: "doc",
-          label: "Use Cases - AI Agents",
-          id: "agents-use-cases",
-        },
         "concepts/authnz",
         "api/s3/index",
         "concepts/regions",
@@ -693,30 +688,19 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "Guides",
+      label: "Use Cases",
       collapsed: false,
       items: [
         {
-          type: "category",
-          label: "Model Storage",
-          link: {
-            type: "doc",
-            id: "model-storage/index",
-          },
-          items: [
-            {
-              type: "doc",
-              label: "Beam Cloud",
-              id: "model-storage/beam-cloud",
-            },
-            {
-              type: "doc",
-              label: "Vast.ai",
-              id: "model-storage/vast-ai",
-            },
-          ],
+          type: "doc",
+          label: "AI Agents",
+          id: "agents-use-cases",
         },
-        "apps/docker-registry",
+        {
+          type: "doc",
+          label: "Model Training",
+          id: "training-use-cases",
+        },
       ],
     },
     {

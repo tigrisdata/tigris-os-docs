@@ -71,23 +71,7 @@ A [global bucket](/docs/buckets/locations/) serves every read from the nearest
 replica at no egress cost, so those read-heavy loops don't accumulate transfer
 fees regardless of which region the agent is running in.
 
-<div className="mermaid-frame">
-```mermaid
-flowchart LR
-    classDef bucket fill:#0d47a1,stroke:#42a5f5,color:#fff
-    classDef agent  fill:#4a148c,stroke:#ce93d8,color:#fff
-    classDef writer fill:#1b5e20,stroke:#81c784,color:#fff
-
-    W[Write once]:::writer --> GB[(Global bucket)]:::bucket
-    GB -->|local read| EU[Agent — EU]:::agent
-    GB -->|local read| US[Agent — US]:::agent
-    GB -->|local read| APAC[Agent — APAC]:::agent
-
-````
-</div>
-<div className="mermaid-caption">
-  Figure 1: One global bucket serves local reads for agents in every region.
-</div>
+![Persist agent memory globally](/img/use-cases/agents-persist-memory.excalidraw.png)
 
 In practice, you point all agents at a single global bucket and choose a stable
 keying scheme for memory artifacts (for example `runs/{run_id}/memory/{step}`).
@@ -119,24 +103,7 @@ agent, with no cross-region prefetch and no egress cost on the read. Agents that
 need filesystem semantics can mount the bucket directly via [TigrisFS](/docs/training/tigrisfs/) and see a
 plain `/data` directory.
 
-<div className="mermaid-frame">
-```mermaid
-flowchart LR
-    classDef bucket fill:#0d47a1,stroke:#42a5f5,color:#fff
-    classDef agent  fill:#4a148c,stroke:#ce93d8,color:#fff
-    classDef snap   fill:#bf360c,stroke:#ff8a65,color:#fff
-
-    A[Agent]:::agent -->|checkpoint| S[(Snapshot)]:::snap
-    S -->|fork| B1[Sub-agent 1]:::agent
-    S -->|fork| B2[Sub-agent 2]:::agent
-    S -->|resume| R[Any machine]:::agent
-````
-
-</div>
-<div className="mermaid-caption">
-  Figure 2: Agents checkpoint into a snapshot, then either resume from it or
-  fork new sub-agents.
-</div>
+![Checkpoint and resume agents](/img/use-cases/agents-checkpoint.excalidraw.png)
 
 The diagram shows two distinct things a snapshot enables, and they don't have to
 happen together. **Resume** is straightforward: the agent fails or migrates,
@@ -174,24 +141,7 @@ polling loop with a push model. An HTTP `POST` request fires to your webhook the
 moment an object lands, carrying the bucket, key, size, and ETag needed to begin
 processing immediately.
 
-<div className="mermaid-frame">
-```mermaid
-flowchart LR
-    classDef bucket  fill:#0d47a1,stroke:#42a5f5,color:#fff
-    classDef agent   fill:#4a148c,stroke:#ce93d8,color:#fff
-    classDef client  fill:#1b5e20,stroke:#81c784,color:#fff
-
-    C[Client]:::client -->|PutObject| B[(Tigris bucket)]:::bucket
-    B -->|OBJECT_CREATED_PUT webhook| W[Webhook agent]:::agent
-    W -->|GetObject| E[Extraction jobs]:::agent
-    E -->|PutObject outputs| B
-
-````
-</div>
-<div className="mermaid-caption">
-  Figure 3: Each upload immediately triggers a webhook that starts the
-  processing pipeline.
-</div>
+![Trigger processing pipelines](/img/use-cases/agents-pipelines.excalidraw.png)
 
 You configure a notification rule through the Tigris Dashboard, pointing it at
 an HTTPS endpoint your agent controls. On each `OBJECT_CREATED_PUT`, the agent
@@ -209,7 +159,7 @@ Filter webhooks to exactly the events you need:
 
 ```sql
 WHERE `key` REGEXP "^raw/videos" AND `Event-Type` = "OBJECT_CREATED_PUT"
-````
+```
 
 :::
 
@@ -233,28 +183,7 @@ scale. [Tigris forks](/docs/buckets/snapshots-and-forks/) create a copy-on-write
 snapshot of a bucket instantly. Each run gets full isolation, mutations in one
 fork never affect another, and the source dataset stays unchanged for replay.
 
-<div className="mermaid-frame">
-```mermaid
-flowchart LR
-    classDef bucket fill:#0d47a1,stroke:#42a5f5,color:#fff
-    classDef snap   fill:#bf360c,stroke:#ff8a65,color:#fff
-    classDef fork   fill:#006064,stroke:#80deea,color:#fff
-    classDef agent  fill:#4a148c,stroke:#ce93d8,color:#fff
-
-    R[(Reference bucket)]:::bucket -->|snapshot| S[Snapshot]:::snap
-    S -->|fork| F1[(run-1)]:::fork
-    S -->|fork| F2[(run-2)]:::fork
-    S -->|fork| F3[(run-3)]:::fork
-    F1 --- AG1[agent-1]:::agent
-    F2 --- AG2[agent-2]:::agent
-    F3 --- AG3[agent-3]:::agent
-
-````
-</div>
-<div className="mermaid-caption">
-  Figure 4: A reference bucket forks into isolated views so each eval run can
-  write without affecting the source.
-</div>
+![Fork storage for isolated eval runs](/img/use-cases/agents-fork-eval.excalidraw.png)
 
 Your eval runner creates a snapshot from the reference bucket, then forks it
 once per run and passes the forked bucket name into the job's environment. Runs
@@ -279,24 +208,7 @@ because the artifact is versioned and immutable, conditional `GetObject` calls
 with `If-None-Match` let nodes skip the download entirely if they already have
 the current version. No replication pipelines, no reconciliation logic.
 
-<div className="mermaid-frame">
-```mermaid
-flowchart LR
-    classDef bucket fill:#0d47a1,stroke:#42a5f5,color:#fff
-    classDef ci     fill:#1b5e20,stroke:#81c784,color:#fff
-    classDef node   fill:#4a148c,stroke:#ce93d8,color:#fff
-
-    CI[CI pipeline]:::ci -->|presigned PUT| GB[(Global bucket)]:::bucket
-    GB -->|local read| N1[Fleet node — US]:::node
-    GB -->|local read| N2[Fleet node — EU]:::node
-    GB -->|local read| N3[Fleet node — APAC]:::node
-````
-
-</div>
-<div className="mermaid-caption">
-  Figure 5: CI uploads an artifact once and fleet nodes fetch it from the
-  nearest replica.
-</div>
+![Distribute agent artifacts](/img/use-cases/agents-distribute.excalidraw.png)
 
 In CI, a release job requests a
 [presigned `PUT` URL for a versioned key](/docs/objects/presigned/) such as
@@ -321,28 +233,7 @@ scenes. The agent sees a plain `/data` directory while the platform stores
 everything as globally distributed objects. Snapshots and forks handle mid-run
 checkpoints and sub-agent fan-out.
 
-<div className="mermaid-frame">
-```mermaid
-flowchart LR
-    classDef bucket fill:#0d47a1,stroke:#42a5f5,color:#fff
-    classDef agent  fill:#4a148c,stroke:#ce93d8,color:#fff
-    classDef snap   fill:#bf360c,stroke:#ff8a65,color:#fff
-    classDef fork   fill:#006064,stroke:#80deea,color:#fff
-    classDef mount  fill:#33691e,stroke:#aed581,color:#fff
-
-    SB[Sandbox agent]:::agent -->|reads / writes /data| TFS[TigrisFS]:::mount
-    TFS <-->|S3 API| B[(Sandbox bucket)]:::bucket
-    B -->|checkpoint| SNAP[Snapshot]:::snap
-    SNAP -->|fork| F1[(Sub-agent 1)]:::fork
-    SNAP -->|fork| F2[(Sub-agent 2)]:::fork
-    SNAP -->|resume| R[Resumed sandbox]:::agent
-
-```
-</div>
-<div className="mermaid-caption">
-  Figure 6: Each sandbox writes to `/data` while TigrisFS backs it with its own
-  bucket and snapshots.
-</div>
+![Provision isolated storage for sandboxes](/img/use-cases/agents-sandboxes.excalidraw.png)
 
 The sandbox agent talks only to a TigrisFS mount that your platform wires to a
 dedicated bucket per sandbox. Platform code is responsible for creating that
@@ -359,4 +250,3 @@ when you need checkpoints, replay, or sub-agent fan-out.
 | [Object notifications](/docs/buckets/object-notifications/) | How to configure webhooks, filter events, and build event-driven pipelines.                |
 | [TigrisFS](/docs/training/tigrisfs/)                        | Instructions for mounting buckets as filesystems and working with `/data` inside agents.   |
 | [Presigned URLs](/docs/objects/presigned/)                  | Patterns for generating scoped URLs for upload/download in CI and production apps.         |
-```

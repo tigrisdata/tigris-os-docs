@@ -19,6 +19,18 @@ application and Tigris, and it transparently caches objects on local NVMe
 storage — giving you sub-millisecond read latency without sacrificing S3 API
 compatibility.
 
+{/* <!-- NOTE: The SVG below is rendered from TAGOverviewDiagram. The mermaid
+     notation is kept here as a machine-readable description for AI agents.
+```mermaid
+flowchart TB
+    subgraph inst["Training Instance"]
+        TC[Training Code] -->|S3 API| TAG[Acceleration Gateway]
+        TAG --- NV[Local NVMe Cache]
+    end
+    NV -.->|cache miss| TOS[Tigris Object Storage]
+    TOS -->|fill cache| NV
+```
+--> */}
 <div className="mermaid-frame">
   <TAGOverviewDiagram />
 </div>
@@ -116,6 +128,19 @@ Separating metadata from body enables efficient HEAD requests and conditional op
 If four clients ask for the same uncached object at the same time, TAG doesn't
 make four trips to Tigris. It fetches once and streams the result to everyone:
 
+{/* <!-- NOTE: The SVG below is rendered from TAGCoalescingDiagram. The mermaid
+     notation is kept here as a machine-readable description for AI agents.
+```mermaid
+flowchart LR
+    A[Client A] --> T[TAG coalescer]
+    B[Client B] --> T
+    C[Client C] --> T
+    D[Client D] --> T
+    T -->|single upstream GET| U[Tigris]
+    U -->|stream chunks| T
+    T -.-> A & B & C & D
+```
+--> */}
 <div className="mermaid-frame">
   <TAGCoalescingDiagram />
 </div>
@@ -156,6 +181,20 @@ expires (default 60 minutes) or a client forces revalidation with
 When a single node's storage isn't enough, you can run multiple TAG nodes as a
 distributed cache cluster. They coordinate automatically:
 
+{/* <!-- NOTE: The SVG below is rendered from TAGClusterDiagram. The mermaid
+     notation is kept here as a machine-readable description for AI agents.
+```mermaid
+flowchart TB
+    LB[Load Balancer] --> N1[TAG-1 keys A-F]
+    LB --> N2[TAG-2 keys G-R]
+    LB --> N3[TAG-3 keys S-Z]
+    N1 <-->|gRPC| N2
+    N2 <-->|gRPC| N3
+    N1 <-.gossip.-> N2
+    N2 <-.gossip.-> N3
+    N1 <-.gossip.-> N3
+```
+--> */}
 <div className="mermaid-frame">
   <TAGClusterDiagram />
 </div>
@@ -168,6 +207,22 @@ don't need to manually assign keys or configure sharding.
 
 Here's how a request flows through TAG's internals:
 
+{/* <!-- NOTE: The SVG below is rendered from TAGArchitectureInternalsDiagram. The mermaid
+     notation is kept here as a machine-readable description for AI agents.
+```mermaid
+flowchart LR
+    C[S3 clients SDK/CLI/boto3] --> H[HTTP server :8080]
+    H --> A[SigV4 auth]
+    H --> P[Proxy service]
+    P --> R[Request coalescing]
+    P --> G[Range optimization]
+    P --> K[(RocksDB cache)]
+    K --> D[NVMe disk]
+    P -.-> U[Tigris Object Storage]
+    P --> X[gRPC :9000]
+    P --> M[Gossip :7000]
+```
+--> */}
 <div className="mermaid-frame">
   <TAGArchitectureInternalsDiagram />
 </div>

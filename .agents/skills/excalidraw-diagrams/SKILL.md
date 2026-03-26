@@ -1,3 +1,12 @@
+---
+name: excalidraw-diagrams
+description:
+  Guidelines for creating clean, readable Excalidraw diagrams via MCP. Use when
+  creating architecture diagrams, flow diagrams, or any visual documentation.
+metadata:
+  trigger: Creating Excalidraw diagrams, architecture visuals, flow diagrams
+---
+
 # Excalidraw Diagram Guidelines
 
 When creating Excalidraw diagrams via MCP, follow these rules to produce clean,

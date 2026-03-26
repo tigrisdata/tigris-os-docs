@@ -98,9 +98,20 @@ const sidebars = {
       ],
     },
     {
-      type: "doc",
+      type: "category",
       label: "Quickstart",
-      id: "get-started/index",
+      link: {
+        type: "doc",
+        id: "get-started/index",
+      },
+      items: [
+        "quickstarts/go",
+        "quickstarts/kubernetes",
+        "quickstarts/mcp",
+        "quickstarts/node",
+        "quickstarts/rclone",
+        "terraform/index",
+      ],
     },
 
     // ── Product ──────────────────────────────────────
@@ -206,12 +217,6 @@ const sidebars = {
         },
       ],
     },
-    "training/tigrisfs",
-    {
-      type: "doc",
-      label: "Changelog",
-      id: "changelog/index",
-    },
 
     // ── Tools & SDKs ─────────────────────────────────
     {
@@ -249,11 +254,6 @@ const sidebars = {
         },
         "sdks/tigris/using-sdk",
         "sdks/tigris/client-uploads",
-        {
-          type: "doc",
-          label: "Snapshots and Forks",
-          id: "sdks/tigris/snapshots-and-forks",
-        },
         "sdks/tigris/examples",
         "sdks/tigris/api",
       ],
@@ -385,6 +385,7 @@ const sidebars = {
         },
       ],
     },
+    "training/tigrisfs",
     {
       type: "category",
       label: "Tigris MCP Server",
@@ -402,6 +403,77 @@ const sidebars = {
           id: "mcp/remote",
         },
       ],
+    },
+
+    // ── Guides ────────────────────────────────────────
+    {
+      type: "html",
+      value: "Guides",
+      className: "sidebar-heading",
+    },
+    {
+      type: "category",
+      label: "Migrate to Tigris",
+      collapsed: true,
+      link: {
+        type: "doc",
+        id: "migration/index",
+      },
+      items: [
+        "migration/aws-s3",
+        "migration/gcs",
+        "migration/cloudflare-r2",
+        "migration/minio",
+        "migration/s3-compatible",
+      ],
+    },
+    {
+      type: "category",
+      label: "Serve Model Weights",
+      link: {
+        type: "doc",
+        id: "model-storage/index",
+      },
+      items: [
+        {
+          type: "doc",
+          label: "Beam Cloud",
+          id: "model-storage/beam-cloud",
+        },
+        {
+          type: "doc",
+          label: "Vast.ai",
+          id: "model-storage/vast-ai",
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "Deploy on Fly.io",
+      collapsible: true,
+      collapsed: true,
+      items: [
+        {
+          type: "doc",
+          label: "Getting Started",
+          id: "sdks/fly/index",
+        },
+        {
+          type: "doc",
+          label: "Data Migration with Flyctl",
+          id: "sdks/fly/data-migration-with-flyctl",
+        },
+        {
+          type: "doc",
+          label: "Model Storage",
+          id: "model-storage/fly-io",
+        },
+      ],
+    },
+    {
+      type: "doc",
+      label: "Host a Docker Registry",
+      id: "apps/docker-registry",
     },
 
     // ── Integrations ───────────────────────────────────
@@ -542,93 +614,17 @@ const sidebars = {
         },
       ],
     },
-    {
-      type: "category",
-      label: "Fly.io",
-      collapsible: true,
-      collapsed: true,
-      items: [
-        {
-          type: "doc",
-          label: "Getting Started",
-          id: "sdks/fly/index",
-        },
-        {
-          type: "doc",
-          label: "Data Migration with Flyctl",
-          id: "sdks/fly/data-migration-with-flyctl",
-        },
-        {
-          type: "doc",
-          label: "Model Storage",
-          id: "model-storage/fly-io",
-        },
-      ],
-    },
-
-    // ── Guides ────────────────────────────────────────
-    {
-      type: "html",
-      value: "Guides",
-      className: "sidebar-heading",
-    },
-    {
-      type: "category",
-      label: "Migrate to Tigris",
-      collapsed: true,
-      link: {
-        type: "doc",
-        id: "migration/index",
-      },
-      items: [
-        "migration/aws-s3",
-        "migration/gcs",
-        "migration/cloudflare-r2",
-        "migration/minio",
-        "migration/s3-compatible",
-      ],
-    },
-    {
-      type: "category",
-      label: "Model Storage",
-      link: {
-        type: "doc",
-        id: "model-storage/index",
-      },
-      items: [
-        {
-          type: "doc",
-          label: "Beam Cloud",
-          id: "model-storage/beam-cloud",
-        },
-        {
-          type: "doc",
-          label: "Vast.ai",
-          id: "model-storage/vast-ai",
-        },
-      ],
-    },
-    {
-      type: "category",
-      label: "Examples",
-      collapsible: true,
-      collapsed: true,
-      items: [
-        "quickstarts/go",
-        "quickstarts/kubernetes",
-        "quickstarts/mcp",
-        "quickstarts/node",
-        "quickstarts/rclone",
-        "terraform/index",
-      ],
-    },
-    "apps/docker-registry",
 
     // ── Resources ─────────────────────────────────────
     {
       type: "html",
       value: "Resources",
       className: "sidebar-heading",
+    },
+    {
+      type: "doc",
+      label: "Product Changelog",
+      id: "changelog/index",
     },
     {
       type: "category",

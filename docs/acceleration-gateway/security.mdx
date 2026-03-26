@@ -4,6 +4,10 @@ sidebar_label: Security
 description: TAG authentication, authorization, and security architecture.
 ---
 
+import TAGFirstRequestDiagram from '@site/src/components/diagrams/TAGFirstRequestDiagram';
+import TAGSubsequentRequestDiagram from '@site/src/components/diagrams/TAGSubsequentRequestDiagram';
+import TAGAccessControlDiagram from '@site/src/components/diagrams/TAGAccessControlDiagram';
+
 # Security and access control
 
 TAG is designed so your secret keys never leave your hands. This page explains
@@ -72,42 +76,13 @@ Every request after that is validated locally:
 **First request (key learning):**
 
 <div className="mermaid-frame">
-
-```mermaid
-%%{init: {'theme': 'base', 'sequence': {'mirrorActors': false, 'messageMargin': 30, 'boxMargin': 6, 'noteMargin': 6}, 'themeVariables': {'primaryColor': '#142229', 'primaryTextColor': '#c8d6de', 'primaryBorderColor': '#1e3340', 'lineColor': '#62FEB5', 'secondaryColor': '#101c24', 'tertiaryColor': '#0e1920', 'edgeLabelBackground': 'transparent', 'clusterBkg': '#0e1920', 'clusterBorder': '#1e3340', 'fontFamily': 'sans-serif', 'fontSize': '13px', 'background': '#0e1920', 'textColor': '#8fa3b0', 'nodeBorder': '#1e3340', 'actorBkg': '#142229', 'actorBorder': '#62FEB5', 'actorTextColor': '#62FEB5', 'signalColor': '#62FEB5', 'signalTextColor': '#c8d6de', 'noteBkgColor': '#142229', 'noteBorderColor': '#62FEB5', 'noteTextColor': '#62FEB5', 'activationBkgColor': '#142229', 'activationBorderColor': '#62FEB5', 'sequenceNumberColor': '#0A171E'}}}%%
-sequenceDiagram
-    participant C as Client
-    participant T as TAG
-    participant S as Tigris
-
-    C->>T: GET /bucket/key (Authorization: ...)
-    T->>S: Forward original auth + proxy headers
-    S-->>T: 200 OK + X-Tigris-Proxy-Signing-Keys
-    Note over T: Unwrap & store derived keys
-    Note over T: Grant authz cache entry
-    T-->>C: 200 OK (signing key header stripped)
-```
-
+  <TAGFirstRequestDiagram />
 </div>
 
 **Subsequent requests (local validation):**
 
 <div className="mermaid-frame">
-
-```mermaid
-%%{init: {'theme': 'base', 'sequence': {'mirrorActors': false, 'messageMargin': 30, 'boxMargin': 6, 'noteMargin': 6}, 'themeVariables': {'primaryColor': '#142229', 'primaryTextColor': '#c8d6de', 'primaryBorderColor': '#1e3340', 'lineColor': '#62FEB5', 'secondaryColor': '#101c24', 'tertiaryColor': '#0e1920', 'edgeLabelBackground': 'transparent', 'clusterBkg': '#0e1920', 'clusterBorder': '#1e3340', 'fontFamily': 'sans-serif', 'fontSize': '13px', 'background': '#0e1920', 'textColor': '#8fa3b0', 'nodeBorder': '#1e3340', 'actorBkg': '#142229', 'actorBorder': '#62FEB5', 'actorTextColor': '#62FEB5', 'signalColor': '#62FEB5', 'signalTextColor': '#c8d6de', 'noteBkgColor': '#142229', 'noteBorderColor': '#62FEB5', 'noteTextColor': '#62FEB5', 'activationBkgColor': '#142229', 'activationBorderColor': '#62FEB5', 'sequenceNumberColor': '#0A171E'}}}%%
-sequenceDiagram
-    participant C as Client
-    participant T as TAG
-    participant S as Tigris
-
-    C->>T: GET /bucket/key (Authorization: ...)
-    Note over T: Validate SigV4 locally
-    Note over T: Check authz cache → AuthValidated
-    Note over T: Serve from cache
-    T-->>C: 200 OK, X-Cache: HIT
-```
-
+  <TAGSubsequentRequestDiagram />
 </div>
 
 ## Access control flow
@@ -117,34 +92,7 @@ with a forward to Tigris — TAG only serves from cache when it has both a valid
 signature and a cached authorization grant:
 
 <div className="mermaid-frame">
-
-```mermaid
-%%{init: {'theme': 'base', 'flowchart': {'padding': 8, 'nodeSpacing': 25, 'rankSpacing': 35}, 'themeVariables': {'primaryColor': '#142229', 'primaryTextColor': '#c8d6de', 'primaryBorderColor': '#1e3340', 'lineColor': '#62FEB5', 'secondaryColor': '#101c24', 'tertiaryColor': '#0e1920', 'edgeLabelBackground': 'transparent', 'clusterBkg': '#0e1920', 'clusterBorder': '#1e3340', 'fontFamily': 'sans-serif', 'fontSize': '13px', 'background': '#0e1920', 'textColor': '#8fa3b0', 'nodeBorder': '#1e3340'}}}%%
-flowchart TD
-    classDef tag fill:#62FEB5,stroke:#62FEB5,color:#0A171E,stroke-width:1.2px
-    classDef forward fill:#101c24,stroke:#62FEB5,color:#62FEB5,stroke-width:1.5px
-    classDef reject fill:#2a1215,stroke:#506874,color:#c8d6de,stroke-width:1.2px
-    classDef local fill:#142229,stroke:#62FEB5,color:#62FEB5,stroke-width:1px
-
-    R[Request arrives at TAG]:::tag
-    R --> A{Authorization header?}
-
-    A -->|Missing| F1[Forward to Tigris]:::forward
-    F1 --> F1a[Tigris decides\ne.g. public bucket access]
-
-    A -->|Malformed| REJ[Reject with 4xx]:::reject
-
-    A -->|Present| K{Access key known?}
-    K -->|No| F2[Forward to Tigris\nlearn keys on success]:::forward
-
-    K -->|Yes| S{SigV4 valid?}
-    S -->|Mismatch| F3[Forward to Tigris\nre-learn keys if stale]:::forward
-
-    S -->|Valid| AZ{Authz cache hit?}
-    AZ -->|Miss / expired| F4[Forward to Tigris\nre-authorize on success]:::forward
-    AZ -->|Hit| OK[AuthValidated\nserve from cache]:::local
-```
-
+  <TAGAccessControlDiagram />
 </div>
 
 ## Authorization lifecycle

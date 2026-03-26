@@ -6,6 +6,11 @@ description:
   for Tigris object storage.
 ---
 
+import TAGOverviewDiagram from '@site/src/components/diagrams/TAGOverviewDiagram';
+import TAGCoalescingDiagram from '@site/src/components/diagrams/TAGCoalescingDiagram';
+import TAGClusterDiagram from '@site/src/components/diagrams/TAGClusterDiagram';
+import TAGArchitectureInternalsDiagram from '@site/src/components/diagrams/TAGArchitectureInternalsDiagram';
+
 # TAG — Tigris Acceleration Gateway
 
 TAG is a high-performance S3-compatible caching proxy for
@@ -15,23 +20,7 @@ storage — giving you sub-millisecond read latency without sacrificing S3 API
 compatibility.
 
 <div className="mermaid-frame">
-```mermaid
-%%{init: {'theme': 'base', 'flowchart': {'padding': 8, 'nodeSpacing': 25, 'rankSpacing': 35}, 'themeVariables': {'primaryColor': '#142229', 'primaryTextColor': '#c8d6de', 'primaryBorderColor': '#1e3340', 'lineColor': '#62FEB5', 'secondaryColor': '#101c24', 'tertiaryColor': '#0e1920', 'edgeLabelBackground': 'transparent', 'clusterBkg': '#0e1920', 'clusterBorder': '#1e3340', 'fontFamily': 'sans-serif', 'fontSize': '13px', 'background': '#0e1920', 'textColor': '#8fa3b0', 'nodeBorder': '#1e3340'}}}%%
-flowchart LR
-    classDef app fill:#142229,stroke:#2a4050,color:#c8d6de,stroke-width:1.2px
-    classDef tag fill:#62FEB5,stroke:#62FEB5,color:#0A171E,stroke-width:1.2px
-    classDef cache fill:#142229,stroke:#62FEB5,color:#62FEB5,stroke-width:1px
-    classDef upstream fill:#101c24,stroke:#62FEB5,color:#62FEB5,stroke-width:1.5px
-
-    A[Your App]:::app -->|GET /bucket/key| T[TAG]:::tag
-    T --> V[Validate SigV4 locally]:::tag
-    V --> C[(RocksDB cache on NVMe)]:::cache
-    C -->|HIT| R[Return response<br/>X-Cache: HIT]:::tag
-    C -->|MISS| U[Tigris Object Storage]:::upstream
-    U -->|Stream response| T
-    T -->|Cache + return<br/>X-Cache: MISS| A
-
-````
+  <TAGOverviewDiagram />
 </div>
 
 You don't need to change any application code. Just point your S3 client at TAG
@@ -128,25 +117,7 @@ If four clients ask for the same uncached object at the same time, TAG doesn't
 make four trips to Tigris. It fetches once and streams the result to everyone:
 
 <div className="mermaid-frame">
-```mermaid
-%%{init: {'theme': 'base', 'flowchart': {'padding': 8, 'nodeSpacing': 25, 'rankSpacing': 35}, 'themeVariables': {'primaryColor': '#142229', 'primaryTextColor': '#c8d6de', 'primaryBorderColor': '#1e3340', 'lineColor': '#62FEB5', 'secondaryColor': '#101c24', 'tertiaryColor': '#0e1920', 'edgeLabelBackground': 'transparent', 'clusterBkg': '#0e1920', 'clusterBorder': '#1e3340', 'fontFamily': 'sans-serif', 'fontSize': '13px', 'background': '#0e1920', 'textColor': '#8fa3b0', 'nodeBorder': '#1e3340'}}}%%
-flowchart LR
-    classDef client fill:#142229,stroke:#2a4050,color:#c8d6de,stroke-width:1.2px
-    classDef tag fill:#62FEB5,stroke:#62FEB5,color:#0A171E,stroke-width:1.2px
-    classDef upstream fill:#101c24,stroke:#62FEB5,color:#62FEB5,stroke-width:1.5px
-
-    A[Client A]:::client --> T[TAG coalescer]:::tag
-    B[Client B]:::client --> T
-    C[Client C]:::client --> T
-    D[Client D]:::client --> T
-    T -->|Single upstream GET| U[Tigris]:::upstream
-    U -->|Stream chunks| T
-    T --> A
-    T --> B
-    T --> C
-    T --> D
-````
-
+  <TAGCoalescingDiagram />
 </div>
 
 ### Range Request Optimization
@@ -186,28 +157,7 @@ When a single node's storage isn't enough, you can run multiple TAG nodes as a
 distributed cache cluster. They coordinate automatically:
 
 <div className="mermaid-frame">
-```mermaid
-%%{init: {'theme': 'base', 'flowchart': {'padding': 8, 'nodeSpacing': 25, 'rankSpacing': 35}, 'themeVariables': {'primaryColor': '#142229', 'primaryTextColor': '#c8d6de', 'primaryBorderColor': '#1e3340', 'lineColor': '#62FEB5', 'secondaryColor': '#101c24', 'tertiaryColor': '#0e1920', 'edgeLabelBackground': 'transparent', 'clusterBkg': '#0e1920', 'clusterBorder': '#1e3340', 'fontFamily': 'sans-serif', 'fontSize': '13px', 'background': '#0e1920', 'textColor': '#8fa3b0', 'nodeBorder': '#1e3340'}}}%%
-flowchart TB
-    classDef infra fill:#142229,stroke:#2a4050,color:#c8d6de,stroke-width:1.2px
-    classDef node fill:#62FEB5,stroke:#62FEB5,color:#0A171E,stroke-width:1.2px
-
-    LB[Load Balancer]:::infra
-    N1[TAG-1<br/>keys A-F]:::node
-    N2[TAG-2<br/>keys G-R]:::node
-    N3[TAG-3<br/>keys S-Z]:::node
-
-    LB --> N1
-    LB --> N2
-    LB --> N3
-
-    N1 <-->|gRPC| N2
-    N2 <-->|gRPC| N3
-    N1 <-.gossip.-> N2
-    N2 <-.gossip.-> N3
-    N1 <-.gossip.-> N3
-
-````
+  <TAGClusterDiagram />
 </div>
 
 Nodes discover each other via gossip, consistent hashing spreads keys across
@@ -219,26 +169,7 @@ don't need to manually assign keys or configure sharding.
 Here's how a request flows through TAG's internals:
 
 <div className="mermaid-frame">
-```mermaid
-%%{init: {'theme': 'base', 'flowchart': {'padding': 8, 'nodeSpacing': 25, 'rankSpacing': 35}, 'themeVariables': {'primaryColor': '#142229', 'primaryTextColor': '#c8d6de', 'primaryBorderColor': '#1e3340', 'lineColor': '#62FEB5', 'secondaryColor': '#101c24', 'tertiaryColor': '#0e1920', 'edgeLabelBackground': 'transparent', 'clusterBkg': '#0e1920', 'clusterBorder': '#1e3340', 'fontFamily': 'sans-serif', 'fontSize': '13px', 'background': '#0e1920', 'textColor': '#8fa3b0', 'nodeBorder': '#1e3340'}}}%%
-flowchart LR
-    classDef client fill:#142229,stroke:#2a4050,color:#c8d6de,stroke-width:1.2px
-    classDef tag fill:#62FEB5,stroke:#62FEB5,color:#0A171E,stroke-width:1.2px
-    classDef cache fill:#142229,stroke:#62FEB5,color:#62FEB5,stroke-width:1px
-    classDef upstream fill:#101c24,stroke:#62FEB5,color:#62FEB5,stroke-width:1.5px
-
-    C[S3 clients<br/>SDK/CLI/boto3]:::client --> H[HTTP server :8080]:::tag
-    H --> A[SigV4 auth]:::tag
-    A --> P[Proxy service]:::tag
-    P --> R[Request coalescing]:::tag
-    P --> G[Range optimization]:::tag
-    P --> K[(RocksDB cache)]:::cache
-    K --> D[NVMe disk]:::cache
-    P --> U[Tigris Object Storage]:::upstream
-    P --> X[gRPC :9000]:::tag
-    P --> M[Gossip :7000]:::tag
-````
-
+  <TAGArchitectureInternalsDiagram />
 </div>
 
 ### Request Flows

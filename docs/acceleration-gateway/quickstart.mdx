@@ -108,7 +108,7 @@ curl -sI http://localhost:8080/my-bucket/my-key \
 
 # Second request - served from local cache
 curl -sI http://localhost:8080/my-bucket/my-key \
-  -H "Authorization: ..." | rg X-Cache
+  -H "Authorization: ..." | grep X-Cache
 # X-Cache: HIT
 ```
 

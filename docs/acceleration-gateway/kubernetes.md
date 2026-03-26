@@ -137,4 +137,4 @@ Key metrics to monitor:
 
 For troubleshooting cache misses, authentication failures, cluster issues, and
 debug mode (including Kubernetes-specific commands), see
-[Troubleshooting](./deployment-guide#troubleshooting) in the Deployment Guide.
+[Troubleshooting](deployment-guide.mdx#troubleshooting) in the Deployment Guide.

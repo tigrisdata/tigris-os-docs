@@ -94,13 +94,13 @@ object.
 
 For details on `X-Cache` response headers, request coalescing, range request
 optimization, write-through invalidation, and client cache-control headers, see
-[Cache Control and Revalidation](./cache-control).
+[Cache Control and Revalidation](cache-control.md).
 
 ## Authentication
 
 All requests must be signed with AWS Signature Version 4 (SigV4). Presigned URL
 authentication (`X-Amz-Algorithm` query parameter) is also supported. See
-[Security and Access Control](./security) for the full authentication flow.
+[Security and Access Control](security.mdx) for the full authentication flow.
 
 ## Not supported
 

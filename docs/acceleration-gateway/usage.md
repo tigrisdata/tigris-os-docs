@@ -91,7 +91,7 @@ s3.upload_file(
 
 Check the `X-Cache` header to confirm TAG is caching. For details on cache
 control headers and invalidation, see
-[Cache Control and Revalidation](./cache-control).
+[Cache Control and Revalidation](cache-control.md).
 
 ```bash
 curl -sI http://localhost:8080/my-bucket/my-key \
@@ -103,5 +103,5 @@ curl -sI http://localhost:8080/my-bucket/my-key \
 ## Troubleshooting
 
 For connection errors, authentication failures, timeouts, and path-style
-addressing issues, see [Troubleshooting](./deployment-guide#troubleshooting) in
-the Deployment Guide.
+addressing issues, see [Troubleshooting](deployment-guide.mdx#troubleshooting)
+in the Deployment Guide.

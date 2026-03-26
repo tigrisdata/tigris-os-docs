@@ -187,7 +187,7 @@ signature in a single round-trip.
 
 When `transparent_proxy` is `false`, TAG validates incoming signatures locally
 and re-signs requests with TAG's own credentials before forwarding. See
-[Security and Access Control](./security) for the full authentication flow.
+[Security and Access Control](security.mdx) for the full authentication flow.
 
 ### Endpoint validation
 

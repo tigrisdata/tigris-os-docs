@@ -9,7 +9,7 @@ description:
 Ready to run TAG in production? This guide walks you through sizing, choosing
 between single-node and cluster topologies, and setting up monitoring and
 alerting. If you just want to try TAG out first, start with the
-[Quick Start](./quickstart).
+[Quick Start](quickstart.mdx).
 
 ## Configuration
 
@@ -22,7 +22,7 @@ TAG requires its own Tigris credentials (`AWS_ACCESS_KEY_ID` /
 applications authenticate separately with their own credentials.
 
 For the full list of environment variables, YAML config options, CLI flags, and
-example configurations, see the [Configuration Reference](./configuration).
+example configurations, see the [Configuration Reference](configuration.md).
 
 ## Production Deployment: Single Node
 
@@ -47,14 +47,14 @@ block cache and in-flight request buffers. 4-8 GiB is a reasonable starting
 point. NVMe storage is strongly recommended.
 
 For full benchmark methodology, thread scaling, and environment details, see
-[Benchmarks](./benchmarks).
+[Benchmarks](benchmarks.md).
 
 ### Deployment
 
 For step-by-step deployment instructions:
 
-- [Docker Deployment](./docker) (recommended for single-node)
-- [Quick Start: Native Binary](./quickstart#option-a-native-binary)
+- [Docker Deployment](docker.md) (recommended for single-node)
+- [Quick Start: Native Binary](quickstart.mdx#option-a-native-binary)
 
 For production, run TAG under a process supervisor (systemd, supervisord, etc.)
 to handle restarts.
@@ -108,8 +108,8 @@ deleted objects.
 
 For step-by-step cluster deployment instructions:
 
-- [Docker Cluster](./docker#cluster-mode) — 3-node cluster via Docker Compose
-- [Kubernetes](./kubernetes) — StatefulSet with autoscaling (recommended for
+- [Docker Cluster](docker.md#cluster-mode) — 3-node cluster via Docker Compose
+- [Kubernetes](kubernetes.md) — StatefulSet with autoscaling (recommended for
   production clusters)
 
 ## TLS Configuration
@@ -118,13 +118,13 @@ TAG supports HTTPS with TLS certificates for encrypted client connections. Both
 a certificate file and private key file must be provided together.
 
 For setup instructions covering self-signed certificates, Docker, Kubernetes,
-and native binary deployments, see [TLS/HTTPS](./tls).
+and native binary deployments, see [TLS/HTTPS](tls.md).
 
 ## Monitoring
 
 TAG exposes Prometheus metrics at `GET /metrics` in Prometheus exposition
 format. For the complete metrics reference, PromQL examples, and scrape
-configuration, see [Metrics Reference](./metrics).
+configuration, see [Metrics Reference](metrics.md).
 
 ### Key Metrics to Alert On
 

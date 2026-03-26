@@ -156,11 +156,13 @@ s3.download_file("my-bucket", "my-key", "local-file.txt")
 s3.upload_file("local-file.txt", "my-bucket", "my-key")
 ```
 
-### Important: Path-Style Addressing Only
+:::warning[Path-Style Addressing Only]
 
 TAG supports path-style addressing (`http://host:port/bucket/key`).
 Virtual-hosted style (`http://bucket.host:port/key`) is not supported. Ensure
 your S3 client is configured for path-style access.
+
+:::
 
 ## Common Configuration
 

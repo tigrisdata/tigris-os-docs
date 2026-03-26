@@ -55,9 +55,13 @@ Benchmarked on AWS (c6in.16xlarge client, i3en.24xlarge server with NVMe storage
 
 TAG saturates a 100 Gbps NIC at 85+ Gbps for 1 MiB+ objects, with CPU utilization at only about 12%, leaving significant headroom for additional workloads.
 
-> **Note:** These numbers reflect cache-warm steady state. First requests for uncached objects incur a round-trip to Tigris.
->
-> For full methodology, environment specs, and complete `warp` and `go-ycsb` results, see [TAG Benchmarks](https://github.com/tigrisdata/tag-deploy/blob/main/docs/benchmarks.md).
+:::note
+
+These numbers reflect cache-warm steady state. First requests for uncached objects incur a round-trip to Tigris.
+
+For full methodology, environment specs, and complete `warp` and `go-ycsb` results, see [TAG Benchmarks](https://github.com/tigrisdata/tag-deploy/blob/main/docs/benchmarks.md).
+
+:::
 
 ## Key Features
 
@@ -65,13 +69,21 @@ TAG saturates a 100 Gbps NIC at 85+ Gbps for 1 MiB+ objects, with CPU utilizatio
 
 TAG implements the S3 REST API for commonly used Tigris operations. Clients interact with TAG using standard AWS SDKs, the AWS CLI, or any S3-compatible library. The only change is the endpoint URL.
 
-> **Important:** TAG supports path-style addressing only (`http://host:port/bucket/key`). Virtual-hosted style is not supported. Configure your S3 client accordingly.
+:::warning[Path-Style Addressing Only]
+
+TAG supports path-style addressing only (`http://host:port/bucket/key`). Virtual-hosted style is not supported. Configure your S3 client accordingly.
+
+:::
 
 ### Transparent Proxy Mode
 
 In default mode, TAG preserves the client's original AWS SigV4 Authorization header and forwards requests to Tigris as-is. TAG adds cryptographically signed proxy headers so Tigris can validate both the client's identity and TAG's identity in a single round-trip.
 
-> **Security:** TAG never sees or stores client secret keys. Clients authenticate directly with Tigris using their own credentials.
+:::info[Security]
+
+TAG never sees or stores client secret keys. Clients authenticate directly with Tigris using their own credentials.
+
+:::
 
 ### Embedded Cache with RocksDB
 
@@ -109,10 +121,6 @@ flowchart LR
 
 </div>
 
-All clients receive data simultaneously as chunks arrive from Tigris, with zero
-added latency. Only one upstream request is made regardless of how many clients
-are waiting.
-
 ### Range Request Optimization
 
 TAG serves byte-range requests from cached full objects when available. On a
@@ -120,9 +128,11 @@ range cache miss, TAG does two things in parallel: serves the requested range
 directly from Tigris, and triggers a background fetch of the full object. Future
 range requests for any byte range are then served entirely from cache.
 
-> **Tip:** This is especially useful for ML workloads that access model weights
-> with random-access patterns. The first range request warms the full object
-> into cache.
+:::tip
+
+This is especially useful for ML workloads that access model weights with random-access patterns. The first range request warms the full object into cache.
+
+:::
 
 ### Write-Through Invalidation
 
@@ -131,10 +141,11 @@ automatically invalidate corresponding cache entries before forwarding to
 Tigris. A tombstone mechanism prevents in-flight background cache writes from
 resurrecting deleted objects.
 
-> **Caution:** Objects modified directly on Tigris (bypassing TAG) remain cached
-> until the TTL expires (default 60 minutes) or a client forces revalidation
-> with `Cache-Control: no-cache`. Route writes through TAG for immediate
-> consistency.
+:::caution
+
+Objects modified directly on Tigris (bypassing TAG) remain cached until the TTL expires (default 60 minutes) or a client forces revalidation with `Cache-Control: no-cache`. Route writes through TAG for immediate consistency.
+
+:::
 
 ### Optional Multi-Node Clustering
 
@@ -227,9 +238,11 @@ TAG supports commonly used S3 operations, validated against 214 tests from the
 | Multipart Uploads | Initiate, UploadPart, UploadPartCopy, Complete, Abort, ListParts, ListMultipartUploads                                   |
 | Auth              | SigV4 headers, presigned URLs, chunked encoding                                                                          |
 
-> **Not supported:** Object versioning, server-side encryption (SSE-C/S3/KMS),
-> Object Lock, POST object (browser uploads), multi-range requests, and
-> virtual-hosted style addressing.
+:::warning[Not Supported]
+
+Object versioning, server-side encryption (SSE-C/S3/KMS), Object Lock, POST object (browser uploads), multi-range requests, and virtual-hosted style addressing.
+
+:::
 
 ## Cache Behavior
 
@@ -290,9 +303,11 @@ requests are validated without contacting Tigris.
 | DerivedKeyStore | SigV4 signing keys        | 100K entries | 48 hours              |
 | AuthzCache      | Per-bucket auth decisions | 1M entries   | 10 min (configurable) |
 
-> **Important:** Authorization is per-bucket. Access to one bucket does not
-> grant access to others. Entries are revoked immediately on a Tigris 403
-> response.
+:::warning[Important]
+
+Authorization is per-bucket. Access to one bucket does not grant access to others. Entries are revoked immediately on a Tigris 403 response.
+
+:::
 
 ### Credential Requirements
 

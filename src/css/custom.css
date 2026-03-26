@@ -642,41 +642,99 @@ table td {
   margin-bottom: 0;
 }
 
-/* Mermaid diagrams */
+/* Mermaid diagrams — matches TAGArchitectureDiagram on lander */
 .mermaid-frame {
-  border: 1px solid rgba(98, 254, 181, 0.6);
-  border-radius: 10px;
-  padding: 1.25rem 1.5rem;
-  margin: 1.75rem 0;
+  border: 1px solid #1e3340;
+  border-radius: 14px;
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
   text-align: center;
-  background:
-    radial-gradient(circle at 0% 0%, rgba(98, 254, 181, 0.07), transparent 55%),
-    radial-gradient(
-      circle at 100% 100%,
-      rgba(98, 254, 181, 0.04),
-      transparent 60%
-    );
-  box-shadow:
-    0 0 0 1px rgba(98, 254, 181, 0.25),
-    0 0 10px rgba(98, 254, 181, 0.12);
+  background: #0e1920;
 }
 
 .mermaid-frame > pre {
   margin: 0;
+  background: transparent !important;
 }
 
 .mermaid-frame svg {
   margin: 0 auto;
   display: inline-block;
+  max-height: 420px;
+}
+
+/* Tighten mermaid's default padding */
+.mermaid-frame .flowchart {
+  padding: 0;
+}
+
+/* Match lander node styling — 8px rounded corners like boxR=8 in TAGArchitectureDiagram */
+.mermaid-frame .node rect,
+.mermaid-frame .node .label-container {
+  rx: 8px !important;
+  ry: 8px !important;
+  stroke-width: 1.2px;
+}
+
+/* Diamond shapes in flowcharts */
+.mermaid-frame .node polygon {
+  stroke-width: 1.2px;
+}
+
+/* Thinner arrow lines like the lander */
+.mermaid-frame .flowchart-link {
+  stroke-width: 1.5px !important;
+}
+
+/* Edge label styling - muted gray like lander annotations */
+.mermaid-frame .edgeLabel {
+  font-size: 10px;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.mermaid-frame .edgeLabel .edgeLabel {
+  color: #8fa3b0 !important;
+  background: transparent !important;
+}
+
+/* Node text sizing to match lander (11-12px) */
+.mermaid-frame .node .label {
+  font-size: 12px;
+  font-family: sans-serif;
+}
+
+/* Sequence diagram participant boxes */
+.mermaid-frame .actor {
+  stroke-width: 1.2px;
+  rx: 8;
+  ry: 8;
+}
+
+/* Sequence diagram lines */
+.mermaid-frame .messageLine0,
+.mermaid-frame .messageLine1 {
+  stroke-width: 1.5px;
+}
+
+/* Sequence diagram note boxes */
+.mermaid-frame .note {
+  rx: 6;
+  ry: 6;
+}
+
+/* Sequence diagram message text */
+.mermaid-frame .messageText {
+  font-size: 11px;
+  font-family: sans-serif;
 }
 
 .mermaid-caption {
   margin-top: 0.15rem;
   font-size: 0.85rem;
-  color: rgba(98, 254, 181, 0.9);
+  color: #506874;
   text-align: center;
   font-style: italic;
-  text-shadow: 0 0 6px rgba(98, 254, 181, 0.25);
 }
 
 .sdk-cards .homepage-card .icon {

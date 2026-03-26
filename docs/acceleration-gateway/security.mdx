@@ -74,6 +74,7 @@ Every request after that is validated locally:
 <div className="mermaid-frame">
 
 ```mermaid
+%%{init: {'theme': 'base', 'sequence': {'mirrorActors': false, 'messageMargin': 30, 'boxMargin': 6, 'noteMargin': 6}, 'themeVariables': {'primaryColor': '#142229', 'primaryTextColor': '#c8d6de', 'primaryBorderColor': '#1e3340', 'lineColor': '#62FEB5', 'secondaryColor': '#101c24', 'tertiaryColor': '#0e1920', 'edgeLabelBackground': 'transparent', 'clusterBkg': '#0e1920', 'clusterBorder': '#1e3340', 'fontFamily': 'sans-serif', 'fontSize': '13px', 'background': '#0e1920', 'textColor': '#8fa3b0', 'nodeBorder': '#1e3340', 'actorBkg': '#142229', 'actorBorder': '#62FEB5', 'actorTextColor': '#62FEB5', 'signalColor': '#62FEB5', 'signalTextColor': '#c8d6de', 'noteBkgColor': '#142229', 'noteBorderColor': '#62FEB5', 'noteTextColor': '#62FEB5', 'activationBkgColor': '#142229', 'activationBorderColor': '#62FEB5', 'sequenceNumberColor': '#0A171E'}}}%%
 sequenceDiagram
     participant C as Client
     participant T as TAG
@@ -94,6 +95,7 @@ sequenceDiagram
 <div className="mermaid-frame">
 
 ```mermaid
+%%{init: {'theme': 'base', 'sequence': {'mirrorActors': false, 'messageMargin': 30, 'boxMargin': 6, 'noteMargin': 6}, 'themeVariables': {'primaryColor': '#142229', 'primaryTextColor': '#c8d6de', 'primaryBorderColor': '#1e3340', 'lineColor': '#62FEB5', 'secondaryColor': '#101c24', 'tertiaryColor': '#0e1920', 'edgeLabelBackground': 'transparent', 'clusterBkg': '#0e1920', 'clusterBorder': '#1e3340', 'fontFamily': 'sans-serif', 'fontSize': '13px', 'background': '#0e1920', 'textColor': '#8fa3b0', 'nodeBorder': '#1e3340', 'actorBkg': '#142229', 'actorBorder': '#62FEB5', 'actorTextColor': '#62FEB5', 'signalColor': '#62FEB5', 'signalTextColor': '#c8d6de', 'noteBkgColor': '#142229', 'noteBorderColor': '#62FEB5', 'noteTextColor': '#62FEB5', 'activationBkgColor': '#142229', 'activationBorderColor': '#62FEB5', 'sequenceNumberColor': '#0A171E'}}}%%
 sequenceDiagram
     participant C as Client
     participant T as TAG
@@ -117,11 +119,12 @@ signature and a cached authorization grant:
 <div className="mermaid-frame">
 
 ```mermaid
+%%{init: {'theme': 'base', 'flowchart': {'padding': 8, 'nodeSpacing': 25, 'rankSpacing': 35}, 'themeVariables': {'primaryColor': '#142229', 'primaryTextColor': '#c8d6de', 'primaryBorderColor': '#1e3340', 'lineColor': '#62FEB5', 'secondaryColor': '#101c24', 'tertiaryColor': '#0e1920', 'edgeLabelBackground': 'transparent', 'clusterBkg': '#0e1920', 'clusterBorder': '#1e3340', 'fontFamily': 'sans-serif', 'fontSize': '13px', 'background': '#0e1920', 'textColor': '#8fa3b0', 'nodeBorder': '#1e3340'}}}%%
 flowchart TD
-    classDef tag fill:#4a148c,stroke:#ce93d8,color:#fff
-    classDef forward fill:#006064,stroke:#80deea,color:#fff
-    classDef reject fill:#b71c1c,stroke:#ef9a9a,color:#fff
-    classDef local fill:#1b5e20,stroke:#81c784,color:#fff
+    classDef tag fill:#62FEB5,stroke:#62FEB5,color:#0A171E,stroke-width:1.2px
+    classDef forward fill:#101c24,stroke:#62FEB5,color:#62FEB5,stroke-width:1.5px
+    classDef reject fill:#2a1215,stroke:#506874,color:#c8d6de,stroke-width:1.2px
+    classDef local fill:#142229,stroke:#62FEB5,color:#62FEB5,stroke-width:1px
 
     R[Request arrives at TAG]:::tag
     R --> A{Authorization header?}

@@ -1,32 +1,73 @@
 ---
 title: Security and Access Control
 sidebar_label: Security
-description:
-  TAG authentication, authorization, and security architecture.
+description: TAG authentication, authorization, and security architecture.
 ---
 
 # Security and access control
 
-This page describes TAG's authentication, authorization, and security
-architecture.
+TAG is designed so your secret keys never leave your hands. This page explains
+how authentication, authorization, and credential handling work under the hood.
 
-## Authentication
+## Authentication modes
 
-TAG uses transparent proxy authentication. Clients sign requests with their own
-Tigris credentials. TAG forwards the request as-is, preserving the original
-`Authorization` header, and adds additional proxy headers to identify itself to
-Tigris.
+TAG supports two authentication modes, controlled by the
+`upstream.transparent_proxy` configuration option (default: `true`).
 
-Tigris independently validates both the client's SigV4 signature and TAG's proxy
-signature. TAG's access key must belong to the same Tigris organization as the
-client's access key.
+### Transparent proxy mode (default)
+
+TAG forwards the client's original `Authorization` header to Tigris unchanged
+and adds cryptographically signed proxy headers (`X-Tigris-Forwarded-Host`,
+`X-Tigris-Proxy-Access-Key`, `X-Tigris-Proxy-Timestamp`,
+`X-Tigris-Proxy-Signature`) computed with TAG's own secret key. Tigris
+independently validates both the client's SigV4 signature and TAG's proxy
+signature in a single round-trip.
+
+This is the recommended mode: TAG never sees client secret keys, client
+credentials do not need to be stored anywhere other than on the client, and
+Tigris retains full control over authorization decisions.
+
+### Signing mode
+
+When `transparent_proxy: false`, TAG operates in signing mode. In this mode, TAG
+validates incoming requests against its local credential store and then re-signs
+them with TAG's own credentials for the Tigris upstream.
+
+Signing mode is useful when TAG needs to perform credential translation — for
+example, when clients use internal credentials that Tigris does not recognize.
+Note that in signing mode, clients must have their signing keys provisioned in
+TAG's credential store.
+
+To enable signing mode:
+
+```bash
+TAG_TRANSPARENT_PROXY=false ./tag
+```
+
+Or via config file:
+
+```yaml
+upstream:
+  transparent_proxy: false
+```
+
+:::note
+
+Transparent proxy mode is the default and is strongly recommended. Use signing
+mode only when you have a specific need for credential translation.
+
+:::
 
 ## Local authentication
 
-TAG implements local SigV4 validation to serve cache hits without contacting
-Tigris on every request.
+TAG doesn't call Tigris on every request. After your client's first request, TAG
+learns enough to validate signatures locally — so cache hits skip the network
+entirely.
 
 ### How it works
+
+On the first request, TAG learns your client's derived signing keys from Tigris.
+Every request after that is validated locally:
 
 **First request (key learning):**
 
@@ -68,6 +109,10 @@ sequenceDiagram
 </div>
 
 ## Access control flow
+
+Here's the full decision tree TAG uses when a request arrives. Most paths end
+with a forward to Tigris — TAG only serves from cache when it has both a valid
+signature and a cached authorization grant:
 
 <div className="mermaid-frame">
 

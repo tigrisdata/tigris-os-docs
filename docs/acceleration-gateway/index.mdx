@@ -9,9 +9,10 @@ description:
 # TAG — Tigris Acceleration Gateway
 
 TAG is a high-performance S3-compatible caching proxy for
-[Tigris object storage](https://www.tigrisdata.com). It sits between your
-application and Tigris, transparently caching objects on local NVMe storage to
-deliver sub-millisecond read latency while preserving full S3 API compatibility.
+[Tigris object storage](https://www.tigrisdata.com). You deploy it between your
+application and Tigris, and it transparently caches objects on local NVMe
+storage — giving you sub-millisecond read latency without sacrificing S3 API
+compatibility.
 
 <div className="mermaid-frame">
 ```mermaid
@@ -32,13 +33,14 @@ flowchart LR
 ````
 </div>
 
-TAG requires no application code changes: point your S3 client at TAG instead of Tigris, and reads are automatically accelerated. TAG is distributed as pre-built binaries and Docker images for Tigris customers.
+You don't need to change any application code. Just point your S3 client at TAG
+instead of Tigris and your reads are automatically accelerated.
 
 ## Why TAG
 
-Object storage is durable and scalable, but every read crosses the network. For latency-sensitive workloads (ML model serving, real-time analytics, and high-throughput data pipelines), that round-trip adds up fast.
+Object storage is durable and scalable, but every read crosses the network. If you're serving ML models, running real-time analytics, or pushing data through high-throughput pipelines, those round-trips add up fast.
 
-TAG eliminates it for repeated reads by maintaining a local RocksDB-backed cache that serves objects in microseconds instead of milliseconds. TAG is not a generic HTTP cache. It understands S3 natively: it coalesces concurrent requests for the same object into a single upstream fetch, serves range requests from cached full objects, revalidates stale entries with conditional requests, and invalidates cache entries when objects are written or deleted.
+TAG eliminates them for repeated reads. It maintains a local RocksDB-backed cache that serves objects in microseconds instead of milliseconds. Unlike a generic HTTP cache, TAG understands S3 natively — it coalesces concurrent requests into a single upstream fetch, serves range requests from cached full objects, revalidates stale entries with conditional requests, and invalidates cache entries the moment you write or delete an object.
 
 > **Bottom line:** One endpoint change. Zero code changes. Sub-millisecond reads.
 
@@ -121,7 +123,8 @@ Separating metadata from body enables efficient HEAD requests and conditional op
 
 ### Request Coalescing
 
-When multiple clients request the same uncached object simultaneously, TAG coalesces them into a single upstream fetch:
+If four clients ask for the same uncached object at the same time, TAG doesn't
+make four trips to Tigris. It fetches once and streams the result to everyone:
 
 <div className="mermaid-frame">
 ```mermaid
@@ -146,34 +149,39 @@ flowchart LR
 
 ### Range Request Optimization
 
-TAG serves byte-range requests from cached full objects when available. On a
-range cache miss, TAG does two things in parallel: serves the requested range
-directly from Tigris, and triggers a background fetch of the full object. Future
-range requests for any byte range are then served entirely from cache.
+When you send a byte-range request, TAG serves it from the cached full object if
+available. On a range miss, TAG does two things at once: it serves you the
+requested range directly from Tigris while also fetching the full object in the
+background. After that, any future range request for any byte range comes
+straight from cache.
 
 :::tip
 
-This is especially useful for ML workloads that access model weights with random-access patterns. The first range request warms the full object into cache.
+This is especially useful for ML workloads that access model weights with
+random-access patterns. The first range request warms the full object into
+cache.
 
 :::
 
 ### Write-Through Invalidation
 
-PutObject, DeleteObject, DeleteObjects (bulk), and CopyObject operations
-automatically invalidate corresponding cache entries before forwarding to
-Tigris. A tombstone mechanism prevents in-flight background cache writes from
-resurrecting deleted objects.
+When you write, delete, or copy an object through TAG, it invalidates the
+corresponding cache entry before forwarding the request to Tigris. A tombstone
+mechanism prevents any in-flight background cache writes from accidentally
+resurrecting objects you've already deleted.
 
 :::caution
 
-Objects modified directly on Tigris (bypassing TAG) remain cached until the TTL expires (default 60 minutes) or a client forces revalidation with `Cache-Control: no-cache`. Route writes through TAG for immediate consistency.
+Objects modified directly on Tigris (bypassing TAG) remain cached until the TTL
+expires (default 60 minutes) or a client forces revalidation with
+`Cache-Control: no-cache`. Route writes through TAG for immediate consistency.
 
 :::
 
 ### Optional Multi-Node Clustering
 
-For deployments requiring more cache capacity than a single node provides, TAG
-nodes can form a distributed cache cluster:
+When a single node's storage isn't enough, you can run multiple TAG nodes as a
+distributed cache cluster. They coordinate automatically:
 
 <div className="mermaid-frame">
 ```mermaid
@@ -199,9 +207,13 @@ flowchart TB
 ````
 </div>
 
-Memberlist gossip handles discovery, consistent hashing distributes keys across nodes, and gRPC forwards requests for remote keys transparently.
+Nodes discover each other via gossip, consistent hashing spreads keys across
+the cluster, and gRPC forwards requests for remote keys transparently. You
+don't need to manually assign keys or configure sharding.
 
 ## Architecture
+
+Here's how a request flows through TAG's internals:
 
 <div className="mermaid-frame">
 ```mermaid
@@ -227,19 +239,21 @@ flowchart LR
 
 ### Request Flows
 
-**Cache hit:** Client -> TAG validates SigV4 locally -> cache lookup -> returns
-object with `X-Cache: HIT`. Tigris is not contacted.
+**Cache hit:** Your request arrives, TAG validates your SigV4 signature locally,
+finds the object in cache, and returns it with `X-Cache: HIT`. Tigris is never
+contacted.
 
-**Cache miss:** Client -> TAG forwards to Tigris -> streams response to client
-while writing to cache -> `X-Cache: MISS`. Next request is a hit.
+**Cache miss:** TAG forwards your request to Tigris, streams the response back
+to you while writing it to cache, and returns `X-Cache: MISS`. The next request
+for the same object is a hit.
 
-**Coalesced request:** Multiple clients GET the same uncached object -> first
-becomes the fetcher -> others attach as broadcast listeners -> all receive data
-simultaneously -> one upstream request.
+**Coalesced request:** Multiple clients GET the same uncached object — the first
+becomes the fetcher, the rest attach as broadcast listeners. Everyone gets the
+data simultaneously from a single upstream request.
 
-**Range request:** Client sends `Range: bytes=0-1023` -> if cached, serve from
-cache -> if not, serve range from Tigris plus background fetch of full object ->
-future ranges served from cache.
+**Range request:** You send `Range: bytes=0-1023` — if the full object is
+cached, TAG serves your range from cache. If not, it serves the range from
+Tigris while fetching the full object in the background for future requests.
 
 ### Ports
 
@@ -248,6 +262,14 @@ future ranges served from cache.
 | 8080 | HTTP/HTTPS | S3 API (client-facing)                 |
 | 7000 | TCP        | Memberlist gossip (cluster discovery)  |
 | 9000 | TCP        | gRPC (cache key routing between nodes) |
+
+:::caution[macOS port conflict]
+
+On macOS, port 7000 is used by AirPlay Receiver. Use ports `17000` (gossip) and
+`19000` (gRPC) instead when running TAG locally on macOS. See
+[Configuration Reference](./configuration#ports) for details.
+
+:::
 
 ## S3 API Coverage
 
@@ -263,7 +285,9 @@ TAG supports commonly used S3 operations, validated against 214 tests from the
 
 :::warning[Not Supported]
 
-Object versioning, server-side encryption (SSE-C/S3/KMS), Object Lock, POST object (browser uploads), multi-range requests, and virtual-hosted style addressing.
+Object versioning, server-side encryption (SSE-C/S3/KMS), Object Lock, POST
+object (browser uploads), multi-range requests, and virtual-hosted style
+addressing.
 
 :::
 
@@ -293,11 +317,11 @@ details, see [Cache Control and Revalidation](./cache-control).
 
 ## Security Model
 
-TAG uses transparent proxy authentication. Clients sign requests with their own
-Tigris credentials, and TAG forwards them to Tigris as-is. TAG never sees or
-stores client secret keys. After a client's first request, TAG learns derived
-signing keys from Tigris (encrypted with AES-256-GCM) so subsequent requests
-can be validated locally without contacting Tigris.
+Your clients sign requests with their own Tigris credentials, and TAG forwards
+them to Tigris as-is — it never sees or stores your secret keys. After a
+client's first request, TAG learns derived signing keys from Tigris (encrypted
+with AES-256-GCM), so it can validate subsequent requests locally without
+calling home.
 
 TAG requires its own Tigris credentials (`AWS_ACCESS_KEY_ID` /
 `AWS_SECRET_ACCESS_KEY`) with read-only access to all buckets in the same
@@ -305,7 +329,8 @@ organization as clients it serves.
 
 :::warning[Important]
 
-Authorization is per-bucket. Access to one bucket does not grant access to others. Entries are revoked immediately on a Tigris 403 response.
+Authorization is per-bucket. Access to one bucket does not grant access to
+others. Entries are revoked immediately on a Tigris 403 response.
 
 :::
 

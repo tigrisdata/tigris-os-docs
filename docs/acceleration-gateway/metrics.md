@@ -208,7 +208,8 @@ rate(tag_revalidations_triggered_total[5m])
 
 ### tag_local_auth_validations_total
 
-**Type:** Counter — local authentication validation attempts.
+**Type:** Counter — local authentication validation attempts in transparent
+proxy mode.
 
 | Label    | Description                                                                                                       |
 | -------- | ----------------------------------------------------------------------------------------------------------------- |
@@ -218,6 +219,32 @@ rate(tag_revalidations_triggered_total[5m])
 # Local auth success rate
 rate(tag_local_auth_validations_total{result="success"}[5m]) /
 sum(rate(tag_local_auth_validations_total[5m]))
+
+# Auth failure breakdown by reason
+sum by (result) (rate(tag_local_auth_validations_total{result!="success"}[5m]))
+```
+
+### tag_derived_key_store_size
+
+**Type:** Gauge — number of derived signing keys currently stored. TAG learns
+signing keys from Tigris responses and caches them for local SigV4 validation. A
+value of 0 after receiving requests indicates key learning is not working.
+
+### tag_authz_cache_size
+
+**Type:** Gauge — number of active per-bucket authorization cache entries
+(`accessKey × bucket` pairs). Each entry represents a client that has been
+granted access to a specific bucket.
+
+### tag_proxy_signing_keys_received_total
+
+**Type:** Counter — number of signing key sets received from Tigris responses.
+Incremented each time Tigris returns an `X-Tigris-Proxy-Signing-Keys` header
+that TAG uses to enable local validation.
+
+```promql
+# Rate of new key learning events
+rate(tag_proxy_signing_keys_received_total[5m])
 ```
 
 ## Connection metrics

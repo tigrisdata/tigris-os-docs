@@ -20,23 +20,27 @@ variables. Environment variables take precedence over file configuration.
 
 ## Environment variables
 
-| Variable                   | Description                                      | Default                 |
-| -------------------------- | ------------------------------------------------ | ----------------------- |
-| `AWS_ACCESS_KEY_ID`        | Tigris access key                                | (required)              |
-| `AWS_SECRET_ACCESS_KEY`    | Tigris secret key                                | (required)              |
-| `TAG_CACHE_DISABLED`       | Disable caching (`true` or `1`)                  | `false`                 |
-| `TAG_CACHE_DISK_PATH`      | Path to cache data directory                     | `/var/tmp/tag`          |
-| `TAG_CACHE_MAX_DISK_USAGE` | Max disk usage in bytes (0 = unlimited)          | `0`                     |
-| `TAG_CACHE_NODE_ID`        | Unique node identifier for cluster mode          | (none)                  |
-| `TAG_CACHE_CLUSTER_ADDR`   | Address for memberlist gossip                    | `:7000`                 |
-| `TAG_CACHE_GRPC_ADDR`      | Address for gRPC server                          | `:9000`                 |
-| `TAG_CACHE_ADVERTISE_ADDR` | Address advertised to other nodes                | (defaults to gRPC addr) |
-| `TAG_CACHE_SEED_NODES`     | Comma-separated seed nodes for cluster discovery | (none)                  |
-| `TAG_LOG_LEVEL`            | Log level: `debug`, `info`, `warn`, `error`      | `info`                  |
-| `TAG_LOG_FORMAT`           | Log format: `json` or `console`                  | `json`                  |
-| `TAG_TLS_CERT_FILE`        | Path to TLS certificate file (PEM format)        | (none)                  |
-| `TAG_TLS_KEY_FILE`         | Path to TLS private key file (PEM format)        | (none)                  |
-| `TAG_PPROF_ENABLED`        | Enable pprof endpoints (`true` or `1`)           | `false`                 |
+| Variable                      | Description                                                                                    | Default                  |
+| ----------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------ |
+| `AWS_ACCESS_KEY_ID`           | Tigris access key (TAG's own credentials, not client credentials)                              | (required)               |
+| `AWS_SECRET_ACCESS_KEY`       | Tigris secret key                                                                              | (required)               |
+| `TAG_UPSTREAM_ENDPOINT`       | Tigris S3 endpoint URL                                                                         | `https://t3.storage.dev` |
+| `TAG_MAX_IDLE_CONNS_PER_HOST` | HTTP connection pool size per upstream host                                                    | `100`                    |
+| `TAG_TRANSPARENT_PROXY`       | Enable transparent proxy mode. Set to `false` or `0` to use signing mode                       | `true`                   |
+| `TAG_CACHE_DISABLED`          | Disable caching (`true` or `1`)                                                                | `false`                  |
+| `TAG_CACHE_DISK_PATH`         | Path to cache data directory                                                                   | `/var/cache/tag`         |
+| `TAG_CACHE_MAX_DISK_USAGE`    | Max disk usage in bytes (0 = unlimited)                                                        | `0`                      |
+| `TAG_CACHE_NODE_ID`           | Unique node identifier for cluster mode                                                        | (none)                   |
+| `TAG_CACHE_CLUSTER_ADDR`      | Address for memberlist gossip                                                                  | `:7000`                  |
+| `TAG_CACHE_GRPC_ADDR`         | Address for gRPC server                                                                        | `:9000`                  |
+| `TAG_CACHE_ADVERTISE_ADDR`    | Address advertised to other nodes                                                              | (defaults to gRPC addr)  |
+| `TAG_CACHE_SEED_NODES`        | Comma-separated seed nodes for cluster discovery                                               | (none)                   |
+| `TAG_CACHE_GRPC_AUTH`         | Enable gRPC authentication between cluster nodes (`true` default; disable with `false` or `0`) | `true`                   |
+| `TAG_LOG_LEVEL`               | Log level: `debug`, `info`, `warn`, `error`                                                    | `info`                   |
+| `TAG_LOG_FORMAT`              | Log format: `json` or `console`                                                                | `json`                   |
+| `TAG_TLS_CERT_FILE`           | Path to TLS certificate file (PEM format)                                                      | (none)                   |
+| `TAG_TLS_KEY_FILE`            | Path to TLS private key file (PEM format)                                                      | (none)                   |
+| `TAG_PPROF_ENABLED`           | Enable pprof endpoints (`true` or `1`)                                                         | `false`                  |
 
 `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` are TAG's own Tigris credentials
 with read-only access to all buckets accessed through TAG (required). Clients
@@ -78,6 +82,26 @@ server:
   # Default: "" (TLS disabled, serves HTTP)
   tls_key_file: ""
 
+# Upstream Tigris configuration
+upstream:
+  # Tigris S3 endpoint URL
+  # Default: "https://t3.storage.dev"
+  endpoint: "https://t3.storage.dev"
+
+  # AWS region for request signing
+  # Default: "auto"
+  region: "auto"
+
+  # HTTP connection pool size per upstream host
+  # Higher values improve throughput for cache-miss scenarios
+  # Default: 100
+  max_idle_conns_per_host: 100
+
+  # Enable transparent proxy mode (default: true)
+  # When true, client requests are forwarded as-is with proxy headers added.
+  # When false, TAG validates and re-signs requests (signing mode).
+  transparent_proxy: true
+
 # Cache configuration
 cache:
   # Enable caching
@@ -94,8 +118,8 @@ cache:
   size_threshold: 1073741824
 
   # Path to cache data directory
-  # Default: /var/tmp/tag
-  disk_path: "/var/tmp/tag"
+  # Default: /var/cache/tag
+  disk_path: "/var/cache/tag"
 
   # Max disk usage in bytes (0 = unlimited)
   # Default: 0
@@ -124,6 +148,17 @@ cache:
     - "tag-node-2:7000"
     - "tag-node-3:7000"
 
+# Broadcast configuration (request coalescing)
+broadcast:
+  # Streaming chunk size in bytes
+  # Default: 65536 (64 KiB)
+  chunk_size: 65536
+
+  # Buffer size per listener in chunks
+  # Total buffer per listener = chunk_size × channel_buffer
+  # Default: 32 (~2 MiB with default chunk size)
+  channel_buffer: 32
+
 # Logging configuration
 log:
   # Log level: debug, info, warn, error
@@ -135,83 +170,64 @@ log:
   format: "json"
 ```
 
-## Configuration sections
+## Additional notes
 
-### Server
+### TLS
 
-Controls the HTTP server settings.
+When both `tls_cert_file` and `tls_key_file` are set, TAG serves HTTPS. See
+[TLS/HTTPS](tls.md) for certificate setup across Docker, Kubernetes, and native
+deployments.
 
-| Field           | Type   | Default     | Description                        |
-| --------------- | ------ | ----------- | ---------------------------------- |
-| `http_port`     | int    | `8080`      | Port for the S3 API                |
-| `bind_ip`       | string | `"0.0.0.0"` | IP address to bind to              |
-| `pprof_enabled` | bool   | `false`     | Enable pprof profiling endpoints   |
-| `tls_cert_file` | string | `""`        | Path to TLS certificate file (PEM) |
-| `tls_key_file`  | string | `""`        | Path to TLS private key file (PEM) |
+### Transparent vs. Signing mode
 
-See [TLS/HTTPS](tls.md) for full TLS configuration details.
+When `transparent_proxy` is `true` (default), TAG forwards the client's original
+`Authorization` header to Tigris unchanged and adds cryptographically signed
+proxy headers. Tigris validates both the client's signature and TAG's proxy
+signature in a single round-trip.
 
-### Cache
+When `transparent_proxy` is `false`, TAG validates incoming signatures locally
+and re-signs requests with TAG's own credentials before forwarding. See
+[Security and Access Control](./security) for the full authentication flow.
 
-Controls the embedded cache behavior. TAG uses an embedded OCache instance with
-RocksDB storage.
+### Endpoint validation
 
-| Field                  | Type     | Default        | Description                                     |
-| ---------------------- | -------- | -------------- | ----------------------------------------------- |
-| `enabled`              | bool     | `true`         | Enable caching                                  |
-| `ttl`                  | duration | `60m`          | Default TTL for cached objects                  |
-| `size_threshold`       | int64    | `1073741824`   | Max object size to cache (bytes)                |
-| `disk_path`            | string   | `/var/tmp/tag` | Path to cache data directory                    |
-| `max_disk_usage_bytes` | int64    | `0`            | Max disk usage (0 = unlimited)                  |
-| `node_id`              | string   | `""`           | Unique node identifier for cluster mode         |
-| `cluster_addr`         | string   | `:7000`        | Address for memberlist gossip                   |
-| `grpc_addr`            | string   | `:9000`        | Address for gRPC server (cache cluster routing) |
-| `advertise_addr`       | string   | `""`           | Address advertised to other nodes               |
-| `seed_nodes`           | []string | `[]`           | Seed nodes for cluster discovery                |
+The upstream endpoint must match one of the allowed host patterns: `localhost`,
+`*.tigris.dev`, or `*.storage.dev`. TAG exits at startup if the endpoint does
+not match.
 
-**TTL format:**
+### Cluster mode
 
-- `60m` — 60 minutes (default)
-- `1h` — 1 hour
-- `24h` — 24 hours
-
-**Size threshold examples:**
-
-- `1073741824` — 1 GB (default)
-- `104857600` — 100 MB
-- `536870912` — 512 MB
-
-**Cluster mode:**
-
-For multi-node deployments, configure each node with:
-
-- A unique `node_id`
-- The same `seed_nodes` list (all nodes in the cluster)
-- Appropriate `advertise_addr` (reachable from other nodes)
-
-#### Ports
+For multi-node deployments, configure each node with a unique `node_id`, the
+same `seed_nodes` list, and an `advertise_addr` reachable from other nodes.
 
 | Port | Protocol | Purpose                                 |
 | ---- | -------- | --------------------------------------- |
-| 7000 | TCP      | Gossip protocol for cluster discovery   |
 | 8080 | TCP      | HTTP API (S3-compatible)                |
+| 7000 | TCP      | Gossip protocol for cluster discovery   |
 | 9000 | TCP      | gRPC for inter-node cache communication |
 
-### Log
+:::caution[macOS port conflict]
 
-Controls logging output.
+On macOS, port 7000 is used by AirPlay Receiver. Use ports 17000 (gossip) and
+19000 (gRPC) instead:
 
-| Field    | Type   | Default  | Description                     |
-| -------- | ------ | -------- | ------------------------------- |
-| `level`  | string | `"info"` | Log level                       |
-| `format` | string | `"json"` | Log format: `json` or `console` |
+```yaml
+cache:
+  cluster_addr: ":17000"
+  grpc_addr: ":19000"
+  seed_nodes:
+    - "node1:17000"
+```
 
-**Log levels:**
+:::
 
-- `debug` — Verbose debugging information
-- `info` — Normal operation messages
-- `warn` — Warning conditions
-- `error` — Error conditions only
+### Broadcast memory usage
+
+The total in-flight memory per broadcast is
+`chunk_size × channel_buffer × num_listeners`. With defaults, 100 concurrent
+listeners for the same object consume ~200 MiB. Increase `chunk_size` or
+`channel_buffer` for very high concurrency; decrease them if memory is
+constrained.
 
 ## Profiling
 
@@ -272,6 +288,9 @@ AWS_ACCESS_KEY_ID=xxx AWS_SECRET_ACCESS_KEY=yyy ./tag
 server:
   http_port: 8080
 
+upstream:
+  endpoint: "https://t3.storage.dev"
+
 cache:
   disk_path: "/tmp/tag-cache"
   node_id: "dev-node"
@@ -287,54 +306,58 @@ server:
   http_port: 8080
   bind_ip: "0.0.0.0"
 
+upstream:
+  endpoint: "https://t3.storage.dev"
+  max_idle_conns_per_host: 100
+
 cache:
-  disk_path: "/var/tmp/tag"
-  max_disk_usage_bytes: 429496729600 # 400GB
+  disk_path: "/var/cache/tag"
+  max_disk_usage_bytes: 429496729600 # 400 GiB
   ttl: 60m
   size_threshold: 1073741824
   node_id: "tag-prod"
+
+log:
+  level: "info"
+  format: "json"
 ```
 
-### Production (single node with TLS)
-
-```yaml
-server:
-  http_port: 443
-  bind_ip: "0.0.0.0"
-  tls_cert_file: "/etc/tag/tls/cert.pem"
-  tls_key_file: "/etc/tag/tls/key.pem"
-
-cache:
-  disk_path: "/var/tmp/tag"
-  max_disk_usage_bytes: 429496729600 # 400GB
-  ttl: 60m
-  size_threshold: 1073741824
-  node_id: "tag-prod"
-```
+To add TLS to any of these configs, set `tls_cert_file` and `tls_key_file` under
+`server`. See [TLS/HTTPS](tls.md) for full examples.
 
 ### Production (cluster mode)
 
-For multi-node deployments, configure each node with a unique `node_id` and the
-same `seed_nodes` list:
+Configure each node with a unique `node_id` and the same `seed_nodes` list:
 
 ```yaml
 server:
   http_port: 8080
 
+upstream:
+  endpoint: "https://t3.storage.dev"
+  max_idle_conns_per_host: 100
+
 cache:
-  disk_path: "/var/tmp/tag"
-  max_disk_usage_bytes: 429496729600 # 400GB per node
+  disk_path: "/var/cache/tag"
+  max_disk_usage_bytes: 429496729600 # 400 GiB per node
   ttl: 1h
   size_threshold: 1073741824
 
-  # Cluster configuration
-  node_id: "tag-1" # Unique per node
+  # Cluster configuration — unique per node
+  node_id: "tag-1"
   cluster_addr: ":7000"
   grpc_addr: ":9000"
   advertise_addr: "tag-1.tag-svc.default.svc.cluster.local:9000"
   seed_nodes:
-    - "tag-svc.default.svc.cluster.local:7000"
+    - "tag-1.tag-svc.default.svc.cluster.local:7000"
+    - "tag-2.tag-svc.default.svc.cluster.local:7000"
+    - "tag-3.tag-svc.default.svc.cluster.local:7000"
+
+broadcast:
+  chunk_size: 131072 # 128 KiB chunks for high-throughput cluster workloads
+  channel_buffer: 64
 
 log:
   level: "info"
+  format: "json"
 ```

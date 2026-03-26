@@ -4,10 +4,9 @@ sidebar_label: Quick Start
 description: Install and run Tigris Acceleration Gateway (TAG) in minutes.
 ---
 
-Get TAG (Tigris Acceleration Gateway) running in under 5 minutes. TAG is an
-S3-compatible caching proxy that accelerates reads from Tigris object storage by
-caching objects on local disk. TAG is available to all Tigris customers as a
-pre-built binary and Docker image.
+Get TAG running in under 5 minutes. TAG caches your Tigris objects on local disk
+so repeated reads are served in microseconds instead of milliseconds — and you
+don't need to change any application code.
 
 ## Prerequisites
 
@@ -84,7 +83,8 @@ Use `./run.sh stop --clean` to stop TAG and remove all cached data.
 
 ## Verify It Works
 
-TAG is now listening on `http://localhost:8080`.
+TAG is now listening on `http://localhost:8080`. Try a few requests to make sure
+everything is connected:
 
 ```bash
 # Health check
@@ -97,8 +97,8 @@ aws s3 ls --endpoint-url http://localhost:8080
 aws s3 cp s3://my-bucket/my-key ./local-file --endpoint-url http://localhost:8080
 ```
 
-To confirm caching is working, request the same object twice and check the
-`X-Cache` response header:
+To confirm caching is working, request the same object twice. The first response
+comes from Tigris; the second comes from your local cache:
 
 ```bash
 # First request - fetches from Tigris
@@ -114,9 +114,8 @@ curl -sI http://localhost:8080/my-bucket/my-key \
 
 ## Connect Your Application
 
-TAG is compatible with any S3 client. Change the endpoint URL to point at TAG
-and ensure path-style addressing is configured. No other code changes are
-needed.
+TAG works with any S3 client. Just change your endpoint URL to point at TAG and
+make sure path-style addressing is enabled — that's it.
 
 :::warning[Path-Style Addressing Only]
 
@@ -136,24 +135,14 @@ A few environment variables you may want to set right away:
 | Variable                | Default                  | Description                                |
 | ----------------------- | ------------------------ | ------------------------------------------ |
 | `TAG_LOG_LEVEL`         | `info`                   | Set to `debug` for verbose request logging |
-| `TAG_CACHE_DISK_PATH`   | `/var/tmp/tag`           | Where TAG stores cached objects            |
+| `TAG_CACHE_DISK_PATH`   | `/var/cache/tag`         | Where TAG stores cached objects            |
 | `TAG_UPSTREAM_ENDPOINT` | `https://t3.storage.dev` | Tigris S3 endpoint                         |
 
 For the full configuration reference, production deployment, clustering, TLS,
 and monitoring, see the [Deployment Guide](./deployment-guide).
 
-## Quick Troubleshooting
+## Troubleshooting
 
-**TAG won't start ("missing AWS credentials"):** Set both `AWS_ACCESS_KEY_ID`
-and `AWS_SECRET_ACCESS_KEY`. These are TAG's own credentials, not your
-application's.
-
-**403 on first request:** Verify your client credentials are valid for the
-requested bucket on Tigris. TAG forwards the first request to Tigris for
-authentication.
-
-**All responses show `X-Cache: MISS`:** Check that `TAG_CACHE_DISABLED` is not
-set to `true` and that the cache directory is writable.
-
-For more troubleshooting, see the
-[Deployment Guide](./deployment-guide#troubleshooting).
+If something isn't working — TAG won't start, you're getting 403s, or every
+response shows `X-Cache: MISS` — see
+[Troubleshooting](./deployment-guide#troubleshooting) in the Deployment Guide.

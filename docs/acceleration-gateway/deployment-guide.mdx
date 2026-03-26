@@ -6,11 +6,10 @@ description:
   configuration, clustering, TLS, and monitoring.
 ---
 
-This guide covers production deployment of TAG (Tigris Acceleration Gateway):
-sizing, topology decisions, and operational best practices. For a fast setup,
-see the [Quick Start](./quickstart).
-
-TAG is available to Tigris customers as pre-built binaries and Docker images.
+Ready to run TAG in production? This guide walks you through sizing, choosing
+between single-node and cluster topologies, and setting up monitoring and
+alerting. If you just want to try TAG out first, start with the
+[Quick Start](./quickstart).
 
 ## Configuration
 
@@ -23,13 +22,13 @@ TAG requires its own Tigris credentials (`AWS_ACCESS_KEY_ID` /
 applications authenticate separately with their own credentials.
 
 For the full list of environment variables, YAML config options, CLI flags, and
-example configurations, see the
-[Configuration Reference](./configuration).
+example configurations, see the [Configuration Reference](./configuration).
 
 ## Production Deployment: Single Node
 
-A single TAG node is appropriate when your working set fits on one machine's
-storage and the node's network bandwidth is sufficient for your read throughput.
+Start here if your working set fits on one machine's storage and a single node's
+network bandwidth can handle your read throughput. Most workloads start with a
+single node and scale out only when needed.
 
 ### Sizing Guidelines
 
@@ -75,7 +74,7 @@ cache:
   enabled: true
   ttl: 60m
   size_threshold: 1073741824 # 1 GiB
-  disk_path: "/var/tmp/tag"
+  disk_path: "/var/cache/tag"
   max_disk_usage_bytes: 107374182400 # 100 GiB
   node_id: "tag-prod-1"
 
@@ -86,10 +85,11 @@ log:
 
 ## Production Deployment: Multi-Node Cluster
 
-Deploy multiple TAG nodes when you need more cache capacity or higher aggregate
-throughput than a single node provides. TAG nodes form a distributed cache
-cluster automatically. Each node owns a subset of cache keys via consistent
-hashing, and requests for remote keys are forwarded transparently over gRPC.
+When you outgrow a single node — either you need more cache capacity or higher
+aggregate throughput — you can deploy a multi-node cluster. TAG nodes form the
+cluster automatically: each node owns a subset of cache keys via consistent
+hashing, and requests for remote keys are forwarded over gRPC without any manual
+routing on your part.
 
 ### How Clustering Works
 
@@ -174,55 +174,91 @@ monitoring.
 
 ### TAG Won't Start
 
-**"missing AWS credentials"** - Set both `AWS_ACCESS_KEY_ID` and
+**"missing AWS credentials"** — Set both `AWS_ACCESS_KEY_ID` and
 `AWS_SECRET_ACCESS_KEY`. These are TAG's own credentials, not your
-application's.
+application's. In Kubernetes, verify the secret exists:
+`kubectl get secret -n tag tag-credentials`
 
-**"invalid upstream endpoint"** - TAG only allows connections to `localhost`,
+**"invalid upstream endpoint"** — TAG only allows connections to `localhost`,
 `*.tigris.dev`, or `*.storage.dev`. Check `TAG_UPSTREAM_ENDPOINT`.
 
-**"TLS certificate or key file not found"** - If either `TAG_TLS_CERT_FILE` or
+**"TLS certificate or key file not found"** — If either `TAG_TLS_CERT_FILE` or
 `TAG_TLS_KEY_FILE` is set, both must point to valid files.
+
+**Connection refused** — Verify TAG is running:
+`curl http://localhost:8080/health`
 
 ### Cache Not Working
 
-**All responses show `X-Cache: MISS`** - Check that caching is enabled
+**All responses show `X-Cache: MISS`** — Check that caching is enabled
 (`TAG_CACHE_DISABLED` is not `true`) and that the cache directory is writable.
-Set `TAG_LOG_LEVEL=debug` and look for cache write errors.
+Set `TAG_LOG_LEVEL=debug` and look for cache write errors. In Kubernetes, check
+logs with `kubectl logs -n tag tag-0` and verify the cache PVC is bound with
+`kubectl get pvc -n tag`.
 
-**Objects not being cached** - Objects must return HTTP 200 and be within the
+**Objects not being cached** — Objects must return HTTP 200 and be within the
 size threshold (default 1 GiB). Objects with `Cache-Control: no-store` or
 `private` are not cached.
 
 ### Authentication Errors
 
-**403 on first request** - Verify your client credentials are valid for the
-requested bucket on Tigris. TAG forwards the request to Tigris, which performs
+**403 on first request** — Verify your client credentials are valid for the
+requested bucket on Tigris and belong to the same Tigris organization as TAG's
+credentials. TAG forwards the first request to Tigris, which performs
 authentication.
 
-**403 after credential rotation** - TAG caches derived signing keys for up to 48
+**403 after credential rotation** — TAG caches derived signing keys for up to 48
 hours and authorization decisions for 10 minutes. After rotating credentials,
 either wait for TTL expiry or restart TAG to clear caches.
 
+### Client Errors
+
+**405 on bucket creation** — You're using virtual-hosted style addressing. TAG
+requires path-style. Set `addressing_style: 'path'` in your S3 client config.
+
+**Timeout on large files** — Increase client-side timeouts. For example, in
+boto3:
+
+```python
+from botocore.config import Config
+
+config = Config(
+    connect_timeout=30,
+    read_timeout=300,
+    s3={'addressing_style': 'path'},
+)
+```
+
 ### Cluster Issues
 
-**Nodes not discovering each other** - Verify seed nodes are reachable on port
+**Nodes not discovering each other** — Verify seed nodes are reachable on port
 7000 (gossip). In Kubernetes, ensure the headless service resolves correctly:
 
 ```bash
 nslookup tag-headless.tag.svc.cluster.local
 ```
 
-**gRPC routing failures** - Verify port 9000 is open between nodes. Check that
+**gRPC routing failures** — Verify port 9000 is open between nodes. Check that
 `TAG_CACHE_ADVERTISE_ADDR` is set to an address reachable by other nodes (not
 `localhost`).
 
 ### High Latency
 
-**High p99 latency** - Check `tag_upstream_request_duration_seconds` to
+**High p99 latency** — Check `tag_upstream_request_duration_seconds` to
 determine whether latency comes from Tigris or TAG. High request coalescing
 (`tag_broadcast_shared_total`) is normal and reduces upstream load. High
 `tag_broadcast_slow_consumers_total` indicates clients are reading too slowly.
+In Kubernetes, also check disk I/O performance on the storage class.
 
-**Debug mode** - Set `TAG_LOG_LEVEL=debug` for detailed request-level logging.
-This is verbose; use it only during active debugging.
+### Debug Mode
+
+Set `TAG_LOG_LEVEL=debug` for detailed request-level logging. This is verbose;
+use it only during active debugging.
+
+In Kubernetes, update the StatefulSet:
+
+```yaml
+env:
+  - name: TAG_LOG_LEVEL
+    value: "debug"
+```

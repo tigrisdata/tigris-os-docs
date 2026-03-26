@@ -54,6 +54,32 @@ request directly to upstream and does not cache the response.
 curl -H "Cache-Control: no-store" http://localhost:8080/my-bucket/my-key
 ```
 
+## Object size threshold
+
+TAG caches objects up to a configurable size limit (`cache.size_threshold`,
+default 1 GiB). Objects larger than this threshold bypass the cache entirely:
+they are fetched from Tigris and streamed directly to the client without being
+written to disk.
+
+Configure the threshold via the config file:
+
+```yaml
+cache:
+  size_threshold: 5368709120 # 5 GiB
+```
+
+Responses that bypass the threshold return `X-Cache: MISS` and are not stored.
+Subsequent requests for the same large object will always go to Tigris.
+
+:::tip
+
+For ML workloads with very large model files, increase `size_threshold` to the
+size of your largest model checkpoint. Alternatively, use range requests — range
+cache misses trigger a background fetch of the full object, which is then cached
+for future range requests regardless of the threshold setting.
+
+:::
+
 ## Automatic cache invalidation
 
 TAG automatically invalidates cached objects when they are modified through TAG:

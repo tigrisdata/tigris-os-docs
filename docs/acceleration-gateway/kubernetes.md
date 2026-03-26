@@ -1,8 +1,7 @@
 ---
 title: Kubernetes Deployment
 sidebar_label: Kubernetes
-description:
-  Deploy TAG as a Kubernetes StatefulSet with distributed caching.
+description: Deploy TAG as a Kubernetes StatefulSet with distributed caching.
 ---
 
 # Kubernetes deployment
@@ -136,32 +135,6 @@ Key metrics to monitor:
 
 ## Troubleshooting
 
-### No cache hits
-
-- Check TAG logs for cache initialization errors: `kubectl logs -n tag tag-0`
-- Verify the cache PVC is bound: `kubectl get pvc -n tag`
-- Ensure the disk path is writable
-
-### Authentication failures
-
-- Verify the credentials secret exists:
-  `kubectl get secret -n tag tag-credentials`
-- Check that credentials have read access to the target buckets
-- Review signature logs at debug level: set `TAG_LOG_LEVEL=debug` in the
-  StatefulSet
-
-### High latency
-
-- Check upstream endpoint latency
-- Monitor cache hit ratio via Prometheus metrics
-- Review disk I/O performance on the storage class
-
-### Debug mode
-
-Enable debug logging by updating the StatefulSet:
-
-```yaml
-env:
-  - name: TAG_LOG_LEVEL
-    value: "debug"
-```
+For troubleshooting cache misses, authentication failures, cluster issues, and
+debug mode (including Kubernetes-specific commands), see
+[Troubleshooting](./deployment-guide#troubleshooting) in the Deployment Guide.

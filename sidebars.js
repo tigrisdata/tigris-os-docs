@@ -216,23 +216,35 @@ const sidebars = {
             },
             {
               type: "doc",
+              label: "Benchmarks",
+              id: "acceleration-gateway/benchmarks",
+            },
+            {
+              type: "doc",
               label: "Quick Start",
               id: "acceleration-gateway/quickstart",
             },
             {
-              type: "doc",
-              label: "Deployment Guide",
-              id: "acceleration-gateway/deployment-guide",
-            },
-            {
-              type: "doc",
-              label: "Docker",
-              id: "acceleration-gateway/docker",
-            },
-            {
-              type: "doc",
-              label: "Kubernetes",
-              id: "acceleration-gateway/kubernetes",
+              type: "category",
+              label: "Deployment",
+              collapsible: true,
+              collapsed: false,
+              link: {
+                type: "doc",
+                id: "acceleration-gateway/deployment-guide",
+              },
+              items: [
+                {
+                  type: "doc",
+                  label: "Docker",
+                  id: "acceleration-gateway/docker",
+                },
+                {
+                  type: "doc",
+                  label: "Kubernetes",
+                  id: "acceleration-gateway/kubernetes",
+                },
+              ],
             },
             {
               type: "category",
@@ -249,6 +261,11 @@ const sidebars = {
                   type: "doc",
                   label: "S3 Client Usage",
                   id: "acceleration-gateway/usage",
+                },
+                {
+                  type: "doc",
+                  label: "S3 Compatibility",
+                  id: "acceleration-gateway/s3-compatibility",
                 },
                 {
                   type: "doc",
@@ -269,11 +286,6 @@ const sidebars = {
                   type: "doc",
                   label: "Metrics",
                   id: "acceleration-gateway/metrics",
-                },
-                {
-                  type: "doc",
-                  label: "Benchmarks",
-                  id: "acceleration-gateway/benchmarks",
                 },
               ],
             },

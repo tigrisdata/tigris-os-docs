@@ -203,6 +203,64 @@ const sidebars = {
             },
           ],
         },
+        {
+          type: "category",
+          label: "Acceleration Gateway (TAG)",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              label: "Overview",
+              id: "acceleration-gateway/index",
+            },
+            {
+              type: "doc",
+              label: "Docker Deployment",
+              id: "acceleration-gateway/docker",
+            },
+            {
+              type: "doc",
+              label: "Kubernetes Deployment",
+              id: "acceleration-gateway/kubernetes",
+            },
+            {
+              type: "doc",
+              label: "Configuration Reference",
+              id: "acceleration-gateway/configuration",
+            },
+            {
+              type: "doc",
+              label: "Cache Control",
+              id: "acceleration-gateway/cache-control",
+            },
+            {
+              type: "doc",
+              label: "Security & Access Control",
+              id: "acceleration-gateway/security",
+            },
+            {
+              type: "doc",
+              label: "TLS/HTTPS",
+              id: "acceleration-gateway/tls",
+            },
+            {
+              type: "doc",
+              label: "Using with S3 SDKs",
+              id: "acceleration-gateway/usage",
+            },
+            {
+              type: "doc",
+              label: "Benchmarks",
+              id: "acceleration-gateway/benchmarks",
+            },
+            {
+              type: "doc",
+              label: "Metrics Reference",
+              id: "acceleration-gateway/metrics",
+            },
+          ],
+        },
         "training/tigrisfs",
         {
           type: "doc",

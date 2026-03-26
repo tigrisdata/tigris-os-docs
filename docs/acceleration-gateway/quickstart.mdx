@@ -103,7 +103,7 @@ To confirm caching is working, request the same object twice and check the
 ```bash
 # First request - fetches from Tigris
 curl -sI http://localhost:8080/my-bucket/my-key \
-  -H "Authorization: ..." | rg X-Cache
+  -H "Authorization: ..." | grep X-Cache
 # X-Cache: MISS
 
 # Second request - served from local cache

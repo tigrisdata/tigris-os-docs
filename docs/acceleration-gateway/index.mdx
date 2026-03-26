@@ -42,6 +42,29 @@ TAG eliminates it for repeated reads by maintaining a local RocksDB-backed cache
 
 > **Bottom line:** One endpoint change. Zero code changes. Sub-millisecond reads.
 
+## Use Cases
+
+### ML Model Training
+
+Cache training datasets on local NVMe so multi-epoch training runs don't
+re-fetch data from remote storage on every epoch. The first epoch populates the
+cache; subsequent epochs read entirely from local storage, removing the network
+bottleneck without requiring you to pre-download datasets, shard data into tar
+archives, or adopt a new storage API. Works with PyTorch DataLoaders, S3
+Connector for PyTorch, and any S3-compatible data loading library.
+
+### Inference Data Caching
+
+Cache model weights, configuration files, or other assets that inference
+workloads read repeatedly. Reduces cold-start latency and eliminates redundant
+network traffic.
+
+### High-Throughput Data Pipelines
+
+For real-time analytics or data processing pipelines that repeatedly read the
+same objects, TAG eliminates redundant network round-trips and serves data at
+local NVMe speeds.
+
 ## Performance
 
 Benchmarked on AWS (c6in.16xlarge client, i3en.24xlarge server with NVMe storage):
@@ -59,7 +82,7 @@ TAG saturates a 100 Gbps NIC at 85+ Gbps for 1 MiB+ objects, with CPU utilizatio
 
 These numbers reflect cache-warm steady state. First requests for uncached objects incur a round-trip to Tigris.
 
-For full methodology, environment specs, and complete `warp` and `go-ycsb` results, see [TAG Benchmarks](https://github.com/tigrisdata/tag-deploy/blob/main/docs/benchmarks.md).
+For full methodology, environment specs, and complete `warp` and `go-ycsb` results, see [Benchmarks](./benchmarks).
 
 :::
 
@@ -244,6 +267,9 @@ Object versioning, server-side encryption (SSE-C/S3/KMS), Object Lock, POST obje
 
 :::
 
+For client SDK examples (AWS CLI, Python boto3, and more), see
+[S3 Client Usage](./usage).
+
 ## Cache Behavior
 
 TAG adds an `X-Cache` response header to every response:
@@ -262,46 +288,20 @@ GiB) that do not include `Cache-Control: no-store` or `private`.
 **What does not:** Non-200 responses, objects above the size threshold, and
 objects with cache-prevention headers.
 
-**Client cache control:**
-
-| Header                     | Behavior                               |
-| -------------------------- | -------------------------------------- |
-| `Cache-Control: no-cache`  | Revalidate with Tigris before serving  |
-| `Cache-Control: max-age=0` | Same as `no-cache`                     |
-| `Cache-Control: no-store`  | Bypass cache entirely and do not store |
+For revalidation, client cache-control headers, and automatic invalidation
+details, see [Cache Control and Revalidation](./cache-control).
 
 ## Security Model
 
-### Transparent Proxy Authentication
+TAG uses transparent proxy authentication. Clients sign requests with their own
+Tigris credentials, and TAG forwards them to Tigris as-is. TAG never sees or
+stores client secret keys. After a client's first request, TAG learns derived
+signing keys from Tigris (encrypted with AES-256-GCM) so subsequent requests
+can be validated locally without contacting Tigris.
 
-<div className="mermaid-frame">
-```mermaid
-sequenceDiagram
-    participant C as Client
-    participant T as TAG
-    participant S as Tigris
-    C->>T: Signed request (SigV4)
-    T->>S: Forward original auth + proxy headers
-    S->>S: Validate client signature
-    S->>S: Validate TAG proxy signature
-    S-->>T: Response + derived signing keys
-    T-->>C: Response (internal headers stripped)
-```
-</div>
-
-TAG never sees client secret keys. Proxy headers are signed with HMAC-SHA256 so
-Tigris can verify TAG's identity alongside the client's.
-
-### Local Authentication for Cache Hits
-
-After a client's first request, TAG learns the client's derived SigV4 signing
-keys from Tigris (encrypted with AES-256-GCM, decrypted locally). Subsequent
-requests are validated without contacting Tigris.
-
-| Component       | Purpose                   | Capacity     | TTL                   |
-| --------------- | ------------------------- | ------------ | --------------------- |
-| DerivedKeyStore | SigV4 signing keys        | 100K entries | 48 hours              |
-| AuthzCache      | Per-bucket auth decisions | 1M entries   | 10 min (configurable) |
+TAG requires its own Tigris credentials (`AWS_ACCESS_KEY_ID` /
+`AWS_SECRET_ACCESS_KEY`) with read-only access to all buckets in the same
+organization as clients it serves.
 
 :::warning[Important]
 
@@ -309,38 +309,15 @@ Authorization is per-bucket. Access to one bucket does not grant access to other
 
 :::
 
-### Credential Requirements
-
-TAG requires its own Tigris credentials (`AWS_ACCESS_KEY_ID` /
-`AWS_SECRET_ACCESS_KEY`) with read-only access to all buckets in the same
-organization as clients it serves. These are used for proxy header signing and
-background cache operations.
-
-### Endpoint Validation
-
-TAG validates the upstream endpoint at startup and allows connections only to:
-
-| Pattern         | Example                          |
-| --------------- | -------------------------------- |
-| `localhost`     | `http://localhost:8080`          |
-| `*.tigris.dev`  | `https://fly.storage.tigris.dev` |
-| `*.storage.dev` | `https://t3.storage.dev`         |
-
-Any other endpoint is a fatal startup error. This prevents TAG from being
-pointed at arbitrary S3-compatible services.
+For the full authentication flow, authorization lifecycle, proxy header
+security, and endpoint validation, see
+[Security and Access Control](./security).
 
 ## Monitoring
 
-TAG exposes 30+ Prometheus metrics at `/metrics`. Key categories:
+TAG exposes 30+ Prometheus metrics at `/metrics` covering request throughput,
+cache effectiveness, request coalescing, upstream health, authentication, and
+connection stats.
 
-| Category               | Key metrics                                                                          |
-| ---------------------- | ------------------------------------------------------------------------------------ |
-| Throughput and latency | `tag_requests_total`, `tag_request_duration_seconds`                                 |
-| Cache effectiveness    | `tag_cache_hits_total`, `tag_cache_misses_total`, `tag_range_from_cache_hits_total`  |
-| Request coalescing     | `tag_broadcast_shared_total`, `tag_broadcast_fetches_total`, `tag_active_broadcasts` |
-| Upstream health        | `tag_upstream_request_duration_seconds`, `tag_upstream_errors_total`                 |
-| Authentication         | `tag_auth_failures_total`, `tag_local_auth_validations_total`                        |
-| Resources              | `tag_active_connections`, `tag_bytes_transferred_total`                              |
-
-For scrape configuration, alerting rules, and full metrics reference, see the
-[Deployment Guide](./deployment-guide#monitoring).
+For the full metrics reference, PromQL examples, alerting recommendations, and
+scrape configuration, see [Metrics Reference](./metrics).

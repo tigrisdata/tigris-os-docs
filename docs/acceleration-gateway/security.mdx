@@ -1,0 +1,170 @@
+---
+title: Security and Access Control
+sidebar_label: Security
+description:
+  TAG authentication, authorization, and security architecture.
+---
+
+# Security and access control
+
+This page describes TAG's authentication, authorization, and security
+architecture.
+
+## Authentication
+
+TAG uses transparent proxy authentication. Clients sign requests with their own
+Tigris credentials. TAG forwards the request as-is, preserving the original
+`Authorization` header, and adds additional proxy headers to identify itself to
+Tigris.
+
+Tigris independently validates both the client's SigV4 signature and TAG's proxy
+signature. TAG's access key must belong to the same Tigris organization as the
+client's access key.
+
+## Local authentication
+
+TAG implements local SigV4 validation to serve cache hits without contacting
+Tigris on every request.
+
+### How it works
+
+**First request (key learning):**
+
+<div className="mermaid-frame">
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant T as TAG
+    participant S as Tigris
+
+    C->>T: GET /bucket/key (Authorization: ...)
+    T->>S: Forward original auth + proxy headers
+    S-->>T: 200 OK + X-Tigris-Proxy-Signing-Keys
+    Note over T: Unwrap & store derived keys
+    Note over T: Grant authz cache entry
+    T-->>C: 200 OK (signing key header stripped)
+```
+
+</div>
+
+**Subsequent requests (local validation):**
+
+<div className="mermaid-frame">
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant T as TAG
+    participant S as Tigris
+
+    C->>T: GET /bucket/key (Authorization: ...)
+    Note over T: Validate SigV4 locally
+    Note over T: Check authz cache → AuthValidated
+    Note over T: Serve from cache
+    T-->>C: 200 OK, X-Cache: HIT
+```
+
+</div>
+
+## Access control flow
+
+<div className="mermaid-frame">
+
+```mermaid
+flowchart TD
+    classDef tag fill:#4a148c,stroke:#ce93d8,color:#fff
+    classDef forward fill:#006064,stroke:#80deea,color:#fff
+    classDef reject fill:#b71c1c,stroke:#ef9a9a,color:#fff
+    classDef local fill:#1b5e20,stroke:#81c784,color:#fff
+
+    R[Request arrives at TAG]:::tag
+    R --> A{Authorization header?}
+
+    A -->|Missing| F1[Forward to Tigris]:::forward
+    F1 --> F1a[Tigris decides\ne.g. public bucket access]
+
+    A -->|Malformed| REJ[Reject with 4xx]:::reject
+
+    A -->|Present| K{Access key known?}
+    K -->|No| F2[Forward to Tigris\nlearn keys on success]:::forward
+
+    K -->|Yes| S{SigV4 valid?}
+    S -->|Mismatch| F3[Forward to Tigris\nre-learn keys if stale]:::forward
+
+    S -->|Valid| AZ{Authz cache hit?}
+    AZ -->|Miss / expired| F4[Forward to Tigris\nre-authorize on success]:::forward
+    AZ -->|Hit| OK[AuthValidated\nserve from cache]:::local
+```
+
+</div>
+
+## Authorization lifecycle
+
+Authorization decisions are cached per `(accessKey, bucket)` pair:
+
+| Event                                | Action                                    |
+| ------------------------------------ | ----------------------------------------- |
+| Tigris returns 2xx with signing keys | `AuthzCache.Grant(accessKey, bucket)`     |
+| Tigris returns 403                   | `AuthzCache.Revoke(accessKey, bucket)`    |
+| TTL expires (10 min default)         | Entry removed, next request re-authorizes |
+
+Authorization is strictly per-bucket. A client may have access to some buckets
+but not others, and TAG enforces this at the cache level.
+
+## Proxy header security
+
+### Preventing client injection
+
+TAG overwrites any client-supplied proxy header values with TAG's own computed
+values. Clients cannot impersonate TAG or bypass proxy authentication.
+
+### Proxy signature computation
+
+TAG computes the proxy signature using its own secret key. Only TAG (and Tigris,
+which knows TAG's key) can produce a valid proxy signature.
+
+## Endpoint validation
+
+TAG validates the upstream endpoint at startup to prevent misconfiguration and
+SSRF attacks.
+
+**Allowed hosts:**
+
+| Pattern         | Example                          | Use case                  |
+| --------------- | -------------------------------- | ------------------------- |
+| `localhost`     | `http://localhost:8080`          | Development and testing   |
+| `*.tigris.dev`  | `https://fly.storage.tigris.dev` | Tigris production domains |
+| `*.storage.dev` | `https://t3.storage.dev`         | Tigris storage domains    |
+
+Any other endpoint causes a fatal startup error.
+
+## Credential requirements
+
+TAG requires its own Tigris credentials via environment variables:
+
+```bash
+export AWS_ACCESS_KEY_ID=<TAG's access key>
+export AWS_SECRET_ACCESS_KEY=<TAG's secret key>
+```
+
+These credentials must have **read-only access** to all buckets accessed through
+TAG. This is required for:
+
+- Signing proxy headers
+- Background cache fetches (e.g., fetching full objects after a range request
+  cache miss)
+
+TAG's access key must belong to the same Tigris organization as client access
+keys. Clients use their own credentials directly — TAG does not need or store
+client secret keys.
+
+## Error mapping
+
+| Auth error         | S3 error code         | HTTP status | Action            |
+| ------------------ | --------------------- | ----------- | ----------------- |
+| Signature mismatch | SignatureDoesNotMatch | 403         | Forward to Tigris |
+| Unknown access key | InvalidAccessKeyId    | 403         | Forward to Tigris |
+| Expired request    | RequestTimeTooSkewed  | 403         | Forward to Tigris |
+| Malformed auth     | MalformedAuth         | 400         | Reject at TAG     |
+| Missing auth       | (none)                | (none)      | Forward to Tigris |

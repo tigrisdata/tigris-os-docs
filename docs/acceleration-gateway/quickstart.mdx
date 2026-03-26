@@ -118,44 +118,6 @@ TAG is compatible with any S3 client. Change the endpoint URL to point at TAG
 and ensure path-style addressing is configured. No other code changes are
 needed.
 
-### AWS CLI
-
-```bash
-export AWS_ACCESS_KEY_ID=<your-client-key>
-export AWS_SECRET_ACCESS_KEY=<your-client-secret>
-
-aws s3 ls --endpoint-url http://<tag-host>:8080
-aws s3 cp s3://my-bucket/my-key ./local-file --endpoint-url http://<tag-host>:8080
-```
-
-Or configure a named profile in `~/.aws/config`:
-
-```ini
-[profile tag]
-endpoint_url = http://<tag-host>:8080
-```
-
-Then use `--profile tag` or set `AWS_PROFILE=tag`.
-
-### Python (boto3)
-
-```python
-import boto3
-from botocore.config import Config
-
-s3 = boto3.client(
-    "s3",
-    endpoint_url="http://<tag-host>:8080",
-    aws_access_key_id="<your-client-key>",
-    aws_secret_access_key="<your-client-secret>",
-    config=Config(s3={"addressing_style": "path"}),
-)
-
-s3.list_buckets()
-s3.download_file("my-bucket", "my-key", "local-file.txt")
-s3.upload_file("local-file.txt", "my-bucket", "my-key")
-```
-
 :::warning[Path-Style Addressing Only]
 
 TAG supports path-style addressing (`http://host:port/bucket/key`).
@@ -164,6 +126,9 @@ your S3 client is configured for path-style access.
 
 :::
 
+For client examples covering AWS CLI, Python boto3, streaming large files, and
+troubleshooting, see [S3 Client Usage](./usage).
+
 ## Common Configuration
 
 A few environment variables you may want to set right away:
@@ -171,7 +136,7 @@ A few environment variables you may want to set right away:
 | Variable                | Default                  | Description                                |
 | ----------------------- | ------------------------ | ------------------------------------------ |
 | `TAG_LOG_LEVEL`         | `info`                   | Set to `debug` for verbose request logging |
-| `TAG_CACHE_DISK_PATH`   | `/var/cache/tag`         | Where TAG stores cached objects            |
+| `TAG_CACHE_DISK_PATH`   | `/var/tmp/tag`           | Where TAG stores cached objects            |
 | `TAG_UPSTREAM_ENDPOINT` | `https://t3.storage.dev` | Tigris S3 endpoint                         |
 
 For the full configuration reference, production deployment, clustering, TLS,

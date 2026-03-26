@@ -133,13 +133,13 @@ log:
 
 Controls the HTTP server settings.
 
-| Field           | Type   | Default      | Description                        |
-| --------------- | ------ | ------------ | ---------------------------------- |
-| `http_port`     | int    | `8080`       | Port for the S3 API                |
-| `bind_ip`       | string | `"0.0.0.0"`  | IP address to bind to             |
-| `pprof_enabled` | bool   | `false`      | Enable pprof profiling endpoints   |
-| `tls_cert_file` | string | `""`         | Path to TLS certificate file (PEM) |
-| `tls_key_file`  | string | `""`         | Path to TLS private key file (PEM) |
+| Field           | Type   | Default     | Description                        |
+| --------------- | ------ | ----------- | ---------------------------------- |
+| `http_port`     | int    | `8080`      | Port for the S3 API                |
+| `bind_ip`       | string | `"0.0.0.0"` | IP address to bind to              |
+| `pprof_enabled` | bool   | `false`     | Enable pprof profiling endpoints   |
+| `tls_cert_file` | string | `""`        | Path to TLS certificate file (PEM) |
+| `tls_key_file`  | string | `""`        | Path to TLS private key file (PEM) |
 
 See [TLS/HTTPS](tls.md) for full TLS configuration details.
 

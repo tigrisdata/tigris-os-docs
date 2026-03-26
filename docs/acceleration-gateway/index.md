@@ -12,9 +12,9 @@ but remote storage throughput often becomes the bottleneck — especially during
 multi-epoch training where the same data is read repeatedly.
 
 TAG solves this by caching training data on local NVMe drives. The first epoch
-populates the cache. Subsequent epochs read entirely from local storage, removing
-the network bottleneck without requiring you to pre-download datasets, shard data
-into tar archives, or adopt a new storage API.
+populates the cache. Subsequent epochs read entirely from local storage,
+removing the network bottleneck without requiring you to pre-download datasets,
+shard data into tar archives, or adopt a new storage API.
 
 ### Key benefits
 
@@ -42,9 +42,9 @@ TAG sits between your application and Tigris Object Storage:
 4. TAG handles authentication transparently: clients use their own Tigris
    credentials, and TAG forwards them to Tigris for validation.
 
-TAG supports the full S3 read path (`GetObject`, `HeadObject`,
-`ListObjectsV2`), write operations (`PutObject`, `DeleteObject`, `CopyObject`),
-and automatically invalidates cached objects when they're modified through TAG.
+TAG supports the full S3 read path (`GetObject`, `HeadObject`, `ListObjectsV2`),
+write operations (`PutObject`, `DeleteObject`, `CopyObject`), and automatically
+invalidates cached objects when they're modified through TAG.
 
 ## Use cases
 
@@ -73,11 +73,11 @@ TAG can run as a single node or as a multi-node cluster:
 - **Single node**: one TAG instance with a local NVMe cache. Suitable for
   sidecar deployments alongside training jobs.
 - **Cluster mode**: multiple TAG nodes with gossip-based discovery and
-  distributed cache. A cache miss on one node can be served by another node
-  that has the object cached.
+  distributed cache. A cache miss on one node can be served by another node that
+  has the object cached.
 
-Each node uses an embedded OCache instance backed by RocksDB for high-performance
-local storage.
+Each node uses an embedded OCache instance backed by RocksDB for
+high-performance local storage.
 
 ## Next steps
 

@@ -5,6 +5,13 @@ Run TAG using Docker Compose. For all configuration options, see the
 
 ## Prerequisites
 
+Clone the [tag-deploy](https://github.com/tigrisdata/tag-deploy) repository:
+
+```bash
+git clone https://github.com/tigrisdata/tag-deploy.git
+cd tag-deploy
+```
+
 Create a `.env` file in the `docker/` directory with your Tigris credentials:
 
 ```bash

@@ -129,8 +129,8 @@ Any other endpoint causes a fatal startup error.
 TAG requires its own Tigris credentials via environment variables:
 
 ```bash
-export AWS_ACCESS_KEY_ID=<TAGs access key>
-export AWS_SECRET_ACCESS_KEY=<TAGs secret key>
+export AWS_ACCESS_KEY_ID=<TAG's access key>
+export AWS_SECRET_ACCESS_KEY=<TAG's secret key>
 ```
 
 These credentials must have **read-only access** to all buckets accessed through
@@ -146,10 +146,10 @@ client secret keys.
 
 ## Error mapping
 
-| Auth error         | S3 error code          | HTTP status | Action            |
-| ------------------ | ---------------------- | ----------- | ----------------- |
-| Signature mismatch | SignatureDoesNotMatch  | 403         | Forward to Tigris |
-| Unknown access key | InvalidAccessKeyId     | 403         | Forward to Tigris |
-| Expired request    | RequestTimeTooSkewed   | 403         | Forward to Tigris |
-| Malformed auth     | MalformedAuth          | 400         | Reject at TAG     |
-| Missing auth       | (none)                 | (none)      | Forward to Tigris |
+| Auth error         | S3 error code         | HTTP status | Action            |
+| ------------------ | --------------------- | ----------- | ----------------- |
+| Signature mismatch | SignatureDoesNotMatch | 403         | Forward to Tigris |
+| Unknown access key | InvalidAccessKeyId    | 403         | Forward to Tigris |
+| Expired request    | RequestTimeTooSkewed  | 403         | Forward to Tigris |
+| Malformed auth     | MalformedAuth         | 400         | Reject at TAG     |
+| Missing auth       | (none)                | (none)      | Forward to Tigris |

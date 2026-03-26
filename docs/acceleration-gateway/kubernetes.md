@@ -10,6 +10,12 @@ options, see the [Configuration Reference](configuration.md).
 - `kubectl` configured to access the cluster
 - Tigris access key and secret key with read access to all buckets that will be
   accessed through TAG
+- Clone the [tag-deploy](https://github.com/tigrisdata/tag-deploy) repository:
+
+```bash
+git clone https://github.com/tigrisdata/tag-deploy.git
+cd tag-deploy
+```
 
 ## Deploy
 
@@ -55,13 +61,13 @@ kubectl exec -n tag tag-0 -- curl -s http://localhost:8080/health
 
 The `kubernetes/base/` directory uses Kustomize:
 
-| File                   | Description                                    |
-| ---------------------- | ---------------------------------------------- |
-| `kustomization.yaml`  | Kustomize configuration with image tag         |
-| `statefulset.yaml`    | TAG StatefulSet (3 replicas, embedded cache)   |
-| `service.yaml`        | LoadBalancer Service for external access       |
+| File                    | Description                                  |
+| ----------------------- | -------------------------------------------- |
+| `kustomization.yaml`    | Kustomize configuration with image tag       |
+| `statefulset.yaml`      | TAG StatefulSet (3 replicas, embedded cache) |
+| `service.yaml`          | LoadBalancer Service for external access     |
 | `service-headless.yaml` | Headless Service for cluster discovery       |
-| `hpa.yaml`            | Horizontal Pod Autoscaler                      |
+| `hpa.yaml`              | Horizontal Pod Autoscaler                    |
 
 To customize the image version or other settings, create an overlay:
 
@@ -125,8 +131,7 @@ Key metrics to monitor:
 
 ### No cache hits
 
-- Check TAG logs for cache initialization errors:
-  `kubectl logs -n tag tag-0`
+- Check TAG logs for cache initialization errors: `kubectl logs -n tag tag-0`
 - Verify the cache PVC is bound: `kubectl get pvc -n tag`
 - Ensure the disk path is writable
 

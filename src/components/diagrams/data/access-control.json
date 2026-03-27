@@ -1,0 +1,332 @@
+[
+  {
+    "type": "text",
+    "id": "title7",
+    "x": 350,
+    "y": 10,
+    "text": "Access Control Decision Tree",
+    "fontSize": 24,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "rectangle",
+    "id": "req",
+    "x": 440,
+    "y": 60,
+    "width": 200,
+    "height": 55,
+    "backgroundColor": "#62FEB5",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1,
+    "roundness": { "type": 3 },
+    "label": { "text": "Request arrives", "fontSize": 21, "color": "#0A171E" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_req_auth",
+    "x": 540,
+    "y": 115,
+    "width": 0,
+    "height": 40,
+    "points": [
+      [0, 0],
+      [0, 40]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "diamond",
+    "id": "d_auth",
+    "x": 440,
+    "y": 155,
+    "width": 220,
+    "height": 100,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.2,
+    "label": { "text": "Auth header?", "fontSize": 21, "color": "#c8d6de" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_auth_miss",
+    "x": 440,
+    "y": 205,
+    "width": -140,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [-140, 0]
+    ],
+    "strokeColor": "#506874",
+    "strokeWidth": 1.2,
+    "endArrowhead": "arrow",
+    "label": { "text": "missing", "fontSize": 18, "color": "#506874" }
+  },
+  {
+    "type": "rectangle",
+    "id": "fwd1",
+    "x": 140,
+    "y": 180,
+    "width": 160,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 },
+    "label": { "text": "Forward to Tigris", "fontSize": 18, "color": "#c8d6de" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_auth_bad",
+    "x": 660,
+    "y": 205,
+    "width": 100,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [100, 0]
+    ],
+    "strokeColor": "#506874",
+    "strokeWidth": 1.2,
+    "endArrowhead": "arrow",
+    "label": { "text": "malformed", "fontSize": 18, "color": "#506874" }
+  },
+  {
+    "type": "rectangle",
+    "id": "rej",
+    "x": 760,
+    "y": 180,
+    "width": 160,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#ef4444",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 },
+    "label": { "text": "Reject 4xx", "fontSize": 18, "color": "#ef4444" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_auth_ok",
+    "x": 540,
+    "y": 255,
+    "width": 0,
+    "height": 40,
+    "points": [
+      [0, 0],
+      [0, 40]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "label": { "text": "present", "fontSize": 18, "color": "#62FEB5" }
+  },
+  {
+    "type": "diamond",
+    "id": "d_key",
+    "x": 440,
+    "y": 295,
+    "width": 220,
+    "height": 100,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.2,
+    "label": { "text": "Key known?", "fontSize": 21, "color": "#c8d6de" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_key_no",
+    "x": 440,
+    "y": 345,
+    "width": -140,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [-140, 0]
+    ],
+    "strokeColor": "#506874",
+    "strokeWidth": 1.2,
+    "endArrowhead": "arrow",
+    "label": { "text": "no", "fontSize": 18, "color": "#506874" }
+  },
+  {
+    "type": "rectangle",
+    "id": "fwd2",
+    "x": 120,
+    "y": 320,
+    "width": 180,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 },
+    "label": {
+      "text": "Forward, learn keys",
+      "fontSize": 18,
+      "color": "#c8d6de"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "a_key_yes",
+    "x": 540,
+    "y": 395,
+    "width": 0,
+    "height": 40,
+    "points": [
+      [0, 0],
+      [0, 40]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "label": { "text": "yes", "fontSize": 18, "color": "#62FEB5" }
+  },
+  {
+    "type": "diamond",
+    "id": "d_sig",
+    "x": 440,
+    "y": 435,
+    "width": 220,
+    "height": 100,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.2,
+    "label": { "text": "SigV4 valid?", "fontSize": 21, "color": "#c8d6de" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_sig_no",
+    "x": 660,
+    "y": 485,
+    "width": 100,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [100, 0]
+    ],
+    "strokeColor": "#506874",
+    "strokeWidth": 1.2,
+    "endArrowhead": "arrow",
+    "label": { "text": "mismatch", "fontSize": 18, "color": "#506874" }
+  },
+  {
+    "type": "rectangle",
+    "id": "fwd3",
+    "x": 760,
+    "y": 460,
+    "width": 200,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 },
+    "label": { "text": "Forward, re-learn", "fontSize": 18, "color": "#c8d6de" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_sig_yes",
+    "x": 540,
+    "y": 535,
+    "width": 0,
+    "height": 40,
+    "points": [
+      [0, 0],
+      [0, 40]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "label": { "text": "valid", "fontSize": 18, "color": "#62FEB5" }
+  },
+  {
+    "type": "diamond",
+    "id": "d_authz",
+    "x": 440,
+    "y": 575,
+    "width": 220,
+    "height": 100,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.2,
+    "label": { "text": "Authz cache?", "fontSize": 21, "color": "#c8d6de" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_authz_miss",
+    "x": 440,
+    "y": 625,
+    "width": -140,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [-140, 0]
+    ],
+    "strokeColor": "#506874",
+    "strokeWidth": 1.2,
+    "endArrowhead": "arrow",
+    "label": { "text": "miss", "fontSize": 18, "color": "#506874" }
+  },
+  {
+    "type": "rectangle",
+    "id": "fwd4",
+    "x": 120,
+    "y": 600,
+    "width": 180,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 },
+    "label": {
+      "text": "Forward, re-authorize",
+      "fontSize": 18,
+      "color": "#c8d6de"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "a_authz_hit",
+    "x": 540,
+    "y": 675,
+    "width": 0,
+    "height": 40,
+    "points": [
+      [0, 0],
+      [0, 40]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "label": { "text": "hit", "fontSize": 18, "color": "#62FEB5" }
+  },
+  {
+    "type": "rectangle",
+    "id": "ok",
+    "x": 430,
+    "y": 715,
+    "width": 240,
+    "height": 55,
+    "backgroundColor": "#62FEB5",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1,
+    "roundness": { "type": 3 },
+    "label": {
+      "text": "AuthValidated\nServe from cache",
+      "fontSize": 18,
+      "color": "#0A171E"
+    }
+  }
+]

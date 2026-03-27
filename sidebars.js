@@ -203,6 +203,94 @@ const sidebars = {
             },
           ],
         },
+        {
+          type: "category",
+          label: "Tigris Acceleration Gateway",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              label: "Overview",
+              id: "acceleration-gateway/index",
+            },
+            {
+              type: "doc",
+              label: "Benchmarks",
+              id: "acceleration-gateway/benchmarks",
+            },
+            {
+              type: "doc",
+              label: "Quick Start",
+              id: "acceleration-gateway/quickstart",
+            },
+            {
+              type: "category",
+              label: "Deployment",
+              collapsible: true,
+              collapsed: false,
+              link: {
+                type: "doc",
+                id: "acceleration-gateway/deployment-guide",
+              },
+              items: [
+                {
+                  type: "doc",
+                  label: "Docker",
+                  id: "acceleration-gateway/docker",
+                },
+                {
+                  type: "doc",
+                  label: "Kubernetes",
+                  id: "acceleration-gateway/kubernetes",
+                },
+              ],
+            },
+            {
+              type: "category",
+              label: "Reference",
+              collapsible: true,
+              collapsed: true,
+              items: [
+                {
+                  type: "doc",
+                  label: "Configuration",
+                  id: "acceleration-gateway/configuration",
+                },
+                {
+                  type: "doc",
+                  label: "S3 Client Usage",
+                  id: "acceleration-gateway/usage",
+                },
+                {
+                  type: "doc",
+                  label: "S3 Compatibility",
+                  id: "acceleration-gateway/s3-compatibility",
+                },
+                {
+                  type: "doc",
+                  label: "Cache Control",
+                  id: "acceleration-gateway/cache-control",
+                },
+                {
+                  type: "doc",
+                  label: "TLS",
+                  id: "acceleration-gateway/tls",
+                },
+                {
+                  type: "doc",
+                  label: "Security",
+                  id: "acceleration-gateway/security",
+                },
+                {
+                  type: "doc",
+                  label: "Metrics",
+                  id: "acceleration-gateway/metrics",
+                },
+              ],
+            },
+          ],
+        },
         "training/tigrisfs",
         {
           type: "doc",

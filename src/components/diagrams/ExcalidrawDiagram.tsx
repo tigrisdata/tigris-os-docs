@@ -304,7 +304,6 @@ export default function ExcalidrawDiagram({ elements }: Props) {
       style={{
         background: "#0e1920",
         borderRadius: 14,
-        border: "1px solid #1e3340",
       }}
     >
       <defs>

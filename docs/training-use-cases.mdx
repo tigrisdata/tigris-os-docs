@@ -80,34 +80,33 @@ flowchart LR
     GB -->|direct read| DL
     DL --> GPU[GPU]:::gpu
 
-    SKY[SkyPilot — any cloud]:::cloud -.->|launches| DL
+    ANY[Any cloud — Lambda, Coreweave, Crusoe, etc.]:::cloud -.->|launches| DL
 
-````
+```
 </div>
 <div className="mermaid-caption">
   Figure 1: Training data streams from a global bucket through optional TAG
-  caching into DataLoader workers, which can run on any cloud via SkyPilot.
+  caching into DataLoader workers, which can run on any cloud.
 </div>
 
-On [benchmarks](/docs/overview/benchmarks/model-training), Tigris reaches ~134
-samples/sec at ~99% GPU utilization on a ViT workload (100k JPEGs, g5.8xlarge),
-matching AWS S3 on the same setup. Packing images into tar shards cuts the
-worker count from 16 to 8 to saturate the GPU. Adding
+In [benchmarks](/docs/overview/benchmarks/model-training) replicating
+[AWS's own S3-training workload](https://aws.amazon.com/blogs/storage/optimizing-model-training-accessing-s3-data-with-pytorch/),
+Tigris matches AWS S3 throughput on the same setup. Adding
 [TAG (Tigris Acceleration Gateway)](/docs/overview/benchmarks/model-training#3-tag-eliminates-network-latency-after-epoch-1),
-a local S3-compatible caching proxy, eliminates network round-trips after
-epoch 1: warm epochs run **5.7x faster**, only **4 workers** are needed to
-saturate the GPU, and the local cache provides **~200x** throughput headroom
-over what the GPU can consume.
+a local S3-compatible caching proxy that runs on the training instance,
+eliminates network round-trips after epoch 1: warm epochs run **5.7x faster**,
+the workers needed to saturate the GPU drop from **16 to 4**, and the local
+NVMe cache provides **~200x** throughput headroom over what the GPU can
+consume.
 
-For multi-cloud training, [SkyPilot](/docs/quickstarts/skypilot/) spins up GPU
-instances on whichever provider has capacity. Because all nodes read from the
-same global Tigris bucket at the nearest replica, there are no cross-cloud
-egress costs and no per-region storage to manage.
+For multi-cloud training, GPU instances can run on any provider — Lambda,
+CoreWeave, Crusoe, or a hyperscaler. Because all nodes read from the same
+global Tigris bucket at the nearest replica, there are no cross-cloud egress
+costs and no per-region storage to manage.
 
 For more information, see the docs:
 [PyTorch quickstart](/docs/quickstarts/pytorch) ·
 [Training benchmarks](/docs/overview/benchmarks/model-training) ·
-[Training with big data on SkyPilot](/docs/training/big-data-skypilot/) ·
 [Bucket locations](/docs/buckets/locations/)
 
 :::tip
@@ -148,7 +147,7 @@ flowchart LR
     V -->|mount| T[Training container]:::gpu
     T --> GPU[GPU]:::gpu
     T -->|write checkpoints| GB
-````
+```
 
 </div>
 <div className="mermaid-caption">
@@ -194,6 +193,16 @@ volumes:
     emptyDir: {} # backed by root disk; use a hostPath or local PV for NVMe
 ```
 
+:::caution
+
+`emptyDir` volumes share the node's root disk by default and are subject to its
+available space. If your dataset is larger than the free space on that
+mountpoint, the sync will fail. For large datasets, use a `hostPath` mount
+pointing at a dedicated NVMe drive or provision a `local` PersistentVolume with
+a known capacity.
+
+:::
+
 Because Tigris serves reads from the nearest region, the sync saturates the
 available link regardless of where the job is scheduled. For datasets that don't
 change between runs, the sync is incremental — only new or modified objects
@@ -223,7 +232,7 @@ flowchart LR
     T --> GPU[GPU]:::gpu
     T -->|write checkpoints| GB
 
-````
+```
 </div>
 <div className="mermaid-caption">
   Figure 2b: A separate job ingests data from Tigris into a parallel filesystem.
@@ -245,7 +254,7 @@ torchrun --nproc_per_node=8 train.py --data-dir /mnt/weka/dataset
 
 # Write results back to Tigris
 aws s3 cp /mnt/weka/checkpoints/ s3://my-checkpoints/ --recursive --endpoint-url https://t3.storage.dev
-````
+```
 
 For more information, see the docs: [TigrisFS](/docs/training/tigrisfs/) ·
 [Bucket locations](/docs/buckets/locations/) ·
@@ -289,7 +298,7 @@ flowchart LR
     S -->|fork| F2[(Experiment B — lr=3e-5)]:::fork
     S -->|fork| F3[(Experiment C — lr=1e-3)]:::fork
 
-````
+```
 
 </div>
 <div className="mermaid-caption">
@@ -298,11 +307,12 @@ flowchart LR
 </div>
 
 In practice, you create the bucket with `X-Tigris-Enable-Snapshot: true` at
-creation time, then have your training loop write checkpoints on a fixed cadence
-(every N steps or at epoch boundaries). Store the snapshot version ID alongside
-the run metadata in your experiment tracker. To resume, pass the version to the
-new job. To sweep hyperparameters, fork the snapshot once per configuration and
-let each fork write independently.
+creation time (`X-Tigris-Enable-Snapshot` must be set at creation and cannot be
+changed afterward), then have your training loop write checkpoints on a fixed
+cadence (every N steps or at epoch boundaries). Store the snapshot version ID
+alongside the run metadata in your experiment tracker. To resume, pass the
+version to the new job. To sweep hyperparameters, fork the snapshot once per
+configuration and let each fork write independently.
 
 For more information, see the docs:
 [Bucket snapshots and forks](/docs/buckets/snapshots-and-forks/) ·
@@ -314,13 +324,6 @@ Scope each training job's credentials with a
 [fine-grained IAM policy](/docs/iam/policies/examples/training-job): read-only
 to the dataset bucket, read-only to the base model, write-only to the output
 bucket, with optional time-window and IP restrictions.
-
-:::
-
-:::note
-
-`X-Tigris-Enable-Snapshot: true` must be set at bucket creation and cannot be
-changed afterward.
 
 :::
 
@@ -351,7 +354,7 @@ flowchart LR
     W --> Q[Quantize / convert]:::pipe
     W --> D[Deploy to inference]:::pipe
 
-````
+```
 
 </div>
 <div className="mermaid-caption">

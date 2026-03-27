@@ -50,10 +50,9 @@ Add a mermaid-syntax HTML comment above the diagram for agent readability, then
 render the component:
 
 ```mdx
-{/* <!-- Mermaid UML description for AI agents:
+{/_ <!-- Mermaid UML description for AI agents:
 graph LR
-  A[Component] --> B[Component]
---> */}
+  A[Component] --> B[Component] --> _/}
 
 <div className="mermaid-frame">
   <NameDiagram />
@@ -147,9 +146,9 @@ Use `\n` in the `text` field. The renderer splits on newlines and renders
 
 ## Styling
 
-- The `ExcalidrawDiagram` component provides its own dark background
-  (`#0e1920`) and border-radius. Do NOT add borders to the SVG or to the
-  `.mermaid-frame` wrapper — the diagram is self-contained.
+- The `ExcalidrawDiagram` component provides its own dark background (`#0e1920`)
+  and border-radius. Do NOT add borders to the SVG or to the `.mermaid-frame`
+  wrapper — the diagram is self-contained.
 - Do NOT add borders, background colors, or border-radius via inline styles on
   the SVG element.
 

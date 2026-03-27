@@ -1,217 +1,216 @@
 ---
 name: excalidraw-diagrams
 description:
-  Guidelines for creating and embedding Excalidraw diagrams in Tigris docs. Use
-  when creating architecture diagrams, flow diagrams, or any visual
-  documentation.
+  Guidelines for creating clean, readable Excalidraw diagrams embedded as inline
+  SVG via JSON data files. Use when creating architecture diagrams, flow
+  diagrams, or any visual documentation.
 metadata:
   trigger: Creating Excalidraw diagrams, architecture visuals, flow diagrams
 ---
 
 # Excalidraw Diagram Guidelines
 
-When creating Excalidraw diagrams via MCP, follow these rules to produce clean,
-readable, customer-facing results — and embed them directly in the docs site.
+These rules produce clean, readable, customer-facing diagrams embedded as inline
+SVG in the Tigris docs site.
 
-## Embedding Diagrams in Docs (CRITICAL)
+## CRITICAL — Read Before Writing Any Diagram
 
-**Never export PNGs.** Diagrams are rendered as inline SVGs using the
-`ExcalidrawDiagram` React component. This gives crisp rendering at any
-resolution, dark-mode support, and no image files to manage.
+> **NEVER use `label` properties on shapes.** This is the #1 source of broken
+> diagrams. The `label` property causes text to overflow and clip outside boxes.
+> Always create a **separate `text` element** positioned inside the shape. See
+> the example below.
 
-### Step-by-step embedding process
+## Embedding Pattern
 
-1. **Create the diagram JSON data file** at
-   `src/components/diagrams/data/<name>.json`. This file is a JSON array of
-   Excalidraw elements (same format as the MCP `create_view` tool, minus
-   `cameraUpdate` and `delete` pseudo-elements). Use dark-mode colors (see Color
-   Scheme below).
+Diagrams are embedded as React components that render inline SVG. Each diagram
+has three parts:
 
-2. **Create a thin wrapper component** at
-   `src/components/diagrams/<Name>Diagram.tsx`:
+1. **JSON data file** in `src/components/diagrams/data/<name>.json` — an array
+   of Excalidraw-style element objects
+2. **Wrapper component** in `src/components/diagrams/<Name>Diagram.tsx` — thin
+   wrapper that imports the JSON and passes it to `ExcalidrawDiagram`
+3. **MDX import** in the doc page — imports the wrapper and renders it inside a
+   `<div className="mermaid-frame">`
 
-   ```tsx
-   import React from "react";
-   import ExcalidrawDiagram from "./ExcalidrawDiagram";
-   import elements from "./data/<name>.json";
+### Wrapper component template
 
-   export default function <Name>Diagram() {
-     return <ExcalidrawDiagram elements={elements} />;
-   }
-   ```
+```tsx
+import React from "react";
+import ExcalidrawDiagram from "./ExcalidrawDiagram";
+import elements from "./data/<name>.json";
 
-3. **Import and render in your MDX file**:
-
-   ```mdx
-   import <Name>Diagram from "@site/src/components/diagrams/<Name>Diagram";
-
-   <div className="mermaid-frame">
-     <<Name>Diagram />
-   </div>
-   ```
-
-4. **Add a mermaid HTML comment** above the diagram div for AI agent
-   readability. This lets agents understand the diagram's content without
-   parsing the JSON:
-
-   ```mdx
-   <!-- NOTE: The SVG below is rendered from <Name>Diagram. The mermaid
-   notation is kept here as a machine-readable description for AI agents.
-   flowchart LR
-       A[Client] -->|S3 API| B[Gateway]
-
-       B --> C[Cache]
-       C -.->|cache miss| D[Tigris]
-
-   -->
-
-   <div className="mermaid-frame">
-     <<Name>Diagram />
-   </div>
-   ```
-
-### Key files
-
-| File                                            | Purpose                                               |
-| ----------------------------------------------- | ----------------------------------------------------- |
-| `src/components/diagrams/ExcalidrawDiagram.tsx` | SVG renderer — auto-sizes viewBox, embeds Virgil font |
-| `src/components/diagrams/virgilFont.ts`         | Base64-encoded Virgil woff2 font face                 |
-| `src/components/diagrams/data/*.json`           | Diagram element data (one file per diagram)           |
-| `src/components/diagrams/*Diagram.tsx`          | Thin wrappers that import data + renderer             |
-| `static/fonts/Virgil.woff2`                     | Virgil font file                                      |
-| `src/css/custom.css` (`.mermaid-frame`)         | Diagram container styling                             |
-
-### Mermaid HTML comments
-
-Every embedded diagram **must** have a mermaid-syntax HTML comment directly
-above it. This serves as a machine-readable description so AI agents can
-understand diagram content without parsing JSON coordinates. The comment format
-is:
-
-```html
-<!-- NOTE: The SVG below is rendered from <ComponentName>. The mermaid
-notation is kept here as a machine-readable description for AI agents.
-<mermaid diagram syntax here>
--->
+export default function <Name>Diagram() {
+  return <ExcalidrawDiagram elements={elements} />;
+}
 ```
 
-Use standard mermaid flowchart/sequence/graph syntax. The comment is never
-rendered — it exists purely for agent comprehension.
+### MDX usage
 
-## Font — Virgil
+Add a mermaid-syntax HTML comment above the diagram for agent readability, then
+render the component:
 
-- **Always use the Virgil handwriting font** for all text. This is Excalidraw's
-  signature hand-drawn look.
-- The `ExcalidrawDiagram` component embeds the font automatically via
-  `virgilFont.ts`. You do not need to handle font embedding manually.
-- Set `fontFamily: 1` on Excalidraw elements (this maps to Virgil).
+```mdx
+{/* <!-- Mermaid UML description for AI agents:
+graph LR
+  A[Component] --> B[Component]
+--> */}
 
-## Text Sizing & Spacing
+<div className="mermaid-frame">
+  <NameDiagram />
+</div>
+```
 
-The Virgil font renders **significantly wider** than standard sans-serif fonts
-at the same pixel size. Always account for this:
+## JSON Data Format — Correct Example
 
-- Overestimate the horizontal space text needs by **~40%** compared to what
-  you'd expect from character count × fontSize.
-- **Minimum 100px horizontal gap** between connected boxes when there is a label
-  between them.
-- **Minimum 80px vertical gap** between connected boxes when there is a label.
-- Arrow labels render at the midpoint of the arrow. Make arrows at least **80px
-  long** when they carry a label.
+This shows the RIGHT way to put text inside a box — as a separate `text`
+element, not a `label`:
+
+```json
+[
+  {
+    "type": "rectangle",
+    "id": "mybox",
+    "x": 50,
+    "y": 100,
+    "width": 200,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "myboxlbl",
+    "x": 75,
+    "y": 113,
+    "text": "My Label",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  }
+]
+```
+
+**Key points:**
+
+- The rectangle has NO `label` property
+- The text element is positioned ~25px inward from the box edges
+- `fontFamily: 1` is set on every text element (Virgil hand-drawn font)
+- Text `x`/`y` places the top-left of the first line of text
+
+### Multi-line text
+
+Use `\n` in the `text` field. The renderer splits on newlines and renders
+`<tspan>` elements. Account for ~1.3× fontSize vertical spacing per line.
+
+## Font
+
+- **Always set `fontFamily: 1`** on every text element. This is Excalidraw's
+  hand-drawn font (Virgil). Without it, text renders in a mismatched default.
+
+## Text Sizing
+
+- The Virgil font renders **significantly wider** than you'd expect from the
+  pixel coordinates. Always overestimate the space text needs by ~40%.
+- Make boxes wide enough to hold the text with **at least 25px padding** from
+  all edges.
+
+## Spacing Between Elements
+
+- **Minimum 160px horizontal gap** between connected boxes. This gives arrow
+  labels room to breathe.
+- **Minimum 125px vertical gap** between connected boxes.
+- Arrow labels must be placed **at least 25px away from the arrow line** — above
+  for forward arrows, below for return arrows.
 - **Never place a text label between two parallel arrows.** Put labels on the
-  outer sides.
+  outer sides (above the top arrow, below the bottom arrow).
 
-## Bidirectional Flows
+## Arrow Labels
 
-For request/response pairs between two boxes:
+- Place labels as **separate `text` elements** above or below arrows, never
+  overlapping them. Do NOT use `label` on arrows either.
+- For bidirectional flows (request → / ← response), stagger the arrows
+  vertically with ~50px gap and put labels on opposite sides.
 
-- Stagger the two arrows vertically with a **20-30px gap** between them.
-- Place the forward label above the top arrow, the return label below the bottom
-  arrow.
-- Both arrows must connect to the box edges — do not let dashed return arrows
-  float below the boxes.
+## Zone Labels
 
-## Container / Zone Labels
+- Place zone labels (for dashed-border grouping boxes) in the **upper-left
+  corner** of the zone, ~15px inward from the top-left edges.
+- Use a smaller font size (14–16px) and secondary text color.
 
-- When a dashed container has a text label (e.g., "Training Instance"), leave
-  **at least 40px vertical gap** between the label's baseline and the top edge
-  of the first child element.
-- **Rule of thumb**: container label y + fontSize × 1.5 = minimum y for first
-  child element.
+## Box Internal Padding
 
-## Color Scheme — Tigris Brand Palette
+- Text inside boxes should have **at least 25px padding** from all edges.
+- For multi-line box content (title + subtitle), leave **30px between lines**.
 
-Use this palette to match the Tigris brand. The `ExcalidrawDiagram` component
-renders with a `#0e1920` background.
+## Styling
+
+- The `ExcalidrawDiagram` component provides its own dark background
+  (`#0e1920`) and border-radius. Do NOT add borders to the SVG or to the
+  `.mermaid-frame` wrapper — the diagram is self-contained.
+- Do NOT add borders, background colors, or border-radius via inline styles on
+  the SVG element.
+
+## Color Scheme (Tigris Dark Theme)
+
+Use this palette to match the Tigris brand:
 
 ```
-Background / canvas:   #0e1920
-Container fill:        #0e1920 (same as bg, differentiated by border)
-Container border:      #1e3340 (dashed stroke for grouping zones)
-Node fill (default):   #142229 (dark navy)
-Node border (default): #2a4050
-Node fill (primary):   #62FEB5 (Tigris brand green — used for TAG/gateway)
-Node border (primary): #62FEB5
-Node fill (upstream):  #101c24 (darker, for external services like Tigris)
-Node border (upstream):#62FEB5
+Background:        #0e1920 (SVG bg, set by component)
+Node fill:         #142229 (boxes, containers)
+Zone backgrounds:  #142229 at opacity 40 (dashed grouping zones)
+Borders:           #1e3340 (zones), #2a4050 (node borders)
+Primary text:      #c8d6de
+Secondary text:    #8fa3b0
+Primary accent:    #62FEB5 (Tigris green — highlights, key elements)
+Dark on accent:    #0A171E (text on green backgrounds)
 
-Primary text:          #c8d6de (inside dark nodes)
-Brand text:            #0A171E (inside green #62FEB5 nodes — dark on bright)
-Green accent text:     #62FEB5 (for cache-related labels, NVMe nodes)
-Muted annotation text: #8fa3b0 (arrow labels, annotations)
-Secondary muted text:  #506874 (gossip lines, less important flows)
-
-Arrow colors:
-  Primary flow:        #62FEB5 (main data path)
-  Secondary/dashed:    #506874 (gossip, background flows)
-  Cache miss:          #506874 dashed (optional/fallback paths)
-  Error/reject:        #ef4444
+Additional accent colors:
+  Blue:    #4a9eed (requests, your infra)
+  Purple:  #8b5cf6 (TAG / gateway)
+  Green:   #22c55e (responses, cache, success)
+  Amber:   #f59e0b (upstream/Tigris, cache miss)
+  Red:     #ef4444 (errors, cache miss indicators)
 ```
-
-### When to use each color
-
-| Element                   | Fill      | Stroke         | Text color |
-| ------------------------- | --------- | -------------- | ---------- |
-| Your app / client boxes   | `#142229` | `#2a4050`      | `#c8d6de`  |
-| TAG / gateway boxes       | `#62FEB5` | `#62FEB5`      | `#0A171E`  |
-| External storage (Tigris) | `#101c24` | `#62FEB5`      | `#62FEB5`  |
-| Grouping containers       | `#0e1920` | `#1e3340` dash | `#8fa3b0`  |
-| Primary arrows            | —         | `#62FEB5`      | `#8fa3b0`  |
-| Secondary/gossip arrows   | —         | `#506874` dash | `#506874`  |
 
 ## Layout Pattern
 
-- Use **dashed stroke containers** (`strokeStyle: "dashed"`,
-  `strokeColor: "#1e3340"`) to group related components.
-- Dashed lines should be **semantically meaningful** — they indicate a boundary
-  or grouping, not decoration.
-- Keep diagrams **compact and purposeful**. No wasted space. Every element
-  should earn its place.
+- Use **dashed stroke zones** to group related components (e.g., "Your
+  Infrastructure" vs "Tigris Cloud")
+- Use **numbered step badges** (filled circles with numbers) to guide reading
+  order
+- Include a **Legend box** with sample arrows explaining line styles (solid =
+  request, dashed = response, colored = upstream fetch)
+- Add an **explanatory callout box** (dashed border) for key performance facts
 
 ## Verification
 
-After creating or modifying a diagram, **always view it locally** via the dev
-server (`npm run dev`) and inspect the rendered result before pushing:
+After creating or modifying a diagram, run the dev server (`npm start`) and
+visually check the page in the browser. Look for:
 
-1. Text clipping or cutoff at box edges or between boxes
+1. Text clipping or cutoff at box edges
 2. Arrow lines crossing over text labels
 3. Sufficient contrast (text readable against backgrounds)
-4. All labels fully visible — especially short labels between boxes
-5. Dashed return arrows actually connect to box edges, not floating in space
-
-Fix any issues and re-verify before presenting to the user.
+4. All elements visible and nothing overlapping
+5. Multi-line text rendering correctly (not as a single line)
 
 ## Common Mistakes to Avoid
 
-- **Do not export PNGs** — always embed diagrams as inline SVGs using the
-  component system described above
-- Do not forget Virgil font — causes mismatched rendering
-- Do not rely on external CSS `@font-face` for SVGs — the component handles this
-- Do not use gaps under 100px between boxes that have labels — text clips
-- Do not let return/dashed arrows float below boxes — they must visually connect
-- Do not place text between two parallel arrows — always gets obscured
-- Do not change the Tigris brand colors when asked to fix spacing — always
-  preserve the approved palette
-- Do not skip the visual verification step — you cannot trust coordinate math
-  alone with Virgil's wide character rendering
-- Do not forget the mermaid HTML comment above each diagram — agents need it
+These are listed in order of severity. Every one of these has caused a broken
+diagram in the past:
+
+1. **Do not use `label` property on ANY element** — text clips and overflows.
+   Always use separate `text` elements. This applies to rectangles, diamonds,
+   ellipses, AND arrows.
+2. **Do not forget `fontFamily: 1`** — causes wrong font rendering on every text
+   element.
+3. **Do not make boxes too narrow** — Virgil font is ~40% wider than you expect.
+   A 6-character label needs a box at least 150px wide.
+4. **Do not place zone labels at the bottom** — convention is upper-left corner.
+5. **Do not add borders to the SVG or wrapper** — the component handles styling.
+6. **Do not place text between two parallel arrows** — always gets obscured.
+7. **Do not use gaps under 120px between connected elements** — labels collide.
+8. **Do not change colors when asked to fix spacing** — always preserve the
+   approved palette.

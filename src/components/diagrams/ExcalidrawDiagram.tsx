@@ -277,7 +277,6 @@ export default function ExcalidrawDiagram({ elements }: Props) {
       width="100%"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ background: "#0e1920", borderRadius: 14, border: "1px solid #1e3340" }}
     >
       {visible.map((el, i) => (
         <RenderElement key={el.id ?? i} el={el} pad={{ x: 0, y: 0 }} />

@@ -16,7 +16,7 @@ requirements must be met first:
 2. The custom domain must have a CNAME record that points to the bucket URL. For
    example, if you own the domain `images.example.com` and bucket `foo-bucket`,
    the CNAME record for `images.example.com` should point to
-   `foo-bucket.t3.storage.dev`.
+   `foo-bucket.t3.tigrisbucket.io`.
 
 :::warning[Keep CNAME record in place]
 
@@ -39,7 +39,7 @@ is set to DNS-only mode so that traffic reaches Tigris directly.
 
 Once these requirements are met, you can enable the custom domain as follows:
 
-### Set custom domain using the Tigris Dashboard
+## Set custom domain using the Tigris Dashboard
 
 1. Navigate to the Tigris Dashboard and select the bucket you want to set a
    custom domain for.

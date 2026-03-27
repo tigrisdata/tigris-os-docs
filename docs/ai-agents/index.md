@@ -217,7 +217,7 @@ AWS_ENDPOINT_URL_S3=https://t3.storage.dev
 AWS_REGION=auto
 ```
 
-Get your access keys at [console.tigris.dev](https://console.tigris.dev).
+Get your access keys at [console.storage.dev](https://console.storage.dev).
 
 ## Learn More
 

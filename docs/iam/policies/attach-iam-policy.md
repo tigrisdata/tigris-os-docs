@@ -35,7 +35,7 @@ to replace `<example-org-level-unique-policy-name>` with a unique name for your
 policy.
 
 Alternatively, you can create an IAM Policy directly from the
-[Tigris Dashboard](https://console.tigris.dev). Navigate to "IAM Policies" in
+[Tigris Dashboard](https://console.storage.dev). Navigate to "IAM Policies" in
 the side menu and click the **Create New IAM Policy +** button to start the
 policy creation process.
 
@@ -68,7 +68,7 @@ created in the previous step and `<tid_>` with the access key ID you created in
 the first step.
 
 You can also attach policies easily through the
-[Tigris Dashboard](https://console.tigris.dev):
+[Tigris Dashboard](https://console.storage.dev):
 
 - From the policy list, click on `Manage IAM Policy` next to the policy you want
   to update.

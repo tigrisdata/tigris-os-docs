@@ -5,7 +5,7 @@ If you need support? We can help! Here's where to look.
 ## Tigris status
 
 For platform-wide issues and updates, please view our
-[status page](https://status.tigris.dev/).
+[status page](https://status.tigrisdata.com/).
 
 ## Community forum
 

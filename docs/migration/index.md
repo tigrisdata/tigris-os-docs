@@ -87,7 +87,7 @@ in the shadow bucket are not listed until they are accessed and migrated.
 
 To enable data migration from any S3-compatible bucket:
 
-- Go to the [Tigris Dashboard](https://console.tigris.dev).
+- Go to the [Tigris Dashboard](https://console.storage.dev).
 - Click on `Buckets` in the left menu.
 - Click on the bucket to which you wish to migrate data.
 - Click `Settings`.

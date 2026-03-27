@@ -18,7 +18,7 @@ The expiration can be set in two ways:
 ### Specifying expiration rules via the Tigris Dashboard
 
 You can specify expiration rules for your bucket using the
-[Tigris Dashboard](https://console.tigris.dev/).
+[Tigris Dashboard](https://console.storage.dev/).
 
 Here's a short video that demonstrates how to specify expiration rules for a
 bucket:

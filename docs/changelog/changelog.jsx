@@ -769,8 +769,8 @@ const file = await get("object.txt", "string");`}</CodeBlock>
               <>
                 <p>
                   Invoices are now available under{" "}
-                  <a href="https://console.tigris.dev/billing">
-                    console.tigris.dev/billing
+                  <a href="https://console.storage.dev/billing">
+                    console.storage.dev/billing
                   </a>
                   .
                 </p>
@@ -1111,7 +1111,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
         </ul>
 
         <BlogPostPreview
-          href="https://console.tigris.dev/"
+          href="https://console.storage.dev/"
           title="Native Sign-up"
           description="Sign in to Tigris natively using your email and password, Google, or GitHub."
           imageSrc={require("./assets/2025/05/native-signup.webp").default}

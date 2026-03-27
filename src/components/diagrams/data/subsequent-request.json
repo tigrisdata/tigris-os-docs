@@ -1,0 +1,12 @@
+[
+  {"type":"text","id":"title6","x":140,"y":10,"text":"Subsequent Requests (Local Validation)","fontSize":22,"strokeColor":"#c8d6de"},
+  {"type":"rectangle","id":"client6","x":80,"y":60,"width":120,"height":45,"backgroundColor":"#142229","fillStyle":"solid","strokeColor":"#2a4050","strokeWidth":1.2,"roundness":{"type":3},"label":{"text":"Client","fontSize":18,"color":"#c8d6de"}},
+  {"type":"arrow","id":"cl6","x":140,"y":105,"width":0,"height":380,"points":[[0,0],[0,380]],"strokeColor":"#2a4050","strokeWidth":1,"strokeStyle":"dashed","endArrowhead":null},
+  {"type":"rectangle","id":"tag6","x":400,"y":60,"width":120,"height":45,"backgroundColor":"#62FEB5","fillStyle":"solid","strokeColor":"#62FEB5","strokeWidth":1,"roundness":{"type":3},"label":{"text":"TAG","fontSize":18,"color":"#0A171E"}},
+  {"type":"arrow","id":"tl6","x":460,"y":105,"width":0,"height":380,"points":[[0,0],[0,380]],"strokeColor":"#2a4050","strokeWidth":1,"strokeStyle":"dashed","endArrowhead":null},
+  {"type":"arrow","id":"m1_6","x":140,"y":150,"width":320,"height":0,"points":[[0,0],[320,0]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":"arrow","label":{"text":"GET /bucket/key + Auth","fontSize":16,"color":"#8fa3b0"}},
+  {"type":"rectangle","id":"note1_6","x":370,"y":200,"width":240,"height":40,"backgroundColor":"#142229","fillStyle":"solid","strokeColor":"#1e3340","strokeWidth":1,"roundness":{"type":3},"label":{"text":"Validate SigV4 locally","fontSize":16,"color":"#8fa3b0"}},
+  {"type":"rectangle","id":"note2_6","x":370,"y":270,"width":240,"height":40,"backgroundColor":"#142229","fillStyle":"solid","strokeColor":"#1e3340","strokeWidth":1,"roundness":{"type":3},"label":{"text":"Authz cache → granted","fontSize":16,"color":"#62FEB5"}},
+  {"type":"rectangle","id":"note3_6","x":370,"y":340,"width":240,"height":40,"backgroundColor":"#142229","fillStyle":"solid","strokeColor":"#1e3340","strokeWidth":1,"roundness":{"type":3},"label":{"text":"Serve from cache","fontSize":16,"color":"#62FEB5"}},
+  {"type":"arrow","id":"m2_6","x":460,"y":420,"width":-320,"height":0,"points":[[0,0],[-320,0]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":"arrow","strokeStyle":"dashed","label":{"text":"200 OK · X-Cache: HIT","fontSize":16,"color":"#62FEB5"}}
+]

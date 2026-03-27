@@ -1,26 +1,347 @@
 [
-  {"type":"rectangle","id":"clients","x":20,"y":160,"width":160,"height":60,"backgroundColor":"#142229","fillStyle":"solid","strokeColor":"#2a4050","strokeWidth":1.2,"roundness":{"type":3},"label":{"text":"S3 Clients","fontSize":21,"color":"#c8d6de"}},
-  {"type":"text","id":"clientsSub","x":30,"y":230,"text":"SDK / CLI / boto3","fontSize":18,"strokeColor":"#506874"},
-  {"type":"arrow","id":"a_c_http","x":180,"y":190,"width":80,"height":0,"points":[[0,0],[80,0]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":"arrow"},
-  {"type":"rectangle","id":"tagbox","x":260,"y":40,"width":440,"height":400,"backgroundColor":"#0e1920","fillStyle":"solid","strokeColor":"#1e3340","strokeWidth":1.5,"strokeStyle":"dashed","roundness":{"type":3}},
-  {"type":"text","id":"tagboxLabel","x":280,"y":55,"text":"TAG Process","fontSize":21,"strokeColor":"#8fa3b0"},
-  {"type":"rectangle","id":"http","x":280,"y":160,"width":160,"height":60,"backgroundColor":"#62FEB5","fillStyle":"solid","strokeColor":"#62FEB5","strokeWidth":1,"roundness":{"type":3},"label":{"text":"HTTP :8080","fontSize":21,"color":"#0A171E"}},
-  {"type":"arrow","id":"a_http_auth","x":380,"y":100,"width":0,"height":-10,"points":[[0,0],[0,-10]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":"arrow"},
-  {"type":"rectangle","id":"auth","x":310,"y":80,"width":140,"height":45,"backgroundColor":"#142229","fillStyle":"solid","strokeColor":"#2a4050","strokeWidth":1.2,"roundness":{"type":3},"label":{"text":"SigV4 Auth","fontSize":18,"color":"#c8d6de"}},
-  {"type":"arrow","id":"a_http_proxy","x":440,"y":190,"width":60,"height":0,"points":[[0,0],[60,0]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":"arrow"},
-  {"type":"rectangle","id":"proxy","x":500,"y":160,"width":180,"height":60,"backgroundColor":"#62FEB5","fillStyle":"solid","strokeColor":"#62FEB5","strokeWidth":1,"roundness":{"type":3},"label":{"text":"Proxy Service","fontSize":21,"color":"#0A171E"}},
-  {"type":"arrow","id":"a_proxy_coal","x":590,"y":100,"width":0,"height":-10,"points":[[0,0],[0,-10]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":"arrow"},
-  {"type":"rectangle","id":"coal2","x":510,"y":80,"width":160,"height":45,"backgroundColor":"#142229","fillStyle":"solid","strokeColor":"#62FEB5","strokeWidth":1,"roundness":{"type":3},"label":{"text":"Coalescing","fontSize":18,"color":"#62FEB5"}},
-  {"type":"arrow","id":"a_proxy_range","x":590,"y":220,"width":0,"height":30,"points":[[0,0],[0,30]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":"arrow"},
-  {"type":"rectangle","id":"range","x":500,"y":250,"width":180,"height":45,"backgroundColor":"#142229","fillStyle":"solid","strokeColor":"#62FEB5","strokeWidth":1,"roundness":{"type":3},"label":{"text":"Range Optimization","fontSize":18,"color":"#62FEB5"}},
-  {"type":"arrow","id":"a_proxy_rocks","x":590,"y":300,"width":0,"height":30,"points":[[0,0],[0,30]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":"arrow"},
-  {"type":"rectangle","id":"rocks","x":500,"y":330,"width":180,"height":45,"backgroundColor":"#142229","fillStyle":"solid","strokeColor":"#2a4050","strokeWidth":1.2,"roundness":{"type":3},"label":{"text":"RocksDB Cache","fontSize":18,"color":"#c8d6de"}},
-  {"type":"arrow","id":"a_rocks_nvme","x":590,"y":380,"width":0,"height":30,"points":[[0,0],[0,30]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":"arrow"},
-  {"type":"rectangle","id":"nvme2","x":520,"y":410,"width":140,"height":40,"backgroundColor":"#142229","fillStyle":"solid","strokeColor":"#2a4050","strokeWidth":1.2,"roundness":{"type":3},"label":{"text":"NVMe Disk","fontSize":18,"color":"#c8d6de"}},
-  {"type":"arrow","id":"a_proxy_tig","x":680,"y":190,"width":120,"height":0,"points":[[0,0],[120,0]],"strokeColor":"#506874","strokeWidth":1.2,"strokeStyle":"dashed","endArrowhead":"arrow"},
-  {"type":"rectangle","id":"tig3","x":800,"y":130,"width":170,"height":65,"backgroundColor":"#101c24","fillStyle":"solid","strokeColor":"#62FEB5","strokeWidth":1.5,"roundness":{"type":3},"label":{"text":"Tigris Object\nStorage","fontSize":21,"color":"#62FEB5"}},
-  {"type":"arrow","id":"a_proxy_grpc","x":680,"y":300,"width":120,"height":0,"points":[[0,0],[120,0]],"strokeColor":"#506874","strokeWidth":1.2,"endArrowhead":"arrow"},
-  {"type":"rectangle","id":"grpc","x":800,"y":280,"width":150,"height":45,"backgroundColor":"#142229","fillStyle":"solid","strokeColor":"#2a4050","strokeWidth":1.2,"roundness":{"type":3},"label":{"text":"gRPC :9000","fontSize":18,"color":"#c8d6de"}},
-  {"type":"arrow","id":"a_proxy_gossip","x":680,"y":360,"width":120,"height":0,"points":[[0,0],[120,0]],"strokeColor":"#506874","strokeWidth":1.2,"endArrowhead":"arrow"},
-  {"type":"rectangle","id":"gossip","x":800,"y":340,"width":150,"height":45,"backgroundColor":"#142229","fillStyle":"solid","strokeColor":"#2a4050","strokeWidth":1.2,"roundness":{"type":3},"label":{"text":"Gossip :7000","fontSize":18,"color":"#c8d6de"}}
+  {
+    "type": "rectangle",
+    "id": "clients",
+    "x": 20,
+    "y": 160,
+    "width": 160,
+    "height": 60,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 },
+    "label": { "text": "S3 Clients", "fontSize": 21, "color": "#c8d6de" }
+  },
+  {
+    "type": "text",
+    "id": "clientsSub",
+    "x": 30,
+    "y": 230,
+    "text": "SDK / CLI / boto3",
+    "fontSize": 18,
+    "strokeColor": "#506874"
+  },
+  {
+    "type": "arrow",
+    "id": "a_c_http",
+    "x": 180,
+    "y": 190,
+    "width": 80,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [80, 0]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "rectangle",
+    "id": "tagbox",
+    "x": 260,
+    "y": 40,
+    "width": 440,
+    "height": 400,
+    "backgroundColor": "#0e1920",
+    "fillStyle": "solid",
+    "strokeColor": "#1e3340",
+    "strokeWidth": 1.5,
+    "strokeStyle": "dashed",
+    "roundness": { "type": 3 }
+  },
+  {
+    "type": "text",
+    "id": "tagboxLabel",
+    "x": 280,
+    "y": 55,
+    "text": "TAG Process",
+    "fontSize": 21,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "rectangle",
+    "id": "http",
+    "x": 280,
+    "y": 160,
+    "width": 160,
+    "height": 60,
+    "backgroundColor": "#62FEB5",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1,
+    "roundness": { "type": 3 },
+    "label": { "text": "HTTP :8080", "fontSize": 21, "color": "#0A171E" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_http_auth",
+    "x": 380,
+    "y": 160,
+    "width": 0,
+    "height": -15,
+    "points": [
+      [0, 0],
+      [0, -15]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "rectangle",
+    "id": "auth",
+    "x": 310,
+    "y": 100,
+    "width": 140,
+    "height": 45,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 },
+    "label": { "text": "SigV4 Auth", "fontSize": 18, "color": "#c8d6de" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_http_proxy",
+    "x": 440,
+    "y": 190,
+    "width": 60,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [60, 0]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "rectangle",
+    "id": "proxy",
+    "x": 500,
+    "y": 160,
+    "width": 180,
+    "height": 60,
+    "backgroundColor": "#62FEB5",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1,
+    "roundness": { "type": 3 },
+    "label": { "text": "Proxy Service", "fontSize": 21, "color": "#0A171E" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_proxy_coal",
+    "x": 590,
+    "y": 160,
+    "width": 0,
+    "height": -15,
+    "points": [
+      [0, 0],
+      [0, -15]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "rectangle",
+    "id": "coal2",
+    "x": 510,
+    "y": 100,
+    "width": 160,
+    "height": 45,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1,
+    "roundness": { "type": 3 },
+    "label": { "text": "Coalescing", "fontSize": 18, "color": "#62FEB5" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_proxy_range",
+    "x": 590,
+    "y": 220,
+    "width": 0,
+    "height": 30,
+    "points": [
+      [0, 0],
+      [0, 30]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "rectangle",
+    "id": "range",
+    "x": 500,
+    "y": 250,
+    "width": 180,
+    "height": 45,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1,
+    "roundness": { "type": 3 },
+    "label": {
+      "text": "Range Optimization",
+      "fontSize": 18,
+      "color": "#62FEB5"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "a_proxy_rocks",
+    "x": 590,
+    "y": 300,
+    "width": 0,
+    "height": 30,
+    "points": [
+      [0, 0],
+      [0, 30]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "rectangle",
+    "id": "rocks",
+    "x": 500,
+    "y": 330,
+    "width": 180,
+    "height": 45,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 },
+    "label": { "text": "RocksDB Cache", "fontSize": 18, "color": "#c8d6de" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_rocks_nvme",
+    "x": 590,
+    "y": 380,
+    "width": 0,
+    "height": 30,
+    "points": [
+      [0, 0],
+      [0, 30]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "rectangle",
+    "id": "nvme2",
+    "x": 520,
+    "y": 410,
+    "width": 140,
+    "height": 40,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 },
+    "label": { "text": "NVMe Disk", "fontSize": 18, "color": "#c8d6de" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_proxy_tig",
+    "x": 680,
+    "y": 190,
+    "width": 120,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [120, 0]
+    ],
+    "strokeColor": "#506874",
+    "strokeWidth": 1.2,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "rectangle",
+    "id": "tig3",
+    "x": 800,
+    "y": 130,
+    "width": 170,
+    "height": 65,
+    "backgroundColor": "#101c24",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "roundness": { "type": 3 },
+    "label": {
+      "text": "Tigris Object\nStorage",
+      "fontSize": 21,
+      "color": "#62FEB5"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "a_proxy_grpc",
+    "x": 680,
+    "y": 300,
+    "width": 120,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [120, 0]
+    ],
+    "strokeColor": "#506874",
+    "strokeWidth": 1.2,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "rectangle",
+    "id": "grpc",
+    "x": 800,
+    "y": 280,
+    "width": 150,
+    "height": 45,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 },
+    "label": { "text": "gRPC :9000", "fontSize": 18, "color": "#c8d6de" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_proxy_gossip",
+    "x": 680,
+    "y": 360,
+    "width": 120,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [120, 0]
+    ],
+    "strokeColor": "#506874",
+    "strokeWidth": 1.2,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "rectangle",
+    "id": "gossip",
+    "x": 800,
+    "y": 340,
+    "width": 150,
+    "height": 45,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 },
+    "label": { "text": "Gossip :7000", "fontSize": 18, "color": "#c8d6de" }
+  }
 ]

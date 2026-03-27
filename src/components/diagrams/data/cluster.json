@@ -1,16 +1,163 @@
 [
-  {"type":"rectangle","id":"lb","x":280,"y":20,"width":200,"height":60,"backgroundColor":"#142229","fillStyle":"solid","strokeColor":"#2a4050","strokeWidth":1.2,"roundness":{"type":3},"label":{"text":"Load Balancer","fontSize":18,"color":"#c8d6de"}},
-  {"type":"arrow","id":"alb1","x":330,"y":80,"width":-180,"height":100,"points":[[0,0],[-180,100]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":"arrow"},
-  {"type":"arrow","id":"alb2","x":380,"y":80,"width":0,"height":100,"points":[[0,0],[0,100]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":"arrow"},
-  {"type":"arrow","id":"alb3","x":430,"y":80,"width":180,"height":100,"points":[[0,0],[180,100]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":"arrow"},
-  {"type":"rectangle","id":"n1","x":50,"y":180,"width":200,"height":60,"backgroundColor":"#62FEB5","fillStyle":"solid","strokeColor":"#62FEB5","strokeWidth":1,"roundness":{"type":3},"label":{"text":"TAG-1  keys A–F","fontSize":16,"color":"#0A171E"}},
-  {"type":"rectangle","id":"n2","x":280,"y":180,"width":200,"height":60,"backgroundColor":"#62FEB5","fillStyle":"solid","strokeColor":"#62FEB5","strokeWidth":1,"roundness":{"type":3},"label":{"text":"TAG-2  keys G–R","fontSize":16,"color":"#0A171E"}},
-  {"type":"rectangle","id":"n3","x":510,"y":180,"width":200,"height":60,"backgroundColor":"#62FEB5","fillStyle":"solid","strokeColor":"#62FEB5","strokeWidth":1,"roundness":{"type":3},"label":{"text":"TAG-3  keys S–Z","fontSize":16,"color":"#0A171E"}},
-  {"type":"arrow","id":"grpc12","x":250,"y":280,"width":80,"height":0,"points":[[0,0],[80,0]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":"arrow","startArrowhead":"arrow","label":{"text":"gRPC","fontSize":14,"color":"#8fa3b0"}},
-  {"type":"arrow","id":"grpc23","x":480,"y":280,"width":80,"height":0,"points":[[0,0],[80,0]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":"arrow","startArrowhead":"arrow","label":{"text":"gRPC","fontSize":14,"color":"#8fa3b0"}},
-  {"type":"arrow","id":"an1d","x":150,"y":240,"width":0,"height":40,"points":[[0,0],[0,40]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":null},
-  {"type":"arrow","id":"an2d","x":380,"y":240,"width":0,"height":40,"points":[[0,0],[0,40]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":null},
-  {"type":"arrow","id":"an3d","x":610,"y":240,"width":0,"height":40,"points":[[0,0],[0,40]],"strokeColor":"#62FEB5","strokeWidth":1.5,"endArrowhead":null},
-  {"type":"arrow","id":"gossip13","x":150,"y":340,"width":460,"height":0,"points":[[0,0],[460,0]],"strokeColor":"#506874","strokeWidth":1.2,"strokeStyle":"dashed","endArrowhead":"arrow","startArrowhead":"arrow"},
-  {"type":"text","id":"gossipLabel","x":310,"y":350,"text":"gossip protocol","fontSize":14,"strokeColor":"#506874"}
+  {
+    "type": "rectangle",
+    "id": "lb",
+    "x": 290,
+    "y": 20,
+    "width": 200,
+    "height": 60,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 },
+    "label": { "text": "Load Balancer", "fontSize": 18, "color": "#c8d6de" }
+  },
+  {
+    "type": "arrow",
+    "id": "alb1",
+    "x": 340,
+    "y": 80,
+    "width": -210,
+    "height": 100,
+    "points": [
+      [0, 0],
+      [-210, 100]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "arrow",
+    "id": "alb2",
+    "x": 390,
+    "y": 80,
+    "width": 0,
+    "height": 100,
+    "points": [
+      [0, 0],
+      [0, 100]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "arrow",
+    "id": "alb3",
+    "x": 440,
+    "y": 80,
+    "width": 210,
+    "height": 100,
+    "points": [
+      [0, 0],
+      [210, 100]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "rectangle",
+    "id": "n1b",
+    "x": 30,
+    "y": 180,
+    "width": 200,
+    "height": 70,
+    "backgroundColor": "#62FEB5",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1,
+    "roundness": { "type": 3 },
+    "label": { "text": "TAG-1\nkeys A–F", "fontSize": 16, "color": "#0A171E" }
+  },
+  {
+    "type": "rectangle",
+    "id": "n2b",
+    "x": 290,
+    "y": 180,
+    "width": 200,
+    "height": 70,
+    "backgroundColor": "#62FEB5",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1,
+    "roundness": { "type": 3 },
+    "label": { "text": "TAG-2\nkeys G–R", "fontSize": 16, "color": "#0A171E" }
+  },
+  {
+    "type": "rectangle",
+    "id": "n3b",
+    "x": 550,
+    "y": 180,
+    "width": 200,
+    "height": 70,
+    "backgroundColor": "#62FEB5",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1,
+    "roundness": { "type": 3 },
+    "label": { "text": "TAG-3\nkeys S–Z", "fontSize": 16, "color": "#0A171E" }
+  },
+  {
+    "type": "arrow",
+    "id": "grpc12b",
+    "x": 230,
+    "y": 215,
+    "width": 60,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [60, 0]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "startArrowhead": "arrow",
+    "label": { "text": "gRPC", "fontSize": 14, "color": "#8fa3b0" }
+  },
+  {
+    "type": "arrow",
+    "id": "grpc23b",
+    "x": 490,
+    "y": 215,
+    "width": 60,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [60, 0]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "startArrowhead": "arrow",
+    "label": { "text": "gRPC", "fontSize": 14, "color": "#8fa3b0" }
+  },
+  {
+    "type": "arrow",
+    "id": "gossip13b",
+    "x": 130,
+    "y": 275,
+    "width": 520,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [520, 0]
+    ],
+    "strokeColor": "#506874",
+    "strokeWidth": 1.2,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
+    "startArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "gossipLabelB",
+    "x": 330,
+    "y": 282,
+    "text": "gossip protocol",
+    "fontSize": 14,
+    "strokeColor": "#506874"
+  }
 ]

@@ -207,7 +207,7 @@ const sidebars = {
           type: "category",
           label: "Tigris Acceleration Gateway",
           collapsible: true,
-          collapsed: false,
+          collapsed: true,
           items: [
             {
               type: "doc",

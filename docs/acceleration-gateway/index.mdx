@@ -6,10 +6,10 @@ description:
   for Tigris object storage.
 ---
 
-import TAGOverviewDiagram from '@site/src/components/diagrams/TAGOverviewDiagram';
-import TAGCoalescingDiagram from '@site/src/components/diagrams/TAGCoalescingDiagram';
-import TAGClusterDiagram from '@site/src/components/diagrams/TAGClusterDiagram';
-import TAGArchitectureInternalsDiagram from '@site/src/components/diagrams/TAGArchitectureInternalsDiagram';
+import TAGOverviewDiagram from "@site/src/components/diagrams/TAGOverviewDiagram";
+import TAGCoalescingDiagram from "@site/src/components/diagrams/TAGCoalescingDiagram";
+import TAGClusterDiagram from "@site/src/components/diagrams/TAGClusterDiagram";
+import TAGArchitectureInternalsDiagram from "@site/src/components/diagrams/TAGArchitectureInternalsDiagram";
 
 # TAG — Tigris Acceleration Gateway
 
@@ -19,18 +19,17 @@ application and Tigris, and it transparently caches objects on local NVMe
 storage — giving you sub-millisecond read latency without sacrificing S3 API
 compatibility.
 
-{/* <!-- NOTE: The SVG below is rendered from TAGOverviewDiagram. The mermaid
-     notation is kept here as a machine-readable description for AI agents.
-```mermaid
+<!-- NOTE: The SVG below is rendered from TAGOverviewDiagram. The mermaid
+notation is kept here as a machine-readable description for AI agents.
 flowchart TB
     subgraph inst["Training Instance"]
-        TC[Training Code] -->|S3 API| TAG[Acceleration Gateway]
-        TAG --- NV[Local NVMe Cache]
+        TC[Training Code] - - >|S3 API| TAG[Acceleration Gateway]
+        TAG - - - NV[Local NVMe Cache]
     end
     NV -.->|cache miss| TOS[Tigris Object Storage]
-    TOS -->|fill cache| NV
-```
---> */}
+    TOS - - >|fill cache| NV
+-->
+
 <div className="mermaid-frame">
   <TAGOverviewDiagram />
 </div>
@@ -40,11 +39,19 @@ instead of Tigris and your reads are automatically accelerated.
 
 ## Why TAG
 
-Object storage is durable and scalable, but every read crosses the network. If you're serving ML models, running real-time analytics, or pushing data through high-throughput pipelines, those round-trips add up fast.
+Object storage is durable and scalable, but every read crosses the network. If
+you're serving ML models, running real-time analytics, or pushing data through
+high-throughput pipelines, those round-trips add up fast.
 
-TAG eliminates them for repeated reads. It maintains a local RocksDB-backed cache that serves objects in microseconds instead of milliseconds. Unlike a generic HTTP cache, TAG understands S3 natively — it coalesces concurrent requests into a single upstream fetch, serves range requests from cached full objects, revalidates stale entries with conditional requests, and invalidates cache entries the moment you write or delete an object.
+TAG eliminates them for repeated reads. It maintains a local RocksDB-backed
+cache that serves objects in microseconds instead of milliseconds. Unlike a
+generic HTTP cache, TAG understands S3 natively — it coalesces concurrent
+requests into a single upstream fetch, serves range requests from cached full
+objects, revalidates stale entries with conditional requests, and invalidates
+cache entries the moment you write or delete an object.
 
-> **Bottom line:** One endpoint change. Zero code changes. Sub-millisecond reads.
+> **Bottom line:** One endpoint change. Zero code changes. Sub-millisecond
+> reads.
 
 ## Use Cases
 
@@ -71,22 +78,27 @@ local NVMe speeds.
 
 ## Performance
 
-Benchmarked on AWS (c6in.16xlarge client, i3en.24xlarge server with NVMe storage):
+Benchmarked on AWS (c6in.16xlarge client, i3en.24xlarge server with NVMe
+storage):
 
-| Object Size | Ops/sec | Bandwidth | TTFB p50 |
-|---|---:|---:|---|
-| 1 KiB | 75,717 | 73.9 MiB/s | < 1 ms |
-| 100 KiB | 33,350 | 3.2 GiB/s | < 1 ms |
-| 1 MiB | 10,955 | 10.7 GiB/s | Single-digit ms |
-| 4 MiB | 2,775 | 10.8 GiB/s | Single-digit ms |
+| Object Size | Ops/sec |  Bandwidth | TTFB p50        |
+| ----------- | ------: | ---------: | --------------- |
+| 1 KiB       |  75,717 | 73.9 MiB/s | < 1 ms          |
+| 100 KiB     |  33,350 |  3.2 GiB/s | < 1 ms          |
+| 1 MiB       |  10,955 | 10.7 GiB/s | Single-digit ms |
+| 4 MiB       |   2,775 | 10.8 GiB/s | Single-digit ms |
 
-TAG saturates a 100 Gbps NIC at 85+ Gbps for 1 MiB+ objects, with CPU utilization at only about 12%, leaving significant headroom for additional workloads.
+TAG saturates a 100 Gbps NIC at 85+ Gbps for 1 MiB+ objects, with CPU
+utilization at only about 12%, leaving significant headroom for additional
+workloads.
 
 :::note
 
-These numbers reflect cache-warm steady state. First requests for uncached objects incur a round-trip to Tigris.
+These numbers reflect cache-warm steady state. First requests for uncached
+objects incur a round-trip to Tigris.
 
-For full methodology, environment specs, and complete `warp` and `go-ycsb` results, see [Benchmarks](./benchmarks).
+For full methodology, environment specs, and complete `warp` and `go-ycsb`
+results, see [Benchmarks](./benchmarks).
 
 :::
 
@@ -94,53 +106,61 @@ For full methodology, environment specs, and complete `warp` and `go-ycsb` resul
 
 ### S3-Compatible API
 
-TAG implements the S3 REST API for commonly used Tigris operations. Clients interact with TAG using standard AWS SDKs, the AWS CLI, or any S3-compatible library. The only change is the endpoint URL.
+TAG implements the S3 REST API for commonly used Tigris operations. Clients
+interact with TAG using standard AWS SDKs, the AWS CLI, or any S3-compatible
+library. The only change is the endpoint URL.
 
 :::warning[Path-Style Addressing Only]
 
-TAG supports path-style addressing only (`http://host:port/bucket/key`). Virtual-hosted style is not supported. Configure your S3 client accordingly.
+TAG supports path-style addressing only (`http://host:port/bucket/key`).
+Virtual-hosted style is not supported. Configure your S3 client accordingly.
 
 :::
 
 ### Transparent Proxy Mode
 
-In default mode, TAG preserves the client's original AWS SigV4 Authorization header and forwards requests to Tigris as-is. TAG adds cryptographically signed proxy headers so Tigris can validate both the client's identity and TAG's identity in a single round-trip.
+In default mode, TAG preserves the client's original AWS SigV4 Authorization
+header and forwards requests to Tigris as-is. TAG adds cryptographically signed
+proxy headers so Tigris can validate both the client's identity and TAG's
+identity in a single round-trip.
 
 :::info[Security]
 
-TAG never sees or stores client secret keys. Clients authenticate directly with Tigris using their own credentials.
+TAG never sees or stores client secret keys. Clients authenticate directly with
+Tigris using their own credentials.
 
 :::
 
 ### Embedded Cache with RocksDB
 
-Each TAG node runs an embedded cache backed by RocksDB, optimized for NVMe storage. Objects are stored using a two-key pattern:
+Each TAG node runs an embedded cache backed by RocksDB, optimized for NVMe
+storage. Objects are stored using a two-key pattern:
 
-| Key | Stored data |
-|---|---|
-| `meta|my-bucket|photo.jpg` | `Content-Type`, `ETag`, `Content-Length`, `Last-Modified` |
-| `body|my-bucket|photo.jpg` | Raw object bytes |
+| Key                          | Stored data                                               |
+| ---------------------------- | --------------------------------------------------------- |
+| `meta\|my-bucket\|photo.jpg` | `Content-Type`, `ETag`, `Content-Length`, `Last-Modified` |
+| `body\|my-bucket\|photo.jpg` | Raw object bytes                                          |
 
-Separating metadata from body enables efficient HEAD requests and conditional operations without reading the full object.
+Separating metadata from body enables efficient HEAD requests and conditional
+operations without reading the full object.
 
 ### Request Coalescing
 
 If four clients ask for the same uncached object at the same time, TAG doesn't
 make four trips to Tigris. It fetches once and streams the result to everyone:
 
-{/* <!-- NOTE: The SVG below is rendered from TAGCoalescingDiagram. The mermaid
-     notation is kept here as a machine-readable description for AI agents.
-```mermaid
+<!-- NOTE: The SVG below is rendered from TAGCoalescingDiagram. The mermaid
+notation is kept here as a machine-readable description for AI agents.
 flowchart LR
-    A[Client A] --> T[TAG coalescer]
-    B[Client B] --> T
-    C[Client C] --> T
-    D[Client D] --> T
-    T -->|single upstream GET| U[Tigris]
-    U -->|stream chunks| T
+    A[Client A] - - > T[TAG coalescer]
+    B[Client B] - - > T
+    C[Client C] - - > T
+    D[Client D] - - > T
+    T - - >|single upstream GET| U[Tigris]
+    U - - >|stream chunks| T
     T -.-> A & B & C & D
-```
---> */}
+-->
+
 <div className="mermaid-frame">
   <TAGCoalescingDiagram />
 </div>
@@ -181,48 +201,46 @@ expires (default 60 minutes) or a client forces revalidation with
 When a single node's storage isn't enough, you can run multiple TAG nodes as a
 distributed cache cluster. They coordinate automatically:
 
-{/* <!-- NOTE: The SVG below is rendered from TAGClusterDiagram. The mermaid
-     notation is kept here as a machine-readable description for AI agents.
-```mermaid
+<!-- NOTE: The SVG below is rendered from TAGClusterDiagram. The mermaid
+notation is kept here as a machine-readable description for AI agents.
 flowchart TB
-    LB[Load Balancer] --> N1[TAG-1 keys A-F]
-    LB --> N2[TAG-2 keys G-R]
-    LB --> N3[TAG-3 keys S-Z]
-    N1 <-->|gRPC| N2
-    N2 <-->|gRPC| N3
+    LB[Load Balancer] - - > N1[TAG-1 keys A-F]
+    LB - - > N2[TAG-2 keys G-R]
+    LB - - > N3[TAG-3 keys S-Z]
+    N1 <-- >|gRPC| N2
+    N2 <-- >|gRPC| N3
     N1 <-.gossip.-> N2
     N2 <-.gossip.-> N3
     N1 <-.gossip.-> N3
-```
---> */}
+-->
+
 <div className="mermaid-frame">
   <TAGClusterDiagram />
 </div>
 
-Nodes discover each other via gossip, consistent hashing spreads keys across
-the cluster, and gRPC forwards requests for remote keys transparently. You
-don't need to manually assign keys or configure sharding.
+Nodes discover each other via gossip, consistent hashing spreads keys across the
+cluster, and gRPC forwards requests for remote keys transparently. You don't
+need to manually assign keys or configure sharding.
 
 ## Architecture
 
 Here's how a request flows through TAG's internals:
 
-{/* <!-- NOTE: The SVG below is rendered from TAGArchitectureInternalsDiagram. The mermaid
-     notation is kept here as a machine-readable description for AI agents.
-```mermaid
+<!-- NOTE: The SVG below is rendered from TAGArchitectureInternalsDiagram.
+The mermaid notation is kept here as a machine-readable description for AI agents.
 flowchart LR
-    C[S3 clients SDK/CLI/boto3] --> H[HTTP server :8080]
-    H --> A[SigV4 auth]
-    H --> P[Proxy service]
-    P --> R[Request coalescing]
-    P --> G[Range optimization]
-    P --> K[(RocksDB cache)]
-    K --> D[NVMe disk]
+    C[S3 clients SDK/CLI/boto3] - - > H[HTTP server :8080]
+    H - - > A[SigV4 auth]
+    H - - > P[Proxy service]
+    P - - > R[Request coalescing]
+    P - - > G[Range optimization]
+    P - - > K[(RocksDB cache)]
+    K - - > D[NVMe disk]
     P -.-> U[Tigris Object Storage]
-    P --> X[gRPC :9000]
-    P --> M[Gossip :7000]
-```
---> */}
+    P - - > X[gRPC :9000]
+    P - - > M[Gossip :7000]
+-->
+
 <div className="mermaid-frame">
   <TAGArchitectureInternalsDiagram />
 </div>

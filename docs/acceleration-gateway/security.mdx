@@ -4,9 +4,9 @@ sidebar_label: Security
 description: TAG authentication, authorization, and security architecture.
 ---
 
-import TAGFirstRequestDiagram from '@site/src/components/diagrams/TAGFirstRequestDiagram';
-import TAGSubsequentRequestDiagram from '@site/src/components/diagrams/TAGSubsequentRequestDiagram';
-import TAGAccessControlDiagram from '@site/src/components/diagrams/TAGAccessControlDiagram';
+import TAGFirstRequestDiagram from "@site/src/components/diagrams/TAGFirstRequestDiagram";
+import TAGSubsequentRequestDiagram from "@site/src/components/diagrams/TAGSubsequentRequestDiagram";
+import TAGAccessControlDiagram from "@site/src/components/diagrams/TAGAccessControlDiagram";
 
 # Security and access control
 
@@ -75,41 +75,39 @@ Every request after that is validated locally:
 
 **First request (key learning):**
 
-{/* <!-- NOTE: The SVG below is rendered from TAGFirstRequestDiagram. The mermaid
-     notation is kept here as a machine-readable description for AI agents.
-```mermaid
+<!-- NOTE: The SVG below is rendered from TAGFirstRequestDiagram. The mermaid
+notation is kept here as a machine-readable description for AI agents.
 sequenceDiagram
     participant C as Client
     participant T as TAG
     participant S as Tigris
     C->>T: GET /bucket/key (Authorization: ...)
     T->>S: Forward original auth + proxy headers
-    S-->>T: 200 OK + X-Tigris-Proxy-Signing-Keys
-    Note over T: Unwrap & store derived keys
+    S- ->>T: 200 OK + X-Tigris-Proxy-Signing-Keys
+    Note over T: Unwrap and store derived keys
     Note over T: Grant authz cache entry
-    T-->>C: 200 OK (signing key header stripped)
-```
---> */}
+    T- ->>C: 200 OK (signing key header stripped)
+-->
+
 <div className="mermaid-frame">
   <TAGFirstRequestDiagram />
 </div>
 
 **Subsequent requests (local validation):**
 
-{/* <!-- NOTE: The SVG below is rendered from TAGSubsequentRequestDiagram. The mermaid
-     notation is kept here as a machine-readable description for AI agents.
-```mermaid
+<!-- NOTE: The SVG below is rendered from TAGSubsequentRequestDiagram. The mermaid
+notation is kept here as a machine-readable description for AI agents.
 sequenceDiagram
     participant C as Client
     participant T as TAG
     participant S as Tigris
     C->>T: GET /bucket/key (Authorization: ...)
     Note over T: Validate SigV4 locally
-    Note over T: Check authz cache → AuthValidated
+    Note over T: Check authz cache, AuthValidated
     Note over T: Serve from cache
-    T-->>C: 200 OK, X-Cache: HIT
-```
---> */}
+    T- ->>C: 200 OK, X-Cache: HIT
+-->
+
 <div className="mermaid-frame">
   <TAGSubsequentRequestDiagram />
 </div>
@@ -120,22 +118,21 @@ Here's the full decision tree TAG uses when a request arrives. Most paths end
 with a forward to Tigris — TAG only serves from cache when it has both a valid
 signature and a cached authorization grant:
 
-{/* <!-- NOTE: The SVG below is rendered from TAGAccessControlDiagram. The mermaid
-     notation is kept here as a machine-readable description for AI agents.
-```mermaid
+<!-- NOTE: The SVG below is rendered from TAGAccessControlDiagram. The mermaid
+notation is kept here as a machine-readable description for AI agents.
 flowchart TD
-    R[Request arrives at TAG] --> A{Authorization header?}
-    A -->|Missing| F1[Forward to Tigris]
-    A -->|Malformed| REJ[Reject with 4xx]
-    A -->|Present| K{Access key known?}
-    K -->|No| F2[Forward to Tigris, learn keys on success]
-    K -->|Yes| S{SigV4 valid?}
-    S -->|Mismatch| F3[Forward to Tigris, re-learn keys if stale]
-    S -->|Valid| AZ{Authz cache hit?}
-    AZ -->|Miss / expired| F4[Forward to Tigris, re-authorize on success]
-    AZ -->|Hit| OK[AuthValidated, serve from cache]
-```
---> */}
+    R[Request arrives at TAG] - - > A{Authorization header?}
+    A - - >|Missing| F1[Forward to Tigris]
+    A - - >|Malformed| REJ[Reject with 4xx]
+    A - - >|Present| K{Access key known?}
+    K - - >|No| F2[Forward to Tigris, learn keys on success]
+    K - - >|Yes| S{SigV4 valid?}
+    S - - >|Mismatch| F3[Forward to Tigris, re-learn keys if stale]
+    S - - >|Valid| AZ{Authz cache hit?}
+    AZ - - >|Miss / expired| F4[Forward to Tigris, re-authorize on success]
+    AZ - - >|Hit| OK[AuthValidated, serve from cache]
+-->
+
 <div className="mermaid-frame">
   <TAGAccessControlDiagram />
 </div>

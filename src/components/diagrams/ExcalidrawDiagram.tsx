@@ -1,4 +1,5 @@
 import React from "react";
+import { VIRGIL_FONT_FACE } from "./virgilFont";
 
 type Element = {
   type: string;
@@ -28,7 +29,10 @@ type Props = {
 
 // Compute bounding box of all elements
 function getBounds(elements: Element[]) {
-  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  let minX = Infinity,
+    minY = Infinity,
+    maxX = -Infinity,
+    maxY = -Infinity;
   for (const el of elements) {
     if (el.x == null || el.y == null) continue;
     const x = el.x;
@@ -65,7 +69,11 @@ function getBounds(elements: Element[]) {
 }
 
 function renderArrowhead(
-  x: number, y: number, angle: number, color: string, size = 8
+  x: number,
+  y: number,
+  angle: number,
+  color: string,
+  size = 8,
 ): React.ReactNode {
   const a1 = angle + Math.PI * 0.8;
   const a2 = angle - Math.PI * 0.8;
@@ -85,14 +93,23 @@ function renderArrowhead(
   );
 }
 
-function RenderElement({ el, pad }: { el: Element; pad: { x: number; y: number } }) {
+function RenderElement({
+  el,
+  pad,
+}: {
+  el: Element;
+  pad: { x: number; y: number };
+}) {
   const ox = pad.x;
   const oy = pad.y;
   const x = (el.x ?? 0) + ox;
   const y = (el.y ?? 0) + oy;
   const w = el.width ?? 0;
   const h = el.height ?? 0;
-  const fill = el.fillStyle === "solid" ? (el.backgroundColor ?? "transparent") : "transparent";
+  const fill =
+    el.fillStyle === "solid"
+      ? (el.backgroundColor ?? "transparent")
+      : "transparent";
   const stroke = el.strokeColor ?? "#1e1e1e";
   const sw = el.strokeWidth ?? 1;
   const opacity = el.opacity != null ? el.opacity / 100 : 1;
@@ -103,8 +120,12 @@ function RenderElement({ el, pad }: { el: Element; pad: { x: number; y: number }
     return (
       <g opacity={opacity}>
         <rect
-          x={x} y={y} width={w} height={h}
-          rx={rounded} ry={rounded}
+          x={x}
+          y={y}
+          width={w}
+          height={h}
+          rx={rounded}
+          ry={rounded}
           fill={fill}
           stroke={stroke === "transparent" ? "none" : stroke}
           strokeWidth={sw}
@@ -112,8 +133,10 @@ function RenderElement({ el, pad }: { el: Element; pad: { x: number; y: number }
         />
         {el.label && (
           <text
-            x={x + w / 2} y={y + h / 2}
-            textAnchor="middle" dominantBaseline="central"
+            x={x + w / 2}
+            y={y + h / 2}
+            textAnchor="middle"
+            dominantBaseline="central"
             fill={el.label.color ?? "#1e1e1e"}
             fontSize={el.label.fontSize ?? 16}
             fontFamily="Virgil, sans-serif"
@@ -140,16 +163,13 @@ function RenderElement({ el, pad }: { el: Element; pad: { x: number; y: number }
     const pts = `${cx},${y} ${x + w},${cy} ${cx},${y + h} ${x},${cy}`;
     return (
       <g opacity={opacity}>
-        <polygon
-          points={pts}
-          fill={fill}
-          stroke={stroke}
-          strokeWidth={sw}
-        />
+        <polygon points={pts} fill={fill} stroke={stroke} strokeWidth={sw} />
         {el.label && (
           <text
-            x={cx} y={cy}
-            textAnchor="middle" dominantBaseline="central"
+            x={cx}
+            y={cy}
+            textAnchor="middle"
+            dominantBaseline="central"
             fill={el.label.color ?? "#1e1e1e"}
             fontSize={el.label.fontSize ?? 16}
             fontFamily="Virgil, sans-serif"
@@ -165,7 +185,8 @@ function RenderElement({ el, pad }: { el: Element; pad: { x: number; y: number }
   if (el.type === "text") {
     return (
       <text
-        x={x} y={y + (el.fontSize ?? 16)}
+        x={x}
+        y={y + (el.fontSize ?? 16)}
         fill={stroke}
         fontSize={el.fontSize ?? 16}
         fontFamily="Virgil, sans-serif"
@@ -191,7 +212,7 @@ function RenderElement({ el, pad }: { el: Element; pad: { x: number; y: number }
       arrows.push(
         <React.Fragment key="end">
           {renderArrowhead(x + last[0], y + last[1], angle, stroke)}
-        </React.Fragment>
+        </React.Fragment>,
       );
     }
     if (el.startArrowhead && pts.length >= 2) {
@@ -201,7 +222,7 @@ function RenderElement({ el, pad }: { el: Element; pad: { x: number; y: number }
       arrows.push(
         <React.Fragment key="start">
           {renderArrowhead(x + first[0], y + first[1], angle, stroke)}
-        </React.Fragment>
+        </React.Fragment>,
       );
     }
 
@@ -215,7 +236,8 @@ function RenderElement({ el, pad }: { el: Element; pad: { x: number; y: number }
       const ly = y + (p1[1] + p2[1]) / 2 - 8;
       label = (
         <text
-          x={lx} y={ly}
+          x={lx}
+          y={ly}
           textAnchor="middle"
           fill={el.label.color ?? "#8fa3b0"}
           fontSize={el.label.fontSize ?? 14}
@@ -246,8 +268,10 @@ function RenderElement({ el, pad }: { el: Element; pad: { x: number; y: number }
   if (el.type === "ellipse") {
     return (
       <ellipse
-        cx={x + w / 2} cy={y + h / 2}
-        rx={w / 2} ry={h / 2}
+        cx={x + w / 2}
+        cy={y + h / 2}
+        rx={w / 2}
+        ry={h / 2}
         fill={fill}
         stroke={stroke}
         strokeWidth={sw}
@@ -261,7 +285,7 @@ function RenderElement({ el, pad }: { el: Element; pad: { x: number; y: number }
 
 export default function ExcalidrawDiagram({ elements }: Props) {
   const visible = elements.filter(
-    (el) => el.type !== "cameraUpdate" && !el.id?.startsWith("darkbg")
+    (el) => el.type !== "cameraUpdate" && !el.id?.startsWith("darkbg"),
   );
 
   const bounds = getBounds(visible);
@@ -277,8 +301,15 @@ export default function ExcalidrawDiagram({ elements }: Props) {
       width="100%"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ background: "#0e1920", borderRadius: 14, border: "1px solid #1e3340" }}
+      style={{
+        background: "#0e1920",
+        borderRadius: 14,
+        border: "1px solid #1e3340",
+      }}
     >
+      <defs>
+        <style>{VIRGIL_FONT_FACE}</style>
+      </defs>
       {visible.map((el, i) => (
         <RenderElement key={el.id ?? i} el={el} pad={{ x: 0, y: 0 }} />
       ))}

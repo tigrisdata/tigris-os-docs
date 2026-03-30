@@ -86,6 +86,29 @@ const sidebars = {
           label: "Features",
           id: "overview/features",
         },
+        {
+          type: "category",
+          label: "Compare to Tigris",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              label: "Compare to AWS S3",
+              id: "overview/compare/aws-s3",
+            },
+            {
+              type: "doc",
+              label: "Compare to Google Cloud Storage",
+              id: "overview/compare/google-cloud-storage",
+            },
+            {
+              type: "doc",
+              label: "Compare to Cloudflare R2",
+              id: "overview/compare/cloudflare-r2",
+            },
+          ],
+        },
         "concepts/architecture",
         "concepts/authnz",
         "api/s3/index",

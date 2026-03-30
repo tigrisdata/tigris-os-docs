@@ -1,0 +1,70 @@
+---
+id: aws-s3
+title: "Tigris vs AWS S3"
+---
+
+# Tigris vs AWS S3
+
+A side-by-side comparison of Tigris and Amazon S3 to help you understand where
+each service fits.
+
+## At a glance
+
+|                          | **Tigris**                                    | **AWS S3**                                            |
+| ------------------------ | --------------------------------------------- | ----------------------------------------------------- |
+| **Global distribution**  | Automatic — data moves to where it's accessed | Manual — requires Cross-Region Replication per bucket |
+| **Egress fees**          | Free                                          | $0.09/GB (varies by region)                           |
+| **Region selection**     | Not required — single global endpoint         | Required — you choose a region per bucket             |
+| **Multi-region**         | Built-in, every bucket is global              | Requires Multi-Region Access Points + CRR             |
+| **S3 API compatibility** | Full — same SDKs, CLI, tools                  | Native                                                |
+| **Consistency**          | Strong read-after-write                       | Strong read-after-write                               |
+| **Storage tiers**        | Standard, Infrequent Access, Archive          | Standard, IA, One Zone-IA, Glacier, Deep Archive      |
+| **Snapshots & forks**    | Native — zero-copy clones                     | No equivalent (versioning + copy)                     |
+| **Custom domains**       | Supported                                     | Supported (via CloudFront or S3 website hosting)      |
+| **IAM**                  | Fine-grained per bucket/prefix                | IAM policies, bucket policies, ACLs                   |
+
+## Where Tigris shines
+
+### No region management
+
+With AWS S3, you choose a region when creating a bucket. If your users are
+spread across the globe, you need to set up Cross-Region Replication, manage
+Multi-Region Access Points, and pay egress fees on every replicated byte. With
+Tigris, every bucket is global from the start — no configuration, no replication
+rules.
+
+### Zero egress costs
+
+AWS S3 charges $0.09/GB for data transfer out (standard regions). For workloads
+with heavy reads — serving model weights, distributing assets, streaming
+training data — this adds up fast. Tigris has no egress fees, ever.
+
+### Simpler multi-tenancy
+
+Building multi-tenant storage on AWS means assembling bucket policies, IAM
+roles, and S3 Access Points. Tigris offers a
+[Partner Integration API](/docs/partner-integrations/) that provisions isolated
+tenant organizations in a single API call.
+
+### Instant snapshots and forks
+
+AWS S3 has versioning, but no native snapshot or fork primitive. Tigris lets you
+snapshot a bucket and fork it into independent copy-on-write clones — useful for
+ML experiment branching, safe migrations, and dev/staging environments.
+
+## Where AWS S3 fits better
+
+- **Deep AWS ecosystem integration** — Lambda triggers, Athena queries, EMR,
+  CloudFront, and other services that expect native S3 buckets
+- **Compliance certifications** — AWS has a broader set of certifications
+  (FedRAMP, HIPAA BAA, etc.) for regulated industries
+- **Glacier Deep Archive** — for extremely cold data at very low per-GB rates
+- **S3 Select / S3 Object Lambda** — server-side processing features that Tigris
+  doesn't offer
+
+## Migration
+
+Switching from AWS S3 to Tigris is straightforward — change your endpoint URL
+and credentials. For existing data, use the
+[data migration guide](/docs/migration/) to move objects without downtime or
+egress costs.

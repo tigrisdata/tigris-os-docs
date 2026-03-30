@@ -1,0 +1,76 @@
+---
+id: cloudflare-r2
+title: "Tigris vs Cloudflare R2"
+---
+
+# Tigris vs Cloudflare R2
+
+A side-by-side comparison of Tigris and Cloudflare R2 to help you understand
+where each service fits.
+
+## At a glance
+
+|                                | **Tigris**                                        | **Cloudflare R2**                                  |
+| ------------------------------ | ------------------------------------------------- | -------------------------------------------------- |
+| **Global distribution**        | Automatic — data moves to where it's accessed     | Single primary region + optional cache via Workers |
+| **Egress fees**                | Free                                              | Free                                               |
+| **Region selection**           | Not required — single global endpoint             | Automatic (closest region) or manual hint          |
+| **S3 API compatibility**       | Full                                              | Mostly compatible — some gaps                      |
+| **Consistency**                | Strong read-after-write                           | Strong read-after-write                            |
+| **Storage tiers**              | Standard, Infrequent Access, Archive              | Standard, Infrequent Access                        |
+| **Snapshots & forks**          | Native — zero-copy clones                         | No equivalent                                      |
+| **Custom domains**             | Supported                                         | Supported (via Workers or R2 public bucket)        |
+| **IAM**                        | Fine-grained per bucket/prefix                    | API tokens scoped to account or bucket             |
+| **Partner / multi-tenant API** | Native [Partner API](/docs/partner-integrations/) | Not available                                      |
+
+## Where Tigris shines
+
+### True global distribution
+
+R2 stores data in a single primary location and relies on Cloudflare's CDN edge
+cache for read performance. Cache misses go back to the origin region. Tigris
+uses Dynamic Data Placement to actually move and replicate data to the regions
+where it's accessed — so reads are fast even for infrequently cached objects.
+
+### Richer S3 compatibility
+
+R2's S3 compatibility has known gaps — some S3 features like multipart upload
+copy parts, certain ACL operations, and some list parameters aren't fully
+supported. Tigris implements a broader set of the S3 API, so existing tools and
+libraries are less likely to hit edge cases.
+
+### Snapshots and forks
+
+R2 has no snapshot or fork capability. Tigris lets you take point-in-time
+snapshots of a bucket and create independent copy-on-write forks — useful for ML
+experiment branching, safe migrations, and dev environments.
+
+### Multi-tenant provisioning
+
+If you're building a platform that needs isolated storage per customer, Tigris
+offers a [Partner Integration API](/docs/partner-integrations/) for provisioning
+tenant organizations with isolated buckets, credentials, and per-tenant usage
+tracking. R2 doesn't have an equivalent — you'd need to manage isolation at the
+application level.
+
+### Archive tier
+
+Tigris offers an Archive storage tier for long-term retention at lower cost. R2
+only has Standard and Infrequent Access tiers.
+
+## Where Cloudflare R2 fits better
+
+- **Cloudflare Workers ecosystem** — native bindings for Workers, Pages, and
+  Durable Objects make R2 a natural fit for edge-first Cloudflare applications
+- **Edge compute co-location** — if your logic already runs on Cloudflare
+  Workers, R2 reads from the same data center are very fast
+- **Event notifications via Queues** — R2 integrates with Cloudflare Queues for
+  event-driven processing within the Cloudflare ecosystem
+- **Free tier** — R2 offers 10 GB of free storage and 10 million Class A
+  operations/month
+
+## Migration
+
+Moving from R2 to Tigris is straightforward since both use the S3 API. Change
+your endpoint URL and credentials, then use [rclone](/docs/quickstarts/rclone/)
+or the [data migration guide](/docs/migration/) to sync existing data.

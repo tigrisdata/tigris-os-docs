@@ -10,6 +10,7 @@ import {
 } from "@site/src/components/HomepageComponents.jsx";
 import { YellowStar } from "@site/src/icons";
 import ToolCards from "@site/src/components/ToolCards";
+import StackGrid from "@site/src/components/StackGrid";
 import Link from "@docusaurus/Link";
 
 <div style={{ textAlign: 'center', margin: "2em auto 0 auto", width: '80%' }}>
@@ -65,44 +66,7 @@ import Link from "@docusaurus/Link";
   />
 </Section>
 
-<Section title="Get started with your stack" id="stack" HeadingTag="h2">
-  <Card
-    title="Go"
-    description="Upload and manage objects from your Go application with the AWS SDK."
-    to="/quickstarts/go/"
-    icon="img/icons/golang"
-  />
-  <Card
-    title="Python"
-    description="Use boto3 with Tigris-specific extensions for snapshots, forks, and more."
-    to="/quickstarts/python/"
-    icon="img/icons/python"
-  />
-  <Card
-    title="Node"
-    description="Integrate Tigris into your Node.js app with the AWS JavaScript SDK."
-    to="/quickstarts/node/"
-    icon="img/icons/javascript"
-  />
-  <Card
-    title="Kubernetes"
-    description="Use Tigris as S3-compatible storage for any Kubernetes workload."
-    to="/quickstarts/kubernetes/"
-    icon="img/cube"
-  />
-  <Card
-    title="Terraform"
-    description="Provision and manage Tigris buckets with the Terraform S3 provider."
-    to="/terraform/"
-    icon="img/cube"
-  />
-  <Card
-    title="rclone"
-    description="Sync, copy, and mount Tigris buckets from the command line with rclone."
-    to="/quickstarts/rclone/"
-    icon="img/cube"
-  />
-</Section>
+<StackGrid />
 
 <Section title="End-to-End Guides" id="guides" HeadingTag="h2">
   <Card

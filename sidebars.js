@@ -54,8 +54,8 @@ const sidebars = {
           items: [
             {
               type: "doc",
-              label: "MCP Server",
-              id: "mcp/remote",
+              label: "MCP Quickstart",
+              id: "quickstarts/mcp",
             },
             {
               type: "doc",

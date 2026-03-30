@@ -22,15 +22,59 @@ import apisidebar from "./docs/partner-integrations/api/sidebar.ts";
 const sidebars = {
   quickstarts: [
     {
-      type: "doc",
-      label: "Home",
-      id: "index",
+      type: "category",
+      label: "Get Started",
+      collapsible: true,
+      collapsed: false,
+      link: {
+        type: "doc",
+        id: "index",
+      },
+      items: [
+        {
+          type: "doc",
+          label: "Use the Tigris CLI",
+          id: "cli/index",
+        },
+        {
+          type: "doc",
+          label: "Use the Tigris SDK",
+          id: "sdks/tigris/index",
+        },
+        {
+          type: "doc",
+          label: "Use Your Existing S3 Code",
+          id: "sdks/s3/index",
+        },
+        {
+          type: "category",
+          label: "Use AI",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              label: "MCP Server",
+              id: "mcp/remote",
+            },
+            {
+              type: "doc",
+              label: "Agent Skills",
+              id: "skills",
+            },
+          ],
+        },
+      ],
     },
     {
       type: "category",
       label: "Overview",
       collapsible: true,
       collapsed: true,
+      link: {
+        type: "doc",
+        id: "overview/index",
+      },
       items: [
         {
           type: "doc",
@@ -38,65 +82,300 @@ const sidebars = {
           id: "overview/index",
         },
         "concepts/architecture",
-        {
-          type: "doc",
-          label: "Use Cases - AI Agents",
-          id: "agents-use-cases",
-        },
         "concepts/authnz",
         "api/s3/index",
         "concepts/regions",
         "concepts/consistency",
+        {
+          type: "category",
+          label: "Benchmarks",
+          link: {
+            type: "doc",
+            id: "overview/benchmarks/index",
+          },
+          items: [
+            {
+              type: "category",
+              label: "Small Object Benchmark",
+              items: [
+                {
+                  type: "doc",
+                  label: "Performance Metrics",
+                  id: "overview/benchmarks/metrics",
+                },
+                {
+                  type: "doc",
+                  label: "Comparison: AWS S3",
+                  id: "overview/benchmarks/aws-s3",
+                },
+                {
+                  type: "doc",
+                  label: "Comparison: Cloudflare R2",
+                  id: "overview/benchmarks/cloudflare-r2",
+                },
+                {
+                  type: "doc",
+                  label: "Benchmark Summary",
+                  id: "overview/benchmarks/summary",
+                },
+              ],
+            },
+            {
+              type: "category",
+              label: "Model Training Benchmark",
+              items: [
+                {
+                  type: "doc",
+                  label: "Model Training on Tigris",
+                  id: "overview/benchmarks/model-training",
+                },
+              ],
+            },
+          ],
+        },
       ],
     },
     {
-      type: "doc",
-      label: "Get Started",
-      id: "get-started/index",
+      type: "category",
+      label: "Use Cases",
+      collapsible: true,
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          label: "Store and Serve Models",
+          id: "model-serving-use-cases",
+        },
+        {
+          type: "doc",
+          label: "Stream Training Datasets",
+          id: "use-cases/stream-training-datasets",
+        },
+        {
+          type: "doc",
+          label: "Preload Data for HPC",
+          id: "use-cases/preload-data-hpc",
+        },
+        {
+          type: "doc",
+          label: "Trigger Pipelines",
+          id: "use-cases/trigger-pipelines",
+        },
+        {
+          type: "doc",
+          label: "Checkpoint, Restore, & Fork",
+          id: "use-cases/checkpoint-restore-fork",
+        },
+      ],
     },
     {
       type: "category",
-      label: "Benchmarks",
+      label: "Guides",
+      collapsible: true,
+      collapsed: true,
       link: {
         type: "doc",
-        id: "overview/benchmarks/index",
+        id: "guides",
       },
       items: [
         {
           type: "category",
-          label: "Small Object Benchmark",
+          label: "Languages & Frameworks",
+          collapsible: true,
+          collapsed: true,
           items: [
             {
               type: "doc",
-              label: "Performance Metrics",
-              id: "overview/benchmarks/metrics",
+              label: "Go",
+              id: "quickstarts/go",
             },
             {
               type: "doc",
-              label: "Comparison: AWS S3",
-              id: "overview/benchmarks/aws-s3",
+              label: "Node.js",
+              id: "quickstarts/node",
             },
             {
               type: "doc",
-              label: "Comparison: Cloudflare R2",
-              id: "overview/benchmarks/cloudflare-r2",
+              label: "Kubernetes",
+              id: "quickstarts/kubernetes",
             },
             {
               type: "doc",
-              label: "Benchmark Summary",
-              id: "overview/benchmarks/summary",
+              label: "Terraform",
+              id: "terraform/index",
+            },
+            {
+              type: "doc",
+              label: "rclone",
+              id: "quickstarts/rclone",
             },
           ],
         },
         {
           type: "category",
-          label: "Model Training Benchmark",
+          label: "AI & ML",
+          collapsible: true,
+          collapsed: true,
           items: [
             {
               type: "doc",
-              label: "Model Training on Tigris",
-              id: "overview/benchmarks/model-training",
+              label: "PyTorch",
+              id: "quickstarts/pytorch",
             },
+            {
+              type: "category",
+              label: "SkyPilot",
+              items: [
+                {
+                  type: "doc",
+                  label: "Getting Started",
+                  id: "quickstarts/skypilot",
+                },
+                {
+                  type: "doc",
+                  label: "Model Storage",
+                  id: "model-storage/skypilot",
+                },
+                {
+                  type: "doc",
+                  label: "Training With Big Data",
+                  id: "training/big-data-skypilot/index",
+                },
+              ],
+            },
+            {
+              type: "category",
+              label: "LanceDB",
+              items: [
+                {
+                  type: "doc",
+                  label: "Getting Started",
+                  id: "libraries/lancedb/index",
+                },
+                {
+                  type: "doc",
+                  label: "Choosing a Lance Dataset Type",
+                  id: "libraries/lancedb/choosing-dataset-type",
+                },
+                {
+                  type: "doc",
+                  label: "Vector Database Tutorial",
+                  id: "libraries/lancedb/vector-database",
+                },
+                {
+                  type: "doc",
+                  label: "Example: Document Search",
+                  id: "libraries/lancedb/docs-search",
+                },
+              ],
+            },
+            {
+              type: "doc",
+              label: "Pixeltable",
+              id: "quickstarts/pixeltable",
+            },
+            {
+              type: "doc",
+              label: "CrewAI",
+              id: "agents/agent-crewai",
+            },
+            {
+              type: "doc",
+              label: "Cognee",
+              id: "agents/agent-cognee",
+            },
+          ],
+        },
+        {
+          type: "category",
+          label: "Data & Analytics",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              label: "DuckDB",
+              id: "quickstarts/duckdb",
+            },
+            {
+              type: "doc",
+              label: "Databricks",
+              id: "libraries/databricks/index",
+            },
+          ],
+        },
+        {
+          type: "category",
+          label: "Streaming & Messaging",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              label: "Bufstream",
+              id: "quickstarts/bufstream",
+            },
+            {
+              type: "doc",
+              label: "AutoMQ",
+              id: "quickstarts/automq",
+            },
+            {
+              type: "doc",
+              label: "Warpstream",
+              id: "guides/warpstream",
+            },
+          ],
+        },
+        {
+          type: "category",
+          label: "Infrastructure",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "category",
+              label: "Fly.io",
+              items: [
+                {
+                  type: "doc",
+                  label: "Getting Started",
+                  id: "sdks/fly/index",
+                },
+                {
+                  type: "doc",
+                  label: "Data Migration with Flyctl",
+                  id: "sdks/fly/data-migration-with-flyctl",
+                },
+                {
+                  type: "doc",
+                  label: "Model Storage",
+                  id: "model-storage/fly-io",
+                },
+              ],
+            },
+            "training/tigrisfs",
+            {
+              type: "doc",
+              label: "Training With Big Data",
+              id: "training/big-data-skypilot/index",
+            },
+          ],
+        },
+        {
+          type: "category",
+          label: "Migrate to Tigris",
+          collapsed: true,
+          link: {
+            type: "doc",
+            id: "migration/index",
+          },
+          items: [
+            "migration/aws-s3",
+            "migration/gcs",
+            "migration/cloudflare-r2",
+            "migration/minio",
+            "migration/s3-compatible",
           ],
         },
       ],
@@ -104,7 +383,7 @@ const sidebars = {
     {
       type: "category",
       label: "Product",
-      collapsed: false,
+      collapsed: true,
       items: [
         {
           type: "category",
@@ -204,104 +483,6 @@ const sidebars = {
           ],
         },
         {
-          type: "category",
-          label: "Tigris Acceleration Gateway",
-          collapsible: true,
-          collapsed: true,
-          items: [
-            {
-              type: "doc",
-              label: "Overview",
-              id: "acceleration-gateway/index",
-            },
-            {
-              type: "doc",
-              label: "Quick Start",
-              id: "acceleration-gateway/quickstart",
-            },
-            {
-              type: "doc",
-              label: "Architecture",
-              id: "acceleration-gateway/architecture",
-            },
-            {
-              type: "doc",
-              label: "Benchmarks",
-              id: "acceleration-gateway/benchmarks",
-            },
-            {
-              type: "category",
-              label: "Deployment",
-              collapsible: true,
-              link: {
-                type: "doc",
-                id: "acceleration-gateway/deployment-guide",
-              },
-              items: [
-                {
-                  type: "doc",
-                  label: "Native Binary",
-                  id: "acceleration-gateway/native",
-                },
-                {
-                  type: "doc",
-                  label: "Docker",
-                  id: "acceleration-gateway/docker",
-                },
-                {
-                  type: "doc",
-                  label: "Kubernetes",
-                  id: "acceleration-gateway/kubernetes",
-                },
-              ],
-            },
-            {
-              type: "category",
-              label: "Reference",
-              collapsible: true,
-              collapsed: true,
-              items: [
-                {
-                  type: "doc",
-                  label: "Configuration",
-                  id: "acceleration-gateway/configuration",
-                },
-                {
-                  type: "doc",
-                  label: "S3 Client Usage",
-                  id: "acceleration-gateway/usage",
-                },
-                {
-                  type: "doc",
-                  label: "S3 Compatibility",
-                  id: "acceleration-gateway/s3-compatibility",
-                },
-                {
-                  type: "doc",
-                  label: "Cache Control",
-                  id: "acceleration-gateway/cache-control",
-                },
-                {
-                  type: "doc",
-                  label: "TLS",
-                  id: "acceleration-gateway/tls",
-                },
-                {
-                  type: "doc",
-                  label: "Security",
-                  id: "acceleration-gateway/security",
-                },
-                {
-                  type: "doc",
-                  label: "Metrics",
-                  id: "acceleration-gateway/metrics",
-                },
-              ],
-            },
-          ],
-        },
-        "training/tigrisfs",
-        {
           type: "doc",
           label: "Changelog",
           id: "changelog/index",
@@ -310,40 +491,9 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "AI",
-      collapsible: true,
-      collapsed: true,
-      items: [
-        {
-          type: "category",
-          label: "MCP",
-          collapsible: true,
-          collapsed: true,
-          items: [
-            {
-              type: "doc",
-              label: "Local MCP Server",
-              id: "mcp/local",
-            },
-            {
-              type: "doc",
-              label: "Remote MCP Server",
-              id: "mcp/remote",
-            },
-          ],
-        },
-        {
-          type: "doc",
-          label: "Agent Skills",
-          id: "skills",
-        },
-      ],
-    },
-    {
-      type: "category",
       label: "SDKs",
       collapsible: true,
-      collapsed: false,
+      collapsed: true,
       items: [
         {
           type: "category",
@@ -389,6 +539,8 @@ const sidebars = {
     {
       type: "category",
       label: "Tigris CLI",
+      collapsible: true,
+      collapsed: true,
       link: {
         type: "doc",
         id: "cli/index",
@@ -515,253 +667,32 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "Migrate to Tigris",
-      collapsed: true,
-      link: {
-        type: "doc",
-        id: "migration/index",
-      },
-      items: [
-        "migration/aws-s3",
-        "migration/gcs",
-        "migration/cloudflare-r2",
-        "migration/minio",
-        "migration/s3-compatible",
-      ],
-    },
-    {
-      type: "category",
-      label: "Integrations",
+      label: "AI",
       collapsible: true,
       collapsed: true,
       items: [
         {
           type: "category",
-          label: "Multimodal AI",
-          collapsible: true,
-          collapsed: false,
-          items: [
-            {
-              type: "category",
-              label: "LanceDB",
-              items: [
-                {
-                  type: "doc",
-                  label: "Getting Started",
-                  id: "libraries/lancedb/index",
-                },
-                {
-                  type: "doc",
-                  label: "Choosing a Lance Dataset Type",
-                  id: "libraries/lancedb/choosing-dataset-type",
-                },
-                {
-                  type: "doc",
-                  label: "Vector Database Tutorial",
-                  id: "libraries/lancedb/vector-database",
-                },
-                {
-                  type: "doc",
-                  label: "Example: Document Search",
-                  id: "libraries/lancedb/docs-search",
-                },
-              ],
-            },
-            {
-              type: "doc",
-              label: "Pixeltable",
-              id: "quickstarts/pixeltable",
-            },
-          ],
-        },
-        {
-          type: "category",
-          label: "AI & ML Training",
-          collapsible: true,
-          collapsed: false,
-          items: [
-            {
-              type: "doc",
-              label: "PyTorch",
-              id: "quickstarts/pytorch",
-            },
-            {
-              type: "category",
-              label: "SkyPilot",
-              items: [
-                {
-                  type: "doc",
-                  label: "Getting Started",
-                  id: "quickstarts/skypilot",
-                },
-                {
-                  type: "doc",
-                  label: "Model Storage",
-                  id: "model-storage/skypilot",
-                },
-                {
-                  type: "doc",
-                  label: "Training With Big Data",
-                  id: "training/big-data-skypilot/index",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: "category",
-          label: "AI Agents",
-          collapsible: true,
-          collapsed: false,
-          items: [
-            {
-              type: "doc",
-              label: "CrewAI",
-              id: "agents/agent-crewai",
-            },
-            {
-              type: "doc",
-              label: "Cognee",
-              id: "agents/agent-cognee",
-            },
-          ],
-        },
-        {
-          type: "category",
-          label: "Data",
-          collapsible: true,
-          collapsed: false,
-          items: [
-            {
-              type: "doc",
-              label: "DuckDB",
-              id: "quickstarts/duckdb",
-            },
-            {
-              type: "doc",
-              label: "Databricks",
-              id: "libraries/databricks/index",
-            },
-          ],
-        },
-        {
-          type: "category",
-          label: "Streaming & Messaging",
-          collapsible: true,
-          collapsed: true,
-          items: [
-            {
-              type: "doc",
-              label: "Bufstream",
-              id: "quickstarts/bufstream",
-            },
-            {
-              type: "doc",
-              label: "AutoMQ",
-              id: "quickstarts/automq",
-            },
-            {
-              type: "doc",
-              label: "Warpstream",
-              id: "guides/warpstream",
-            },
-          ],
-        },
-        {
-          type: "category",
-          label: "Deployment & Infrastructure",
-          collapsible: true,
-          collapsed: true,
-          items: [
-            {
-              type: "category",
-              label: "Fly.io",
-              items: [
-                {
-                  type: "doc",
-                  label: "Getting Started",
-                  id: "sdks/fly/index",
-                },
-                {
-                  type: "doc",
-                  label: "Data Migration with Flyctl",
-                  id: "sdks/fly/data-migration-with-flyctl",
-                },
-                {
-                  type: "doc",
-                  label: "Model Storage",
-                  id: "model-storage/fly-io",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      type: "category",
-      label: "Languages & Frameworks",
-      collapsible: true,
-      collapsed: true,
-      items: [
-        {
-          type: "doc",
-          label: "Go",
-          id: "quickstarts/go",
-        },
-        {
-          type: "doc",
-          label: "Kubernetes",
-          id: "quickstarts/kubernetes",
-        },
-        {
-          type: "doc",
           label: "MCP",
-          id: "quickstarts/mcp",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              label: "Local MCP Server",
+              id: "mcp/local",
+            },
+            {
+              type: "doc",
+              label: "Remote MCP Server",
+              id: "mcp/remote",
+            },
+          ],
         },
         {
           type: "doc",
-          label: "Node",
-          id: "quickstarts/node",
-        },
-        {
-          type: "doc",
-          label: "rclone",
-          id: "quickstarts/rclone",
-        },
-        "terraform/index",
-      ],
-    },
-    {
-      type: "category",
-      label: "Use Cases",
-      collapsible: true,
-      collapsed: false,
-      items: [
-        {
-          type: "doc",
-          label: "Store and Serve Models",
-          id: "model-serving-use-cases",
-        },
-        {
-          type: "doc",
-          label: "Stream Training Datasets",
-          id: "use-cases/stream-training-datasets",
-        },
-        {
-          type: "doc",
-          label: "Preload Data for HPC",
-          id: "use-cases/preload-data-hpc",
-        },
-        {
-          type: "doc",
-          label: "Trigger Pipelines",
-          id: "use-cases/trigger-pipelines",
-        },
-        {
-          type: "doc",
-          label: "Checkpoint, Restore, & Fork",
-          id: "use-cases/checkpoint-restore-fork",
+          label: "Agent Skills",
+          id: "skills",
         },
       ],
     },
@@ -784,11 +715,6 @@ const sidebars = {
           type: "doc",
           label: "Multi-Tenant Architecture",
           id: "partner-integrations/architecture",
-        },
-        {
-          type: "doc",
-          label: "Access Control",
-          id: "partner-integrations/access-control",
         },
         {
           type: "category",
@@ -816,6 +742,7 @@ const sidebars = {
     {
       type: "category",
       label: "Legal",
+      collapsed: true,
       items: [
         "legal/privacy-policy",
         "legal/service-terms",

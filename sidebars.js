@@ -26,10 +26,6 @@ const sidebars = {
       label: "Get Started",
       collapsible: true,
       collapsed: true,
-      link: {
-        type: "doc",
-        id: "index",
-      },
       items: [
         {
           type: "doc",

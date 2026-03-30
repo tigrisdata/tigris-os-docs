@@ -191,6 +191,11 @@ const sidebars = {
           items: [
             {
               type: "doc",
+              label: "Python",
+              id: "quickstarts/python",
+            },
+            {
+              type: "doc",
               label: "Go",
               id: "quickstarts/go",
             },

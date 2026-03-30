@@ -1,0 +1,320 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 200,
+    "y": 10,
+    "text": "Two Layers of Access Control",
+    "fontSize": 22,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "rectangle",
+    "id": "create-key-box",
+    "x": 210,
+    "y": 55,
+    "width": 380,
+    "height": 60,
+    "backgroundColor": "#62FEB5",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1,
+    "roundness": { "type": 3 }
+  },
+  {
+    "type": "text",
+    "id": "create-key-text",
+    "x": 265,
+    "y": 60,
+    "text": "POST /access-keys",
+    "fontSize": 18,
+    "fontFamily": 1,
+    "strokeColor": "#0A171E"
+  },
+  {
+    "type": "text",
+    "id": "create-key-sub",
+    "x": 260,
+    "y": 83,
+    "text": "user_role + buckets_roles",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#0A171E"
+  },
+  {
+    "type": "arrow",
+    "id": "arrow-left",
+    "x": 330,
+    "y": 115,
+    "width": -130,
+    "height": 100,
+    "points": [
+      [0, 0],
+      [-130, 100]
+    ],
+    "strokeColor": "#4a9eed",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "arrow-left-label",
+    "x": 160,
+    "y": 145,
+    "text": "user_role",
+    "fontSize": 15,
+    "fontFamily": 1,
+    "strokeColor": "#4a9eed"
+  },
+  {
+    "type": "arrow",
+    "id": "arrow-right",
+    "x": 470,
+    "y": 115,
+    "width": 130,
+    "height": 100,
+    "points": [
+      [0, 0],
+      [130, 100]
+    ],
+    "strokeColor": "#22c55e",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "arrow-right-label",
+    "x": 570,
+    "y": 145,
+    "text": "buckets_roles",
+    "fontSize": 15,
+    "fontFamily": 1,
+    "strokeColor": "#22c55e"
+  },
+  {
+    "type": "rectangle",
+    "id": "zone-left",
+    "x": 10,
+    "y": 230,
+    "width": 370,
+    "height": 290,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#1e3340",
+    "strokeWidth": 1.5,
+    "strokeStyle": "dashed",
+    "roundness": { "type": 3 },
+    "opacity": 40
+  },
+  {
+    "type": "text",
+    "id": "zone-left-label",
+    "x": 25,
+    "y": 245,
+    "text": "Management Scope",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "rectangle",
+    "id": "admin-mgmt-box",
+    "x": 35,
+    "y": 290,
+    "width": 320,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#4a9eed",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 }
+  },
+  {
+    "type": "text",
+    "id": "admin-mgmt-title",
+    "x": 60,
+    "y": 295,
+    "text": "Admin",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "admin-mgmt-desc",
+    "x": 60,
+    "y": 317,
+    "text": "All keys, org settings, users",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "rectangle",
+    "id": "member-mgmt-box",
+    "x": 35,
+    "y": 375,
+    "width": 320,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 }
+  },
+  {
+    "type": "text",
+    "id": "member-mgmt-title",
+    "x": 60,
+    "y": 380,
+    "text": "Member",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "member-mgmt-desc",
+    "x": 60,
+    "y": 402,
+    "text": "Own keys only",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "text",
+    "id": "default-note",
+    "x": 60,
+    "y": 455,
+    "text": "Default if omitted: Member",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#506874"
+  },
+  {
+    "type": "rectangle",
+    "id": "zone-right",
+    "x": 420,
+    "y": 230,
+    "width": 370,
+    "height": 290,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#1e3340",
+    "strokeWidth": 1.5,
+    "strokeStyle": "dashed",
+    "roundness": { "type": 3 },
+    "opacity": 40
+  },
+  {
+    "type": "text",
+    "id": "zone-right-label",
+    "x": 435,
+    "y": 245,
+    "text": "S3 Operations (per bucket)",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "rectangle",
+    "id": "readonly-box",
+    "x": 445,
+    "y": 285,
+    "width": 320,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 }
+  },
+  {
+    "type": "text",
+    "id": "readonly-title",
+    "x": 470,
+    "y": 291,
+    "text": "ReadOnly",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "readonly-desc",
+    "x": 470,
+    "y": 311,
+    "text": "Get, list, head",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "rectangle",
+    "id": "editor-box",
+    "x": 445,
+    "y": 360,
+    "width": 320,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 }
+  },
+  {
+    "type": "text",
+    "id": "editor-title",
+    "x": 470,
+    "y": 366,
+    "text": "Editor",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "editor-desc",
+    "x": 470,
+    "y": 386,
+    "text": "+ put, delete, bucket config",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "rectangle",
+    "id": "admin-s3-box",
+    "x": 445,
+    "y": 435,
+    "width": 320,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#22c55e",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 }
+  },
+  {
+    "type": "text",
+    "id": "admin-s3-title",
+    "x": 470,
+    "y": 441,
+    "text": "Admin",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "admin-s3-desc",
+    "x": 470,
+    "y": 461,
+    "text": "All ops, bypasses all checks",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  }
+]

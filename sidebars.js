@@ -22,6 +22,11 @@ import apisidebar from "./docs/partner-integrations/api/sidebar.ts";
 const sidebars = {
   quickstarts: [
     {
+      type: "doc",
+      id: "index",
+      label: "Home",
+    },
+    {
       type: "category",
       label: "Get Started",
       collapsible: true,

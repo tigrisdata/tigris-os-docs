@@ -4,12 +4,9 @@ title: "Get Started"
 slug: /
 ---
 
-import {
-  HomepageCard as Card,
-  HomepageSection as Section,
-} from "@site/src/components/HomepageComponents.jsx";
 import ToolCards from "@site/src/components/ToolCards";
 import StackGrid from "@site/src/components/StackGrid";
+import FeaturesGrid from "@site/src/components/FeaturesGrid";
 import Link from "@docusaurus/Link";
 
 <div style={{ textAlign: 'center', margin: "2em auto 0 auto", width: '80%' }}>
@@ -26,43 +23,6 @@ import Link from "@docusaurus/Link";
 
 <ToolCards />
 
-<Section title="Features" id="features" HeadingTag="h2">
-  <Card
-    title="Globally Distributed Data"
-    description="Data stored close to the users automatically ensuring low latency everywhere."
-    to="/overview/#global-low-latency-access"
-    icon="img/lightning"
-  />
-  <Card
-    title="S3 Compatible API"
-    description="Global and fast object storage with familiar AWS S3 tools, libraries, and extensions."
-    to="/api/s3/"
-    icon="img/lightning"
-  />
-  <Card
-    title="Zero Egress Fees"
-    description="Free data egress ensures seamless and unrestricted access to your data whenever you need it."
-    to="https://www.tigrisdata.com/pricing/#zero-egress-fees"
-    icon="img/lightning"
-  />
-  <Card
-    title="Geo-Redundant Storage"
-    description="Geo-redundant storage with high level of availability and built-in strong consistency."
-    to="/buckets/locations/"
-    icon="img/lightning"
-  />
-  <Card
-    title="Flexible Storage Tiers"
-    description="Choose the right storage tier for your data to optimize costs and performance."
-    to="/objects/tiers/"
-    icon="img/lightning"
-  />
-  <Card
-    title="Snapshots and Forks"
-    description="Instantly create zero-copy clones of your data for development, testing, or rollback with Git-style workflows."
-    to="/snapshots-and-forks/"
-    icon="img/lightning"
-  />
-</Section>
-
 <StackGrid />
+
+<FeaturesGrid />

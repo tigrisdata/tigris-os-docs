@@ -81,6 +81,11 @@ const sidebars = {
           label: "What is Tigris?",
           id: "overview/index",
         },
+        {
+          type: "doc",
+          label: "Features",
+          id: "overview/features",
+        },
         "concepts/architecture",
         "concepts/authnz",
         "api/s3/index",

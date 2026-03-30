@@ -3,12 +3,9 @@ id: model-serving-use-cases
 title: "Store and Serve Models"
 ---
 
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
 import DirectAccessDiagram from "@site/src/components/diagrams/DirectAccessDiagram";
 import TAGModelServingDiagram from "@site/src/components/diagrams/TAGModelServingDiagram";
 import TAGClusterModeDiagram from "@site/src/components/diagrams/TAGClusterModeDiagram";
-import GlobalWeightsDiagram from "@site/src/components/diagrams/GlobalWeightsDiagram";
 import DiagramLightbox from "@site/src/components/diagrams/DiagramLightbox";
 
 # Store and Serve Models
@@ -122,7 +119,7 @@ file paths, mount with [TigrisFS](/docs/training/tigrisfs/).
   <div className="use-case-hero__diagram">
     <DiagramLightbox>
       <div className="mermaid-frame">
-        <GlobalWeightsDiagram />
+        <DirectAccessDiagram />
       </div>
     </DiagramLightbox>
   </div>

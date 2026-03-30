@@ -1,31 +1,164 @@
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 import {
   HomepageCard as Card,
   HomepageSection as Section,
 } from "@site/src/components/HomepageComponents.jsx";
 
-import {
-  JavaIcon,
-  GoIcon,
-  PhpIcon,
-  DotNetIcon,
-  TerminalIcon,
-  PythonIcon,
-  JSIcon,
-  RubyIcon,
-  ElixirIcon,
-} from "@site/src/icons";
+# Use Your Existing S3 Code
 
-# AWS S3 SDKs
+Tigris is fully S3-compatible. If you already have code that talks to AWS S3 or
+any S3-compatible service, you can switch to Tigris by changing two things:
 
-Tigris is a S3-compatible object storage service. This means that you can
-continue using the standard AWS S3 SDKs and libraries as usual. The
-S3-compatible API allows you to access the wide range of available S3 tools,
-libraries, and extensions.
+1. **Endpoint** — point to `https://t3.storage.dev`
+2. **Credentials** — use your Tigris access key and secret key
 
-Below you can find examples of how to use Tigris with the most popular S3 SDKs
-and CLIs.
+Everything else — your SDK calls, CLI scripts, libraries — stays exactly the
+same.
 
-<Section title="SDKs" id="sdks">
+## Get your credentials
+
+Create an access key in the [Tigris Console](https://console.storage.dev).
+You'll get a key pair:
+
+- **Access Key ID** — starts with `tid_`
+- **Secret Access Key** — starts with `tsec_`
+
+## Configure your environment
+
+The fastest way to get started is to set environment variables. Every AWS SDK
+and the AWS CLI will pick these up automatically:
+
+```bash
+export AWS_ACCESS_KEY_ID="tid_your_access_key"
+export AWS_SECRET_ACCESS_KEY="tsec_your_secret_key"
+export AWS_ENDPOINT_URL="https://t3.storage.dev"
+export AWS_REGION="auto"
+```
+
+That's it. Your existing code now talks to Tigris.
+
+### Using an AWS profile
+
+If you use Tigris alongside AWS, add a named profile to `~/.aws/credentials` and
+`~/.aws/config`:
+
+```text title="~/.aws/credentials"
+[tigris]
+aws_access_key_id = tid_your_access_key
+aws_secret_access_key = tsec_your_secret_key
+```
+
+```text title="~/.aws/config"
+[profile tigris]
+endpoint_url = https://t3.storage.dev
+region = auto
+```
+
+Then select the profile when running commands:
+
+```bash
+export AWS_PROFILE=tigris
+
+# Or pass it per-command
+aws s3 ls --profile tigris
+```
+
+## Quick examples
+
+<Tabs>
+<TabItem value="cli" label="AWS CLI">
+
+```bash
+# List buckets
+aws s3 ls --endpoint-url https://t3.storage.dev
+
+# Create a bucket
+aws s3 mb s3://my-bucket --endpoint-url https://t3.storage.dev
+
+# Upload a file
+aws s3 cp ./file.bin s3://my-bucket/ --endpoint-url https://t3.storage.dev
+
+# Download a file
+aws s3 cp s3://my-bucket/file.bin ./file.bin --endpoint-url https://t3.storage.dev
+```
+
+If you set `AWS_ENDPOINT_URL` in your environment, you can drop the
+`--endpoint-url` flag entirely.
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import boto3
+from botocore.client import Config
+
+s3 = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    config=Config(s3={"addressing_style": "virtual"}),
+)
+
+# List buckets
+for bucket in s3.list_buckets()["Buckets"]:
+    print(bucket["Name"])
+
+# Upload a file
+s3.upload_file("./file.bin", "my-bucket", "file.bin")
+```
+
+</TabItem>
+<TabItem value="javascript" label="JavaScript">
+
+```javascript
+import { S3Client, ListBucketsCommand } from "@aws-sdk/client-s3";
+
+const s3 = new S3Client({
+  region: "auto",
+  endpoint: "https://t3.storage.dev",
+});
+
+const { Buckets } = await s3.send(new ListBucketsCommand({}));
+console.log(Buckets.map((b) => b.Name));
+```
+
+</TabItem>
+<TabItem value="go" label="Go">
+
+```go
+cfg, _ := config.LoadDefaultConfig(ctx)
+
+svc := s3.NewFromConfig(cfg, func(o *s3.Options) {
+    o.BaseEndpoint = aws.String("https://t3.storage.dev")
+    o.Region = "auto"
+})
+
+result, _ := svc.ListBuckets(ctx, &s3.ListBucketsInput{})
+for _, b := range result.Buckets {
+    fmt.Println(*b.Name)
+}
+```
+
+</TabItem>
+<TabItem value="java" label="Java">
+
+```java
+S3Client s3 = S3Client.builder()
+    .endpointOverride(URI.create("https://t3.storage.dev"))
+    .region(Region.of("auto"))
+    .build();
+
+s3.listBuckets().buckets().forEach(b -> System.out.println(b.name()));
+```
+
+</TabItem>
+</Tabs>
+
+## Language-specific guides
+
+For full setup instructions, configuration options, and more examples:
+
+<Section title="" id="sdks">
   <Card
     title="AWS CLI"
     description="Use Tigris with AWS CLI"

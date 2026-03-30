@@ -89,9 +89,11 @@ Use `"*"` as the bucket name to grant access to all buckets in the org:
 }
 ```
 
-**Important:** An access key with `{"bucket_name": "*", "role": "Admin"}` is
+:::warning
+An access key with `{"bucket_name": "*", "role": "Admin"}` is
 treated as a full org admin. This key bypasses all bucket-level permission
 checks, equivalent to `user_role: "Admin"` for S3 operations.
+:::
 
 ## How the Two Fields Interact
 
@@ -188,9 +190,11 @@ object prefixes, IP ranges, or time windows, use
 [IAM policies](/docs/iam/policies/). Policies are evaluated after role checks,
 so they can further restrict what a role allows.
 
-One thing to be aware of: `Admin` role bypasses policy evaluation entirely. If
+:::warning
+`Admin` role bypasses policy evaluation entirely. If
 you need policies to apply, use `Member` with `Editor` or `ReadOnly` roles
 instead.
+:::
 
 ## Access Key Lifecycle
 

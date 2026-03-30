@@ -1,5 +1,5 @@
 .tool-cards-wrapper {
-  margin: 4rem 0 0 0;
+  margin: 2rem 0 0 0;
 }
 
 .tool-cards-title {
@@ -10,7 +10,7 @@
 
 .tool-cards-section {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
 
@@ -209,12 +209,6 @@
 .tool-card-mcp-link:hover {
   color: var(--ifm-color-primary);
   text-decoration: none;
-}
-
-@media screen and (max-width: 1200px) {
-  .tool-cards-section {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 @media screen and (max-width: 768px) {

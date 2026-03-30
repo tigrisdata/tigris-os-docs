@@ -8,7 +8,6 @@ import {
   HomepageCard as Card,
   HomepageSection as Section,
 } from "@site/src/components/HomepageComponents.jsx";
-import { YellowStar } from "@site/src/icons";
 import ToolCards from "@site/src/components/ToolCards";
 import StackGrid from "@site/src/components/StackGrid";
 import Link from "@docusaurus/Link";
@@ -67,30 +66,3 @@ import Link from "@docusaurus/Link";
 </Section>
 
 <StackGrid />
-
-<Section title="End-to-End Guides" id="guides" HeadingTag="h2">
-  <Card
-    title="Data Migration"
-    description="Migrate data from an existing S3-compatible bucket to Tigris without downtime and without incuring egress costs."
-    to="/migration/"
-    icon="img/bolt"
-  />
-  <Card
-    title="Mount Tigris as a Filesystem"
-    description="Use Tigris bucket as a filesystem for AI workloads and get unlimited storage and memory capacity."
-    to="/training/tigrisfs/"
-    icon="img/bolt"
-  />
-  <Card
-    title="Training with Big Data on SkyPilot"
-    description="Build a multi-cloud compatible model training job that leverages Tigris to store training data and SkyPilot to manage compute."
-    to="/training/big-data-skypilot/"
-    icon="img/bolt"
-  />
-  <Card
-    title="Store vector embeddings in Tigris"
-    description="Host embeddings and vector stores for real-time retrieval-augmented generation (RAG)"
-    to="/libraries/lancedb/"
-    icon="img/bolt"
-  />
-</Section>

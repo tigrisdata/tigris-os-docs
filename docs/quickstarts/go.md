@@ -1,4 +1,4 @@
-# Go Quickstart
+# Go
 
 This project is a simple web application that demonstrates how to upload files
 to a Tigris storage bucket and manage them. It is an HTTP server written in Go

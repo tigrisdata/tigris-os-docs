@@ -53,11 +53,15 @@ function getBounds(elements: Element[]) {
       maxX = Math.max(maxX, x + w);
       maxY = Math.max(maxY, y + h);
     } else if (el.type === "text") {
-      const estW = (el.text?.length ?? 0) * (el.fontSize ?? 16) * 0.5;
+      const lines = (el.text ?? "").split("\n");
+      const maxLen = Math.max(...lines.map((l) => l.length));
+      const fs = el.fontSize ?? 16;
+      const estW = maxLen * fs * 0.6;
+      const estH = lines.length * fs * 1.2;
       minX = Math.min(minX, x);
       minY = Math.min(minY, y);
       maxX = Math.max(maxX, x + estW);
-      maxY = Math.max(maxY, y + (el.fontSize ?? 16) * 1.4);
+      maxY = Math.max(maxY, y + estH);
     } else {
       minX = Math.min(minX, x);
       minY = Math.min(minY, y);
@@ -183,16 +187,22 @@ function RenderElement({
   }
 
   if (el.type === "text") {
+    const fs = el.fontSize ?? 16;
+    const lines = (el.text ?? "").split("\n");
     return (
       <text
         x={x}
-        y={y + (el.fontSize ?? 16)}
+        y={y + fs}
         fill={stroke}
-        fontSize={el.fontSize ?? 16}
+        fontSize={fs}
         fontFamily="Virgil, sans-serif"
         opacity={opacity}
       >
-        {el.text}
+        {lines.map((line, i) => (
+          <tspan key={i} x={x} dy={i === 0 ? 0 : fs * 1.2}>
+            {line}
+          </tspan>
+        ))}
       </text>
     );
   }

@@ -1,0 +1,91 @@
+---
+id: checkpoint-restore-fork
+title: "Checkpoint, Restore, & Fork"
+---
+
+import CheckpointForkDiagram from "@site/src/components/diagrams/CheckpointForkDiagram";
+import DiagramLightbox from "@site/src/components/diagrams/DiagramLightbox";
+
+# Checkpoint, Restore, & Fork
+
+## Durable checkpoints with instant forking
+
+_Snapshot model state mid-training. Resume anywhere. Fork for experiments._
+
+<div className="use-case-hero">
+  <div className="use-case-hero__text">
+
+Long training jobs fail. Spot instances get preempted, nodes crash, and
+hyperparameters need revising. If you're not checkpointing to durable storage,
+you restart from scratch.
+
+Writing checkpoints to a Tigris bucket with
+[snapshots enabled](/docs/buckets/snapshots-and-forks/) gives you two things at
+once: **resume** from the latest checkpoint on any machine with no cross-region
+prefetch, and **fork** from a known-good checkpoint into parallel experiments
+instantly via copy-on-write.
+
+[Snapshots and forks →](/docs/buckets/snapshots-and-forks/)
+
+  </div>
+  <div className="use-case-hero__diagram">
+    <DiagramLightbox>
+      <div className="mermaid-frame">
+        <CheckpointForkDiagram />
+      </div>
+    </DiagramLightbox>
+  </div>
+</div>
+
+### Benefits
+
+<details>
+<summary>Resume on any machine</summary>
+
+When a job dies or you migrate to cheaper hardware, the orchestrator restarts on
+a new machine and loads the latest checkpoint from the nearest replica — no
+cross-region prefetch, no egress cost. The same checkpoint works whether you
+resume on Lambda, CoreWeave, or a hyperscaler.
+
+</details>
+
+<details>
+<summary>Instant copy-on-write forks</summary>
+
+When you want to branch from a known-good checkpoint to run parallel
+experiments, each fork gets its own copy-on-write view of the bucket instantly.
+Mutations in one fork never affect another, and the source checkpoint stays
+immutable. No data copying required.
+
+</details>
+
+<details>
+<summary>Scoped credentials per job</summary>
+
+Scope each training job's credentials with a
+[fine-grained IAM policy](/docs/iam/policies/examples/training-job): read-only
+to the dataset bucket, read-only to the base model, write-only to the output
+bucket, with optional time-window and IP restrictions.
+
+</details>
+
+### How it works
+
+Create the bucket with `X-Tigris-Enable-Snapshot: true` at creation time (this
+must be set at creation and cannot be changed afterward). Have your training
+loop write checkpoints on a fixed cadence — every N steps or at epoch
+boundaries.
+
+Store the snapshot version ID alongside run metadata in your experiment tracker.
+To resume, pass the version to the new job. To sweep hyperparameters, fork the
+snapshot once per configuration and let each fork write independently.
+
+```bash
+# Take a snapshot after checkpoint write
+tigris snapshots take my-checkpoints
+
+# Fork for parallel experiments
+tigris forks create my-checkpoints --name experiment-lr-1e-4
+tigris forks create my-checkpoints --name experiment-lr-3e-5
+tigris forks create my-checkpoints --name experiment-lr-1e-3
+```

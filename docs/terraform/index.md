@@ -1,4 +1,4 @@
-# Terraform Quickstart
+# Terraform
 
 Use the
 [Tigris Terraform provider](https://registry.terraform.io/providers/tigrisdata/tigris/latest/docs)

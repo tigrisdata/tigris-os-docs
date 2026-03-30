@@ -1,4 +1,4 @@
-# Node Quickstart
+# Node
 
 This project is a simple web application that demonstrates how to upload objects
 to a Tigris storage bucket and manage them. It's built using Next.js router and

@@ -167,11 +167,12 @@ Primary accent:    #62FEB5 (Tigris green — highlights, key elements)
 Dark on accent:    #0A171E (text on green backgrounds)
 
 Additional accent colors:
-  Blue:    #4a9eed (requests, your infra)
-  Purple:  #8b5cf6 (TAG / gateway)
-  Green:   #22c55e (responses, cache, success)
-  Amber:   #f59e0b (upstream/Tigris, cache miss)
-  Red:     #ef4444 (errors, cache miss indicators)
+  Steel blue:  #5BA4CF (secondary flows, metadata, gRPC, gossip)
+  Sandstone:   #CF8E5B (warnings, cache miss)
+  Muted coral: #CF5B5B (errors)
+
+Do NOT use saturated purple (#8b5cf6), bright amber (#f59e0b), or
+bright red (#ef4444) — they clash with the cool-toned palette.
 ```
 
 ## Layout Pattern

@@ -1,0 +1,45 @@
+[
+  {"type":"text","id":"title","x":260,"y":12,"text":"Global model distribution","fontSize":18,"fontFamily":1,"strokeColor":"#c8d6de"},
+
+  {"type":"rectangle","id":"train","x":30,"y":60,"width":180,"height":50,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#62FEB5","strokeWidth":2},
+  {"type":"text","id":"trainlbl","x":68,"y":73,"text":"Training job","fontSize":15,"fontFamily":1,"strokeColor":"#62FEB5"},
+
+  {"type":"arrow","id":"a_put","x":210,"y":85,"points":[[0,0],[80,0]],"strokeColor":"#62FEB5","strokeWidth":2,"endArrowhead":"arrow"},
+  {"type":"text","id":"a_putlbl","x":220,"y":58,"text":"PutObject","fontSize":12,"fontFamily":1,"strokeColor":"#8fa3b0"},
+
+  {"type":"rectangle","id":"bucket","x":290,"y":50,"width":220,"height":70,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#62FEB5","strokeWidth":2},
+  {"type":"text","id":"bucketlbl","x":315,"y":62,"text":"Tigris Object Storage","fontSize":14,"fontFamily":1,"strokeColor":"#62FEB5"},
+  {"type":"text","id":"bucketsub","x":345,"y":88,"text":"Global bucket","fontSize":12,"fontFamily":1,"strokeColor":"#8fa3b0"},
+
+  {"type":"arrow","id":"a_aws","x":350,"y":120,"points":[[0,0],[-200,60]],"strokeColor":"#5BA4CF","strokeWidth":2,"endArrowhead":"arrow","strokeStyle":"dashed"},
+  {"type":"arrow","id":"a_gcp","x":400,"y":120,"points":[[0,0],[0,60]],"strokeColor":"#5BA4CF","strokeWidth":2,"endArrowhead":"arrow","strokeStyle":"dashed"},
+  {"type":"arrow","id":"a_lambda","x":450,"y":120,"points":[[0,0],[200,60]],"strokeColor":"#5BA4CF","strokeWidth":2,"endArrowhead":"arrow","strokeStyle":"dashed"},
+
+  {"type":"text","id":"readlbl","x":545,"y":130,"text":"nearest\nreplica","fontSize":11,"fontFamily":1,"strokeColor":"#8fa3b0"},
+
+  {"type":"rectangle","id":"aws_card","x":30,"y":195,"width":240,"height":110,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#2a4050","strokeWidth":2},
+  {"type":"text","id":"aws_title","x":55,"y":210,"text":"AWS — US East","fontSize":14,"fontFamily":1,"strokeColor":"#c8d6de"},
+  {"type":"rectangle","id":"aws_pod1","x":55,"y":240,"width":90,"height":30,"backgroundColor":"#0A171E","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#1e3340","strokeWidth":1},
+  {"type":"text","id":"aws_pod1lbl","x":68,"y":247,"text":"vLLM","fontSize":12,"fontFamily":1,"strokeColor":"#8fa3b0"},
+  {"type":"rectangle","id":"aws_pod2","x":160,"y":240,"width":90,"height":30,"backgroundColor":"#0A171E","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#1e3340","strokeWidth":1},
+  {"type":"text","id":"aws_pod2lbl","x":194,"y":247,"text":"TGI","fontSize":12,"fontFamily":1,"strokeColor":"#8fa3b0"},
+  {"type":"text","id":"aws_pod3lbl","x":55,"y":280,"text":"4× GPU inference pods","fontSize":11,"fontFamily":1,"strokeColor":"#8fa3b0"},
+
+  {"type":"rectangle","id":"gcp_card","x":290,"y":195,"width":220,"height":110,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#2a4050","strokeWidth":2},
+  {"type":"text","id":"gcp_title","x":315,"y":210,"text":"GCP — Europe","fontSize":14,"fontFamily":1,"strokeColor":"#c8d6de"},
+  {"type":"rectangle","id":"gcp_pod1","x":315,"y":240,"width":90,"height":30,"backgroundColor":"#0A171E","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#1e3340","strokeWidth":1},
+  {"type":"text","id":"gcp_pod1lbl","x":328,"y":247,"text":"vLLM","fontSize":12,"fontFamily":1,"strokeColor":"#8fa3b0"},
+  {"type":"rectangle","id":"gcp_pod2","x":415,"y":240,"width":75,"height":30,"backgroundColor":"#0A171E","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#1e3340","strokeWidth":1},
+  {"type":"text","id":"gcp_pod2lbl","x":441,"y":247,"text":"TGI","fontSize":12,"fontFamily":1,"strokeColor":"#8fa3b0"},
+  {"type":"text","id":"gcp_pod3lbl","x":315,"y":280,"text":"2× GPU inference pods","fontSize":11,"fontFamily":1,"strokeColor":"#8fa3b0"},
+
+  {"type":"rectangle","id":"lambda_card","x":530,"y":195,"width":240,"height":110,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#2a4050","strokeWidth":2},
+  {"type":"text","id":"lambda_title","x":555,"y":210,"text":"Lambda — Asia Pacific","fontSize":14,"fontFamily":1,"strokeColor":"#c8d6de"},
+  {"type":"rectangle","id":"lambda_pod1","x":555,"y":240,"width":90,"height":30,"backgroundColor":"#0A171E","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#1e3340","strokeWidth":1},
+  {"type":"text","id":"lambda_pod1lbl","x":568,"y":247,"text":"vLLM","fontSize":12,"fontFamily":1,"strokeColor":"#8fa3b0"},
+  {"type":"rectangle","id":"lambda_pod2","x":660,"y":240,"width":90,"height":30,"backgroundColor":"#0A171E","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#1e3340","strokeWidth":1},
+  {"type":"text","id":"lambda_pod2lbl","x":694,"y":247,"text":"TGI","fontSize":12,"fontFamily":1,"strokeColor":"#8fa3b0"},
+  {"type":"text","id":"lambda_pod3lbl","x":555,"y":280,"text":"8× GPU inference pods","fontSize":11,"fontFamily":1,"strokeColor":"#8fa3b0"},
+
+  {"type":"text","id":"note","x":182,"y":325,"text":"Zero egress fees · Nearest replica served automatically","fontSize":13,"fontFamily":1,"strokeColor":"#8fa3b0"}
+]

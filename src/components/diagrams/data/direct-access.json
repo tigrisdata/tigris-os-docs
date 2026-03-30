@@ -1,0 +1,20 @@
+[
+  {"type":"text","id":"t1","x":241,"y":30,"text":"Direct Access: Tigris as Model Store","fontSize":24,"fontFamily":1,"strokeColor":"#c8d6de"},
+  {"type":"rectangle","id":"client","x":30,"y":140,"width":200,"height":60,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#2a4050","strokeWidth":2},
+  {"type":"text","id":"clientlbl","x":60,"y":160,"text":"Client Request","fontSize":16,"fontFamily":1,"strokeColor":"#c8d6de"},
+  {"type":"arrow","id":"a1","x":230,"y":170,"width":160,"height":0,"points":[[0,0],[160,0]],"strokeColor":"#62FEB5","strokeWidth":2,"endArrowhead":"arrow"},
+  {"type":"rectangle","id":"inf1","x":390,"y":130,"width":210,"height":80,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#5BA4CF","strokeWidth":2},
+  {"type":"text","id":"inf1lbl","x":409,"y":160,"text":"Inference Server","fontSize":18,"fontFamily":1,"strokeColor":"#c8d6de"},
+  {"type":"arrow","id":"a2","x":600,"y":170,"width":160,"height":0,"points":[[0,0],[160,0]],"strokeColor":"#62FEB5","strokeWidth":2,"endArrowhead":"arrow"},
+  {"type":"text","id":"a2lbl","x":640,"y":145,"text":"GetObject","fontSize":14,"fontFamily":1,"strokeColor":"#8fa3b0"},
+  {"type":"rectangle","id":"tigris","x":760,"y":130,"width":210,"height":80,"backgroundColor":"#101c24","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#62FEB5","strokeWidth":2},
+  {"type":"text","id":"tigrislbl","x":795,"y":160,"text":"Tigris Bucket","fontSize":18,"fontFamily":1,"strokeColor":"#62FEB5"},
+  {"type":"text","id":"note1","x":760,"y":225,"text":"Zero egress, global reads","fontSize":14,"fontFamily":1,"strokeColor":"#8fa3b0"},
+  {"type":"rectangle","id":"inf2","x":390,"y":300,"width":210,"height":60,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#5BA4CF","strokeWidth":2},
+  {"type":"text","id":"inf2lbl","x":455,"y":320,"text":"Replica 2","fontSize":16,"fontFamily":1,"strokeColor":"#c8d6de"},
+  {"type":"arrow","id":"a3","x":600,"y":330,"width":160,"height":0,"points":[[0,0],[160,0]],"strokeColor":"#62FEB5","strokeWidth":2,"endArrowhead":"arrow"},
+  {"type":"rectangle","id":"inf3","x":390,"y":390,"width":210,"height":60,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#5BA4CF","strokeWidth":2},
+  {"type":"text","id":"inf3lbl","x":455,"y":410,"text":"Replica 3","fontSize":16,"fontFamily":1,"strokeColor":"#c8d6de"},
+  {"type":"arrow","id":"a4","x":600,"y":420,"width":160,"height":0,"points":[[0,0],[160,0]],"strokeColor":"#62FEB5","strokeWidth":2,"endArrowhead":"arrow"},
+  {"type":"text","id":"note2","x":320,"y":480,"text":"Each replica downloads independently","fontSize":16,"fontFamily":1,"strokeColor":"#8fa3b0"}
+]

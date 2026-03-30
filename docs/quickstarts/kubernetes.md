@@ -1,4 +1,4 @@
-# Kubernetes Quickstart
+# Kubernetes
 
 Tigris is S3-compatible, so any Kubernetes workload that uses S3 works with
 Tigris. There are two ways to connect:

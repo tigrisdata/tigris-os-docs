@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-undef, no-unused-vars */
 // Converts compact diagram element arrays into proper .excalidraw files
 // and generates .excalidraw.png via Playwright
 

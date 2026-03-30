@@ -218,6 +218,11 @@ const sidebars = {
           label: "Backups and Archives",
           id: "use-cases/backup-archive",
         },
+        {
+          type: "doc",
+          label: "Agent Sandboxes",
+          id: "use-cases/agent-sandboxes",
+        },
       ],
     },
     {

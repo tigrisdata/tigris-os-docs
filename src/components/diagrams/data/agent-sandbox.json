@@ -1,0 +1,43 @@
+[
+  {"type":"text","id":"title","x":220,"y":15,"text":"Agent Sandbox Forking","fontSize":18,"fontFamily":1,"strokeColor":"#62FEB5"},
+
+  {"type":"rectangle","id":"base","x":240,"y":70,"width":220,"height":75,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#62FEB5","strokeWidth":2},
+  {"type":"text","id":"baselbl","x":270,"y":82,"text":"Base Bucket","fontSize":16,"fontFamily":1,"strokeColor":"#62FEB5"},
+  {"type":"text","id":"basesub","x":258,"y":115,"text":"deps + datasets + configs","fontSize":13,"fontFamily":1,"strokeColor":"#8fa3b0"},
+
+  {"type":"arrow","id":"a-snap","x":460,"y":108,"width":70,"height":0,"strokeColor":"#62FEB5","strokeWidth":2,"points":[[0,0],[70,0]]},
+  {"type":"text","id":"a-snap-lbl","x":465,"y":80,"text":"snapshot","fontSize":13,"fontFamily":1,"strokeColor":"#8fa3b0"},
+
+  {"type":"rectangle","id":"snap","x":530,"y":80,"width":160,"height":55,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#62FEB5","strokeWidth":2},
+  {"type":"text","id":"snaplbl","x":555,"y":97,"text":"Snapshot","fontSize":16,"fontFamily":1,"strokeColor":"#62FEB5"},
+
+  {"type":"arrow","id":"a-f1","x":530,"y":80,"width":-200,"height":-55,"strokeColor":"#CF8E5B","strokeWidth":2,"strokeStyle":"dashed","points":[[0,0],[-200,-55]]},
+  {"type":"arrow","id":"a-f2","x":610,"y":80,"width":0,"height":-55,"strokeColor":"#CF8E5B","strokeWidth":2,"strokeStyle":"dashed","points":[[0,0],[0,-55]]},
+  {"type":"arrow","id":"a-f3","x":690,"y":80,"width":200,"height":-55,"strokeColor":"#CF8E5B","strokeWidth":2,"strokeStyle":"dashed","points":[[0,0],[200,-55]]},
+
+  {"type":"text","id":"forklbl","x":555,"y":160,"text":"instant zero-copy fork","fontSize":13,"fontFamily":1,"strokeColor":"#CF8E5B"},
+
+  {"type":"rectangle","id":"fork1","x":200,"y":-30,"width":200,"height":55,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#CF8E5B","strokeWidth":2},
+  {"type":"text","id":"fork1lbl","x":230,"y":-15,"text":"Agent A sandbox","fontSize":14,"fontFamily":1,"strokeColor":"#CF8E5B"},
+
+  {"type":"rectangle","id":"fork2","x":510,"y":-30,"width":200,"height":55,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#CF8E5B","strokeWidth":2},
+  {"type":"text","id":"fork2lbl","x":540,"y":-15,"text":"Agent B sandbox","fontSize":14,"fontFamily":1,"strokeColor":"#CF8E5B"},
+
+  {"type":"rectangle","id":"fork3","x":790,"y":-30,"width":200,"height":55,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#CF8E5B","strokeWidth":2},
+  {"type":"text","id":"fork3lbl","x":820,"y":-15,"text":"Agent C sandbox","fontSize":14,"fontFamily":1,"strokeColor":"#CF8E5B"},
+
+  {"type":"rectangle","id":"agent1","x":215,"y":-110,"width":170,"height":50,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#5BA4CF","strokeWidth":2},
+  {"type":"text","id":"agent1lbl","x":260,"y":-95,"text":"Agent A","fontSize":14,"fontFamily":1,"strokeColor":"#5BA4CF"},
+
+  {"type":"rectangle","id":"agent2","x":525,"y":-110,"width":170,"height":50,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#5BA4CF","strokeWidth":2},
+  {"type":"text","id":"agent2lbl","x":570,"y":-95,"text":"Agent B","fontSize":14,"fontFamily":1,"strokeColor":"#5BA4CF"},
+
+  {"type":"rectangle","id":"agent3","x":805,"y":-110,"width":170,"height":50,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#5BA4CF","strokeWidth":2},
+  {"type":"text","id":"agent3lbl","x":850,"y":-95,"text":"Agent C","fontSize":14,"fontFamily":1,"strokeColor":"#5BA4CF"},
+
+  {"type":"arrow","id":"a-a1","x":300,"y":-60,"width":0,"height":30,"strokeColor":"#5BA4CF","strokeWidth":2,"points":[[0,0],[0,30]]},
+  {"type":"arrow","id":"a-a2","x":610,"y":-60,"width":0,"height":30,"strokeColor":"#5BA4CF","strokeWidth":2,"points":[[0,0],[0,30]]},
+  {"type":"arrow","id":"a-a3","x":890,"y":-60,"width":0,"height":30,"strokeColor":"#5BA4CF","strokeWidth":2,"points":[[0,0],[0,30]]},
+
+  {"type":"text","id":"note","x":230,"y":190,"text":"Each agent reads and writes its own fork — full isolation, no data copied","fontSize":14,"fontFamily":1,"strokeColor":"#8fa3b0"}
+]

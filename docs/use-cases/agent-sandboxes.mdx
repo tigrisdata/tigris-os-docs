@@ -1,0 +1,153 @@
+---
+id: agent-sandboxes
+title: "Agent Sandboxes"
+---
+
+import AgentSandboxDiagram from "@site/src/components/diagrams/AgentSandboxDiagram";
+import DiagramLightbox from "@site/src/components/diagrams/DiagramLightbox";
+
+# Agent Sandboxes
+
+## Isolated environments from forked buckets
+
+_Give every agent its own copy of the world — instantly, with zero data
+duplication._
+
+<div className="use-case-hero">
+  <div className="use-case-hero__text">
+
+AI agents that run in parallel need isolation. Without it, one agent's writes
+corrupt another agent's reads, and debugging becomes impossible. Copying
+datasets or runtime dependencies for each agent is slow and expensive — copying
+100 GB of dependencies per sandbox adds minutes of startup time and doubles your
+storage bill.
+
+[Tigris bucket forks](/docs/buckets/snapshots-and-forks/) solve both problems at
+once. A fork is a copy-on-write clone of a bucket: it's created instantly
+regardless of size, costs nothing until an agent writes new data, and provides
+full read/write isolation. Each agent gets its own fork with the complete dataset
+and dependencies already in place — ready to work in seconds, not minutes.
+
+[Snapshots and forks →](/docs/buckets/snapshots-and-forks/)
+
+  </div>
+  <div className="use-case-hero__diagram">
+    <DiagramLightbox>
+      <div className="mermaid-frame">
+        <AgentSandboxDiagram />
+      </div>
+    </DiagramLightbox>
+  </div>
+</div>
+
+### Benefits
+
+<details>
+<summary>Instant agent startup</summary>
+
+Runtime dependencies — model weights, package caches, configuration trees, RAG
+corpora — live in a base bucket. When a new agent spins up, forking that bucket
+gives it immediate access to everything without copying a single byte. Startup
+goes from minutes (copying dependencies) to seconds (creating a fork).
+
+```bash
+# Fork the base environment for a new agent
+tigris forks create agent-base --name agent-task-42
+```
+
+</details>
+
+<details>
+<summary>Full read/write isolation</summary>
+
+Each fork is an independent namespace. Agent A can write intermediate results,
+modify datasets, or create scratch files without affecting Agent B's view.
+There's no need for path-prefix conventions or locking — isolation is enforced at
+the storage level.
+
+</details>
+
+<details>
+<summary>Zero-copy efficiency</summary>
+
+Forks share the underlying data through copy-on-write. If 10 agents each fork a
+100 GB dataset, you store 100 GB — not 1 TB. You only pay for the bytes each
+agent actually changes. For read-heavy workloads where agents mostly query the
+data, the overhead is near zero.
+
+</details>
+
+<details>
+<summary>Scoped credentials per agent</summary>
+
+Give each agent an [IAM policy](/docs/iam/policies/) scoped to its own fork.
+Agents can't read or write each other's sandboxes, and a compromised agent can't
+touch the base bucket. Revoke access by deleting the fork — no cleanup required.
+
+</details>
+
+<details>
+<summary>Inspect and merge results</summary>
+
+When an agent finishes, its fork contains the complete output alongside the
+original inputs. Review, diff, or merge results back into the base bucket. Forks
+you no longer need can be deleted instantly, reclaiming only the changed bytes.
+
+</details>
+
+### Patterns
+
+#### Parallel agent execution
+
+Spin up N agents against the same dataset. Each gets a fork with the full corpus
+pre-loaded. Agents write results to their own fork, and an orchestrator collects
+outputs when all agents complete.
+
+```bash
+# Snapshot the current state
+tigris snapshots take agent-base
+
+# Fork once per agent
+for i in $(seq 1 10); do
+  tigris forks create agent-base --name "agent-run-${i}"
+done
+
+# Each agent reads and writes its own fork
+export AWS_ENDPOINT_URL="https://t3.storage.dev"
+aws s3 cp s3://agent-run-1/data/input.json - | process | \
+  aws s3 cp - s3://agent-run-1/results/output.json
+```
+
+#### Pre-warmed dependency caches
+
+Maintain a base bucket with shared runtime assets — pip/npm caches, model
+weights, vector indices, tool binaries. Snapshot it after each dependency update.
+New agents fork from the latest snapshot and skip the download step entirely.
+
+```bash
+# Update the base image
+aws s3 sync ./updated-deps s3://agent-base/deps/
+
+# Take a new snapshot
+tigris snapshots take agent-base
+
+# All new forks automatically get the updated dependencies
+tigris forks create agent-base --name agent-next-task
+```
+
+#### Ephemeral evaluation sandboxes
+
+For eval and benchmarking, fork a known-good dataset, run the agent, score the
+output, and delete the fork. The base dataset is never modified, so you can
+re-run evaluations deterministically.
+
+```bash
+# Fork for eval
+tigris forks create eval-dataset --name eval-run-20240315
+
+# Run evaluation
+python run_eval.py --bucket eval-run-20240315
+
+# Clean up
+tigris forks delete eval-run-20240315
+```

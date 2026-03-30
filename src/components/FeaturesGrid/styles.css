@@ -64,6 +64,13 @@
   text-align: center;
 }
 
+.feature-tile-description {
+  font-size: 12px;
+  color: var(--docs-color-text-100);
+  text-align: center;
+  line-height: 1.5;
+}
+
 .features-grid-link {
   display: block;
   margin-top: 0.75rem;

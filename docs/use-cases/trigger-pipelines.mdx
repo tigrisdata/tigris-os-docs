@@ -43,8 +43,8 @@ immediately.
 <summary>Instant pipeline triggers</summary>
 
 No polling interval means no wasted time between a checkpoint landing and your
-pipeline starting. The webhook fires the moment the `PutObject` completes,
-so eval, conversion, or deployment kicks off immediately.
+pipeline starting. The webhook fires the moment the `PutObject` completes, so
+eval, conversion, or deployment kicks off immediately.
 
 </details>
 
@@ -72,8 +72,8 @@ rolling deploy to your inference fleet — all from one event.
 
 ### Example: eval → convert → deploy
 
-Configure a notification rule through the Tigris Dashboard, pointing at an
-HTTPS endpoint you control. When weights land at `final/`, your handler:
+Configure a notification rule through the Tigris Dashboard, pointing at an HTTPS
+endpoint you control. When weights land at `final/`, your handler:
 
 1. Runs evaluation benchmarks against the new model
 2. Converts to optimized serving format (ONNX, TensorRT)

@@ -46,49 +46,49 @@ Browse the full list at
 
 ### Storage Setup
 
-| Skill | Description |
-| --- | --- |
+| Skill                         | Description                                                  |
+| ----------------------------- | ------------------------------------------------------------ |
 | **installing-tigris-storage** | SDK setup, endpoint configuration, and credential management |
-| **tigris-sdk-guide** | Detailed SDK implementation patterns and usage |
+| **tigris-sdk-guide**          | Detailed SDK implementation patterns and usage               |
 
 ### Object Operations
 
-| Skill | Description |
-| --- | --- |
-| **tigris-object-operations** | Upload, download, delete, list objects, and generate presigned URLs |
-| **file-storage** | File storage patterns and operations |
-| **tigris-image-optimization** | Image processing and optimization with Tigris |
-| **tigris-static-assets** | Serving and managing static assets |
+| Skill                         | Description                                                         |
+| ----------------------------- | ------------------------------------------------------------------- |
+| **tigris-object-operations**  | Upload, download, delete, list objects, and generate presigned URLs |
+| **file-storage**              | File storage patterns and operations                                |
+| **tigris-image-optimization** | Image processing and optimization with Tigris                       |
+| **tigris-static-assets**      | Serving and managing static assets                                  |
 
 ### Bucket Management
 
-| Skill | Description |
-| --- | --- |
-| **tigris-bucket-management** | Create, list, inspect, and remove buckets |
-| **tigris-lifecycle-management** | Object lifecycle policies and expiration rules |
+| Skill                              | Description                                         |
+| ---------------------------------- | --------------------------------------------------- |
+| **tigris-bucket-management**       | Create, list, inspect, and remove buckets           |
+| **tigris-lifecycle-management**    | Object lifecycle policies and expiration rules      |
 | **tigris-security-access-control** | Bucket permissions and access control configuration |
 
 ### Snapshots, Forks & Migration
 
-| Skill | Description |
-| --- | --- |
-| **tigris-snapshots-forking** | Point-in-time bucket snapshots and copy-on-write forks |
-| **tigris-snapshots-recovery** | Restore data from snapshots |
-| **tigris-s3-migration** | Migrate from AWS S3 or other S3-compatible providers |
-| **tigris-backup-export** | Backup and export procedures |
+| Skill                         | Description                                            |
+| ----------------------------- | ------------------------------------------------------ |
+| **tigris-snapshots-forking**  | Point-in-time bucket snapshots and copy-on-write forks |
+| **tigris-snapshots-recovery** | Restore data from snapshots                            |
+| **tigris-s3-migration**       | Migrate from AWS S3 or other S3-compatible providers   |
+| **tigris-backup-export**      | Backup and export procedures                           |
 
 ### Optimization
 
-| Skill | Description |
-| --- | --- |
+| Skill                       | Description                                    |
+| --------------------------- | ---------------------------------------------- |
 | **tigris-egress-optimizer** | Reduce data transfer costs and optimize egress |
 
 ### Development Practices
 
-| Skill | Description |
-| --- | --- |
-| **conventional-commits** | Consistent commit message formatting |
-| **go-table-driven-tests** | Idiomatic Go test patterns |
+| Skill                     | Description                          |
+| ------------------------- | ------------------------------------ |
+| **conventional-commits**  | Consistent commit message formatting |
+| **go-table-driven-tests** | Idiomatic Go test patterns           |
 
 ## How Skills Work
 
@@ -107,12 +107,12 @@ practices — without you needing to specify those details.
 
 Skills and context files serve different purposes:
 
-| | Skills | Context Files |
-| --- | --- | --- |
-| **Scope** | Global — available across all projects | Project-specific (`TIGRIS.md`) or machine-wide (`SKILL.md`) |
-| **Content** | Procedural knowledge for specific tasks | Configuration and conventions for your setup |
-| **Install** | `npx skills add` from skills.sh | Added to your repo or installed with the [Tigris CLI](/docs/cli/) |
-| **Best for** | Teaching agents _how_ to use Tigris | Telling agents _your_ Tigris configuration |
+|              | Skills                                  | Context Files                                                     |
+| ------------ | --------------------------------------- | ----------------------------------------------------------------- |
+| **Scope**    | Global — available across all projects  | Project-specific (`TIGRIS.md`) or machine-wide (`SKILL.md`)       |
+| **Content**  | Procedural knowledge for specific tasks | Configuration and conventions for your setup                      |
+| **Install**  | `npx skills add` from skills.sh         | Added to your repo or installed with the [Tigris CLI](/docs/cli/) |
+| **Best for** | Teaching agents _how_ to use Tigris     | Telling agents _your_ Tigris configuration                        |
 
 Use both together for best results: skills teach agents Tigris patterns, and
 context files tell agents your specific setup.

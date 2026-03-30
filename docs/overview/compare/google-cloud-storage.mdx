@@ -5,50 +5,63 @@ title: "Tigris vs Google Cloud Storage"
 
 # Tigris vs Google Cloud Storage
 
-A side-by-side comparison of Tigris and Google Cloud Storage (GCS) to help you
-understand where each service fits.
+Both Tigris and Google Cloud Storage (GCS) are object storage services with
+strong consistency and multiple storage tiers. The main differences are in API
+compatibility, global distribution, and pricing.
 
-## At a glance
+## API compatibility
 
-|                          | **Tigris**                                    | **Google Cloud Storage**                                     |
-| ------------------------ | --------------------------------------------- | ------------------------------------------------------------ |
-| **Global distribution**  | Automatic — data moves to where it's accessed | Manual — choose region, dual-region, or multi-region         |
-| **Egress fees**          | Free                                          | $0.12/GB (varies by destination)                             |
-| **Region selection**     | Not required — single global endpoint         | Required — region, dual-region, or multi-region per bucket   |
-| **S3 API compatibility** | Full — standard S3 SDKs work                  | Partial — S3-compatible XML API, but native API is different |
-| **Consistency**          | Strong read-after-write                       | Strong read-after-write                                      |
-| **Storage tiers**        | Standard, Infrequent Access, Archive          | Standard, Nearline, Coldline, Archive                        |
-| **Snapshots & forks**    | Native — zero-copy clones                     | No equivalent                                                |
-| **Custom domains**       | Supported                                     | Supported (via load balancer or CNAME)                       |
-| **IAM**                  | Fine-grained per bucket/prefix                | IAM policies, ACLs, signed URLs                              |
+### Google Cloud Storage
 
-## Where Tigris shines
+GCS has its own native API and offers an S3-compatible XML API as an
+alternative. The S3 compatibility layer doesn't support all S3 features, so
+migrating from AWS or other S3-compatible services can require code changes.
 
-### No region decisions
+### Tigris
+
+Tigris is S3-native. Your existing boto3, @aws-sdk, AWS CLI, and Terraform
+configurations work without translation layers or compatibility caveats.
+
+## Global distribution
+
+### Google Cloud Storage
 
 GCS makes you choose between single-region (cheapest), dual-region (two specific
 locations), or multi-region (continent-wide). Each tier has different pricing,
-availability guarantees, and replication semantics. Tigris eliminates this
-decision — every bucket is globally distributed automatically.
+availability guarantees, and replication semantics. Choosing wrong means paying
+more or re-creating buckets.
 
-### Zero egress costs
+### Tigris
+
+Every Tigris bucket is globally distributed automatically. Data moves to where
+it's accessed through Dynamic Data Placement — no region selection, no
+replication configuration, no trade-offs to evaluate.
+
+## Pricing
+
+### Google Cloud Storage
 
 GCS charges $0.12/GB for internet egress (standard pricing). Even inter-region
-transfer within Google Cloud costs money. Tigris has no egress fees regardless
-of where data is read from.
+transfer within Google Cloud costs money. Dual-region and multi-region storage
+classes cost more per GB stored than single-region.
 
-### Native S3 compatibility
+### Tigris
 
-GCS has its own native API and offers an S3-compatible XML API as an
-alternative, but it doesn't support all S3 features. Tigris is S3-native — your
-existing boto3, @aws-sdk, AWS CLI, and Terraform configurations work without
-translation layers or compatibility caveats.
+Tigris has no egress fees regardless of where data is read from. There are no
+inter-region transfer charges because there are no regions to transfer between.
 
-### Snapshots and forks
+## Snapshots and forks
 
-GCS has Object Versioning but no snapshot or fork concept. Tigris lets you
-snapshot a bucket's state and create independent copy-on-write forks — useful
-for ML experiments, staging environments, and safe rollbacks.
+### Google Cloud Storage
+
+GCS has Object Versioning for tracking changes to individual objects, but no
+snapshot or fork concept for entire buckets.
+
+### Tigris
+
+Tigris lets you snapshot a bucket's state and create independent copy-on-write
+forks — instant, no data copying. Useful for ML experiments, staging
+environments, and safe rollbacks.
 
 ## Where Google Cloud Storage fits better
 
@@ -61,10 +74,24 @@ for ML experiments, staging environments, and safe rollbacks.
 - **Compliance** — broader set of compliance certifications for regulated
   workloads within the Google Cloud ecosystem
 
+## Summary
+
+|                          | **Tigris**                                       | **Google Cloud Storage**                                     |
+| ------------------------ | ------------------------------------------------ | ------------------------------------------------------------ |
+| **Global distribution**  | Automatic — data moves to where it's accessed    | Manual — choose region, dual-region, or multi-region         |
+| **Egress fees**          | Free                                             | $0.12/GB (varies by destination)                             |
+| **Region selection**     | Not required — single global endpoint            | Required — region, dual-region, or multi-region per bucket   |
+| **S3 API compatibility** | Full — standard S3 SDKs work                     | Partial — S3-compatible XML API, but native API is different |
+| **Consistency**          | Strong read-after-write                          | Strong read-after-write                                      |
+| **Storage tiers**        | Standard, IA, Archive, Archive Instant Retrieval | Standard, Nearline, Coldline, Archive                        |
+| **Snapshots & forks**    | Native — zero-copy clones                        | No equivalent                                                |
+| **Custom domains**       | Supported                                        | Supported (via load balancer or CNAME)                       |
+| **IAM**                  | IAM policies, bucket policies, ACLs              | IAM policies, ACLs, signed URLs                              |
+
 ## Migration
 
 Moving from GCS to Tigris is straightforward. Use
 [rclone](/docs/quickstarts/rclone/) to sync data, or the
-[data migration guide](/docs/migration/) for a zero-downtime cutover. Since
-Tigris uses the S3 API, any code using the GCS S3-compatible API already works —
-just change the endpoint and credentials.
+[data migration guide](/docs/migration/gcs/) for a zero-downtime cutover. Since
+Tigris uses the S3 API, any code using the GCS S3-compatible XML API already
+works — just change the endpoint and credentials.

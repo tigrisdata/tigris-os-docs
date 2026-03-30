@@ -123,6 +123,8 @@ code {
 
   --docs-color-android: #44db85;
   --docs-color-apple: var(--docs-color-text) !important;
+
+  --sidebar-chevron: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 3.5L10.5 8L6 12.5' stroke='%23999' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -159,6 +161,8 @@ html[data-theme="dark"] {
   --ifm-color-content: #e7e7e7;
 
   --docusaurus-highlighted-code-line-bg: rgba(105, 105, 105, 0.3);
+
+  --sidebar-chevron: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 3.5L10.5 8L6 12.5' stroke='%23888' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
 pre.prism-code {
@@ -174,34 +178,88 @@ nav.navbar {
 }
 
 .navbar__item {
-}
-
-.navbar__item,
-.menu__link {
   font-size: 14px;
 }
 
 .menu__link {
-  border-radius: 4px 0 0 4px;
+  font-size: 17px;
+  border-radius: 4px;
 }
 
 .menu__list-item-collapsible:hover {
   background: none;
 }
 
-ul.menu__list > li > a.menu__link--active {
-  border-right: 1px solid var(--ifm-color-primary);
+/* Active sidebar link: filled background, no right border */
+ul.menu__list > li > a.menu__link--active:not(.menu__link--sublist),
+.menu__list .menu__list .menu__link--active:not(.menu__link--sublist) {
+  background-color: var(--docs-color-primary-tint-light);
+  color: var(--ifm-color-primary);
+  border-right: none;
+}
+
+html[data-theme="dark"]
+  ul.menu__list
+  > li
+  > a.menu__link--active:not(.menu__link--sublist),
+html[data-theme="dark"]
+  .menu__list
+  .menu__list
+  .menu__link--active:not(.menu__link--sublist) {
+  background-color: rgba(98, 254, 181, 0.1);
+  color: var(--docs-color-primary);
+}
+
+/* Vertical line on the left of nested sub-items */
+.menu__list .menu__list {
+  border-left: 1px solid var(--docs-color-border);
+  margin-left: 0.75rem;
+  padding-left: 0;
+}
+
+/* Sidebar collapse/expand chevron arrows */
+.menu__link--sublist-caret::after,
+.menu__caret::before {
+  background: var(--sidebar-chevron) 50% / 16px 16px !important;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  filter: none !important;
+  transform: rotate(90deg);
+  transition: transform 0.2s ease;
+}
+
+.menu__list-item--collapsed .menu__link--sublist-caret::after,
+.menu__list-item--collapsed .menu__caret::before {
+  transform: rotate(0deg);
+}
+
+/* Sidebar section divider */
+.sidebar-divider {
+  all: unset;
+  display: block;
+  height: 0;
+  border: none;
+  border-top: 1px solid var(--docs-color-border);
+  margin: 0.75rem 0.5rem;
+  opacity: 1;
 }
 
 nav.menu {
   padding-right: 0;
   scrollbar-gutter: auto;
 }
+
+/* Top-level sidebar items */
 nav.menu > ul.menu__list > li.menu__list-item > a,
 nav.menu > ul.menu__list > li.menu__list-item > div > a {
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  font-size: 17px;
+}
+
+/* Top-level active category label */
+nav.menu > ul.menu__list > li.menu__list-item > a.menu__link--active,
+nav.menu > ul.menu__list > li.menu__list-item > div > a.menu__link--active {
+  color: var(--ifm-color-primary);
 }
 
 /* Disables link hover decoration enabled by default in docusaurus v2.0.0-beta.22 */
@@ -727,7 +785,9 @@ table td {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.15s, border-color 0.15s;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
   z-index: 2;
 }
 

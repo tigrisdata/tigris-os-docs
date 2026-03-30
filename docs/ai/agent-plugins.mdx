@@ -1,0 +1,90 @@
+---
+id: agent-plugins
+title: "Agent Plugins for Claude Code & Cursor"
+---
+
+# Agent Plugins for Claude Code & Cursor
+
+The [Tigris agent plugins](https://github.com/tigrisdata/tigris-agents-plugins)
+give AI coding agents direct access to Tigris operations — managing buckets,
+objects, access keys, IAM policies, and migrations — without leaving your
+editor.
+
+## Available skills
+
+The plugin provides five specialized skills:
+
+- **tigris-authentication** — CLI installation, OAuth/credential login,
+  configuration management
+- **tigris-buckets** — bucket creation, configuration, deletion, CORS,
+  migrations, TTL, snapshots, forks
+- **tigris-objects** — upload, download, list, move, delete, and presign objects
+- **tigris-access-keys** — create, list, assign roles, delete access keys
+- **tigris-iam** — manage IAM policies, users, invitations, and permissions
+
+## Install in Claude Code
+
+Use the plugin marketplace:
+
+```
+/plugin marketplace add tigrisdata/tigris-agents-plugins
+/plugin install tigris-storage@tigris-agents-plugins
+```
+
+Or install manually by cloning the repo and copying the skill folders to
+`~/.claude/skills/`:
+
+```bash
+git clone https://github.com/tigrisdata/tigris-agents-plugins.git
+cp -r tigris-agents-plugins/skills/* ~/.claude/skills/
+```
+
+## Install in Cursor
+
+Navigate to **Settings > Rules > Add Rule > Remote Rule (GitHub)** and enter:
+
+```
+tigrisdata/tigris-agents-plugins
+```
+
+Or install manually by copying the skill folders to `~/.cursor/skills/`:
+
+```bash
+git clone https://github.com/tigrisdata/tigris-agents-plugins.git
+cp -r tigris-agents-plugins/skills/* ~/.cursor/skills/
+```
+
+### Cursor rules
+
+The plugin also includes two context-aware rules that enforce Tigris SDK best
+practices and security guardrails for TypeScript and JavaScript projects. These
+are installed automatically when you add the remote rule.
+
+## Subagent
+
+The plugins include a `tigris-storage-agent` subagent that handles multi-step
+workflows like:
+
+- Setting up a new project with Tigris storage
+- Migrating from AWS S3 or other providers
+- Creating dev sandbox environments
+- Running security audits on bucket configurations
+- Configuring production deployments
+
+## Prerequisites
+
+The plugins use the [Tigris CLI](/docs/cli/) under the hood. Make sure you have
+it installed and authenticated:
+
+```bash
+npm install -g @tigrisdata/cli
+tigris login
+```
+
+## See also
+
+- [MCP Server](/docs/mcp/remote/) — connect Tigris to any MCP-compatible AI tool
+  with OAuth authentication
+- [Agent Skills](/docs/skills/) — reference for the skill definitions
+- [tigris-agents-plugins on GitHub](https://github.com/tigrisdata/tigris-agents-plugins)
+  — source code and full documentation

@@ -25,7 +25,7 @@ const sidebars = {
       type: "category",
       label: "Get Started",
       collapsible: true,
-      collapsed: false,
+      collapsed: true,
       link: {
         type: "doc",
         id: "index",
@@ -62,6 +62,11 @@ const sidebars = {
               label: "Agent Skills",
               id: "skills",
             },
+            {
+              type: "doc",
+              label: "Agent Plugins",
+              id: "ai/agent-plugins",
+            },
           ],
         },
       ],
@@ -88,32 +93,17 @@ const sidebars = {
         },
         {
           type: "category",
-          label: "Compare to Tigris",
+          label: "Concepts",
           collapsible: true,
           collapsed: true,
           items: [
-            {
-              type: "doc",
-              label: "Compare to AWS S3",
-              id: "overview/compare/aws-s3",
-            },
-            {
-              type: "doc",
-              label: "Compare to Google Cloud Storage",
-              id: "overview/compare/google-cloud-storage",
-            },
-            {
-              type: "doc",
-              label: "Compare to Cloudflare R2",
-              id: "overview/compare/cloudflare-r2",
-            },
+            "concepts/architecture",
+            "concepts/authnz",
+            "concepts/consistency",
+            "concepts/regions",
+            "api/s3/index",
           ],
         },
-        "concepts/architecture",
-        "concepts/authnz",
-        "api/s3/index",
-        "concepts/regions",
-        "concepts/consistency",
         {
           type: "category",
           label: "Benchmarks",
@@ -161,13 +151,36 @@ const sidebars = {
             },
           ],
         },
+        {
+          type: "category",
+          label: "Compare to Tigris",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              label: "Compare to AWS S3",
+              id: "overview/compare/aws-s3",
+            },
+            {
+              type: "doc",
+              label: "Compare to Google Cloud Storage",
+              id: "overview/compare/google-cloud-storage",
+            },
+            {
+              type: "doc",
+              label: "Compare to Cloudflare R2",
+              id: "overview/compare/cloudflare-r2",
+            },
+          ],
+        },
       ],
     },
     {
       type: "category",
       label: "Use Cases",
       collapsible: true,
-      collapsed: false,
+      collapsed: true,
       items: [
         {
           type: "doc",
@@ -196,8 +209,13 @@ const sidebars = {
         },
         {
           type: "doc",
-          label: "Multitenant Storage",
+          label: "Multi-Tenant Storage",
           id: "use-cases/multitenant-storage",
+        },
+        {
+          type: "doc",
+          label: "Backups and Archives",
+          id: "use-cases/backup-archive",
         },
       ],
     },
@@ -206,10 +224,6 @@ const sidebars = {
       label: "Guides",
       collapsible: true,
       collapsed: true,
-      link: {
-        type: "doc",
-        id: "guides",
-      },
       items: [
         {
           type: "category",
@@ -221,6 +235,11 @@ const sidebars = {
               type: "doc",
               label: "Python",
               id: "quickstarts/python",
+            },
+            {
+              type: "doc",
+              label: "PyTorch",
+              id: "quickstarts/pytorch",
             },
             {
               type: "doc",
@@ -251,157 +270,6 @@ const sidebars = {
         },
         {
           type: "category",
-          label: "AI & ML",
-          collapsible: true,
-          collapsed: true,
-          items: [
-            {
-              type: "doc",
-              label: "PyTorch",
-              id: "quickstarts/pytorch",
-            },
-            {
-              type: "category",
-              label: "SkyPilot",
-              items: [
-                {
-                  type: "doc",
-                  label: "Getting Started",
-                  id: "quickstarts/skypilot",
-                },
-                {
-                  type: "doc",
-                  label: "Model Storage",
-                  id: "model-storage/skypilot",
-                },
-                {
-                  type: "doc",
-                  label: "Training With Big Data",
-                  id: "training/big-data-skypilot/index",
-                },
-              ],
-            },
-            {
-              type: "category",
-              label: "LanceDB",
-              items: [
-                {
-                  type: "doc",
-                  label: "Getting Started",
-                  id: "libraries/lancedb/index",
-                },
-                {
-                  type: "doc",
-                  label: "Choosing a Lance Dataset Type",
-                  id: "libraries/lancedb/choosing-dataset-type",
-                },
-                {
-                  type: "doc",
-                  label: "Vector Database Tutorial",
-                  id: "libraries/lancedb/vector-database",
-                },
-                {
-                  type: "doc",
-                  label: "Example: Document Search",
-                  id: "libraries/lancedb/docs-search",
-                },
-              ],
-            },
-            {
-              type: "doc",
-              label: "Pixeltable",
-              id: "quickstarts/pixeltable",
-            },
-            {
-              type: "doc",
-              label: "CrewAI",
-              id: "agents/agent-crewai",
-            },
-            {
-              type: "doc",
-              label: "Cognee",
-              id: "agents/agent-cognee",
-            },
-          ],
-        },
-        {
-          type: "category",
-          label: "Data & Analytics",
-          collapsible: true,
-          collapsed: true,
-          items: [
-            {
-              type: "doc",
-              label: "DuckDB",
-              id: "quickstarts/duckdb",
-            },
-            {
-              type: "doc",
-              label: "Databricks",
-              id: "libraries/databricks/index",
-            },
-          ],
-        },
-        {
-          type: "category",
-          label: "Streaming & Messaging",
-          collapsible: true,
-          collapsed: true,
-          items: [
-            {
-              type: "doc",
-              label: "Bufstream",
-              id: "quickstarts/bufstream",
-            },
-            {
-              type: "doc",
-              label: "AutoMQ",
-              id: "quickstarts/automq",
-            },
-            {
-              type: "doc",
-              label: "Warpstream",
-              id: "guides/warpstream",
-            },
-          ],
-        },
-        {
-          type: "category",
-          label: "Infrastructure",
-          collapsible: true,
-          collapsed: true,
-          items: [
-            {
-              type: "category",
-              label: "Fly.io",
-              items: [
-                {
-                  type: "doc",
-                  label: "Getting Started",
-                  id: "sdks/fly/index",
-                },
-                {
-                  type: "doc",
-                  label: "Data Migration with Flyctl",
-                  id: "sdks/fly/data-migration-with-flyctl",
-                },
-                {
-                  type: "doc",
-                  label: "Model Storage",
-                  id: "model-storage/fly-io",
-                },
-              ],
-            },
-            "training/tigrisfs",
-            {
-              type: "doc",
-              label: "Training With Big Data",
-              id: "training/big-data-skypilot/index",
-            },
-          ],
-        },
-        {
-          type: "category",
           label: "Migrate to Tigris",
           collapsed: true,
           link: {
@@ -416,7 +284,144 @@ const sidebars = {
             "migration/s3-compatible",
           ],
         },
+        {
+          type: "category",
+          label: "Integrations",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "category",
+              label: "AI & ML",
+              collapsible: true,
+              collapsed: true,
+              items: [
+                {
+                  type: "category",
+                  label: "SkyPilot",
+                  items: [
+                    {
+                      type: "doc",
+                      label: "Getting Started",
+                      id: "quickstarts/skypilot",
+                    },
+                    {
+                      type: "doc",
+                      label: "Model Storage",
+                      id: "model-storage/skypilot",
+                    },
+                    {
+                      type: "doc",
+                      label: "Training With Big Data",
+                      id: "training/big-data-skypilot/index",
+                    },
+                  ],
+                },
+                {
+                  type: "category",
+                  label: "LanceDB",
+                  items: [
+                    {
+                      type: "doc",
+                      label: "Getting Started",
+                      id: "libraries/lancedb/index",
+                    },
+                    {
+                      type: "doc",
+                      label: "Choosing a Lance Dataset Type",
+                      id: "libraries/lancedb/choosing-dataset-type",
+                    },
+                    {
+                      type: "doc",
+                      label: "Vector Database Tutorial",
+                      id: "libraries/lancedb/vector-database",
+                    },
+                    {
+                      type: "doc",
+                      label: "Example: Document Search",
+                      id: "libraries/lancedb/docs-search",
+                    },
+                  ],
+                },
+                {
+                  type: "doc",
+                  label: "Pixeltable",
+                  id: "quickstarts/pixeltable",
+                },
+                {
+                  type: "doc",
+                  label: "CrewAI",
+                  id: "agents/agent-crewai",
+                },
+                {
+                  type: "doc",
+                  label: "Cognee",
+                  id: "agents/agent-cognee",
+                },
+              ],
+            },
+            {
+              type: "category",
+              label: "Data & Analytics",
+              collapsible: true,
+              collapsed: true,
+              items: [
+                {
+                  type: "doc",
+                  label: "DuckDB",
+                  id: "quickstarts/duckdb",
+                },
+                {
+                  type: "doc",
+                  label: "Databricks",
+                  id: "libraries/databricks/index",
+                },
+              ],
+            },
+            {
+              type: "category",
+              label: "Streaming & Messaging",
+              collapsible: true,
+              collapsed: true,
+              items: [
+                {
+                  type: "doc",
+                  label: "Bufstream",
+                  id: "quickstarts/bufstream",
+                },
+                {
+                  type: "doc",
+                  label: "AutoMQ",
+                  id: "quickstarts/automq",
+                },
+                {
+                  type: "doc",
+                  label: "Warpstream",
+                  id: "guides/warpstream",
+                },
+              ],
+            },
+            {
+              type: "category",
+              label: "Infrastructure",
+              collapsible: true,
+              collapsed: true,
+              items: [
+                {
+                  type: "doc",
+                  label: "Fly.io",
+                  id: "sdks/fly/index",
+                },
+              ],
+            },
+          ],
+        },
       ],
+    },
+    {
+      type: "html",
+      value: '<hr class="sidebar-divider" />',
+      defaultStyle: false,
     },
     {
       type: "category",
@@ -521,9 +526,131 @@ const sidebars = {
           ],
         },
         {
+          type: "category",
+          label: "Tigris Acceleration Gateway",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              label: "Overview",
+              id: "acceleration-gateway/index",
+            },
+            {
+              type: "doc",
+              label: "Benchmarks",
+              id: "acceleration-gateway/benchmarks",
+            },
+            {
+              type: "doc",
+              label: "Quick Start",
+              id: "acceleration-gateway/quickstart",
+            },
+            {
+              type: "category",
+              label: "Deployment",
+              collapsible: true,
+              collapsed: false,
+              link: {
+                type: "doc",
+                id: "acceleration-gateway/deployment-guide",
+              },
+              items: [
+                {
+                  type: "doc",
+                  label: "Docker",
+                  id: "acceleration-gateway/docker",
+                },
+                {
+                  type: "doc",
+                  label: "Kubernetes",
+                  id: "acceleration-gateway/kubernetes",
+                },
+              ],
+            },
+            {
+              type: "category",
+              label: "Reference",
+              collapsible: true,
+              collapsed: true,
+              items: [
+                {
+                  type: "doc",
+                  label: "Configuration",
+                  id: "acceleration-gateway/configuration",
+                },
+                {
+                  type: "doc",
+                  label: "S3 Client Usage",
+                  id: "acceleration-gateway/usage",
+                },
+                {
+                  type: "doc",
+                  label: "S3 Compatibility",
+                  id: "acceleration-gateway/s3-compatibility",
+                },
+                {
+                  type: "doc",
+                  label: "Cache Control",
+                  id: "acceleration-gateway/cache-control",
+                },
+                {
+                  type: "doc",
+                  label: "TLS",
+                  id: "acceleration-gateway/tls",
+                },
+                {
+                  type: "doc",
+                  label: "Security",
+                  id: "acceleration-gateway/security",
+                },
+                {
+                  type: "doc",
+                  label: "Metrics",
+                  id: "acceleration-gateway/metrics",
+                },
+              ],
+            },
+          ],
+        },
+        "training/tigrisfs",
+        {
           type: "doc",
           label: "Changelog",
           id: "changelog/index",
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "Partner Integration Program",
+      collapsed: true,
+      items: [
+        {
+          type: "doc",
+          label: "Overview",
+          id: "partner-integrations/index",
+        },
+        {
+          type: "doc",
+          label: "Partner Dashboard",
+          id: "partner-integrations/dashboard",
+        },
+        {
+          type: "doc",
+          label: "Multi-Tenant Architecture",
+          id: "partner-integrations/architecture",
+        },
+        {
+          type: "category",
+          label: "API reference",
+          link: {
+            type: "generated-index",
+            title: "Partner Integrations API reference",
+            slug: "/partner-integrations/api/",
+            description: "OpenAPI spec for Tigris parter extensions API.",
+          },
+          items: apisidebar,
         },
       ],
     },
@@ -576,7 +703,7 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "Tigris CLI",
+      label: "CLI",
       collapsible: true,
       collapsed: true,
       link: {
@@ -732,38 +859,10 @@ const sidebars = {
           label: "Agent Skills",
           id: "skills",
         },
-      ],
-    },
-    {
-      type: "category",
-      label: "Partner Integration Program",
-      collapsed: true,
-      items: [
         {
           type: "doc",
-          label: "Overview",
-          id: "partner-integrations/index",
-        },
-        {
-          type: "doc",
-          label: "Partner Dashboard",
-          id: "partner-integrations/dashboard",
-        },
-        {
-          type: "doc",
-          label: "Multi-Tenant Architecture",
-          id: "partner-integrations/architecture",
-        },
-        {
-          type: "category",
-          label: "API reference",
-          link: {
-            type: "generated-index",
-            title: "Partner Integrations API reference",
-            slug: "/partner-integrations/api/",
-            description: "OpenAPI spec for Tigris parter extensions API.",
-          },
-          items: apisidebar,
+          label: "Agent Plugins",
+          id: "ai/agent-plugins",
         },
       ],
     },

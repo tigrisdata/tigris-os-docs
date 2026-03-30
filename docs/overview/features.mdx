@@ -19,16 +19,18 @@ When a user in Tokyo reads an object that was uploaded in Virginia, subsequent
 reads from Tokyo are served from a nearby replica at low latency. This happens
 transparently, with no configuration required.
 
-[Learn more about global distribution →](/docs/overview/#global-low-latency-access)
+[Learn more about global distribution →](/docs/concepts/regions/)
 
 ## S3 Compatible API
 
 Tigris implements the S3 API, so any tool, library, or application that works
 with AWS S3 works with Tigris. boto3, @aws-sdk, the AWS CLI, Terraform, rclone —
-all work by changing the endpoint URL.
+all work by updating your endpoint and access keys.
 
 ```bash
 export AWS_ENDPOINT_URL="https://t3.storage.dev"
+export AWS_ACCESS_KEY_ID="tid_your_access_key"
+export AWS_SECRET_ACCESS_KEY="tsec_your_secret_key"
 # Your existing S3 code just works
 ```
 
@@ -119,3 +121,27 @@ prefixes, and operations. Create read-only keys for inference servers,
 write-only keys for training jobs, or admin keys for your CI/CD pipeline.
 
 [IAM policies →](/docs/iam/policies/)
+
+## Zero-Downtime Migration
+
+Shadow Buckets enable seamless migration from existing S3-compatible storage.
+Configure a shadow bucket to automatically sync reads and writes between your
+old and new storage — no risky hard cutover, no downtime.
+
+[Migration guides →](/docs/migration/)
+
+## Strong Consistency
+
+Tigris offers read-after-write consistency within the same region and eventual
+consistency globally by default. For use cases where objects may be modified
+from any region, Tigris provides a global strong consistency option.
+
+[Consistency model →](/docs/concepts/consistency/)
+
+## Security and Compliance
+
+Tigris is SOC 2 Type II compliant with encryption at rest and in transit.
+Fine-grained IAM policies let you control access to buckets and objects down to
+the prefix and operation level.
+
+[Authentication and authorization →](/docs/concepts/authnz/)

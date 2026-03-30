@@ -20,9 +20,16 @@ _Serve models faster. Without changing your code._
 <div className="use-case-hero">
   <div className="use-case-hero__text">
 
-Serving ML models at scale means loading large weight files quickly, repeatedly, and from wherever your GPUs happen to be. The bottleneck is almost always the same: getting gigabytes of model data from storage to GPU memory as fast as possible.
+Serving ML models at scale means loading large weight files quickly, repeatedly,
+and from wherever your GPUs happen to be. The bottleneck is almost always the
+same: getting gigabytes of model data from storage to GPU memory as fast as
+possible.
 
-[TAG](/docs/acceleration-gateway/quickstart/) is a high-performance S3-compatible caching proxy purpose-built for ML workloads. It sits between your inference servers and Tigris, caches model weights on local NVMe/SSD, and serves subsequent reads at near-local-disk speed. Your framework doesn't know TAG exists — it just sees a faster S3 endpoint.
+[TAG](/docs/acceleration-gateway/quickstart/) is a high-performance
+S3-compatible caching proxy purpose-built for ML workloads. It sits between your
+inference servers and Tigris, caches model weights on local NVMe/SSD, and serves
+subsequent reads at near-local-disk speed. Your framework doesn't know TAG
+exists — it just sees a faster S3 endpoint.
 
 [Get started with TAG →](/docs/acceleration-gateway/quickstart/)
 
@@ -80,9 +87,9 @@ about it and can forward requests via gRPC. This avoids redundant downloads
 across your fleet.
 
 <DiagramLightbox>
-<div className="mermaid-frame">
-  <TAGClusterModeDiagram />
-</div>
+  <div className="mermaid-frame">
+    <TAGClusterModeDiagram />
+  </div>
 </DiagramLightbox>
 
 </details>
@@ -135,8 +142,8 @@ your storage bill.
 <details>
 <summary>Global low-latency reads</summary>
 
-A [global bucket](/docs/buckets/locations/) automatically serves weights from the
-nearest replica. No per-region buckets to manage, no sync jobs to maintain.
+A [global bucket](/docs/buckets/locations/) automatically serves weights from
+the nearest replica. No per-region buckets to manage, no sync jobs to maintain.
 
 </details>
 
@@ -157,10 +164,10 @@ Both patterns store your models durably in Tigris — TAG is purely a read
 acceleration layer. Start with direct access, then add TAG when load times
 become a bottleneck. No application code changes either way.
 
-| | Direct access | With TAG |
-|--------|--------------|----------|
-| **Setup** | Set endpoint URL | Run TAG alongside your stack |
-| **Cold starts** | Network speed to Tigris | First same, all subsequent near-instant |
-| **Best for** | Small fleets, infrequent restarts | Large fleets, frequent scaling, serverless |
-| **Model swaps** | Full download each time | Instant if cached |
-| **Code changes** | None | None |
+|                  | Direct access                     | With TAG                                   |
+| ---------------- | --------------------------------- | ------------------------------------------ |
+| **Setup**        | Set endpoint URL                  | Run TAG alongside your stack               |
+| **Cold starts**  | Network speed to Tigris           | First same, all subsequent near-instant    |
+| **Best for**     | Small fleets, infrequent restarts | Large fleets, frequent scaling, serverless |
+| **Model swaps**  | Full download each time           | Instant if cached                          |
+| **Code changes** | None                              | None                                       |

@@ -1,0 +1,306 @@
+---
+id: go
+title: "Go"
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Go
+
+There are two ways to use Tigris with Go:
+
+- **[AWS Go SDK](/docs/sdks/s3/aws-go-sdk/)** — use the standard AWS SDK for Go
+  v2, just point it at Tigris. This is the recommended approach for production
+  use.
+- **[Tigris Go SDK](https://github.com/tigrisdata/storage-go)** — a Go SDK with
+  Tigris-specific features like snapshots and bucket forking built in. Currently
+  in development.
+
+Both are fully S3-compatible. We recommend the AWS Go SDK for most use cases
+today.
+
+## Prerequisites
+
+- Go 1.21+
+- A Tigris account — create one at [storage.new](https://storage.new)
+- An access key from
+  [console.storage.dev/createaccesskey](https://console.storage.dev/createaccesskey)
+
+## Install
+
+<Tabs>
+<TabItem value="aws" label="AWS Go SDK" default>
+
+```bash
+go get github.com/aws/aws-sdk-go-v2
+go get github.com/aws/aws-sdk-go-v2/config
+go get github.com/aws/aws-sdk-go-v2/service/s3
+```
+
+</TabItem>
+<TabItem value="tigris" label="Tigris Go SDK">
+
+```bash
+go get github.com/tigrisdata/storage-go
+```
+
+</TabItem>
+</Tabs>
+
+## Configure credentials
+
+Set your Tigris credentials as environment variables:
+
+```bash
+export AWS_ACCESS_KEY_ID="tid_your_access_key"
+export AWS_SECRET_ACCESS_KEY="tsec_your_secret_key"
+export AWS_ENDPOINT_URL="https://t3.storage.dev"
+export AWS_REGION="auto"
+```
+
+## Create a client
+
+<Tabs>
+<TabItem value="aws" label="AWS Go SDK" default>
+
+```go
+package main
+
+import (
+    "context"
+    "log"
+
+    "github.com/aws/aws-sdk-go-v2/aws"
+    "github.com/aws/aws-sdk-go-v2/config"
+    "github.com/aws/aws-sdk-go-v2/service/s3"
+)
+
+func main() {
+    ctx := context.Background()
+
+    sdkConfig, err := config.LoadDefaultConfig(ctx)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    client := s3.NewFromConfig(sdkConfig, func(o *s3.Options) {
+        o.BaseEndpoint = aws.String("https://t3.storage.dev")
+        o.Region = "auto"
+        o.UsePathStyle = false
+    })
+}
+```
+
+If you set `AWS_ENDPOINT_URL` in your environment, you can omit the
+`BaseEndpoint` option.
+
+</TabItem>
+<TabItem value="tigris" label="Tigris Go SDK">
+
+```go
+package main
+
+import (
+    "context"
+    "log"
+
+    storage "github.com/tigrisdata/storage-go"
+)
+
+func main() {
+    ctx := context.Background()
+
+    client, err := storage.New(ctx)
+    if err != nil {
+        log.Fatal(err)
+    }
+}
+```
+
+The SDK reads credentials from environment variables automatically. You can also
+configure it with options:
+
+```go
+client, err := storage.New(ctx,
+    storage.WithGlobalEndpoint(),
+    storage.WithAccessKeypair("tid_your_access_key", "tsec_your_secret_key"),
+)
+```
+
+</TabItem>
+</Tabs>
+
+## Basic operations
+
+<Tabs>
+<TabItem value="aws" label="AWS Go SDK" default>
+
+### Create a bucket
+
+```go
+_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{
+    Bucket: aws.String("my-bucket"),
+})
+```
+
+### Upload an object
+
+```go
+import "strings"
+
+_, err := client.PutObject(ctx, &s3.PutObjectInput{
+    Bucket: aws.String("my-bucket"),
+    Key:    aws.String("hello.txt"),
+    Body:   strings.NewReader("Hello, World!"),
+})
+```
+
+### Download an object
+
+```go
+import "io"
+
+result, err := client.GetObject(ctx, &s3.GetObjectInput{
+    Bucket: aws.String("my-bucket"),
+    Key:    aws.String("hello.txt"),
+})
+if err != nil {
+    log.Fatal(err)
+}
+defer result.Body.Close()
+
+data, _ := io.ReadAll(result.Body)
+fmt.Println(string(data))
+```
+
+### List objects
+
+```go
+result, err := client.ListObjectsV2(ctx, &s3.ListObjectsV2Input{
+    Bucket: aws.String("my-bucket"),
+})
+if err != nil {
+    log.Fatal(err)
+}
+
+for _, obj := range result.Contents {
+    fmt.Printf("  %s  (%d bytes)\n", *obj.Key, *obj.Size)
+}
+```
+
+### Generate a presigned URL
+
+```go
+import "github.com/aws/aws-sdk-go-v2/service/s3"
+
+presigner := s3.NewPresignClient(client)
+
+req, err := presigner.PresignGetObject(ctx, &s3.GetObjectInput{
+    Bucket: aws.String("my-bucket"),
+    Key:    aws.String("hello.txt"),
+}, s3.WithPresignExpires(time.Hour))
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Println(req.URL)
+```
+
+</TabItem>
+<TabItem value="tigris" label="Tigris Go SDK">
+
+The Tigris Go SDK wraps the AWS SDK, so standard S3 operations work the same
+way. Use `client.S3` to access the underlying S3 client:
+
+### Create a bucket
+
+```go
+_, err := client.S3.CreateBucket(ctx, &s3.CreateBucketInput{
+    Bucket: aws.String("my-bucket"),
+})
+```
+
+### Upload an object
+
+```go
+import "strings"
+
+_, err := client.S3.PutObject(ctx, &s3.PutObjectInput{
+    Bucket: aws.String("my-bucket"),
+    Key:    aws.String("hello.txt"),
+    Body:   strings.NewReader("Hello, World!"),
+})
+```
+
+### Download an object
+
+```go
+import "io"
+
+result, err := client.S3.GetObject(ctx, &s3.GetObjectInput{
+    Bucket: aws.String("my-bucket"),
+    Key:    aws.String("hello.txt"),
+})
+if err != nil {
+    log.Fatal(err)
+}
+defer result.Body.Close()
+
+data, _ := io.ReadAll(result.Body)
+fmt.Println(string(data))
+```
+
+### List objects
+
+```go
+result, err := client.S3.ListObjectsV2(ctx, &s3.ListObjectsV2Input{
+    Bucket: aws.String("my-bucket"),
+})
+if err != nil {
+    log.Fatal(err)
+}
+
+for _, obj := range result.Contents {
+    fmt.Printf("  %s  (%d bytes)\n", *obj.Key, *obj.Size)
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Snapshots and forks
+
+The Tigris Go SDK provides built-in support for snapshots and bucket forking.
+You can also use these features with the AWS Go SDK by passing Tigris-specific
+headers on each request, but the Tigris Go SDK handles this for you
+automatically.
+
+```go
+import storage "github.com/tigrisdata/storage-go"
+
+// Create a snapshot-enabled bucket
+err := client.CreateSnapshotBucket(ctx, "my-snapshots")
+
+// Take a snapshot
+snapshot, err := client.CreateSnapshot(ctx, "my-snapshots")
+fmt.Printf("Snapshot: %s\n", snapshot)
+
+// List snapshots
+snapshots, err := client.ListSnapshots(ctx, "my-snapshots")
+
+// Fork a bucket — instant copy-on-write clone
+err = client.CreateFork(ctx, "my-snapshots", "experiment-1")
+```
+
+## Next steps
+
+- [Example Go app](https://github.com/tigrisdata-community/tigris-go-quickstart)
+  — a simple web app that uploads and manages files with Tigris, ready to deploy
+  to Fly.io
+- [AWS Go SDK reference](/docs/sdks/s3/aws-go-sdk/) — advanced usage with
+  presigned URLs, conditional operations, metadata queries, and object
+  notifications
+- [Snapshots and forks](/docs/buckets/snapshots-and-forks/) — full guide on
+  Tigris snapshot and fork concepts
+- [storage-go on GitHub](https://github.com/tigrisdata/storage-go) — Tigris Go
+  SDK source code

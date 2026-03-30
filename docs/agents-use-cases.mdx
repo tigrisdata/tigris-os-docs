@@ -79,15 +79,15 @@ Writers only ever call `PutObject` into that bucket. Readers in any region use
 plain `GetObject` calls against the same keys and automatically hit the nearest
 replica.
 
-For more information, see the docs:
-[Bucket locations](/docs/buckets/locations/) ·
-[Metadata querying](/docs/objects/query-metadata.md) ·
+For more information, see the docs: [Bucket locations](/docs/buckets/locations/)
+· [Metadata querying](/docs/objects/query-metadata.md) ·
 [Bucket locations](/docs/buckets/locations/) (per-object residency)
 
 :::note
 
-Global buckets are [strongly consistent within a region](/docs/concepts/consistency/) and eventually consistent
-across regions.
+Global buckets are
+[strongly consistent within a region](/docs/concepts/consistency/) and
+eventually consistent across regions.
 
 :::
 
@@ -97,11 +97,12 @@ When you need agents to pick up exactly where they left off, you have to
 checkpoint their state somewhere durable.
 
 In practice, that means saving snapshots of their state at safe points so you
-can restart them after failures or migration. [Storing snapshots in Tigris](/docs/buckets/snapshots-and-forks/) makes
-them available from the nearest region to whichever machine picks up the resumed
+can restart them after failures or migration.
+[Storing snapshots in Tigris](/docs/buckets/snapshots-and-forks/) makes them
+available from the nearest region to whichever machine picks up the resumed
 agent, with no cross-region prefetch and no egress cost on the read. Agents that
-need filesystem semantics can mount the bucket directly via [TigrisFS](/docs/training/tigrisfs/) and see a
-plain `/data` directory.
+need filesystem semantics can mount the bucket directly via
+[TigrisFS](/docs/training/tigrisfs/) and see a plain `/data` directory.
 
 ![Checkpoint and resume agents](/img/use-cases/agents-checkpoint.excalidraw.png)
 

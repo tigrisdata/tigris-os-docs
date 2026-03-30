@@ -1,0 +1,136 @@
+---
+id: backup-archive
+title: "Backups and Archives"
+---
+
+import BackupArchiveDiagram from "@site/src/components/diagrams/BackupArchiveDiagram";
+import DiagramLightbox from "@site/src/components/diagrams/DiagramLightbox";
+
+# Backups and Archives
+
+## Durable, low-cost storage for data you need to keep
+
+_Store backups and long-term archives with built-in geo-redundancy — no
+replication rules, no retrieval delays._
+
+<div className="use-case-hero">
+  <div className="use-case-hero__text">
+
+Backup and archive workloads need storage that is durable, affordable, and
+accessible when it counts. Traditional providers force you to choose between
+cost and retrieval speed: cheap archive tiers come with hours-long restore
+times, and cross-region redundancy requires manual replication setup.
+
+Tigris stores every object redundantly across multiple geographic locations by
+default. [Lifecycle rules](/docs/buckets/object-lifecycle-rules/) automatically
+transition objects from Standard to Infrequent Access to Archive as they age, so
+you get the lowest storage cost without managing tiering manually. When you need
+to restore, data is available immediately — no rehydration wait.
+
+[Storage tiers →](/docs/objects/tiers/)&nbsp;&nbsp;&nbsp;[Lifecycle rules →](/docs/buckets/object-lifecycle-rules/)
+
+  </div>
+  <div className="use-case-hero__diagram">
+    <DiagramLightbox>
+      <div className="mermaid-frame">
+        <BackupArchiveDiagram />
+      </div>
+    </DiagramLightbox>
+  </div>
+</div>
+
+### Benefits
+
+<details>
+<summary>Automatic tiering with lifecycle rules</summary>
+
+Define age-based rules to move objects between storage tiers automatically. A
+backup written today starts in Standard, transitions to Infrequent Access after
+30 days, and moves to Archive after 90 — all without application changes.
+
+```bash
+tigris buckets lifecycle set my-backups \
+  --rule '{"prefix":"backups/","transitions":[{"days":30,"storage_class":"INFREQUENT_ACCESS"},{"days":90,"storage_class":"ARCHIVE"}]}'
+```
+
+</details>
+
+<details>
+<summary>Geo-redundant by default</summary>
+
+Every object is stored across multiple regions automatically. You don't need to
+configure cross-region replication, manage replica buckets, or pay extra for
+redundancy. If a region goes down, your backups are still accessible from
+another location.
+
+</details>
+
+<details>
+<summary>No retrieval delays</summary>
+
+Unlike traditional archive storage where restoring data takes minutes to hours,
+objects in every Tigris storage tier are accessible immediately. When you need
+to restore from a backup, you can start reading data right away — there is no
+rehydration step.
+
+</details>
+
+<details>
+<summary>Zero egress fees</summary>
+
+Restoring backups from traditional cloud storage can be expensive — especially
+cross-region restores during an incident. Tigris charges nothing for data
+transfer out, so disaster recovery doesn't come with a surprise bill.
+
+[Pricing →](https://www.tigrisdata.com/pricing/#zero-egress-fees)
+
+</details>
+
+<details>
+<summary>S3-compatible API</summary>
+
+Use your existing backup tools — rclone, AWS CLI, restic, or any S3-compatible
+client. Point them at `t3.storage.dev` with your Tigris credentials and your
+existing backup scripts work without modification.
+
+```bash
+# Example: rclone sync to Tigris
+rclone sync /var/backups tigris:my-backups/daily/
+```
+
+</details>
+
+### Common patterns
+
+#### Database backups
+
+Schedule automated database dumps to Tigris. Lifecycle rules handle tiering
+automatically, and [object notifications](/docs/buckets/object-notifications/)
+can trigger verification jobs when a new backup lands.
+
+```bash
+# Dump and upload
+pg_dump mydb | gzip | aws s3 cp - s3://my-backups/db/$(date +%F).sql.gz
+
+# Verify latest backup exists
+aws s3 ls s3://my-backups/db/ --recursive | tail -1
+```
+
+#### Application state snapshots
+
+Use [Tigris snapshots](/docs/buckets/snapshots-and-forks/) to capture the state
+of an entire bucket at a point in time. Snapshots are instant and zero-copy — no
+data is duplicated until it changes.
+
+```bash
+# Take a point-in-time snapshot
+tigris snapshots take my-app-data --name pre-migration-2024-03
+```
+
+#### Compliance and audit logs
+
+Store logs and audit trails that must be retained for regulatory compliance.
+Lifecycle rules move them to Archive tier for the lowest storage cost, while IAM
+policies ensure they remain immutable.
+
+[IAM policies →](/docs/iam/policies/)

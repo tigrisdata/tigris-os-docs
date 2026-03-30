@@ -24,9 +24,9 @@ cloud or region.
 
 The
 [S3 Connector for PyTorch](https://github.com/awslabs/s3-connector-for-pytorch)
-reads objects directly from Tigris into your training loop.
-`S3IterableDataset` streams sequentially; `S3MapDataset` gives random access
-for shuffling. Each DataLoader worker automatically gets a distinct partition.
+reads objects directly from Tigris into your training loop. `S3IterableDataset`
+streams sequentially; `S3MapDataset` gives random access for shuffling. Each
+DataLoader worker automatically gets a distinct partition.
 
 [Get started with TAG →](/docs/acceleration-gateway/quickstart/)&nbsp;&nbsp;&nbsp;[PyTorch quickstart →](/docs/quickstarts/pytorch)
 
@@ -98,22 +98,22 @@ S3 endpoint.
 <details>
 <summary>Local caches and proxies</summary>
 
-S3-compatible caching proxies like [TAG](/docs/acceleration-gateway/) sit between
-your compute and Tigris, caching hot data on local NVMe. After the first read,
-subsequent requests are served at disk speed. Any proxy that speaks S3 can use
-Tigris as its upstream origin — just set the endpoint URL.
+S3-compatible caching proxies like [TAG](/docs/acceleration-gateway/) sit
+between your compute and Tigris, caching hot data on local NVMe. After the first
+read, subsequent requests are served at disk speed. Any proxy that speaks S3 can
+use Tigris as its upstream origin — just set the endpoint URL.
 
 </details>
 
 <details>
 <summary>Distributed caching layers</summary>
 
-Distributed caching systems that sit between compute frameworks and S3-compatible
-storage work with Tigris as a backend. Configure Tigris as the under-storage
-system and the caching layer handles tiered caching across your cluster — hot
-data stays on local SSD/NVMe, warm data spills to remote storage. This is
-especially useful for multi-tenant clusters where many jobs read overlapping
-datasets.
+Distributed caching systems that sit between compute frameworks and
+S3-compatible storage work with Tigris as a backend. Configure Tigris as the
+under-storage system and the caching layer handles tiered caching across your
+cluster — hot data stays on local SSD/NVMe, warm data spills to remote storage.
+This is especially useful for multi-tenant clusters where many jobs read
+overlapping datasets.
 
 </details>
 

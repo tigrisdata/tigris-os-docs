@@ -4,7 +4,7 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 import "./styles.css";
 
 /* eslint-disable react/prop-types */
-function StackTile({ icon, title, to }) {
+export function StackTile({ icon, title, to }) {
   const darkIcon = useBaseUrl(icon ? `${icon}.svg` : null);
   const lightIcon = useBaseUrl(icon ? `${icon}-light.svg` : null);
 
@@ -29,28 +29,38 @@ export default function StackGrid() {
         Use your favorite language and framework.
       </p>
       <div className="stack-grid">
-        <StackTile icon="img/icons/golang" title="Go" to="/quickstarts/go/" />
         <StackTile
           icon="img/icons/python"
           title="Python"
           to="/quickstarts/python/"
         />
         <StackTile
+          icon="img/icons/pytorch"
+          title="PyTorch"
+          to="/quickstarts/pytorch/"
+        />
+        <StackTile icon="img/icons/golang" title="Go" to="/quickstarts/go/" />
+        <StackTile
           icon="img/icons/javascript"
           title="Node"
           to="/quickstarts/node/"
         />
         <StackTile
-          icon="img/cube"
+          icon="img/icons/kubernetes"
           title="Kubernetes"
           to="/quickstarts/kubernetes/"
         />
-        <StackTile icon="img/cube" title="Terraform" to="/terraform/" />
-        <StackTile icon="img/cube" title="rclone" to="/quickstarts/rclone/" />
+        <StackTile
+          icon="img/icons/terraform"
+          title="Terraform"
+          to="/terraform/"
+        />
+        <StackTile
+          icon="img/icons/rclone"
+          title="rclone"
+          to="/quickstarts/rclone/"
+        />
       </div>
-      <Link to="/guides/" className="stack-grid-link">
-        View all guides &rarr;
-      </Link>
     </div>
   );
 }

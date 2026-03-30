@@ -3,13 +3,23 @@ id: python
 title: "Python"
 ---
 
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
 # Python
 
-Get started with Tigris in Python using
-[tigris-boto3-ext](https://github.com/tigrisdata/tigris-boto3-ext) — a
-lightweight extension that adds Tigris-specific features like snapshots and
-bucket forking on top of standard boto3. Everything you already know about boto3
-still works.
+There are three ways to use Tigris with Python:
+
+- **[boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html)**
+  — use the standard AWS SDK directly, just point it at Tigris
+- **[tigris-boto3-ext](https://github.com/tigrisdata/tigris-boto3-ext)** — a
+  lightweight extension that adds Tigris-specific features like snapshots and
+  bucket forking on top of boto3
+- **[AWS SDK for Python](/docs/sdks/s3/aws-python-sdk/)** — if you have existing
+  code using the AWS Python SDK, you can migrate to Tigris by changing the
+  endpoint and credentials
+
+All approaches are fully S3-compatible. Pick whichever fits your needs.
 
 ## Prerequisites
 
@@ -20,11 +30,34 @@ still works.
 
 ## Install
 
+<Tabs>
+<TabItem value="boto3" label="boto3" default>
+
+```bash
+pip install boto3
+```
+
+</TabItem>
+<TabItem value="ext" label="tigris-boto3-ext">
+
 ```bash
 pip install tigris-boto3-ext
 ```
 
 This installs boto3 as a dependency if you don't already have it.
+
+</TabItem>
+<TabItem value="aws-sdk" label="Existing AWS code">
+
+```bash
+pip install boto3
+```
+
+If you already have boto3 installed, no changes needed — just update your
+configuration.
+
+</TabItem>
+</Tabs>
 
 ## Configure credentials
 
@@ -39,12 +72,61 @@ export AWS_REGION="auto"
 
 ## Create a client
 
-The extension works with a standard boto3 S3 client — no special setup required:
+<Tabs>
+<TabItem value="boto3" label="boto3" default>
+
+With `AWS_ENDPOINT_URL` set in your environment:
+
+```python
+import boto3
+
+s3 = boto3.client("s3")
+```
+
+Or pass the endpoint explicitly:
+
+```python
+import boto3
+
+s3 = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    aws_access_key_id="tid_your_access_key",
+    aws_secret_access_key="tsec_your_secret_key",
+    region_name="auto",
+)
+```
+
+</TabItem>
+<TabItem value="ext" label="tigris-boto3-ext">
+
+The extension works with a standard boto3 client — no special setup required:
+
+```python
+import boto3
+
+s3 = boto3.client("s3")
+```
+
+The extension registers event handlers with boto3's event system automatically.
+Your existing boto3 code works unchanged, and you opt in to Tigris-specific
+features through helper functions, context managers, or decorators.
+
+</TabItem>
+<TabItem value="aws-sdk" label="Existing AWS code">
+
+If you have existing code that uses boto3 with AWS S3, you can migrate to Tigris
+by changing the endpoint and credentials. Set the environment variables above,
+then update your client configuration:
 
 ```python
 import boto3
 from botocore.client import Config
 
+# Before (AWS S3)
+# s3 = boto3.client("s3")
+
+# After (Tigris) — just add the endpoint and addressing style
 s3 = boto3.client(
     "s3",
     endpoint_url="https://t3.storage.dev",
@@ -52,19 +134,19 @@ s3 = boto3.client(
 )
 ```
 
-If you set `AWS_ENDPOINT_URL` in your environment, you can simplify this to:
+The rest of your code stays the same. All standard S3 operations — `put_object`,
+`get_object`, `upload_file`, `list_objects_v2`, presigned URLs — work as-is.
 
-```python
-import boto3
-from botocore.client import Config
+If you use AWS profiles, you can add a Tigris profile to `~/.aws/credentials`
+and `~/.aws/config` to keep both side by side. See the
+[AWS Python SDK reference](/docs/sdks/s3/aws-python-sdk/) for details.
 
-s3 = boto3.client(
-    "s3",
-    config=Config(s3={"addressing_style": "virtual"}),
-)
-```
+</TabItem>
+</Tabs>
 
 ## Basic operations
+
+These work the same with both boto3 and the extension.
 
 ### Create a bucket
 
@@ -110,9 +192,10 @@ print(url)
 
 ## Snapshots and forks
 
-The `tigris-boto3-ext` package adds Tigris-specific features that standard boto3
-doesn't have. These work by injecting the right HTTP headers into your S3
-requests automatically.
+You can use snapshots and forks with plain boto3 by passing Tigris-specific
+headers on each request, but the
+[tigris-boto3-ext](https://github.com/tigrisdata/tigris-boto3-ext) package
+handles this for you automatically.
 
 ### Create a snapshot-enabled bucket
 

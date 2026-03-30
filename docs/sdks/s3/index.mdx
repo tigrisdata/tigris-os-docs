@@ -1,9 +1,6 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
-import {
-  HomepageCard as Card,
-  HomepageSection as Section,
-} from "@site/src/components/HomepageComponents.jsx";
+import { StackTile } from "@site/src/components/StackGrid";
 
 # Use Your Existing S3 Code
 
@@ -23,6 +20,10 @@ You'll get a key pair:
 
 - **Access Key ID** — starts with `tid_`
 - **Secret Access Key** — starts with `tsec_`
+
+Tigris authenticates using access key and secret key pairs only. AssumeRole,
+STS, and temporary security credentials are not supported. We recommend
+[rotating your access keys](/docs/iam/manage-access-key/) regularly.
 
 ## Configure your environment
 
@@ -154,63 +155,31 @@ s3.listBuckets().buckets().forEach(b -> System.out.println(b.name()));
 </TabItem>
 </Tabs>
 
-## Language-specific guides
+## AWS SDK guides
 
-For full setup instructions, configuration options, and more examples:
+Tigris works with the official AWS SDKs for every language. Pick your language
+for full setup instructions, configuration options, and examples:
 
-<Section title="" id="sdks">
-  <Card
-    title="AWS CLI"
-    description="Use Tigris with AWS CLI"
-    to="/sdks/s3/aws-cli/"
-    icon="img/icons/aws-cli"
-  />
-  <Card
-    title="JavaScript"
-    description="Integrate Tigris in your JavaScript App"
-    to="/sdks/s3/aws-js-sdk/"
+<div className="stack-grid stack-grid--5col">
+  <StackTile icon="img/icons/aws-cli" title="AWS CLI" to="/sdks/s3/aws-cli/" />
+  <StackTile
     icon="img/icons/javascript"
+    title="JavaScript"
+    to="/sdks/s3/aws-js-sdk/"
   />
-  <Card
-    title="Golang"
-    description="Integrate Tigris in your Golang App"
-    to="/sdks/s3/aws-go-sdk/"
-    icon="img/icons/golang"
-  />
-  <Card
-    title="Java"
-    description="Integrate Tigris in your Java App"
-    to="/sdks/s3/aws-java-sdk/"
-    icon="img/icons/java"
-  />
-  <Card
-    title="Python"
-    description="Integrate Tigris in your Python App"
-    to="/sdks/s3/aws-python-sdk/"
+  <StackTile icon="img/icons/golang" title="Go" to="/sdks/s3/aws-go-sdk/" />
+  <StackTile icon="img/icons/java" title="Java" to="/sdks/s3/aws-java-sdk/" />
+  <StackTile
     icon="img/icons/python"
+    title="Python"
+    to="/sdks/s3/aws-python-sdk/"
   />
-  <Card
-    title="PHP"
-    description="Integrate Tigris in your PHP App"
-    to="/sdks/s3/aws-php-sdk/"
-    icon="img/icons/php"
-  />
-  <Card
-    title="Elixir"
-    description="Integrate Tigris in your Elixir App"
-    to="/sdks/s3/aws-elixir-sdk/"
+  <StackTile icon="img/icons/php" title="PHP" to="/sdks/s3/aws-php-sdk/" />
+  <StackTile
     icon="img/icons/elixir"
+    title="Elixir"
+    to="/sdks/s3/aws-elixir-sdk/"
   />
-  <Card
-    title="Ruby"
-    description="Integrate Tigris in your Ruby App"
-    to="/sdks/s3/aws-ruby-sdk/"
-    icon="img/icons/ruby"
-  />
-  <Card
-    title=".NET"
-    description="Integrate Tigris in your .NET App"
-    to="/sdks/s3/aws-net-sdk/"
-    icon="img/icons/dotnet"
-  />
-</Section>
+  <StackTile icon="img/icons/ruby" title="Ruby" to="/sdks/s3/aws-ruby-sdk/" />
+  <StackTile icon="img/icons/dotnet" title=".NET" to="/sdks/s3/aws-net-sdk/" />
+</div>

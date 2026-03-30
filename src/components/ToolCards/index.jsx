@@ -307,7 +307,7 @@ export default function ToolCards() {
             </svg>
           }
           title="Use Your Existing Code"
-          description="Already using AWS S3 SDKs? Point your existing boto3, @aws-sdk, or any S3-compatible client at Tigris with a one-line endpoint change."
+          description="Already using AWS S3 SDKs? Point your existing boto3, @aws-sdk, or any S3-compatible client at Tigris by updating your endpoint and keys."
           to="/sdks/s3/"
         >
           <div className="tool-card-code">
@@ -322,6 +322,16 @@ export default function ToolCards() {
                 <span className="tool-card-keyword">export</span>{" "}
                 AWS_ENDPOINT_URL=
                 <span className="tool-card-string">https://t3.storage.dev</span>
+              </div>
+              <div className="tool-card-terminal-line">
+                <span className="tool-card-keyword">export</span>{" "}
+                AWS_ACCESS_KEY_ID=
+                <span className="tool-card-string">tid_...</span>
+              </div>
+              <div className="tool-card-terminal-line">
+                <span className="tool-card-keyword">export</span>{" "}
+                AWS_SECRET_ACCESS_KEY=
+                <span className="tool-card-string">tsec_...</span>
               </div>
               <div className="tool-card-terminal-line">&nbsp;</div>
               <div className="tool-card-terminal-line">

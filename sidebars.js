@@ -166,6 +166,11 @@ const sidebars = {
           label: "Checkpoint, Restore, & Fork",
           id: "use-cases/checkpoint-restore-fork",
         },
+        {
+          type: "doc",
+          label: "Multitenant Storage",
+          id: "use-cases/multitenant-storage",
+        },
       ],
     },
     {

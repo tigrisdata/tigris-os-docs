@@ -1,0 +1,141 @@
+---
+id: multitenant-storage
+title: "Multitenant Storage"
+---
+
+import MultitenantStorageDiagram from "@site/src/components/diagrams/MultitenantStorageDiagram";
+import DiagramLightbox from "@site/src/components/diagrams/DiagramLightbox";
+
+# Multitenant Storage
+
+## Give your users storage without becoming a storage company
+
+_Provision isolated, globally distributed object storage for every tenant with a
+single API call._
+
+<div className="use-case-hero">
+  <div className="use-case-hero__text">
+
+Building multi-tenant storage on AWS means choosing between bucket-per-tenant
+sprawl, shared buckets with fragile prefix-based IAM, or S3 Access Points with
+their own quota limits. Each option bolts together services that weren't
+designed for multi-tenancy.
+
+The Tigris [Partner Integration API](/docs/partner-integrations/) treats tenant
+isolation as a first-class primitive. One API call creates an Organization with
+its own buckets, users, access keys, and usage tracking — fully isolated from
+every other tenant. Your users hit standard S3 endpoints with their own
+credentials. You control provisioning, billing, and branding.
+
+[Get started →](/docs/partner-integrations/)
+
+  </div>
+  <div className="use-case-hero__diagram">
+    <DiagramLightbox>
+      <div className="mermaid-frame">
+        <MultitenantStorageDiagram />
+      </div>
+    </DiagramLightbox>
+  </div>
+</div>
+
+### Benefits
+
+<details>
+<summary>Single-call tenant provisioning</summary>
+
+One `POST` to the Partner API creates an organization, an initial bucket, a
+user, and scoped access keys — all in a single request. No orchestrating
+multiple AWS APIs, no CloudFormation stacks per tenant, no IAM policy
+templating. When a user signs up in your platform, their storage is ready before
+the welcome email sends.
+
+```bash
+curl -X POST https://api.tigris.dev/v1/providers/{provider_id}/orgs/{org_id}/provision \
+  -H "Content-Type: application/json" \
+  -d '{
+    "bucket_name": "user-data",
+    "org_name": "Acme Corp",
+    "user_id": "user-123"
+  }'
+```
+
+</details>
+
+<details>
+<summary>Complete tenant isolation</summary>
+
+Each Organization is a hard security boundary. Tenants cannot see or access each
+other's buckets, objects, or metadata — no prefix tricks, no bucket policies to
+audit. Access keys are scoped to a single organization and can be further
+restricted to specific buckets within it. Deactivating an organization
+immediately revokes all its credentials.
+
+</details>
+
+<details>
+<summary>Per-tenant usage and billing</summary>
+
+Tigris tracks storage and bandwidth per Organization with daily granularity. You
+can query the usage API for any date range and build your own billing model —
+flat rate, usage-based, tiered, or bundled into your platform subscription. No
+need to parse CloudWatch metrics or tag-based cost allocation reports.
+
+</details>
+
+<details>
+<summary>White-label with custom domains</summary>
+
+Bucket endpoints default to `*.t3.storage.dev`, but partners can configure
+custom domains so storage appears as part of your product. Your users never see
+the Tigris brand — they interact with storage through your UI, your CLI, and
+your domain.
+
+</details>
+
+<details>
+<summary>Global by default — no region management</summary>
+
+Every bucket is globally distributed automatically. Your tenants get low-latency
+reads from the nearest replica regardless of where they are, with zero egress
+fees. You never need to choose regions, configure replication, or maintain
+multi-region access points.
+
+</details>
+
+### How it works
+
+As a Tigris Partner you get a **Provider** account that manages all of your
+tenant Organizations. The hierarchy is simple:
+
+| Level            | Maps to                                                               |
+| ---------------- | --------------------------------------------------------------------- |
+| **Provider**     | Your platform. Holds your signing key for API auth.                   |
+| **Organization** | One per tenant. Isolated buckets, users, keys, and usage tracking.    |
+| **Bucket**       | S3-compatible storage within an org. Tenants can have multiple.       |
+| **Access Key**   | Scoped credentials (SigV4) for a tenant's org, optionally per-bucket. |
+
+Your platform backend calls the Partner API to provision and manage orgs. Your
+tenants' apps use standard S3 SDKs pointed at `t3.storage.dev` (or your custom
+domain) with their own credentials — they never touch the Partner API.
+
+### Who's using it
+
+- **Railway** shipped Storage Buckets as a native platform feature in two weeks,
+  with free egress and no region selection required for users.
+- **Fly.io** integrates storage through `flyctl`, automatically distributing
+  objects across their global edge network.
+- **Agentuity** uses the API across five storage layers for AI agents — from
+  persistent storage to CDN origins and sandbox snapshots.
+
+### Get started
+
+1. **Request partner access** at
+   [tigrisdata.com/partners](https://www.tigrisdata.com/partners/)
+2. **Explore the dashboard** at
+   [partners.storage.dev](https://partners.storage.dev) — manage orgs and
+   buckets without writing code
+3. **Automate with the API** using the
+   [Partner Integration API reference](/docs/partner-integrations/api/)
+
+[Partner Integration docs →](/docs/partner-integrations/)&nbsp;&nbsp;&nbsp;[Architecture guide →](/docs/partner-integrations/architecture)

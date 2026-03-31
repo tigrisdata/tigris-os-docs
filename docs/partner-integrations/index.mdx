@@ -43,7 +43,10 @@ full walkthrough.
 3. **Understand the architecture** -- Read the
    [Multi-Tenant Architecture guide](/docs/partner-integrations/architecture) to
    learn how to map your customers to Tigris Organizations
-4. **Automate with the API** -- Use the
+4. **Set up access control** -- Learn how to use
+   [roles and permissions](/docs/partner-integrations/access-control) to control
+   what your tenants' keys can do
+5. **Automate with the API** -- Use the
    [Partner Integrations API](/docs/partner-integrations/api/) to integrate
    provisioning and billing into your platform
 
@@ -58,6 +61,11 @@ customized to `https://tigris-example-bucket.<CUSTOM_URL>/bar.txt`
 Organizations provide strong isolation between end users. An organization is
 created for each end user, and an organization may consist of one or more users.
 A user may have `Admin` or `Member` privileges.
+
+Two fields on the Partner API control access: `user_role` scopes what the user
+can do through management endpoints, and `buckets_roles` scopes what their
+access key can do with S3 operations. See
+[Access Control](/docs/partner-integrations/access-control) for details.
 
 Endpoints for rotating and revoking access keys are available, as well as a
 recommended process for offboarding end users. Offboarding consists of

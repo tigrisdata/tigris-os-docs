@@ -126,6 +126,10 @@ Content-Type: application/json
 }
 ```
 
+The `user_role` field controls what this user can do through management
+endpoints. See [Access Control](/docs/partner-integrations/access-control) for
+details on how roles and permissions work.
+
 ### Offboarding Tenants
 
 To offboard a tenant, deactivate their organization. This immediately revokes
@@ -158,9 +162,11 @@ Content-Type: application/json
 
 ## Next Steps
 
-Now that you understand how to structure your multi-tenant architecture, explore
-**[Partner Integrations API Reference](/docs/partner-integrations/api/)** for
-the complete API documentation.
+- **[Access Control](/docs/partner-integrations/access-control)** -- Learn how
+  to use `user_role` and `buckets_roles` to control what your tenants' access
+  keys can do
+- **[Partner Integrations API Reference](/docs/partner-integrations/api/)** --
+  Complete API documentation for all partner endpoints
 
 ### Getting Help
 

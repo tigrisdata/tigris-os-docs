@@ -740,6 +740,11 @@ const sidebars = {
           id: "partner-integrations/architecture",
         },
         {
+          type: "doc",
+          label: "Access Control",
+          id: "partner-integrations/access-control",
+        },
+        {
           type: "category",
           label: "API reference",
           link: {

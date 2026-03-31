@@ -842,7 +842,17 @@ components:
           $ref: "#/components/schemas/OrgMembership"
     OrgMembership:
       type: string
-      description: Role assigned to the user in the organization
+      description: |
+        Role of the user in the organization. Controls what the user can do
+        through the Partner API management endpoints.
+
+        - `Admin`: Full org access. Can list and manage all access keys in the
+          org, update org settings, and manage users. ListAccessKeys returns
+          all keys in the org.
+        - `Member`: Standard access. Can only manage their own access keys.
+          ListAccessKeys returns only keys owned by this user.
+
+        If omitted, defaults to `Member` behavior.
       enum: [Admin, Member]
     OrgQuota:
       type: object
@@ -1469,11 +1479,15 @@ components:
           description: |
             The role defines the permissions for the associated bucket:
 
-            - `ReadOnly`: Read-only access to the bucket.
-            - `Editor`: Read and write access to the bucket.
-            - `Admin`: Full access to all the buckets in the org, including management of
-              permissions. Since this access key manages all the buckets, the value of `bucket_name`
-              field should always be `*`.
+            - `ReadOnly`: Read-only access to the bucket. Permits read
+              operations like GetObject, HeadObject, ListObjects.
+            - `Editor`: Read and write access to the bucket. Includes
+              everything in ReadOnly, plus PutObject, DeleteObject, and bucket
+              configuration operations.
+            - `Admin`: Full access to all buckets in the org, bypasses all
+              permission checks. When used with `bucket_name: "*"`, the access
+              key is treated as a full org admin. The value of `bucket_name`
+              should always be `*` when using this role.
 
               Example:
               ```

@@ -1,0 +1,151 @@
+# Access Control
+
+When you create access keys through the Partner API, two fields control what
+those keys can do:
+
+- `user_role` controls what your user can do through the **management API**
+  (listing keys, updating org settings).
+- `buckets_roles` controls what **S3 operations** the access key can perform on
+  specific buckets.
+
+These two fields are independent. They apply at different times and serve
+different purposes.
+
+| Field           | Where it applies   | What it controls                                          |
+| --------------- | ------------------ | --------------------------------------------------------- |
+| `user_role`     | Partner API calls  | Management scope: list all keys vs own keys, org settings |
+| `buckets_roles` | S3 data operations | What the access key can read, write, or manage per bucket |
+
+import PartnerAccessControlDiagram from "@site/src/components/diagrams/PartnerAccessControlDiagram";
+
+<div className="mermaid-frame">
+  <PartnerAccessControlDiagram />
+</div>
+
+## Organization Role (`user_role`)
+
+The `user_role` field tells Tigris what privileges this user has in your system.
+You pass it on provisioning, access key, and org management endpoints.
+
+| Value    | What it means                                                                             |
+| -------- | ----------------------------------------------------------------------------------------- |
+| `Admin`  | Full org access. Can manage all access keys, update org settings, and view all resources. |
+| `Member` | Standard access. Can only manage their own access keys and resources.                     |
+
+The behavioral difference shows up immediately. When you call
+[List Access Keys](/docs/partner-integrations/api/tigris-list-access-keys) with
+`user_role: "Admin"`, the response includes **all** access keys in the org. With
+`user_role: "Member"` (or omitted), you get back **only keys owned by that
+user**.
+
+This same scoping applies to other management operations. Admin-only operations
+include:
+
+- **Manage all access keys** -- view, rotate, or delete any key in the org, not
+  just the user's own
+- **Update org settings** -- change org name, quotas, active status
+- **Invite and manage users** -- send invitations, update roles, remove members
+
+If you omit `user_role`, the user is treated as a `Member`. For most
+integrations, `Member` is the right default.
+
+## Bucket Roles (`buckets_roles`)
+
+The `buckets_roles` field is an array of `{bucket_name, role}` pairs stored on
+the access key. Three roles are available: `ReadOnly`, `Editor`, and `Admin`.
+See the
+[RBAC permissions table](/docs/concepts/authnz#role-based-access-control-rbac)
+for exactly which S3 operations each role permits.
+
+Use `"*"` as the bucket name to grant access to all buckets in the org. An
+access key with `{"bucket_name": "*", "role": "Admin"}` is treated as a full org
+admin, bypassing all bucket-level permission checks.
+
+## How the Two Fields Interact
+
+`user_role` and `buckets_roles` apply at different times. Here's how common
+partner scenarios map to these fields:
+
+| Scenario              | `user_role` | `buckets_roles`                                                                                 | Result                                            |
+| --------------------- | ----------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| **Developer uploads** | `Member`    | `[{"bucket_name": "user-uploads", "role": "Editor"}]`                                           | User manages own key, can read/write their bucket |
+| **Platform admin**    | `Admin`     | `[{"bucket_name": "*", "role": "Admin"}]`                                                       | Full management + full S3 access                  |
+| **CI/CD pipeline**    | `Member`    | `[{"bucket_name": "artifacts", "role": "ReadOnly"}]`                                            | Automated reads, no management access             |
+| **Mixed access**      | `Member`    | `[{"bucket_name": "assets", "role": "ReadOnly"}, {"bucket_name": "uploads", "role": "Editor"}]` | Read shared content, write user content           |
+
+## Common Access Patterns
+
+### Read-only access to a bucket
+
+```http
+POST /v1/providers/{provider_id}/orgs/{org_id}/access-keys
+Content-Type: application/json
+
+{
+  "user_id": "user-123",
+  "user_role": "Member",
+  "buckets_roles": [
+    { "bucket_name": "assets", "role": "ReadOnly" }
+  ]
+}
+```
+
+### Read/write access to a bucket
+
+```http
+POST /v1/providers/{provider_id}/orgs/{org_id}/access-keys
+Content-Type: application/json
+
+{
+  "user_id": "user-123",
+  "user_role": "Member",
+  "buckets_roles": [
+    { "bucket_name": "uploads", "role": "Editor" }
+  ]
+}
+```
+
+### Mixed permissions across buckets
+
+```http
+POST /v1/providers/{provider_id}/orgs/{org_id}/access-keys
+Content-Type: application/json
+
+{
+  "user_id": "user-123",
+  "user_role": "Member",
+  "buckets_roles": [
+    { "bucket_name": "assets", "role": "ReadOnly" },
+    { "bucket_name": "uploads", "role": "Editor" }
+  ]
+}
+```
+
+### Full admin key for org owner
+
+```http
+POST /v1/providers/{provider_id}/orgs/{org_id}/access-keys
+Content-Type: application/json
+
+{
+  "user_id": "admin-user",
+  "user_role": "Admin",
+  "buckets_roles": [
+    { "bucket_name": "*", "role": "Admin" }
+  ]
+}
+```
+
+For most integrations, `user_role: "Member"` with per-bucket `ReadOnly` or
+`Editor` roles covers what you need. Reserve `Admin` for org owners who need to
+manage other users' keys or org-level settings.
+
+## Fine-Grained Access with IAM Policies
+
+For access control more granular than per-bucket roles, like restricting to
+object prefixes, IP ranges, or time windows, use
+[IAM policies](/docs/iam/policies/). Policies are evaluated after role checks,
+so they can further restrict what a role allows.
+
+**Important:** `Admin` role bypasses policy evaluation entirely. If you need
+policies to apply, use `Member` with `Editor` or `ReadOnly` roles instead.

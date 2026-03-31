@@ -1,0 +1,148 @@
+---
+id: stream-training-datasets
+title: "Stream Training Datasets"
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import StreamTrainingDiagram from "@site/src/components/diagrams/StreamTrainingDiagram";
+import DiagramLightbox from "@site/src/components/diagrams/DiagramLightbox";
+
+# Stream Training Datasets
+
+## Stream directly from object storage
+
+_Feed datasets to GPUs without staging locally._
+
+<div className="use-case-hero">
+  <div className="use-case-hero__text">
+
+Training jobs need data fed to the GPU fast enough that compute never stalls
+waiting on storage. With Tigris you can stream objects straight into PyTorch
+DataLoaders without staging anything locally, and the same bucket works from any
+cloud or region.
+
+The
+[S3 Connector for PyTorch](https://github.com/awslabs/s3-connector-for-pytorch)
+reads objects directly from Tigris into your training loop. `S3IterableDataset`
+streams sequentially; `S3MapDataset` gives random access for shuffling. Each
+DataLoader worker automatically gets a distinct partition.
+
+[Get started with TAG →](/docs/acceleration-gateway/quickstart/)&nbsp;&nbsp;&nbsp;[PyTorch quickstart →](/docs/quickstarts/pytorch)
+
+  </div>
+  <div className="use-case-hero__diagram">
+    <DiagramLightbox>
+      <div className="mermaid-frame">
+        <StreamTrainingDiagram />
+      </div>
+    </DiagramLightbox>
+  </div>
+</div>
+
+### Benefits
+
+<details>
+<summary>Near-local speed with TAG caching</summary>
+
+Adding [TAG (Tigris Acceleration Gateway)](/docs/acceleration-gateway/) as a
+local S3-compatible caching proxy eliminates network round-trips after epoch 1.
+In [benchmarks](/docs/overview/benchmarks/model-training), warm epochs run
+**5.7× faster**, workers needed to saturate the GPU drop from **16 to 4**, and
+local NVMe cache provides **~200×** throughput headroom over what the GPU can
+consume.
+
+</details>
+
+<details>
+<summary>Multi-cloud without egress costs</summary>
+
+GPU instances can run on any provider — Lambda, CoreWeave, Crusoe, or a
+hyperscaler. All nodes read from the same global Tigris bucket at the nearest
+replica, so there are no cross-cloud egress costs and no per-region storage to
+manage.
+
+</details>
+
+<details>
+<summary>DataLoader best practices</summary>
+
+Use `pin_memory=True` and `persistent_workers=True` on your DataLoader for
+faster host-to-GPU transfers and lower worker startup overhead between epochs.
+
+</details>
+
+## Works with any S3-compatible cache or accelerator
+
+_Tigris is a drop-in backend for the tools your infrastructure already uses._
+
+<div className="use-case-hero">
+  <div className="use-case-hero__text">
+
+Any product that reads from S3-compatible storage works with Tigris out of the
+box. Point it at `t3.storage.dev` and your existing caching layer, GPU
+accelerator, or data loader keeps working — no code changes, no vendor lock-in.
+
+This includes local caching proxies like TAG, distributed caching layers,
+parallel filesystems with S3 import (Weka, VAST, DDN, managed Lustre),
+GPU-direct storage solutions, and framework-native data loaders that accept an
+S3 endpoint.
+
+[Training with big data →](/docs/training/big-data-skypilot/)
+
+  </div>
+</div>
+
+### Benefits
+
+<details>
+<summary>Local caches and proxies</summary>
+
+S3-compatible caching proxies like [TAG](/docs/acceleration-gateway/) sit
+between your compute and Tigris, caching hot data on local NVMe. After the first
+read, subsequent requests are served at disk speed. Any proxy that speaks S3 can
+use Tigris as its upstream origin — just set the endpoint URL.
+
+</details>
+
+<details>
+<summary>Distributed caching layers</summary>
+
+Distributed caching systems that sit between compute frameworks and
+S3-compatible storage work with Tigris as a backend. Configure Tigris as the
+under-storage system and the caching layer handles tiered caching across your
+cluster — hot data stays on local SSD/NVMe, warm data spills to remote storage.
+This is especially useful for multi-tenant clusters where many jobs read
+overlapping datasets.
+
+</details>
+
+<details>
+<summary>Parallel filesystems</summary>
+
+Weka, VAST, DDN, and managed Lustre products all support S3 data import. Use
+Tigris as the durable source of truth and hydrate into the parallel filesystem
+before compute starts. The filesystem is provisioned only for the duration of
+the job, so you avoid paying for high-performance storage around the clock.
+
+</details>
+
+<details>
+<summary>GPU-direct storage</summary>
+
+NVIDIA's
+[GPUDirect Storage](https://docs.nvidia.com/gpudirect-storage/overview-guide/)
+enables direct NVMe-to-GPU data paths, bypassing the CPU during data loading.
+Combine with Tigris hydration to local NVMe or a parallel filesystem for maximum
+throughput.
+
+</details>
+
+<details>
+<summary>Framework-native loaders</summary>
+
+PyTorch's S3 Connector, Hugging Face `datasets`, and other framework loaders
+accept an S3 endpoint URL. Point them at Tigris and they stream data directly
+into your training loop — no staging, no custom integration code.
+
+</details>

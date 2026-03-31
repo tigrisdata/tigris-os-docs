@@ -1,0 +1,88 @@
+---
+id: trigger-pipelines
+title: "Trigger Pipelines"
+---
+
+import TriggerPipelineDiagram from "@site/src/components/diagrams/TriggerPipelineDiagram";
+import DiagramLightbox from "@site/src/components/diagrams/DiagramLightbox";
+
+# Trigger Pipelines
+
+## Event-driven post-training workflows
+
+_Fire a webhook when a checkpoint or model lands. No polling required._
+
+<div className="use-case-hero">
+  <div className="use-case-hero__text">
+
+After a training job writes a checkpoint or final weights, downstream work
+usually follows: evaluation, quantization, conversion to a serving format, or
+deployment. Polling the bucket adds latency, wastes API calls, and complicates
+orchestration.
+
+[Tigris Object Notifications](/docs/buckets/object-notifications/) replace the
+polling loop with a push model. An HTTP `POST` fires the moment a new object
+lands, carrying the bucket, key, size, and ETag. Your pipeline handler starts
+immediately.
+
+[Object notifications →](/docs/buckets/object-notifications/)
+
+  </div>
+  <div className="use-case-hero__diagram">
+    <DiagramLightbox>
+      <div className="mermaid-frame">
+        <TriggerPipelineDiagram />
+      </div>
+    </DiagramLightbox>
+  </div>
+</div>
+
+### Benefits
+
+<details>
+<summary>Instant pipeline triggers</summary>
+
+No polling interval means no wasted time between a checkpoint landing and your
+pipeline starting. The webhook fires the moment the `PutObject` completes, so
+eval, conversion, or deployment kicks off immediately.
+
+</details>
+
+<details>
+<summary>Prefix filtering</summary>
+
+Filter to exactly the events you care about — for example, only objects under
+`checkpoints/` or `final/` — so your handler isn't invoked on intermediate
+artifacts it doesn't need.
+
+```sql
+WHERE `key` REGEXP "^final/" AND `Event-Type` = "OBJECT_CREATED_PUT"
+```
+
+</details>
+
+<details>
+<summary>Fan-out to multiple steps</summary>
+
+A single webhook handler can fan out to parallel downstream tasks: run evals
+against the new checkpoint, kick off ONNX or TensorRT conversion, and trigger a
+rolling deploy to your inference fleet — all from one event.
+
+</details>
+
+### Example: eval → convert → deploy
+
+Configure a notification rule through the Tigris Dashboard, pointing at an HTTPS
+endpoint you control. When weights land at `final/`, your handler:
+
+1. Runs evaluation benchmarks against the new model
+2. Converts to optimized serving format (ONNX, TensorRT)
+3. Triggers a rolling deploy to inference endpoints
+
+:::note
+
+Notifications are delivered at least once and can arrive out of order across
+regions. Use the `Last-Modified` timestamp on the object (not `eventTime`) to
+sequence events correctly, and design your handler to be idempotent.
+
+:::

@@ -1,0 +1,223 @@
+---
+id: node
+title: "Node.js"
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Node.js
+
+There are two ways to use Tigris with Node.js:
+
+- **[Tigris SDK](https://www.npmjs.com/package/@tigrisdata/storage)** — a
+  type-safe SDK for TypeScript and JavaScript with a simple, high-level API.
+  This is the recommended approach.
+- **[AWS JavaScript SDK](/docs/sdks/s3/aws-js-sdk/)** — use the standard AWS SDK
+  for JavaScript v3, just point it at Tigris. Useful if you have existing AWS S3
+  code to migrate.
+
+Both are fully S3-compatible. We recommend the Tigris SDK for new projects.
+
+## Prerequisites
+
+- Node.js 18+
+- A Tigris account — create one at [storage.new](https://storage.new)
+- An access key from
+  [console.storage.dev/createaccesskey](https://console.storage.dev/createaccesskey)
+
+## Install
+
+<Tabs>
+<TabItem value="tigris" label="Tigris SDK" default>
+
+```bash
+npm install @tigrisdata/storage
+```
+
+</TabItem>
+<TabItem value="aws" label="AWS JS SDK">
+
+```bash
+npm install @aws-sdk/client-s3
+```
+
+</TabItem>
+</Tabs>
+
+## Configure credentials
+
+Set your Tigris credentials as environment variables:
+
+<Tabs>
+<TabItem value="tigris" label="Tigris SDK" default>
+
+```bash
+export TIGRIS_STORAGE_ACCESS_KEY_ID="tid_your_access_key"
+export TIGRIS_STORAGE_SECRET_ACCESS_KEY="tsec_your_secret_key"
+export TIGRIS_STORAGE_BUCKET="my-bucket"
+```
+
+Or add them to a `.env` file in your project root:
+
+```bash
+TIGRIS_STORAGE_ACCESS_KEY_ID=tid_your_access_key
+TIGRIS_STORAGE_SECRET_ACCESS_KEY=tsec_your_secret_key
+TIGRIS_STORAGE_BUCKET=my-bucket
+```
+
+</TabItem>
+<TabItem value="aws" label="AWS JS SDK">
+
+```bash
+export AWS_ACCESS_KEY_ID="tid_your_access_key"
+export AWS_SECRET_ACCESS_KEY="tsec_your_secret_key"
+export AWS_ENDPOINT_URL="https://t3.storage.dev"
+export AWS_REGION="auto"
+```
+
+</TabItem>
+</Tabs>
+
+## Create a client
+
+<Tabs>
+<TabItem value="tigris" label="Tigris SDK" default>
+
+The Tigris SDK reads credentials from environment variables automatically — no
+client setup needed:
+
+```js
+import { list, put, get } from "@tigrisdata/storage";
+```
+
+</TabItem>
+<TabItem value="aws" label="AWS JS SDK">
+
+```js
+import { S3Client } from "@aws-sdk/client-s3";
+
+const s3 = new S3Client({
+  region: "auto",
+  endpoint: "https://t3.storage.dev",
+});
+```
+
+If you set `AWS_ENDPOINT_URL` in your environment, you can omit the `endpoint`
+option.
+
+</TabItem>
+</Tabs>
+
+## Basic operations
+
+<Tabs>
+<TabItem value="tigris" label="Tigris SDK" default>
+
+### Upload an object
+
+```js
+import { put } from "@tigrisdata/storage";
+
+await put("hello.txt", "Hello, World!");
+
+// Upload a file from disk
+import { readFileSync } from "fs";
+await put("data.csv", readFileSync("data.csv"));
+```
+
+### Download an object
+
+```js
+import { get } from "@tigrisdata/storage";
+
+const data = await get("hello.txt");
+console.log(data.toString());
+```
+
+### List objects
+
+```js
+import { list } from "@tigrisdata/storage";
+
+const objects = await list();
+console.log(objects);
+```
+
+### Delete an object
+
+```js
+import { del } from "@tigrisdata/storage";
+
+await del("hello.txt");
+```
+
+</TabItem>
+<TabItem value="aws" label="AWS JS SDK">
+
+### Upload an object
+
+```js
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+
+await s3.send(
+  new PutObjectCommand({
+    Bucket: "my-bucket",
+    Key: "hello.txt",
+    Body: "Hello, World!",
+  }),
+);
+```
+
+### Download an object
+
+```js
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+
+const result = await s3.send(
+  new GetObjectCommand({
+    Bucket: "my-bucket",
+    Key: "hello.txt",
+  }),
+);
+const body = await result.Body.transformToString();
+console.log(body);
+```
+
+### List objects
+
+```js
+import { ListObjectsV2Command } from "@aws-sdk/client-s3";
+
+const result = await s3.send(new ListObjectsV2Command({ Bucket: "my-bucket" }));
+for (const obj of result.Contents ?? []) {
+  console.log(`  ${obj.Key}  (${obj.Size} bytes)`);
+}
+```
+
+### Generate a presigned URL
+
+```js
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+
+const url = await getSignedUrl(
+  s3,
+  new GetObjectCommand({ Bucket: "my-bucket", Key: "hello.txt" }),
+  { expiresIn: 3600 },
+);
+console.log(url);
+```
+
+</TabItem>
+</Tabs>
+
+## Next steps
+
+- [Example Next.js app](https://github.com/tigrisdata-community/storage-sdk-examples)
+  — a Next.js app that uploads and manages files with the Tigris SDK, ready to
+  deploy to Vercel
+- [Tigris SDK reference](/docs/sdks/tigris/) — full SDK documentation including
+  client uploads, multipart uploads, and more
+- [AWS JS SDK reference](/docs/sdks/s3/aws-js-sdk/) — advanced usage with
+  presigned URLs, metadata queries, and conditional operations

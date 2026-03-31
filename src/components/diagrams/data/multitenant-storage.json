@@ -1,0 +1,406 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 210,
+    "y": 10,
+    "text": "Multitenant Storage with the Partner API",
+    "fontSize": 20,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de",
+    "textAlign": "center"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "platform-zone",
+    "x": 30,
+    "y": 55,
+    "width": 320,
+    "height": 420,
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "strokeColor": "#1e3340",
+    "strokeWidth": 2,
+    "strokeStyle": "dashed",
+    "roundness": { "type": 3 }
+  },
+  {
+    "type": "text",
+    "id": "platform-zone-lbl",
+    "x": 45,
+    "y": 65,
+    "text": "Your Platform",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "platform-box",
+    "x": 70,
+    "y": 95,
+    "width": 240,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "platform-lbl",
+    "x": 108,
+    "y": 108,
+    "text": "Platform Backend",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "tenant-a",
+    "x": 70,
+    "y": 195,
+    "width": 240,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "tenant-a-lbl",
+    "x": 128,
+    "y": 208,
+    "text": "Tenant A App",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "tenant-b",
+    "x": 70,
+    "y": 290,
+    "width": 240,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "tenant-b-lbl",
+    "x": 130,
+    "y": 303,
+    "text": "Tenant B App",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "tenant-c",
+    "x": 70,
+    "y": 385,
+    "width": 240,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "tenant-c-lbl",
+    "x": 130,
+    "y": 398,
+    "text": "Tenant C App",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "tigris-zone",
+    "x": 530,
+    "y": 55,
+    "width": 320,
+    "height": 420,
+    "backgroundColor": "transparent",
+    "fillStyle": "solid",
+    "strokeColor": "#1e3340",
+    "strokeWidth": 2,
+    "strokeStyle": "dashed",
+    "roundness": { "type": 3 }
+  },
+  {
+    "type": "text",
+    "id": "tigris-zone-lbl",
+    "x": 545,
+    "y": 65,
+    "text": "Tigris",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "provider",
+    "x": 570,
+    "y": 95,
+    "width": 240,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "provider-lbl",
+    "x": 608,
+    "y": 108,
+    "text": "Provider Account",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "org-a",
+    "x": 570,
+    "y": 195,
+    "width": 240,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "org-a-lbl",
+    "x": 615,
+    "y": 201,
+    "text": "Org A",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "org-a-detail",
+    "x": 615,
+    "y": 222,
+    "text": "buckets · keys · usage",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "org-b",
+    "x": 570,
+    "y": 290,
+    "width": 240,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "org-b-lbl",
+    "x": 615,
+    "y": 296,
+    "text": "Org B",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+  {
+    "type": "text",
+    "id": "org-b-detail",
+    "x": 615,
+    "y": 317,
+    "text": "buckets · keys · usage",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "org-c",
+    "x": 570,
+    "y": 385,
+    "width": 240,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "org-c-lbl",
+    "x": 615,
+    "y": 391,
+    "text": "Org C",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+  {
+    "type": "text",
+    "id": "org-c-detail",
+    "x": 615,
+    "y": 412,
+    "text": "buckets · keys · usage",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "arrow-provision",
+    "x": 310,
+    "y": 122,
+    "width": 260,
+    "height": 0,
+    "strokeColor": "#c8d6de",
+    "strokeWidth": 2,
+    "strokeStyle": "dashed",
+    "points": [
+      [0, 0],
+      [260, 0]
+    ],
+    "startArrowhead": null,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "arrow-provision-lbl",
+    "x": 370,
+    "y": 97,
+    "text": "Partner API",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "arrow-a",
+    "x": 310,
+    "y": 222,
+    "width": 260,
+    "height": 0,
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [260, 0]
+    ],
+    "startArrowhead": null,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "arrow-a-lbl",
+    "x": 385,
+    "y": 197,
+    "text": "S3 API",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+
+  {
+    "type": "arrow",
+    "id": "arrow-b",
+    "x": 310,
+    "y": 317,
+    "width": 260,
+    "height": 0,
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [260, 0]
+    ],
+    "startArrowhead": null,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "arrow-b-lbl",
+    "x": 385,
+    "y": 292,
+    "text": "S3 API",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+
+  {
+    "type": "arrow",
+    "id": "arrow-c",
+    "x": 310,
+    "y": 412,
+    "width": 260,
+    "height": 0,
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [260, 0]
+    ],
+    "startArrowhead": null,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "arrow-c-lbl",
+    "x": 385,
+    "y": 387,
+    "text": "S3 API",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+
+  {
+    "type": "text",
+    "id": "footer",
+    "x": 175,
+    "y": 495,
+    "text": "Each tenant gets isolated storage · Your platform controls provisioning and billing",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0",
+    "textAlign": "center"
+  }
+]

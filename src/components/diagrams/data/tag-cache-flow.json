@@ -1,0 +1,256 @@
+[
+  {
+    "type": "text",
+    "id": "t2",
+    "x": 200,
+    "y": 20,
+    "text": "TAG Cache Flow",
+    "fontSize": 24,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "rectangle",
+    "id": "zone",
+    "x": 30,
+    "y": 70,
+    "width": 560,
+    "height": 350,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#1e3340",
+    "strokeWidth": 1,
+    "strokeStyle": "dashed",
+    "opacity": 40
+  },
+  {
+    "type": "text",
+    "id": "zonelbl",
+    "x": 45,
+    "y": 80,
+    "text": "Training / Inference Instance",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "rectangle",
+    "id": "code",
+    "x": 160,
+    "y": 120,
+    "width": 240,
+    "height": 60,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "codelbl",
+    "x": 210,
+    "y": 140,
+    "text": "Training Code",
+    "fontSize": 18,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "s3lbl",
+    "x": 115,
+    "y": 200,
+    "text": "S3 API",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "arrow",
+    "id": "a5",
+    "x": 280,
+    "y": 180,
+    "width": 0,
+    "height": 70,
+    "points": [
+      [0, 0],
+      [0, 70]
+    ],
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "rectangle",
+    "id": "gateway",
+    "x": 80,
+    "y": 260,
+    "width": 230,
+    "height": 65,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "gwlbl",
+    "x": 110,
+    "y": 270,
+    "text": "Acceleration\nGateway",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "arrow",
+    "id": "a6",
+    "x": 310,
+    "y": 292,
+    "width": 160,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [160, 0]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "a6lbl",
+    "x": 345,
+    "y": 268,
+    "text": "cache hit",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "rectangle",
+    "id": "cache",
+    "x": 470,
+    "y": 260,
+    "width": 200,
+    "height": 65,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "cachelbl",
+    "x": 500,
+    "y": 270,
+    "text": "Local NVMe\nCache",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "rectangle",
+    "id": "tigris2",
+    "x": 740,
+    "y": 210,
+    "width": 210,
+    "height": 70,
+    "backgroundColor": "#101c24",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "tigris2lbl",
+    "x": 770,
+    "y": 225,
+    "text": "Tigris Object\nStorage",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "arrow",
+    "id": "a7",
+    "x": 670,
+    "y": 280,
+    "width": 70,
+    "height": -30,
+    "points": [
+      [0, 0],
+      [70, -30]
+    ],
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "a7lbl",
+    "x": 675,
+    "y": 240,
+    "text": "cache miss",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+  {
+    "type": "arrow",
+    "id": "a8",
+    "x": 845,
+    "y": 280,
+    "width": 0,
+    "height": 100,
+    "points": [
+      [0, 0],
+      [0, 100]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2,
+    "endArrowhead": null,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "arrow",
+    "id": "a9",
+    "x": 845,
+    "y": 380,
+    "width": -305,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [-305, 0]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2,
+    "endArrowhead": "arrow",
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "filllbl",
+    "x": 640,
+    "y": 365,
+    "text": "fill cache",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "note3",
+    "x": 55,
+    "y": 445,
+    "text": "Epoch 1 fetches from Tigris  ·  Epoch 2+ reads from local NVMe at disk speed",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  }
+]

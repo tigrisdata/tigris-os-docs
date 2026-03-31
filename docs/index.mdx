@@ -1,17 +1,12 @@
 ---
 id: index
-title: "Docs"
+title: "Get Started"
+slug: /
 ---
 
-import {
-  HomepageCard as Card,
-  HomepageSection as Section,
-} from "@site/src/components/HomepageComponents.jsx";
-import { YellowStar } from "@site/src/icons";
-import SDKCards from "@site/src/components/SDKCards";
 import ToolCards from "@site/src/components/ToolCards";
-import WorldMap from "@site/static/img/globe-final-frame.png";
-import TigrisStorageSDK from "@site/static/img/tigris-sdk.png";
+import StackGrid from "@site/src/components/StackGrid";
+import FeaturesGrid from "@site/src/components/FeaturesGrid";
 import Link from "@docusaurus/Link";
 
 <div style={{ textAlign: 'center', margin: "2em auto 0 auto", width: '80%' }}>
@@ -19,124 +14,15 @@ import Link from "@docusaurus/Link";
 # Tigris Developer Documentation
 
 <div style={{ fontSize: "20px" }}>
-  Tigris is a globally distributed, multi-cloud object storage service with built-in support for the S3 API. 
-  It uses <strong>Dynamic Data Placement</strong> and <strong>Access-Based Rebalancing</strong> to deliver 
+  Tigris is a globally distributed, multi-cloud object storage service with built-in support for the S3 API.
+  It uses <strong>Dynamic Data Placement</strong> and <strong>Access-Based Rebalancing</strong> to deliver
   low-latency access worldwide — without the need to manage replication or caching.
 
 </div>
 </div>
 
-<div className="homepage-card-container">
-  <div className="homepage-card-pic">
-    <div className="img">
-      <Link to="/overview/">
-        <img
-          src={WorldMap}
-          alt="Global"
-          style={{ objectFit: "contain", padding: "10px" }}
-        />
-      </Link>
-    </div>
-    <div className="text">
-      <Link to="/overview/">
-        <h3>Overview</h3>
-        <span>Learn about the core Tigris concepts</span>
-      </Link>
-    </div>
-  </div>
-  <div className="homepage-card-pic">
-    <div className="img">
-      <Link to="/get-started/">
-        <img src="img/console-preview.svg" alt="Console Preview" />
-      </Link>
-    </div>
-    <div className="text">
-      <Link to="/get-started/">
-        <h3>Get Started</h3>
-        <span>Essential guide to get you up and running quickly</span>
-      </Link>
-    </div>
-  </div>
-</div>
-
 <ToolCards />
 
-<Section title="Features" id="features" HeadingTag="h2">
-  <Card
-    title="Globally Distributed Data"
-    description="Data stored close to the users automatically ensuring low latency everywhere."
-    to="/overview/#global-low-latency-access"
-    icon="img/lightning"
-  />
-  <Card
-    title="S3 Compatible API"
-    description="Global and fast object storage with familiar AWS S3 tools, libraries, and extensions."
-    to="/api/s3/"
-    icon="img/lightning"
-  />
-  <Card
-    title="Zero Egress Fees"
-    description="Free data egress ensures seamless and unrestricted access to your data whenever you need it."
-    to="https://www.tigrisdata.com/pricing/#zero-egress-fees"
-    icon="img/lightning"
-  />
-  <Card
-    title="Geo-Redundant Storage"
-    description="Geo-redundant storage with high level of availability and built-in strong consistency."
-    to="/buckets/locations/"
-    icon="img/lightning"
-  />
-  <Card
-    title="Flexible Storage Tiers"
-    description="Choose the right storage tier for your data to optimize costs and performance."
-    to="/objects/tiers/"
-    icon="img/lightning"
-  />
-  <Card
-    title="Snapshots and Forks"
-    description="Instantly create zero-copy clones of your data for development, testing, or rollback with Git-style workflows."
-    to="/snapshots-and-forks/"
-    icon="img/lightning"
-  />
-</Section>
+<StackGrid />
 
-<SDKCards />
-
-<Section title="End-to-End Guides" id="features" HeadingTag="h2">
-  <Card
-    title="Data Migration"
-    description="Migrate data from an existing S3-compatible bucket to Tigris without downtime and without incuring egress costs."
-    to="/migration/"
-    icon="img/bolt"
-  />
-  <Card
-    title="Mount Tigris as a Filesystem"
-    description="Use Tigris bucket as a filesystem for AI workloads and get unlimited storage and memory capacity."
-    to="/training/tigrisfs/"
-    icon="img/bolt"
-  />
-  <Card
-    title="Training with Big Data on SkyPilot"
-    description="Build a multi-cloud compatible model training job that leverages Tigris to store training data and SkyPilot to manage compute."
-    to="/training/big-data-skypilot/"
-    icon="img/bolt"
-  />
-  <Card
-    title="Using model weights in Tigris"
-    description="Enhance AI model deployment by optimizing cold starts and ensuring high availability without third-party dependencies."
-    to="/model-storage/"
-    icon="img/bolt"
-  />
-  <Card
-    title="Store vector embeddings in Tigris"
-    description="Host embeddings and vector stores for real-time retrieval-augmented generation (RAG)"
-    to="/libraries/lancedb/"
-    icon="img/bolt"
-  />
-  <Card
-    title="Docker Registry"
-    description="Use Tigris instead of S3 to pull images as fast as possible and get around Docker Hub rate limits."
-    to="/apps/docker-registry/"
-    icon="img/bolt"
-  />
-</Section>
+<FeaturesGrid />

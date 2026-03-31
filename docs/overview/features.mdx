@@ -1,0 +1,149 @@
+---
+id: features
+title: "Features"
+---
+
+# Features
+
+Tigris is globally distributed object storage built for performance, simplicity,
+and cost efficiency. Here's what sets it apart.
+
+## Global Distribution
+
+Data is automatically stored close to the users that access it. Tigris uses
+**Dynamic Data Placement** and **Access-Based Rebalancing** to move data to
+where it's needed — no manual replication, no CDN configuration, no region
+selection.
+
+When a user in Tokyo reads an object that was uploaded in Virginia, subsequent
+reads from Tokyo are served from a nearby replica at low latency. This happens
+transparently, with no configuration required.
+
+[Learn more about global distribution →](/docs/concepts/regions/)
+
+## S3 Compatible API
+
+Tigris implements the S3 API, so any tool, library, or application that works
+with AWS S3 works with Tigris. boto3, @aws-sdk, the AWS CLI, Terraform, rclone —
+all work by updating your endpoint and access keys.
+
+```bash
+export AWS_ENDPOINT_URL="https://t3.storage.dev"
+export AWS_ACCESS_KEY_ID="tid_your_access_key"
+export AWS_SECRET_ACCESS_KEY="tsec_your_secret_key"
+# Your existing S3 code just works
+```
+
+[S3 API reference →](/docs/api/s3/)&nbsp;&nbsp;&nbsp;[Use your existing code →](/docs/sdks/s3/)
+
+## Zero Egress Fees
+
+Data transfer out of Tigris is free. No bandwidth charges, no surprise bills
+from cross-region reads, no incentive to keep data locked in one provider.
+
+This applies to all reads — whether from your application servers, end users via
+presigned URLs, or data pipelines pulling training data across clouds.
+
+[See pricing →](https://www.tigrisdata.com/pricing/#zero-egress-fees)
+
+## Geo-Redundant Storage
+
+Every object is stored redundantly across multiple geographic locations. You get
+high availability and strong read-after-write consistency without configuring
+replication rules or managing multi-region buckets.
+
+[Bucket locations →](/docs/buckets/locations/)
+
+## Flexible Storage Tiers
+
+Choose the right storage tier for your workload:
+
+- **Standard** — for frequently accessed data with low-latency reads
+- **Infrequent Access** — for data accessed less often, at lower storage cost
+- **Archive Instant Retrieval** — for rarely accessed data that still needs
+  immediate reads
+- **Archive** — for long-term retention at the lowest cost
+
+Objects can be moved between tiers automatically using lifecycle rules, or
+managed explicitly per object.
+
+[Storage tiers →](/docs/objects/tiers/)
+
+## Snapshots and Forks
+
+Create instant, zero-copy clones of your buckets with Git-style workflows:
+
+- **Snapshots** capture the state of a bucket at a point in time
+- **Forks** create independent copy-on-write branches from a snapshot
+
+Use these for development environments, experiment branching in ML training,
+safe rollbacks, or testing migrations without touching production data.
+
+```bash
+# Take a snapshot
+tigris snapshots take my-bucket
+
+# Fork for an experiment
+tigris forks create my-bucket --name experiment-v2
+```
+
+[Snapshots and forks →](/docs/buckets/snapshots-and-forks/)
+
+## Object Notifications
+
+Get notified when objects are created, updated, or deleted. Configure webhook
+endpoints to trigger downstream pipelines — model evaluation, media processing,
+deployment rollouts — without polling.
+
+[Object notifications →](/docs/buckets/object-notifications/)
+
+## Presigned URLs
+
+Generate time-limited URLs that grant temporary access to private objects. Use
+them for secure file downloads, direct browser uploads, or sharing objects
+without exposing credentials.
+
+Presigned URLs work with custom domains, so your users see your brand, not
+Tigris infrastructure.
+
+[Presigned URLs →](/docs/objects/presigned/)
+
+## Custom Domains
+
+Serve objects from your own domain. Configure a custom bucket endpoint so URLs
+look like `https://assets.yourapp.com/image.jpg` instead of the default Tigris
+domain.
+
+[Custom domains →](/docs/buckets/custom-domain/)
+
+## Identity and Access Management
+
+Fine-grained IAM policies let you scope credentials to specific buckets,
+prefixes, and operations. Create read-only keys for inference servers,
+write-only keys for training jobs, or admin keys for your CI/CD pipeline.
+
+[IAM policies →](/docs/iam/policies/)
+
+## Zero-Downtime Migration
+
+Shadow Buckets enable seamless migration from existing S3-compatible storage.
+Configure a shadow bucket to automatically sync reads and writes between your
+old and new storage — no risky hard cutover, no downtime.
+
+[Migration guides →](/docs/migration/)
+
+## Strong Consistency
+
+Tigris offers read-after-write consistency within the same region and eventual
+consistency globally by default. For use cases where objects may be modified
+from any region, Tigris provides a global strong consistency option.
+
+[Consistency model →](/docs/concepts/consistency/)
+
+## Security and Compliance
+
+Tigris is SOC 2 Type II compliant with encryption at rest and in transit.
+Fine-grained IAM policies let you control access to buckets and objects down to
+the prefix and operation level.
+
+[Authentication and authorization →](/docs/concepts/authnz/)

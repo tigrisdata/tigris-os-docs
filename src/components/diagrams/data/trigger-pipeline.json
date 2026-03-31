@@ -1,0 +1,268 @@
+[
+  {
+    "type": "rectangle",
+    "id": "job",
+    "x": 20,
+    "y": 120,
+    "width": 200,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "joblbl",
+    "x": 60,
+    "y": 137,
+    "text": "Training Job",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-job-bucket",
+    "x": 220,
+    "y": 148,
+    "width": 80,
+    "height": 0,
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [80, 0]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "a-job-bucket-lbl",
+    "x": 228,
+    "y": 118,
+    "text": "PutObject weights",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "bucket",
+    "x": 300,
+    "y": 110,
+    "width": 220,
+    "height": 75,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "bucketlbl",
+    "x": 340,
+    "y": 122,
+    "text": "Model Bucket",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "bucketsub",
+    "x": 335,
+    "y": 155,
+    "text": "notifications on",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-bucket-handler",
+    "x": 520,
+    "y": 148,
+    "width": 80,
+    "height": 0,
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [80, 0]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "a-bucket-handler-lbl",
+    "x": 535,
+    "y": 118,
+    "text": "webhook",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "handler",
+    "x": 600,
+    "y": 110,
+    "width": 220,
+    "height": 75,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "handlerlbl",
+    "x": 625,
+    "y": 122,
+    "text": "Pipeline Handler",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "handlersub",
+    "x": 645,
+    "y": 155,
+    "text": "your endpoint",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-handler-eval",
+    "x": 710,
+    "y": 185,
+    "width": -90,
+    "height": 70,
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [-90, 70]
+    ]
+  },
+  {
+    "type": "rectangle",
+    "id": "eval",
+    "x": 510,
+    "y": 255,
+    "width": 180,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "evallbl",
+    "x": 562,
+    "y": 270,
+    "text": "Run Evals",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-handler-convert",
+    "x": 710,
+    "y": 185,
+    "width": 0,
+    "height": 70,
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [0, 70]
+    ]
+  },
+  {
+    "type": "rectangle",
+    "id": "convert",
+    "x": 620,
+    "y": 255,
+    "width": 180,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "convertlbl",
+    "x": 655,
+    "y": 270,
+    "text": "Convert Model",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-handler-deploy",
+    "x": 710,
+    "y": 185,
+    "width": 90,
+    "height": 70,
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [90, 70]
+    ]
+  },
+  {
+    "type": "rectangle",
+    "id": "deploy",
+    "x": 730,
+    "y": 255,
+    "width": 180,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "deploylbl",
+    "x": 795,
+    "y": 270,
+    "text": "Deploy",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+
+  {
+    "type": "text",
+    "id": "note",
+    "x": 225,
+    "y": 340,
+    "text": "No polling — webhook fires the moment PutObject completes",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  }
+]

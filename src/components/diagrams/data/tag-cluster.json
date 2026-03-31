@@ -1,0 +1,456 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 358,
+    "y": 5,
+    "text": "Multi-node inference clusters",
+    "fontSize": 18,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "rectangle",
+    "id": "zone",
+    "x": 385,
+    "y": 40,
+    "width": 365,
+    "height": 555,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#1e3340",
+    "strokeWidth": 2,
+    "strokeStyle": "dashed",
+    "opacity": 40
+  },
+  {
+    "type": "text",
+    "id": "zonelbl",
+    "x": 400,
+    "y": 50,
+    "text": "TAG Cluster",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "podA",
+    "x": 40,
+    "y": 107,
+    "width": 200,
+    "height": 66,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "podAlbl",
+    "x": 65,
+    "y": 132,
+    "text": "Inference Pod A",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "podB",
+    "x": 40,
+    "y": 322,
+    "width": 200,
+    "height": 66,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "podBlbl",
+    "x": 65,
+    "y": 347,
+    "text": "Inference Pod B",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "podC",
+    "x": 40,
+    "y": 517,
+    "width": 200,
+    "height": 66,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "podClbl",
+    "x": 65,
+    "y": 542,
+    "text": "Inference Pod C",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+
+  {
+    "type": "arrow",
+    "id": "arwPA",
+    "x": 240,
+    "y": 140,
+    "width": 170,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [170, 0]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "arrow",
+    "id": "arwPB",
+    "x": 240,
+    "y": 355,
+    "width": 170,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [170, 0]
+    ],
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "endArrowhead": "arrow",
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "arwPBlbl",
+    "x": 245,
+    "y": 328,
+    "text": "request LLaMA model",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+  {
+    "type": "arrow",
+    "id": "arwPC",
+    "x": 240,
+    "y": 550,
+    "width": 170,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [170, 0]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2,
+    "endArrowhead": "arrow"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "tagA",
+    "x": 410,
+    "y": 80,
+    "width": 200,
+    "height": 120,
+    "backgroundColor": "#62FEB5",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "tagAlbl",
+    "x": 440,
+    "y": 105,
+    "text": "TAG Node A",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#0A171E"
+  },
+  {
+    "type": "rectangle",
+    "id": "cached",
+    "x": 430,
+    "y": 138,
+    "width": 160,
+    "height": 40,
+    "backgroundColor": "#0A171E",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1
+  },
+  {
+    "type": "text",
+    "id": "cachedlbl",
+    "x": 480,
+    "y": 150,
+    "text": "LLaMA",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "tagB",
+    "x": 410,
+    "y": 325,
+    "width": 200,
+    "height": 60,
+    "backgroundColor": "#62FEB5",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "tagBlbl",
+    "x": 440,
+    "y": 347,
+    "text": "TAG Node B",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#0A171E"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "tagC",
+    "x": 410,
+    "y": 520,
+    "width": 200,
+    "height": 60,
+    "backgroundColor": "#62FEB5",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "tagClbl",
+    "x": 440,
+    "y": 542,
+    "text": "TAG Node C",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#0A171E"
+  },
+
+  {
+    "type": "arrow",
+    "id": "gossipAB",
+    "x": 510,
+    "y": 210,
+    "width": 0,
+    "height": 105,
+    "points": [
+      [0, 0],
+      [0, 105]
+    ],
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 1,
+    "endArrowhead": "arrow",
+    "startArrowhead": "arrow",
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "gossipABlbl",
+    "x": 515,
+    "y": 218,
+    "text": "gossip",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+
+  {
+    "type": "arrow",
+    "id": "gossipBC",
+    "x": 510,
+    "y": 395,
+    "width": 0,
+    "height": 115,
+    "points": [
+      [0, 0],
+      [0, 115]
+    ],
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 1,
+    "endArrowhead": "arrow",
+    "startArrowhead": "arrow",
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "gossipBClbl",
+    "x": 520,
+    "y": 445,
+    "text": "gossip",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+
+  {
+    "type": "arrow",
+    "id": "grpcFwd",
+    "x": 560,
+    "y": 325,
+    "width": 0,
+    "height": -125,
+    "points": [
+      [0, 0],
+      [0, -125]
+    ],
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "endArrowhead": "arrow",
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "grpcFwdLbl",
+    "x": 570,
+    "y": 240,
+    "text": "gRPC forward request",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+  {
+    "type": "arrow",
+    "id": "grpcRet",
+    "x": 470,
+    "y": 200,
+    "width": 0,
+    "height": 125,
+    "points": [
+      [0, 0],
+      [0, 125]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "grpcRetLbl",
+    "x": 415,
+    "y": 255,
+    "text": "serve\nLLaMA model\nfrom cache",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "arrow",
+    "id": "servePodB",
+    "x": 410,
+    "y": 370,
+    "width": -170,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [-170, 0]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "servePodBlbl",
+    "x": 270,
+    "y": 378,
+    "text": "serve LLaMA model",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+
+  {
+    "type": "arrow",
+    "id": "cacheMiss",
+    "x": 610,
+    "y": 550,
+    "width": 170,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [170, 0]
+    ],
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2,
+    "endArrowhead": "arrow",
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "cacheMissLbl",
+    "x": 640,
+    "y": 525,
+    "text": "cache miss",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "tigris",
+    "x": 780,
+    "y": 520,
+    "width": 220,
+    "height": 60,
+    "backgroundColor": "#101c24",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "tigrislbl",
+    "x": 805,
+    "y": 540,
+    "text": "Tigris Object Storage",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+
+  {
+    "type": "text",
+    "id": "note",
+    "x": 285,
+    "y": 625,
+    "text": "Nodes share metadata — avoid redundant downloads",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  }
+]

@@ -1,0 +1,269 @@
+---
+id: training-use-cases
+title: "Tigris for model training"
+---
+
+import {
+  HomepageCard as Card,
+  HomepageSection as Section,
+} from "@site/src/components/HomepageComponents.jsx";
+
+# Tigris Storage for Model Training
+
+Training runs are long, expensive, and data-hungry. The storage layer has to
+stream terabytes to GPUs without becoming a bottleneck, persist checkpoints that
+let you resume on a different machine or cloud, and deliver finished weights to
+inference endpoints worldwide — all without surprise egress bills.
+
+This page covers five patterns where Tigris's architecture fits the access
+patterns of model training better than conventional S3.
+
+## Five Core Use Cases
+
+<Section>
+  <Card
+    title="Stream training data to GPUs"
+    description="Feed datasets directly into PyTorch DataLoaders from a global bucket, with local caching for repeat epochs."
+    to="#stream-training-data-to-gpus"
+    icon="img/atom"
+  />
+  <Card
+    title="Hydrate datasets to local storage"
+    description="Sync datasets from Tigris to a parallel filesystem before training, keeping Tigris as the durable source of truth."
+    to="#hydrate-datasets-to-local-storage"
+    icon="img/lightning"
+  />
+  <Card
+    title="Checkpoint, resume, and fork training runs"
+    description="Snapshot model state mid-training, resume anywhere, and fork for parallel experiments."
+    to="#checkpoint-resume-and-fork-training-runs"
+    icon="img/spark"
+  />
+  <Card
+    title="Trigger post-training pipelines on upload"
+    description="Fire a webhook when a checkpoint or final model lands to kick off eval, conversion, or deployment."
+    to="#trigger-post-training-pipelines-on-upload"
+    icon="img/globe"
+  />
+  <Card
+    title="Store and serve model weights globally"
+    description="Write fine-tuned weights once and load them for inference from the nearest region at zero egress cost."
+    to="#store-and-serve-model-weights-globally"
+    icon="img/bolt"
+  />
+</Section>
+
+## 1. Stream training data to GPUs {#stream-training-data-to-gpus}
+
+Training jobs need data fed to the GPU fast enough that compute never stalls
+waiting on storage. With Tigris you can stream objects straight into PyTorch
+DataLoaders without staging anything locally, and the same bucket works from any
+cloud or region.
+
+The
+[S3 Connector for PyTorch](https://github.com/awslabs/s3-connector-for-pytorch)
+reads objects directly from Tigris into your training loop. `S3IterableDataset`
+streams sequentially for large-scale runs; `S3MapDataset` gives random access
+when you need shuffling or indexed lookups. Each DataLoader worker automatically
+gets a distinct partition of the iterable dataset.
+
+![Stream training data to GPUs](/img/use-cases/training-stream-data.excalidraw.png)
+
+On [benchmarks](/docs/overview/benchmarks/model-training), Tigris delivers
+throughput comparable to AWS S3 on the same workload (ViT, 100k JPEGs,
+g5.8xlarge). Packing images into tar shards cuts the worker count from 16 to 8
+to saturate the GPU. Adding
+[TAG (Tigris Acceleration Gateway)](/docs/overview/benchmarks/model-training#3-tag-eliminates-network-latency-after-epoch-1),
+a local S3-compatible caching proxy, reduces warm-epoch duration by **5.7x**,
+cuts the workers needed to saturate the GPU from **16 to 4**, and provides
+**~200x** throughput headroom over what the GPU can consume via its local NVMe
+cache.
+
+For multi-cloud training, any cloud orchestrator (SkyPilot, Kubernetes, or your
+own tooling) can spin up GPU instances on whichever provider has capacity.
+Because all nodes read from the same global Tigris bucket at the nearest
+replica, there are no cross-cloud egress costs and no per-region storage to
+manage.
+
+For more information, see the docs:
+[PyTorch quickstart](/docs/quickstarts/pytorch) ·
+[Training benchmarks](/docs/overview/benchmarks/model-training) ·
+[Training with big data on SkyPilot](/docs/training/big-data-skypilot/) ·
+[Bucket locations](/docs/buckets/locations/)
+
+:::tip
+
+Use `pin_memory=True` and `persistent_workers=True` on your DataLoader for
+faster host-to-GPU transfers and lower worker startup overhead between epochs.
+
+:::
+
+## 2. Hydrate datasets to local storage {#hydrate-datasets-to-local-storage}
+
+Streaming directly from object storage works for fine-tuning and lighter
+workloads, but large-scale pre-training with heavy random I/O needs the dataset
+on fast local storage before training starts. Tigris acts as the durable,
+globally accessible source of truth: you hydrate data out of it into a parallel
+filesystem for the duration of a job, then write results back. This keeps you
+from paying for expensive filesystem storage around the clock while still
+getting full disk-speed reads during training.
+
+A separate ingestion job copies data from Tigris into a high-performance
+parallel filesystem. The training container then mounts the filesystem through
+its CSI driver and reads at full filesystem speed.
+
+![Hydrate datasets to local storage](/img/use-cases/training-hydrate-data.excalidraw.png)
+
+```bash
+# Hydrate Weka from Tigris (run as a separate k8s job or CLI step)
+aws s3 sync s3://my-dataset /mnt/weka/dataset --endpoint-url https://t3.storage.dev
+
+# Training container sees /mnt/weka/dataset via CSI mount
+torchrun --nproc_per_node=8 train.py --data-dir /mnt/weka/dataset
+
+# Write results back to Tigris
+aws s3 cp /mnt/weka/checkpoints/ s3://my-checkpoints/ --recursive --endpoint-url https://t3.storage.dev
+```
+
+Object storage stays the persistent store. The parallel filesystem is
+provisioned only for the duration of training, so you avoid paying for
+high-performance storage around the clock. Weka, VAST, and other vendors provide
+S3 data-import features and Kubernetes CSI plugins that make the
+hydrate-mount-train cycle straightforward.
+
+Because Tigris serves reads from the nearest region, the sync saturates the
+available link regardless of where the job is scheduled. For datasets that don't
+change between runs, the sync is incremental — only new or modified objects
+transfer.
+
+For more information, see the docs: [TigrisFS](/docs/training/tigrisfs/) ·
+[Bucket locations](/docs/buckets/locations/) ·
+[rclone quickstart](/docs/quickstarts/rclone/)
+
+:::tip
+
+For datasets that change infrequently, run `aws s3 sync` with `--size-only` to
+skip unchanged files based on size rather than checksumming every object. This
+cuts hydration time on repeat runs.
+
+:::
+
+## 3. Checkpoint, resume, and fork training runs {#checkpoint-resume-and-fork-training-runs}
+
+Long training jobs fail. Spot instances get preempted, nodes crash, and
+hyperparameters need revising. If you're not checkpointing to durable storage,
+you restart from scratch.
+
+Writing checkpoints to a Tigris bucket with
+[snapshots enabled](/docs/buckets/snapshots-and-forks/) gives you two things at
+once. **Resume**: when a job dies or you migrate to cheaper hardware, the
+orchestrator restarts on a new machine and loads the latest checkpoint from the
+nearest replica — no cross-region prefetch, no egress cost. **Fork**: when you
+want to branch from a known-good checkpoint to run parallel experiments, each
+fork gets its own copy-on-write view of the bucket instantly. Mutations in one
+fork never affect another, and the source checkpoint stays immutable.
+
+![Checkpoint, resume, and fork training runs](/img/use-cases/training-checkpoint.excalidraw.png)
+
+In practice, you create the bucket with `X-Tigris-Enable-Snapshot: true` at
+creation time, then have your training loop write checkpoints on a fixed cadence
+(every N steps or at epoch boundaries). Store the snapshot version ID alongside
+the run metadata in your experiment tracker. To resume, pass the version to the
+new job. To sweep hyperparameters, fork the snapshot once per configuration and
+let each fork write independently.
+
+For more information, see the docs:
+[Bucket snapshots and forks](/docs/buckets/snapshots-and-forks/) ·
+[TigrisFS](/docs/training/tigrisfs/)
+
+:::tip
+
+Scope each training job's credentials with a
+[fine-grained IAM policy](/docs/iam/policies/examples/training-job): read-only
+to the dataset bucket, read-only to the base model, write-only to the output
+bucket, with optional time-window and IP restrictions.
+`X-Tigris-Enable-Snapshot: true` must be set at bucket creation and cannot be
+changed afterward.
+
+:::
+
+## 4. Trigger post-training pipelines on upload {#trigger-post-training-pipelines-on-upload}
+
+After a training job writes a checkpoint or a final set of weights, downstream
+work usually follows: evaluation, quantization, conversion to a serving format,
+or deployment to an inference fleet. Polling the bucket for new objects adds
+latency, wastes API calls, and complicates orchestration.
+
+[Tigris Object Notifications](/docs/buckets/object-notifications/) replace the
+polling loop with a push model. An HTTP `POST` fires to your webhook the moment
+a new object lands, carrying the bucket, key, size, and ETag. Your pipeline
+handler can start immediately — run evals against the new checkpoint, kick off
+ONNX or TensorRT conversion, or trigger a rolling deploy to your inference
+fleet.
+
+![Trigger post-training pipelines on upload](/img/use-cases/training-pipelines.excalidraw.png)
+
+You configure a notification rule through Tigris Dashboard, pointing it at an
+HTTPS endpoint you control. Filter to exactly the events you care about — for
+example, only objects under the `checkpoints/` or `final/` prefix — so your
+handler isn't invoked on intermediate artifacts it doesn't need.
+
+For more information, see the docs:
+[Object notifications](/docs/buckets/object-notifications/)
+
+:::tip
+
+Filter webhooks to the keys that matter. When
+[configuring a notification rule](/docs/buckets/object-notifications/#filtering),
+set a prefix filter such as `final/` to only fire on completed weights, not
+intermediate artifacts. Your handler should be idempotent since notifications
+are delivered at least once and can arrive out of order across regions — use the
+`Last-Modified` timestamp on the object (not `eventTime`) to sequence events
+correctly.
+
+:::
+
+## 5. Store and serve model weights globally {#store-and-serve-model-weights-globally}
+
+Once training is done, the weights need to reach inference endpoints that may be
+spread across regions and clouds. Copying files to per-region buckets is slow to
+set up, expensive to maintain, and drifts when you forget to sync after a
+retrain.
+
+A single `PutObject` to a [global Tigris bucket](/docs/buckets/locations/) makes
+the weights available worldwide. Inference nodes read from the nearest replica
+at no egress cost. Because weights are immutable per version, conditional
+`GetObject` calls with `If-None-Match` let nodes skip the download entirely if
+they already have the current version — useful for rolling deploys where most
+nodes are already warm.
+
+For latency-sensitive serving, deploying
+[TAG](/docs/overview/benchmarks/model-training#3-tag-eliminates-network-latency-after-epoch-1)
+alongside your inference nodes gives you a local NVMe-backed cache that
+eliminates network round-trips on warm reads, the same way it accelerates
+training.
+
+![Store and serve model weights globally](/img/use-cases/training-global-weights.excalidraw.png)
+
+In practice, your training job writes the final weights (or LoRA adapters) to a
+versioned key such as `models/{model}/{run_id}/weights.safetensors`. Inference
+nodes learn the key from your model registry or control plane and pull on
+startup or rollout. For frameworks that expect local file paths, mount the
+bucket with [TigrisFS](/docs/training/tigrisfs/) and load directly from the
+mount point — `torch.load("/mnt/tigris/model.bin")` or
+`AutoModel.from_pretrained("/mnt/tigris/my-model/")` work without code changes.
+
+For more information, see the docs: [Presigned URLs](/docs/objects/presigned/) ·
+[TigrisFS](/docs/training/tigrisfs/) ·
+[Bucket locations](/docs/buckets/locations/)
+
+## Next steps
+
+| Topic                                                           | What you'll find there                                                                     |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [Get started with Tigris](/docs/get-started/)                   | A guided walkthrough for creating buckets, uploading objects, and running basic workloads. |
+| [PyTorch quickstart](/docs/quickstarts/pytorch)                 | End-to-end setup for streaming training data from Tigris into PyTorch DataLoaders.         |
+| [Training benchmarks](/docs/overview/benchmarks/model-training) | ViT benchmark results, sharding strategies, and TAG caching performance numbers.           |
+| [Training with big data](/docs/training/big-data-skypilot/)     | Multi-cloud LoRA fine-tuning walkthrough with SkyPilot and Tigris.                         |
+| [Snapshots and forks](/docs/buckets/snapshots-and-forks/)       | Concepts and API flows for creating snapshots, forking buckets, and managing versions.     |
+| [TigrisFS](/docs/training/tigrisfs/)                            | Mount Tigris buckets as a local filesystem for storing and loading model weights.          |

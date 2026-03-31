@@ -28,7 +28,7 @@ function ToolCard({ icon, title, description, to, children }) {
 export default function ToolCards() {
   return (
     <div className="tool-cards-wrapper">
-      <h2 className="tool-cards-title">Developer Tools</h2>
+      <h2 className="tool-cards-title">Get Started</h2>
       <div className="tool-cards-section">
         <ToolCard
           icon={
@@ -200,7 +200,7 @@ export default function ToolCards() {
               />
             </svg>
           }
-          title="Tigris MCP Server"
+          title="AI"
           description="Empower your AI assistants. Expose your Tigris buckets and objects to LLMs via the Model Context Protocol for seamless context integration."
           to="/quickstarts/mcp"
         >
@@ -279,6 +279,71 @@ export default function ToolCards() {
             >
               See all integrations &rarr;
             </a>
+          </div>
+        </ToolCard>
+
+        <ToolCard
+          icon={
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          }
+          title="Use Your Existing Code"
+          description="Already using AWS S3 SDKs? Point your existing boto3, @aws-sdk, or any S3-compatible client at Tigris by updating your endpoint and keys."
+          to="/sdks/s3/"
+        >
+          <div className="tool-card-code">
+            <div className="tool-card-code-header">
+              <div className="tool-card-dots">
+                <span />
+              </div>
+              <span className="tool-card-filename">terminal</span>
+            </div>
+            <div className="tool-card-terminal">
+              <div className="tool-card-terminal-line">
+                <span className="tool-card-keyword">export</span>{" "}
+                AWS_ENDPOINT_URL=
+                <span className="tool-card-string">https://t3.storage.dev</span>
+              </div>
+              <div className="tool-card-terminal-line">
+                <span className="tool-card-keyword">export</span>{" "}
+                AWS_ACCESS_KEY_ID=
+                <span className="tool-card-string">tid_...</span>
+              </div>
+              <div className="tool-card-terminal-line">
+                <span className="tool-card-keyword">export</span>{" "}
+                AWS_SECRET_ACCESS_KEY=
+                <span className="tool-card-string">tsec_...</span>
+              </div>
+              <div className="tool-card-terminal-line">&nbsp;</div>
+              <div className="tool-card-terminal-line">
+                <span className="tool-card-comment">
+                  # Your existing code just works
+                </span>
+              </div>
+              <div className="tool-card-terminal-line">
+                <span className="tool-card-prompt">$ </span>aws s3 cp file.bin
+                s3://my-bucket/
+              </div>
+            </div>
           </div>
         </ToolCard>
       </div>

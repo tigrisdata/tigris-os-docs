@@ -1,0 +1,170 @@
+---
+id: model-serving-use-cases
+title: "Store and Serve Models"
+---
+
+import DirectAccessDiagram from "@site/src/components/diagrams/DirectAccessDiagram";
+import TAGModelServingDiagram from "@site/src/components/diagrams/TAGModelServingDiagram";
+import TAGClusterModeDiagram from "@site/src/components/diagrams/TAGClusterModeDiagram";
+import DiagramLightbox from "@site/src/components/diagrams/DiagramLightbox";
+
+# Store and Serve Models
+
+## Accelerated access: Tigris + TAG
+
+_Serve models faster. Without changing your code._
+
+<div className="use-case-hero">
+  <div className="use-case-hero__text">
+
+Serving ML models at scale means loading large weight files quickly, repeatedly,
+and from wherever your GPUs happen to be. The bottleneck is almost always the
+same: getting gigabytes of model data from storage to GPU memory as fast as
+possible.
+
+[TAG](/docs/acceleration-gateway/quickstart/) is a high-performance
+S3-compatible caching proxy purpose-built for ML workloads. It sits between your
+inference servers and Tigris, caches model weights on local NVMe/SSD, and serves
+subsequent reads at near-local-disk speed. Your framework doesn't know TAG
+exists — it just sees a faster S3 endpoint.
+
+[Get started with TAG →](/docs/acceleration-gateway/quickstart/)
+
+  </div>
+  <div className="use-case-hero__diagram">
+    <DiagramLightbox>
+      <div className="mermaid-frame">
+        <TAGModelServingDiagram />
+      </div>
+    </DiagramLightbox>
+  </div>
+</div>
+
+### Benefits
+
+<details>
+<summary>Cold start elimination</summary>
+
+When you deploy a new inference pod, it typically downloads the full model from
+object storage before it can serve requests — minutes of GPU idle time for large
+models. With TAG deployed as a sidecar or node-level cache, the model weights
+are already on local disk after the first pod fetches them. Subsequent pods on
+the same node get cache hits and start immediately.
+
+</details>
+
+<details>
+<summary>Request coalescing for simultaneous pod scaling</summary>
+
+When you scale from 1 to 10 inference pods at once, all 10 would normally send
+identical requests for the same model. TAG's request coalescing means only one
+upstream request goes to Tigris — the other 9 get the data streamed from the
+single in-flight request. This is especially valuable for large model
+checkpoints.
+
+</details>
+
+<details>
+<summary>Range request optimization</summary>
+
+ML frameworks (PyTorch, HuggingFace safetensors, etc.) often load models using
+range requests — fetching specific tensor shards rather than the whole file. TAG
+detects these and triggers a background full-object fetch while serving the
+range, so subsequent range requests hit the local cache instead of roundtripping
+to Tigris each time.
+
+</details>
+
+<details>
+<summary>Multi-node inference clusters</summary>
+
+TAG deploys as a Kubernetes StatefulSet with gossip-based cluster discovery.
+Nodes share cache metadata, so if node A already cached a model, node B knows
+about it and can forward requests via gRPC. This avoids redundant downloads
+across your fleet.
+
+<DiagramLightbox>
+  <div className="mermaid-frame">
+    <TAGClusterModeDiagram />
+  </div>
+</DiagramLightbox>
+
+</details>
+
+<details>
+<summary>Read-only credential separation</summary>
+
+TAG only needs read-only Tigris credentials for its own cache operations. Your
+inference servers pass their own credentials through transparently via SigV4
+re-signing. This fits a typical pattern where model weights are stored in a
+shared read-only bucket.
+
+</details>
+
+## Direct access: Tigris as your model store
+
+<div className="use-case-hero">
+  <div className="use-case-hero__text">
+
+Point your inference framework directly at Tigris. Any framework that loads
+models from S3 works out of the box — no code changes, no custom integrations.
+
+Upload weights once to a [global bucket](/docs/buckets/locations/) and inference
+nodes read from the nearest replica automatically. For frameworks that expect
+file paths, mount with [TigrisFS](/docs/training/tigrisfs/).
+
+[Get started →](/docs/get-started/)
+
+  </div>
+  <div className="use-case-hero__diagram">
+    <DiagramLightbox>
+      <div className="mermaid-frame">
+        <DirectAccessDiagram />
+      </div>
+    </DiagramLightbox>
+  </div>
+</div>
+
+### Benefits
+
+<details>
+<summary>Zero egress fees</summary>
+
+Loading the same 70 GB model across 10 replicas costs nothing in transfer fees.
+Tigris doesn't charge for egress, so scaling your inference fleet doesn't scale
+your storage bill.
+
+</details>
+
+<details>
+<summary>Global low-latency reads</summary>
+
+A [global bucket](/docs/buckets/locations/) automatically serves weights from
+the nearest replica. No per-region buckets to manage, no sync jobs to maintain.
+
+</details>
+
+<details>
+<summary>Version-aware deploys</summary>
+
+Write weights to a versioned key like
+`models/{model}/{run_id}/weights.safetensors`. Conditional `GetObject` calls
+with `If-None-Match` let nodes skip the download entirely when they already have
+the current version — useful for rolling deploys where most nodes are already
+warm.
+
+</details>
+
+## Which approach?
+
+Both patterns store your models durably in Tigris — TAG is purely a read
+acceleration layer. Start with direct access, then add TAG when load times
+become a bottleneck. No application code changes either way.
+
+|                  | Direct access                     | With TAG                                   |
+| ---------------- | --------------------------------- | ------------------------------------------ |
+| **Setup**        | Set endpoint URL                  | Run TAG alongside your stack               |
+| **Cold starts**  | Network speed to Tigris           | First same, all subsequent near-instant    |
+| **Best for**     | Small fleets, infrequent restarts | Large fleets, frequent scaling, serverless |
+| **Model swaps**  | Full download each time           | Instant if cached                          |
+| **Code changes** | None                              | None                                       |

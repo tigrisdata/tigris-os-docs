@@ -1,0 +1,111 @@
+---
+id: cloudflare-r2
+title: "Tigris vs Cloudflare R2"
+---
+
+# Tigris vs Cloudflare R2
+
+Both Tigris and Cloudflare R2 are S3-compatible object storage services with
+zero egress fees. They share a commitment to eliminating data transfer costs.
+The differences are in how each handles global distribution, S3 compatibility,
+and platform features.
+
+## Global distribution
+
+### Cloudflare R2
+
+R2 stores data in a single primary location and relies on Cloudflare's CDN edge
+cache for read performance. Cache misses go back to the origin region. You can
+hint at a preferred region, but data lives in one place.
+
+### Tigris
+
+Tigris uses Dynamic Data Placement to actually move and replicate data to the
+regions where it's accessed. Reads are fast even for infrequently cached objects
+because data physically lives closer to where it's needed — not just cached at
+the edge.
+
+## S3 compatibility
+
+### Cloudflare R2
+
+R2's S3 compatibility has known gaps. Some features like multipart upload copy
+parts, certain ACL operations, and some list parameters aren't fully supported.
+This can cause issues with tools and libraries that rely on the full S3 API.
+
+### Tigris
+
+Tigris implements a broader set of the S3 API. Existing tools, SDKs, and
+libraries are less likely to hit edge cases or need workarounds.
+
+## Storage tiers
+
+### Cloudflare R2
+
+R2 offers Standard and Infrequent Access tiers. There is no archive tier for
+long-term, low-cost retention.
+
+### Tigris
+
+Tigris offers Standard, Infrequent Access, Archive, and Archive with Instant
+Retrieval — giving you more options for optimizing storage costs across
+different access patterns.
+
+## Multi-tenancy
+
+### Cloudflare R2
+
+R2 doesn't have a multi-tenant provisioning API. If you're building a platform
+that needs isolated storage per customer, you manage isolation at the
+application level using API tokens scoped to accounts or buckets.
+
+### Tigris
+
+Tigris offers a [Partner Integration API](/docs/partner-integrations/) for
+provisioning isolated tenant organizations in a single API call — each with
+their own buckets, credentials, and usage tracking built in.
+
+## Snapshots and forks
+
+### Cloudflare R2
+
+R2 has no snapshot or fork capability.
+
+### Tigris
+
+Tigris lets you take point-in-time snapshots of a bucket and create independent
+copy-on-write forks — instant, no data copying. Useful for ML experiment
+branching, safe migrations, and dev environments.
+
+## Where Cloudflare R2 fits better
+
+- **Cloudflare Workers ecosystem** — native bindings for Workers, Pages, and
+  Durable Objects make R2 a natural fit for edge-first Cloudflare applications
+- **Edge compute co-location** — if your logic already runs on Cloudflare
+  Workers, R2 reads from the same data center are very fast
+- **Event notifications via Queues** — R2 integrates with Cloudflare Queues for
+  event-driven processing within the Cloudflare ecosystem
+- **Free tier** — R2 offers 10 GB of free storage and 10 million Class A
+  operations/month
+
+## Summary
+
+|                                | **Tigris**                                        | **Cloudflare R2**                                  |
+| ------------------------------ | ------------------------------------------------- | -------------------------------------------------- |
+| **Global distribution**        | Automatic — data moves to where it's accessed     | Single primary region + optional cache via Workers |
+| **Egress fees**                | Free                                              | Free                                               |
+| **Region selection**           | Not required — single global endpoint             | Automatic (closest region) or manual hint          |
+| **S3 API compatibility**       | Full                                              | Mostly compatible — some gaps                      |
+| **Consistency**                | Strong read-after-write                           | Strong read-after-write                            |
+| **Storage tiers**              | Standard, IA, Archive, Archive Instant Retrieval  | Standard, Infrequent Access                        |
+| **Snapshots & forks**          | Native — zero-copy clones                         | No equivalent                                      |
+| **Custom domains**             | Supported                                         | Supported (via Workers or R2 public bucket)        |
+| **IAM**                        | IAM policies, bucket policies, ACLs               | API tokens scoped to account or bucket             |
+| **Partner / multi-tenant API** | Native [Partner API](/docs/partner-integrations/) | Not available                                      |
+
+## Migration
+
+Moving from R2 to Tigris is straightforward since both use the S3 API. Change
+your endpoint URL and credentials, then use [rclone](/docs/quickstarts/rclone/)
+or the [data migration guide](/docs/migration/cloudflare-r2/) to sync existing
+data.

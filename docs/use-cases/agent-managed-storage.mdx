@@ -1,0 +1,210 @@
+---
+id: agent-managed-storage
+title: "Agent Managed Storage"
+---
+
+# Agent Managed Storage
+
+## Agents that provision and manage their own storage
+
+_Let your AI agents handle storage setup end-to-end — no human in the loop
+required._
+
+<div className="use-case-hero">
+  <div className="use-case-hero__text">
+
+AI agents that interact with the real world need storage — for intermediate
+results, uploaded artifacts, shared state between steps, and outputs handed off
+to other systems. Today, storage setup is typically a human-gated step: someone
+creates a bucket, configures access, and hands the agent a credential. This
+breaks autonomous workflows and forces agents to wait.
+
+With Tigris and [agent skills](/docs/skills/), agents can provision their own
+storage on demand. The Tigris CLI gives agents a simple, scriptable interface to
+create buckets, upload objects, manage access keys, and configure policies — all
+from within the agent's own workflow. Agent skills install procedural knowledge
+directly into AI coding agents like Claude Code and Cursor, so the agent already
+knows the right commands and patterns without manual prompting.
+
+[Tigris CLI reference →](/docs/cli/)
+
+  </div>
+</div>
+
+### Benefits
+
+<details>
+<summary>Self-service storage provisioning</summary>
+
+Agents can create a bucket the moment they need one, without waiting for a human
+to set it up. The Tigris CLI provides a simple interface that works well in
+scripted and agent-driven contexts. An agent that needs scratch space, output
+storage, or a place to stage data between pipeline steps can provision it
+immediately as part of its own workflow.
+
+```bash
+# Create a bucket for this agent's outputs
+tigris mb my-agent-outputs
+
+# Upload results
+tigris cp ./results.json s3://my-agent-outputs/results.json
+```
+
+</details>
+
+<details>
+<summary>Agent skills enable correct usage without prompting</summary>
+
+[Tigris agent skills](/docs/skills/) give AI coding agents like Claude Code and
+Cursor built-in procedural knowledge about Tigris. Once installed via
+`skills.sh`, the agent knows how to authenticate, create buckets, upload
+objects, manage access keys, and set IAM policies — without needing step-by-step
+instructions in every prompt.
+
+This means agents make correct Tigris API calls on the first try, follow
+least-privilege patterns by default, and handle edge cases (bucket already
+exists, credential rotation, policy updates) correctly. Skills dramatically
+reduce the prompt engineering required to get reliable storage operations from
+an AI agent.
+
+</details>
+
+<details>
+<summary>Scoped access keys per task</summary>
+
+Rather than sharing a single credential across an entire workflow, agents can
+create access keys scoped to specific buckets for specific tasks. A key created
+for one step of a pipeline can be restricted to a single bucket and revoked when
+the step completes. This follows the principle of least privilege and limits the
+blast radius of a compromised or misbehaving agent.
+
+```bash
+# Create a scoped access key for a single bucket
+tigris access-keys create \
+  --name "pipeline-step-3" \
+  --policy '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":["s3:GetObject","s3:PutObject"],"Resource":"arn:aws:s3:::pipeline-step-3-data/*"}]}'
+```
+
+</details>
+
+<details>
+<summary>Complete workflow automation</summary>
+
+Agents can set up a full storage pipeline in a single pass: create a bucket,
+configure lifecycle rules to expire temporary files, upload input data, run a
+workload, and emit outputs to a known location — all without human involvement.
+This makes Tigris a natural fit for agents that need durable, addressable
+storage as a first-class part of their execution environment.
+
+</details>
+
+<details>
+<summary>Multi-agent coordination through scoped credentials</summary>
+
+In multi-agent systems, a coordinator agent can provision isolated storage for
+each worker agent: create a dedicated bucket, generate a scoped credential, pass
+the credential to the worker, and clean up when the task is done. Workers get
+exactly the access they need, coordinators maintain visibility into all buckets,
+and no agent can touch another agent's data.
+
+</details>
+
+### Patterns
+
+#### Agent provisions its own storage on startup
+
+An agent that runs a multi-step pipeline creates its own scratch bucket at
+startup, uses it throughout the pipeline, and optionally archives or deletes it
+when done.
+
+```bash
+# Agent startup: create a workspace bucket
+AGENT_ID="agent-$(date +%s)"
+tigris mb "${AGENT_ID}-workspace"
+
+# Store intermediate results between pipeline steps
+tigris cp ./step1-output.json "s3://${AGENT_ID}-workspace/step1/output.json"
+tigris cp ./step2-output.json "s3://${AGENT_ID}-workspace/step2/output.json"
+
+# List what's accumulated
+tigris ls "s3://${AGENT_ID}-workspace/"
+
+# On completion, archive outputs to a shared bucket
+tigris cp \
+  "s3://${AGENT_ID}-workspace/step2/output.json" \
+  "s3://shared-pipeline-outputs/${AGENT_ID}/result.json"
+
+# Clean up scratch space
+tigris rb --force "${AGENT_ID}-workspace"
+```
+
+#### Coordinator provisions isolated storage for worker agents
+
+A coordinator creates one bucket per worker, generates scoped credentials, and
+passes them to each worker. Workers operate in isolation; the coordinator
+collects results when all workers are done.
+
+```bash
+# Coordinator: provision storage for 5 worker agents
+for i in $(seq 1 5); do
+  BUCKET="worker-${i}-data"
+  tigris mb "${BUCKET}"
+
+  # Create a scoped access key for this worker only
+  tigris access-keys create \
+    --name "worker-${i}-key" \
+    --policy "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"s3:*\"],\"Resource\":\"arn:aws:s3:::${BUCKET}/*\"}]}"
+done
+
+# Workers run independently, writing to their own buckets
+
+# Coordinator collects results
+for i in $(seq 1 5); do
+  tigris cp "s3://worker-${i}-data/output.json" "./results/worker-${i}.json"
+done
+```
+
+#### Least-privilege key rotation
+
+Long-running agents rotate their own access keys periodically to limit exposure.
+The agent creates a new key, updates its local configuration, and revokes the
+old key — without any human involvement.
+
+```bash
+# Create a replacement key before revoking the old one
+NEW_KEY=$(tigris access-keys create --name "agent-key-$(date +%Y%m%d)" --json)
+
+# Update the local credential configuration
+export AWS_ACCESS_KEY_ID=$(echo "$NEW_KEY" | jq -r '.accessKeyId')
+export AWS_SECRET_ACCESS_KEY=$(echo "$NEW_KEY" | jq -r '.secretAccessKey')
+
+# Revoke the previous key
+tigris access-keys delete "${OLD_KEY_ID}"
+```
+
+#### Configure a bucket for a specific workload
+
+Agents can configure bucket-level settings — lifecycle rules, access policies,
+notification endpoints — to match the requirements of a specific workload, then
+tear them down when the workload is complete.
+
+```bash
+# Create a bucket with a short-lived object lifecycle for scratch data
+tigris mb scratch-data
+
+# Apply a lifecycle rule to expire objects after 7 days
+aws s3api put-bucket-lifecycle-configuration \
+  --endpoint-url https://t3.storage.dev \
+  --bucket scratch-data \
+  --lifecycle-configuration '{
+    "Rules": [{
+      "ID": "expire-scratch",
+      "Status": "Enabled",
+      "Expiration": {"Days": 7},
+      "Filter": {"Prefix": "tmp/"}
+    }]
+  }'
+
+# Upload scratch files — they will expire automatically
+tigris cp ./intermediate.bin s3://scratch-data/tmp/intermediate.bin
+```

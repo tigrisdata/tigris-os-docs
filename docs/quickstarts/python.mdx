@@ -1,0 +1,296 @@
+---
+id: python
+title: "Python"
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Python
+
+There are three ways to use Tigris with Python:
+
+- **[boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html)**
+  — use the standard AWS SDK directly, just point it at Tigris
+- **[tigris-boto3-ext](https://github.com/tigrisdata/tigris-boto3-ext)** — a
+  lightweight extension that adds Tigris-specific features like snapshots and
+  bucket forking on top of boto3
+- **[AWS SDK for Python](/docs/sdks/s3/aws-python-sdk/)** — if you have existing
+  code using the AWS Python SDK, you can migrate to Tigris by changing the
+  endpoint and credentials
+
+All approaches are fully S3-compatible. Pick whichever fits your needs.
+
+## Prerequisites
+
+- Python 3.9+
+- A Tigris account — create one at [storage.new](https://storage.new)
+- An access key from
+  [console.storage.dev/createaccesskey](https://console.storage.dev/createaccesskey)
+
+## Install
+
+<Tabs>
+<TabItem value="boto3" label="boto3" default>
+
+```bash
+pip install boto3
+```
+
+</TabItem>
+<TabItem value="ext" label="tigris-boto3-ext">
+
+```bash
+pip install tigris-boto3-ext
+```
+
+This installs boto3 as a dependency if you don't already have it.
+
+</TabItem>
+<TabItem value="aws-sdk" label="Existing AWS code">
+
+```bash
+pip install boto3
+```
+
+If you already have boto3 installed, no changes needed — just update your
+configuration.
+
+</TabItem>
+</Tabs>
+
+## Configure credentials
+
+Set your Tigris credentials as environment variables:
+
+```bash
+export AWS_ACCESS_KEY_ID="tid_your_access_key"
+export AWS_SECRET_ACCESS_KEY="tsec_your_secret_key"
+export AWS_ENDPOINT_URL="https://t3.storage.dev"
+export AWS_REGION="auto"
+```
+
+## Create a client
+
+<Tabs>
+<TabItem value="boto3" label="boto3" default>
+
+With `AWS_ENDPOINT_URL` set in your environment:
+
+```python
+import boto3
+
+s3 = boto3.client("s3")
+```
+
+Or pass the endpoint explicitly:
+
+```python
+import boto3
+
+s3 = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    aws_access_key_id="tid_your_access_key",
+    aws_secret_access_key="tsec_your_secret_key",
+    region_name="auto",
+)
+```
+
+</TabItem>
+<TabItem value="ext" label="tigris-boto3-ext">
+
+The extension works with a standard boto3 client — no special setup required:
+
+```python
+import boto3
+
+s3 = boto3.client("s3")
+```
+
+The extension registers event handlers with boto3's event system automatically.
+Your existing boto3 code works unchanged, and you opt in to Tigris-specific
+features through helper functions, context managers, or decorators.
+
+</TabItem>
+<TabItem value="aws-sdk" label="Existing AWS code">
+
+If you have existing code that uses boto3 with AWS S3, you can migrate to Tigris
+by changing the endpoint and credentials. Set the environment variables above,
+then update your client configuration:
+
+```python
+import boto3
+from botocore.client import Config
+
+# Before (AWS S3)
+# s3 = boto3.client("s3")
+
+# After (Tigris) — just add the endpoint and addressing style
+s3 = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    config=Config(s3={"addressing_style": "virtual"}),
+)
+```
+
+The rest of your code stays the same. All standard S3 operations — `put_object`,
+`get_object`, `upload_file`, `list_objects_v2`, presigned URLs — work as-is.
+
+If you use AWS profiles, you can add a Tigris profile to `~/.aws/credentials`
+and `~/.aws/config` to keep both side by side. See the
+[AWS Python SDK reference](/docs/sdks/s3/aws-python-sdk/) for details.
+
+</TabItem>
+</Tabs>
+
+## Basic operations
+
+These work the same with both boto3 and the extension.
+
+### Create a bucket
+
+```python
+s3.create_bucket(Bucket="my-bucket")
+```
+
+### Upload a file
+
+```python
+# From a file on disk
+s3.upload_file("data.csv", "my-bucket", "data.csv")
+
+# From a string
+s3.put_object(Bucket="my-bucket", Key="hello.txt", Body="Hello, World!")
+```
+
+### Download a file
+
+```python
+s3.download_file("my-bucket", "data.csv", "local-copy.csv")
+```
+
+### List objects
+
+```python
+response = s3.list_objects_v2(Bucket="my-bucket")
+
+for obj in response.get("Contents", []):
+    print(f"  {obj['Key']}  ({obj['Size']} bytes)")
+```
+
+### Generate a presigned URL
+
+```python
+url = s3.generate_presigned_url(
+    "get_object",
+    Params={"Bucket": "my-bucket", "Key": "data.csv"},
+    ExpiresIn=3600,
+)
+print(url)
+```
+
+## Snapshots and forks
+
+You can use snapshots and forks with plain boto3 by passing Tigris-specific
+headers on each request, but the
+[tigris-boto3-ext](https://github.com/tigrisdata/tigris-boto3-ext) package
+handles this for you automatically.
+
+### Create a snapshot-enabled bucket
+
+```python
+from tigris_boto3_ext import create_snapshot_bucket
+
+create_snapshot_bucket(s3, "my-snapshots")
+```
+
+### Take a snapshot
+
+```python
+from tigris_boto3_ext import create_snapshot, list_snapshots
+
+# Upload some data
+s3.put_object(Bucket="my-snapshots", Key="model.bin", Body=b"v1 weights")
+
+# Snapshot the current state
+snapshot = create_snapshot(s3, "my-snapshots")
+print(f"Snapshot version: {snapshot}")
+
+# List all snapshots
+for snap in list_snapshots(s3, "my-snapshots"):
+    print(snap)
+```
+
+### Read from a snapshot
+
+```python
+from tigris_boto3_ext import get_object_from_snapshot
+
+# Read the object as it was at snapshot time — even if it's been
+# overwritten or deleted since
+obj = get_object_from_snapshot(s3, "my-snapshots", "model.bin", snapshot)
+data = obj["Body"].read()
+```
+
+### Fork a bucket
+
+Forking creates a copy-on-write clone — instant, no data copying:
+
+```python
+from tigris_boto3_ext import create_fork
+
+create_fork(s3, source_bucket="my-snapshots", fork_bucket="experiment-lr-1e-4")
+
+# The fork has all the same objects but writes are independent
+s3.put_object(Bucket="experiment-lr-1e-4", Key="model.bin", Body=b"new weights")
+
+# Original bucket is unchanged
+```
+
+### Context managers
+
+For scoped operations, use context managers:
+
+```python
+from tigris_boto3_ext import TigrisSnapshot, TigrisFork
+
+# Read from a specific snapshot
+with TigrisSnapshot(s3, "my-snapshots", snapshot_version=snapshot):
+    obj = s3.get_object(Bucket="my-snapshots", Key="model.bin")
+    print(obj["Body"].read())
+
+# Work inside a fork
+with TigrisFork(s3, source_bucket="my-snapshots", fork_bucket="test-fork"):
+    s3.put_object(Bucket="test-fork", Key="results.json", Body=b"{}")
+```
+
+### Decorators
+
+You can also use decorators to scope snapshot/fork behavior to a function:
+
+```python
+from tigris_boto3_ext import snapshot_enabled, with_snapshot, forked_from
+
+@snapshot_enabled
+def backup_workflow(s3_client):
+    s3_client.put_object(Bucket="backups", Key="data.bak", Body=b"backup data")
+
+@with_snapshot(snapshot_version="v1")
+def read_historical(s3_client):
+    return s3_client.get_object(Bucket="backups", Key="data.bak")
+
+@forked_from(source_bucket="production")
+def run_test(s3_client):
+    # Writes go to the fork, production is untouched
+    s3_client.put_object(Bucket="test-env", Key="test.txt", Body=b"test")
+```
+
+## Next steps
+
+- [Snapshots and forks](/docs/buckets/snapshots-and-forks/) — full guide on
+  Tigris snapshot and fork concepts
+- [AWS Python SDK reference](/docs/sdks/s3/aws-python-sdk/) — advanced boto3
+  usage with Tigris (profiles, presigned URLs, metadata queries)
+- [tigris-boto3-ext on GitHub](https://github.com/tigrisdata/tigris-boto3-ext) —
+  source code and full API reference

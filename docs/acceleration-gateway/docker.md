@@ -46,7 +46,7 @@ Run 3 TAG nodes with an embedded distributed cache cluster:
 
 ```bash
 cd docker
-docker compose -f docker compose-cluster.yml up -d
+docker compose -f docker-compose-cluster.yml up -d
 ```
 
 TAG endpoints:
@@ -60,10 +60,10 @@ cluster.
 
 ```bash
 # View logs
-docker compose -f docker compose-cluster.yml logs -f
+docker compose -f docker-compose-cluster.yml logs -f
 
 # Stop and remove volumes
-docker compose -f docker compose-cluster.yml down -v
+docker compose -f docker-compose-cluster.yml down -v
 ```
 
 ## Environment variables

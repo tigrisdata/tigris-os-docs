@@ -88,23 +88,14 @@ regardless of where its data lives — has a metadata entry that records the
 storage type, file path or segment offset, TTL expiry, data length, and a CRC32
 checksum.
 
-## Request forwarding modes
+## Request forwarding
 
-Forwards client requests to Tigris as-is, preserving the original Authorization
-header. TAG adds four proxy headers so Tigris can validate the client's
-signature against the original host.
+TAG forwards client requests to Tigris as-is, preserving the original
+Authorization header. TAG adds four proxy headers so Tigris can validate the
+client's signature against the original host.
 
 No local credential store is needed. URL encoding is preserved exactly as
 received from the client.
-
-### Signing mode
-
-Validates incoming signatures against a local credential store, then re-signs
-requests for the upstream Tigris endpoint. Proxy headers are stripped from
-client requests to prevent injection of unsigned headers.
-
-Both modes share the same infrastructure for HTTP execution, response streaming,
-and cache interactions.
 
 ## Request flows
 

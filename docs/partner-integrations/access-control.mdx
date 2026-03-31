@@ -51,46 +51,20 @@ integrations, `Member` is the right default.
 
 ## Bucket Roles (`buckets_roles`)
 
-The `buckets_roles` field is an array of `{bucket_name, role}` pairs that get
-stored on the access key. When someone authenticates with that key and makes an
-S3 request, these roles determine what operations are allowed.
+The `buckets_roles` field is an array of `{bucket_name, role}` pairs stored on
+the access key. Three roles are available: `ReadOnly`, `Editor`, and `Admin`.
+See the
+[RBAC permissions table](/docs/concepts/authnz#role-based-access-control-rbac)
+for exactly which S3 operations each role permits.
 
-| Role       | What it permits                                                      |
-| ---------- | -------------------------------------------------------------------- |
-| `ReadOnly` | Read objects, list buckets and objects, head requests                |
-| `Editor`   | Everything in ReadOnly, plus write, delete, and bucket configuration |
-| `Admin`    | All operations unconditionally, bypasses all permission checks       |
-
-For the complete list of which S3 operations each role permits, see the
-[RBAC permissions table](/docs/concepts/authnz#role-based-access-control-rbac).
-
-### Wildcard access
-
-Use `"*"` as the bucket name to grant access to all buckets in the org:
-
-```json
-{
-  "buckets_roles": [{ "bucket_name": "*", "role": "Editor" }]
-}
-```
-
-**Important:** An access key with `{"bucket_name": "*", "role": "Admin"}` is
-treated as a full org admin. This key bypasses all bucket-level permission
-checks, equivalent to `user_role: "Admin"` for S3 operations.
+Use `"*"` as the bucket name to grant access to all buckets in the org. An
+access key with `{"bucket_name": "*", "role": "Admin"}` is treated as a full org
+admin, bypassing all bucket-level permission checks.
 
 ## How the Two Fields Interact
 
-`user_role` and `buckets_roles` apply at different times. `user_role` scopes
-what your user can do through management endpoints. `buckets_roles` scopes what
-the access key can do with actual S3 operations.
-
-A user can be an org `Member` but have an `Editor` key on all buckets. The
-`Member` restriction means they can only manage their own keys through the API,
-but the `Editor` role means their key can read and write objects in any bucket.
-Conversely, an `Admin` user with a `ReadOnly` key can manage all keys through
-the API, but the key itself can only read objects.
-
-Here's how common partner scenarios map to these fields:
+`user_role` and `buckets_roles` apply at different times. Here's how common
+partner scenarios map to these fields:
 
 | Scenario              | `user_role` | `buckets_roles`                                                                                 | Result                                            |
 | --------------------- | ----------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------- |
@@ -175,16 +149,3 @@ so they can further restrict what a role allows.
 
 **Important:** `Admin` role bypasses policy evaluation entirely. If you need
 policies to apply, use `Member` with `Editor` or `ReadOnly` roles instead.
-
-## Access Key Lifecycle
-
-1. **Create the key** -- Call the
-   [Create Access Key](/docs/partner-integrations/api/tigris-create-access-key)
-   endpoint with `user_id`, `user_role`, and `buckets_roles`.
-2. **Key is stored** -- Tigris associates the key with the org and stores the
-   bucket role assignments.
-3. **User authenticates** -- Your user's application uses the access key ID and
-   secret with any S3-compatible SDK or CLI.
-4. **Authorization runs** -- On each S3 request, Tigris checks the key's bucket
-   roles against the target bucket and operation. If the role permits the
-   operation, the request succeeds.

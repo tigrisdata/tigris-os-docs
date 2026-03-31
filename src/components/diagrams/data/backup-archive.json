@@ -1,33 +1,266 @@
 [
-  {"type":"text","id":"title","x":260,"y":20,"text":"Backup & Archive Flow","fontSize":18,"fontFamily":1,"strokeColor":"#62FEB5"},
+  {
+    "type": "text",
+    "id": "title",
+    "x": 260,
+    "y": 20,
+    "text": "Backup & Archive Flow",
+    "fontSize": 18,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
 
-  {"type":"rectangle","id":"app","x":20,"y":100,"width":180,"height":55,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#5BA4CF","strokeWidth":2},
-  {"type":"text","id":"applbl","x":52,"y":117,"text":"Application","fontSize":16,"fontFamily":1,"strokeColor":"#5BA4CF"},
+  {
+    "type": "rectangle",
+    "id": "app",
+    "x": 20,
+    "y": 100,
+    "width": 180,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "applbl",
+    "x": 52,
+    "y": 117,
+    "text": "Application",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
 
-  {"type":"rectangle","id":"db","x":20,"y":200,"width":180,"height":55,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#5BA4CF","strokeWidth":2},
-  {"type":"text","id":"dblbl","x":55,"y":217,"text":"Database","fontSize":16,"fontFamily":1,"strokeColor":"#5BA4CF"},
+  {
+    "type": "rectangle",
+    "id": "db",
+    "x": 20,
+    "y": 200,
+    "width": 180,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "dblbl",
+    "x": 55,
+    "y": 217,
+    "text": "Database",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
 
-  {"type":"arrow","id":"a-app-bucket","x":200,"y":128,"width":100,"height":30,"strokeColor":"#5BA4CF","strokeWidth":2,"points":[[0,0],[100,30]]},
-  {"type":"text","id":"a-app-lbl","x":210,"y":112,"text":"daily backup","fontSize":13,"fontFamily":1,"strokeColor":"#8fa3b0"},
+  {
+    "type": "arrow",
+    "id": "a-app-bucket",
+    "x": 200,
+    "y": 128,
+    "width": 100,
+    "height": 30,
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [100, 30]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "a-app-lbl",
+    "x": 210,
+    "y": 112,
+    "text": "daily backup",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
 
-  {"type":"arrow","id":"a-db-bucket","x":200,"y":228,"width":100,"height":-70,"strokeColor":"#5BA4CF","strokeWidth":2,"points":[[0,0],[100,-70]]},
-  {"type":"text","id":"a-db-lbl","x":215,"y":240,"text":"snapshots","fontSize":13,"fontFamily":1,"strokeColor":"#8fa3b0"},
+  {
+    "type": "arrow",
+    "id": "a-db-bucket",
+    "x": 200,
+    "y": 228,
+    "width": 100,
+    "height": -70,
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [100, -70]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "a-db-lbl",
+    "x": 215,
+    "y": 240,
+    "text": "snapshots",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
 
-  {"type":"rectangle","id":"bucket","x":300,"y":110,"width":200,"height":75,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#62FEB5","strokeWidth":2},
-  {"type":"text","id":"bucketlbl","x":330,"y":120,"text":"Tigris Bucket","fontSize":16,"fontFamily":1,"strokeColor":"#62FEB5"},
-  {"type":"text","id":"bucketsub","x":330,"y":155,"text":"lifecycle rules","fontSize":13,"fontFamily":1,"strokeColor":"#8fa3b0"},
+  {
+    "type": "rectangle",
+    "id": "bucket",
+    "x": 300,
+    "y": 110,
+    "width": 200,
+    "height": 75,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "bucketlbl",
+    "x": 330,
+    "y": 120,
+    "text": "Tigris Bucket",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "bucketsub",
+    "x": 330,
+    "y": 155,
+    "text": "lifecycle rules",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
 
-  {"type":"arrow","id":"a-bucket-ia","x":500,"y":125,"width":100,"height":-20,"strokeColor":"#62FEB5","strokeWidth":2,"points":[[0,0],[100,-20]],"label":{"text":"30 days","fontSize":12,"color":"#8fa3b0"}},
-  {"type":"arrow","id":"a-bucket-archive","x":500,"y":165,"width":100,"height":20,"strokeColor":"#62FEB5","strokeWidth":2,"points":[[0,0],[100,20]],"label":{"text":"90 days","fontSize":12,"color":"#8fa3b0"}},
+  {
+    "type": "arrow",
+    "id": "a-bucket-ia",
+    "x": 500,
+    "y": 125,
+    "width": 100,
+    "height": -20,
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [100, -20]
+    ],
+    "label": { "text": "30 days", "fontSize": 12, "color": "#8fa3b0" }
+  },
+  {
+    "type": "arrow",
+    "id": "a-bucket-archive",
+    "x": 500,
+    "y": 165,
+    "width": 100,
+    "height": 20,
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [100, 20]
+    ],
+    "label": { "text": "90 days", "fontSize": 12, "color": "#8fa3b0" }
+  },
 
-  {"type":"rectangle","id":"ia","x":600,"y":75,"width":200,"height":55,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#CF8E5B","strokeWidth":2},
-  {"type":"text","id":"ialbl","x":630,"y":92,"text":"Infrequent Access","fontSize":14,"fontFamily":1,"strokeColor":"#CF8E5B"},
+  {
+    "type": "rectangle",
+    "id": "ia",
+    "x": 600,
+    "y": 75,
+    "width": 200,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "ialbl",
+    "x": 630,
+    "y": 92,
+    "text": "Infrequent Access",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
 
-  {"type":"rectangle","id":"archive","x":600,"y":165,"width":200,"height":55,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#CF8E5B","strokeWidth":2},
-  {"type":"text","id":"archivelbl","x":660,"y":182,"text":"Archive","fontSize":14,"fontFamily":1,"strokeColor":"#CF8E5B"},
+  {
+    "type": "rectangle",
+    "id": "archive",
+    "x": 600,
+    "y": 165,
+    "width": 200,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "archivelbl",
+    "x": 660,
+    "y": 182,
+    "text": "Archive",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
 
-  {"type":"arrow","id":"a-restore","x":700,"y":260,"width":-300,"height":-60,"strokeColor":"#8fa3b0","strokeWidth":1,"strokeStyle":"dashed","points":[[0,0],[-300,-60]],"endArrowhead":"arrow","label":{"text":"restore on demand","fontSize":12,"color":"#8fa3b0"}},
+  {
+    "type": "arrow",
+    "id": "a-restore",
+    "x": 700,
+    "y": 260,
+    "width": -300,
+    "height": -60,
+    "strokeColor": "#8fa3b0",
+    "strokeWidth": 1,
+    "strokeStyle": "dashed",
+    "points": [
+      [0, 0],
+      [-300, -60]
+    ],
+    "endArrowhead": "arrow",
+    "label": { "text": "restore on demand", "fontSize": 12, "color": "#8fa3b0" }
+  },
 
-  {"type":"rectangle","id":"geo","x":280,"y":260,"width":240,"height":45,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#62FEB5","strokeWidth":1,"strokeStyle":"dashed"},
-  {"type":"text","id":"geolbl","x":295,"y":270,"text":"geo-redundant across regions","fontSize":13,"fontFamily":1,"strokeColor":"#62FEB5"}
+  {
+    "type": "rectangle",
+    "id": "geo",
+    "x": 280,
+    "y": 260,
+    "width": 240,
+    "height": 45,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "geolbl",
+    "x": 295,
+    "y": 270,
+    "text": "geo-redundant across regions",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  }
 ]

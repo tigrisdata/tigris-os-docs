@@ -25,8 +25,9 @@ storage bill.
 [Tigris bucket forks](/docs/buckets/snapshots-and-forks/) solve both problems at
 once. A fork is a copy-on-write clone of a bucket: it's created instantly
 regardless of size, costs nothing until an agent writes new data, and provides
-full read/write isolation. Each agent gets its own fork with the complete dataset
-and dependencies already in place — ready to work in seconds, not minutes.
+full read/write isolation. Each agent gets its own fork with the complete
+dataset and dependencies already in place — ready to work in seconds, not
+minutes.
 
 [Snapshots and forks →](/docs/buckets/snapshots-and-forks/)
 
@@ -62,8 +63,8 @@ tigris forks create agent-base --name agent-task-42
 
 Each fork is an independent namespace. Agent A can write intermediate results,
 modify datasets, or create scratch files without affecting Agent B's view.
-There's no need for path-prefix conventions or locking — isolation is enforced at
-the storage level.
+There's no need for path-prefix conventions or locking — isolation is enforced
+at the storage level.
 
 </details>
 
@@ -121,8 +122,9 @@ aws s3 cp s3://agent-run-1/data/input.json - | process | \
 #### Pre-warmed dependency caches
 
 Maintain a base bucket with shared runtime assets — pip/npm caches, model
-weights, vector indices, tool binaries. Snapshot it after each dependency update.
-New agents fork from the latest snapshot and skip the download step entirely.
+weights, vector indices, tool binaries. Snapshot it after each dependency
+update. New agents fork from the latest snapshot and skip the download step
+entirely.
 
 ```bash
 # Update the base image

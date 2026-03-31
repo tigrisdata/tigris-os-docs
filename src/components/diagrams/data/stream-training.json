@@ -1,37 +1,310 @@
 [
-  {"type":"rectangle","id":"zone-cluster","x":20,"y":20,"width":520,"height":340,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#1e3340","strokeWidth":2,"strokeStyle":"dashed","opacity":40},
-  {"type":"text","id":"zone-cluster-lbl","x":35,"y":35,"text":"GPU Cluster, Any Cloud","fontSize":14,"fontFamily":1,"strokeColor":"#8fa3b0"},
+  {
+    "type": "rectangle",
+    "id": "zone-cluster",
+    "x": 20,
+    "y": 20,
+    "width": 520,
+    "height": 340,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#1e3340",
+    "strokeWidth": 2,
+    "strokeStyle": "dashed",
+    "opacity": 40
+  },
+  {
+    "type": "text",
+    "id": "zone-cluster-lbl",
+    "x": 35,
+    "y": 35,
+    "text": "GPU Cluster, Any Cloud",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
 
-  {"type":"rectangle","id":"dl1","x":50,"y":75,"width":200,"height":50,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#2a4050","strokeWidth":2},
-  {"type":"text","id":"dl1lbl","x":80,"y":90,"text":"DataLoader W0","fontSize":14,"fontFamily":1,"strokeColor":"#c8d6de"},
+  {
+    "type": "rectangle",
+    "id": "dl1",
+    "x": 50,
+    "y": 75,
+    "width": 200,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "dl1lbl",
+    "x": 80,
+    "y": 90,
+    "text": "DataLoader W0",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
 
-  {"type":"rectangle","id":"dl2","x":50,"y":150,"width":200,"height":50,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#2a4050","strokeWidth":2},
-  {"type":"text","id":"dl2lbl","x":80,"y":165,"text":"DataLoader W1","fontSize":14,"fontFamily":1,"strokeColor":"#c8d6de"},
+  {
+    "type": "rectangle",
+    "id": "dl2",
+    "x": 50,
+    "y": 150,
+    "width": 200,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "dl2lbl",
+    "x": 80,
+    "y": 165,
+    "text": "DataLoader W1",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
 
-  {"type":"rectangle","id":"dl3","x":50,"y":225,"width":200,"height":50,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#2a4050","strokeWidth":2},
-  {"type":"text","id":"dl3lbl","x":80,"y":240,"text":"DataLoader W2","fontSize":14,"fontFamily":1,"strokeColor":"#c8d6de"},
+  {
+    "type": "rectangle",
+    "id": "dl3",
+    "x": 50,
+    "y": 225,
+    "width": 200,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "dl3lbl",
+    "x": 80,
+    "y": 240,
+    "text": "DataLoader W2",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
 
-  {"type":"rectangle","id":"dl4","x":50,"y":300,"width":200,"height":50,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#2a4050","strokeWidth":2},
-  {"type":"text","id":"dl4lbl","x":80,"y":315,"text":"DataLoader W3","fontSize":14,"fontFamily":1,"strokeColor":"#c8d6de"},
+  {
+    "type": "rectangle",
+    "id": "dl4",
+    "x": 50,
+    "y": 300,
+    "width": 200,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "dl4lbl",
+    "x": 80,
+    "y": 315,
+    "text": "DataLoader W3",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
 
-  {"type":"rectangle","id":"tag","x":310,"y":140,"width":210,"height":100,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#62FEB5","strokeWidth":2},
-  {"type":"text","id":"taglbl","x":372,"y":158,"text":"TAG Cache","fontSize":16,"fontFamily":1,"strokeColor":"#62FEB5"},
-  {"type":"text","id":"tagsub","x":360,"y":195,"text":"local NVMe/SSD","fontSize":13,"fontFamily":1,"strokeColor":"#8fa3b0"},
+  {
+    "type": "rectangle",
+    "id": "tag",
+    "x": 310,
+    "y": 140,
+    "width": 210,
+    "height": 100,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "taglbl",
+    "x": 372,
+    "y": 158,
+    "text": "TAG Cache",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "tagsub",
+    "x": 360,
+    "y": 195,
+    "text": "local NVMe/SSD",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
 
-  {"type":"arrow","id":"a-dl1-tag","x":250,"y":100,"width":60,"height":65,"strokeColor":"#5BA4CF","strokeWidth":2,"points":[[0,0],[60,65]]},
-  {"type":"arrow","id":"a-dl2-tag","x":250,"y":175,"width":60,"height":15,"strokeColor":"#5BA4CF","strokeWidth":2,"points":[[0,0],[60,15]]},
-  {"type":"arrow","id":"a-dl3-tag","x":250,"y":250,"width":60,"height":-15,"strokeColor":"#5BA4CF","strokeWidth":2,"points":[[0,0],[60,-15]]},
-  {"type":"arrow","id":"a-dl4-tag","x":250,"y":325,"width":60,"height":-65,"strokeColor":"#5BA4CF","strokeWidth":2,"points":[[0,0],[60,-65]]},
+  {
+    "type": "arrow",
+    "id": "a-dl1-tag",
+    "x": 250,
+    "y": 100,
+    "width": 60,
+    "height": 65,
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [60, 65]
+    ]
+  },
+  {
+    "type": "arrow",
+    "id": "a-dl2-tag",
+    "x": 250,
+    "y": 175,
+    "width": 60,
+    "height": 15,
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [60, 15]
+    ]
+  },
+  {
+    "type": "arrow",
+    "id": "a-dl3-tag",
+    "x": 250,
+    "y": 250,
+    "width": 60,
+    "height": -15,
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [60, -15]
+    ]
+  },
+  {
+    "type": "arrow",
+    "id": "a-dl4-tag",
+    "x": 250,
+    "y": 325,
+    "width": 60,
+    "height": -65,
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [60, -65]
+    ]
+  },
 
-  {"type":"rectangle","id":"tigris","x":600,"y":140,"width":240,"height":100,"backgroundColor":"#142229","fillStyle":"solid","roundness":{"type":3},"strokeColor":"#62FEB5","strokeWidth":2},
-  {"type":"text","id":"tigrislbl","x":625,"y":158,"text":"Tigris Object Storage","fontSize":16,"fontFamily":1,"strokeColor":"#62FEB5"},
-  {"type":"text","id":"tigrissub","x":640,"y":195,"text":"global bucket","fontSize":13,"fontFamily":1,"strokeColor":"#8fa3b0"},
+  {
+    "type": "rectangle",
+    "id": "tigris",
+    "x": 600,
+    "y": 140,
+    "width": 240,
+    "height": 100,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "tigrislbl",
+    "x": 625,
+    "y": 158,
+    "text": "Tigris Object Storage",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "tigrissub",
+    "x": 640,
+    "y": 195,
+    "text": "global bucket",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
 
-  {"type":"arrow","id":"a-tag-tigris","x":520,"y":175,"width":80,"height":0,"strokeColor":"#CF8E5B","strokeWidth":2,"points":[[0,0],[80,0]]},
-  {"type":"text","id":"a-tag-tigris-lbl","x":530,"y":148,"text":"epoch 1","fontSize":13,"fontFamily":1,"strokeColor":"#CF8E5B"},
+  {
+    "type": "arrow",
+    "id": "a-tag-tigris",
+    "x": 520,
+    "y": 175,
+    "width": 80,
+    "height": 0,
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [80, 0]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "a-tag-tigris-lbl",
+    "x": 530,
+    "y": 148,
+    "text": "epoch 1",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
 
-  {"type":"arrow","id":"a-tag-return","x":520,"y":210,"width":0,"height":0,"strokeColor":"#62FEB5","strokeWidth":2,"strokeStyle":"dashed","points":[[0,0],[-210,0]]},
-  {"type":"text","id":"a-tag-return-lbl","x":340,"y":220,"text":"epoch 2+ from cache","fontSize":13,"fontFamily":1,"strokeColor":"#62FEB5"},
+  {
+    "type": "arrow",
+    "id": "a-tag-return",
+    "x": 520,
+    "y": 210,
+    "width": 0,
+    "height": 0,
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2,
+    "strokeStyle": "dashed",
+    "points": [
+      [0, 0],
+      [-210, 0]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "a-tag-return-lbl",
+    "x": 340,
+    "y": 220,
+    "text": "epoch 2+ from cache",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
 
-  {"type":"text","id":"note","x":195,"y":385,"text":"Warm epochs run 5.7× faster · Workers drop from 16 to 4","fontSize":14,"fontFamily":1,"strokeColor":"#8fa3b0"}
+  {
+    "type": "text",
+    "id": "note",
+    "x": 195,
+    "y": 385,
+    "text": "Warm epochs run 5.7× faster · Workers drop from 16 to 4",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  }
 ]

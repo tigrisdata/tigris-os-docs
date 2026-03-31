@@ -293,7 +293,10 @@
     "strokeColor": "#c8d6de",
     "strokeWidth": 2,
     "strokeStyle": "dashed",
-    "points": [[0, 0], [260, 0]],
+    "points": [
+      [0, 0],
+      [260, 0]
+    ],
     "startArrowhead": null,
     "endArrowhead": "arrow"
   },
@@ -317,7 +320,10 @@
     "height": 0,
     "strokeColor": "#62FEB5",
     "strokeWidth": 2,
-    "points": [[0, 0], [260, 0]],
+    "points": [
+      [0, 0],
+      [260, 0]
+    ],
     "startArrowhead": null,
     "endArrowhead": "arrow"
   },
@@ -341,7 +347,10 @@
     "height": 0,
     "strokeColor": "#5BA4CF",
     "strokeWidth": 2,
-    "points": [[0, 0], [260, 0]],
+    "points": [
+      [0, 0],
+      [260, 0]
+    ],
     "startArrowhead": null,
     "endArrowhead": "arrow"
   },
@@ -365,7 +374,10 @@
     "height": 0,
     "strokeColor": "#CF8E5B",
     "strokeWidth": 2,
-    "points": [[0, 0], [260, 0]],
+    "points": [
+      [0, 0],
+      [260, 0]
+    ],
     "startArrowhead": null,
     "endArrowhead": "arrow"
   },

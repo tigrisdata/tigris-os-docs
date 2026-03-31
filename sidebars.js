@@ -184,44 +184,68 @@ const sidebars = {
       collapsed: true,
       items: [
         {
-          type: "doc",
-          label: "Store and Serve Models",
-          id: "model-serving-use-cases",
+          type: "category",
+          label: "Agent Storage",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              label: "Agent Sandboxes",
+              id: "use-cases/agent-sandboxes",
+            },
+            {
+              type: "doc",
+              label: "Agent Managed Storage",
+              id: "use-cases/agent-managed-storage",
+            },
+          ],
         },
         {
-          type: "doc",
-          label: "Stream Training Datasets",
-          id: "use-cases/stream-training-datasets",
+          type: "category",
+          label: "Training & Inference",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              label: "Store and Serve Models",
+              id: "model-serving-use-cases",
+            },
+            {
+              type: "doc",
+              label: "Stream Training Datasets",
+              id: "use-cases/stream-training-datasets",
+            },
+            {
+              type: "doc",
+              label: "Preload Data for HPC",
+              id: "use-cases/preload-data-hpc",
+            },
+            {
+              type: "doc",
+              label: "Trigger Pipelines",
+              id: "use-cases/trigger-pipelines",
+            },
+          ],
         },
         {
-          type: "doc",
-          label: "Preload Data for HPC",
-          id: "use-cases/preload-data-hpc",
-        },
-        {
-          type: "doc",
-          label: "Trigger Pipelines",
-          id: "use-cases/trigger-pipelines",
-        },
-        {
-          type: "doc",
-          label: "Checkpoint, Restore, & Fork",
-          id: "use-cases/checkpoint-restore-fork",
-        },
-        {
-          type: "doc",
-          label: "Multi-Tenant Storage",
-          id: "use-cases/multitenant-storage",
-        },
-        {
-          type: "doc",
-          label: "Backups and Archives",
-          id: "use-cases/backup-archive",
-        },
-        {
-          type: "doc",
-          label: "Agent Sandboxes",
-          id: "use-cases/agent-sandboxes",
+          type: "category",
+          label: "Platforms",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              label: "Multi-Tenant Storage",
+              id: "use-cases/multitenant-storage",
+            },
+            {
+              type: "doc",
+              label: "Backups & Archives",
+              id: "use-cases/backup-archive",
+            },
+          ],
         },
       ],
     },

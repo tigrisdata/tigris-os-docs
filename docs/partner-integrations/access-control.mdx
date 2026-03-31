@@ -18,19 +18,6 @@ different purposes.
 
 import PartnerAccessControlDiagram from "@site/src/components/diagrams/PartnerAccessControlDiagram";
 
-{/* <!-- Mermaid UML description for AI agents:
-graph TD
-  A[POST /access-keys] --> B[user_role]
-  A --> C[buckets_roles]
-  B --> D[Management Scope]
-  D --> E[Admin: all keys, org settings]
-  D --> F[Member: own keys only]
-  C --> G[S3 Operations per bucket]
-  G --> H[ReadOnly: get, list, head]
-  G --> I[Editor: + put, delete, config]
-  G --> J[Admin: all ops]
---> */}
-
 <div className="mermaid-frame">
   <PartnerAccessControlDiagram />
 </div>
@@ -87,11 +74,9 @@ Use `"*"` as the bucket name to grant access to all buckets in the org:
 }
 ```
 
-:::warning
-An access key with `{"bucket_name": "*", "role": "Admin"}` is treated
-as a full org admin. This key bypasses all bucket-level permission checks,
-equivalent to `user_role: "Admin"` for S3 operations.
-:::
+**Important:** An access key with `{"bucket_name": "*", "role": "Admin"}` is
+treated as a full org admin. This key bypasses all bucket-level permission
+checks, equivalent to `user_role: "Admin"` for S3 operations.
 
 ## How the Two Fields Interact
 
@@ -188,10 +173,8 @@ object prefixes, IP ranges, or time windows, use
 [IAM policies](/docs/iam/policies/). Policies are evaluated after role checks,
 so they can further restrict what a role allows.
 
-:::warning
-`Admin` role bypasses policy evaluation entirely. If you need
+**Important:** `Admin` role bypasses policy evaluation entirely. If you need
 policies to apply, use `Member` with `Editor` or `ReadOnly` roles instead.
-:::
 
 ## Access Key Lifecycle
 

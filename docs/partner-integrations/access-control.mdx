@@ -11,25 +11,19 @@ those keys can do:
 These two fields are independent. They apply at different times and serve
 different purposes.
 
-| Field           | Where it applies     | What it controls                                               |
-| --------------- | -------------------- | -------------------------------------------------------------- |
-| `user_role`     | Partner API calls    | Management scope: list all keys vs own keys, org settings      |
-| `buckets_roles` | S3 data operations   | What the access key can read, write, or manage per bucket      |
+| Field           | Where it applies   | What it controls                                          |
+| --------------- | ------------------ | --------------------------------------------------------- |
+| `user_role`     | Partner API calls  | Management scope: list all keys vs own keys, org settings |
+| `buckets_roles` | S3 data operations | What the access key can read, write, or manage per bucket |
 
 import PartnerAccessControlDiagram from "@site/src/components/diagrams/PartnerAccessControlDiagram";
 
-{/* <!-- Mermaid UML description for AI agents:
+{/_ <!-- Mermaid UML description for AI agents:
 graph TD
-  A[POST /access-keys] --> B[user_role]
-  A --> C[buckets_roles]
-  B --> D[Management Scope]
-  D --> E[Admin: all keys, org settings]
-  D --> F[Member: own keys only]
-  C --> G[S3 Operations per bucket]
-  G --> H[ReadOnly: get, list, head]
-  G --> I[Editor: + put, delete, config]
-  G --> J[Admin: all ops]
---> */}
+  A[POST /access-keys] --> B[user_role] A --> C[buckets_roles] B -->
+D[Management Scope] D --> E[Admin: all keys, org settings] D --> F[Member: own
+keys only] C --> G[S3 Operations per bucket] G --> H[ReadOnly: get, list, head]
+G --> I[Editor: + put, delete, config] G --> J[Admin: all ops] --> _/}
 
 <div className="mermaid-frame">
   <PartnerAccessControlDiagram />
@@ -40,10 +34,10 @@ graph TD
 The `user_role` field tells Tigris what privileges this user has in your system.
 You pass it on provisioning, access key, and org management endpoints.
 
-| Value    | What it means                                                                                     |
-| -------- | ------------------------------------------------------------------------------------------------- |
-| `Admin`  | Full org access. Can manage all access keys, update org settings, and view all resources.         |
-| `Member` | Standard access. Can only manage their own access keys and resources.                             |
+| Value    | What it means                                                                             |
+| -------- | ----------------------------------------------------------------------------------------- |
+| `Admin`  | Full org access. Can manage all access keys, update org settings, and view all resources. |
+| `Member` | Standard access. Can only manage their own access keys and resources.                     |
 
 The behavioral difference shows up immediately. When you call
 [List Access Keys](/docs/partner-integrations/api/tigris-list-access-keys) with
@@ -68,11 +62,11 @@ The `buckets_roles` field is an array of `{bucket_name, role}` pairs that get
 stored on the access key. When someone authenticates with that key and makes an
 S3 request, these roles determine what operations are allowed.
 
-| Role       | What it permits                                                          |
-| ---------- | ------------------------------------------------------------------------ |
-| `ReadOnly` | Read objects, list buckets and objects, head requests                     |
-| `Editor`   | Everything in ReadOnly, plus write, delete, and bucket configuration     |
-| `Admin`    | All operations unconditionally, bypasses all permission checks           |
+| Role       | What it permits                                                      |
+| ---------- | -------------------------------------------------------------------- |
+| `ReadOnly` | Read objects, list buckets and objects, head requests                |
+| `Editor`   | Everything in ReadOnly, plus write, delete, and bucket configuration |
+| `Admin`    | All operations unconditionally, bypasses all permission checks       |
 
 For the complete list of which S3 operations each role permits, see the
 [RBAC permissions table](/docs/concepts/authnz#role-based-access-control-rbac).
@@ -83,17 +77,13 @@ Use `"*"` as the bucket name to grant access to all buckets in the org:
 
 ```json
 {
-  "buckets_roles": [
-    { "bucket_name": "*", "role": "Editor" }
-  ]
+  "buckets_roles": [{ "bucket_name": "*", "role": "Editor" }]
 }
 ```
 
-:::warning
-An access key with `{"bucket_name": "*", "role": "Admin"}` is
-treated as a full org admin. This key bypasses all bucket-level permission
-checks, equivalent to `user_role: "Admin"` for S3 operations.
-:::
+:::warning An access key with `{"bucket_name": "*", "role": "Admin"}` is treated
+as a full org admin. This key bypasses all bucket-level permission checks,
+equivalent to `user_role: "Admin"` for S3 operations. :::
 
 ## How the Two Fields Interact
 
@@ -109,12 +99,12 @@ the API, but the key itself can only read objects.
 
 Here's how common partner scenarios map to these fields:
 
-| Scenario              | `user_role` | `buckets_roles`                                                                   | Result                                         |
-| --------------------- | ----------- | --------------------------------------------------------------------------------- | ---------------------------------------------- |
-| **Developer uploads** | `Member`    | `[{"bucket_name": "user-uploads", "role": "Editor"}]`                             | User manages own key, can read/write their bucket |
-| **Platform admin**    | `Admin`     | `[{"bucket_name": "*", "role": "Admin"}]`                                         | Full management + full S3 access               |
-| **CI/CD pipeline**    | `Member`    | `[{"bucket_name": "artifacts", "role": "ReadOnly"}]`                              | Automated reads, no management access          |
-| **Mixed access**      | `Member`    | `[{"bucket_name": "assets", "role": "ReadOnly"}, {"bucket_name": "uploads", "role": "Editor"}]` | Read shared content, write user content |
+| Scenario              | `user_role` | `buckets_roles`                                                                                 | Result                                            |
+| --------------------- | ----------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| **Developer uploads** | `Member`    | `[{"bucket_name": "user-uploads", "role": "Editor"}]`                                           | User manages own key, can read/write their bucket |
+| **Platform admin**    | `Admin`     | `[{"bucket_name": "*", "role": "Admin"}]`                                                       | Full management + full S3 access                  |
+| **CI/CD pipeline**    | `Member`    | `[{"bucket_name": "artifacts", "role": "ReadOnly"}]`                                            | Automated reads, no management access             |
+| **Mixed access**      | `Member`    | `[{"bucket_name": "assets", "role": "ReadOnly"}, {"bucket_name": "uploads", "role": "Editor"}]` | Read shared content, write user content           |
 
 ## Common Access Patterns
 
@@ -190,11 +180,8 @@ object prefixes, IP ranges, or time windows, use
 [IAM policies](/docs/iam/policies/). Policies are evaluated after role checks,
 so they can further restrict what a role allows.
 
-:::warning
-`Admin` role bypasses policy evaluation entirely. If
-you need policies to apply, use `Member` with `Editor` or `ReadOnly` roles
-instead.
-:::
+:::warning `Admin` role bypasses policy evaluation entirely. If you need
+policies to apply, use `Member` with `Editor` or `ReadOnly` roles instead. :::
 
 ## Access Key Lifecycle
 

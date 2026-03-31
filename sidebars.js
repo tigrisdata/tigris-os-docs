@@ -227,6 +227,11 @@ const sidebars = {
               label: "Trigger Pipelines",
               id: "use-cases/trigger-pipelines",
             },
+            {
+              type: "doc",
+              label: "Checkpoint, Restore, & Fork",
+              id: "use-cases/checkpoint-restore-fork",
+            },
           ],
         },
         {

@@ -1,0 +1,319 @@
+import TAGArchitectureInternalsDiagram from "@site/src/components/diagrams/TAGArchitectureInternalsDiagram";
+import TAGCoalescingDiagram from "@site/src/components/diagrams/TAGCoalescingDiagram";
+import TAGClusterDiagram from "@site/src/components/diagrams/TAGClusterDiagram";
+import TAGCacheTiersDiagram from "@site/src/components/diagrams/TAGCacheTiersDiagram";
+
+# Architecture
+
+This page describes how TAG processes requests internally. Understanding these
+flows helps with debugging, capacity planning, and choosing the right deployment
+topology.
+
+## System overview
+
+TAG sits between your S3 clients and Tigris object storage. Incoming requests
+pass through an authentication layer, a proxy service that coordinates caching
+and request coalescing, and either returns data from the local cache or forwards
+to Tigris.
+
+<div className="mermaid-frame">
+  <TAGArchitectureInternalsDiagram />
+</div>
+
+## Components
+
+### Handler server
+
+The HTTP server receives incoming S3 requests and routes them based on method
+and path:
+
+- `GET /{bucket}/{key}` — GetObject
+- `PUT /{bucket}/{key}` — PutObject
+- `DELETE /{bucket}/{key}` — DeleteObject
+- `HEAD /{bucket}/{key}` — HeadObject
+- `GET /health` — Health check
+- `GET /metrics` — Prometheus metrics
+
+### Authentication
+
+TAG supports AWS Signature Version 4 authentication in two modes:
+
+TAG forwards the client's original Authorization header as-is and adds
+cryptographically signed proxy headers so Tigris can validate both the client's
+identity and TAG's identity. TAG also performs local SigV4 validation using
+pre-derived signing keys learned from Tigris responses, enabling cache hits to
+be served without an upstream round-trip. Anonymous requests (missing auth) are
+forwarded to Tigris for authoritative handling (e.g., public bucket access),
+while malformed auth headers are rejected at TAG.
+
+See [Security and Access Control](./security) for the full authentication flow.
+
+### Proxy service
+
+The core request handling layer that coordinates:
+
+- Cache lookups and writes
+- Request coalescing
+- Range request optimization with background fetching
+- Request forwarding to Tigris
+- Cache invalidation on write operations
+
+### Cache
+
+TAG embeds a multi-tiered storage engine optimized for NVMe, designed to handle
+objects of all sizes efficiently. Rather than forcing a single storage strategy,
+it routes objects to different tiers based on size:
+
+<div className="mermaid-frame">
+  <TAGCacheTiersDiagram />
+</div>
+
+**Small objects** are stored inline in RocksDB alongside their metadata. This
+keeps both key lookups and data reads in a single I/O path, optimizing for the
+high-concurrency, low-latency access patterns typical of small objects.
+
+**Medium objects** are initially written as individual raw files. A background
+compactor then consolidates them into immutable segment files. Each segment is
+append-only and write-once — once sealed, it serves only read traffic with no
+locking overhead. A recompactor reclaims space from segments where large portion
+of entries have been deleted.
+
+**Large objects** are stored as permanent raw files and are never compacted.
+These objects benefit from direct file access for streaming reads with high
+throughput.
+
+All tiers share a common metadata layer in RocksDB. Every cached object —
+regardless of where its data lives — has a metadata entry that records the
+storage type, file path or segment offset, TTL expiry, data length, and a CRC32
+checksum.
+
+## Request forwarding modes
+
+Forwards client requests to Tigris as-is, preserving the original Authorization
+header. TAG adds four proxy headers so Tigris can validate the client's
+signature against the original host.
+
+No local credential store is needed. URL encoding is preserved exactly as
+received from the client.
+
+### Signing mode
+
+Validates incoming signatures against a local credential store, then re-signs
+requests for the upstream Tigris endpoint. Proxy headers are stripped from
+client requests to prevent injection of unsigned headers.
+
+Both modes share the same infrastructure for HTTP execution, response streaming,
+and cache interactions.
+
+## Request flows
+
+### GET object — cache hit
+
+```text
+Client                 TAG                    Embedded Cache
+  │                     │                       │
+  │ GET /bucket/key     │                       │
+  │────────────────────▶│                       │
+  │                     │ Get meta:bucket/key   │
+  │                     │──────────────────────▶│
+  │                     │◀──────────────────────│ metadata
+  │                     │ Get body:bucket/key   │
+  │                     │──────────────────────▶│
+  │                     │◀──────────────────────│ body (streaming)
+  │◀────────────────────│                       │
+  │  200 OK + body      │                       │
+  │  X-Cache: HIT       │                       │
+```
+
+TAG validates the SigV4 signature locally, finds the object in cache, and
+returns it without contacting Tigris.
+
+### GET object — cache miss
+
+```text
+Client                 TAG                    Embedded Cache         Tigris
+  │                     │                       │                    │
+  │ GET /bucket/key     │                       │                    │
+  │────────────────────▶│                       │                    │
+  │                     │ Get meta:bucket/key   │                    │
+  │                     │──────────────────────▶│                    │
+  │                     │◀──────────────────────│ not found          │
+  │                     │                       │                    │
+  │                     │ GET /bucket/key (signed)                   │
+  │                     │───────────────────────────────────────────▶│
+  │                     │◀───────────────────────────────────────────│
+  │                     │                       │       200 OK       │
+  │                     │                       │                    │
+  │                     │ Put meta + body       │                    │
+  │                     │──────────────────────▶│                    │
+  │◀────────────────────│                       │                    │
+  │  200 OK + body      │                       │                    │
+  │  X-Cache: MISS      │                       │                    │
+```
+
+TAG forwards the request to Tigris, streams the response back while writing it
+to cache. The next request for the same object is a cache hit.
+
+### GET object — cluster mode (remote key)
+
+```text
+Client                 TAG-1                   TAG-2 (owns key)       Tigris
+  │                     │                       │                       │
+  │ GET /bucket/key     │                       │                       │
+  │────────────────────▶│                       │                       │
+  │                     │ Hash(key) → TAG-2     │                       │
+  │                     │                       │                       │
+  │                     │ gRPC: Get(key)        │                       │
+  │                     │──────────────────────▶│                       │
+  │                     │                       │ Check local cache     │
+  │                     │                       │──────┐                │
+  │                     │                       │◀─────┘ HIT            │
+  │                     │◀──────────────────────│ Return data           │
+  │◀────────────────────│                       │                       │
+  │  200 OK + body      │                       │                       │
+```
+
+In cluster mode, each cache key is hashed to determine its owner node. If the
+key belongs to a remote node, the request is transparently forwarded via gRPC.
+
+### Request coalescing
+
+When multiple clients request the same uncached object simultaneously, TAG makes
+only one upstream request and streams the result to all waiting clients:
+
+<div className="mermaid-frame">
+  <TAGCoalescingDiagram />
+</div>
+
+Key behaviors:
+
+- The first request becomes the "fetcher" and initiates the upstream request
+- Subsequent requests before streaming starts join as "listeners"
+- All clients receive data simultaneously as chunks arrive from upstream
+- Only one upstream request is made, regardless of concurrent client count
+- Once streaming starts, new requests for the same key start their own fetch
+- Listeners that read too slowly are disconnected to prevent memory buildup
+
+### Range request optimization
+
+When a byte-range request arrives for an uncached object, TAG serves the range
+immediately while fetching the full object in the background:
+
+```text
+Client                 TAG                    Embedded Cache         Tigris
+  │                     │                       │                    │
+  │ GET /bucket/key     │                       │                    │
+  │ Range: bytes=0-1023 │                       │                    │
+  │────────────────────▶│                       │                    │
+  │                     │ Get meta:bucket/key   │                    │
+  │                     │──────────────────────▶│                    │
+  │                     │◀──────────────────────│ not found          │
+  │                     │                       │                    │
+  │                     │ GET Range: bytes=0-1023                    │
+  │                     │───────────────────────────────────────────▶│
+  │                     │◀───────────────────────────────────────────│
+  │◀────────────────────│       206 Partial                          │
+  │  206 Partial        │                                            │
+  │                     │                                            │
+  │                     │ (Background: fetch full object)            │
+  │                     │───────────────────────────────────────────▶│
+  │                     │◀───────────────────────────────────────────│
+  │                     │       200 OK (full object)                 │
+  │                     │ Put meta + body       │                    │
+  │                     │──────────────────────▶│                    │
+```
+
+Benefits:
+
+- **Low latency** — the client gets the requested range immediately
+- **Future ranges served from cache** — any byte range of the same object comes
+  from local storage
+- **Background fetches are coalesced** — multiple range requests for the same
+  object trigger only a single background fetch
+
+:::info
+
+This is especially useful for ML workloads that access model weights with
+random-access patterns. The first range request warms the full object into
+cache.
+
+:::
+
+## Cluster architecture
+
+For multi-node deployments, TAG nodes form a distributed cache cluster:
+
+<div className="mermaid-frame">
+  <TAGClusterDiagram />
+</div>
+
+### How clustering works
+
+1. **Discovery** — Nodes join the cluster via seed nodes using the memberlist
+   gossip protocol (port 7000). Any node can be a seed; new nodes contact a seed
+   to discover the full cluster membership.
+
+2. **Key routing** — Cache keys are distributed across nodes using consistent
+   hashing. Each node owns a subset of the key space.
+
+3. **Local vs. remote** — GET requests check local cache first. If the key
+   belongs to a remote node, the request is transparently forwarded via gRPC
+   (port 9000).
+
+4. **Rebalancing** — When nodes join or leave, keys are automatically
+   redistributed. No manual intervention is required.
+
+### Ports
+
+| Port | Protocol | Purpose                               |
+| ---- | -------- | ------------------------------------- |
+| 8080 | HTTP     | S3 API (client-facing)                |
+| 7000 | TCP      | Memberlist gossip (cluster discovery) |
+| 9000 | gRPC     | Cache key routing between nodes       |
+
+### Consistency
+
+Cache coherence is maintained through:
+
+- **Write-through invalidation** — PutObject, DeleteObject, and CopyObject
+  invalidate the cache entry before forwarding to Tigris
+- **Tombstone markers** — A short-lived tombstone prevents in-flight background
+  fetches from resurrecting deleted objects
+- **TTL expiry** — Cached objects expire after the configured TTL (default 24
+  hours) and are revalidated with Tigris on the next request
+
+## Cacheability rules
+
+Objects are cached when:
+
+- Response status is 200 OK
+- Size is within `size_threshold` (default 1 GiB)
+- No `Cache-Control: no-store` or `private` headers
+
+Objects are NOT cached when:
+
+- Response is not 200 (errors, redirects)
+- Size exceeds the threshold
+- `Cache-Control` prevents caching
+- Caching is disabled server-side
+
+## Error handling
+
+TAG returns S3-compatible XML error responses:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+    <Code>AccessDenied</Code>
+    <Message>Access Denied</Message>
+    <RequestId>request-id</RequestId>
+</Error>
+```
+
+| Condition          | S3 Error Code         | HTTP Status |
+| ------------------ | --------------------- | ----------- |
+| Invalid signature  | SignatureDoesNotMatch | 403         |
+| Unknown access key | InvalidAccessKeyId    | 403         |
+| Request expired    | RequestTimeTooSkewed  | 403         |
+| Slow consumer      | InternalError         | 500         |
+| Upstream error     | InternalError         | 502         |

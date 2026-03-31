@@ -7,9 +7,6 @@ description:
 ---
 
 import TAGOverviewDiagram from "@site/src/components/diagrams/TAGOverviewDiagram";
-import TAGCoalescingDiagram from "@site/src/components/diagrams/TAGCoalescingDiagram";
-import TAGClusterDiagram from "@site/src/components/diagrams/TAGClusterDiagram";
-import TAGArchitectureInternalsDiagram from "@site/src/components/diagrams/TAGArchitectureInternalsDiagram";
 
 # TAG — Tigris Acceleration Gateway
 
@@ -18,17 +15,6 @@ TAG is a high-performance S3-compatible caching proxy for
 application and Tigris, and it transparently caches objects on local NVMe
 storage — giving you sub-millisecond read latency without sacrificing S3 API
 compatibility.
-
-<!-- NOTE: The SVG below is rendered from TAGOverviewDiagram. The mermaid
-notation is kept here as a machine-readable description for AI agents.
-flowchart TB
-    subgraph inst["Training Instance"]
-        TC[Training Code] - - >|S3 API| TAG[Acceleration Gateway]
-        TAG - - - NV[Local NVMe Cache]
-    end
-    NV -.->|cache miss| TOS[Tigris Object Storage]
-    TOS - - >|fill cache| NV
--->
 
 <div className="mermaid-frame">
   <TAGOverviewDiagram />
@@ -53,9 +39,9 @@ cache entries the moment you write or delete an object.
 > **Bottom line:** One endpoint change. Zero code changes. Sub-millisecond
 > reads.
 
-## Use Cases
+## Use cases
 
-### ML Model Training
+### ML model training
 
 Cache training datasets on local NVMe so multi-epoch training runs don't
 re-fetch data from remote storage on every epoch. The first epoch populates the
@@ -64,13 +50,13 @@ bottleneck without requiring you to pre-download datasets, shard data into tar
 archives, or adopt a new storage API. Works with PyTorch DataLoaders, S3
 Connector for PyTorch, and any S3-compatible data loading library.
 
-### Inference Data Caching
+### Inference data caching
 
 Cache model weights, configuration files, or other assets that inference
 workloads read repeatedly. Reduces cold-start latency and eliminates redundant
 network traffic.
 
-### High-Throughput Data Pipelines
+### High-throughput data pipelines
 
 For real-time analytics or data processing pipelines that repeatedly read the
 same objects, TAG eliminates redundant network round-trips and serves data at
@@ -92,7 +78,7 @@ TAG saturates a 100 Gbps NIC at 85+ Gbps for 1 MiB+ objects, with CPU
 utilization at only about 12%, leaving significant headroom for additional
 workloads.
 
-:::note
+:::info
 
 These numbers reflect cache-warm steady state. First requests for uncached
 objects incur a round-trip to Tigris.
@@ -102,184 +88,27 @@ results, see [Benchmarks](./benchmarks).
 
 :::
 
-## Key Features
+## Key features
 
-### S3-Compatible API
+- **S3-compatible API** — Standard AWS SDKs, AWS CLI, or any S3-compatible
+  library. Path-style addressing only.
+- **Transparent proxy** — TAG forwards your SigV4 credentials to Tigris as-is.
+  It never sees or stores your secret keys.
+- **Embedded RocksDB cache** — NVMe-optimized, two-key storage pattern for
+  efficient HEAD and conditional operations.
+- **Request coalescing** — Multiple concurrent requests for the same uncached
+  object result in a single upstream fetch.
+- **Range request optimization** — Range misses trigger a background fetch of
+  the full object, so future ranges come from cache.
+- **Write-through invalidation** — Writes, deletes, and copies invalidate cache
+  entries immediately.
+- **Multi-node clustering** — Gossip discovery, consistent hashing, and gRPC
+  routing for distributed caching across nodes.
 
-TAG implements the S3 REST API for commonly used Tigris operations. Clients
-interact with TAG using standard AWS SDKs, the AWS CLI, or any S3-compatible
-library. The only change is the endpoint URL.
+For detailed request flows, sequence diagrams, and cluster architecture, see
+[Architecture](./architecture).
 
-:::warning[Path-Style Addressing Only]
-
-TAG supports path-style addressing only (`http://host:port/bucket/key`).
-Virtual-hosted style is not supported. Configure your S3 client accordingly.
-
-:::
-
-### Transparent Proxy Mode
-
-In default mode, TAG preserves the client's original AWS SigV4 Authorization
-header and forwards requests to Tigris as-is. TAG adds cryptographically signed
-proxy headers so Tigris can validate both the client's identity and TAG's
-identity in a single round-trip.
-
-:::info[Security]
-
-TAG never sees or stores client secret keys. Clients authenticate directly with
-Tigris using their own credentials.
-
-:::
-
-### Embedded Cache with RocksDB
-
-Each TAG node runs an embedded cache backed by RocksDB, optimized for NVMe
-storage. Objects are stored using a two-key pattern:
-
-| Key                          | Stored data                                               |
-| ---------------------------- | --------------------------------------------------------- |
-| `meta\|my-bucket\|photo.jpg` | `Content-Type`, `ETag`, `Content-Length`, `Last-Modified` |
-| `body\|my-bucket\|photo.jpg` | Raw object bytes                                          |
-
-Separating metadata from body enables efficient HEAD requests and conditional
-operations without reading the full object.
-
-### Request Coalescing
-
-If four clients ask for the same uncached object at the same time, TAG doesn't
-make four trips to Tigris. It fetches once and streams the result to everyone:
-
-<!-- NOTE: The SVG below is rendered from TAGCoalescingDiagram. The mermaid
-notation is kept here as a machine-readable description for AI agents.
-flowchart LR
-    A[Client A] - - > T[TAG coalescer]
-    B[Client B] - - > T
-    C[Client C] - - > T
-    D[Client D] - - > T
-    T - - >|single upstream GET| U[Tigris]
-    U - - >|stream chunks| T
-    T -.-> A & B & C & D
--->
-
-<div className="mermaid-frame">
-  <TAGCoalescingDiagram />
-</div>
-
-### Range Request Optimization
-
-When you send a byte-range request, TAG serves it from the cached full object if
-available. On a range miss, TAG does two things at once: it serves you the
-requested range directly from Tigris while also fetching the full object in the
-background. After that, any future range request for any byte range comes
-straight from cache.
-
-:::tip
-
-This is especially useful for ML workloads that access model weights with
-random-access patterns. The first range request warms the full object into
-cache.
-
-:::
-
-### Write-Through Invalidation
-
-When you write, delete, or copy an object through TAG, it invalidates the
-corresponding cache entry before forwarding the request to Tigris. A tombstone
-mechanism prevents any in-flight background cache writes from accidentally
-resurrecting objects you've already deleted.
-
-:::caution
-
-Objects modified directly on Tigris (bypassing TAG) remain cached until the TTL
-expires (default 60 minutes) or a client forces revalidation with
-`Cache-Control: no-cache`. Route writes through TAG for immediate consistency.
-
-:::
-
-### Optional Multi-Node Clustering
-
-When a single node's storage isn't enough, you can run multiple TAG nodes as a
-distributed cache cluster. They coordinate automatically:
-
-<!-- NOTE: The SVG below is rendered from TAGClusterDiagram. The mermaid
-notation is kept here as a machine-readable description for AI agents.
-flowchart TB
-    LB[Load Balancer] - - > N1[TAG-1 keys A-F]
-    LB - - > N2[TAG-2 keys G-R]
-    LB - - > N3[TAG-3 keys S-Z]
-    N1 <-- >|gRPC| N2
-    N2 <-- >|gRPC| N3
-    N1 <-.gossip.-> N2
-    N2 <-.gossip.-> N3
-    N1 <-.gossip.-> N3
--->
-
-<div className="mermaid-frame">
-  <TAGClusterDiagram />
-</div>
-
-Nodes discover each other via gossip, consistent hashing spreads keys across the
-cluster, and gRPC forwards requests for remote keys transparently. You don't
-need to manually assign keys or configure sharding.
-
-## Architecture
-
-Here's how a request flows through TAG's internals:
-
-<!-- NOTE: The SVG below is rendered from TAGArchitectureInternalsDiagram.
-The mermaid notation is kept here as a machine-readable description for AI agents.
-flowchart LR
-    C[S3 clients SDK/CLI/boto3] - - > H[HTTP server :8080]
-    H - - > A[SigV4 auth]
-    H - - > P[Proxy service]
-    P - - > R[Request coalescing]
-    P - - > G[Range optimization]
-    P - - > K[(RocksDB cache)]
-    K - - > D[NVMe disk]
-    P -.-> U[Tigris Object Storage]
-    P - - > X[gRPC :9000]
-    P - - > M[Gossip :7000]
--->
-
-<div className="mermaid-frame">
-  <TAGArchitectureInternalsDiagram />
-</div>
-
-### Request Flows
-
-**Cache hit:** Your request arrives, TAG validates your SigV4 signature locally,
-finds the object in cache, and returns it with `X-Cache: HIT`. Tigris is never
-contacted.
-
-**Cache miss:** TAG forwards your request to Tigris, streams the response back
-to you while writing it to cache, and returns `X-Cache: MISS`. The next request
-for the same object is a hit.
-
-**Coalesced request:** Multiple clients GET the same uncached object — the first
-becomes the fetcher, the rest attach as broadcast listeners. Everyone gets the
-data simultaneously from a single upstream request.
-
-**Range request:** You send `Range: bytes=0-1023` — if the full object is
-cached, TAG serves your range from cache. If not, it serves the range from
-Tigris while fetching the full object in the background for future requests.
-
-### Ports
-
-| Port | Protocol   | Purpose                                |
-| ---- | ---------- | -------------------------------------- |
-| 8080 | HTTP/HTTPS | S3 API (client-facing)                 |
-| 7000 | TCP        | Memberlist gossip (cluster discovery)  |
-| 9000 | TCP        | gRPC (cache key routing between nodes) |
-
-:::caution[macOS port conflict]
-
-On macOS, port 7000 is used by AirPlay Receiver. Use ports `17000` (gossip) and
-`19000` (gRPC) instead when running TAG locally on macOS. See
-[Configuration Reference](./configuration#cluster-mode) for details.
-
-:::
-
-## S3 API Coverage
+## S3 API coverage
 
 TAG supports commonly used S3 operations, validated against 214 tests from the
 `ceph/s3-tests` compatibility suite.
@@ -291,18 +120,17 @@ TAG supports commonly used S3 operations, validated against 214 tests from the
 | Multipart Uploads | Initiate, UploadPart, UploadPartCopy, Complete, Abort, ListParts, ListMultipartUploads                                   |
 | Auth              | SigV4 headers, presigned URLs, chunked encoding                                                                          |
 
-:::warning[Not Supported]
+:::info[Not Supported]
 
 Object versioning, server-side encryption (SSE-C/S3/KMS), Object Lock, POST
-object (browser uploads), multi-range requests, and virtual-hosted style
-addressing.
+object (browser uploads), and virtual-hosted style addressing.
 
 :::
 
-For client SDK examples (AWS CLI, Python boto3, and more), see
-[S3 Client Usage](./usage).
+For the full compatibility matrix, see [S3 Compatibility](./s3-compatibility).
+For client SDK examples, see [S3 Client Usage](./usage).
 
-## Cache Behavior
+## Cache behavior
 
 TAG adds an `X-Cache` response header to every response:
 
@@ -314,16 +142,10 @@ TAG adds an `X-Cache` response header to every response:
 | `BYPASS`      | Cache skipped (client sent `Cache-Control: no-store`)            |
 | `DISABLED`    | Caching turned off server-side                                   |
 
-**What gets cached:** HTTP 200 responses within the size threshold (default 1
-GiB) that do not include `Cache-Control: no-store` or `private`.
+For revalidation, cache-control headers, eviction, and automatic invalidation,
+see [Cache Control](./cache-control).
 
-**What does not:** Non-200 responses, objects above the size threshold, and
-objects with cache-prevention headers.
-
-For revalidation, client cache-control headers, and automatic invalidation
-details, see [Cache Control and Revalidation](./cache-control).
-
-## Security Model
+## Security
 
 Your clients sign requests with their own Tigris credentials, and TAG forwards
 them to Tigris as-is — it never sees or stores your secret keys. After a
@@ -331,20 +153,8 @@ client's first request, TAG learns derived signing keys from Tigris (encrypted
 with AES-256-GCM), so it can validate subsequent requests locally without
 calling home.
 
-TAG requires its own Tigris credentials (`AWS_ACCESS_KEY_ID` /
-`AWS_SECRET_ACCESS_KEY`) with read-only access to all buckets in the same
-organization as clients it serves.
-
-:::warning[Important]
-
-Authorization is per-bucket. Access to one bucket does not grant access to
-others. Entries are revoked immediately on a Tigris 403 response.
-
-:::
-
-For the full authentication flow, authorization lifecycle, proxy header
-security, and endpoint validation, see
-[Security and Access Control](./security).
+For the full authentication flow, authorization lifecycle, and credential setup,
+see [Security and Access Control](./security).
 
 ## Monitoring
 

@@ -1,11 +1,3 @@
----
-title: Metrics Reference
-sidebar_label: Metrics
-description:
-  Complete reference for TAG Prometheus metrics, PromQL examples, and scrape
-  configuration.
----
-
 # Metrics reference
 
 TAG exposes Prometheus metrics at the `/metrics` endpoint.

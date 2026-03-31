@@ -1,8 +1,7 @@
----
-title: TAG Quick Start
-sidebar_label: Quick Start
-description: Install and run Tigris Acceleration Gateway (TAG) in minutes.
----
+# Quickstart
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 
 Get TAG running in under 5 minutes. TAG caches your Tigris objects on local disk
 so repeated reads are served in microseconds instead of milliseconds — and you
@@ -15,73 +14,75 @@ You need a pair of Tigris credentials (`AWS_ACCESS_KEY_ID` /
 organization. These are TAG's service credentials. Your application clients
 authenticate separately with their own credentials.
 
-## Install and Run
+## Install and run
 
-Pick whichever method matches your environment.
-
-### Option A: Native Binary
+<Tabs>
+<TabItem value="native" label="Native Binary" default>
 
 ```bash
 # Download and install TAG
-curl -sSL https://tag-releases.t3.storage.dev/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/tigrisdata/tag-deploy/main/native/install.sh | bash
 
 # Set your Tigris credentials
 export AWS_ACCESS_KEY_ID=<your-access-key>
 export AWS_SECRET_ACCESS_KEY=<your-secret-key>
 
 # Start TAG
-tag
+tag --config /etc/tag/config.yaml
 ```
 
 The install script auto-detects your OS (Linux/macOS) and architecture
 (amd64/arm64) and places the binary in `/usr/local/bin`.
 
-### Option B: Docker
-
-Create a `.env` file with your credentials:
-
-```bash
-AWS_ACCESS_KEY_ID=<your-access-key>
-AWS_SECRET_ACCESS_KEY=<your-secret-key>
-```
-
-Then start TAG:
+</TabItem>
+<TabItem value="docker" label="Docker">
 
 ```bash
-cd docker/
-docker compose up -d
+git clone https://github.com/tigrisdata/tag-deploy.git
+cd tag-deploy
+
+# Create docker/.env with credentials
+cat > docker/.env <<EOF
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+EOF
+
+# Start TAG
+cd docker && docker compose up -d
 ```
 
 The Docker image (`tigrisdata/tag`) uses Alpine Linux, runs as a non-root user,
 and persists cache data in a named volume.
 
-### Option C: Process Manager (`run.sh`)
+For cluster mode and more options, see the [Docker guide](docker.md).
 
-For environments where you want simple process lifecycle management:
+</TabItem>
+<TabItem value="kubernetes" label="Kubernetes">
 
 ```bash
-cd native/
+git clone https://github.com/tigrisdata/tag-deploy.git
+cd tag-deploy
 
-# Set credentials
-export AWS_ACCESS_KEY_ID=<your-access-key>
-export AWS_SECRET_ACCESS_KEY=<your-secret-key>
+kubectl create namespace tag
 
-# Start TAG (downloads binary if needed, waits for health check)
-./run.sh start
+kubectl create secret generic tag-credentials \
+  --namespace tag \
+  --from-literal=AWS_ACCESS_KEY_ID=your_access_key \
+  --from-literal=AWS_SECRET_ACCESS_KEY=your_secret_key
 
-# Check status
-./run.sh status
-
-# View logs
-./run.sh logs 100
-
-# Stop TAG
-./run.sh stop
+kubectl apply -k kubernetes/base/ -n tag
 ```
 
-Use `./run.sh stop --clean` to stop TAG and remove all cached data.
+This deploys a 3-replica StatefulSet with embedded caching, gossip-based cluster
+discovery, and a LoadBalancer service on port 8080.
 
-## Verify It Works
+For production considerations and scaling, see the
+[Kubernetes guide](kubernetes.md).
+
+</TabItem>
+</Tabs>
+
+## Verify it works
 
 TAG is now listening on `http://localhost:8080`. Try a few requests to make sure
 everything is connected:
@@ -97,27 +98,12 @@ aws s3 ls --endpoint-url http://localhost:8080
 aws s3 cp s3://my-bucket/my-key ./local-file --endpoint-url http://localhost:8080
 ```
 
-To confirm caching is working, request the same object twice. The first response
-comes from Tigris; the second comes from your local cache:
-
-```bash
-# First request - fetches from Tigris
-curl -sI http://localhost:8080/my-bucket/my-key \
-  -H "Authorization: ..." | grep X-Cache
-# X-Cache: MISS
-
-# Second request - served from local cache
-curl -sI http://localhost:8080/my-bucket/my-key \
-  -H "Authorization: ..." | grep X-Cache
-# X-Cache: HIT
-```
-
-## Connect Your Application
+## Connect your application
 
 TAG works with any S3 client. Just change your endpoint URL to point at TAG and
 make sure path-style addressing is enabled — that's it.
 
-:::warning[Path-Style Addressing Only]
+:::info[Path-Style Addressing Only]
 
 TAG supports path-style addressing (`http://host:port/bucket/key`).
 Virtual-hosted style (`http://bucket.host:port/key`) is not supported. Ensure
@@ -128,21 +114,8 @@ your S3 client is configured for path-style access.
 For client examples covering AWS CLI, Python boto3, streaming large files, and
 troubleshooting, see [S3 Client Usage](usage.md).
 
-## Common Configuration
-
-A few environment variables you may want to set right away:
-
-| Variable                | Default                  | Description                                |
-| ----------------------- | ------------------------ | ------------------------------------------ |
-| `TAG_LOG_LEVEL`         | `info`                   | Set to `debug` for verbose request logging |
-| `TAG_CACHE_DISK_PATH`   | `/var/cache/tag`         | Where TAG stores cached objects            |
-| `TAG_UPSTREAM_ENDPOINT` | `https://t3.storage.dev` | Tigris S3 endpoint                         |
-
-For the full configuration reference, production deployment, clustering, TLS,
-and monitoring, see the [Deployment Guide](deployment-guide.mdx).
-
 ## Troubleshooting
 
 If something isn't working — TAG won't start, you're getting 403s, or every
 response shows `X-Cache: MISS` — see
-[Troubleshooting](deployment-guide.mdx#troubleshooting) in the Deployment Guide.
+[Troubleshooting](deployment-guide.md#troubleshooting) in the Deployment Guide.

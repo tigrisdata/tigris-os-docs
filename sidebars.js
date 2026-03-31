@@ -216,24 +216,33 @@ const sidebars = {
             },
             {
               type: "doc",
-              label: "Benchmarks",
-              id: "acceleration-gateway/benchmarks",
+              label: "Quick Start",
+              id: "acceleration-gateway/quickstart",
             },
             {
               type: "doc",
-              label: "Quick Start",
-              id: "acceleration-gateway/quickstart",
+              label: "Architecture",
+              id: "acceleration-gateway/architecture",
+            },
+            {
+              type: "doc",
+              label: "Benchmarks",
+              id: "acceleration-gateway/benchmarks",
             },
             {
               type: "category",
               label: "Deployment",
               collapsible: true,
-              collapsed: false,
               link: {
                 type: "doc",
                 id: "acceleration-gateway/deployment-guide",
               },
               items: [
+                {
+                  type: "doc",
+                  label: "Native Binary",
+                  id: "acceleration-gateway/native",
+                },
                 {
                   type: "doc",
                   label: "Docker",

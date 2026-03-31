@@ -1,10 +1,3 @@
----
-title: Benchmarks
-sidebar_label: Benchmarks
-description:
-  TAG performance benchmark results using warp and go-ycsb on AWS EC2.
----
-
 # Benchmarks
 
 Benchmark results for a single TAG instance serving cached object reads. A

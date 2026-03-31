@@ -1,0 +1,282 @@
+[
+  {
+    "type": "rectangle",
+    "id": "incoming",
+    "x": 30,
+    "y": 130,
+    "width": 180,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "roundness": { "type": 3 },
+    "label": { "text": "Incoming Object", "fontSize": 16, "color": "#62FEB5" }
+  },
+
+  {
+    "type": "arrow",
+    "id": "a_in_rocksdb",
+    "x": 210,
+    "y": 158,
+    "width": 140,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [140, 0]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "rocksdb",
+    "x": 350,
+    "y": 115,
+    "width": 420,
+    "height": 85,
+    "backgroundColor": "#62FEB5",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1,
+    "roundness": { "type": 3 }
+  },
+  {
+    "type": "text",
+    "id": "rocksdb_title",
+    "x": 475,
+    "y": 130,
+    "text": "RocksDB",
+    "fontSize": 18,
+    "strokeColor": "#0A171E"
+  },
+  {
+    "type": "text",
+    "id": "rocksdb_sub",
+    "x": 420,
+    "y": 160,
+    "text": "metadata + inline small object data",
+    "fontSize": 14,
+    "strokeColor": "#0A171E"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a_rocks_medium",
+    "x": 480,
+    "y": 200,
+    "width": 0,
+    "height": 50,
+    "points": [
+      [0, 0],
+      [0, 50]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "data_store_label",
+    "x": 492,
+    "y": 215,
+    "text": "data storage",
+    "fontSize": 13,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "zone_medium",
+    "x": 350,
+    "y": 250,
+    "width": 420,
+    "height": 115,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#1e3340",
+    "strokeWidth": 1.5,
+    "strokeStyle": "dashed",
+    "roundness": { "type": 3 }
+  },
+  {
+    "type": "text",
+    "id": "zone_medium_label",
+    "x": 368,
+    "y": 260,
+    "text": "Medium Objects",
+    "fontSize": 14,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "rectangle",
+    "id": "rawfiles",
+    "x": 375,
+    "y": 290,
+    "width": 170,
+    "height": 42,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 },
+    "label": { "text": "Raw Files", "fontSize": 15, "color": "#62FEB5" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_raw_seg",
+    "x": 545,
+    "y": 311,
+    "width": 60,
+    "height": 0,
+    "points": [
+      [0, 0],
+      [60, 0]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.2,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "rectangle",
+    "id": "segments",
+    "x": 605,
+    "y": 290,
+    "width": 145,
+    "height": 42,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 },
+    "label": { "text": "Segments", "fontSize": 15, "color": "#62FEB5" }
+  },
+  {
+    "type": "text",
+    "id": "compact_label",
+    "x": 550,
+    "y": 335,
+    "text": "compactor",
+    "fontSize": 12,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a_medium_large",
+    "x": 480,
+    "y": 365,
+    "width": 0,
+    "height": 30,
+    "points": [
+      [0, 0],
+      [0, 30]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "zone_large",
+    "x": 350,
+    "y": 395,
+    "width": 420,
+    "height": 85,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#1e3340",
+    "strokeWidth": 1.5,
+    "strokeStyle": "dashed",
+    "roundness": { "type": 3 }
+  },
+  {
+    "type": "text",
+    "id": "zone_large_label",
+    "x": 368,
+    "y": 405,
+    "text": "Large Objects",
+    "fontSize": 14,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "rectangle",
+    "id": "indivfiles",
+    "x": 375,
+    "y": 432,
+    "width": 375,
+    "height": 38,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 },
+    "label": { "text": "Individual Files", "fontSize": 15, "color": "#62FEB5" }
+  },
+
+  {
+    "type": "arrow",
+    "id": "a_medium_meta",
+    "x": 350,
+    "y": 310,
+    "width": -70,
+    "height": -130,
+    "points": [
+      [0, 0],
+      [-70, 0],
+      [-70, -130]
+    ],
+    "strokeColor": "#506874",
+    "strokeWidth": 1,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "meta_medium_label",
+    "x": 260,
+    "y": 265,
+    "text": "metadata",
+    "fontSize": 12,
+    "strokeColor": "#506874"
+  },
+  {
+    "type": "arrow",
+    "id": "a_large_meta",
+    "x": 350,
+    "y": 450,
+    "width": -110,
+    "height": -270,
+    "points": [
+      [0, 0],
+      [-110, 0],
+      [-110, -270]
+    ],
+    "strokeColor": "#506874",
+    "strokeWidth": 1,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "meta_large_label",
+    "x": 220,
+    "y": 405,
+    "text": "metadata",
+    "fontSize": 12,
+    "strokeColor": "#506874"
+  },
+
+  {
+    "type": "text",
+    "id": "annotation",
+    "x": 100,
+    "y": 520,
+    "text": "All objects store metadata in RocksDB · Small object data is inlined · Compactor consolidates medium objects into segments",
+    "fontSize": 14,
+    "strokeColor": "#506874"
+  }
+]

@@ -221,7 +221,7 @@
     "strokeColor": "#2a4050",
     "strokeWidth": 1.2,
     "roundness": { "type": 3 },
-    "label": { "text": "RocksDB Cache", "fontSize": 18, "color": "#c8d6de" }
+    "label": { "text": "Embedded Cache", "fontSize": 18, "color": "#c8d6de" }
   },
   {
     "type": "arrow",

@@ -1,36 +1,17 @@
----
-title: TAG Deployment Guide
-sidebar_label: Deployment Guide
-description:
-  Production deployment guide for Tigris Acceleration Gateway (TAG), including
-  configuration, clustering, TLS, and monitoring.
----
+# Deployment guide
 
-Ready to run TAG in production? This guide walks you through sizing, choosing
-between single-node and cluster topologies, and setting up monitoring and
-alerting. If you just want to try TAG out first, start with the
+Ready to run TAG in production? This guide covers sizing, choosing between
+single-node and cluster topologies, monitoring, upgrading, and troubleshooting.
+If you just want to try TAG out first, start with the
 [Quick Start](quickstart.mdx).
 
-## Configuration
-
-TAG is configured through environment variables, a YAML config file, or both.
-Command-line flags take precedence over environment variables, which take
-precedence over config file values.
-
-TAG requires its own Tigris credentials (`AWS_ACCESS_KEY_ID` /
-`AWS_SECRET_ACCESS_KEY`) with read-only access to all buckets. Client
-applications authenticate separately with their own credentials.
-
-For the full list of environment variables, YAML config options, CLI flags, and
-example configurations, see the [Configuration Reference](configuration.md).
-
-## Production Deployment: Single Node
+## Single node
 
 Start here if your working set fits on one machine's storage and a single node's
 network bandwidth can handle your read throughput. Most workloads start with a
 single node and scale out only when needed.
 
-### Sizing Guidelines
+### Sizing guidelines
 
 TAG is typically NVMe-bound for large objects and CPU-bound for small objects.
 Benchmark reference points (single node, cache-warm):
@@ -49,84 +30,41 @@ point. NVMe storage is strongly recommended.
 For full benchmark methodology, thread scaling, and environment details, see
 [Benchmarks](benchmarks.md).
 
-### Deployment
+### Deploy
 
-For step-by-step deployment instructions:
+- [Docker](docker.md) (recommended for single-node)
+- [Native Binary](quickstart.mdx) (see the Quick Start)
 
-- [Docker Deployment](docker.md) (recommended for single-node)
-- [Quick Start: Native Binary](quickstart.mdx#option-a-native-binary)
+See
+[Configuration Reference — Example Configurations](configuration.md#example-configurations)
+for ready-to-use production YAML configs.
 
-For production, run TAG under a process supervisor (systemd, supervisord, etc.)
-to handle restarts.
-
-### Example Production Config (Single Node)
-
-```yaml
-server:
-  http_port: 8080
-  bind_ip: "0.0.0.0"
-
-upstream:
-  endpoint: "https://t3.storage.dev"
-  max_idle_conns_per_host: 100
-
-cache:
-  enabled: true
-  ttl: 60m
-  size_threshold: 1073741824 # 1 GiB
-  disk_path: "/var/cache/tag"
-  max_disk_usage_bytes: 107374182400 # 100 GiB
-  node_id: "tag-prod-1"
-
-log:
-  level: "info"
-  format: "json"
-```
-
-## Production Deployment: Multi-Node Cluster
+## Multi-node cluster
 
 When you outgrow a single node — either you need more cache capacity or higher
-aggregate throughput — you can deploy a multi-node cluster. TAG nodes form the
-cluster automatically: each node owns a subset of cache keys via consistent
-hashing, and requests for remote keys are forwarded over gRPC without any manual
-routing on your part.
+aggregate throughput — deploy a multi-node cluster. TAG nodes form the cluster
+automatically via gossip discovery, consistent hashing distributes cache keys,
+and gRPC forwards requests for remote keys transparently. See
+[Architecture — Cluster Architecture](architecture.mdx#cluster-architecture) for
+details on how clustering works.
 
-### How Clustering Works
-
-**Discovery:** Nodes find each other via memberlist gossip protocol (port 7000).
-Configure one or more seed nodes; new nodes join by contacting any seed.
-
-**Key routing:** Each cache key is hashed to determine its owner node. GET
-requests check local cache first; if the key belongs to a remote node, the
-request is forwarded through gRPC (port 9000).
-
-**Consistency:** Write-through invalidation and tombstone markers ensure cache
-coherence. Tombstones prevent in-flight background writes from resurrecting
-deleted objects.
-
-### Deployment
-
-For step-by-step cluster deployment instructions:
+### Cluster Deployment Options
 
 - [Docker Cluster](docker.md#cluster-mode) — 3-node cluster via Docker Compose
 - [Kubernetes](kubernetes.md) — StatefulSet with autoscaling (recommended for
   production clusters)
 
-## TLS Configuration
+## TLS
 
-TAG supports HTTPS with TLS certificates for encrypted client connections. Both
-a certificate file and private key file must be provided together.
-
-For setup instructions covering self-signed certificates, Docker, Kubernetes,
-and native binary deployments, see [TLS/HTTPS](tls.md).
+TAG supports HTTPS with TLS certificates for encrypted client connections. See
+[TLS/HTTPS](tls.md) for setup instructions.
 
 ## Monitoring
 
-TAG exposes Prometheus metrics at `GET /metrics` in Prometheus exposition
-format. For the complete metrics reference, PromQL examples, and scrape
-configuration, see [Metrics Reference](metrics.md).
+TAG exposes Prometheus metrics at `GET /metrics`. For the complete metrics
+reference and scrape configuration, see [Metrics Reference](metrics.md).
 
-### Key Metrics to Alert On
+### Key metrics to alert on
 
 **Error rate:**
 
@@ -164,15 +102,15 @@ rate(tag_auth_failures_total[5m])
 
 Spikes indicate credential misconfiguration or unauthorized access attempts.
 
-### Health Check
+## Upgrading
 
-`GET /health` returns `200 OK` when TAG is ready to accept requests. Use this
-for load balancer health checks, container orchestrator probes, and uptime
-monitoring.
+TAG's on-disk cache is persistent and compatible across versions. Upgrading TAG
+does not require clearing or rebuilding the cache — the new version picks up
+where the old one left off.
 
 ## Troubleshooting
 
-### TAG Won't Start
+### TAG won't start
 
 **"missing AWS credentials"** — Set both `AWS_ACCESS_KEY_ID` and
 `AWS_SECRET_ACCESS_KEY`. These are TAG's own credentials, not your
@@ -188,7 +126,7 @@ application's. In Kubernetes, verify the secret exists:
 **Connection refused** — Verify TAG is running:
 `curl http://localhost:8080/health`
 
-### Cache Not Working
+### Cache not working
 
 **All responses show `X-Cache: MISS`** — Check that caching is enabled
 (`TAG_CACHE_DISABLED` is not `true`) and that the cache directory is writable.
@@ -197,21 +135,20 @@ logs with `kubectl logs -n tag tag-0` and verify the cache PVC is bound with
 `kubectl get pvc -n tag`.
 
 **Objects not being cached** — Objects must return HTTP 200 and be within the
-size threshold (default 1 GiB). Objects with `Cache-Control: no-store` or
-`private` are not cached.
+size threshold (default 1 GiB). Objects with `Cache-Control: no-store` are not
+cached.
 
-### Authentication Errors
+### Authentication errors
 
 **403 on first request** — Verify your client credentials are valid for the
 requested bucket on Tigris and belong to the same Tigris organization as TAG's
 credentials. TAG forwards the first request to Tigris, which performs
 authentication.
 
-**403 after credential rotation** — TAG caches derived signing keys for up to 48
-hours and authorization decisions for 10 minutes. After rotating credentials,
-either wait for TTL expiry or restart TAG to clear caches.
+**403 after credential rotation** — After rotating credentials, restart TAG to
+clear auth related caches.
 
-### Client Errors
+### Client errors
 
 **405 on bucket creation** — You're using virtual-hosted style addressing. TAG
 requires path-style. Set `addressing_style: 'path'` in your S3 client config.
@@ -229,7 +166,7 @@ config = Config(
 )
 ```
 
-### Cluster Issues
+### Cluster issues
 
 **Nodes not discovering each other** — Verify seed nodes are reachable on port
 7000 (gossip). In Kubernetes, ensure the headless service resolves correctly:
@@ -242,7 +179,7 @@ nslookup tag-headless.tag.svc.cluster.local
 `TAG_CACHE_ADVERTISE_ADDR` is set to an address reachable by other nodes (not
 `localhost`).
 
-### High Latency
+### High latency
 
 **High p99 latency** — Check `tag_upstream_request_duration_seconds` to
 determine whether latency comes from Tigris or TAG. High request coalescing
@@ -250,7 +187,7 @@ determine whether latency comes from Tigris or TAG. High request coalescing
 `tag_broadcast_slow_consumers_total` indicates clients are reading too slowly.
 In Kubernetes, also check disk I/O performance on the storage class.
 
-### Debug Mode
+### Debug mode
 
 Set `TAG_LOG_LEVEL=debug` for detailed request-level logging. This is verbose;
 use it only during active debugging.

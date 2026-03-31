@@ -1,9 +1,3 @@
----
-title: Kubernetes Deployment
-sidebar_label: Kubernetes
-description: Deploy TAG as a Kubernetes StatefulSet with distributed caching.
----
-
 # Kubernetes deployment
 
 Deploy TAG as a StatefulSet with an embedded distributed cache cluster. For
@@ -109,11 +103,20 @@ Scaling down may temporarily reduce cache hit ratio.
 performance. If you change the PVC volume size, also update
 `TAG_CACHE_MAX_DISK_USAGE` in the StatefulSet to match (value is in bytes).
 
+### Security
+
+The StatefulSet is configured with security best practices:
+
+- Runs as non-root user (UID 1000)
+- No privilege escalation allowed
+- Read-only root filesystem
+- All Linux capabilities dropped
+
 ### Health checks
 
 TAG exposes a health endpoint:
 
-```
+```text
 GET /health
 ```
 
@@ -133,8 +136,21 @@ Key metrics to monitor:
   cache hit ratio
 - `tag_upstream_request_duration_seconds` — upstream latency
 
+## Upgrading
+
+Update the image tag in your Kustomize overlay or directly in the StatefulSet,
+then apply:
+
+```bash
+kubectl apply -k kubernetes/overlays/production/ -n tag
+```
+
+The StatefulSet performs a rolling update by default — one pod at a time is
+replaced. Each pod's PVC-backed cache survives the restart. During the rollout,
+the remaining pods continue serving traffic.
+
 ## Troubleshooting
 
 For troubleshooting cache misses, authentication failures, cluster issues, and
 debug mode (including Kubernetes-specific commands), see
-[Troubleshooting](deployment-guide.mdx#troubleshooting) in the Deployment Guide.
+[Troubleshooting](deployment-guide.md#troubleshooting) in the Deployment Guide.

@@ -1,11 +1,3 @@
----
-title: S3 API Compatibility
-sidebar_label: S3 Compatibility
-description:
-  S3 operations supported by TAG, caching behavior per operation, addressing
-  style, authentication modes, and unsupported features.
----
-
 # S3 API compatibility
 
 TAG implements the commonly used S3 REST API operations, acting as a caching
@@ -13,7 +5,7 @@ proxy between S3 clients and Tigris object storage. Compatibility is validated
 against 214 tests from the [ceph/s3-tests](https://github.com/ceph/s3-tests)
 suite.
 
-:::warning[Path-Style Addressing Only]
+:::info[Path-Style Addressing Only]
 
 TAG supports path-style addressing only (`http://host:port/bucket/key`).
 Virtual-hosted style (`http://bucket.host:port/key`) is not supported. Configure
@@ -25,57 +17,53 @@ your S3 client accordingly.
 
 ### Service
 
-| Operation   | Method | Path | Notes |
-| ----------- | ------ | ---- | ----- |
-| ListBuckets | GET    | `/`  |       |
+| Operation   | Notes               |
+| ----------- | ------------------- |
+| ListBuckets | Forwarded to Tigris |
 
 ### Bucket
 
-All bucket operations support both `/{bucket}` and `/{bucket}/` path forms for
-compatibility with clients that send trailing slashes.
-
-| Operation            | Method             | Path / Query            | Notes                                                |
-| -------------------- | ------------------ | ----------------------- | ---------------------------------------------------- |
-| CreateBucket         | PUT                | `/{bucket}`             |                                                      |
-| DeleteBucket         | DELETE             | `/{bucket}`             |                                                      |
-| HeadBucket           | HEAD               | `/{bucket}`             |                                                      |
-| ListObjects V1       | GET                | `/{bucket}`             |                                                      |
-| ListObjects V2       | GET                | `/{bucket}?list-type=2` |                                                      |
-| ListMultipartUploads | GET                | `/{bucket}?uploads`     |                                                      |
-| GetBucketLocation    | GET                | `/{bucket}?location`    | Returns configured region                            |
-| GetBucketVersioning  | GET / PUT          | `/{bucket}?versioning`  | Forwarded to Tigris                                  |
-| GetBucketACL         | GET / PUT          | `/{bucket}?acl`         | Forwarded to Tigris                                  |
-| GetBucketPolicy      | GET / PUT / DELETE | `/{bucket}?policy`      | Forwarded to Tigris                                  |
-| GetBucketCORS        | GET / PUT / DELETE | `/{bucket}?cors`        | Forwarded to Tigris                                  |
-| GetBucketTagging     | GET / PUT / DELETE | `/{bucket}?tagging`     | Forwarded to Tigris                                  |
-| GetBucketLifecycle   | GET / PUT / DELETE | `/{bucket}?lifecycle`   | Forwarded to Tigris                                  |
-| DeleteObjects        | POST               | `/{bucket}?delete`      | Bulk delete with XML body; invalidates cache entries |
+| Operation            | Notes                                  |
+| -------------------- | -------------------------------------- |
+| CreateBucket         | Forwarded to Tigris                    |
+| DeleteBucket         | Forwarded to Tigris                    |
+| HeadBucket           | Forwarded to Tigris                    |
+| ListObjects (V1/V2)  | Forwarded to Tigris                    |
+| ListMultipartUploads | Forwarded to Tigris                    |
+| GetBucketLocation    | Returns configured region              |
+| GetBucketVersioning  | Forwarded to Tigris                    |
+| GetBucketACL         | Forwarded to Tigris                    |
+| GetBucketPolicy      | Forwarded to Tigris                    |
+| GetBucketCORS        | Forwarded to Tigris                    |
+| GetBucketTagging     | Forwarded to Tigris                    |
+| GetBucketLifecycle   | Forwarded to Tigris                    |
+| DeleteObjects        | Bulk delete; invalidates cache entries |
 
 ### Object
 
-| Operation           | Method | Path / Query              | Notes                                                                  |
-| ------------------- | ------ | ------------------------- | ---------------------------------------------------------------------- |
-| GetObject           | GET    | `/{bucket}/{key}`         | Cache-first; supports `Range` and conditional headers                  |
-| HeadObject          | HEAD   | `/{bucket}/{key}`         | Served from cached metadata when available                             |
-| PutObject           | PUT    | `/{bucket}/{key}`         | Invalidates cache before forwarding                                    |
-| DeleteObject        | DELETE | `/{bucket}/{key}`         | Invalidates cache before forwarding                                    |
-| CopyObject          | PUT    | `/{bucket}/{key}`         | Detected via `X-Amz-Copy-Source` header; invalidates destination cache |
-| GetObjectTagging    | GET    | `/{bucket}/{key}?tagging` |                                                                        |
-| PutObjectTagging    | PUT    | `/{bucket}/{key}?tagging` |                                                                        |
-| DeleteObjectTagging | DELETE | `/{bucket}/{key}?tagging` |                                                                        |
-| GetObjectACL        | GET    | `/{bucket}/{key}?acl`     |                                                                        |
-| PutObjectACL        | PUT    | `/{bucket}/{key}?acl`     |                                                                        |
+| Operation           | Notes                                                 |
+| ------------------- | ----------------------------------------------------- |
+| GetObject           | Cache-first; supports `Range` and conditional headers |
+| HeadObject          | Served from cached metadata when available            |
+| PutObject           | Invalidates cache before forwarding                   |
+| DeleteObject        | Invalidates cache before forwarding                   |
+| CopyObject          | Invalidates destination cache before forwarding       |
+| GetObjectTagging    | Forwarded to Tigris                                   |
+| PutObjectTagging    | Forwarded to Tigris                                   |
+| DeleteObjectTagging | Forwarded to Tigris                                   |
+| GetObjectACL        | Forwarded to Tigris                                   |
+| PutObjectACL        | Forwarded to Tigris                                   |
 
 ### Multipart upload
 
-| Operation               | Method | Path / Query                            | Notes                                      |
-| ----------------------- | ------ | --------------------------------------- | ------------------------------------------ |
-| InitiateMultipartUpload | POST   | `/{bucket}/{key}?uploads`               |                                            |
-| UploadPart              | PUT    | `/{bucket}/{key}?uploadId=&partNumber=` |                                            |
-| UploadPartCopy          | PUT    | `/{bucket}/{key}?uploadId=&partNumber=` | Detected via `X-Amz-Copy-Source` header    |
-| CompleteMultipartUpload | POST   | `/{bucket}/{key}?uploadId=`             | Idempotent — successful completions cached |
-| AbortMultipartUpload    | DELETE | `/{bucket}/{key}?uploadId=`             |                                            |
-| ListParts               | GET    | `/{bucket}/{key}?uploadId=`             |                                            |
+| Operation               | Notes                                      |
+| ----------------------- | ------------------------------------------ |
+| InitiateMultipartUpload | Forwarded to Tigris                        |
+| UploadPart              | Forwarded to Tigris                        |
+| UploadPartCopy          | Forwarded to Tigris                        |
+| CompleteMultipartUpload | Idempotent — successful completions cached |
+| AbortMultipartUpload    | Forwarded to Tigris                        |
+| ListParts               | Forwarded to Tigris                        |
 
 ## AWS chunked transfer encoding
 
@@ -94,7 +82,7 @@ object.
 
 For details on `X-Cache` response headers, request coalescing, range request
 optimization, write-through invalidation, and client cache-control headers, see
-[Cache Control and Revalidation](cache-control.md).
+[Cache Control](cache-control.md).
 
 ## Authentication
 
@@ -113,7 +101,6 @@ forwarded to Tigris as-is, where Tigris itself may or may not support them:
 - POST object (browser-based HTML form uploads)
 - Public Access Block configuration
 - Bucket ownership controls
-- Multi-range requests (single `Range` header only)
 - Virtual-hosted style addressing
 - Website hosting configuration
 - Replication configuration
@@ -135,3 +122,6 @@ TAG's compatibility is validated using a curated subset of tests from
 | Copy operations      | 9       | Same-bucket, cross-bucket, metadata handling            |
 | Tagging              | 15      | Object and bucket tag CRUD                              |
 | **Total**            | **214** |                                                         |
+
+The test suite is executed as part of TAG's CI pipeline on every release to
+ensure that there is no regressions in S3 API compatibility.

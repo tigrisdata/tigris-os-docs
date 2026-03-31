@@ -22,19 +22,13 @@ aws s3 ls --endpoint-url http://localhost:8080
 
 ### Named profile
 
-Add to `~/.aws/config`:
-
-```ini
-[profile tag]
-endpoint_url = http://localhost:8080
-```
-
-And `~/.aws/credentials`:
+Add to `~/.aws/credentials`:
 
 ```ini
 [tag]
 aws_access_key_id = your_access_key
 aws_secret_access_key = your_secret_key
+endpoint_url = http://localhost:8080
 ```
 
 Then use `--profile tag` or set `AWS_PROFILE=tag`.
@@ -93,15 +87,8 @@ Check the `X-Cache` header to confirm TAG is caching. For details on cache
 control headers and invalidation, see
 [Cache Control and Revalidation](cache-control.md).
 
-```bash
-curl -sI http://localhost:8080/my-bucket/my-key \
-  -H "Authorization: AWS4-HMAC-SHA256 ..." | grep X-Cache
-# X-Cache: HIT    (served from cache)
-# X-Cache: MISS   (fetched from Tigris, now cached)
-```
-
 ## Troubleshooting
 
 For connection errors, authentication failures, timeouts, and path-style
-addressing issues, see [Troubleshooting](deployment-guide.mdx#troubleshooting)
-in the Deployment Guide.
+addressing issues, see [Troubleshooting](deployment-guide.md#troubleshooting) in
+the Deployment Guide.

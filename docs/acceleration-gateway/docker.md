@@ -1,10 +1,3 @@
----
-title: Docker Deployment
-sidebar_label: Docker
-description:
-  Deploy TAG using Docker Compose for single-node and cluster configurations.
----
-
 # Docker deployment
 
 Run TAG using Docker Compose. For all configuration options, see the
@@ -34,17 +27,17 @@ use their own credentials directly.
 
 ```bash
 cd docker
-docker-compose up -d
+docker compose up -d
 ```
 
 TAG will be available at `http://localhost:8080`.
 
 ```bash
 # View logs
-docker-compose logs -f tag
+docker compose logs -f tag
 
 # Stop
-docker-compose down
+docker compose down
 ```
 
 ## Cluster mode
@@ -53,7 +46,7 @@ Run 3 TAG nodes with an embedded distributed cache cluster:
 
 ```bash
 cd docker
-docker-compose -f docker-compose-cluster.yml up -d
+docker compose -f docker-compose-cluster.yml up -d
 ```
 
 TAG endpoints:
@@ -67,10 +60,10 @@ cluster.
 
 ```bash
 # View logs
-docker-compose -f docker-compose-cluster.yml logs -f
+docker compose -f docker-compose-cluster.yml logs -f
 
 # Stop and remove volumes
-docker-compose -f docker-compose-cluster.yml down -v
+docker compose -f docker-compose-cluster.yml down -v
 ```
 
 ## Environment variables
@@ -84,6 +77,18 @@ TAG_LOG_LEVEL=info
 ```
 
 See the full [Configuration Reference](configuration.md) for all options.
+
+## Upgrading
+
+Update the image tag in your `docker-compose.yml` and recreate the container:
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+The cache volume is preserved across container recreations — TAG picks up the
+existing cache without rebuilding.
 
 ## Test
 

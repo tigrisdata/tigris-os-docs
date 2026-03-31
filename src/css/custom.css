@@ -186,10 +186,6 @@ nav.navbar {
   border-radius: 4px;
 }
 
-/* Hide the top-level "Home" sidebar link (keeps the doc in the sidebar for rendering) */
-nav.menu > ul.menu__list > li.menu__list-item:first-child > a[href="/docs/"] {
-  display: none;
-}
 
 .menu__list-item-collapsible:hover {
   background: none;

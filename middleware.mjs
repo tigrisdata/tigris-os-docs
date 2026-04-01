@@ -12,8 +12,6 @@ const AGENT_UA_PATTERNS = [
   /\bGoogle-Extended\b/i,
   /\bPerplexityBot\b/i,
   /\bCohere-AI\b/i,
-  /\bAnthropic\b/i,
-  /\bClaude\b/i,
   /\bOAI-SearchBot\b/i,
   /\bYouBot\b/i,
   /\bAI2Bot\b/i,
@@ -77,11 +75,14 @@ export default function middleware(request) {
     return rewriteToMarkdown(pathname, request.url);
   }
 
-  // For normal HTML requests, add Link header pointing to llms.txt for discovery
+  // For normal HTML requests, add Link header pointing to llms.txt for discovery.
+  // Intentionally omit Vary: User-Agent here to avoid CDN cache fragmentation —
+  // Vercel Edge Middleware runs before the cache, so the redirect already handles
+  // agent requests before this branch is reached.
   return next({
     headers: {
       Link: '</docs/llms.txt>; rel="alternate"; type="text/plain"',
-      Vary: "Accept, User-Agent",
+      Vary: "Accept",
     },
   });
 }

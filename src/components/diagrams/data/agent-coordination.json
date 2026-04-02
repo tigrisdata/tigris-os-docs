@@ -43,6 +43,7 @@
     "height": 0,
     "strokeColor": "#62FEB5",
     "strokeWidth": 2,
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
       [120, 0]
@@ -94,17 +95,65 @@
   },
 
   {
+    "type": "rectangle",
+    "id": "agent-b",
+    "x": 700,
+    "y": 45,
+    "width": 220,
+    "height": 170,
+    "backgroundColor": "#0e1920",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "agent-b-lbl",
+    "x": 734,
+    "y": 52,
+    "text": "Agent B (watcher)",
+    "fontSize": 15,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+  {
+    "type": "rectangle",
+    "id": "webhook-handler",
+    "x": 715,
+    "y": 78,
+    "width": 190,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 1
+  },
+  {
+    "type": "text",
+    "id": "webhook-handler-lbl",
+    "x": 750,
+    "y": 93,
+    "text": "webhook handler",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+
+  {
     "type": "arrow",
     "id": "a-notify",
     "x": 580,
     "y": 100,
-    "width": 120,
-    "height": 0,
+    "width": 135,
+    "height": 3,
     "strokeColor": "#CF8E5B",
     "strokeWidth": 2,
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
-      [120, 0]
+      [135, 3]
     ]
   },
   {
@@ -119,84 +168,51 @@
   },
 
   {
-    "type": "rectangle",
-    "id": "handler",
-    "x": 700,
-    "y": 60,
-    "width": 200,
-    "height": 80,
-    "backgroundColor": "#142229",
-    "fillStyle": "solid",
-    "roundness": { "type": 3 },
+    "type": "arrow",
+    "id": "handler-trigger",
+    "x": 810,
+    "y": 128,
+    "width": 0,
+    "height": 22,
     "strokeColor": "#CF8E5B",
-    "strokeWidth": 2
+    "strokeWidth": 1,
+    "endArrowhead": "arrow",
+    "points": [
+      [0, 0],
+      [0, 22]
+    ]
   },
   {
     "type": "text",
-    "id": "handler-lbl",
-    "x": 730,
-    "y": 78,
-    "text": "Webhook Handler",
-    "fontSize": 15,
-    "fontFamily": 1,
-    "strokeColor": "#CF8E5B"
-  },
-  {
-    "type": "text",
-    "id": "handler-sub",
-    "x": 730,
-    "y": 108,
-    "text": "your endpoint",
-    "fontSize": 13,
+    "id": "handler-trigger-lbl",
+    "x": 820,
+    "y": 130,
+    "text": "triggers",
+    "fontSize": 11,
     "fontFamily": 1,
     "strokeColor": "#8fa3b0"
   },
 
   {
-    "type": "arrow",
-    "id": "a-dispatch",
-    "x": 800,
-    "y": 140,
-    "width": 0,
-    "height": 60,
-    "strokeColor": "#CF8E5B",
-    "strokeWidth": 2,
-    "points": [
-      [0, 0],
-      [0, 60]
-    ]
-  },
-  {
-    "type": "text",
-    "id": "a-dispatch-lbl",
-    "x": 815,
-    "y": 155,
-    "text": "triggers",
-    "fontSize": 13,
-    "fontFamily": 1,
-    "strokeColor": "#CF8E5B"
-  },
-
-  {
     "type": "rectangle",
-    "id": "agent-b",
-    "x": 700,
-    "y": 200,
-    "width": 200,
-    "height": 60,
+    "id": "processor",
+    "x": 715,
+    "y": 150,
+    "width": 190,
+    "height": 50,
     "backgroundColor": "#142229",
     "fillStyle": "solid",
     "roundness": { "type": 3 },
     "strokeColor": "#5BA4CF",
-    "strokeWidth": 2
+    "strokeWidth": 1
   },
   {
     "type": "text",
-    "id": "agent-b-lbl",
-    "x": 728,
-    "y": 218,
-    "text": "Agent B (watcher)",
-    "fontSize": 15,
+    "id": "processor-lbl",
+    "x": 775,
+    "y": 165,
+    "text": "processor",
+    "fontSize": 13,
     "fontFamily": 1,
     "strokeColor": "#5BA4CF"
   },
@@ -204,23 +220,24 @@
   {
     "type": "arrow",
     "id": "a-read",
-    "x": 700,
-    "y": 230,
-    "width": -120,
-    "height": -90,
+    "x": 715,
+    "y": 175,
+    "width": -135,
+    "height": -75,
     "strokeColor": "#5BA4CF",
     "strokeWidth": 2,
     "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
-      [-120, -90]
+      [-135, -75]
     ]
   },
   {
     "type": "text",
     "id": "a-read-lbl",
-    "x": 600,
-    "y": 180,
+    "x": 598,
+    "y": 150,
     "text": "GetObject",
     "fontSize": 13,
     "fontFamily": 1,

@@ -181,7 +181,7 @@ const sidebars = {
       type: "category",
       label: "Use Cases",
       collapsible: true,
-      collapsed: true,
+      collapsed: false,
       items: [
         {
           type: "category",

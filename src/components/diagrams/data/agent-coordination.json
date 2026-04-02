@@ -43,6 +43,7 @@
     "height": 0,
     "strokeColor": "#62FEB5",
     "strokeWidth": 2,
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
       [120, 0]
@@ -102,6 +103,7 @@
     "height": 3,
     "strokeColor": "#CF8E5B",
     "strokeWidth": 2,
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
       [135, 3]
@@ -168,22 +170,23 @@
   {
     "type": "arrow",
     "id": "a-read",
-    "x": 715,
+    "x": 700,
     "y": 150,
-    "width": -135,
+    "width": -120,
     "height": -50,
     "strokeColor": "#5BA4CF",
     "strokeWidth": 2,
     "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
-      [-135, -50]
+      [-120, -50]
     ]
   },
   {
     "type": "text",
     "id": "a-read-lbl",
-    "x": 610,
+    "x": 600,
     "y": 140,
     "text": "GetObject",
     "fontSize": 13,

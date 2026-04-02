@@ -2,8 +2,8 @@
   {
     "type": "text",
     "id": "title",
-    "x": 260,
-    "y": 20,
+    "x": 300,
+    "y": 15,
     "text": "Backup & Archive Flow",
     "fontSize": 18,
     "fontFamily": 1,
@@ -13,8 +13,8 @@
   {
     "type": "rectangle",
     "id": "app",
-    "x": 20,
-    "y": 100,
+    "x": 30,
+    "y": 80,
     "width": 180,
     "height": 55,
     "backgroundColor": "#142229",
@@ -26,8 +26,8 @@
   {
     "type": "text",
     "id": "applbl",
-    "x": 52,
-    "y": 117,
+    "x": 62,
+    "y": 95,
     "text": "Application",
     "fontSize": 16,
     "fontFamily": 1,
@@ -37,8 +37,8 @@
   {
     "type": "rectangle",
     "id": "db",
-    "x": 20,
-    "y": 200,
+    "x": 30,
+    "y": 195,
     "width": 180,
     "height": 55,
     "backgroundColor": "#142229",
@@ -50,8 +50,8 @@
   {
     "type": "text",
     "id": "dblbl",
-    "x": 55,
-    "y": 217,
+    "x": 68,
+    "y": 210,
     "text": "Database",
     "fontSize": 16,
     "fontFamily": 1,
@@ -61,22 +61,23 @@
   {
     "type": "arrow",
     "id": "a-app-bucket",
-    "x": 200,
-    "y": 128,
-    "width": 100,
-    "height": 30,
+    "x": 210,
+    "y": 108,
+    "width": 110,
+    "height": 40,
     "strokeColor": "#5BA4CF",
     "strokeWidth": 2,
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
-      [100, 30]
+      [110, 40]
     ]
   },
   {
     "type": "text",
     "id": "a-app-lbl",
-    "x": 210,
-    "y": 112,
+    "x": 218,
+    "y": 98,
     "text": "daily backup",
     "fontSize": 13,
     "fontFamily": 1,
@@ -86,22 +87,23 @@
   {
     "type": "arrow",
     "id": "a-db-bucket",
-    "x": 200,
-    "y": 228,
-    "width": 100,
-    "height": -70,
+    "x": 210,
+    "y": 222,
+    "width": 110,
+    "height": -54,
     "strokeColor": "#5BA4CF",
     "strokeWidth": 2,
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
-      [100, -70]
+      [110, -54]
     ]
   },
   {
     "type": "text",
     "id": "a-db-lbl",
-    "x": 215,
-    "y": 240,
+    "x": 225,
+    "y": 230,
     "text": "snapshots",
     "fontSize": 13,
     "fontFamily": 1,
@@ -111,10 +113,10 @@
   {
     "type": "rectangle",
     "id": "bucket",
-    "x": 300,
+    "x": 320,
     "y": 110,
-    "width": 200,
-    "height": 75,
+    "width": 210,
+    "height": 80,
     "backgroundColor": "#142229",
     "fillStyle": "solid",
     "roundness": { "type": 3 },
@@ -124,7 +126,7 @@
   {
     "type": "text",
     "id": "bucketlbl",
-    "x": 330,
+    "x": 355,
     "y": 120,
     "text": "Tigris Bucket",
     "fontSize": 16,
@@ -134,7 +136,7 @@
   {
     "type": "text",
     "id": "bucketsub",
-    "x": 330,
+    "x": 358,
     "y": 155,
     "text": "lifecycle rules",
     "fontSize": 13,
@@ -145,38 +147,59 @@
   {
     "type": "arrow",
     "id": "a-bucket-ia",
-    "x": 500,
-    "y": 125,
-    "width": 100,
-    "height": -20,
+    "x": 530,
+    "y": 130,
+    "width": 120,
+    "height": -25,
     "strokeColor": "#62FEB5",
     "strokeWidth": 2,
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
-      [100, -20]
-    ],
-    "label": { "text": "30 days", "fontSize": 12, "color": "#8fa3b0" }
+      [120, -25]
+    ]
   },
+  {
+    "type": "text",
+    "id": "a-ia-lbl",
+    "x": 555,
+    "y": 90,
+    "text": "30 days",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
   {
     "type": "arrow",
     "id": "a-bucket-archive",
-    "x": 500,
-    "y": 165,
-    "width": 100,
-    "height": 20,
+    "x": 530,
+    "y": 170,
+    "width": 120,
+    "height": 30,
     "strokeColor": "#62FEB5",
     "strokeWidth": 2,
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
-      [100, 20]
-    ],
-    "label": { "text": "90 days", "fontSize": 12, "color": "#8fa3b0" }
+      [120, 30]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "a-archive-lbl",
+    "x": 555,
+    "y": 198,
+    "text": "90 days",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
   },
 
   {
     "type": "rectangle",
     "id": "ia",
-    "x": 600,
+    "x": 650,
     "y": 75,
     "width": 200,
     "height": 55,
@@ -189,8 +212,8 @@
   {
     "type": "text",
     "id": "ialbl",
-    "x": 630,
-    "y": 92,
+    "x": 680,
+    "y": 90,
     "text": "Infrequent Access",
     "fontSize": 14,
     "fontFamily": 1,
@@ -200,8 +223,8 @@
   {
     "type": "rectangle",
     "id": "archive",
-    "x": 600,
-    "y": 165,
+    "x": 650,
+    "y": 175,
     "width": 200,
     "height": 55,
     "backgroundColor": "#142229",
@@ -213,8 +236,8 @@
   {
     "type": "text",
     "id": "archivelbl",
-    "x": 660,
-    "y": 182,
+    "x": 710,
+    "y": 190,
     "text": "Archive",
     "fontSize": 14,
     "fontFamily": 1,
@@ -224,27 +247,38 @@
   {
     "type": "arrow",
     "id": "a-restore",
-    "x": 700,
-    "y": 260,
-    "width": -300,
-    "height": -60,
+    "x": 750,
+    "y": 230,
+    "width": 0,
+    "height": 0,
     "strokeColor": "#8fa3b0",
-    "strokeWidth": 1,
+    "strokeWidth": 1.5,
     "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
-      [-300, -60]
-    ],
-    "endArrowhead": "arrow",
-    "label": { "text": "restore on demand", "fontSize": 12, "color": "#8fa3b0" }
+      [0, 75],
+      [-630, 75],
+      [-630, -95]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "restorelbl",
+    "x": 340,
+    "y": 296,
+    "text": "restore on demand",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
   },
 
   {
     "type": "rectangle",
     "id": "geo",
     "x": 280,
-    "y": 260,
-    "width": 240,
+    "y": 355,
+    "width": 280,
     "height": 45,
     "backgroundColor": "#142229",
     "fillStyle": "solid",
@@ -256,8 +290,8 @@
   {
     "type": "text",
     "id": "geolbl",
-    "x": 295,
-    "y": 270,
+    "x": 298,
+    "y": 365,
     "text": "geo-redundant across regions",
     "fontSize": 13,
     "fontFamily": 1,

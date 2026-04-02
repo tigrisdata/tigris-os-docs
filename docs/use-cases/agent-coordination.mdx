@@ -92,7 +92,10 @@ to Agent B, which reads the object and continues the workflow.
 
 Set up an object notification rule in the
 [Tigris Dashboard](https://console.tigris.dev) or via the API, pointing at your
-webhook endpoint. Filter to the prefix and event type you care about.
+webhook endpoint. Filter to the prefix and event type you care about. Tigris
+supports
+[basic and bearer token authentication](/docs/buckets/object-notifications/#webhook-authentication)
+on webhook endpoints — enable this so only Tigris can trigger your handler.
 
 #### 2. Agent A writes artifacts
 
@@ -122,15 +125,22 @@ const app = express();
 app.use(express.json());
 
 app.post("/webhook", (req, res) => {
-  for (const event of req.body.events) {
-    const bucket = event.bucket;
-    const key = event.object.key;
+  try {
+    for (const event of req.body.events) {
+      const bucket = event.bucket;
+      const key = event.object.key;
 
-    // Dispatch to Agent B with the object reference
-    triggerAgentB({ bucket, key });
+      // Dispatch to Agent B with the object reference.
+      // Replace with your dispatch logic: queue push, function call, HTTP request, etc.
+      triggerAgentB({ bucket, key });
+    }
+
+    res.sendStatus(200);
+  } catch (err) {
+    console.error("Failed to process webhook:", err);
+    // Return a non-200 status so Tigris retries delivery
+    res.sendStatus(500);
   }
-
-  res.sendStatus(200);
 });
 ```
 
@@ -162,8 +172,9 @@ async function agentBHandler(bucket: string, key: string) {
 
 :::note
 
-Notifications are delivered at least once and can arrive out of order across
-regions. Use the `Last-Modified` timestamp on the object (not `eventTime`) to
-sequence events correctly, and design your handlers to be idempotent.
+Notifications are delivered at least once — Tigris retries on non-200 responses
+— and can arrive out of order across regions. Use the `Last-Modified` timestamp
+on the object (not `eventTime`) to sequence events correctly, and design your
+handlers to be idempotent.
 
 :::

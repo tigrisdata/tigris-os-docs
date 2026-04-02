@@ -87,7 +87,7 @@
     "id": "bucket-sub",
     "x": 420,
     "y": 108,
-    "text": "artifacts/",
+    "text": "results/",
     "fontSize": 13,
     "fontFamily": 1,
     "strokeColor": "#8fa3b0"
@@ -223,17 +223,6 @@
     "y": 180,
     "text": "GetObject",
     "fontSize": 13,
-    "fontFamily": 1,
-    "strokeColor": "#8fa3b0"
-  },
-
-  {
-    "type": "text",
-    "id": "note",
-    "x": 170,
-    "y": 290,
-    "text": "Agent A writes artifacts — Agent B is notified instantly via webhook, no polling needed",
-    "fontSize": 14,
     "fontFamily": 1,
     "strokeColor": "#8fa3b0"
   }

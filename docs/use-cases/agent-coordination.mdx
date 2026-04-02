@@ -122,10 +122,13 @@ const app = express();
 app.use(express.json());
 
 app.post("/webhook", (req, res) => {
-  const { bucket, key } = req.body;
+  for (const event of req.body.events) {
+    const bucket = event.bucket;
+    const key = event.object.key;
 
-  // Dispatch to Agent B with the object reference
-  triggerAgentB({ bucket, key });
+    // Dispatch to Agent B with the object reference
+    triggerAgentB({ bucket, key });
+  }
 
   res.sendStatus(200);
 });

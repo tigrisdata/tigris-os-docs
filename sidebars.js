@@ -914,11 +914,7 @@ const sidebars = {
       type: "category",
       label: "Pricing",
       collapsed: true,
-      link: {
-        type: "doc",
-        id: "pricing/index",
-      },
-      items: ["pricing/compare", "pricing/faqs"],
+      items: ["pricing/index", "pricing/compare", "pricing/faqs"],
     },
     {
       type: "doc",

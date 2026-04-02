@@ -1,3 +1,7 @@
+---
+sidebar_label: Overview
+---
+
 # Pricing
 
 Tigris uses simple, usage-based pricing with no egress fees. You pay only for

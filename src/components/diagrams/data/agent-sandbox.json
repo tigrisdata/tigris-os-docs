@@ -289,6 +289,7 @@
     "height": 40,
     "strokeColor": "#5BA4CF",
     "strokeWidth": 2,
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
       [0, 40]
@@ -303,6 +304,7 @@
     "height": 40,
     "strokeColor": "#5BA4CF",
     "strokeWidth": 2,
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
       [0, 40]
@@ -317,6 +319,7 @@
     "height": 40,
     "strokeColor": "#5BA4CF",
     "strokeWidth": 2,
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
       [0, 40]

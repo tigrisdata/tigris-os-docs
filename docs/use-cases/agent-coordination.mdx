@@ -96,12 +96,18 @@ webhook endpoint. Filter to the prefix and event type you care about.
 
 #### 2. Agent A writes artifacts
 
-Agent A uses standard S3 `PutObject` calls — it doesn't need any awareness of
-the downstream consumer.
+Agent A writes its output using the [Tigris SDK](/docs/sdks/tigris/) — no
+awareness of the downstream consumer needed.
 
-```bash
-# Agent A writes its output to the shared bucket
-tigris cp ./report.json s3://coordination-bucket/results/report.json
+```ts
+import { put } from "@tigrisdata/storage";
+import { readFile } from "node:fs/promises";
+
+const report = await readFile("./report.json");
+
+await put("results/report.json", report, {
+  config: { bucket: "coordination-bucket" },
+});
 ```
 
 #### 3. Webhook handler dispatches to Agent B
@@ -109,21 +115,20 @@ tigris cp ./report.json s3://coordination-bucket/results/report.json
 Your handler receives the notification and kicks off Agent B with the object
 details.
 
-```python
-from flask import Flask, request
+```ts
+import express from "express";
 
-app = Flask(__name__)
+const app = express();
+app.use(express.json());
 
-@app.route("/webhook", methods=["POST"])
-def handle_notification():
-    event = request.json
-    bucket = event["bucket"]
-    key = event["key"]
+app.post("/webhook", (req, res) => {
+  const { bucket, key } = req.body;
 
-    # Dispatch to Agent B with the object reference
-    trigger_agent_b(bucket=bucket, key=key)
+  // Dispatch to Agent B with the object reference
+  triggerAgentB({ bucket, key });
 
-    return "", 200
+  res.sendStatus(200);
+});
 ```
 
 #### 4. Agent B reads and acts
@@ -131,24 +136,25 @@ def handle_notification():
 Agent B fetches the object that triggered the notification and takes its next
 step — validation, transformation, forwarding, or anything else.
 
-```python
-import boto3
+```ts
+import { get, put } from "@tigrisdata/storage";
 
-s3 = boto3.client("s3", endpoint_url="https://t3.storage.dev")
+async function agentBHandler(bucket: string, key: string) {
+  const result = await get(key, "string", { config: { bucket } });
 
-def agent_b_handler(bucket: str, key: str):
-    obj = s3.get_object(Bucket=bucket, Key=key)
-    data = obj["Body"].read()
+  if (result.error) {
+    console.error("Failed to fetch object:", result.error);
+    return;
+  }
 
-    # Process the artifact
-    result = process(data)
+  // Process the artifact
+  const processed = process(result.data);
 
-    # Optionally write output for a third agent
-    s3.put_object(
-        Bucket=bucket,
-        Key=key.replace("results/", "processed/"),
-        Body=result,
-    )
+  // Optionally write output for a third agent
+  await put(key.replace("results/", "processed/"), processed, {
+    config: { bucket },
+  });
+}
 ```
 
 :::note

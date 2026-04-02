@@ -95,32 +95,6 @@
   },
 
   {
-    "type": "arrow",
-    "id": "a-notify",
-    "x": 580,
-    "y": 100,
-    "width": 135,
-    "height": 3,
-    "strokeColor": "#CF8E5B",
-    "strokeWidth": 2,
-    "endArrowhead": "arrow",
-    "points": [
-      [0, 0],
-      [135, 3]
-    ]
-  },
-  {
-    "type": "text",
-    "id": "a-notify-lbl",
-    "x": 590,
-    "y": 72,
-    "text": "webhook POST",
-    "fontSize": 13,
-    "fontFamily": 1,
-    "strokeColor": "#CF8E5B"
-  },
-
-  {
     "type": "rectangle",
     "id": "agent-b",
     "x": 700,
@@ -162,6 +136,32 @@
     "x": 750,
     "y": 93,
     "text": "webhook handler",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-notify",
+    "x": 580,
+    "y": 100,
+    "width": 135,
+    "height": 3,
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2,
+    "endArrowhead": "arrow",
+    "points": [
+      [0, 0],
+      [135, 3]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "a-notify-lbl",
+    "x": 590,
+    "y": 72,
+    "text": "webhook POST",
     "fontSize": 13,
     "fontFamily": 1,
     "strokeColor": "#CF8E5B"

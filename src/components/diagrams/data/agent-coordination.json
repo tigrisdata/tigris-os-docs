@@ -1,0 +1,240 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 250,
+    "y": 10,
+    "text": "Agent Coordination via Object Notifications",
+    "fontSize": 18,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "agent-a",
+    "x": 80,
+    "y": 70,
+    "width": 180,
+    "height": 60,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "agent-a-lbl",
+    "x": 115,
+    "y": 88,
+    "text": "Agent A (writer)",
+    "fontSize": 15,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-write",
+    "x": 260,
+    "y": 100,
+    "width": 120,
+    "height": 0,
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [120, 0]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "a-write-lbl",
+    "x": 277,
+    "y": 72,
+    "text": "PutObject",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "bucket",
+    "x": 380,
+    "y": 60,
+    "width": 200,
+    "height": 80,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "bucket-lbl",
+    "x": 415,
+    "y": 78,
+    "text": "Shared Bucket",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "bucket-sub",
+    "x": 420,
+    "y": 108,
+    "text": "artifacts/",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-notify",
+    "x": 580,
+    "y": 100,
+    "width": 120,
+    "height": 0,
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [120, 0]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "a-notify-lbl",
+    "x": 590,
+    "y": 72,
+    "text": "webhook POST",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "handler",
+    "x": 700,
+    "y": 60,
+    "width": 200,
+    "height": 80,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "handler-lbl",
+    "x": 730,
+    "y": 78,
+    "text": "Webhook Handler",
+    "fontSize": 15,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+  {
+    "type": "text",
+    "id": "handler-sub",
+    "x": 730,
+    "y": 108,
+    "text": "your endpoint",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-dispatch",
+    "x": 800,
+    "y": 140,
+    "width": 0,
+    "height": 60,
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [0, 60]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "a-dispatch-lbl",
+    "x": 815,
+    "y": 155,
+    "text": "triggers",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "agent-b",
+    "x": 700,
+    "y": 200,
+    "width": 200,
+    "height": 60,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "agent-b-lbl",
+    "x": 728,
+    "y": 218,
+    "text": "Agent B (watcher)",
+    "fontSize": 15,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-read",
+    "x": 700,
+    "y": 230,
+    "width": -120,
+    "height": -90,
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "strokeStyle": "dashed",
+    "points": [
+      [0, 0],
+      [-120, -90]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "a-read-lbl",
+    "x": 600,
+    "y": 180,
+    "text": "GetObject",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "text",
+    "id": "note",
+    "x": 170,
+    "y": 290,
+    "text": "Agent A writes artifacts — Agent B is notified instantly via webhook, no polling needed",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  }
+]

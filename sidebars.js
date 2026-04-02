@@ -199,6 +199,11 @@ const sidebars = {
               label: "Agent Managed Storage",
               id: "use-cases/agent-managed-storage",
             },
+            {
+              type: "doc",
+              label: "Agent Coordination",
+              id: "use-cases/agent-coordination",
+            },
           ],
         },
         {

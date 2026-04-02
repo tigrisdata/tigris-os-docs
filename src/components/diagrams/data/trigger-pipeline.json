@@ -146,21 +146,21 @@
     "id": "a-handler-eval",
     "x": 710,
     "y": 185,
-    "width": -90,
+    "width": -190,
     "height": 70,
     "strokeColor": "#CF8E5B",
     "strokeWidth": 2,
     "points": [
       [0, 0],
-      [-90, 70]
+      [-190, 70]
     ]
   },
   {
     "type": "rectangle",
     "id": "eval",
-    "x": 510,
+    "x": 440,
     "y": 255,
-    "width": 180,
+    "width": 160,
     "height": 50,
     "backgroundColor": "#142229",
     "fillStyle": "solid",
@@ -171,7 +171,7 @@
   {
     "type": "text",
     "id": "evallbl",
-    "x": 562,
+    "x": 482,
     "y": 270,
     "text": "Run Evals",
     "fontSize": 14,
@@ -196,9 +196,9 @@
   {
     "type": "rectangle",
     "id": "convert",
-    "x": 620,
+    "x": 630,
     "y": 255,
-    "width": 180,
+    "width": 160,
     "height": 50,
     "backgroundColor": "#142229",
     "fillStyle": "solid",
@@ -209,7 +209,7 @@
   {
     "type": "text",
     "id": "convertlbl",
-    "x": 655,
+    "x": 656,
     "y": 270,
     "text": "Convert Model",
     "fontSize": 14,
@@ -222,21 +222,21 @@
     "id": "a-handler-deploy",
     "x": 710,
     "y": 185,
-    "width": 90,
+    "width": 190,
     "height": 70,
     "strokeColor": "#CF8E5B",
     "strokeWidth": 2,
     "points": [
       [0, 0],
-      [90, 70]
+      [190, 70]
     ]
   },
   {
     "type": "rectangle",
     "id": "deploy",
-    "x": 730,
+    "x": 820,
     "y": 255,
-    "width": 180,
+    "width": 160,
     "height": 50,
     "backgroundColor": "#142229",
     "fillStyle": "solid",
@@ -247,7 +247,7 @@
   {
     "type": "text",
     "id": "deploylbl",
-    "x": 795,
+    "x": 875,
     "y": 270,
     "text": "Deploy",
     "fontSize": 14,

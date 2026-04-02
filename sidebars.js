@@ -913,7 +913,7 @@ const sidebars = {
     {
       type: "category",
       label: "Pricing",
-      collapsed: false,
+      collapsed: true,
       link: {
         type: "doc",
         id: "pricing/index",

@@ -173,20 +173,20 @@
     "x": 810,
     "y": 128,
     "width": 0,
-    "height": 40,
+    "height": 22,
     "strokeColor": "#CF8E5B",
     "strokeWidth": 1,
     "endArrowhead": "arrow",
     "points": [
       [0, 0],
-      [0, 40]
+      [0, 22]
     ]
   },
   {
     "type": "text",
     "id": "handler-trigger-lbl",
     "x": 820,
-    "y": 138,
+    "y": 130,
     "text": "triggers",
     "fontSize": 11,
     "fontFamily": 1,
@@ -194,26 +194,50 @@
   },
 
   {
+    "type": "rectangle",
+    "id": "processor",
+    "x": 715,
+    "y": 150,
+    "width": 190,
+    "height": 50,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 1
+  },
+  {
+    "type": "text",
+    "id": "processor-lbl",
+    "x": 775,
+    "y": 165,
+    "text": "processor",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+
+  {
     "type": "arrow",
     "id": "a-read",
-    "x": 700,
-    "y": 185,
-    "width": -120,
-    "height": -85,
+    "x": 715,
+    "y": 175,
+    "width": -135,
+    "height": -75,
     "strokeColor": "#5BA4CF",
     "strokeWidth": 2,
     "strokeStyle": "dashed",
     "endArrowhead": "arrow",
     "points": [
       [0, 0],
-      [-120, -85]
+      [-135, -75]
     ]
   },
   {
     "type": "text",
     "id": "a-read-lbl",
     "x": 598,
-    "y": 155,
+    "y": 150,
     "text": "GetObject",
     "fontSize": 13,
     "fontFamily": 1,

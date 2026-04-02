@@ -13,7 +13,7 @@ Every account includes a generous free tier each month:
 | Class A requests | 10,000 / month  |
 | Class B requests | 100,000 / month |
 
-No credit card required to get started.
+A payment method is required to create an account.
 
 ## Storage
 
@@ -73,3 +73,10 @@ access patterns — there are no additional replication fees.
 
 For larger workloads or custom requirements,
 [contact us](https://www.tigrisdata.com/contact/) for enterprise pricing.
+
+## A note on units
+
+Tigris measures storage in gibibytes (GiB, base-2), where 1 GiB = 2^30 bytes.
+Throughout our documentation and billing we refer to this as "GB" for
+simplicity, consistent with how other cloud storage providers label their
+pricing.

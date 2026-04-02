@@ -4,10 +4,11 @@ Common questions about Tigris pricing and billing.
 
 ## General
 
-### Do I need a credit card to get started?
+### Do I need a payment method to get started?
 
-No. The [free tier](/docs/pricing/) gives you 5 GB of Standard storage, 10,000
-Class A requests, and 100,000 Class B requests each month at no cost.
+Yes. A payment method is required to create an account. You won't be charged
+beyond the [free tier](/docs/pricing/) unless your usage exceeds the included
+allowances.
 
 ### How does billing work?
 

@@ -1,0 +1,169 @@
+---
+id: agent-coordination
+title: "Agent Coordination"
+---
+
+import AgentCoordinationDiagram from "@site/src/components/diagrams/AgentCoordinationDiagram";
+import DiagramLightbox from "@site/src/components/diagrams/DiagramLightbox";
+
+# Agent Coordination
+
+## Event-driven handoffs between agents
+
+_One agent writes, the other reacts — coordinated through object notifications
+with zero polling._
+
+<div className="use-case-hero">
+  <div className="use-case-hero__text">
+
+Multi-agent systems often need one agent to hand off work to another. Agent A
+produces an artifact — a report, a processed dataset, an intermediate result —
+and Agent B needs to pick it up and continue. Polling the bucket wastes API
+calls and adds latency. Shared queues add infrastructure you have to run.
+
+[Tigris Object Notifications](/docs/buckets/object-notifications/) turn the
+bucket itself into the coordination layer. When Agent A writes or updates an
+object, Tigris fires an HTTP `POST` to your webhook endpoint with the bucket
+name, key, size, and ETag. Your handler dispatches the event to Agent B, which
+reads the new object and takes its next step.
+
+[Object notifications →](/docs/buckets/object-notifications/)
+
+  </div>
+  <div className="use-case-hero__diagram">
+    <DiagramLightbox>
+      <div className="mermaid-frame">
+        <AgentCoordinationDiagram />
+      </div>
+    </DiagramLightbox>
+  </div>
+</div>
+
+### Benefits
+
+<details>
+<summary>No polling, no queues</summary>
+
+Object notifications push events the moment a write completes. Agent B doesn't
+need to poll on a timer, and you don't need to stand up a message queue between
+the two agents. The bucket is the shared state and the event source.
+
+</details>
+
+<details>
+<summary>Prefix-scoped triggers</summary>
+
+Filter notifications to specific key prefixes so Agent B only wakes up for the
+objects it cares about. If Agent A writes scratch files to `tmp/` and final
+outputs to `results/`, you can target only `results/`.
+
+```sql
+WHERE `key` REGEXP "^results/" AND `Event-Type` = "OBJECT_CREATED_PUT"
+```
+
+</details>
+
+<details>
+<summary>Loose coupling</summary>
+
+Agent A doesn't need to know Agent B exists. It writes to the bucket using
+standard S3 operations. The notification rule handles routing. You can add a
+third agent, swap out Agent B, or fan out to multiple consumers without changing
+Agent A's code.
+
+</details>
+
+<details>
+<summary>Built-in delivery metadata</summary>
+
+Every webhook payload includes the bucket, object key, size, ETag, and event
+timestamp. Agent B has everything it needs to fetch the right object and decide
+whether to act — no extra API calls to discover what changed.
+
+</details>
+
+### Pattern: writer agent → watcher agent
+
+Agent A writes artifacts to a shared bucket. A notification rule fires a webhook
+when new objects land under `results/`. The webhook handler dispatches the event
+to Agent B, which reads the object and continues the workflow.
+
+#### 1. Configure the notification
+
+Set up an object notification rule in the
+[Tigris Dashboard](https://console.tigris.dev) or via the API, pointing at your
+webhook endpoint. Filter to the prefix and event type you care about.
+
+#### 2. Agent A writes artifacts
+
+Agent A writes its output using the [Tigris SDK](/docs/sdks/tigris/) — no
+awareness of the downstream consumer needed.
+
+```ts
+import { put } from "@tigrisdata/storage";
+import { readFile } from "node:fs/promises";
+
+const report = await readFile("./report.json");
+
+await put("results/report.json", report, {
+  config: { bucket: "coordination-bucket" },
+});
+```
+
+#### 3. Webhook handler dispatches to Agent B
+
+Your handler receives the notification and kicks off Agent B with the object
+details.
+
+```ts
+import express from "express";
+
+const app = express();
+app.use(express.json());
+
+app.post("/webhook", (req, res) => {
+  for (const event of req.body.events) {
+    const bucket = event.bucket;
+    const key = event.object.key;
+
+    // Dispatch to Agent B with the object reference
+    triggerAgentB({ bucket, key });
+  }
+
+  res.sendStatus(200);
+});
+```
+
+#### 4. Agent B reads and acts
+
+Agent B fetches the object that triggered the notification and takes its next
+step — validation, transformation, forwarding, or anything else.
+
+```ts
+import { get, put } from "@tigrisdata/storage";
+
+async function agentBHandler(bucket: string, key: string) {
+  const result = await get(key, "string", { config: { bucket } });
+
+  if (result.error) {
+    console.error("Failed to fetch object:", result.error);
+    return;
+  }
+
+  // Process the artifact
+  const processed = process(result.data);
+
+  // Optionally write output for a third agent
+  await put(key.replace("results/", "processed/"), processed, {
+    config: { bucket },
+  });
+}
+```
+
+:::note
+
+Notifications are delivered at least once and can arrive out of order across
+regions. Use the `Last-Modified` timestamp on the object (not `eventTime`) to
+sequence events correctly, and design your handlers to be idempotent.
+
+:::

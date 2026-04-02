@@ -191,13 +191,18 @@ const sidebars = {
           items: [
             {
               type: "doc",
-              label: "Agent Sandboxes",
-              id: "use-cases/agent-sandboxes",
+              label: "Agent Coordination",
+              id: "use-cases/agent-coordination",
             },
             {
               type: "doc",
               label: "Agent Managed Storage",
               id: "use-cases/agent-managed-storage",
+            },
+            {
+              type: "doc",
+              label: "Agent Sandboxes",
+              id: "use-cases/agent-sandboxes",
             },
           ],
         },

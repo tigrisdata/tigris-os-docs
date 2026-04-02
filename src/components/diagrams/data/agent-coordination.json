@@ -100,7 +100,7 @@
     "x": 700,
     "y": 45,
     "width": 220,
-    "height": 130,
+    "height": 170,
     "backgroundColor": "#0e1920",
     "fillStyle": "solid",
     "roundness": { "type": 3 },
@@ -169,25 +169,51 @@
 
   {
     "type": "arrow",
+    "id": "handler-trigger",
+    "x": 810,
+    "y": 128,
+    "width": 0,
+    "height": 40,
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 1,
+    "endArrowhead": "arrow",
+    "points": [
+      [0, 0],
+      [0, 40]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "handler-trigger-lbl",
+    "x": 820,
+    "y": 138,
+    "text": "triggers",
+    "fontSize": 11,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
     "id": "a-read",
     "x": 700,
-    "y": 150,
+    "y": 185,
     "width": -120,
-    "height": -50,
+    "height": -85,
     "strokeColor": "#5BA4CF",
     "strokeWidth": 2,
     "strokeStyle": "dashed",
     "endArrowhead": "arrow",
     "points": [
       [0, 0],
-      [-120, -50]
+      [-120, -85]
     ]
   },
   {
     "type": "text",
     "id": "a-read-lbl",
-    "x": 600,
-    "y": 140,
+    "x": 598,
+    "y": 155,
     "text": "GetObject",
     "fontSize": 13,
     "fontFamily": 1,

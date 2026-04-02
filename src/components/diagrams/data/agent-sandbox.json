@@ -2,8 +2,8 @@
   {
     "type": "text",
     "id": "title",
-    "x": 220,
-    "y": 15,
+    "x": 280,
+    "y": 0,
     "text": "Agent Sandbox Forking",
     "fontSize": 18,
     "fontFamily": 1,
@@ -13,10 +13,10 @@
   {
     "type": "rectangle",
     "id": "base",
-    "x": 240,
-    "y": 70,
-    "width": 220,
-    "height": 75,
+    "x": 80,
+    "y": 40,
+    "width": 750,
+    "height": 170,
     "backgroundColor": "#142229",
     "fillStyle": "solid",
     "roundness": { "type": 3 },
@@ -26,18 +26,18 @@
   {
     "type": "text",
     "id": "baselbl",
-    "x": 270,
-    "y": 82,
+    "x": 110,
+    "y": 50,
     "text": "Base Bucket",
-    "fontSize": 16,
+    "fontSize": 18,
     "fontFamily": 1,
     "strokeColor": "#62FEB5"
   },
   {
     "type": "text",
     "id": "basesub",
-    "x": 258,
-    "y": 115,
+    "x": 110,
+    "y": 80,
     "text": "deps + datasets + configs",
     "fontSize": 13,
     "fontFamily": 1,
@@ -45,105 +45,163 @@
   },
 
   {
-    "type": "arrow",
-    "id": "a-snap",
-    "x": 460,
-    "y": 108,
-    "width": 70,
-    "height": 0,
-    "strokeColor": "#62FEB5",
-    "strokeWidth": 2,
-    "points": [
-      [0, 0],
-      [70, 0]
-    ]
-  },
-  {
-    "type": "text",
-    "id": "a-snap-lbl",
-    "x": 465,
-    "y": 80,
-    "text": "snapshot",
-    "fontSize": 13,
-    "fontFamily": 1,
-    "strokeColor": "#8fa3b0"
-  },
-
-  {
     "type": "rectangle",
-    "id": "snap",
-    "x": 530,
-    "y": 80,
-    "width": 160,
-    "height": 55,
-    "backgroundColor": "#142229",
+    "id": "snap1",
+    "x": 120,
+    "y": 115,
+    "width": 110,
+    "height": 45,
+    "backgroundColor": "#0e1920",
     "fillStyle": "solid",
     "roundness": { "type": 3 },
     "strokeColor": "#62FEB5",
-    "strokeWidth": 2
+    "strokeWidth": 1.5
   },
   {
     "type": "text",
-    "id": "snaplbl",
-    "x": 555,
-    "y": 97,
-    "text": "Snapshot",
-    "fontSize": 16,
+    "id": "snap1lbl",
+    "x": 155,
+    "y": 125,
+    "text": "S1",
+    "fontSize": 14,
     "fontFamily": 1,
     "strokeColor": "#62FEB5"
   },
 
   {
     "type": "arrow",
+    "id": "a-s1s2",
+    "x": 230,
+    "y": 138,
+    "width": 100,
+    "height": 0,
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "points": [
+      [0, 0],
+      [100, 0]
+    ]
+  },
+
+  {
+    "type": "rectangle",
+    "id": "snap2",
+    "x": 330,
+    "y": 115,
+    "width": 110,
+    "height": 45,
+    "backgroundColor": "#0e1920",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5
+  },
+  {
+    "type": "text",
+    "id": "snap2lbl",
+    "x": 365,
+    "y": 125,
+    "text": "S2",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-s2s3",
+    "x": 440,
+    "y": 138,
+    "width": 100,
+    "height": 0,
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "points": [
+      [0, 0],
+      [100, 0]
+    ]
+  },
+
+  {
+    "type": "rectangle",
+    "id": "snap3",
+    "x": 540,
+    "y": 110,
+    "width": 160,
+    "height": 55,
+    "backgroundColor": "#0e1920",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "snap3lbl",
+    "x": 568,
+    "y": 122,
+    "text": "S3 (latest)",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+
+  {
+    "type": "arrow",
     "id": "a-f1",
-    "x": 530,
-    "y": 80,
-    "width": -200,
-    "height": -55,
+    "x": 620,
+    "y": 210,
+    "width": -425,
+    "height": 80,
     "strokeColor": "#CF8E5B",
     "strokeWidth": 2,
     "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
-      [-200, -55]
+      [-425, 80]
     ]
   },
   {
     "type": "arrow",
     "id": "a-f2",
-    "x": 610,
-    "y": 80,
-    "width": 0,
-    "height": -55,
+    "x": 620,
+    "y": 210,
+    "width": -125,
+    "height": 80,
     "strokeColor": "#CF8E5B",
     "strokeWidth": 2,
     "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
-      [0, -55]
+      [-125, 80]
     ]
   },
   {
     "type": "arrow",
     "id": "a-f3",
-    "x": 690,
-    "y": 80,
-    "width": 200,
-    "height": -55,
+    "x": 620,
+    "y": 210,
+    "width": 175,
+    "height": 80,
     "strokeColor": "#CF8E5B",
     "strokeWidth": 2,
     "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
     "points": [
       [0, 0],
-      [200, -55]
+      [175, 80]
     ]
   },
 
   {
     "type": "text",
     "id": "forklbl",
-    "x": 555,
-    "y": 160,
+    "x": 640,
+    "y": 235,
     "text": "instant zero-copy fork",
     "fontSize": 13,
     "fontFamily": 1,
@@ -153,10 +211,10 @@
   {
     "type": "rectangle",
     "id": "fork1",
-    "x": 200,
-    "y": -30,
-    "width": 200,
-    "height": 55,
+    "x": 90,
+    "y": 290,
+    "width": 210,
+    "height": 60,
     "backgroundColor": "#142229",
     "fillStyle": "solid",
     "roundness": { "type": 3 },
@@ -166,8 +224,8 @@
   {
     "type": "text",
     "id": "fork1lbl",
-    "x": 230,
-    "y": -15,
+    "x": 128,
+    "y": 308,
     "text": "Agent A sandbox",
     "fontSize": 14,
     "fontFamily": 1,
@@ -177,10 +235,10 @@
   {
     "type": "rectangle",
     "id": "fork2",
-    "x": 510,
-    "y": -30,
-    "width": 200,
-    "height": 55,
+    "x": 390,
+    "y": 290,
+    "width": 210,
+    "height": 60,
     "backgroundColor": "#142229",
     "fillStyle": "solid",
     "roundness": { "type": 3 },
@@ -190,8 +248,8 @@
   {
     "type": "text",
     "id": "fork2lbl",
-    "x": 540,
-    "y": -15,
+    "x": 428,
+    "y": 308,
     "text": "Agent B sandbox",
     "fontSize": 14,
     "fontFamily": 1,
@@ -201,10 +259,10 @@
   {
     "type": "rectangle",
     "id": "fork3",
-    "x": 790,
-    "y": -30,
-    "width": 200,
-    "height": 55,
+    "x": 690,
+    "y": 290,
+    "width": 210,
+    "height": 60,
     "backgroundColor": "#142229",
     "fillStyle": "solid",
     "roundness": { "type": 3 },
@@ -214,8 +272,8 @@
   {
     "type": "text",
     "id": "fork3lbl",
-    "x": 820,
-    "y": -15,
+    "x": 728,
+    "y": 308,
     "text": "Agent C sandbox",
     "fontSize": 14,
     "fontFamily": 1,
@@ -223,12 +281,55 @@
   },
 
   {
+    "type": "arrow",
+    "id": "a-a1",
+    "x": 195,
+    "y": 350,
+    "width": 0,
+    "height": 40,
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [0, 40]
+    ]
+  },
+  {
+    "type": "arrow",
+    "id": "a-a2",
+    "x": 495,
+    "y": 350,
+    "width": 0,
+    "height": 40,
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [0, 40]
+    ]
+  },
+  {
+    "type": "arrow",
+    "id": "a-a3",
+    "x": 795,
+    "y": 350,
+    "width": 0,
+    "height": 40,
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "points": [
+      [0, 0],
+      [0, 40]
+    ]
+  },
+
+  {
     "type": "rectangle",
     "id": "agent1",
-    "x": 215,
-    "y": -110,
-    "width": 170,
-    "height": 50,
+    "x": 100,
+    "y": 390,
+    "width": 190,
+    "height": 55,
     "backgroundColor": "#142229",
     "fillStyle": "solid",
     "roundness": { "type": 3 },
@@ -238,8 +339,8 @@
   {
     "type": "text",
     "id": "agent1lbl",
-    "x": 260,
-    "y": -95,
+    "x": 155,
+    "y": 405,
     "text": "Agent A",
     "fontSize": 14,
     "fontFamily": 1,
@@ -249,10 +350,10 @@
   {
     "type": "rectangle",
     "id": "agent2",
-    "x": 525,
-    "y": -110,
-    "width": 170,
-    "height": 50,
+    "x": 400,
+    "y": 390,
+    "width": 190,
+    "height": 55,
     "backgroundColor": "#142229",
     "fillStyle": "solid",
     "roundness": { "type": 3 },
@@ -262,8 +363,8 @@
   {
     "type": "text",
     "id": "agent2lbl",
-    "x": 570,
-    "y": -95,
+    "x": 455,
+    "y": 405,
     "text": "Agent B",
     "fontSize": 14,
     "fontFamily": 1,
@@ -273,10 +374,10 @@
   {
     "type": "rectangle",
     "id": "agent3",
-    "x": 805,
-    "y": -110,
-    "width": 170,
-    "height": 50,
+    "x": 700,
+    "y": 390,
+    "width": 190,
+    "height": 55,
     "backgroundColor": "#142229",
     "fillStyle": "solid",
     "roundness": { "type": 3 },
@@ -286,8 +387,8 @@
   {
     "type": "text",
     "id": "agent3lbl",
-    "x": 850,
-    "y": -95,
+    "x": 755,
+    "y": 405,
     "text": "Agent C",
     "fontSize": 14,
     "fontFamily": 1,
@@ -295,53 +396,10 @@
   },
 
   {
-    "type": "arrow",
-    "id": "a-a1",
-    "x": 300,
-    "y": -60,
-    "width": 0,
-    "height": 30,
-    "strokeColor": "#5BA4CF",
-    "strokeWidth": 2,
-    "points": [
-      [0, 0],
-      [0, 30]
-    ]
-  },
-  {
-    "type": "arrow",
-    "id": "a-a2",
-    "x": 610,
-    "y": -60,
-    "width": 0,
-    "height": 30,
-    "strokeColor": "#5BA4CF",
-    "strokeWidth": 2,
-    "points": [
-      [0, 0],
-      [0, 30]
-    ]
-  },
-  {
-    "type": "arrow",
-    "id": "a-a3",
-    "x": 890,
-    "y": -60,
-    "width": 0,
-    "height": 30,
-    "strokeColor": "#5BA4CF",
-    "strokeWidth": 2,
-    "points": [
-      [0, 0],
-      [0, 30]
-    ]
-  },
-
-  {
     "type": "text",
     "id": "note",
-    "x": 230,
-    "y": 190,
+    "x": 180,
+    "y": 470,
     "text": "Each agent reads and writes its own fork — full isolation, no data copied",
     "fontSize": 14,
     "fontFamily": 1,

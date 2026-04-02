@@ -22,8 +22,8 @@ A video platform stores 1 TB of content and serves 10 TB of egress per month.
 | Cost component    | Tigris  | AWS S3   | Google Cloud Storage | Cloudflare R2 |
 | ----------------- | ------- | -------- | -------------------- | ------------- |
 | Storage (1 TB)    | $20     | $23      | $20                  | $15           |
-| Egress (10 TB)    | $0      | $920     | $1,200               | $0            |
-| **Monthly total** | **$20** | **$943** | **$1,220**           | **$15**       |
+| Egress (10 TB)    | $0      | $900     | $1,200               | $0            |
+| **Monthly total** | **$20** | **$923** | **$1,220**           | **$15**       |
 
 Tigris and R2 both eliminate egress fees. Where Tigris differentiates is
 automatic global distribution — data is cached close to users without needing a
@@ -37,8 +37,8 @@ across regions.
 | Cost component    | Tigris   | AWS S3     | Google Cloud Storage | Cloudflare R2 |
 | ----------------- | -------- | ---------- | -------------------- | ------------- |
 | Storage (10 TB)   | $200     | $230       | $200                 | $150          |
-| Egress (50 TB)    | $0       | $4,300     | $5,500               | $0            |
-| **Monthly total** | **$200** | **$4,530** | **$5,700**           | **$150**      |
+| Egress (50 TB)    | $0       | $4,500     | $6,000               | $0            |
+| **Monthly total** | **$200** | **$4,730** | **$6,200**           | **$150**      |
 
 At this scale, egress dominates the bill on traditional cloud providers. With
 Tigris, costs scale linearly with storage — downloading a model 100 times costs
@@ -52,10 +52,10 @@ million PUT requests and 20 million GET requests.
 | Cost component     | Tigris  | AWS S3   | Google Cloud Storage | Cloudflare R2 |
 | ------------------ | ------- | -------- | -------------------- | ------------- |
 | Storage (500 GB)   | $10.00  | $11.50   | $10.00               | $7.50         |
-| Egress (2 TB)      | $0      | $184     | $240                 | $0            |
+| Egress (2 TB)      | $0      | $180     | $240                 | $0            |
 | PUT requests (2M)  | $10.00  | $10.00   | $10.00               | $9.00         |
 | GET requests (20M) | $10.00  | $8.00    | $8.00                | $7.20         |
-| **Monthly total**  | **$30** | **$214** | **$268**             | **$24**       |
+| **Monthly total**  | **$30** | **$210** | **$268**             | **$24**       |
 
 Even at moderate egress levels, transfer costs on AWS and GCS add up fast.
 

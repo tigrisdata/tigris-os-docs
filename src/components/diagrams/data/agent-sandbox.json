@@ -2,7 +2,7 @@
   {
     "type": "text",
     "id": "title",
-    "x": 280,
+    "x": 370,
     "y": 0,
     "text": "Agent Sandbox Forking",
     "fontSize": 18,
@@ -200,8 +200,8 @@
   {
     "type": "text",
     "id": "forklbl",
-    "x": 640,
-    "y": 235,
+    "x": 830,
+    "y": 245,
     "text": "instant zero-copy fork",
     "fontSize": 13,
     "fontFamily": 1,
@@ -401,7 +401,7 @@
   {
     "type": "text",
     "id": "note",
-    "x": 180,
+    "x": 160,
     "y": 470,
     "text": "Each agent reads and writes its own fork — full isolation, no data copied",
     "fontSize": 14,

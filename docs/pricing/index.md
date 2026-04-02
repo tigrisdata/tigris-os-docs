@@ -17,8 +17,6 @@ Every account includes a generous free tier each month:
 | Class A requests | 10,000 / month  |
 | Class B requests | 100,000 / month |
 
-A payment method is required to create an account.
-
 ## Storage
 
 | Tier                      | Price       | Minimum retention |

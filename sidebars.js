@@ -507,6 +507,7 @@ const sidebars = {
             "objects/access-objects-via-cookies",
             "objects/acl",
             "objects/object-rename",
+            "objects/bundle",
           ],
         },
         {

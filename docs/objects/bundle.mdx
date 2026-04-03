@@ -1,0 +1,291 @@
+# Bundle API
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+The Bundle API lets you fetch multiple objects from a bucket as a streaming tar
+archive in a single HTTP request. Instead of making one request per object, you
+send a list of keys and receive a tar stream — assembled on the fly with no
+server-side buffering.
+
+This is designed for **ML training workloads** where dataloaders need to fetch
+thousands of images or samples per batch. The Bundle API eliminates per-object
+HTTP overhead and removes the need to pre-materialize shard files (tarballs,
+parquet files, etc.).
+
+## How it works
+
+```
+POST /{bucket}?bundle HTTP/1.1
+x-tigris-bundle-format: tar
+Content-Type: application/json
+
+{"keys": ["train/img_001.jpg", "train/img_002.jpg", "train/img_003.jpg"]}
+```
+
+The server streams back a tar archive containing those objects, in the order you
+requested. Each tar entry's filename is the full object key.
+
+## Request headers
+
+| Header                        | Required | Values                     | Default |
+| ----------------------------- | -------- | -------------------------- | ------- |
+| `x-tigris-bundle-format`      | Yes      | `tar`                      | —       |
+| `x-tigris-bundle-compression` | No       | `none` \| `gzip` \| `zstd` | `none`  |
+| `x-tigris-bundle-on-error`    | No       | `fail` \| `skip`           | `skip`  |
+
+## Request body
+
+Send a JSON array of object keys:
+
+```json
+{
+  "keys": [
+    "dataset/train/img_00001.jpg",
+    "dataset/train/img_00002.jpg",
+    "dataset/train/img_00003.jpg"
+  ]
+}
+```
+
+XML is also supported:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Bundle xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+  <Object><Key>dataset/train/img_00001.jpg</Key></Object>
+  <Object><Key>dataset/train/img_00002.jpg</Key></Object>
+</Bundle>
+```
+
+## Compression
+
+| Value  | Content-Type        | When to use                                      |
+| ------ | ------------------- | ------------------------------------------------ |
+| `none` | `application/x-tar` | Default. Best for JPEG/PNG (already compressed). |
+| `gzip` | `application/gzip`  | Mixed content or bandwidth-constrained links.    |
+| `zstd` | `application/zstd`  | Best ratio + speed for large bundles.            |
+
+**Tip:** For image training data, use `none` — double-compressing JPEG/PNG
+wastes CPU for negligible size reduction.
+
+## Error handling
+
+### Skip mode (default)
+
+Missing or inaccessible objects are silently omitted from the tar. A
+`__bundle_errors.json` entry is appended at the end of the archive:
+
+```json
+{
+  "skipped": [{ "key": "dataset/train/img_00002.jpg", "reason": "NoSuchKey" }]
+}
+```
+
+This is the recommended mode for training pipelines. Dataloaders already handle
+missing samples gracefully.
+
+### Fail mode
+
+Set `x-tigris-bundle-on-error: fail` to pre-validate all keys before streaming.
+If any key is missing, the server returns a **404** error with the list of
+missing keys — no partial tar is sent.
+
+```xml
+<Error>
+  <Code>BundleKeyNotFound</Code>
+  <Message>One or more keys could not be resolved</Message>
+  <MissingKeys>
+    <Key>dataset/train/img_00002.jpg</Key>
+  </MissingKeys>
+</Error>
+```
+
+Use fail mode for inference or serving where every object must be present.
+
+## Limits
+
+| Parameter            | Limit  |
+| -------------------- | ------ |
+| Max keys per request | 5,000  |
+| Max assembled size   | 50 GB  |
+| Max request body     | 5 MB   |
+| Request timeout      | 15 min |
+
+## Authentication
+
+Standard S3 SigV4 authentication. The caller must have `s3:GetObject` permission
+on the bucket. No new IAM actions are required.
+
+## SDK examples
+
+<Tabs groupId="languages">
+<TabItem value="python" label="Python">
+
+```bash
+pip install tigris-boto3-ext
+```
+
+```python
+import tarfile
+from tigris_boto3_ext import bundle_objects
+
+response = bundle_objects(s3_client, "my-bucket", [
+    "dataset/train/img_001.jpg",
+    "dataset/train/img_002.jpg",
+])
+
+with tarfile.open(fileobj=response, mode="r|") as tar:
+    for member in tar:
+        if member.name == "__bundle_errors.json":
+            continue
+        f = tar.extractfile(member)
+        if f is not None:
+            image_bytes = f.read()
+```
+
+</TabItem>
+<TabItem value="go" label="Go">
+
+Using `storage-go`:
+
+Install the SDK:
+
+```bash
+go get github.com/tigrisdata/storage-go
+```
+
+```go
+import (
+    "archive/tar"
+    "io"
+    "log"
+
+    storage "github.com/tigrisdata/storage-go"
+)
+
+output, err := client.BundleObjects(ctx, &storage.BundleObjectsInput{
+    Bucket: "my-bucket",
+    Keys: []string{
+        "dataset/train/img_001.jpg",
+        "dataset/train/img_002.jpg",
+        "dataset/train/img_003.jpg",
+    },
+})
+if err != nil {
+    log.Fatal(err)
+}
+defer output.Body.Close()
+
+tr := tar.NewReader(output.Body)
+for {
+    hdr, err := tr.Next()
+    if err == io.EOF {
+        break
+    }
+    if err != nil {
+        log.Fatal(err)
+    }
+    if hdr.Name == "__bundle_errors.json" {
+        continue
+    }
+
+    data, _ := io.ReadAll(tr)
+    // process hdr.Name, data
+}
+```
+
+</TabItem>
+<TabItem value="js" label="JavaScript">
+
+```bash
+npm install @tigrisdata/storage tar-stream
+```
+
+```js
+import { bundle } from "@tigrisdata/storage/server";
+import tar from "tar-stream"; // npm install tar-stream
+
+const result = await bundle("my-bucket", [
+  "dataset/train/img_001.jpg",
+  "dataset/train/img_002.jpg",
+]);
+
+if (result.error) {
+  throw result.error;
+}
+
+// Pipe the streaming response through a tar parser
+const extract = tar.extract();
+
+extract.on("entry", (header, stream, next) => {
+  if (header.name === "__bundle_errors.json") {
+    stream.resume();
+    next();
+    return;
+  }
+
+  const chunks = [];
+  stream.on("data", (chunk) => chunks.push(chunk));
+  stream.on("end", () => {
+    const data = Buffer.concat(chunks);
+    console.log(`${header.name}: ${data.length} bytes`);
+    next();
+  });
+  stream.resume();
+});
+
+// Convert ReadableStream to Node stream and pipe
+const { Readable } = await import("stream");
+Readable.fromWeb(result.data.body).pipe(extract);
+```
+
+</TabItem>
+</Tabs>
+
+## PyTorch DataLoader integration
+
+The Bundle API integrates naturally with PyTorch dataloaders. Instead of
+fetching one image per `__getitem__` call, fetch a batch at a time:
+
+```python
+class TigrisBundleDataset(torch.utils.data.IterableDataset):
+    def __init__(self, metadata_path, bucket, batch_size=32, prefetch=20):
+        self.bucket = bucket
+        self.batch_size = batch_size
+        self.prefetch = prefetch
+        self.batches = build_batches(metadata_path, batch_size)
+
+    def __iter__(self):
+        worker_info = torch.utils.data.get_worker_info()
+        if worker_info is None:
+            my_batches = self.batches
+        else:
+            my_batches = self.batches[worker_info.id::worker_info.num_workers]
+        random.shuffle(my_batches)
+
+        for i in range(0, len(my_batches), self.prefetch):
+            chunk = my_batches[i : i + self.prefetch]
+            keys = [row["key"] for batch in chunk for row in batch]
+
+            response = bundle_objects(s3_client, self.bucket, keys)
+            with tarfile.open(fileobj=response, mode="r|") as tar:
+                for member in tar:
+                    if member.name == "__bundle_errors.json":
+                        continue
+                    f = tar.extractfile(member)
+                    if f is None:
+                        continue
+                    image = Image.open(BytesIO(f.read())).convert("RGB")
+                    yield {"image": image}
+```
+
+## Response trailers
+
+After the stream completes, the response includes HTTP trailers:
+
+| Trailer                   | Description                        |
+| ------------------------- | ---------------------------------- |
+| `x-tigris-bundle-count`   | Number of objects in the tar       |
+| `x-tigris-bundle-bytes`   | Total bytes streamed               |
+| `x-tigris-bundle-skipped` | Number of skipped keys (skip mode) |

@@ -90,12 +90,17 @@ to Agent B, which reads the object and continues the workflow.
 
 #### 1. Configure the notification
 
-Set up an object notification rule in the
-[Tigris Dashboard](https://console.tigris.dev) or via the API, pointing at your
-webhook endpoint. Filter to the prefix and event type you care about. Tigris
-supports
+Set up an object notification rule pointing at your webhook endpoint. Filter to
+the prefix you care about. Tigris supports
 [basic and bearer token authentication](/docs/buckets/object-notifications/#webhook-authentication)
 on webhook endpoints — enable this so only Tigris can trigger your handler.
+
+```bash
+tigris buckets set-notifications coordination-bucket \
+  --url https://example.com/webhook \
+  --filter 'WHERE `key` REGEXP "^results/"' \
+  --token "$WEBHOOK_SECRET"
+```
 
 #### 2. Agent A writes artifacts
 

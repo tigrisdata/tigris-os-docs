@@ -42,19 +42,18 @@ Now, anyone can read this file without authentication.
 
 ### Public bucket domains
 
-Every public bucket is automatically served over several Tigris-managed domains.
-Using `foo-public-bucket` as an example, the bucket is accessible at:
+Every public bucket is automatically served over several dedicated public
+content domains. Using `foo-public-bucket` as an example, the bucket is
+accessible at:
 
-| Domain                               | Example URL                                                |
-| ------------------------------------ | ---------------------------------------------------------- |
-| `BUCKET_NAME.fly.storage.tigris.dev` | `https://foo-public-bucket.fly.storage.tigris.dev/bar.txt` |
-| `BUCKET_NAME.t3.tigrisblob.io`       | `https://foo-public-bucket.t3.tigrisblob.io/bar.txt`       |
-| `BUCKET_NAME.t3.tigrisfiles.io`      | `https://foo-public-bucket.t3.tigrisfiles.io/bar.txt`      |
-| `BUCKET_NAME.t3.tigrisbucket.io`     | `https://foo-public-bucket.t3.tigrisbucket.io/bar.txt`     |
+| Domain                           | Example URL                                            |
+| -------------------------------- | ------------------------------------------------------ |
+| `BUCKET_NAME.t3.tigrisfiles.io`  | `https://foo-public-bucket.t3.tigrisfiles.io/bar.txt`  |
+| `BUCKET_NAME.t3.tigrisbucket.io` | `https://foo-public-bucket.t3.tigrisbucket.io/bar.txt` |
+| `BUCKET_NAME.t3.tigrisblob.io`   | `https://foo-public-bucket.t3.tigrisblob.io/bar.txt`   |
 
-All domains serve the same content without authentication and are
-interchangeable. The `fly.storage.tigris.dev` domain is available for buckets
-created through Fly.io.
+All three domains serve the same content without authentication and are
+interchangeable.
 
 :::warning
 
@@ -136,6 +135,6 @@ gives you:
   your bucket name contains dots.
 
 To set up a custom domain, create a CNAME record pointing your domain to
-`foo-public-bucket.t3.storage.dev` and then configure the domain in your bucket
-settings. See the [Custom Domains](./custom-domain.md) guide for full
+`foo-public-bucket.t3.tigrisbucket.io` and then configure the domain in your
+bucket settings. See the [Custom Domains](./custom-domain.md) guide for full
 instructions.

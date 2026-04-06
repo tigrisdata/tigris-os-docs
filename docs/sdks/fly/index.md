@@ -67,28 +67,26 @@ fly storage create --public
 
 ### Accessing objects in a public bucket
 
-Objects in a public bucket can be read by anyone without authentication. Each
-public bucket is accessible at `bucket-name.fly.storage.tigris.dev`:
+Objects in a public bucket can be read by anyone without authentication. Public
+content is served from dedicated domains using the bucket name as a subdomain:
 
-```text
-https://bucket-name.fly.storage.tigris.dev/path/to/object.jpg
-```
+- `https://bucket-name.t3.tigrisfiles.io/key-name` (primary)
+- `https://bucket-name.t3.tigrisbucket.io/key-name`
+- `https://bucket-name.t3.tigrisblob.io/key-name`
 
 For example, if you created a public bucket called `my-assets` and uploaded
 `logo.png`, anyone can access it at:
 
 ```text
-https://my-assets.fly.storage.tigris.dev/logo.png
+https://my-assets.t3.tigrisfiles.io/logo.png
 ```
 
 No credentials or signed URLs are needed — the URL works directly in a browser,
 `curl`, `wget`, `<img>` tags, etc.
 
-Public buckets are also accessible via the Tigris-managed domains
-(`bucket-name.t3.tigrisblob.io`, `bucket-name.t3.tigrisfiles.io`,
-`bucket-name.t3.tigrisbucket.io`). See the
-[Public Bucket](/docs/buckets/public-bucket/) guide for full details including
-custom domains.
+For production use, we recommend setting up a
+[custom domain](/docs/buckets/custom-domain/) so your public URLs stay stable.
+See the [Public Bucket](/docs/buckets/public-bucket/) guide for full details.
 
 ### Updating bucket public access
 
@@ -114,7 +112,7 @@ flyctl storage update bucket-name --custom-domain images.example.com
 ```
 
 For this to work, you need to create a CNAME record for `images.example.com`
-that points to `bucket-name.fly.storage.tigris.dev`.
+that points to `bucket-name.t3.tigrisbucket.io`.
 
 ### Remove the custom domain
 

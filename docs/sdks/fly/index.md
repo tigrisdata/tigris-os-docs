@@ -65,6 +65,31 @@ By default, buckets are private. You can create a public bucket by passing the
 fly storage create --public
 ```
 
+### Accessing objects in a public bucket
+
+Objects in a public bucket can be read by anyone without authentication. Each
+public bucket is accessible at `bucket-name.fly.storage.tigris.dev`:
+
+```text
+https://bucket-name.fly.storage.tigris.dev/path/to/object.jpg
+```
+
+For example, if you created a public bucket called `my-assets` and uploaded
+`logo.png`, anyone can access it at:
+
+```text
+https://my-assets.fly.storage.tigris.dev/logo.png
+```
+
+No credentials or signed URLs are needed — the URL works directly in a browser,
+`curl`, `wget`, `<img>` tags, etc.
+
+Public buckets are also accessible via the Tigris-managed domains
+(`bucket-name.t3.tigrisblob.io`, `bucket-name.t3.tigrisfiles.io`,
+`bucket-name.t3.tigrisbucket.io`). See the
+[Public Bucket](/docs/buckets/public-bucket/) guide for full details including
+custom domains.
+
 ### Updating bucket public access
 
 You can make a private bucket public or a public bucket private by using the

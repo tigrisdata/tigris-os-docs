@@ -42,16 +42,28 @@ Now, anyone can read this file without authentication.
 
 ### Public bucket domains
 
-Every public bucket is automatically served over three Tigris-managed domains.
-Using `foo-public-bucket` as an example, the bucket is accessible at:
+Every public bucket is automatically served over several dedicated public
+content domains. Using `foo-public-bucket` as an example, the bucket is
+accessible at:
 
 | Domain                           | Example URL                                            |
 | -------------------------------- | ------------------------------------------------------ |
-| `BUCKET_NAME.t3.tigrisblob.io`   | `https://foo-public-bucket.t3.tigrisblob.io/bar.txt`   |
 | `BUCKET_NAME.t3.tigrisfiles.io`  | `https://foo-public-bucket.t3.tigrisfiles.io/bar.txt`  |
 | `BUCKET_NAME.t3.tigrisbucket.io` | `https://foo-public-bucket.t3.tigrisbucket.io/bar.txt` |
+| `BUCKET_NAME.t3.tigrisblob.io`   | `https://foo-public-bucket.t3.tigrisblob.io/bar.txt`   |
 
-All three domains serve the same content and are interchangeable.
+All three domains serve the same content without authentication and are
+interchangeable.
+
+:::info[Existing Fly.io accounts]
+
+Existing Fly.io accounts can also access public content at
+`BUCKET_NAME.fly.storage.tigris.dev`. This continues to work but is not
+available for new accounts. We recommend setting up a
+[custom domain](#custom-domain) for production use regardless of which domain
+you currently use.
+
+:::
 
 :::warning
 
@@ -133,6 +145,6 @@ gives you:
   your bucket name contains dots.
 
 To set up a custom domain, create a CNAME record pointing your domain to
-`foo-public-bucket.t3.storage.dev` and then configure the domain in your bucket
-settings. See the [Custom Domains](./custom-domain.md) guide for full
+`foo-public-bucket.t3.tigrisbucket.io` and then configure the domain in your
+bucket settings. See the [Custom Domains](./custom-domain.md) guide for full
 instructions.

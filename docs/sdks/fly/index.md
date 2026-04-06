@@ -65,6 +65,37 @@ By default, buckets are private. You can create a public bucket by passing the
 fly storage create --public
 ```
 
+### Accessing objects in a public bucket
+
+Objects in a public bucket can be read by anyone without authentication. Public
+content is served from dedicated domains using the bucket name as a subdomain:
+
+- `https://bucket-name.t3.tigrisfiles.io/key-name` (primary)
+- `https://bucket-name.t3.tigrisbucket.io/key-name`
+- `https://bucket-name.t3.tigrisblob.io/key-name`
+
+For example, if you created a public bucket called `my-assets` and uploaded
+`logo.png`, anyone can access it at:
+
+```text
+https://my-assets.t3.tigrisfiles.io/logo.png
+```
+
+No credentials or signed URLs are needed — the URL works directly in a browser,
+`curl`, `wget`, `<img>` tags, etc.
+
+:::info
+
+Existing Fly.io accounts can also access public content at
+`bucket-name.fly.storage.tigris.dev`. This continues to work but is not
+available for new accounts.
+
+:::
+
+For production use, we recommend setting up a
+[custom domain](/docs/buckets/custom-domain/) so your public URLs stay stable.
+See the [Public Bucket](/docs/buckets/public-bucket/) guide for full details.
+
 ### Updating bucket public access
 
 You can make a private bucket public or a public bucket private by using the
@@ -89,7 +120,7 @@ flyctl storage update bucket-name --custom-domain images.example.com
 ```
 
 For this to work, you need to create a CNAME record for `images.example.com`
-that points to `bucket-name.fly.storage.tigris.dev`.
+that points to `bucket-name.t3.tigrisbucket.io`.
 
 ### Remove the custom domain
 

@@ -55,6 +55,16 @@ accessible at:
 All three domains serve the same content without authentication and are
 interchangeable.
 
+:::info[Existing Fly.io accounts]
+
+Existing Fly.io accounts can also access public content at
+`BUCKET_NAME.fly.storage.tigris.dev`. This continues to work but is not
+available for new accounts. We recommend setting up a
+[custom domain](#custom-domain) for production use regardless of which domain
+you currently use.
+
+:::
+
 :::warning
 
 The public bucket domains don’t work with dots in bucket names because the SSL

@@ -452,6 +452,11 @@ const sidebars = {
                   label: "Fly.io",
                   id: "sdks/fly/index",
                 },
+                {
+                  type: "doc",
+                  label: "Weka",
+                  id: "guides/weka",
+                },
               ],
             },
           ],

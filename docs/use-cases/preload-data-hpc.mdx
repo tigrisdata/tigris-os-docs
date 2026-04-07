@@ -37,71 +37,115 @@ then write results back. Pay for fast storage only when you're using it.
   </div>
 </div>
 
-### Benefits
+## Prerequisites
 
-<details>
-<summary>Global data, local compute</summary>
+- A [Weka](https://www.weka.io/) cluster with admin access
+- A Tigris bucket — create one at [storage.new](https://storage.new)
+- A Tigris access keypair — create one at
+  [storage.new/accesskey](https://storage.new/accesskey)
 
-A single [global bucket](/docs/buckets/locations/) makes datasets available from
-any region. Reads pull from the nearest replica automatically — no per-region
-copies to manage, no cross-region prefetch delays.
+## Option 1: Weka tiering with Tigris
 
-</details>
+Weka's built-in tiering connects directly to S3-compatible object stores. Data
+flows between Weka's local SSD tier and Tigris automatically based on access
+patterns and retention policies.
 
-<details>
-<summary>Zero egress costs</summary>
+### Add Tigris as an object store
 
-Tigris doesn't charge for egress. Copying the same 500 GB dataset across 50
-compute nodes costs nothing in transfer fees, regardless of which cloud or
-region those nodes are in.
+```bash
+weka fs tier s3 add tigris-store \
+  --hostname t3.storage.dev \
+  --port 443 \
+  --bucket my-dataset \
+  --auth-method AWSSignature4 \
+  --access-key-id <TIGRIS_ACCESS_KEY_ID> \
+  --secret-key <TIGRIS_SECRET_ACCESS_KEY> \
+  --region auto \
+  --protocol HTTPS
+```
 
-</details>
+### Attach the object store to a filesystem
 
-<details>
-<summary>Incremental sync</summary>
+```bash
+weka fs tier s3 attach my-fs tigris-store
+```
+
+This enables writable tiering by default — Weka caches hot data on local SSDs
+and tiers cold data to Tigris. For read-only access to existing Tigris data, use
+`--mode remote`.
+
+### Fetch data on demand
+
+Once attached, reads from tiered files automatically pull data from Tigris. To
+prefetch data before a job starts:
+
+```bash
+# Fetch a specific directory
+weka fs tier fetch /mnt/weka/data/
+
+# Batch fetch for large datasets
+find -L /mnt/weka/data -type f | xargs -r -n512 -P64 weka fs tier fetch -v
+```
+
+### Release data back to Tigris
+
+After a job completes, release local copies to free SSD space:
+
+```bash
+weka fs tier release /mnt/weka/results/
+```
+
+### Check where data lives
+
+```bash
+weka fs tier location /mnt/weka/data/file.bin
+```
+
+### Bulk import mode
+
+For initial data import, mount Weka with the `obs_direct` option. Writes go to
+SSD and immediately schedule release to the object store; reads pull from the
+object store without promoting to SSD. Do not use this mode for production
+workloads.
+
+## Option 2: Sync with aws s3 sync
+
+If you don't need Weka-managed tiering, sync data directly from Tigris into
+Weka's mounted filesystem before compute starts.
+
+```bash
+# Sync from Tigris into the parallel filesystem
+aws s3 sync s3://my-dataset /mnt/weka/data \
+  --endpoint-url https://t3.storage.dev
+
+# Run your compute workload
+# ...
+
+# Write results back to Tigris
+aws s3 cp /mnt/weka/results/ s3://my-results/ --recursive \
+  --endpoint-url https://t3.storage.dev
+```
 
 For datasets that don't change between runs, `aws s3 sync` is incremental — only
 new or modified objects transfer. Add `--size-only` to skip unchanged files
 based on size rather than checksumming every object, cutting sync time on repeat
 runs.
 
-</details>
+## Tips
 
-### Copy to a parallel filesystem
+- **Zero egress costs.** Tigris doesn't charge for egress, so syncing the same
+  dataset across many nodes costs nothing in transfer fees regardless of cloud
+  or region.
+- **Global reads.** Tigris serves from the nearest replica. Sync jobs saturate
+  the available link regardless of where the cluster is located.
+- **Don't touch Weka-managed objects.** When using tiering, do not manually
+  delete or apply lifecycle policies to objects Weka writes to the Tigris
+  bucket. Weka manages those objects internally — manual interference risks data
+  loss.
 
-HPC clusters typically use a high-performance parallel filesystem — Weka, VAST,
-DDN, or a managed Lustre product — for shared data access across compute nodes.
-Tigris serves as the durable, globally accessible source of truth. A separate
-ingestion job copies data from Tigris into the parallel filesystem before
-compute begins, and results are written back when the job completes.
+## Related
 
-Because Tigris serves reads from the nearest replica, the sync job saturates the
-available link regardless of where the cluster is located. For datasets that
-don't change between runs, `aws s3 sync` is incremental — only new or modified
-objects transfer.
-
-```bash
-# Copy from Tigris into the parallel filesystem
-aws s3 sync s3://my-dataset /mnt/weka/data \
-  --endpoint-url https://t3.storage.dev
-
-# Compute nodes mount /mnt/weka/data via CSI at full filesystem speed
-# ... run HPC workload ...
-
-# Write results back to Tigris when done
-aws s3 cp /mnt/weka/results/ s3://my-results/ --recursive \
-  --endpoint-url https://t3.storage.dev
-```
-
-Weka, VAST, DDN, and managed Lustre products all provide S3 data-import features
-and Kubernetes CSI plugins that make the copy → mount → compute → writeback
-cycle straightforward.
-
-### NVIDIA GPUDirect Storage
-
-For GPU-heavy HPC workloads, NVIDIA's
-[GPUDirect Storage](https://docs.nvidia.com/gpudirect-storage/overview-guide/)
-enables direct NVMe-to-GPU data paths, bypassing the CPU during data loading.
-This is a capability of the local filesystem and NVIDIA hardware — once data has
-been copied from Tigris to local NVMe or a parallel filesystem, GPUDirect
-Storage can accelerate how that data reaches the GPU.
+- [AWS CLI quickstart](/docs/sdks/s3/aws-cli/) — setting up the AWS CLI with
+  Tigris
+- [Bucket locations](/docs/buckets/locations/) — how global buckets and region
+  placement work

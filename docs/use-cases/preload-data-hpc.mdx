@@ -10,7 +10,7 @@ import DiagramLightbox from "@site/src/components/diagrams/DiagramLightbox";
 
 ## Stage data before compute starts
 
-_Hydrate datasets to local NVMe or parallel filesystems. Keep Tigris as the
+_Copy datasets to local NVMe or parallel filesystems. Keep Tigris as the
 durable source of truth._
 
 <div className="use-case-hero">
@@ -21,9 +21,9 @@ need datasets staged on fast local storage before compute begins. Network
 latency during computation is unacceptable, but keeping terabytes on
 high-performance filesystems around the clock is expensive.
 
-Tigris acts as the globally accessible, durable store. Hydrate data out of it
-into local NVMe or a parallel filesystem for the duration of a job, then write
-results back. Pay for fast storage only when you're using it.
+Tigris acts as the globally accessible, durable store. Use standard S3 tools to
+copy data into local NVMe or a parallel filesystem for the duration of a job,
+then write results back. Pay for fast storage only when you're using it.
 
 [Get started →](/docs/guides/weka/)
 
@@ -43,15 +43,15 @@ results back. Pay for fast storage only when you're using it.
 <summary>Global data, local compute</summary>
 
 A single [global bucket](/docs/buckets/locations/) makes datasets available from
-any region. Hydration jobs pull from the nearest replica automatically — no
-per-region copies to manage, no cross-region prefetch delays.
+any region. Reads pull from the nearest replica automatically — no per-region
+copies to manage, no cross-region prefetch delays.
 
 </details>
 
 <details>
 <summary>Zero egress costs</summary>
 
-Tigris doesn't charge for egress. Hydrating the same 500 GB dataset across 50
+Tigris doesn't charge for egress. Copying the same 500 GB dataset across 50
 compute nodes costs nothing in transfer fees, regardless of which cloud or
 region those nodes are in.
 
@@ -62,12 +62,12 @@ region those nodes are in.
 
 For datasets that don't change between runs, `aws s3 sync` is incremental — only
 new or modified objects transfer. Add `--size-only` to skip unchanged files
-based on size rather than checksumming every object, cutting hydration time on
-repeat runs.
+based on size rather than checksumming every object, cutting sync time on repeat
+runs.
 
 </details>
 
-### Hydrate to a parallel filesystem
+### Copy to a parallel filesystem
 
 HPC clusters typically use a high-performance parallel filesystem — Weka, VAST,
 DDN, or a managed Lustre product — for shared data access across compute nodes.
@@ -75,13 +75,13 @@ Tigris serves as the durable, globally accessible source of truth. A separate
 ingestion job copies data from Tigris into the parallel filesystem before
 compute begins, and results are written back when the job completes.
 
-Because Tigris serves reads from the nearest replica, the hydration job
-saturates the available link regardless of where the cluster is located. For
-datasets that don't change between runs, `aws s3 sync` is incremental — only new
-or modified objects transfer.
+Because Tigris serves reads from the nearest replica, the sync job saturates
+the available link regardless of where the cluster is located. For datasets that
+don't change between runs, `aws s3 sync` is incremental — only new or modified
+objects transfer.
 
 ```bash
-# Hydrate from Tigris into the parallel filesystem
+# Copy from Tigris into the parallel filesystem
 aws s3 sync s3://my-dataset /mnt/weka/data \
   --endpoint-url https://t3.storage.dev
 
@@ -94,7 +94,7 @@ aws s3 cp /mnt/weka/results/ s3://my-results/ --recursive \
 ```
 
 Weka, VAST, DDN, and managed Lustre products all provide S3 data-import features
-and Kubernetes CSI plugins that make the hydrate → mount → compute → writeback
+and Kubernetes CSI plugins that make the copy → mount → compute → writeback
 cycle straightforward.
 
 ### NVIDIA GPUDirect Storage
@@ -102,4 +102,6 @@ cycle straightforward.
 For GPU-heavy HPC workloads, NVIDIA's
 [GPUDirect Storage](https://docs.nvidia.com/gpudirect-storage/overview-guide/)
 enables direct NVMe-to-GPU data paths, bypassing the CPU during data loading.
-Combine with Tigris hydration to the parallel filesystem for maximum throughput.
+This is a capability of the local filesystem and NVIDIA hardware — once data has
+been copied from Tigris to local NVMe or a parallel filesystem, GPUDirect
+Storage can accelerate how that data reaches the GPU.

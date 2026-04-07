@@ -74,7 +74,7 @@ access patterns — there are no additional replication fees.
 ## Enterprise
 
 For larger workloads or custom requirements,
-[contact us](https://www.tigrisdata.com/contact/) for enterprise pricing.
+[contact us](mailto:help@tigrisdata.com) for enterprise pricing.
 
 ## A note on units
 

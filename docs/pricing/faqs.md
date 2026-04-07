@@ -65,5 +65,5 @@ You are only billed for requests beyond those limits.
 ### When should I consider enterprise pricing?
 
 If you have large-scale storage needs, require custom SLAs, or need dedicated
-support, [contact us](https://www.tigrisdata.com/contact/) to discuss enterprise
+support, [contact us](mailto:help@tigrisdata.com) to discuss enterprise
 options.

@@ -1171,3 +1171,19 @@ table td {
 [data-theme="dark"] .dashboard-screenshot img {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
 }
+
+/* Scalar API Reference: reset Docusaurus layout constraints */
+html.plugin-\@scalar\/docusaurus .main-wrapper {
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+html.plugin-\@scalar\/docusaurus .main-wrapper > div {
+  max-width: 100%;
+  width: 100%;
+}
+
+html.plugin-\@scalar\/docusaurus footer.footer {
+  display: none;
+}

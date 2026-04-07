@@ -113,6 +113,9 @@ const config = {
         showNavLink: false,
         configuration: {
           url: "/docs/api/extensions/v1/api.yaml",
+          darkMode: true,
+          hideDownloadButton: false,
+          hideModels: false,
         },
       },
     ],

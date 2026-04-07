@@ -112,7 +112,7 @@
     "id": "nvmesub",
     "x": 439,
     "y": 128,
-    "text": "hydrated data",
+    "text": "staged data",
     "fontSize": 13,
     "fontFamily": 1,
     "strokeColor": "#8fa3b0"
@@ -287,7 +287,7 @@
     "id": "note",
     "x": 210,
     "y": 400,
-    "text": "Hydrate once · Compute at NVMe speed · Write results back",
+    "text": "Copy once · Compute at NVMe speed · Write results back",
     "fontSize": 14,
     "fontFamily": 1,
     "strokeColor": "#8fa3b0"

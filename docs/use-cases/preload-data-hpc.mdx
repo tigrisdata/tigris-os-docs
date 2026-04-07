@@ -10,8 +10,8 @@ import DiagramLightbox from "@site/src/components/diagrams/DiagramLightbox";
 
 ## Stage data before compute starts
 
-_Hydrate datasets to local NVMe or parallel filesystems. Keep Tigris as the
-durable source of truth._
+_Copy datasets to local NVMe or parallel filesystems. Keep Tigris as the durable
+source of truth._
 
 <div className="use-case-hero">
   <div className="use-case-hero__text">
@@ -21,9 +21,9 @@ need datasets staged on fast local storage before compute begins. Network
 latency during computation is unacceptable, but keeping terabytes on
 high-performance filesystems around the clock is expensive.
 
-Tigris acts as the globally accessible, durable store. Hydrate data out of it
-into local NVMe or a parallel filesystem for the duration of a job, then write
-results back. Pay for fast storage only when you're using it.
+Tigris acts as the globally accessible, durable store. Use standard S3 tools to
+copy data into local NVMe or a parallel filesystem for the duration of a job,
+then write results back. Pay for fast storage only when you're using it.
 
 [Get started →](/docs/guides/weka/)
 
@@ -43,17 +43,17 @@ results back. Pay for fast storage only when you're using it.
 <summary>Global data, local compute</summary>
 
 A single [global bucket](/docs/buckets/locations/) makes datasets available from
-any region. Hydration jobs pull from the nearest replica automatically — no
-per-region copies to manage, no cross-region prefetch delays.
+any region. Reads pull from the nearest replica automatically — no per-region
+copies to manage, no cross-region prefetch delays.
 
 </details>
 
 <details>
 <summary>Zero egress costs</summary>
 
-Tigris doesn't charge for egress. Hydrating the same 500 GB dataset across 50
-compute nodes costs nothing in transfer fees, regardless of which cloud or
-region those nodes are in.
+Tigris doesn't charge for egress. Syncing the same dataset across many compute
+nodes costs nothing in transfer fees, regardless of which cloud or region those
+nodes are in.
 
 </details>
 
@@ -62,44 +62,88 @@ region those nodes are in.
 
 For datasets that don't change between runs, `aws s3 sync` is incremental — only
 new or modified objects transfer. Add `--size-only` to skip unchanged files
-based on size rather than checksumming every object, cutting hydration time on
-repeat runs.
+based on size rather than checksumming every object, cutting sync time on repeat
+runs.
 
 </details>
 
-### Hydrate to a parallel filesystem
+### Pattern: Weka tiering with Tigris
 
-HPC clusters typically use a high-performance parallel filesystem — Weka, VAST,
-DDN, or a managed Lustre product — for shared data access across compute nodes.
-Tigris serves as the durable, globally accessible source of truth. A separate
-ingestion job copies data from Tigris into the parallel filesystem before
-compute begins, and results are written back when the job completes.
+[Weka](https://www.weka.io/)'s built-in tiering connects directly to
+S3-compatible object stores. Data flows between Weka's local SSD tier and Tigris
+automatically based on access patterns and retention policies.
 
-Because Tigris serves reads from the nearest replica, the hydration job
-saturates the available link regardless of where the cluster is located. For
-datasets that don't change between runs, `aws s3 sync` is incremental — only new
-or modified objects transfer.
+#### 1. Register Tigris as an object store
 
 ```bash
-# Hydrate from Tigris into the parallel filesystem
+weka fs tier s3 add tigris-store \
+  --hostname t3.storage.dev \
+  --port 443 \
+  --bucket my-dataset \
+  --auth-method AWSSignature4 \
+  --access-key-id <TIGRIS_ACCESS_KEY_ID> \
+  --secret-key <TIGRIS_SECRET_ACCESS_KEY> \
+  --region auto \
+  --protocol HTTPS
+```
+
+#### 2. Attach the object store to a filesystem
+
+```bash
+weka fs tier s3 attach my-fs tigris-store
+```
+
+This enables writable tiering by default — Weka caches hot data on local SSDs
+and tiers cold data to Tigris. For read-only access to existing Tigris data, use
+`--mode remote`.
+
+#### 3. Prefetch data before a job starts
+
+Reads from tiered files automatically pull data from Tigris, but you can
+prefetch explicitly to avoid any latency during compute:
+
+```bash
+# Fetch a specific directory
+weka fs tier fetch /mnt/weka/data/
+
+# Batch fetch for large datasets
+find -L /mnt/weka/data -type f | xargs -r -n512 -P64 weka fs tier fetch -v
+```
+
+#### 4. Release local copies when done
+
+After a job completes, release local copies to free SSD space. The data remains
+durable in Tigris.
+
+```bash
+weka fs tier release /mnt/weka/results/
+```
+
+:::note
+
+When using tiering, do not manually delete or apply lifecycle policies to
+objects Weka writes to the Tigris bucket. Weka manages those objects internally
+— manual interference risks data loss.
+
+:::
+
+### Pattern: Direct sync with aws s3 sync
+
+If your parallel filesystem doesn't support S3-backed tiering, or you want a
+simpler workflow, sync data directly from Tigris before compute starts.
+
+```bash
+# Sync from Tigris into the parallel filesystem
 aws s3 sync s3://my-dataset /mnt/weka/data \
   --endpoint-url https://t3.storage.dev
 
-# Compute nodes mount /mnt/weka/data via CSI at full filesystem speed
-# ... run HPC workload ...
+# Run your compute workload
+# ...
 
-# Write results back to Tigris when done
+# Write results back to Tigris
 aws s3 cp /mnt/weka/results/ s3://my-results/ --recursive \
   --endpoint-url https://t3.storage.dev
 ```
 
-Weka, VAST, DDN, and managed Lustre products all provide S3 data-import features
-and Kubernetes CSI plugins that make the hydrate → mount → compute → writeback
-cycle straightforward.
-
-### NVIDIA GPUDirect Storage
-
-For GPU-heavy HPC workloads, NVIDIA's
-[GPUDirect Storage](https://docs.nvidia.com/gpudirect-storage/overview-guide/)
-enables direct NVMe-to-GPU data paths, bypassing the CPU during data loading.
-Combine with Tigris hydration to the parallel filesystem for maximum throughput.
+This works with any parallel filesystem that exposes a POSIX mount — Weka, VAST,
+DDN, managed Lustre — and with local NVMe directly.

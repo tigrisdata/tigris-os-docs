@@ -52,6 +52,10 @@ In [benchmarks](/docs/overview/benchmarks/model-training), warm epochs run
 local NVMe cache provides **~200×** throughput headroom over what the GPU can
 consume.
 
+Even TAG's first fetch is fast: Tigris automatically [caches objects in the
+region closest to where they're requested](/docs/objects/caching/), so the
+initial pull comes from a nearby cache node rather than a distant origin.
+
 </details>
 
 <details>

@@ -922,9 +922,10 @@ const sidebars = {
       ],
     },
     {
-      type: "link",
+      type: "category",
       label: "Pricing",
-      href: "https://www.tigrisdata.com/pricing/",
+      collapsed: true,
+      items: ["pricing/index", "pricing/compare", "pricing/faqs"],
     },
     {
       type: "doc",

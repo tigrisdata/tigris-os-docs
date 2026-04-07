@@ -398,6 +398,11 @@ const sidebars = {
                   label: "Cognee",
                   id: "agents/agent-cognee",
                 },
+                {
+                  type: "doc",
+                  label: "Weka",
+                  id: "guides/weka",
+                },
               ],
             },
             {

@@ -81,8 +81,7 @@ const config = {
           breadcrumbs: false,
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
-          docRootComponent: "@theme/DocRoot", // added for OpenAPI plugin
-          docItemComponent: "@theme/ApiItem", // added for OpenAPI plugin
+          docRootComponent: "@theme/DocRoot",
         },
         blog: false,
         theme: {
@@ -107,21 +106,13 @@ const config = {
       },
     ],
     [
-      "docusaurus-plugin-openapi-docs",
+      "@scalar/docusaurus",
       {
-        id: "openapi", // plugin id
-        docsPluginId: "classic", // configured for preset-classic
-        config: {
-          extensions: {
-            specPath: "static/api/extensions/v1/api.yaml",
-            outputDir: "docs/partner-integrations/api",
-            sidebarOptions: {
-              groupPathsBy: "tag",
-              categoryLinkSource: "tag",
-            },
-            downloadUrl: "/docs/api/extensions/v1/api.yaml",
-            showSchemas: true,
-          },
+        label: "API Reference",
+        route: "/partner-integrations/api",
+        showNavLink: false,
+        configuration: {
+          url: "/docs/api/extensions/v1/api.yaml",
         },
       },
     ],
@@ -405,7 +396,7 @@ const config = {
       onBrokenMarkdownLinks: "throw",
     },
   },
-  themes: ["@docusaurus/theme-mermaid", "docusaurus-theme-openapi-docs"],
+  themes: ["@docusaurus/theme-mermaid"],
 };
 
 module.exports = config;

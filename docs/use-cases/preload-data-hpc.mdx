@@ -10,8 +10,8 @@ import DiagramLightbox from "@site/src/components/diagrams/DiagramLightbox";
 
 ## Stage data before compute starts
 
-_Copy datasets to local NVMe or parallel filesystems. Keep Tigris as the
-durable source of truth._
+_Copy datasets to local NVMe or parallel filesystems. Keep Tigris as the durable
+source of truth._
 
 <div className="use-case-hero">
   <div className="use-case-hero__text">
@@ -75,8 +75,8 @@ Tigris serves as the durable, globally accessible source of truth. A separate
 ingestion job copies data from Tigris into the parallel filesystem before
 compute begins, and results are written back when the job completes.
 
-Because Tigris serves reads from the nearest replica, the sync job saturates
-the available link regardless of where the cluster is located. For datasets that
+Because Tigris serves reads from the nearest replica, the sync job saturates the
+available link regardless of where the cluster is located. For datasets that
 don't change between runs, `aws s3 sync` is incremental — only new or modified
 objects transfer.
 

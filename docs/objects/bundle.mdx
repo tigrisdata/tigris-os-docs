@@ -13,118 +13,18 @@ thousands of images or samples per batch. The Bundle API eliminates per-object
 HTTP overhead and removes the need to pre-materialize shard files (tarballs,
 parquet files, etc.).
 
-## How it works
-
-```
-POST /{bucket}?bundle HTTP/1.1
-x-tigris-bundle-format: tar
-Content-Type: application/json
-
-{"keys": ["train/img_001.jpg", "train/img_002.jpg", "train/img_003.jpg"]}
-```
-
-The server streams back a tar archive containing those objects, in the order you
-requested. Each tar entry's filename is the full object key.
-
-## Request headers
-
-| Header                        | Required | Values                     | Default |
-| ----------------------------- | -------- | -------------------------- | ------- |
-| `x-tigris-bundle-format`      | Yes      | `tar`                      | —       |
-| `x-tigris-bundle-compression` | No       | `none` \| `gzip` \| `zstd` | `none`  |
-| `x-tigris-bundle-on-error`    | No       | `fail` \| `skip`           | `skip`  |
-
-## Request body
-
-Send a JSON array of object keys:
-
-```json
-{
-  "keys": [
-    "dataset/train/img_00001.jpg",
-    "dataset/train/img_00002.jpg",
-    "dataset/train/img_00003.jpg"
-  ]
-}
-```
-
-XML is also supported:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<Bundle xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-  <Object><Key>dataset/train/img_00001.jpg</Key></Object>
-  <Object><Key>dataset/train/img_00002.jpg</Key></Object>
-</Bundle>
-```
-
-## Compression
-
-| Value  | Content-Type        | When to use                                      |
-| ------ | ------------------- | ------------------------------------------------ |
-| `none` | `application/x-tar` | Default. Best for JPEG/PNG (already compressed). |
-| `gzip` | `application/gzip`  | Mixed content or bandwidth-constrained links.    |
-| `zstd` | `application/zstd`  | Best ratio + speed for large bundles.            |
-
-**Tip:** For image training data, use `none` — double-compressing JPEG/PNG
-wastes CPU for negligible size reduction.
-
-## Error handling
-
-### Skip mode (default)
-
-Missing or inaccessible objects are silently omitted from the tar. A
-`__bundle_errors.json` entry is appended at the end of the archive:
-
-```json
-{
-  "skipped": [{ "key": "dataset/train/img_00002.jpg", "reason": "NoSuchKey" }]
-}
-```
-
-This is the recommended mode for training pipelines. Dataloaders already handle
-missing samples gracefully.
-
-### Fail mode
-
-Set `x-tigris-bundle-on-error: fail` to pre-validate all keys before streaming.
-If any key is missing, the server returns a **404** error with the list of
-missing keys — no partial tar is sent.
-
-```xml
-<Error>
-  <Code>BundleKeyNotFound</Code>
-  <Message>One or more keys could not be resolved</Message>
-  <MissingKeys>
-    <Key>dataset/train/img_00002.jpg</Key>
-  </MissingKeys>
-</Error>
-```
-
-Use fail mode for inference or serving where every object must be present.
-
-## Limits
-
-| Parameter            | Limit  |
-| -------------------- | ------ |
-| Max keys per request | 5,000  |
-| Max assembled size   | 50 GB  |
-| Max request body     | 5 MB   |
-| Request timeout      | 15 min |
-
-## Authentication
-
-Standard S3 SigV4 authentication. The caller must have `s3:GetObject` permission
-on the bucket. No new IAM actions are required.
-
 ## SDK examples
 
 <Tabs groupId="languages">
-<TabItem value="python" label="Python">
+<TabItem value="python" label="Python" default>
+
+Install the Tigris boto3 extension:
 
 ```bash
 pip install tigris-boto3-ext
 ```
+
+### Basic usage
 
 ```python
 import tarfile
@@ -144,10 +44,56 @@ with tarfile.open(fileobj=response, mode="r|") as tar:
             image_bytes = f.read()
 ```
 
+`bundle_objects` returns a `BundleResponse` that works as a context manager for
+automatic connection cleanup:
+
+```python
+with bundle_objects(s3_client, "my-bucket", keys) as response:
+    with tarfile.open(fileobj=response, mode="r|") as tar:
+        for member in tar:
+            if member.name == "__bundle_errors.json":
+                continue
+            f = tar.extractfile(member)
+            if f is not None:
+                image_bytes = f.read()
+```
+
+### Error handling
+
+By default, missing objects are silently skipped and listed in a
+`__bundle_errors.json` entry at the end of the archive. Set
+`on_error=BUNDLE_ON_ERROR_FAIL` to raise an error when any key is missing:
+
+```python
+from tigris_boto3_ext import bundle_objects, BundleError, BUNDLE_ON_ERROR_FAIL
+
+try:
+    response = bundle_objects(
+        s3_client, "my-bucket", keys, on_error=BUNDLE_ON_ERROR_FAIL
+    )
+except BundleError as e:
+    print(f"Bundle failed (HTTP {e.status_code}): {e.body}")
+```
+
+### Response metadata
+
+After consuming the tar stream, `BundleResponse` exposes metadata about the
+bundle:
+
+```python
+response = bundle_objects(s3_client, "my-bucket", keys)
+
+with tarfile.open(fileobj=response, mode="r|") as tar:
+    for member in tar:
+        pass  # consume the stream
+
+print(response.object_count)   # number of objects in the bundle
+print(response.bundle_bytes)   # total bytes streamed
+print(response.skipped_count)  # number of skipped keys (skip mode)
+```
+
 </TabItem>
 <TabItem value="go" label="Go">
-
-Using `storage-go`:
 
 Install the SDK:
 
@@ -249,8 +195,27 @@ The Bundle API integrates naturally with PyTorch dataloaders. Instead of
 fetching one image per `__getitem__` call, fetch a batch at a time:
 
 ```python
+import random
+import tarfile
+from io import BytesIO
+
+import torch
+from PIL import Image
+from tigris_boto3_ext import bundle_objects
+
+
+def build_batches(metadata_path, batch_size):
+    """Load a list of object keys from a metadata file and split into batches.
+
+    Returns a list of lists, where each inner list is a batch of dicts
+    with at least a "key" field pointing to the object key in the bucket.
+    """
+    ...
+
+
 class TigrisBundleDataset(torch.utils.data.IterableDataset):
-    def __init__(self, metadata_path, bucket, batch_size=32, prefetch=20):
+    def __init__(self, s3_client, metadata_path, bucket, batch_size=32, prefetch=20):
+        self.s3_client = s3_client
         self.bucket = bucket
         self.batch_size = batch_size
         self.prefetch = prefetch
@@ -268,19 +233,100 @@ class TigrisBundleDataset(torch.utils.data.IterableDataset):
             chunk = my_batches[i : i + self.prefetch]
             keys = [row["key"] for batch in chunk for row in batch]
 
-            response = bundle_objects(s3_client, self.bucket, keys)
-            with tarfile.open(fileobj=response, mode="r|") as tar:
-                for member in tar:
-                    if member.name == "__bundle_errors.json":
-                        continue
-                    f = tar.extractfile(member)
-                    if f is None:
-                        continue
-                    image = Image.open(BytesIO(f.read())).convert("RGB")
-                    yield {"image": image}
+            with bundle_objects(self.s3_client, self.bucket, keys) as response:
+                with tarfile.open(fileobj=response, mode="r|") as tar:
+                    for member in tar:
+                        if member.name == "__bundle_errors.json":
+                            continue
+                        f = tar.extractfile(member)
+                        if f is None:
+                            continue
+                        image = Image.open(BytesIO(f.read())).convert("RGB")
+                        yield {"image": image}
 ```
 
-## Response trailers
+## How it works
+
+The Bundle API is a Tigris extension to the S3 API. You send a `POST` request
+with a list of object keys and receive a streaming tar archive:
+
+```
+POST /{bucket}?bundle HTTP/1.1
+x-tigris-bundle-format: tar
+Content-Type: application/json
+
+{"keys": ["train/img_001.jpg", "train/img_002.jpg", "train/img_003.jpg"]}
+```
+
+The server streams back a tar archive containing those objects, in the order you
+requested. Each tar entry's filename is the full object key.
+
+### Request headers
+
+| Header                     | Required | Values           | Default |
+| -------------------------- | -------- | ---------------- | ------- |
+| `x-tigris-bundle-format`   | Yes      | `tar`            | —       |
+| `x-tigris-bundle-on-error` | No       | `fail` \| `skip` | `skip`  |
+
+### Request body
+
+Send a JSON array of object keys:
+
+```json
+{
+  "keys": [
+    "dataset/train/img_00001.jpg",
+    "dataset/train/img_00002.jpg",
+    "dataset/train/img_00003.jpg"
+  ]
+}
+```
+
+XML is also supported:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Bundle xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+  <Object><Key>dataset/train/img_00001.jpg</Key></Object>
+  <Object><Key>dataset/train/img_00002.jpg</Key></Object>
+</Bundle>
+```
+
+### Error handling
+
+#### Skip mode (default)
+
+Missing or inaccessible objects are silently omitted from the tar. A
+`__bundle_errors.json` entry is appended at the end of the archive:
+
+```json
+{
+  "skipped": [{ "key": "dataset/train/img_00002.jpg", "reason": "NoSuchKey" }]
+}
+```
+
+This is the recommended mode for training pipelines. Dataloaders already handle
+missing samples gracefully.
+
+#### Fail mode
+
+Set `x-tigris-bundle-on-error: fail` to pre-validate all keys before streaming.
+If any key is missing, the server returns a **404** error with the list of
+missing keys — no partial tar is sent.
+
+```xml
+<Error>
+  <Code>BundleKeyNotFound</Code>
+  <Message>One or more keys could not be resolved</Message>
+  <MissingKeys>
+    <Key>dataset/train/img_00002.jpg</Key>
+  </MissingKeys>
+</Error>
+```
+
+Use fail mode for inference or serving where every object must be present.
+
+### Response trailers
 
 After the stream completes, the response includes HTTP trailers:
 
@@ -289,3 +335,17 @@ After the stream completes, the response includes HTTP trailers:
 | `x-tigris-bundle-count`   | Number of objects in the tar       |
 | `x-tigris-bundle-bytes`   | Total bytes streamed               |
 | `x-tigris-bundle-skipped` | Number of skipped keys (skip mode) |
+
+## Limits
+
+| Parameter            | Limit  |
+| -------------------- | ------ |
+| Max keys per request | 5,000  |
+| Max assembled size   | 50 GB  |
+| Max request body     | 5 MB   |
+| Request timeout      | 15 min |
+
+## Authentication
+
+Standard S3 SigV4 authentication. The caller must have `s3:GetObject` permission
+on the bucket. No new IAM actions are required.

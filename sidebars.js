@@ -398,6 +398,11 @@ const sidebars = {
                   label: "Cognee",
                   id: "agents/agent-cognee",
                 },
+                {
+                  type: "doc",
+                  label: "Weka",
+                  id: "guides/weka",
+                },
               ],
             },
             {
@@ -451,11 +456,6 @@ const sidebars = {
                   type: "doc",
                   label: "Fly.io",
                   id: "sdks/fly/index",
-                },
-                {
-                  type: "doc",
-                  label: "Weka",
-                  id: "guides/weka",
                 },
               ],
             },

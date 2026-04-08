@@ -1,0 +1,118 @@
+---
+id: php
+title: "PHP"
+---
+
+# PHP
+
+Use Tigris with PHP through the
+[AWS SDK for PHP](https://aws.amazon.com/sdk-for-php/). The SDK works with
+Tigris by changing the endpoint configuration.
+
+For the full SDK reference, see the
+[AWS PHP SDK guide](/docs/sdks/s3/aws-php-sdk/).
+
+## Prerequisites
+
+- PHP 8.1+
+- Composer
+- A Tigris account — create one at [storage.new](https://storage.new)
+- An access key from
+  [console.storage.dev/createaccesskey](https://console.storage.dev/createaccesskey)
+
+## Install
+
+```bash
+composer require aws/aws-sdk-php
+```
+
+## Configure credentials
+
+Set your Tigris credentials as environment variables:
+
+```bash
+export AWS_ACCESS_KEY_ID="tid_your_access_key"
+export AWS_SECRET_ACCESS_KEY="tsec_your_secret_key"
+```
+
+## Create a client
+
+```php
+<?php
+require 'vendor/autoload.php';
+
+use Aws\S3\S3Client;
+
+$s3 = new S3Client([
+    'region' => 'auto',
+    'endpoint' => 'https://t3.storage.dev',
+    'version' => 'latest',
+]);
+```
+
+The client reads credentials from the `AWS_ACCESS_KEY_ID` and
+`AWS_SECRET_ACCESS_KEY` environment variables automatically.
+
+## Basic operations
+
+### List buckets
+
+```php
+$result = $s3->listBuckets();
+
+foreach ($result['Buckets'] as $bucket) {
+    echo $bucket['Name'] . "\n";
+}
+```
+
+### Upload an object
+
+```php
+$s3->putObject([
+    'Bucket' => 'my-bucket',
+    'Key' => 'hello.txt',
+    'Body' => 'Hello, World!',
+]);
+```
+
+### Download an object
+
+```php
+$result = $s3->getObject([
+    'Bucket' => 'my-bucket',
+    'Key' => 'hello.txt',
+]);
+
+echo $result['Body'] . "\n";
+```
+
+### List objects
+
+```php
+$result = $s3->listObjectsV2([
+    'Bucket' => 'my-bucket',
+]);
+
+foreach ($result['Contents'] as $object) {
+    echo "  {$object['Key']}  ({$object['Size']} bytes)\n";
+}
+```
+
+### Generate a presigned URL
+
+```php
+$command = $s3->getCommand('GetObject', [
+    'Bucket' => 'my-bucket',
+    'Key' => 'hello.txt',
+]);
+
+$request = $s3->createPresignedRequest($command, '+60 minutes');
+echo (string) $request->getUri() . "\n";
+```
+
+## Next steps
+
+- [AWS PHP SDK reference](/docs/sdks/s3/aws-php-sdk/) — presigned URLs, custom
+  domains, and full configuration details
+- [Snapshots and forks](/docs/buckets/snapshots-and-forks/) — Tigris snapshot
+  and fork concepts

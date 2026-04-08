@@ -1,0 +1,129 @@
+---
+id: ruby
+title: "Ruby"
+---
+
+# Ruby
+
+Use Tigris with Ruby through the
+[AWS SDK for Ruby](https://aws.amazon.com/sdk-for-ruby/). The SDK works with
+Tigris by changing the endpoint configuration.
+
+For the full SDK reference, see the
+[AWS Ruby SDK guide](/docs/sdks/s3/aws-ruby-sdk/).
+
+## Prerequisites
+
+- Ruby 3.0+
+- A Tigris account — create one at [storage.new](https://storage.new)
+- An access key from
+  [console.storage.dev/createaccesskey](https://console.storage.dev/createaccesskey)
+
+## Install
+
+Add the AWS SDK to your `Gemfile`:
+
+```ruby
+gem "aws-sdk-s3"
+```
+
+Then install:
+
+```bash
+bundle install
+```
+
+Or install directly:
+
+```bash
+gem install aws-sdk-s3
+```
+
+## Configure credentials
+
+Set your Tigris credentials as environment variables:
+
+```bash
+export AWS_ACCESS_KEY_ID="tid_your_access_key"
+export AWS_SECRET_ACCESS_KEY="tsec_your_secret_key"
+```
+
+## Create a client
+
+```ruby
+require "aws-sdk-s3"
+
+s3 = Aws::S3::Client.new(
+  region: "auto",
+  endpoint: "https://t3.storage.dev",
+  force_path_style: false,
+)
+```
+
+The client reads credentials from the `AWS_ACCESS_KEY_ID` and
+`AWS_SECRET_ACCESS_KEY` environment variables automatically.
+
+## Basic operations
+
+### List buckets
+
+```ruby
+resp = s3.list_buckets
+
+resp.buckets.each do |bucket|
+  puts bucket.name
+end
+```
+
+### Upload an object
+
+```ruby
+s3.put_object(
+  bucket: "my-bucket",
+  key: "hello.txt",
+  body: "Hello, World!",
+)
+```
+
+### Download an object
+
+```ruby
+resp = s3.get_object(
+  bucket: "my-bucket",
+  key: "hello.txt",
+)
+
+puts resp.body.read
+```
+
+### List objects
+
+```ruby
+resp = s3.list_objects_v2(bucket: "my-bucket")
+
+resp.contents.each do |object|
+  puts "  #{object.key}  (#{object.size} bytes)"
+end
+```
+
+### Generate a presigned URL
+
+```ruby
+signer = Aws::S3::Presigner.new(client: s3)
+
+url = signer.presigned_url(
+  :get_object,
+  bucket: "my-bucket",
+  key: "hello.txt",
+  expires_in: 3600,
+)
+
+puts url
+```
+
+## Next steps
+
+- [AWS Ruby SDK reference](/docs/sdks/s3/aws-ruby-sdk/) — presigned URLs, custom
+  domains, and full configuration details
+- [Snapshots and forks](/docs/buckets/snapshots-and-forks/) — Tigris snapshot
+  and fork concepts

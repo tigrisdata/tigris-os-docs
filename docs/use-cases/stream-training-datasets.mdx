@@ -52,6 +52,10 @@ In [benchmarks](/docs/overview/benchmarks/model-training), warm epochs run
 local NVMe cache provides **~200×** throughput headroom over what the GPU can
 consume.
 
+Even TAG's first fetch is fast: Tigris automatically
+[caches objects in the region closest to where they're requested](/docs/objects/caching/),
+so the initial pull comes from a nearby cache node rather than a distant origin.
+
 </details>
 
 <details>
@@ -84,9 +88,8 @@ box. Point it at `t3.storage.dev` and your existing caching layer, GPU
 accelerator, or data loader keeps working — no code changes, no vendor lock-in.
 
 This includes local caching proxies like TAG, distributed caching layers,
-parallel filesystems with S3 import (Weka, VAST, DDN, managed Lustre),
-GPU-direct storage solutions, and framework-native data loaders that accept an
-S3 endpoint.
+parallel filesystems with S3 import (Weka, VAST, managed Lustre), GPU-direct
+storage solutions, and framework-native data loaders that accept an S3 endpoint.
 
 [Training with big data →](/docs/training/big-data-skypilot/)
 
@@ -120,10 +123,10 @@ overlapping datasets.
 <details>
 <summary>Parallel filesystems</summary>
 
-Weka, VAST, DDN, and managed Lustre products all support S3 data import. Use
-Tigris as the durable source of truth and hydrate into the parallel filesystem
-before compute starts. The filesystem is provisioned only for the duration of
-the job, so you avoid paying for high-performance storage around the clock.
+Weka, VAST, and managed Lustre products all support S3 data import. Use Tigris
+as the durable source of truth and hydrate into the parallel filesystem before
+compute starts. The filesystem is provisioned only for the duration of the job,
+so you avoid paying for high-performance storage around the clock.
 
 </details>
 

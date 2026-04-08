@@ -43,21 +43,6 @@ Every account includes a generous free tier each month:
 
 All storage prices are per GB per month.
 
-**Class A** requests modify state: `CreateBucket`, `CreateMultipartUpload`,
-`CopyObject`, `ListObjects`, `ListObjectsV2`, `ListMultipartUploads`,
-`ListBuckets`, `ListParts`, `PutBucketCors`, `PutBucketLifecycleConfiguration`,
-`PutObjectTagging`, `PutObjectAcl`, `PutObjectRetention`, `PutObjectLegalHold`,
-`PutObjectLockConfiguration`, `PutBucketAcl`, `PutBucketPolicy`,
-`PutBucketTagging`, `PutBucketAccelerateConfiguration`,
-`PutBucketOwnershipControls`, `PutObject`.
-
-**Class B** requests are reads: `GetBucketAccelerateConfiguration`,
-`GetBucketAcl`, `GetBucketCors`, `GetBucketLifecycleConfiguration`,
-`GetBucketLocation`, `GetBucketOwnershipControls`, `GetBucketPolicy`,
-`GetBucketPolicyStatus`, `GetBucketRequestPayment`, `GetBucketTagging`,
-`GetBucketVersioning`, `GetObject`, `GetObjectAcl`, `GetObjectTagging`,
-`HeadBucket`, `HeadObject`.
-
 ## Multi-region pricing
 
 |                        | Standard     | Infrequent Access | Archive      | Archive Instant Retrieval |
@@ -98,6 +83,23 @@ Tigris charges zero egress fees. No charges for:
 - Regional transfers
 - Inter-region transfers
 - Internet egress
+
+## Request types
+
+**Class A** requests modify state: `CreateBucket`, `CreateMultipartUpload`,
+`CopyObject`, `ListObjects`, `ListObjectsV2`, `ListMultipartUploads`,
+`ListBuckets`, `ListParts`, `PutBucketCors`, `PutBucketLifecycleConfiguration`,
+`PutObjectTagging`, `PutObjectAcl`, `PutObjectRetention`, `PutObjectLegalHold`,
+`PutObjectLockConfiguration`, `PutBucketAcl`, `PutBucketPolicy`,
+`PutBucketTagging`, `PutBucketAccelerateConfiguration`,
+`PutBucketOwnershipControls`, `PutObject`.
+
+**Class B** requests are reads: `GetBucketAccelerateConfiguration`,
+`GetBucketAcl`, `GetBucketCors`, `GetBucketLifecycleConfiguration`,
+`GetBucketLocation`, `GetBucketOwnershipControls`, `GetBucketPolicy`,
+`GetBucketPolicyStatus`, `GetBucketRequestPayment`, `GetBucketTagging`,
+`GetBucketVersioning`, `GetObject`, `GetObjectAcl`, `GetObjectTagging`,
+`HeadBucket`, `HeadObject`.
 
 ## Enterprise
 

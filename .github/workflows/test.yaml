@@ -9,7 +9,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: namespace-profile-ubuntu-2404
 
     steps:
       - uses: actions/checkout@v2

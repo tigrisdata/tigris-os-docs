@@ -43,11 +43,20 @@ Every account includes a generous free tier each month:
 
 All storage prices are per GB per month.
 
-**Class A** requests are operations that modify state: `PUT`, `POST`, `LIST`,
-`CreateMultipartUpload`, `CompleteMultipartUpload`, `UploadPart`,
-`UploadPartCopy`, `CopyObject`.
+**Class A** requests modify state: `CreateBucket`, `CreateMultipartUpload`,
+`CopyObject`, `ListObjects`, `ListObjectsV2`, `ListMultipartUploads`,
+`ListBuckets`, `ListParts`, `PutBucketCors`, `PutBucketLifecycleConfiguration`,
+`PutObjectTagging`, `PutObjectAcl`, `PutObjectRetention`, `PutObjectLegalHold`,
+`PutObjectLockConfiguration`, `PutBucketAcl`, `PutBucketPolicy`,
+`PutBucketTagging`, `PutBucketAccelerateConfiguration`,
+`PutBucketOwnershipControls`, `PutObject`.
 
-**Class B** requests are read operations: `GET`, `HEAD`, `GetObjectAttributes`.
+**Class B** requests are reads: `GetBucketAccelerateConfiguration`,
+`GetBucketAcl`, `GetBucketCors`, `GetBucketLifecycleConfiguration`,
+`GetBucketLocation`, `GetBucketOwnershipControls`, `GetBucketPolicy`,
+`GetBucketPolicyStatus`, `GetBucketRequestPayment`, `GetBucketTagging`,
+`GetBucketVersioning`, `GetObject`, `GetObjectAcl`, `GetObjectTagging`,
+`HeadBucket`, `HeadObject`.
 
 ## Multi-region pricing
 
@@ -67,17 +76,20 @@ All storage prices are per GB per month.
 Dual-region pricing is billed per underlying region. The more regions you
 replicate to, the higher the cost.
 
-|                           | Per Region   | Example: 2 Regions | Example: 3 Regions |
-| ------------------------- | ------------ | ------------------ | ------------------ |
-| Standard Storage          | $0.02 / GB   | $0.04 / GB         | $0.06 / GB         |
-| Infrequent Access Storage | $0.01 / GB   | $0.02 / GB         | $0.03 / GB         |
-| Archive Storage           | $0.004 / GB  | $0.008 / GB        | $0.012 / GB        |
-| Class A Requests          | $0.005 / 1K  | $0.01 / 1K         | $0.015 / 1K        |
-| Class B Requests          | $0.0005 / 1K | $0.0005 / 1K       | $0.0005 / 1K       |
-| DELETE, CANCEL            | Free         | Free               | Free               |
-| Data Retrieval            | Free         | Free               | Free               |
-| Object Notifications      | $0.01 / 1K   | $0.01 / 1K         | $0.01 / 1K         |
-| Egress                    | Free         | Free               | Free               |
+|                              | Per Region   | Example: 2 Regions | Example: 3 Regions |
+| ---------------------------- | ------------ | ------------------ | ------------------ |
+| Standard Storage             | $0.02 / GB   | $0.04 / GB         | $0.06 / GB         |
+| Infrequent Access Storage    | $0.01 / GB   | $0.02 / GB         | $0.03 / GB         |
+| Archive Storage              | $0.004 / GB  | $0.008 / GB        | $0.012 / GB        |
+| Archive Instant Retrieval    | $0.004 / GB  | $0.008 / GB        | $0.012 / GB        |
+| Class A Requests             | $0.005 / 1K  | $0.01 / 1K         | $0.015 / 1K        |
+| Class B Requests             | $0.0005 / 1K | $0.0005 / 1K       | $0.0005 / 1K       |
+| DELETE, CANCEL               | Free         | Free               | Free               |
+| Data Retrieval               | Free         | Free               | Free               |
+| Min. Storage Retention (IA)  | 30 days      | 30 days            | 30 days            |
+| Min. Storage Retention (Arc) | 90 days      | 90 days            | 90 days            |
+| Object Notifications         | $0.01 / 1K   | $0.01 / 1K         | $0.01 / 1K         |
+| Egress                       | Free         | Free               | Free               |
 
 ## Data transfer
 

@@ -4,12 +4,6 @@ Common questions about Tigris pricing and billing.
 
 ## General
 
-### Do I need a payment method to get started?
-
-Yes. A payment method is required to create an account. You won't be charged
-beyond the [free tier](/docs/pricing/) unless your usage exceeds the included
-allowances.
-
 ### How does billing work?
 
 Tigris bills monthly based on usage. You are charged for storage, API requests,

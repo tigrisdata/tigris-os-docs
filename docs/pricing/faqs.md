@@ -6,8 +6,9 @@ Common questions about Tigris pricing and billing.
 
 ### Do I need a payment method to get started?
 
-No. No credit card is required to get started. You won't be charged beyond the
-[free tier](/docs/pricing/) unless your usage exceeds the included allowances.
+Yes. A payment method is required to create an account. You won't be charged
+beyond the [free tier](/docs/pricing/) unless your usage exceeds the included
+allowances.
 
 ### How does billing work?
 

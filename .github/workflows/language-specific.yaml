@@ -8,7 +8,7 @@ on:
 jobs:
   dotnet:
     name: ".Net"
-    runs-on: ubuntu-latest
+    runs-on: namespace-profile-ubuntu-2404
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -25,7 +25,7 @@ jobs:
           AWS_REGION: auto
   elixir:
     name: Elixir
-    runs-on: ubuntu-latest
+    runs-on: namespace-profile-ubuntu-2404
     steps:
       - uses: actions/checkout@v4
       - uses: erlef/setup-beam@v1
@@ -41,7 +41,7 @@ jobs:
           AWS_REGION: auto
   go:
     name: Go
-    runs-on: ubuntu-latest
+    runs-on: namespace-profile-ubuntu-2404
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -58,7 +58,7 @@ jobs:
           AWS_REGION: auto
   javascript:
     name: "JavaScript"
-    runs-on: ubuntu-latest
+    runs-on: namespace-profile-ubuntu-2404
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -75,7 +75,7 @@ jobs:
           AWS_ENDPOINT_URL_S3: https://t3.storage.dev
   python:
     name: "Python"
-    runs-on: ubuntu-latest
+    runs-on: namespace-profile-ubuntu-2404
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -91,7 +91,7 @@ jobs:
           AWS_REGION: auto
   ruby:
     name: "Ruby"
-    runs-on: ubuntu-latest
+    runs-on: namespace-profile-ubuntu-2404
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1

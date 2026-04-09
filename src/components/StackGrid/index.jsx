@@ -46,6 +46,13 @@ export default function StackGrid() {
           to="/quickstarts/node/"
         />
         <StackTile
+          icon="img/icons/elixir"
+          title="Elixir"
+          to="/quickstarts/elixir/"
+        />
+        <StackTile icon="img/icons/php" title="PHP" to="/quickstarts/php/" />
+        <StackTile icon="img/icons/ruby" title="Ruby" to="/quickstarts/ruby/" />
+        <StackTile
           icon="img/icons/kubernetes"
           title="Kubernetes"
           to="/quickstarts/kubernetes/"

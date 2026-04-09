@@ -1,0 +1,128 @@
+---
+id: elixir
+title: "Elixir"
+---
+
+# Elixir
+
+Use Tigris with Elixir through the [ExAWS](https://hexdocs.pm/ex_aws/ExAws.html)
+library. ExAWS provides an S3 client that works with Tigris by changing the
+endpoint configuration.
+
+For the full SDK reference, see the
+[ExAWS Elixir SDK guide](/docs/sdks/s3/aws-elixir-sdk/).
+
+## Prerequisites
+
+- Elixir 1.14+
+- A Tigris account — create one at [storage.new](https://storage.new)
+- An access key from
+  [console.storage.dev/createaccesskey](https://console.storage.dev/createaccesskey)
+
+## Install
+
+Add the dependencies to your `mix.exs` file:
+
+```elixir
+defp deps do
+  [
+    {:ex_aws, "~> 2.0"},
+    {:ex_aws_s3, "~> 2.0"},
+    {:poison, "~> 3.0"},
+    {:hackney, "~> 1.9"},
+    {:sweet_xml, "~> 0.6.6"},
+    {:jason, "~> 1.1"},
+  ]
+end
+```
+
+Then fetch dependencies:
+
+```bash
+mix deps.get
+```
+
+## Configure credentials
+
+Set your Tigris credentials as environment variables:
+
+```bash
+export AWS_ACCESS_KEY_ID="tid_your_access_key"
+export AWS_SECRET_ACCESS_KEY="tsec_your_secret_key"
+```
+
+Then configure ExAWS in your `config/config.exs`:
+
+```elixir
+import Config
+
+config :ex_aws,
+  debug_requests: false,
+  json_codec: Jason,
+  access_key_id: [{:system, "AWS_ACCESS_KEY_ID"}, :instance_role],
+  secret_access_key: [{:system, "AWS_SECRET_ACCESS_KEY"}, :instance_role]
+
+config :ex_aws, :s3,
+  scheme: "https://",
+  host: "t3.storage.dev",
+  region: "auto"
+```
+
+## Basic operations
+
+### List buckets
+
+```elixir
+{:ok, %{body: %{buckets: buckets}}} = ExAws.S3.list_buckets() |> ExAws.request()
+
+for bucket <- buckets do
+  IO.puts(bucket.name)
+end
+```
+
+### Upload an object
+
+```elixir
+ExAws.S3.put_object("my-bucket", "hello.txt", "Hello, World!")
+|> ExAws.request!()
+```
+
+### Download an object
+
+```elixir
+{:ok, %{body: body}} =
+  ExAws.S3.get_object("my-bucket", "hello.txt")
+  |> ExAws.request()
+
+IO.puts(body)
+```
+
+### List objects
+
+```elixir
+{:ok, %{body: %{contents: objects}}} =
+  ExAws.S3.list_objects("my-bucket")
+  |> ExAws.request()
+
+for object <- objects do
+  IO.puts("  #{object.key}  (#{object.size} bytes)")
+end
+```
+
+### Generate a presigned URL
+
+```elixir
+{:ok, presigned_url} =
+  ExAws.S3.presigned_url(ExAws.Config.new(:s3), :get, "my-bucket", "hello.txt",
+    expires_in: 3600
+  )
+
+IO.puts(presigned_url)
+```
+
+## Next steps
+
+- [ExAWS Elixir SDK reference](/docs/sdks/s3/aws-elixir-sdk/) — presigned URLs,
+  custom domains, and full configuration details
+- [Snapshots and forks](/docs/buckets/snapshots-and-forks/) — Tigris snapshot
+  and fork concepts

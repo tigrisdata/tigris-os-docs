@@ -293,6 +293,21 @@ const sidebars = {
             },
             {
               type: "doc",
+              label: "Elixir",
+              id: "quickstarts/elixir",
+            },
+            {
+              type: "doc",
+              label: "PHP",
+              id: "quickstarts/php",
+            },
+            {
+              type: "doc",
+              label: "Ruby",
+              id: "quickstarts/ruby",
+            },
+            {
+              type: "doc",
               label: "Kubernetes",
               id: "quickstarts/kubernetes",
             },

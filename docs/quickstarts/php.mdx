@@ -93,7 +93,7 @@ $result = $s3->listObjectsV2([
     'Bucket' => 'my-bucket',
 ]);
 
-foreach ($result['Contents'] as $object) {
+foreach ($result['Contents'] ?? [] as $object) {
     echo "  {$object['Key']}  ({$object['Size']} bytes)\n";
 }
 ```

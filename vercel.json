@@ -61,6 +61,16 @@
       "permanent": true
     },
     {
+      "source": "/docs/pricing/compare/",
+      "destination": "https://www.tigrisdata.com/pricing/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/pricing/faqs/",
+      "destination": "https://www.tigrisdata.com/pricing/",
+      "permanent": true
+    },
+    {
       "source": "/docs/get-started/",
       "destination": "/docs/",
       "permanent": true

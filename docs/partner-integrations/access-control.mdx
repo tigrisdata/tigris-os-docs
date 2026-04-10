@@ -33,10 +33,9 @@ You pass it on provisioning, access key, and org management endpoints.
 | `Member` | Standard access. Can only manage their own access keys and resources.                     |
 
 The behavioral difference shows up immediately. When you call
-[List Access Keys](/docs/partner-integrations/api/tigris-list-access-keys) with
-`user_role: "Admin"`, the response includes **all** access keys in the org. With
-`user_role: "Member"` (or omitted), you get back **only keys owned by that
-user**.
+[List Access Keys](/docs/partner-integrations/api/) with `user_role: "Admin"`,
+the response includes **all** access keys in the org. With `user_role: "Member"`
+(or omitted), you get back **only keys owned by that user**.
 
 This same scoping applies to other management operations. Admin-only operations
 include:

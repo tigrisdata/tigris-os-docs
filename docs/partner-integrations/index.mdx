@@ -73,8 +73,46 @@ deactivating the organization and its associated access keys.
 
 ## Billing
 
-You can run your own billing logic. Tigris provides billing totals given a date
-range with granularity to the day per organization.
+Tigris uses [usage-based pricing](https://www.tigrisdata.com/pricing/) for
+partners, same rates as the standard platform. All charges are in USD on a
+calendar month cycle. There are no egress fees.
+
+### Free tier
+
+Every provider account includes a free tier:
+
+| Resource                           | Free allowance |
+| ---------------------------------- | -------------- |
+| Storage                            | 5 GB           |
+| Class A requests (PUT, POST, LIST) | 10,000         |
+| Class B requests (GET, HEAD)       | 100,000        |
+
+The free tier is applied to your consolidated usage across all organizations
+under your provider account. You receive a single consolidated bill that totals
+the usage across every organization, and the free allowance is subtracted from
+that total. Usage beyond the free tier is charged at standard rates.
+
+### Invoices and payment
+
+Invoices are generated at the end of each calendar month and sent to your
+provider billing email. Each invoice includes a breakdown of usage and charges
+for the billing period. You can make payment through the link in the invoice
+email.
+
+### Billing API
+
+You can fetch invoices and usage data programmatically at any time through the
+[Usage and Billing](/docs/partner-integrations/api/billing/) API endpoints:
+
+- [Get Account Invoice](/docs/partner-integrations/api/tigris-get-account-invoice)
+  for your consolidated provider invoice for a given month.
+- [Get Invoice](/docs/partner-integrations/api/tigris-get-invoice) for a
+  per-organization invoice for a given month.
+- [Get Usage](/docs/partner-integrations/api/tigris-get-usage) for detailed
+  usage metrics over a date range, with daily granularity per organization.
+
+Use these to build your own billing logic, cost attribution, or customer-facing
+usage dashboards.
 
 ## Partnerships
 

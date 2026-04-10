@@ -441,6 +441,37 @@ paths:
               schema:
                 $ref: "#/components/schemas/GenericError"
 
+  /v1/providers/{provider_id}/orgs/{org_id}/key/get:
+    post:
+      tags:
+        - iam
+      summary: Get Access Key details
+      description: |
+        Returns detailed information about an access key, including attached IAM policies.
+      operationId: Tigris_GetAccessKey
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetAccessKeyRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAccessKeyResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
   /v1/providers/{provider_id}/orgs/{org_id}/key/rotate:
     post:
       tags:
@@ -553,6 +584,186 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DeleteAccessKeyResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
+  /v1/providers/{provider_id}/orgs/{org_id}/policies:
+    post:
+      tags:
+        - iam
+      summary: Create an IAM policy
+      description: |
+        Creates a new IAM policy with the given name and document.
+        Returns 409 if a policy with the same name already exists — use
+        [Update Policy](#tag/iam/operation/Tigris_UpdatePolicy) to modify existing policies.
+
+        The policy document follows the [AWS IAM policy syntax](https://www.tigrisdata.com/docs/iam/policies/).
+
+        After creating a policy, attach it to an access key using the
+        [Update Access Key](#tag/iam/operation/Tigris_UpdateAccessKey) endpoint
+        with the `add_policies` field.
+
+        ##### Example: Read-write access to a prefix
+
+        ```json
+        {
+          "name": "uploads-readwrite",
+          "document": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+                "Resource": ["arn:aws:s3:::my-bucket/uploads/*"]
+              },
+              {
+                "Effect": "Allow",
+                "Action": ["s3:ListBucket"],
+                "Resource": ["arn:aws:s3:::my-bucket"]
+              }
+            ]
+          }
+        }
+        ```
+      operationId: Tigris_CreatePolicy
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePolicyRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicyResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+    get:
+      tags:
+        - iam
+      summary: List IAM policies
+      description: |
+        Lists all IAM policies in the organization.
+      operationId: Tigris_ListPolicies
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - name: limit
+          in: query
+          description:
+            Maximum number of policies to return. Defaults to 100, max 1000.
+          schema:
+            type: integer
+        - name: continuation_token
+          in: query
+          description: Token from previous response to fetch next page
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListPoliciesResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
+  /v1/providers/{provider_id}/orgs/{org_id}/policies/{policy_name}:
+    get:
+      tags:
+        - iam
+      summary: Get an IAM policy
+      description: |
+        Returns the policy details including its document.
+      operationId: Tigris_GetPolicy
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/policy_name"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicyResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+    put:
+      tags:
+        - iam
+      summary: Update an IAM policy
+      description: |
+        Updates the document and/or description of an existing IAM policy.
+        Changes take effect immediately for all access keys the policy is attached to.
+
+        The policy document follows the [AWS IAM policy syntax](https://www.tigrisdata.com/docs/iam/policies/).
+        For supported actions, see the [full list of supported actions](https://www.tigrisdata.com/docs/iam/policies/supported-actions).
+      operationId: Tigris_UpdatePolicy
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/policy_name"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePolicyRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicyResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+    delete:
+      tags:
+        - iam
+      summary: Delete an IAM policy
+      description: |
+        Deletes an IAM policy. The policy is automatically detached from all access keys before deletion.
+      operationId: Tigris_DeletePolicy
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/policy_name"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeletePolicyResponse"
         default:
           description: Unexpected error
           content:
@@ -1516,6 +1727,19 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/BucketAccess"
+        add_policies:
+          type: array
+          items:
+            type: string
+          description: |
+            Names of IAM policies to attach to this access key. Policies already attached are ignored.
+            Can be combined with `remove_policies` in the same request — removals are applied first.
+        remove_policies:
+          type: array
+          items:
+            type: string
+          description: |
+            Names of IAM policies to detach from this access key. Policies not currently attached are ignored.
     UpdateAccessKeyResponse:
       type: object
     RotateAccessKeyRequest:
@@ -1550,6 +1774,16 @@ components:
           description: ID of the user for whom the access keys are being listed
         user_role:
           $ref: "#/components/schemas/OrgMembership"
+        limit:
+          type: integer
+          description:
+            Maximum number of keys to return. Defaults to 100, max 1000.
+        continuation_token:
+          type: string
+          description: Token from previous response to fetch next page.
+        key_id_prefix:
+          type: string
+          description: List only keys with specific ID prefix
     ListAccessKeysResponse:
       type: object
       required:
@@ -1559,6 +1793,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/AccessKeyInfo"
+        next_continuation_token:
+          type: string
+          description:
+            Pass as continuation_token for next page. Empty if no more results.
     AccessKeyInfo:
       type: object
       required:
@@ -1686,6 +1924,172 @@ components:
         If you want to remove existing region restrictions, you can set the value to "global".
 
         See https://www.tigrisdata.com/docs/objects/object_regions/ for more details.
+    GetAccessKeyRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - user_id
+        - id
+      properties:
+        user_id:
+          type: string
+          description: ID of the user who owns the access key
+        id:
+          type: string
+          description: Access key ID
+        user_role:
+          $ref: "#/components/schemas/OrgMembership"
+    GetAccessKeyResponse:
+      allOf:
+        - $ref: "#/components/schemas/AccessKeyInfo"
+        - type: object
+          properties:
+            attached_policies:
+              type: array
+              items:
+                type: string
+              description: Names of IAM policies attached to this access key
+    CreatePolicyRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - document
+      properties:
+        name:
+          type: string
+          description: |
+            Name of the policy. Must be unique within the organization.
+            Only alphanumeric characters and `+=,.@_-` are allowed.
+          maxLength: 128
+        document:
+          $ref: "#/components/schemas/PolicyDocument"
+        description:
+          type: string
+          description: A description for the policy
+          maxLength: 1000
+    UpdatePolicyRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - document
+      properties:
+        document:
+          $ref: "#/components/schemas/PolicyDocument"
+        description:
+          type: string
+          description: A description for the policy
+          maxLength: 1000
+    PolicyDocument:
+      type: object
+      description: |
+        AWS IAM-compatible policy document.
+        See [IAM Policies documentation](https://www.tigrisdata.com/docs/iam/policies/) for details.
+      required:
+        - Version
+        - Statement
+      properties:
+        Version:
+          type: string
+          enum: ["2012-10-17"]
+          description: Policy language version.
+        Statement:
+          type: array
+          items:
+            $ref: "#/components/schemas/PolicyStatement"
+    PolicyStatement:
+      type: object
+      description: A permission statement within a policy document.
+      required:
+        - Effect
+        - Action
+        - Resource
+      properties:
+        Sid:
+          type: string
+          description: Optional identifier for the statement
+        Effect:
+          type: string
+          enum: [Allow, Deny]
+          description:
+            Whether this statement allows or denies the specified actions
+        Action:
+          type: array
+          items:
+            type: string
+          description: |
+            S3 actions to allow or deny. Common actions: `s3:GetObject`, `s3:PutObject`,
+            `s3:DeleteObject`, `s3:ListBucket`, `s3:*`.
+            See [supported actions](https://www.tigrisdata.com/docs/iam/policies/supported-actions).
+        Resource:
+          type: array
+          items:
+            type: string
+          description: |
+            S3 resource ARNs. Use `arn:aws:s3:::bucket` for bucket-level and
+            `arn:aws:s3:::bucket/prefix/*` for prefix-scoped access.
+        Condition:
+          type: object
+          description: |
+            Optional conditions (IP, time-based).
+            See [condition examples](https://www.tigrisdata.com/docs/iam/policies/examples/ip-restrictions).
+    PolicyInfo:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Name of the policy
+        description:
+          type: string
+          description: Description of the policy
+        attachment_count:
+          type: integer
+          description: Number of access keys this policy is attached to
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    PolicyResponse:
+      type: object
+      required:
+        - name
+        - document
+      properties:
+        name:
+          type: string
+          description: Name of the policy
+        description:
+          type: string
+        document:
+          $ref: "#/components/schemas/PolicyDocument"
+        attachment_count:
+          type: integer
+          description: Number of access keys this policy is attached to
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    ListPoliciesResponse:
+      type: object
+      required:
+        - policies
+      properties:
+        policies:
+          type: array
+          items:
+            $ref: "#/components/schemas/PolicyInfo"
+        next_continuation_token:
+          type: string
+          description:
+            Pass as continuation_token for next page. Empty if no more results.
+    DeletePolicyResponse:
+      type: object
     GenericError:
       type: object
       properties:
@@ -1711,6 +2115,13 @@ components:
       in: path
       required: true
       description: Bucket name
+      schema:
+        type: string
+    policy_name:
+      name: policy_name
+      in: path
+      required: true
+      description: Name of the IAM policy
       schema:
         type: string
   securitySchemes:

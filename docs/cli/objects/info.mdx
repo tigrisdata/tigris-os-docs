@@ -1,0 +1,36 @@
+# tigris objects info
+
+Show metadata for an object (content type, size, modified date).
+
+**Alias:** `i`
+
+## Usage
+
+```bash
+tigris objects info <bucket> [key] [flags]
+t3 o i <bucket> [key] [flags]
+```
+
+Paths support the optional `t3://` (or `tigris://`) prefix. If the bucket
+argument contains the full path (e.g. `t3://my-bucket/report.pdf`), the key
+argument can be omitted.
+
+## Flags
+
+| Name                              | Required | Default | Description                                    |
+| --------------------------------- | -------- | ------- | ---------------------------------------------- |
+| `--format`                        | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+| `--snapshot-version`, `-snapshot` | No       | —       | Read from a specific bucket snapshot           |
+
+## Examples
+
+```bash
+# Show object metadata
+tigris objects info my-bucket report.pdf
+
+# Using t3:// path
+tigris objects info t3://my-bucket/report.pdf
+
+# Output as JSON
+tigris objects info my-bucket report.pdf --format json
+```

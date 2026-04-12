@@ -1,0 +1,31 @@
+# tigris iam policies unlink-key
+
+Unlink an access key from a policy. If no policy ARN is provided, shows
+interactive selection. If no access key ID is provided, shows interactive
+selection of linked keys.
+
+**Alias:** `ulnk`
+
+## Usage
+
+```bash
+tigris iam policies unlink-key [resource] [flags]
+t3 iam p ulnk [resource] [flags]
+```
+
+## Flags
+
+| Name      | Required | Default | Description                                 |
+| --------- | -------- | ------- | ------------------------------------------- |
+| `--id`    | No       | —       | Access key ID to detach                     |
+| `--force` | No       | —       | Skip confirmation prompts (alias for --yes) |
+
+## Examples
+
+```bash
+# Unlink a specific key from a specific policy
+tigris iam policies unlink-key arn:aws:iam::org_id:policy/my-policy --id tid_AaBb --yes
+
+# Interactive selection
+tigris iam policies unlink-key
+```

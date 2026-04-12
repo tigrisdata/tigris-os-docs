@@ -1,0 +1,29 @@
+# tigris access-keys rotate
+
+Rotate an access key's secret. The current secret is immediately invalidated and
+a new one is returned (shown only once).
+
+**Alias:** `r`
+
+## Usage
+
+```bash
+tigris access-keys rotate <id> [flags]
+t3 keys r <id> [flags]
+```
+
+## Flags
+
+| Name      | Required | Default | Description                                 |
+| --------- | -------- | ------- | ------------------------------------------- |
+| `--force` | No       | —       | Skip confirmation prompts (alias for --yes) |
+
+## Examples
+
+```bash
+# Rotate a key (with confirmation prompt)
+tigris access-keys rotate tid_AaBbCcDdEeFf
+
+# Rotate a key without confirmation
+tigris access-keys rotate tid_AaBbCcDdEeFf --yes
+```

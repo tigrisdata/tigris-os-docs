@@ -1,0 +1,30 @@
+# tigris iam policies link-key
+
+Link an access key to a policy. If no policy ARN is provided, shows interactive
+selection. If no access key ID is provided, shows interactive selection of
+unlinked keys.
+
+**Alias:** `lnk`
+
+## Usage
+
+```bash
+tigris iam policies link-key [resource] [flags]
+t3 iam p lnk [resource] [flags]
+```
+
+## Flags
+
+| Name   | Required | Default | Description             |
+| ------ | -------- | ------- | ----------------------- |
+| `--id` | No       | —       | Access key ID to attach |
+
+## Examples
+
+```bash
+# Link a specific key to a specific policy
+tigris iam policies link-key arn:aws:iam::org_id:policy/my-policy --id tid_AaBb
+
+# Interactive selection for both policy and key
+tigris iam policies link-key
+```

@@ -1,0 +1,29 @@
+# tigris iam policies list-keys
+
+List all access keys attached to a policy. If no policy ARN is provided, shows
+interactive selection.
+
+**Alias:** `lk`
+
+## Usage
+
+```bash
+tigris iam policies list-keys [resource] [flags]
+t3 iam p lk [resource] [flags]
+```
+
+## Flags
+
+| Name       | Required | Default | Description                                    |
+| ---------- | -------- | ------- | ---------------------------------------------- |
+| `--format` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+
+## Examples
+
+```bash
+# List keys for a specific policy
+tigris iam policies list-keys arn:aws:iam::org_id:policy/my-policy
+
+# Interactive policy selection
+tigris iam policies list-keys
+```

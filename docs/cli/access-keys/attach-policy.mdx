@@ -1,0 +1,29 @@
+# tigris access-keys attach-policy
+
+Attach an IAM policy to an access key. If no policy ARN is provided, shows
+interactive selection of available policies.
+
+**Alias:** `ap`
+
+## Usage
+
+```bash
+tigris access-keys attach-policy <id> [flags]
+t3 keys ap <id> [flags]
+```
+
+## Flags
+
+| Name           | Required | Default | Description                 |
+| -------------- | -------- | ------- | --------------------------- |
+| `--policy-arn` | No       | —       | ARN of the policy to attach |
+
+## Examples
+
+```bash
+# Attach a specific policy
+tigris access-keys attach-policy tid_AaBb --policy-arn arn:aws:iam::org_id:policy/my-policy
+
+# Interactive selection
+tigris access-keys attach-policy tid_AaBb
+```

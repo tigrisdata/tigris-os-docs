@@ -1,0 +1,29 @@
+# tigris buckets set-locations
+
+Set the data locations for a bucket.
+
+## Usage
+
+```bash
+tigris buckets set-locations <name> [flags]
+t3 b set-locations <name> [flags]
+```
+
+## Flags
+
+| Name                | Required | Default | Description     |
+| ------------------- | -------- | ------- | --------------- |
+| `--locations`, `-l` | Yes      | —       | Bucket location |
+
+## Examples
+
+```bash
+# Set a single location
+tigris buckets set-locations my-bucket --locations iad
+
+# Set multiple locations
+tigris buckets set-locations my-bucket --locations iad,fra
+
+# Set to global
+tigris buckets set-locations my-bucket --locations global
+```

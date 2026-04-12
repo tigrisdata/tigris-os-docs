@@ -12,6 +12,17 @@ tigris objects <operation> [flags]
 t3 o <operation> [flags]
 ```
 
+## Commands
+
+| Command            | Description                                                     |
+| ------------------ | --------------------------------------------------------------- |
+| [`list`](list)     | List objects in a bucket, optionally filtered by a key prefix   |
+| [`get`](get)       | Download an object by key                                       |
+| [`put`](put)       | Upload a local file as an object                                |
+| [`delete`](delete) | Delete one or more objects by key                               |
+| [`set`](set)       | Update settings on an existing object such as access level      |
+| [`info`](info)     | Show metadata for an object (content type, size, modified date) |
+
 ## Examples
 
 ```bash
@@ -20,4 +31,5 @@ tigris objects get my-bucket report.pdf --output ./report.pdf
 tigris objects put my-bucket report.pdf ./report.pdf
 tigris objects delete my-bucket report.pdf
 tigris objects set my-bucket report.pdf --access public
+tigris objects info my-bucket report.pdf
 ```

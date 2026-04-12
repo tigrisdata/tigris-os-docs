@@ -12,10 +12,26 @@ tigris access-keys <operation> [flags]
 t3 keys <operation> [flags]
 ```
 
+## Commands
+
+| Command                          | Description                                      |
+| -------------------------------- | ------------------------------------------------ |
+| [`list`](list)                   | List all access keys in the current organization |
+| [`create`](create)               | Create a new access key                          |
+| [`delete`](delete)               | Permanently delete an access key                 |
+| [`get`](get)                     | Show details for an access key                   |
+| [`assign`](assign)               | Assign per-bucket roles to an access key         |
+| [`rotate`](rotate)               | Rotate an access key's secret                    |
+| [`attach-policy`](attach-policy) | Attach an IAM policy to an access key            |
+| [`detach-policy`](detach-policy) | Detach an IAM policy from an access key          |
+| [`list-policies`](list-policies) | List all IAM policies attached to an access key  |
+
 ## Examples
 
 ```bash
 tigris access-keys list
 tigris access-keys create my-ci-key
 tigris access-keys assign tid_AaBb --bucket my-bucket --role Editor
+tigris access-keys rotate tid_AaBbCcDdEeFf --yes
+tigris access-keys attach-policy tid_AaBb --policy-arn arn:aws:iam::org_id:policy/my-policy
 ```

@@ -1,0 +1,30 @@
+# tigris access-keys detach-policy
+
+Detach an IAM policy from an access key. If no policy ARN is provided, shows
+interactive selection of attached policies.
+
+**Alias:** `dp`
+
+## Usage
+
+```bash
+tigris access-keys detach-policy <id> [flags]
+t3 keys dp <id> [flags]
+```
+
+## Flags
+
+| Name           | Required | Default | Description                                 |
+| -------------- | -------- | ------- | ------------------------------------------- |
+| `--policy-arn` | No       | —       | ARN of the policy to detach                 |
+| `--force`      | No       | —       | Skip confirmation prompts (alias for --yes) |
+
+## Examples
+
+```bash
+# Detach a specific policy
+tigris access-keys detach-policy tid_AaBb --policy-arn arn:aws:iam::org_id:policy/my-policy --yes
+
+# Interactive selection
+tigris access-keys detach-policy tid_AaBb
+```

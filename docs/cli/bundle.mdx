@@ -1,0 +1,43 @@
+# tigris bundle
+
+Download multiple objects as a streaming tar archive in a single request.
+Designed for batch workloads that need many objects without per-object HTTP
+overhead.
+
+## Usage
+
+```bash
+tigris bundle <bucket> [flags]
+t3 bundle <bucket> [flags]
+```
+
+Paths support the optional `t3://` (or `tigris://`) prefix (e.g.
+`t3://my-bucket` or just `my-bucket`).
+
+Object keys can be provided via `--keys` (comma-separated list or path to a file
+with one key per line) or piped through stdin.
+
+## Flags
+
+| Name             | Required | Default | Description                                                                                                                                                                   |
+| ---------------- | -------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--keys`, `-k`   | No       | —       | Comma-separated object keys, or path to a file with one key per line. If a local file matching the value exists, it is read as a keys file. If omitted, reads keys from stdin |
+| `--output`, `-o` | No       | —       | Output file path. Defaults to stdout (for piping)                                                                                                                             |
+| `--compression`  | No       | —       | Compression algorithm for the archive. Auto-detected from output file extension when not specified. Options: `none`, `gzip`, `zstd`                                           |
+| `--on-error`     | No       | `skip`  | How to handle missing objects. Options: `skip` (omit them), `fail` (abort the request)                                                                                        |
+
+## Examples
+
+```bash
+# Bundle specific keys into a tar file
+tigris bundle my-bucket --keys key1.jpg,key2.jpg --output archive.tar
+
+# Read keys from a file
+tigris bundle my-bucket --keys keys.txt --output archive.tar
+
+# Compress with gzip
+tigris bundle t3://my-bucket --keys keys.txt --compression gzip -o archive.tar.gz
+
+# Pipe keys from stdin
+cat keys.txt | tigris bundle my-bucket > archive.tar
+```

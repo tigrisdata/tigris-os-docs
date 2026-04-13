@@ -9,7 +9,7 @@ sidebar_label: API Reference
 
 API reference for
 [`@tigrisdata/storage`](https://www.npmjs.com/package/@tigrisdata/storage)
-v2.15.1.
+v3.0.0.
 
 For usage examples and guides, see [Using the SDK](/docs/sdks/tigris/using-sdk).
 
@@ -113,24 +113,19 @@ type UploadResponse = {
   contentType?: string;
   modified: Date;
   name: string;
-  /**
-   * @deprecated Use `name` instead. Will be removed in the next major version.
-   */
-  path?: string;
   size: number;
   url: string;
 };
 ```
 
-| Property             | Type     | Required | Description                                                                    |
-| -------------------- | -------- | -------- | ------------------------------------------------------------------------------ |
-| `contentDisposition` | `string` | No       |                                                                                |
-| `contentType`        | `string` | No       |                                                                                |
-| `modified`           | `Date`   | Yes      |                                                                                |
-| `name`               | `string` | Yes      |                                                                                |
-| `path`               | `string` | No       | **Deprecated.** Use `name` instead. Will be removed in the next major version. |
-| `size`               | `number` | Yes      |                                                                                |
-| `url`                | `string` | Yes      |                                                                                |
+| Property             | Type     | Required | Description |
+| -------------------- | -------- | -------- | ----------- |
+| `contentDisposition` | `string` | No       |             |
+| `contentType`        | `string` | No       |             |
+| `modified`           | `Date`   | Yes      |             |
+| `name`               | `string` | Yes      |             |
+| `size`               | `number` | Yes      |             |
+| `url`                | `string` | Yes      |             |
 
 ## Object Operations {#object-operations}
 
@@ -466,22 +461,17 @@ type GetPresignedUrlOptions = {
    * Default is 3600 seconds (1 hour).
    */
   expiresIn?: number;
-  /**
-     @deprecated This property is deprecated and will be removed in the next major version.
-     */
-  contentType?: string;
   config?: TigrisStorageConfig;
 } & MethodOrOperation;
 ```
 
-| Property                                                         | Type                  | Required | Description                                                                                |
-| ---------------------------------------------------------------- | --------------------- | -------- | ------------------------------------------------------------------------------------------ |
-| `accessKeyId`                                                    | `string`              | No       | The access key ID to use for the presigned URL.                                            |
+| Property                                                         | Type                  | Required | Description                                          |
+| ---------------------------------------------------------------- | --------------------- | -------- | ---------------------------------------------------- |
+| `accessKeyId`                                                    | `string`              | No       | The access key ID to use for the presigned URL.      |
 | If not provided, the access key ID from the config will be used. |
-| `expiresIn`                                                      | `number`              | No       | The expiration time of the presigned URL in seconds.                                       |
+| `expiresIn`                                                      | `number`              | No       | The expiration time of the presigned URL in seconds. |
 | Default is 3600 seconds (1 hour).                                |
-| `contentType`                                                    | `string`              | No       | **Deprecated.** This property is deprecated and will be removed in the next major version. |
-| `config`                                                         | `TigrisStorageConfig` | No       |                                                                                            |
+| `config`                                                         | `TigrisStorageConfig` | No       |                                                      |
 
 ### `GetPresignedUrlResponse`
 
@@ -583,32 +573,20 @@ type CreateBucketOptions = {
   sourceBucketSnapshot?: string;
   access?: "public" | "private";
   defaultTier?: StorageClass;
-  /**
-   * @deprecated This property is deprecated and will be removed in the next major version. Use locations instead.
-   * @see https://www.tigrisdata.com/docs/buckets/locations/
-   */
-  consistency?: "strict" | "default";
-  /**
-   * @deprecated This property is deprecated and will be removed in the next major version. Use locations instead.
-   * @see https://www.tigrisdata.com/docs/buckets/locations/
-   */
-  region?: string | string[];
   locations?: BucketLocations;
   config?: Omit<TigrisStorageConfig, "bucket">;
 };
 ```
 
-| Property               | Type                                        | Required | Description                                                                                                       |
-| ---------------------- | ------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
-| `enableSnapshot`       | `boolean`                                   | No       |                                                                                                                   |
-| `sourceBucketName`     | `string`                                    | No       |                                                                                                                   |
-| `sourceBucketSnapshot` | `string`                                    | No       |                                                                                                                   |
-| `access`               | `'public' \| 'private'`                     | No       |                                                                                                                   |
-| `defaultTier`          | `StorageClass`                              | No       |                                                                                                                   |
-| `consistency`          | `'strict' \| 'default'`                     | No       | **Deprecated.** This property is deprecated and will be removed in the next major version. Use locations instead. |
-| `region`               | `string \| string[]`                        | No       | **Deprecated.** This property is deprecated and will be removed in the next major version. Use locations instead. |
-| `locations`            | `BucketLocations`                           | No       |                                                                                                                   |
-| `config`               | `Omit&lt;TigrisStorageConfig, 'bucket'&gt;` | No       |                                                                                                                   |
+| Property               | Type                                        | Required | Description |
+| ---------------------- | ------------------------------------------- | -------- | ----------- |
+| `enableSnapshot`       | `boolean`                                   | No       |             |
+| `sourceBucketName`     | `string`                                    | No       |             |
+| `sourceBucketSnapshot` | `string`                                    | No       |             |
+| `access`               | `'public' \| 'private'`                     | No       |             |
+| `defaultTier`          | `StorageClass`                              | No       |             |
+| `locations`            | `BucketLocations`                           | No       |             |
+| `config`               | `Omit&lt;TigrisStorageConfig, 'bucket'&gt;` | No       |             |
 
 ### `CreateBucketResponse`
 
@@ -645,24 +623,6 @@ type GetBucketInfoOptions = {
 ```ts
 type BucketInfoResponse = {
   isSnapshotEnabled: boolean;
-  /**
-   * @deprecated
-   * @see forkInfo.hasChildren
-   * This property is deprecated and will be removed in the next major version
-   */
-  hasForks: boolean;
-  /**
-   * @deprecated
-   * @see forkInfo.parents[0].bucketName
-   * This property is deprecated and will be removed in the next major version
-   */
-  sourceBucketName?: string;
-  /**
-   * @deprecated
-   * @see forkInfo.parents[0].snapshot
-   * This property is deprecated and will be removed in the next major version
-   */
-  sourceBucketSnapshot?: string;
   forkInfo:
     | {
         hasChildren: boolean;
@@ -694,15 +654,12 @@ type BucketInfoResponse = {
 };
 ```
 
-| Property               | Type                                                                                                                                                                                                                                                                                                                                                    | Required | Description     |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | --------------- |
-| `isSnapshotEnabled`    | `boolean`                                                                                                                                                                                                                                                                                                                                               | Yes      |                 |
-| `hasForks`             | `boolean`                                                                                                                                                                                                                                                                                                                                               | Yes      | **Deprecated.** |
-| `sourceBucketName`     | `string`                                                                                                                                                                                                                                                                                                                                                | No       | **Deprecated.** |
-| `sourceBucketSnapshot` | `string`                                                                                                                                                                                                                                                                                                                                                | No       | **Deprecated.** |
-| `forkInfo`             | `\{ hasChildren: boolean; parents: Array&lt;\{ bucketName: string; forkCreatedAt: Date; snapshot: string; snapshotCreatedAt: Date; \}&gt;; \} \| undefined`                                                                                                                                                                                             | Yes      |                 |
-| `settings`             | `\{ allowObjectAcl: boolean; defaultTier: StorageClass; lifecycleRules?: BucketLifecycleRule[]; dataMigration?: Omit&lt;BucketMigration, 'enabled'&gt;; ttlConfig?: BucketTtl; customDomain?: string; deleteProtection: boolean; corsRules: BucketCorsRule[]; additionalHeaders?: Record&lt;string, string&gt;; notifications?: BucketNotification; \}` | Yes      |                 |
-| `sizeInfo`             | `\{ numberOfObjects: number \| undefined; size: number \| undefined; numberOfObjectsAllVersions: number \| undefined; \}`                                                                                                                                                                                                                               | Yes      |                 |
+| Property            | Type                                                                                                                                                                                                                                                                                                                                                    | Required | Description |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ----------- |
+| `isSnapshotEnabled` | `boolean`                                                                                                                                                                                                                                                                                                                                               | Yes      |             |
+| `forkInfo`          | `\{ hasChildren: boolean; parents: Array&lt;\{ bucketName: string; forkCreatedAt: Date; snapshot: string; snapshotCreatedAt: Date; \}&gt;; \} \| undefined`                                                                                                                                                                                             | Yes      |             |
+| `settings`          | `\{ allowObjectAcl: boolean; defaultTier: StorageClass; lifecycleRules?: BucketLifecycleRule[]; dataMigration?: Omit&lt;BucketMigration, 'enabled'&gt;; ttlConfig?: BucketTtl; customDomain?: string; deleteProtection: boolean; corsRules: BucketCorsRule[]; additionalHeaders?: Record&lt;string, string&gt;; notifications?: BucketNotification; \}` | Yes      |             |
+| `sizeInfo`          | `\{ numberOfObjects: number \| undefined; size: number \| undefined; numberOfObjectsAllVersions: number \| undefined; \}`                                                                                                                                                                                                                               | Yes      |             |
 
 ### `ListBucketsOptions`
 
@@ -771,11 +728,6 @@ type UpdateBucketOptions = {
   access?: "public" | "private";
   allowObjectAcl?: boolean;
   disableDirectoryListing?: boolean;
-  /**
-   * @deprecated This property is deprecated and will be removed in the next major version. Use locations instead.
-   * @see https://www.tigrisdata.com/docs/buckets/locations/
-   */
-  regions?: string | string[];
   locations?: BucketLocations;
   cacheControl?: string;
   customDomain?: string;
@@ -785,18 +737,17 @@ type UpdateBucketOptions = {
 };
 ```
 
-| Property                  | Type                                        | Required | Description                                                                                                       |
-| ------------------------- | ------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
-| `access`                  | `'public' \| 'private'`                     | No       |                                                                                                                   |
-| `allowObjectAcl`          | `boolean`                                   | No       |                                                                                                                   |
-| `disableDirectoryListing` | `boolean`                                   | No       |                                                                                                                   |
-| `regions`                 | `string \| string[]`                        | No       | **Deprecated.** This property is deprecated and will be removed in the next major version. Use locations instead. |
-| `locations`               | `BucketLocations`                           | No       |                                                                                                                   |
-| `cacheControl`            | `string`                                    | No       |                                                                                                                   |
-| `customDomain`            | `string`                                    | No       |                                                                                                                   |
-| `enableAdditionalHeaders` | `boolean`                                   | No       |                                                                                                                   |
-| `enableDeleteProtection`  | `boolean`                                   | No       |                                                                                                                   |
-| `config`                  | `Omit&lt;TigrisStorageConfig, 'bucket'&gt;` | No       |                                                                                                                   |
+| Property                  | Type                                        | Required | Description |
+| ------------------------- | ------------------------------------------- | -------- | ----------- |
+| `access`                  | `'public' \| 'private'`                     | No       |             |
+| `allowObjectAcl`          | `boolean`                                   | No       |             |
+| `disableDirectoryListing` | `boolean`                                   | No       |             |
+| `locations`               | `BucketLocations`                           | No       |             |
+| `cacheControl`            | `string`                                    | No       |             |
+| `customDomain`            | `string`                                    | No       |             |
+| `enableAdditionalHeaders` | `boolean`                                   | No       |             |
+| `enableDeleteProtection`  | `boolean`                                   | No       |             |
+| `config`                  | `Omit&lt;TigrisStorageConfig, 'bucket'&gt;` | No       |             |
 
 ### `UpdateBucketResponse`
 
@@ -1159,19 +1110,14 @@ function listBucketSnapshots(
 ```ts
 type CreateBucketSnapshotOptions = {
   name?: string;
-  /**
-   * @deprecated Use name instead, will be removed in the next major version
-   */
-  description?: string;
   config?: Omit<TigrisStorageConfig, "bucket">;
 };
 ```
 
-| Property      | Type                                        | Required | Description                                                                 |
-| ------------- | ------------------------------------------- | -------- | --------------------------------------------------------------------------- |
-| `name`        | `string`                                    | No       |                                                                             |
-| `description` | `string`                                    | No       | **Deprecated.** Use name instead, will be removed in the next major version |
-| `config`      | `Omit&lt;TigrisStorageConfig, 'bucket'&gt;` | No       |                                                                             |
+| Property | Type                                        | Required | Description |
+| -------- | ------------------------------------------- | -------- | ----------- |
+| `name`   | `string`                                    | No       |             |
+| `config` | `Omit&lt;TigrisStorageConfig, 'bucket'&gt;` | No       |             |
 
 ### `CreateBucketSnapshotResponse`
 
@@ -1190,26 +1136,30 @@ type CreateBucketSnapshotResponse = {
 ```ts
 type ListBucketSnapshotsOptions = {
   config?: Omit<TigrisStorageConfig, "bucket">;
+  paginationToken?: string;
+  limit?: number;
 };
 ```
 
-| Property | Type                                        | Required | Description |
-| -------- | ------------------------------------------- | -------- | ----------- |
-| `config` | `Omit&lt;TigrisStorageConfig, 'bucket'&gt;` | No       |             |
+| Property          | Type                                        | Required | Description |
+| ----------------- | ------------------------------------------- | -------- | ----------- |
+| `config`          | `Omit&lt;TigrisStorageConfig, 'bucket'&gt;` | No       |             |
+| `paginationToken` | `string`                                    | No       |             |
+| `limit`           | `number`                                    | No       |             |
 
 ### `ListBucketSnapshotsResponse`
 
 ```ts
-type ListBucketSnapshotsResponse = Array<{
-  name?: string | undefined;
-  version: string | undefined;
-  /**
-   * @deprecated Use name and version instead, will be removed in the next major version
-   */
-  snapshotName: string | undefined;
-  creationDate: Date | undefined;
-}>;
+type ListBucketSnapshotsResponse = {
+  snapshots: BucketSnapshot[];
+  paginationToken?: string;
+};
 ```
+
+| Property          | Type               | Required | Description |
+| ----------------- | ------------------ | -------- | ----------- |
+| `snapshots`       | `BucketSnapshot[]` | Yes      |             |
+| `paginationToken` | `string`           | No       |             |
 
 ## Multipart Upload {#multipart-upload}
 
@@ -1343,6 +1293,7 @@ function handleClientUpload(
 interface ClientUploadRequest {
   action: UploadAction;
   name: string;
+  /** @deprecated This property is no longer used by the server handler. Will be removed in the next major version. */
   contentType?: string;
   uploadId?: string;
   parts?: number[];
@@ -1352,14 +1303,14 @@ interface ClientUploadRequest {
 }
 ```
 
-| Property      | Type                                        | Required | Description |
-| ------------- | ------------------------------------------- | -------- | ----------- |
-| `action`      | `UploadAction`                              | Yes      |             |
-| `name`        | `string`                                    | Yes      |             |
-| `contentType` | `string`                                    | No       |             |
-| `uploadId`    | `string`                                    | No       |             |
-| `parts`       | `number[]`                                  | No       |             |
-| `partIds`     | `Array&lt;\{ [key: number]: string; \}&gt;` | No       |             |
+| Property      | Type                                        | Required | Description                                                                                                       |
+| ------------- | ------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
+| `action`      | `UploadAction`                              | Yes      |                                                                                                                   |
+| `name`        | `string`                                    | Yes      |                                                                                                                   |
+| `contentType` | `string`                                    | No       | **Deprecated.** This property is no longer used by the server handler. Will be removed in the next major version. |
+| `uploadId`    | `string`                                    | No       |                                                                                                                   |
+| `parts`       | `number[]`                                  | No       |                                                                                                                   |
+| `partIds`     | `Array&lt;\{ [key: number]: string; \}&gt;` | No       |                                                                                                                   |
 
 ### `UploadAction`
 
@@ -1462,17 +1413,24 @@ type TigrisStorageConfig = {
   endpoint?: string;
   sessionToken?: string;
   organizationId?: string;
+  credentialProvider?: () => Promise<{
+    accessKeyId: string;
+    secretAccessKey: string;
+    sessionToken?: string;
+    expiration?: Date;
+  }>;
 };
 ```
 
-| Property          | Type     | Required | Description |
-| ----------------- | -------- | -------- | ----------- |
-| `bucket`          | `string` | No       |             |
-| `accessKeyId`     | `string` | No       |             |
-| `secretAccessKey` | `string` | No       |             |
-| `endpoint`        | `string` | No       |             |
-| `sessionToken`    | `string` | No       |             |
-| `organizationId`  | `string` | No       |             |
+| Property             | Type                                                                                                                    | Required | Description |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------- | ----------- |
+| `bucket`             | `string`                                                                                                                | No       |             |
+| `accessKeyId`        | `string`                                                                                                                | No       |             |
+| `secretAccessKey`    | `string`                                                                                                                | No       |             |
+| `endpoint`           | `string`                                                                                                                | No       |             |
+| `sessionToken`       | `string`                                                                                                                | No       |             |
+| `organizationId`     | `string`                                                                                                                | No       |             |
+| `credentialProvider` | `() =&gt; Promise&lt;\{ accessKeyId: string; secretAccessKey: string; sessionToken?: string; expiration?: Date; \}&gt;` | No       |             |
 
 ### `TigrisStorageResponse`
 

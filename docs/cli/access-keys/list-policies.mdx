@@ -1,0 +1,26 @@
+# tigris access-keys list-policies
+
+List all IAM policies attached to an access key.
+
+**Alias:** `lp`
+
+## Usage
+
+```bash
+tigris access-keys list-policies <id> [flags]
+t3 keys lp <id> [flags]
+```
+
+## Flags
+
+| Name                  | Required | Default | Description                                                     |
+| --------------------- | -------- | ------- | --------------------------------------------------------------- |
+| `--format`            | No       | `table` | Output format. Options: `json`, `table`, `xml`                  |
+| `--limit`             | No       | —       | Maximum number of items to return per page                      |
+| `--page-token`, `-pt` | No       | —       | Pagination token from a previous request to fetch the next page |
+
+## Examples
+
+```bash
+tigris access-keys list-policies tid_AaBbCcDdEeFf
+```

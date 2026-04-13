@@ -11,6 +11,19 @@ tigris iam policies <operation> [flags]
 t3 iam p <operation> [flags]
 ```
 
+## Commands
+
+| Command                    | Description                                   |
+| -------------------------- | --------------------------------------------- |
+| [`list`](list)             | List all policies in the current organization |
+| [`get`](get)               | Show details for a policy                     |
+| [`create`](create)         | Create a new policy with a policy document    |
+| [`edit`](edit)             | Update an existing policy's document          |
+| [`delete`](delete)         | Delete a policy                               |
+| [`link-key`](link-key)     | Link an access key to a policy                |
+| [`unlink-key`](unlink-key) | Unlink an access key from a policy            |
+| [`list-keys`](list-keys)   | List all access keys attached to a policy     |
+
 ## Examples
 
 ```bash
@@ -19,4 +32,6 @@ tigris iam policies get
 tigris iam policies create my-policy --document policy.json
 tigris iam policies edit arn:aws:iam::org_id:policy/my-policy --document policy.json
 tigris iam policies delete arn:aws:iam::org_id:policy/my-policy
+tigris iam policies link-key arn:aws:iam::org_id:policy/my-policy --id tid_AaBb
+tigris iam policies list-keys arn:aws:iam::org_id:policy/my-policy
 ```

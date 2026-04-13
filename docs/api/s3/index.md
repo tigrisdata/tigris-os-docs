@@ -15,7 +15,7 @@ reports pass/fail results.
 
 | Provider                 | Passed | Failed | Total | Score |
 | ------------------------ | ------ | ------ | ----- | ----- |
-| **Tigris**               | 59     | 9      | 68    | 87%   |
+| **Tigris**               | 62     | 6      | 68    | 91%   |
 | **Cloudflare R2**        | 48     | 20     | 68    | 71%   |
 | **Google Cloud Storage** | 45     | 23     | 68    | 66%   |
 
@@ -67,8 +67,8 @@ The complete list of S3 APIs is in the
 | GetBucketAccelerateConfiguration   | ✅     | ❌  | ✅  |
 | GetBucketAcl                       | ✅     | ✅  | ✅  |
 | GetBucketCors                      | ✅     | ✅  | ❌  |
-| GetBucketEncryption                | ❌     | ✅  | ❌  |
-| GetBucketLifecycleConfiguration    | ❌     | ✅  | ❌  |
+| GetBucketEncryption                | ✅     | ✅  | ❌  |
+| GetBucketLifecycleConfiguration    | ✅     | ✅  | ❌  |
 | GetBucketLocation                  | ✅     | ✅  | ✅  |
 | GetBucketNotificationConfiguration | ✅     | ❌  | ✅  |
 | GetBucketOwnershipControls         | ✅     | ❌  | ❌  |
@@ -82,7 +82,7 @@ The complete list of S3 APIs is in the
 | PutBucketAcl                       | ✅     | ❌  | ✅  |
 | PutBucketCors                      | ✅     | ✅  | ❌  |
 | PutBucketEncryption                | ❌     | ✅  | ❌  |
-| PutBucketLifecycleConfiguration    | ❌     | ❌  | ❌  |
+| PutBucketLifecycleConfiguration    | ✅     | ❌  | ❌  |
 | PutBucketNotificationConfiguration | ❌     | ❌  | ❌  |
 | PutBucketOwnershipControls         | ✅     | ❌  | ❌  |
 | PutBucketPolicy                    | ❌     | ❌  | ❌  |

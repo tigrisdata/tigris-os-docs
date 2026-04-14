@@ -15,7 +15,7 @@ reports pass/fail results.
 
 | Provider                 | Passed | Failed | Total | Score |
 | ------------------------ | ------ | ------ | ----- | ----- |
-| **Tigris**               | 62     | 6      | 68    | 91%   |
+| **Tigris**               | 61     | 7      | 68    | 90%   |
 | **Cloudflare R2**        | 48     | 20     | 68    | 71%   |
 | **Google Cloud Storage** | 45     | 23     | 68    | 66%   |
 
@@ -67,7 +67,7 @@ The complete list of S3 APIs is in the
 | GetBucketAccelerateConfiguration   | ✅     | ❌  | ✅  |
 | GetBucketAcl                       | ✅     | ✅  | ✅  |
 | GetBucketCors                      | ✅     | ✅  | ❌  |
-| GetBucketEncryption                | ✅     | ✅  | ❌  |
+| GetBucketEncryption                | ❌     | ✅  | ❌  |
 | GetBucketLifecycleConfiguration    | ✅     | ✅  | ❌  |
 | GetBucketLocation                  | ✅     | ✅  | ✅  |
 | GetBucketNotificationConfiguration | ✅     | ❌  | ✅  |

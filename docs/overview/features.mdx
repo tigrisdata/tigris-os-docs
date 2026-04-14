@@ -48,9 +48,19 @@ presigned URLs, or data pipelines pulling training data across clouds.
 
 ## Geo-Redundant Storage
 
-Every object is stored redundantly across multiple geographic locations. You get
-high availability and strong read-after-write consistency without configuring
-replication rules or managing multi-region buckets.
+Every object is stored redundantly to protect against hardware failures and
+regional outages. Choose a location type based on your availability and data
+residency needs:
+
+- **Global** (default) — data is distributed automatically to wherever it's
+  accessed, with no fixed region
+- **Multi-region** — replicated across regions within a geography (USA or EUR)
+  for the highest availability and strong global consistency
+- **Dual-region** — replicated between two specific regions you choose
+- **Single-region** — redundant within a single region for strict data residency
+
+No replication rules to configure — pick a location type when you create a
+bucket and Tigris handles the rest.
 
 [Bucket locations →](/docs/buckets/locations/)
 
@@ -134,9 +144,17 @@ old and new storage — no risky hard cutover, no downtime.
 
 ## Strong Consistency
 
-Tigris offers read-after-write consistency within the same region and eventual
-consistency globally by default. For use cases where objects may be modified
-from any region, Tigris provides a global strong consistency option.
+All requests within the same region get strong read-after-write consistency,
+regardless of location type. For cross-region requests, consistency depends on
+how the bucket is configured:
+
+- **Global** (default) — eventual consistency across regions, with sub-second
+  replication lag
+- **Multi-region** — strong consistency across all regions in the geography
+- **Single-region** — strong consistency (all requests route to one region)
+
+If your workload modifies objects from multiple regions and needs strong global
+consistency, use a multi-region bucket.
 
 [Consistency model →](/docs/concepts/consistency/)
 

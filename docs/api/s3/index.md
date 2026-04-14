@@ -19,107 +19,107 @@ reports pass/fail results.
 | **Cloudflare R2**        | 48     | 20     | 68    | 71%   |
 | **Google Cloud Storage** | 45     | 23     | 68    | 66%   |
 
-✅ = supported | ⚠️ = partial support (see notes) | ❌ = not supported
+✅ = supported |
+<abbr title="Partial support — hover or click the note number for details">⚠️</abbr>
+= partial support | ❌ = not supported
 
 The complete list of S3 APIs is in the
 [AWS S3 documentation](https://docs.aws.amazon.com/AmazonS3/latest/API/API_Operations_Amazon_Simple_Storage_Service.html).
 
 ## Object operations
 
-| Operation                       | Tigris | R2  | GCS        |
-| ------------------------------- | ------ | --- | ---------- |
-| CopyObject                      | ✅     | ✅  | ✅         |
-| DeleteObject                    | ✅     | ✅  | ✅         |
-| DeleteObjects                   | ✅     | ✅  | ✅         |
-| DeleteObjects (quiet mode)      | ✅     | ✅  | ✅         |
-| DeleteObjectTagging             | ✅     | ✅  | ✅         |
-| GetObject                       | ✅     | ✅  | ✅         |
-| GetObject (If-Match)            | ✅     | ✅  | ✅         |
-| GetObject (If-Modified-Since)   | ✅     | ✅  | ✅         |
-| GetObject (If-None-Match)       | ✅     | ✅  | ✅         |
-| GetObject (If-Unmodified-Since) | ✅     | ✅  | ✅         |
-| GetObject (range request)       | ✅     | ✅  | ✅         |
-| GetObjectAcl                    | ✅     | ❌  | ⚠️ **[4]** |
-| GetObjectTagging                | ✅     | ❌  | ❌         |
-| HeadObject                      | ✅     | ✅  | ✅         |
-| ListObjects                     | ✅     | ✅  | ✅         |
-| ListObjectsV2                   | ✅     | ✅  | ✅         |
-| ListObjectsV2 (delimiter)       | ✅     | ✅  | ✅         |
-| ListObjectsV2 (pagination)      | ✅     | ✅  | ✅         |
-| PutObject                       | ✅     | ✅  | ✅         |
-| PutObject (custom metadata)     | ✅     | ✅  | ✅         |
-| PutObject (SHA256 checksum)     | ✅     | ✅  | ✅         |
-| PutObject (SSE-S3)              | ✅     | ✅  | ✅         |
-| PutObject (storage class)       | ✅     | ✅  | ✅         |
-| PutObjectAcl                    | ✅     | ❌  | ⚠️ **[4]** |
-| PutObjectTagging                | ✅     | ❌  | ❌         |
-| RestoreObject                   | ✅     | ✅  | ❌         |
+| Operation                       | Tigris | R2  | GCS                                                                                                           |
+| ------------------------------- | ------ | --- | ------------------------------------------------------------------------------------------------------------- |
+| CopyObject                      | ✅     | ✅  | ✅                                                                                                            |
+| DeleteObject                    | ✅     | ✅  | ✅                                                                                                            |
+| DeleteObjects                   | ✅     | ✅  | ✅                                                                                                            |
+| DeleteObjects (quiet mode)      | ✅     | ✅  | ✅                                                                                                            |
+| DeleteObjectTagging             | ✅     | ✅  | ✅                                                                                                            |
+| GetObject                       | ✅     | ✅  | ✅                                                                                                            |
+| GetObject (If-Match)            | ✅     | ✅  | ✅                                                                                                            |
+| GetObject (If-Modified-Since)   | ✅     | ✅  | ✅                                                                                                            |
+| GetObject (If-None-Match)       | ✅     | ✅  | ✅                                                                                                            |
+| GetObject (If-Unmodified-Since) | ✅     | ✅  | ✅                                                                                                            |
+| GetObject (range request)       | ✅     | ✅  | ✅                                                                                                            |
+| GetObjectAcl                    | ✅     | ❌  | <abbr title="GCS uses a concentric ACL model (WRITE implies READ) that differs from S3">⚠️</abbr> [4](#notes) |
+| GetObjectTagging                | ✅     | ❌  | ❌                                                                                                            |
+| HeadObject                      | ✅     | ✅  | ✅                                                                                                            |
+| ListObjects                     | ✅     | ✅  | ✅                                                                                                            |
+| ListObjectsV2                   | ✅     | ✅  | ✅                                                                                                            |
+| ListObjectsV2 (delimiter)       | ✅     | ✅  | ✅                                                                                                            |
+| ListObjectsV2 (pagination)      | ✅     | ✅  | ✅                                                                                                            |
+| PutObject                       | ✅     | ✅  | ✅                                                                                                            |
+| PutObject (custom metadata)     | ✅     | ✅  | ✅                                                                                                            |
+| PutObject (SHA256 checksum)     | ✅     | ✅  | ✅                                                                                                            |
+| PutObject (SSE-S3)              | ✅     | ✅  | ✅                                                                                                            |
+| PutObject (storage class)       | ✅     | ✅  | ✅                                                                                                            |
+| PutObjectAcl                    | ✅     | ❌  | <abbr title="GCS uses a concentric ACL model (WRITE implies READ) that differs from S3">⚠️</abbr> [4](#notes) |
+| PutObjectTagging                | ✅     | ❌  | ❌                                                                                                            |
+| RestoreObject                   | ✅     | ✅  | ❌                                                                                                            |
 
 ## Bucket operations
 
-| Operation                          | Tigris     | R2  | GCS        |
-| ---------------------------------- | ---------- | --- | ---------- |
-| CreateBucket                       | ✅         | ✅  | ✅         |
-| DeleteBucket                       | ✅         | ✅  | ✅         |
-| DeleteBucketCors                   | ✅         | ✅  | ❌         |
-| DeleteBucketEncryption             | ⚠️ **[1]** | ✅  | ❌         |
-| DeleteBucketLifecycle              | ✅         | ✅  | ❌         |
-| DeleteBucketOwnershipControls      | ✅         | ❌  | ❌         |
-| DeleteBucketTagging                | ✅         | ❌  | ❌         |
-| GetBucketAccelerateConfiguration   | ✅         | ❌  | ✅         |
-| GetBucketAcl                       | ✅         | ✅  | ⚠️ **[4]** |
-| GetBucketCors                      | ✅         | ✅  | ❌         |
-| GetBucketEncryption                | ⚠️ **[1]** | ✅  | ❌         |
-| GetBucketLifecycleConfiguration    | ✅         | ✅  | ❌         |
-| GetBucketLocation                  | ✅         | ✅  | ✅         |
-| GetBucketNotificationConfiguration | ✅         | ❌  | ✅         |
-| GetBucketOwnershipControls         | ✅         | ❌  | ❌         |
-| GetBucketPolicy                    | ❌         | ❌  | ❌         |
-| GetBucketPolicyStatus              | ✅         | ❌  | ✅         |
-| GetBucketTagging                   | ✅         | ❌  | ❌         |
-| GetBucketVersioning                | ✅         | ✅  | ⚠️ **[5]** |
-| HeadBucket                         | ✅         | ✅  | ✅         |
-| ListBuckets                        | ✅         | ✅  | ❌         |
-| ListObjectVersions                 | ✅         | ❌  | ⚠️ **[5]** |
-| PutBucketAcl                       | ⚠️ **[2]** | ❌  | ⚠️ **[4]** |
-| PutBucketCors                      | ✅         | ✅  | ❌         |
-| PutBucketEncryption                | ⚠️ **[1]** | ✅  | ❌         |
-| PutBucketLifecycleConfiguration    | ✅         | ❌  | ❌         |
-| PutBucketNotificationConfiguration | ❌         | ❌  | ❌         |
-| PutBucketOwnershipControls         | ✅         | ❌  | ❌         |
-| PutBucketPolicy                    | ❌         | ❌  | ❌         |
-| PutBucketTagging                   | ✅         | ❌  | ❌         |
-| PutBucketVersioning                | ❌         | ❌  | ⚠️ **[5]** |
+| Operation                          | Tigris                                                                                                                   | R2  | GCS                                                                                                                            |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | --- | ------------------------------------------------------------------------------------------------------------------------------ |
+| CreateBucket                       | ✅                                                                                                                       | ✅  | ✅                                                                                                                             |
+| DeleteBucket                       | ✅                                                                                                                       | ✅  | ✅                                                                                                                             |
+| DeleteBucketCors                   | ✅                                                                                                                       | ✅  | ❌                                                                                                                             |
+| DeleteBucketEncryption             | <abbr title="Tigris encrypts all data at rest automatically — managed-key encryption is always on">⚠️</abbr> [1](#notes) | ✅  | ❌                                                                                                                             |
+| DeleteBucketLifecycle              | ✅                                                                                                                       | ✅  | ❌                                                                                                                             |
+| DeleteBucketOwnershipControls      | ✅                                                                                                                       | ❌  | ❌                                                                                                                             |
+| DeleteBucketTagging                | ✅                                                                                                                       | ❌  | ❌                                                                                                                             |
+| GetBucketAccelerateConfiguration   | ✅                                                                                                                       | ❌  | ✅                                                                                                                             |
+| GetBucketAcl                       | ✅                                                                                                                       | ✅  | <abbr title="GCS uses a concentric ACL model (WRITE implies READ) that differs from S3">⚠️</abbr> [4](#notes)                  |
+| GetBucketCors                      | ✅                                                                                                                       | ✅  | ❌                                                                                                                             |
+| GetBucketEncryption                | <abbr title="Tigris encrypts all data at rest automatically — managed-key encryption is always on">⚠️</abbr> [1](#notes) | ✅  | ❌                                                                                                                             |
+| GetBucketLifecycleConfiguration    | ✅                                                                                                                       | ✅  | ❌                                                                                                                             |
+| GetBucketLocation                  | ✅                                                                                                                       | ✅  | ✅                                                                                                                             |
+| GetBucketNotificationConfiguration | ✅                                                                                                                       | ❌  | ✅                                                                                                                             |
+| GetBucketOwnershipControls         | ✅                                                                                                                       | ❌  | ❌                                                                                                                             |
+| GetBucketPolicy                    | ❌                                                                                                                       | ❌  | ❌                                                                                                                             |
+| GetBucketPolicyStatus              | ✅                                                                                                                       | ❌  | ✅                                                                                                                             |
+| GetBucketTagging                   | ✅                                                                                                                       | ❌  | ❌                                                                                                                             |
+| GetBucketVersioning                | ✅                                                                                                                       | ✅  | <abbr title="GCS maps versioning to its own generation number system, which differs from S3 version IDs">⚠️</abbr> [5](#notes) |
+| HeadBucket                         | ✅                                                                                                                       | ✅  | ✅                                                                                                                             |
+| ListBuckets                        | ✅                                                                                                                       | ✅  | ❌                                                                                                                             |
+| ListObjectVersions                 | ✅                                                                                                                       | ❌  | <abbr title="GCS maps versioning to its own generation number system, which differs from S3 version IDs">⚠️</abbr> [5](#notes) |
+| PutBucketAcl                       | <abbr title="Only canned ACLs (public-read and private) are supported">⚠️</abbr> [2](#notes)                             | ❌  | <abbr title="GCS uses a concentric ACL model (WRITE implies READ) that differs from S3">⚠️</abbr> [4](#notes)                  |
+| PutBucketCors                      | ✅                                                                                                                       | ✅  | ❌                                                                                                                             |
+| PutBucketEncryption                | <abbr title="Tigris encrypts all data at rest automatically — managed-key encryption is always on">⚠️</abbr> [1](#notes) | ✅  | ❌                                                                                                                             |
+| PutBucketLifecycleConfiguration    | ✅                                                                                                                       | ❌  | ❌                                                                                                                             |
+| PutBucketNotificationConfiguration | ❌                                                                                                                       | ❌  | ❌                                                                                                                             |
+| PutBucketOwnershipControls         | ✅                                                                                                                       | ❌  | ❌                                                                                                                             |
+| PutBucketPolicy                    | ❌                                                                                                                       | ❌  | ❌                                                                                                                             |
+| PutBucketTagging                   | ✅                                                                                                                       | ❌  | ❌                                                                                                                             |
+| PutBucketVersioning                | ❌                                                                                                                       | ❌  | <abbr title="GCS maps versioning to its own generation number system, which differs from S3 version IDs">⚠️</abbr> [5](#notes) |
 
 ## Multipart uploads
 
-| Operation               | Tigris | R2         | GCS |
-| ----------------------- | ------ | ---------- | --- |
-| AbortMultipartUpload    | ✅     | ✅         | ✅  |
-| CompleteMultipartUpload | ✅     | ✅         | ✅  |
-| CreateMultipartUpload   | ✅     | ✅         | ✅  |
-| ListMultipartUploads    | ✅     | ✅         | ✅  |
-| ListParts               | ✅     | ✅         | ✅  |
-| UploadPart              | ✅     | ✅         | ✅  |
-| UploadPartCopy          | ✅     | ⚠️ **[3]** | ❌  |
+| Operation               | Tigris | R2                                                                                                                     | GCS |
+| ----------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------- | --- |
+| AbortMultipartUpload    | ✅     | ✅                                                                                                                     | ✅  |
+| CompleteMultipartUpload | ✅     | ✅                                                                                                                     | ✅  |
+| CreateMultipartUpload   | ✅     | ✅                                                                                                                     | ✅  |
+| ListMultipartUploads    | ✅     | ✅                                                                                                                     | ✅  |
+| ListParts               | ✅     | ✅                                                                                                                     | ✅  |
+| UploadPart              | ✅     | ✅                                                                                                                     | ✅  |
+| UploadPartCopy          | ✅     | <abbr title="R2 does not support conditional copy operations (x-amz-copy-source-if-match, etc.)">⚠️</abbr> [3](#notes) | ❌  |
 
 ### Notes
 
-**[1]** Tigris encrypts all data at rest automatically. The bucket encryption
-configuration APIs accept requests but server-side encryption with managed keys
-is always on.
-
-**[2]** Only canned ACLs (`public-read` and `private`) are supported.
-
-**[3]** R2 supports UploadPartCopy but does not support conditional copy
-operations (`x-amz-copy-source-if-match`, etc.).
-
-**[4]** GCS uses a different ACL permission model where permissions are
-concentric (WRITE implies READ). S3-style ACL XML is accepted but behavior
-differs from AWS S3.
-
-**[5]** GCS maps versioning to its own generation number system, which differs
-from S3 version IDs.
+1. <span id="note-1"></span> **Encryption**: Tigris encrypts all data at rest
+   automatically. The bucket encryption configuration APIs accept requests but
+   server-side encryption with managed keys is always on.
+2. <span id="note-2"></span> **Canned ACLs**: Only canned ACLs (`public-read`
+   and `private`) are supported.
+3. <span id="note-3"></span> **Conditional copy**: R2 supports UploadPartCopy
+   but does not support conditional copy operations
+   (`x-amz-copy-source-if-match`, etc.).
+4. <span id="note-4"></span> **GCS ACL model**: GCS uses a different ACL
+   permission model where permissions are concentric (WRITE implies READ).
+   S3-style ACL XML is accepted but behavior differs from AWS S3.
+5. <span id="note-5"></span> **GCS versioning**: GCS maps versioning to its own
+   generation number system, which differs from S3 version IDs.
 
 ## Presigned URLs
 

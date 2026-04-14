@@ -151,6 +151,8 @@ how the bucket is configured:
 - **Global** (default) — eventual consistency across regions, with sub-second
   replication lag
 - **Multi-region** — strong consistency across all regions in the geography
+- **Dual-region** — eventual consistency across regions, strong within each
+  region
 - **Single-region** — strong consistency (all requests route to one region)
 
 If your workload modifies objects from multiple regions and needs strong global

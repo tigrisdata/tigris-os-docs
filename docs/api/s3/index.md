@@ -19,6 +19,8 @@ reports pass/fail results.
 | **Cloudflare R2**        | 48     | 20     | 68    | 71%   |
 | **Google Cloud Storage** | 45     | 23     | 68    | 66%   |
 
+✅ = supported, ⚠️ = partial support (see notes), ❌ = not supported
+
 The complete list of S3 APIs is in the
 [AWS S3 documentation](https://docs.aws.amazon.com/AmazonS3/latest/API/API_Operations_Amazon_Simple_Storage_Service.html).
 
@@ -55,39 +57,45 @@ The complete list of S3 APIs is in the
 
 ## Bucket operations
 
-| Operation                          | Tigris | R2  | GCS |
-| ---------------------------------- | ------ | --- | --- |
-| CreateBucket                       | ✅     | ✅  | ✅  |
-| DeleteBucket                       | ✅     | ✅  | ✅  |
-| DeleteBucketCors                   | ✅     | ✅  | ❌  |
-| DeleteBucketEncryption             | ❌     | ✅  | ❌  |
-| DeleteBucketLifecycle              | ✅     | ✅  | ❌  |
-| DeleteBucketOwnershipControls      | ✅     | ❌  | ❌  |
-| DeleteBucketTagging                | ✅     | ❌  | ❌  |
-| GetBucketAccelerateConfiguration   | ✅     | ❌  | ✅  |
-| GetBucketAcl                       | ✅     | ✅  | ✅  |
-| GetBucketCors                      | ✅     | ✅  | ❌  |
-| GetBucketEncryption                | ❌     | ✅  | ❌  |
-| GetBucketLifecycleConfiguration    | ✅     | ✅  | ❌  |
-| GetBucketLocation                  | ✅     | ✅  | ✅  |
-| GetBucketNotificationConfiguration | ✅     | ❌  | ✅  |
-| GetBucketOwnershipControls         | ✅     | ❌  | ❌  |
-| GetBucketPolicy                    | ❌     | ❌  | ❌  |
-| GetBucketPolicyStatus              | ✅     | ❌  | ✅  |
-| GetBucketTagging                   | ✅     | ❌  | ❌  |
-| GetBucketVersioning                | ✅     | ✅  | ✅  |
-| HeadBucket                         | ✅     | ✅  | ✅  |
-| ListBuckets                        | ✅     | ✅  | ❌  |
-| ListObjectVersions                 | ✅     | ❌  | ✅  |
-| PutBucketAcl                       | ✅     | ❌  | ✅  |
-| PutBucketCors                      | ✅     | ✅  | ❌  |
-| PutBucketEncryption                | ❌     | ✅  | ❌  |
-| PutBucketLifecycleConfiguration    | ✅     | ❌  | ❌  |
-| PutBucketNotificationConfiguration | ❌     | ❌  | ❌  |
-| PutBucketOwnershipControls         | ✅     | ❌  | ❌  |
-| PutBucketPolicy                    | ❌     | ❌  | ❌  |
-| PutBucketTagging                   | ✅     | ❌  | ❌  |
-| PutBucketVersioning                | ❌     | ❌  | ✅  |
+| Operation                          | Tigris     | R2  | GCS |
+| ---------------------------------- | ---------- | --- | --- |
+| CreateBucket                       | ✅         | ✅  | ✅  |
+| DeleteBucket                       | ✅         | ✅  | ✅  |
+| DeleteBucketCors                   | ✅         | ✅  | ❌  |
+| DeleteBucketEncryption             | ⚠️ **[1]** | ✅  | ❌  |
+| DeleteBucketLifecycle              | ✅         | ✅  | ❌  |
+| DeleteBucketOwnershipControls      | ✅         | ❌  | ❌  |
+| DeleteBucketTagging                | ✅         | ❌  | ❌  |
+| GetBucketAccelerateConfiguration   | ✅         | ❌  | ✅  |
+| GetBucketAcl                       | ✅         | ✅  | ✅  |
+| GetBucketCors                      | ✅         | ✅  | ❌  |
+| GetBucketEncryption                | ⚠️ **[1]** | ✅  | ❌  |
+| GetBucketLifecycleConfiguration    | ✅         | ✅  | ❌  |
+| GetBucketLocation                  | ✅         | ✅  | ✅  |
+| GetBucketNotificationConfiguration | ✅         | ❌  | ✅  |
+| GetBucketOwnershipControls         | ✅         | ❌  | ❌  |
+| GetBucketPolicy                    | ❌         | ❌  | ❌  |
+| GetBucketPolicyStatus              | ✅         | ❌  | ✅  |
+| GetBucketTagging                   | ✅         | ❌  | ❌  |
+| GetBucketVersioning                | ✅         | ✅  | ✅  |
+| HeadBucket                         | ✅         | ✅  | ✅  |
+| ListBuckets                        | ✅         | ✅  | ❌  |
+| ListObjectVersions                 | ✅         | ❌  | ✅  |
+| PutBucketAcl                       | ⚠️ **[2]** | ❌  | ✅  |
+| PutBucketCors                      | ✅         | ✅  | ❌  |
+| PutBucketEncryption                | ⚠️ **[1]** | ✅  | ❌  |
+| PutBucketLifecycleConfiguration    | ✅         | ❌  | ❌  |
+| PutBucketNotificationConfiguration | ❌         | ❌  | ❌  |
+| PutBucketOwnershipControls         | ✅         | ❌  | ❌  |
+| PutBucketPolicy                    | ❌         | ❌  | ❌  |
+| PutBucketTagging                   | ✅         | ❌  | ❌  |
+| PutBucketVersioning                | ❌         | ❌  | ✅  |
+
+**[1]** Tigris encrypts all data at rest automatically. The bucket encryption
+configuration APIs accept requests but server-side encryption with managed keys
+is always on.
+
+**[2]** Only canned ACLs (`public-read` and `private`) are supported.
 
 ## Multipart uploads
 

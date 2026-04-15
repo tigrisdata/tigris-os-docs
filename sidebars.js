@@ -102,7 +102,6 @@ const sidebars = {
             "concepts/authnz",
             "concepts/consistency",
             "concepts/regions",
-            "api/s3/index",
           ],
         },
         {
@@ -151,6 +150,11 @@ const sidebars = {
               ],
             },
           ],
+        },
+        {
+          type: "doc",
+          label: "S3 API Compatibility",
+          id: "api/s3/index",
         },
         {
           type: "category",

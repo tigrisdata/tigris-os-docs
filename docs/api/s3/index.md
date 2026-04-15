@@ -1,3 +1,16 @@
+<style>{`
+  .markdown table th:nth-child(2),
+  .markdown table td:nth-child(2),
+  .markdown table th:nth-child(3),
+  .markdown table td:nth-child(3),
+  .markdown table th:nth-child(4),
+  .markdown table td:nth-child(4) {
+    width: 12%;
+    min-width: 80px;
+    text-align: center;
+  }
+`}</style>
+
 # S3 API Compatibility
 
 Tigris is compatible with the AWS S3 API. You can use the standard AWS S3 SDKs,

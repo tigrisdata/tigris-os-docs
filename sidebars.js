@@ -976,6 +976,11 @@ const sidebars = {
         "legal/sla",
       ],
     },
+    {
+      type: "doc",
+      label: "Antithesis report diagrams",
+      id: "internal/report-diagrams",
+    },
   ],
 };
 

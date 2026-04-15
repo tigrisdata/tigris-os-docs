@@ -1,0 +1,53 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>5 — Tombstone Barrier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background:#1a1a1a; color:#c8d6de; font-family: system-ui, sans-serif; padding: 24px; }
+  h1 { font-size: 14px; font-weight: 500; color:#8fa3b0; margin: 0 0 12px 0; letter-spacing: 0.5px; text-transform: uppercase; }
+  .meta { font-size: 12px; color:#667985; margin-bottom: 20px; }
+  .frame { max-width: 1400px; }
+  svg { display:block; width:100%; height:auto; }
+  /* Use Caveat as a Virgil fallback — similar hand-drawn feel, readily available. */
+  text { font-family: Virgil, 'Caveat', 'Comic Sans MS', cursive, sans-serif !important; }
+</style>
+</head><body>
+<div class="frame">
+  <h1>5 — Tombstone Barrier</h1>
+  <div class="meta">viewBox 40 0 1460 690 — 32 elements</div>
+  <svg viewBox="40 0 1460 690" xmlns="http://www.w3.org/2000/svg" style="background:#0e1920; border-radius:14px;">
+  <text x="520" y="44" fill="#c8d6de" font-size="24" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="520" dy="0">Tombstone Barrier</tspan></text>
+<text x="340" y="72" fill="#8fa3b0" font-size="14" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="340" dy="0">A timestamp check on every cache-write path blocks stale re-population</tspan></text>
+<g opacity="1"><rect x="60" y="160" width="280" height="80" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
+<text x="82" y="192" fill="#c8d6de" font-size="16" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="82" dy="0">Normal read-through</tspan></text>
+<text x="82" y="218" fill="#8fa3b0" font-size="12" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="82" dy="0">cache miss → fetch from FDB / S3</tspan></text>
+<g opacity="1"><rect x="60" y="300" width="280" height="80" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
+<text x="82" y="332" fill="#c8d6de" font-size="16" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="82" dy="0">Async replication</tspan></text>
+<text x="82" y="358" fill="#8fa3b0" font-size="12" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="82" dy="0">follower region delivers a copy</tspan></text>
+<g opacity="1"><rect x="60" y="440" width="280" height="80" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
+<text x="82" y="472" fill="#c8d6de" font-size="16" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="82" dy="0">Retried delayed event</tspan></text>
+<text x="82" y="498" fill="#8fa3b0" font-size="12" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="82" dy="0">earlier event arrives late</tspan></text>
+<g opacity="1"><polygon points="740,260 900,340 740,420 580,340" fill="#142229" stroke="#62FEB5" stroke-width="2.5"/></g>
+<text x="650" y="323" fill="#c8d6de" font-size="18" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="650" dy="0">Tombstone check</tspan></text>
+<text x="630" y="353" fill="#8fa3b0" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="630" dy="0">object.LastModified</tspan></text>
+<text x="664" y="375" fill="#8fa3b0" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="664" dy="0">vs  tombstone_ts</tspan></text>
+<g opacity="1"><path d="M340,200 L580,340" fill="none" stroke="#c8d6de" stroke-width="2" stroke-linecap="round"/><polyline points="572.0401618554409,340.8006102125391 580,340 576.7788491812096,332.67714622550704" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g opacity="1"><path d="M340,340 L580,340" fill="none" stroke="#c8d6de" stroke-width="2" stroke-linecap="round"/><polyline points="573.5278640450005,344.70228201833976 580,340 573.5278640450005,335.29771798166024" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g opacity="1"><path d="M340,480 L580,340" fill="none" stroke="#c8d6de" stroke-width="2" stroke-linecap="round"/><polyline points="576.7788491812096,347.32285377449296 580,340 572.0401618554409,339.1993897874609" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g opacity="1"><rect x="1120" y="210" width="360" height="80" rx="8" ry="8" fill="#142229" stroke="#62FEB5" stroke-width="2.5"/></g>
+<text x="1148" y="242" fill="#62FEB5" font-size="16" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="1148" dy="0">Accept — write to cache</tspan></text>
+<text x="1148" y="268" fill="#8fa3b0" font-size="12" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="1148" dy="0">newer than tombstone, or none exists</tspan></text>
+<g opacity="1"><rect x="1120" y="400" width="360" height="80" rx="8" ry="8" fill="#142229" stroke="#CF5B5B" stroke-width="2.5"/></g>
+<text x="1148" y="432" fill="#CF5B5B" font-size="16" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="1148" dy="0">Reject — stale data</tspan></text>
+<text x="1148" y="458" fill="#8fa3b0" font-size="12" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="1148" dy="0">older than tombstone, refuse cache write</tspan></text>
+<g opacity="1"><path d="M900,310 L1120,250" fill="none" stroke="#62FEB5" stroke-width="2.5" stroke-linecap="round"/><polyline points="1114.993169630453,256.2395231909643 1120,250 1112.518665138516,247.16634005386234" fill="none" stroke="#62FEB5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<text x="950" y="260" fill="#62FEB5" font-size="14" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="950" dy="0">newer</tspan></text>
+<g opacity="1"><path d="M900,370 L1120,440" fill="none" stroke="#CF5B5B" stroke-width="2.5" stroke-linecap="round"/><polyline points="1112.406785691222,442.5185504682193 1120,440 1115.2582839022384,433.5566989478817" fill="none" stroke="#CF5B5B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<text x="950" y="414" fill="#CF5B5B" font-size="14" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="950" dy="0">older</tspan></text>
+<g opacity="0.4"><rect x="60" y="580" width="1420" height="90" rx="8" ry="8" fill="#142229" stroke="#1e3340" stroke-width="1" stroke-dasharray="6 4"/></g>
+<text x="80" y="611" fill="#c8d6de" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="80" dy="0">Source-agnostic — applies to every cache-write path</tspan></text>
+<text x="80" y="639" fill="#8fa3b0" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="80" dy="0">Works even if eager eviction failed or Redis was unreachable. Makes the cache structurally incapable of serving</tspan></text>
+<text x="80" y="661" fill="#8fa3b0" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="80" dy="0">a stale entry after a successful mutation.</tspan></text>
+  </svg>
+</div>
+</body></html>

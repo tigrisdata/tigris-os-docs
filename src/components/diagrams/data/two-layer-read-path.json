@@ -1,0 +1,382 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 540,
+    "y": 20,
+    "text": "Two-Layer Read Path",
+    "fontSize": 24,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 380,
+    "y": 58,
+    "text": "Edge cache in front of FoundationDB metadata and S3-backed block storage",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "client",
+    "x": 60,
+    "y": 260,
+    "width": 140,
+    "height": 70,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "clientlbl",
+    "x": 92,
+    "y": 284,
+    "text": "Client",
+    "fontSize": 18,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "gateway",
+    "x": 360,
+    "y": 260,
+    "width": 170,
+    "height": 70,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "gatewaylbl",
+    "x": 398,
+    "y": 284,
+    "text": "Gateway",
+    "fontSize": 18,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "cache",
+    "x": 690,
+    "y": 235,
+    "width": 240,
+    "height": 120,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2.5
+  },
+  {
+    "type": "text",
+    "id": "cachelbl",
+    "x": 748,
+    "y": 265,
+    "text": "Edge Cache",
+    "fontSize": 20,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "cachesub",
+    "x": 777,
+    "y": 305,
+    "text": "Redis",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "fdb",
+    "x": 1090,
+    "y": 140,
+    "width": 260,
+    "height": 80,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "fdblbl",
+    "x": 1130,
+    "y": 158,
+    "text": "FoundationDB",
+    "fontSize": 18,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "fdbsub",
+    "x": 1170,
+    "y": 188,
+    "text": "Metadata",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "blocks",
+    "x": 1090,
+    "y": 380,
+    "width": 260,
+    "height": 80,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "blockslbl",
+    "x": 1130,
+    "y": 398,
+    "text": "Block Storage",
+    "fontSize": 18,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "blockssub",
+    "x": 1163,
+    "y": 428,
+    "text": "S3-backed",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-client-gw",
+    "x": 200,
+    "y": 295,
+    "points": [[0, 0], [160, 0]],
+    "endArrowhead": "arrow",
+    "strokeColor": "#c8d6de",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "a-client-gw-lbl",
+    "x": 242,
+    "y": 268,
+    "text": "GET",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-gw-cache",
+    "x": 530,
+    "y": 295,
+    "points": [[0, 0], [160, 0]],
+    "endArrowhead": "arrow",
+    "strokeColor": "#c8d6de",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "a-gw-cache-lbl",
+    "x": 560,
+    "y": 268,
+    "text": "check cache",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-hit",
+    "x": 810,
+    "y": 235,
+    "points": [[0, 0], [0, -70], [-680, -70], [-680, 25]],
+    "endArrowhead": "arrow",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2.5
+  },
+  {
+    "type": "text",
+    "id": "a-hit-lbl",
+    "x": 335,
+    "y": 140,
+    "text": "cache HIT — returned from edge, no FDB touch",
+    "fontSize": 15,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-fdb",
+    "x": 930,
+    "y": 270,
+    "points": [[0, 0], [160, -90]],
+    "endArrowhead": "arrow",
+    "startArrowhead": "arrow",
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "a-fdb-lbl",
+    "x": 965,
+    "y": 205,
+    "text": "metadata read",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-blocks",
+    "x": 930,
+    "y": 320,
+    "points": [[0, 0], [160, 100]],
+    "endArrowhead": "arrow",
+    "startArrowhead": "arrow",
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "a-blocks-lbl",
+    "x": 965,
+    "y": 395,
+    "text": "block fetch",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+  {
+    "type": "text",
+    "id": "a-miss-note",
+    "x": 965,
+    "y": 343,
+    "text": "MISS: fetch + populate",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "legendbox",
+    "x": 60,
+    "y": 510,
+    "width": 1290,
+    "height": 90,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#1e3340",
+    "strokeWidth": 1,
+    "strokeStyle": "dashed",
+    "opacity": 40
+  },
+  {
+    "type": "text",
+    "id": "legendlbl",
+    "x": 76,
+    "y": 520,
+    "text": "Legend",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "legend-req",
+    "x": 90,
+    "y": 560,
+    "points": [[0, 0], [60, 0]],
+    "endArrowhead": "arrow",
+    "strokeColor": "#c8d6de",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "legend-req-lbl",
+    "x": 170,
+    "y": 548,
+    "text": "Request flow",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+
+  {
+    "type": "arrow",
+    "id": "legend-hit",
+    "x": 410,
+    "y": 560,
+    "points": [[0, 0], [60, 0]],
+    "endArrowhead": "arrow",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2.5
+  },
+  {
+    "type": "text",
+    "id": "legend-hit-lbl",
+    "x": 490,
+    "y": 548,
+    "text": "Cache HIT (fast, no FDB)",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+
+  {
+    "type": "arrow",
+    "id": "legend-miss",
+    "x": 860,
+    "y": 560,
+    "points": [[0, 0], [60, 0]],
+    "endArrowhead": "arrow",
+    "startArrowhead": "arrow",
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2,
+    "strokeStyle": "dashed"
+  },
+  {
+    "type": "text",
+    "id": "legend-miss-lbl",
+    "x": 940,
+    "y": 548,
+    "text": "Cache MISS (fetch + populate)",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  }
+]

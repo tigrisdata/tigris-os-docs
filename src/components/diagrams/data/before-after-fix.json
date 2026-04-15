@@ -1,0 +1,81 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 480,
+    "y": 20,
+    "text": "The Fix: Reorder, Evict Before Delete",
+    "fontSize": 24,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "zoneL",
+    "x": 40, "y": 80, "width": 660, "height": 560,
+    "backgroundColor": "#142229", "fillStyle": "solid",
+    "roundness": { "type": 3 }, "strokeColor": "#CF5B5B", "strokeWidth": 1.5, "strokeStyle": "dashed", "opacity": 30
+  },
+  { "type": "text", "id": "zoneLlbl", "x": 58, "y": 96, "text": "Before — race window", "fontSize": 16, "fontFamily": 1, "strokeColor": "#CF5B5B" },
+
+  {
+    "type": "rectangle",
+    "id": "zoneR",
+    "x": 780, "y": 80, "width": 660, "height": 560,
+    "backgroundColor": "#142229", "fillStyle": "solid",
+    "roundness": { "type": 3 }, "strokeColor": "#62FEB5", "strokeWidth": 1.5, "strokeStyle": "dashed", "opacity": 30
+  },
+  { "type": "text", "id": "zoneRlbl", "x": 798, "y": 96, "text": "After — eager eviction under lock", "fontSize": 16, "fontFamily": 1, "strokeColor": "#62FEB5" },
+
+  { "type": "rectangle", "id": "l-s1", "x": 80, "y": 150, "width": 480, "height": 46, "backgroundColor": "#142229", "fillStyle": "solid", "roundness": { "type": 3 }, "strokeColor": "#2a4050", "strokeWidth": 2 },
+  { "type": "text", "id": "l-s1l", "x": 100, "y": 163, "text": "1. acquire key lock", "fontSize": 15, "fontFamily": 1, "strokeColor": "#c8d6de" },
+
+  { "type": "rectangle", "id": "l-s2", "x": 80, "y": 216, "width": 480, "height": 46, "backgroundColor": "#142229", "fillStyle": "solid", "roundness": { "type": 3 }, "strokeColor": "#2a4050", "strokeWidth": 2 },
+  { "type": "text", "id": "l-s2l", "x": 100, "y": 229, "text": "2. deleteObjects() — FDB delete succeeds", "fontSize": 15, "fontFamily": 1, "strokeColor": "#c8d6de" },
+
+  { "type": "rectangle", "id": "l-race", "x": 80, "y": 282, "width": 480, "height": 90, "backgroundColor": "#CF5B5B", "fillStyle": "solid", "roundness": { "type": 3 }, "strokeColor": "#CF5B5B", "strokeWidth": 1.5, "strokeStyle": "dashed", "opacity": 20 },
+  { "type": "text", "id": "l-race1", "x": 100, "y": 298, "text": "RACE WINDOW", "fontSize": 15, "fontFamily": 1, "strokeColor": "#CF5B5B" },
+  { "type": "text", "id": "l-race2", "x": 100, "y": 328, "text": "concurrent GET hits cache → returns stale 200", "fontSize": 13, "fontFamily": 1, "strokeColor": "#CF5B5B" },
+
+  { "type": "rectangle", "id": "l-s3", "x": 80, "y": 392, "width": 480, "height": 46, "backgroundColor": "#142229", "fillStyle": "solid", "roundness": { "type": 3 }, "strokeColor": "#2a4050", "strokeWidth": 2 },
+  { "type": "text", "id": "l-s3l", "x": 100, "y": 405, "text": "3. (deferred) evict cache entry", "fontSize": 15, "fontFamily": 1, "strokeColor": "#c8d6de" },
+
+  { "type": "rectangle", "id": "l-s4", "x": 80, "y": 458, "width": 480, "height": 46, "backgroundColor": "#142229", "fillStyle": "solid", "roundness": { "type": 3 }, "strokeColor": "#2a4050", "strokeWidth": 2 },
+  { "type": "text", "id": "l-s4l", "x": 100, "y": 471, "text": "4. (deferred) write tombstone", "fontSize": 15, "fontFamily": 1, "strokeColor": "#c8d6de" },
+
+  { "type": "rectangle", "id": "l-s5", "x": 80, "y": 524, "width": 480, "height": 46, "backgroundColor": "#142229", "fillStyle": "solid", "roundness": { "type": 3 }, "strokeColor": "#2a4050", "strokeWidth": 2 },
+  { "type": "text", "id": "l-s5l", "x": 100, "y": 537, "text": "5. release key lock", "fontSize": 15, "fontFamily": 1, "strokeColor": "#c8d6de" },
+
+  { "type": "arrow", "id": "l-f1", "x": 320, "y": 196, "points": [[0, 0], [0, 20]], "endArrowhead": "arrow", "strokeColor": "#c8d6de", "strokeWidth": 1.5 },
+  { "type": "arrow", "id": "l-f2", "x": 320, "y": 262, "points": [[0, 0], [0, 20]], "endArrowhead": "arrow", "strokeColor": "#c8d6de", "strokeWidth": 1.5 },
+  { "type": "arrow", "id": "l-f3", "x": 320, "y": 372, "points": [[0, 0], [0, 20]], "endArrowhead": "arrow", "strokeColor": "#c8d6de", "strokeWidth": 1.5 },
+  { "type": "arrow", "id": "l-f4", "x": 320, "y": 438, "points": [[0, 0], [0, 20]], "endArrowhead": "arrow", "strokeColor": "#c8d6de", "strokeWidth": 1.5 },
+  { "type": "arrow", "id": "l-f5", "x": 320, "y": 504, "points": [[0, 0], [0, 20]], "endArrowhead": "arrow", "strokeColor": "#c8d6de", "strokeWidth": 1.5 },
+
+  { "type": "rectangle", "id": "r-s1", "x": 820, "y": 150, "width": 480, "height": 46, "backgroundColor": "#142229", "fillStyle": "solid", "roundness": { "type": 3 }, "strokeColor": "#2a4050", "strokeWidth": 2 },
+  { "type": "text", "id": "r-s1l", "x": 840, "y": 163, "text": "1. acquire key lock", "fontSize": 15, "fontFamily": 1, "strokeColor": "#c8d6de" },
+
+  { "type": "rectangle", "id": "r-s2", "x": 820, "y": 216, "width": 480, "height": 46, "backgroundColor": "#142229", "fillStyle": "solid", "roundness": { "type": 3 }, "strokeColor": "#62FEB5", "strokeWidth": 2.5 },
+  { "type": "text", "id": "r-s2l", "x": 840, "y": 229, "text": "2. evict cache entry   (moved up)", "fontSize": 15, "fontFamily": 1, "strokeColor": "#62FEB5" },
+
+  { "type": "rectangle", "id": "r-s3", "x": 820, "y": 282, "width": 480, "height": 46, "backgroundColor": "#142229", "fillStyle": "solid", "roundness": { "type": 3 }, "strokeColor": "#2a4050", "strokeWidth": 2 },
+  { "type": "text", "id": "r-s3l", "x": 840, "y": 295, "text": "3. deleteObjects() — FDB delete", "fontSize": 15, "fontFamily": 1, "strokeColor": "#c8d6de" },
+
+  { "type": "rectangle", "id": "r-noracew", "x": 820, "y": 348, "width": 480, "height": 44, "backgroundColor": "#62FEB5", "fillStyle": "solid", "roundness": { "type": 3 }, "strokeColor": "#62FEB5", "strokeWidth": 1.5, "strokeStyle": "dashed", "opacity": 15 },
+  { "type": "text", "id": "r-noracewl", "x": 840, "y": 362, "text": "no window — lock held, cache already empty", "fontSize": 13, "fontFamily": 1, "strokeColor": "#62FEB5" },
+
+  { "type": "rectangle", "id": "r-s4", "x": 820, "y": 412, "width": 480, "height": 46, "backgroundColor": "#142229", "fillStyle": "solid", "roundness": { "type": 3 }, "strokeColor": "#2a4050", "strokeWidth": 2 },
+  { "type": "text", "id": "r-s4l", "x": 840, "y": 425, "text": "4. (deferred) evict again + write tombstone", "fontSize": 15, "fontFamily": 1, "strokeColor": "#c8d6de" },
+
+  { "type": "rectangle", "id": "r-s5", "x": 820, "y": 478, "width": 480, "height": 46, "backgroundColor": "#142229", "fillStyle": "solid", "roundness": { "type": 3 }, "strokeColor": "#2a4050", "strokeWidth": 2 },
+  { "type": "text", "id": "r-s5l", "x": 840, "y": 491, "text": "5. release key lock", "fontSize": 15, "fontFamily": 1, "strokeColor": "#c8d6de" },
+
+  { "type": "arrow", "id": "r-f1", "x": 1060, "y": 196, "points": [[0, 0], [0, 20]], "endArrowhead": "arrow", "strokeColor": "#c8d6de", "strokeWidth": 1.5 },
+  { "type": "arrow", "id": "r-f2", "x": 1060, "y": 262, "points": [[0, 0], [0, 20]], "endArrowhead": "arrow", "strokeColor": "#62FEB5", "strokeWidth": 2 },
+  { "type": "arrow", "id": "r-f3", "x": 1060, "y": 328, "points": [[0, 0], [0, 20]], "endArrowhead": "arrow", "strokeColor": "#c8d6de", "strokeWidth": 1.5 },
+  { "type": "arrow", "id": "r-f4", "x": 1060, "y": 392, "points": [[0, 0], [0, 20]], "endArrowhead": "arrow", "strokeColor": "#c8d6de", "strokeWidth": 1.5 },
+  { "type": "arrow", "id": "r-f5", "x": 1060, "y": 458, "points": [[0, 0], [0, 20]], "endArrowhead": "arrow", "strokeColor": "#c8d6de", "strokeWidth": 1.5 },
+
+  { "type": "text", "id": "r-defense", "x": 820, "y": 548, "text": "Defense-in-depth: deferred eviction + tombstone still run after —\nblocks stale re-population from async replication.", "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0" }
+]

@@ -1,0 +1,145 @@
+---
+title: Antithesis report — diagram previews
+description: Internal preview of diagrams for the Tigris Antithesis report. Not for public release.
+sidebar_class_name: hidden
+---
+
+import TwoLayerReadPathDiagram from "@site/src/components/diagrams/TwoLayerReadPathDiagram";
+import DeleteThenReadRaceDiagram from "@site/src/components/diagrams/DeleteThenReadRaceDiagram";
+import FourManifestationsDiagram from "@site/src/components/diagrams/FourManifestationsDiagram";
+import BeforeAfterFixDiagram from "@site/src/components/diagrams/BeforeAfterFixDiagram";
+import TombstoneBarrierDiagram from "@site/src/components/diagrams/TombstoneBarrierDiagram";
+import DeleteResurrectionLoopDiagram from "@site/src/components/diagrams/DeleteResurrectionLoopDiagram";
+import ThreeLayerDefenseDiagram from "@site/src/components/diagrams/ThreeLayerDefenseDiagram";
+
+# Antithesis report — diagram previews
+
+Draft previews of the 7 diagrams for the Tigris Antithesis report. This page is not linked from any sidebar and should not be merged. The standalone HTML renders live in `docs/internal/_html/` for offline review.
+
+All diagrams are drafts — please leave comments on the PR pointing at what should change (copy, layout, emphasis). We'll iterate one by one once feedback is in.
+
+---
+
+## 1. Two-Layer Read Path
+
+**Placeholder in report:** _Insert architecture diagram: show the two-layer read path. Client → Gateway → Edge Cache (Redis) → FoundationDB + Block Storage. Label the cache hit path (fast, no FDB touch) and the cache miss path (FDB read, then cache population)._
+
+<div className="mermaid-frame">
+  <TwoLayerReadPathDiagram />
+</div>
+
+**Design notes:**
+
+- Edge Cache is the visual focal point (green accent border) — it's where the bug in later diagrams lives.
+- Three arrow styles: gray solid for request flow, green solid for HIT (no FDB), blue dashed for MISS (fetch + populate).
+- HIT arrow arcs above the whole row to make "cache returns without touching FDB" visually unambiguous.
+
+---
+
+## 2. Delete-Then-Read Race
+
+**Placeholder:** _Insert sequence diagram: Request A DELETE → lock → FDB delete → (gap) → deferred eviction. Request B GET arrives during the gap → hits edge cache → returns 200 with deleted object's body. Label the gap as "race window."_
+
+<div className="mermaid-frame">
+  <DeleteThenReadRaceDiagram />
+</div>
+
+**Design notes:**
+
+- 5-lane sequence diagram (Request A, Key Lock, FDB, Edge Cache, Request B) with vertical dashed lifelines.
+- The race window is a translucent coral band spanning all lanes — makes it obvious the cache is "live" during the gap.
+- Coral-colored step 3 and 4 (GET and stale return) are the bad interleaving.
+
+---
+
+## 3. Four Manifestations, One Root Cause
+
+**Placeholder:** _Insert diagram: show the four manifestations as branches from a single root cause. Root: "Cache-metadata divergence under failure." Branches: Delete race, Rename, Replication, Regional failure._
+
+<div className="mermaid-frame">
+  <FourManifestationsDiagram />
+</div>
+
+**Design notes:**
+
+- Root box has the coral (problem) accent; children are neutral.
+- Each child carries a short description that maps back to a specific bug from the "Other manifestations" section.
+- Footer callout reinforces the framing: one architectural seam, four surface bugs.
+
+---
+
+## 4. The Fix: Reorder, Evict Before Delete
+
+**Placeholder:** _Before/after sequence. Left ("Before"): FDB delete → deferred eviction with race window and a concurrent GET sneaking in. Right ("After"): eager eviction under lock, concurrent GET blocked._
+
+<div className="mermaid-frame">
+  <BeforeAfterFixDiagram />
+</div>
+
+**Design notes:**
+
+- Two zoned panels side-by-side: coral dashed border (Before), green dashed border (After).
+- "Before" shows the race window inline as a coral band between steps 2 and 3; "After" replaces it with a green "no window" band.
+- Step 2 in the "After" panel (the moved-up eager eviction) gets the green accent, calling out the one structural change.
+
+---
+
+## 5. Tombstone Barrier
+
+**Placeholder:** _Cache-write gate. Three inbound arrows (normal read-through, async replication, retry) → tombstone check → rejected (older) / accepted (newer)._
+
+<div className="mermaid-frame">
+  <TombstoneBarrierDiagram />
+</div>
+
+**Design notes:**
+
+- Three sources on the left converge on the diamond tombstone check (green).
+- Two branches on the right: green accept, coral reject.
+- Callout below reinforces the source-agnostic framing from the report.
+
+---
+
+## 6. The Delete-Resurrection Loop
+
+**Placeholder:** _Cycle. DELETE → primary records → invalidation fails → stale cache hit → follower re-populates → loop._
+
+<div className="mermaid-frame">
+  <DeleteResurrectionLoopDiagram />
+</div>
+
+**Design notes:**
+
+- Five nodes arranged around a "keeps coming back" center callout, forming a clockwise loop.
+- Steps 3 (invalidation failure) and 5 (follower re-populate) use sandstone; step 4 (stale hit) uses coral as the visible symptom.
+- Dashed coral "re-cached from stale replica" arrow from 5 back to 4 shows the loop explicitly.
+
+---
+
+## 7. Three Layers of Cache-Coherence Defense
+
+**Placeholder:** _Vertical stack. Top: Write Path (eager invalidation). Middle: Read Path (tombstone barriers). Bottom: Replication Boundary (timestamp ordering). Left-side arrow "Failure modes" pointing up._
+
+<div className="mermaid-frame">
+  <ThreeLayerDefenseDiagram />
+</div>
+
+**Design notes:**
+
+- Each layer is a wide slab with its own accent color (green / steel blue / sandstone) to create a clear vertical hierarchy.
+- Left-side coral arrow pointing upward labels "Failure modes escalate" — each layer catches what the one above misses.
+- Right-side "Catches" cards summarize what each layer defends against.
+
+---
+
+## Raw HTML renders
+
+See `docs/internal/_html/`:
+
+- `01-two-layer-read-path.html`
+- `02-delete-then-read-race.html`
+- `03-four-manifestations.html`
+- `04-before-after-fix.html`
+- `05-tombstone-barrier.html`
+- `06-delete-resurrection-loop.html`
+- `07-three-layer-defense.html`

@@ -1,0 +1,98 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 460,
+    "y": 20,
+    "text": "Three Layers of Cache-Coherence Defense",
+    "fontSize": 24,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "subtitle",
+    "x": 420,
+    "y": 58,
+    "text": "Each layer catches what the one above it misses",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "l1",
+    "x": 280, "y": 120, "width": 900, "height": 130,
+    "backgroundColor": "#142229", "fillStyle": "solid",
+    "roundness": { "type": 3 }, "strokeColor": "#62FEB5", "strokeWidth": 2.5
+  },
+  { "type": "text", "id": "l1num", "x": 300, "y": 140, "text": "L1", "fontSize": 14, "fontFamily": 1, "strokeColor": "#62FEB5" },
+  { "type": "text", "id": "l1t", "x": 340, "y": 140, "text": "Write Path — Eager Invalidation", "fontSize": 20, "fontFamily": 1, "strokeColor": "#c8d6de" },
+  { "type": "text", "id": "l1d1", "x": 300, "y": 180, "text": "Every mutation evicts the cache entry BEFORE the mutation commits to the primary store, not after.", "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0" },
+  { "type": "text", "id": "l1d2", "x": 300, "y": 210, "text": "Closes the gap between \"source of truth changed\" and \"cache knows about it.\"", "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0" },
+
+  {
+    "type": "rectangle",
+    "id": "l2",
+    "x": 280, "y": 300, "width": 900, "height": 130,
+    "backgroundColor": "#142229", "fillStyle": "solid",
+    "roundness": { "type": 3 }, "strokeColor": "#5BA4CF", "strokeWidth": 2.5
+  },
+  { "type": "text", "id": "l2num", "x": 300, "y": 320, "text": "L2", "fontSize": 14, "fontFamily": 1, "strokeColor": "#5BA4CF" },
+  { "type": "text", "id": "l2t", "x": 340, "y": 320, "text": "Read Path — Tombstone Barriers", "fontSize": 20, "fontFamily": 1, "strokeColor": "#c8d6de" },
+  { "type": "text", "id": "l2d1", "x": 300, "y": 360, "text": "Timestamp check on every cache-write path blocks stale re-population.", "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0" },
+  { "type": "text", "id": "l2d2", "x": 300, "y": 390, "text": "Catches stale data even if eviction failed or Redis was unreachable.", "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0" },
+
+  {
+    "type": "rectangle",
+    "id": "l3",
+    "x": 280, "y": 480, "width": 900, "height": 130,
+    "backgroundColor": "#142229", "fillStyle": "solid",
+    "roundness": { "type": 3 }, "strokeColor": "#CF8E5B", "strokeWidth": 2.5
+  },
+  { "type": "text", "id": "l3num", "x": 300, "y": 500, "text": "L3", "fontSize": 14, "fontFamily": 1, "strokeColor": "#CF8E5B" },
+  { "type": "text", "id": "l3t", "x": 340, "y": 500, "text": "Replication Boundary — Timestamp Ordering", "fontSize": 20, "fontFamily": 1, "strokeColor": "#c8d6de" },
+  { "type": "text", "id": "l3d1", "x": 300, "y": 540, "text": "Incoming replication events compare LastModified. Newer data always wins, regardless of arrival order.", "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0" },
+  { "type": "text", "id": "l3d2", "x": 300, "y": 570, "text": "Prevents older copies from overwriting newer ones across regions.", "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0" },
+
+  { "type": "arrow", "id": "fm", "x": 180, "y": 580, "points": [[0, 0], [0, -400]], "endArrowhead": "arrow", "strokeColor": "#CF5B5B", "strokeWidth": 2.5 },
+  { "type": "text", "id": "fml1", "x": 60, "y": 360, "text": "Failure modes", "fontSize": 15, "fontFamily": 1, "strokeColor": "#CF5B5B" },
+  { "type": "text", "id": "fml2", "x": 72, "y": 392, "text": "escalate", "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0" },
+
+  {
+    "type": "rectangle",
+    "id": "r1",
+    "x": 1230, "y": 120, "width": 300, "height": 130,
+    "backgroundColor": "#142229", "fillStyle": "solid",
+    "roundness": { "type": 3 }, "strokeColor": "#1e3340", "strokeWidth": 1, "strokeStyle": "dashed", "opacity": 50
+  },
+  { "type": "text", "id": "r1h", "x": 1250, "y": 138, "text": "Catches", "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0" },
+  { "type": "text", "id": "r1t", "x": 1250, "y": 170, "text": "Direct writes where the", "fontSize": 13, "fontFamily": 1, "strokeColor": "#c8d6de" },
+  { "type": "text", "id": "r1t2", "x": 1250, "y": 192, "text": "cache is reachable and", "fontSize": 13, "fontFamily": 1, "strokeColor": "#c8d6de" },
+  { "type": "text", "id": "r1t3", "x": 1250, "y": 214, "text": "eviction succeeds.", "fontSize": 13, "fontFamily": 1, "strokeColor": "#c8d6de" },
+
+  {
+    "type": "rectangle",
+    "id": "r2",
+    "x": 1230, "y": 300, "width": 300, "height": 130,
+    "backgroundColor": "#142229", "fillStyle": "solid",
+    "roundness": { "type": 3 }, "strokeColor": "#1e3340", "strokeWidth": 1, "strokeStyle": "dashed", "opacity": 50
+  },
+  { "type": "text", "id": "r2h", "x": 1250, "y": 318, "text": "Catches", "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0" },
+  { "type": "text", "id": "r2t", "x": 1250, "y": 350, "text": "Stale re-population via", "fontSize": 13, "fontFamily": 1, "strokeColor": "#c8d6de" },
+  { "type": "text", "id": "r2t2", "x": 1250, "y": 372, "text": "async events after a", "fontSize": 13, "fontFamily": 1, "strokeColor": "#c8d6de" },
+  { "type": "text", "id": "r2t3", "x": 1250, "y": 394, "text": "successful delete.", "fontSize": 13, "fontFamily": 1, "strokeColor": "#c8d6de" },
+
+  {
+    "type": "rectangle",
+    "id": "r3",
+    "x": 1230, "y": 480, "width": 300, "height": 130,
+    "backgroundColor": "#142229", "fillStyle": "solid",
+    "roundness": { "type": 3 }, "strokeColor": "#1e3340", "strokeWidth": 1, "strokeStyle": "dashed", "opacity": 50
+  },
+  { "type": "text", "id": "r3h", "x": 1250, "y": 498, "text": "Catches", "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0" },
+  { "type": "text", "id": "r3t", "x": 1250, "y": 530, "text": "Out-of-order or retried", "fontSize": 13, "fontFamily": 1, "strokeColor": "#c8d6de" },
+  { "type": "text", "id": "r3t2", "x": 1250, "y": 552, "text": "replication events that", "fontSize": 13, "fontFamily": 1, "strokeColor": "#c8d6de" },
+  { "type": "text", "id": "r3t3", "x": 1250, "y": 574, "text": "would rewind state.", "fontSize": 13, "fontFamily": 1, "strokeColor": "#c8d6de" }
+]

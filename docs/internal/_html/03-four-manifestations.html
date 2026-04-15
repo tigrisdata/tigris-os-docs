@@ -1,0 +1,47 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>3 — Four Manifestations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background:#1a1a1a; color:#c8d6de; font-family: system-ui, sans-serif; padding: 24px; }
+  h1 { font-size: 14px; font-weight: 500; color:#8fa3b0; margin: 0 0 12px 0; letter-spacing: 0.5px; text-transform: uppercase; }
+  .meta { font-size: 12px; color:#667985; margin-bottom: 20px; }
+  .frame { max-width: 1400px; }
+  svg { display:block; width:100%; height:auto; }
+  /* Use Caveat as a Virgil fallback — similar hand-drawn feel, readily available. */
+  text { font-family: Virgil, 'Caveat', 'Comic Sans MS', cursive, sans-serif !important; }
+</style>
+</head><body>
+<div class="frame">
+  <h1>3 — Four Manifestations</h1>
+  <div class="meta">viewBox 40 0 1480 580 — 26 elements</div>
+  <svg viewBox="40 0 1480 580" xmlns="http://www.w3.org/2000/svg" style="background:#0e1920; border-radius:14px;">
+  <text x="490" y="44" fill="#c8d6de" font-size="24" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="490" dy="0">Four Manifestations, One Root Cause</tspan></text>
+<g opacity="1"><rect x="500" y="80" width="500" height="90" rx="8" ry="8" fill="#142229" stroke="#CF5B5B" stroke-width="2.5"/></g>
+<text x="540" y="120" fill="#c8d6de" font-size="20" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="540" dy="0">Cache-Metadata Divergence</tspan></text>
+<text x="600" y="149" fill="#CF5B5B" font-size="14" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="600" dy="0">under failure conditions</tspan></text>
+<g opacity="1"><path d="M750,170 L190,280" fill="none" stroke="#5BA4CF" stroke-width="2" stroke-linecap="round"/><polyline points="195.4444329948314,274.13841750337065 190,280 197.25711854935952,283.3666348718775" fill="none" stroke="#5BA4CF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g opacity="1"><path d="M750,170 L570,280" fill="none" stroke="#5BA4CF" stroke-width="2" stroke-linecap="round"/><polyline points="573.0705510324083,272.61273282212045 570,280 577.9745610382454,280.6374764680357" fill="none" stroke="#5BA4CF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g opacity="1"><path d="M750,170 L940,280" fill="none" stroke="#5BA4CF" stroke-width="2" stroke-linecap="round"/><polyline points="932.0428295758315,280.8267035990846 940,280 936.7548572668402,272.68774667825164" fill="none" stroke="#5BA4CF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g opacity="1"><path d="M750,170 L1320,280" fill="none" stroke="#5BA4CF" stroke-width="2" stroke-linecap="round"/><polyline points="1312.7540994716105,283.3907116557865 1320,280 1314.5361351820636,274.15652661071204" fill="none" stroke="#5BA4CF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g opacity="1"><rect x="60" y="280" width="300" height="170" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
+<text x="80" y="310" fill="#62FEB5" font-size="14" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="80" dy="0">1</tspan></text>
+<text x="110" y="314" fill="#c8d6de" font-size="18" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="110" dy="0">Delete race</tspan></text>
+<text x="80" y="349" fill="#8fa3b0" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="80" dy="0">Deferred cache eviction</tspan><tspan x="80" dy="15.6">leaves a window after FDB</tspan><tspan x="80" dy="15.6">delete where a concurrent</tspan><tspan x="80" dy="15.6">GET returns the stale body.</tspan></text>
+<g opacity="1"><rect x="440" y="280" width="300" height="170" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
+<text x="460" y="310" fill="#62FEB5" font-size="14" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="460" dy="0">2</tspan></text>
+<text x="490" y="314" fill="#c8d6de" font-size="18" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="490" dy="0">Rename rollback</tspan></text>
+<text x="460" y="349" fill="#8fa3b0" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="460" dy="0">Cache invalidation treated</tspan><tspan x="460" dy="15.6">as hard dependency; a</tspan><tspan x="460" dy="15.6">transient Redis failure</tspan><tspan x="460" dy="15.6">rolls back a committed</tspan><tspan x="460" dy="15.6">metadata operation.</tspan></text>
+<g opacity="1"><rect x="820" y="280" width="300" height="170" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
+<text x="840" y="310" fill="#62FEB5" font-size="14" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="840" dy="0">3</tspan></text>
+<text x="870" y="314" fill="#c8d6de" font-size="18" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="870" dy="0">Replication gap</tspan></text>
+<text x="840" y="349" fill="#8fa3b0" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="840" dy="0">Missing LastModified check</tspan><tspan x="840" dy="15.6">on replication events —</tspan><tspan x="840" dy="15.6">out-of-order retries let an</tspan><tspan x="840" dy="15.6">older block overwrite a</tspan><tspan x="840" dy="15.6">newer one.</tspan></text>
+<g opacity="1"><rect x="1200" y="280" width="300" height="170" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
+<text x="1220" y="310" fill="#62FEB5" font-size="14" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="1220" dy="0">4</tspan></text>
+<text x="1250" y="314" fill="#c8d6de" font-size="18" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="1250" dy="0">Regional failure</tspan></text>
+<text x="1220" y="349" fill="#8fa3b0" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="1220" dy="0">Partial regional fault</tspan><tspan x="1220" dy="15.6">allows the read path to</tspan><tspan x="1220" dy="15.6">bypass a consistency check</tspan><tspan x="1220" dy="15.6">and serve unvalidated</tspan><tspan x="1220" dy="15.6">state.</tspan></text>
+<g opacity="0.4"><rect x="60" y="500" width="1440" height="60" rx="8" ry="8" fill="#142229" stroke="#1e3340" stroke-width="1" stroke-dasharray="6 4"/></g>
+<text x="80" y="530" fill="#8fa3b0" font-size="14" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="80" dy="0">Each bug looked different in CI; in Antithesis, they resolved to a single architectural seam — metadata and cache diverging under fault.</tspan></text>
+  </svg>
+</div>
+</body></html>

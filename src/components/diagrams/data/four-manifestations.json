@@ -13,14 +13,21 @@
   {
     "type": "rectangle",
     "id": "root",
-    "x": 500, "y": 80, "width": 500, "height": 90,
-    "backgroundColor": "#142229", "fillStyle": "solid",
-    "roundness": { "type": 3 }, "strokeColor": "#CF5B5B", "strokeWidth": 2.5
+    "x": 500,
+    "y": 80,
+    "width": 500,
+    "height": 90,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#CF5B5B",
+    "strokeWidth": 2.5
   },
   {
     "type": "text",
     "id": "rootlbl",
-    "x": 540, "y": 100,
+    "x": 540,
+    "y": 100,
     "text": "Cache-Metadata Divergence",
     "fontSize": 20,
     "fontFamily": 1,
@@ -29,88 +36,266 @@
   {
     "type": "text",
     "id": "rootsub",
-    "x": 600, "y": 135,
+    "x": 600,
+    "y": 135,
     "text": "under failure conditions",
     "fontSize": 14,
     "fontFamily": 1,
     "strokeColor": "#CF5B5B"
   },
 
-  { "type": "arrow", "id": "b1", "x": 750, "y": 170, "points": [[0, 0], [-560, 110]], "endArrowhead": "arrow", "strokeColor": "#5BA4CF", "strokeWidth": 2 },
-  { "type": "arrow", "id": "b2", "x": 750, "y": 170, "points": [[0, 0], [-180, 110]], "endArrowhead": "arrow", "strokeColor": "#5BA4CF", "strokeWidth": 2 },
-  { "type": "arrow", "id": "b3", "x": 750, "y": 170, "points": [[0, 0], [190, 110]], "endArrowhead": "arrow", "strokeColor": "#5BA4CF", "strokeWidth": 2 },
-  { "type": "arrow", "id": "b4", "x": 750, "y": 170, "points": [[0, 0], [570, 110]], "endArrowhead": "arrow", "strokeColor": "#5BA4CF", "strokeWidth": 2 },
+  {
+    "type": "arrow",
+    "id": "b1",
+    "x": 750,
+    "y": 170,
+    "points": [
+      [0, 0],
+      [-560, 110]
+    ],
+    "endArrowhead": "arrow",
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2
+  },
+  {
+    "type": "arrow",
+    "id": "b2",
+    "x": 750,
+    "y": 170,
+    "points": [
+      [0, 0],
+      [-180, 110]
+    ],
+    "endArrowhead": "arrow",
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2
+  },
+  {
+    "type": "arrow",
+    "id": "b3",
+    "x": 750,
+    "y": 170,
+    "points": [
+      [0, 0],
+      [190, 110]
+    ],
+    "endArrowhead": "arrow",
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2
+  },
+  {
+    "type": "arrow",
+    "id": "b4",
+    "x": 750,
+    "y": 170,
+    "points": [
+      [0, 0],
+      [570, 110]
+    ],
+    "endArrowhead": "arrow",
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2
+  },
 
   {
     "type": "rectangle",
     "id": "c1",
-    "x": 60, "y": 280, "width": 300, "height": 170,
-    "backgroundColor": "#142229", "fillStyle": "solid",
-    "roundness": { "type": 3 }, "strokeColor": "#2a4050", "strokeWidth": 2
+    "x": 60,
+    "y": 280,
+    "width": 300,
+    "height": 170,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
   },
-  { "type": "text", "id": "c1n", "x": 80, "y": 296, "text": "1", "fontSize": 14, "fontFamily": 1, "strokeColor": "#62FEB5" },
-  { "type": "text", "id": "c1t", "x": 110, "y": 296, "text": "Delete race", "fontSize": 18, "fontFamily": 1, "strokeColor": "#c8d6de" },
   {
-    "type": "text", "id": "c1d", "x": 80, "y": 336,
+    "type": "text",
+    "id": "c1n",
+    "x": 80,
+    "y": 296,
+    "text": "1",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "c1t",
+    "x": 110,
+    "y": 296,
+    "text": "Delete race",
+    "fontSize": 18,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "c1d",
+    "x": 80,
+    "y": 336,
     "text": "Deferred cache eviction\nleaves a window after FDB\ndelete where a concurrent\nGET returns the stale body.",
-    "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0"
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
   },
 
   {
     "type": "rectangle",
     "id": "c2",
-    "x": 440, "y": 280, "width": 300, "height": 170,
-    "backgroundColor": "#142229", "fillStyle": "solid",
-    "roundness": { "type": 3 }, "strokeColor": "#2a4050", "strokeWidth": 2
+    "x": 440,
+    "y": 280,
+    "width": 300,
+    "height": 170,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
   },
-  { "type": "text", "id": "c2n", "x": 460, "y": 296, "text": "2", "fontSize": 14, "fontFamily": 1, "strokeColor": "#62FEB5" },
-  { "type": "text", "id": "c2t", "x": 490, "y": 296, "text": "Rename rollback", "fontSize": 18, "fontFamily": 1, "strokeColor": "#c8d6de" },
   {
-    "type": "text", "id": "c2d", "x": 460, "y": 336,
+    "type": "text",
+    "id": "c2n",
+    "x": 460,
+    "y": 296,
+    "text": "2",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "c2t",
+    "x": 490,
+    "y": 296,
+    "text": "Rename rollback",
+    "fontSize": 18,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "c2d",
+    "x": 460,
+    "y": 336,
     "text": "Cache invalidation treated\nas hard dependency; a\ntransient Redis failure\nrolls back a committed\nmetadata operation.",
-    "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0"
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
   },
 
   {
     "type": "rectangle",
     "id": "c3",
-    "x": 820, "y": 280, "width": 300, "height": 170,
-    "backgroundColor": "#142229", "fillStyle": "solid",
-    "roundness": { "type": 3 }, "strokeColor": "#2a4050", "strokeWidth": 2
+    "x": 820,
+    "y": 280,
+    "width": 300,
+    "height": 170,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
   },
-  { "type": "text", "id": "c3n", "x": 840, "y": 296, "text": "3", "fontSize": 14, "fontFamily": 1, "strokeColor": "#62FEB5" },
-  { "type": "text", "id": "c3t", "x": 870, "y": 296, "text": "Replication gap", "fontSize": 18, "fontFamily": 1, "strokeColor": "#c8d6de" },
   {
-    "type": "text", "id": "c3d", "x": 840, "y": 336,
+    "type": "text",
+    "id": "c3n",
+    "x": 840,
+    "y": 296,
+    "text": "3",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "c3t",
+    "x": 870,
+    "y": 296,
+    "text": "Replication gap",
+    "fontSize": 18,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "c3d",
+    "x": 840,
+    "y": 336,
     "text": "Missing LastModified check\non replication events —\nout-of-order retries let an\nolder block overwrite a\nnewer one.",
-    "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0"
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
   },
 
   {
     "type": "rectangle",
     "id": "c4",
-    "x": 1200, "y": 280, "width": 300, "height": 170,
-    "backgroundColor": "#142229", "fillStyle": "solid",
-    "roundness": { "type": 3 }, "strokeColor": "#2a4050", "strokeWidth": 2
+    "x": 1200,
+    "y": 280,
+    "width": 300,
+    "height": 170,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
   },
-  { "type": "text", "id": "c4n", "x": 1220, "y": 296, "text": "4", "fontSize": 14, "fontFamily": 1, "strokeColor": "#62FEB5" },
-  { "type": "text", "id": "c4t", "x": 1250, "y": 296, "text": "Regional failure", "fontSize": 18, "fontFamily": 1, "strokeColor": "#c8d6de" },
   {
-    "type": "text", "id": "c4d", "x": 1220, "y": 336,
+    "type": "text",
+    "id": "c4n",
+    "x": 1220,
+    "y": 296,
+    "text": "4",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "c4t",
+    "x": 1250,
+    "y": 296,
+    "text": "Regional failure",
+    "fontSize": 18,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "c4d",
+    "x": 1220,
+    "y": 336,
     "text": "Partial regional fault\nallows the read path to\nbypass a consistency check\nand serve unvalidated\nstate.",
-    "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0"
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
   },
 
   {
     "type": "rectangle",
     "id": "footer",
-    "x": 60, "y": 500, "width": 1440, "height": 60,
-    "backgroundColor": "#142229", "fillStyle": "solid",
-    "roundness": { "type": 3 }, "strokeColor": "#1e3340", "strokeWidth": 1, "strokeStyle": "dashed", "opacity": 40
+    "x": 60,
+    "y": 500,
+    "width": 1440,
+    "height": 60,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#1e3340",
+    "strokeWidth": 1,
+    "strokeStyle": "dashed",
+    "opacity": 40
   },
   {
-    "type": "text", "id": "footerlbl", "x": 80, "y": 516,
+    "type": "text",
+    "id": "footerlbl",
+    "x": 80,
+    "y": 516,
     "text": "Each bug looked different in CI; in Antithesis, they resolved to a single architectural seam — metadata and cache diverging under fault.",
-    "fontSize": 14, "fontFamily": 1, "strokeColor": "#8fa3b0"
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
   }
 ]

@@ -1,57 +1,503 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><title>2 — Delete-Then-Read Race</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  body { margin: 0; background:#1a1a1a; color:#c8d6de; font-family: system-ui, sans-serif; padding: 24px; }
-  h1 { font-size: 14px; font-weight: 500; color:#8fa3b0; margin: 0 0 12px 0; letter-spacing: 0.5px; text-transform: uppercase; }
-  .meta { font-size: 12px; color:#667985; margin-bottom: 20px; }
-  .frame { max-width: 1400px; }
-  svg { display:block; width:100%; height:auto; }
-  /* Use Caveat as a Virgil fallback — similar hand-drawn feel, readily available. */
-  text { font-family: Virgil, 'Caveat', 'Comic Sans MS', cursive, sans-serif !important; }
-</style>
-</head><body>
-<div class="frame">
-  <h1>2 — Delete-Then-Read Race</h1>
-  <div class="meta">viewBox 40 0 1340 700 — 36 elements</div>
-  <svg viewBox="40 0 1340 700" xmlns="http://www.w3.org/2000/svg" style="background:#0e1920; border-radius:14px;">
-  <text x="520" y="44" fill="#c8d6de" font-size="24" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="520" dy="0">Delete-Then-Read Race</tspan></text>
-<text x="360" y="72" fill="#8fa3b0" font-size="14" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="360" dy="0">A concurrent GET wins the gap between FDB delete and deferred cache eviction</tspan></text>
-<g opacity="1"><rect x="60" y="100" width="180" height="56" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
-<text x="86" y="133" fill="#c8d6de" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="86" dy="0">Request A (DELETE)</tspan></text>
-<g opacity="1"><rect x="340" y="100" width="180" height="56" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
-<text x="395" y="133" fill="#c8d6de" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="395" dy="0">Key Lock</tspan></text>
-<g opacity="1"><rect x="620" y="100" width="180" height="56" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
-<text x="660" y="133" fill="#c8d6de" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="660" dy="0">FoundationDB</tspan></text>
-<g opacity="1"><rect x="900" y="100" width="180" height="56" rx="8" ry="8" fill="#142229" stroke="#62FEB5" stroke-width="2.5"/></g>
-<text x="946" y="133" fill="#c8d6de" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="946" dy="0">Edge Cache</tspan></text>
-<g opacity="1"><rect x="1180" y="100" width="180" height="56" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
-<text x="1220" y="133" fill="#c8d6de" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="1220" dy="0">Request B (GET)</tspan></text>
-<g opacity="1"><path d="M150,156 L150,676" fill="none" stroke="#2a4050" stroke-width="1" stroke-dasharray="6 4" stroke-linecap="round"/></g>
-<g opacity="1"><path d="M430,156 L430,676" fill="none" stroke="#2a4050" stroke-width="1" stroke-dasharray="6 4" stroke-linecap="round"/></g>
-<g opacity="1"><path d="M710,156 L710,676" fill="none" stroke="#2a4050" stroke-width="1" stroke-dasharray="6 4" stroke-linecap="round"/></g>
-<g opacity="1"><path d="M990,156 L990,676" fill="none" stroke="#2a4050" stroke-width="1" stroke-dasharray="6 4" stroke-linecap="round"/></g>
-<g opacity="1"><path d="M1270,156 L1270,676" fill="none" stroke="#2a4050" stroke-width="1" stroke-dasharray="6 4" stroke-linecap="round"/></g>
-<g opacity="0.15"><rect x="100" y="290" width="1200" height="110" rx="8" ry="8" fill="#CF5B5B" stroke="#CF5B5B" stroke-width="1.5" stroke-dasharray="6 4"/></g>
-<text x="112" y="312" fill="#CF5B5B" font-size="14" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="112" dy="0">RACE WINDOW — FDB deleted, cache still has object</tspan></text>
-<g opacity="1"><path d="M150,200 L430,200" fill="none" stroke="#c8d6de" stroke-width="2" stroke-linecap="round"/><polyline points="423.5278640450004,204.7022820183398 430,200 423.5278640450004,195.2977179816602" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<text x="192" y="191" fill="#8fa3b0" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="192" dy="0">1. acquire lock</tspan></text>
-<g opacity="1"><path d="M150,250 L710,250" fill="none" stroke="#c8d6de" stroke-width="2" stroke-linecap="round"/><polyline points="703.5278640450005,254.7022820183398 710,250 703.5278640450005,245.2977179816602" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<text x="332" y="241" fill="#8fa3b0" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="332" dy="0">2. deleteObjects() — FDB delete succeeds</tspan></text>
-<g opacity="1"><path d="M1270,330 L990,330" fill="none" stroke="#CF5B5B" stroke-width="2" stroke-linecap="round"/><polyline points="996.4721359549995,325.2977179816602 990,330 996.4721359549995,334.70228201833976" fill="none" stroke="#CF5B5B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<text x="1048" y="321" fill="#CF5B5B" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="1048" dy="0">3. GET arrives — hits cache</tspan></text>
-<g opacity="1"><path d="M990,370 L1270,370" fill="none" stroke="#CF5B5B" stroke-width="2" stroke-dasharray="6 4" stroke-linecap="round"/><polyline points="1263.5278640450003,374.70228201833976 1270,370 1263.5278640450003,365.29771798166024" fill="none" stroke="#CF5B5B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<text x="1032" y="363" fill="#CF5B5B" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="1032" dy="0">4. 200 OK + stale body</tspan></text>
-<g opacity="1"><path d="M150,440 L990,440" fill="none" stroke="#c8d6de" stroke-width="2" stroke-linecap="round"/><polyline points="983.5278640450005,444.70228201833976 990,440 983.5278640450005,435.29771798166024" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<text x="400" y="431" fill="#8fa3b0" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="400" dy="0">5. (defer) evict cache — too late</tspan></text>
-<g opacity="1"><path d="M150,490 L710,490" fill="none" stroke="#c8d6de" stroke-width="2" stroke-linecap="round"/><polyline points="703.5278640450005,494.70228201833976 710,490 703.5278640450005,485.29771798166024" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<text x="332" y="481" fill="#8fa3b0" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="332" dy="0">6. (defer) write tombstone</tspan></text>
-<g opacity="1"><path d="M150,540 L430,540" fill="none" stroke="#c8d6de" stroke-width="2" stroke-linecap="round"/><polyline points="423.5278640450004,544.7022820183398 430,540 423.5278640450004,535.2977179816602" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<text x="192" y="531" fill="#8fa3b0" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="192" dy="0">7. release lock</tspan></text>
-<g opacity="0.4"><rect x="60" y="610" width="1300" height="70" rx="8" ry="8" fill="#142229" stroke="#CF5B5B" stroke-width="1.5" stroke-dasharray="6 4"/></g>
-<text x="80" y="639" fill="#CF5B5B" font-size="14" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="80" dy="0">Consistency violation: DELETE succeeded; next GET must return 404. Instead it returns the deleted body.</tspan></text>
-<text x="80" y="663" fill="#8fa3b0" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="80" dy="0">The gap between step 2 and step 5 is the race window — any concurrent GET in that window sees stale state.</tspan></text>
-  </svg>
-</div>
-</body></html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>2 — Delete-Then-Read Race</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        background: #1a1a1a;
+        color: #c8d6de;
+        font-family: system-ui, sans-serif;
+        padding: 24px;
+      }
+      h1 {
+        font-size: 14px;
+        font-weight: 500;
+        color: #8fa3b0;
+        margin: 0 0 12px 0;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .meta {
+        font-size: 12px;
+        color: #667985;
+        margin-bottom: 20px;
+      }
+      .frame {
+        max-width: 1400px;
+      }
+      svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      /* Use Caveat as a Virgil fallback — similar hand-drawn feel, readily available. */
+      text {
+        font-family:
+          Virgil, "Caveat", "Comic Sans MS", cursive, sans-serif !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <h1>2 — Delete-Then-Read Race</h1>
+      <div class="meta">viewBox 40 0 1340 700 — 36 elements</div>
+      <svg
+        viewBox="40 0 1340 700"
+        xmlns="http://www.w3.org/2000/svg"
+        style="background: #0e1920; border-radius: 14px"
+      >
+        <text
+          x="520"
+          y="44"
+          fill="#c8d6de"
+          font-size="24"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="520" dy="0">Delete-Then-Read Race</tspan>
+        </text>
+        <text
+          x="360"
+          y="72"
+          fill="#8fa3b0"
+          font-size="14"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="360" dy="0">
+            A concurrent GET wins the gap between FDB delete and deferred cache
+            eviction
+          </tspan>
+        </text>
+        <g opacity="1">
+          <rect
+            x="60"
+            y="100"
+            width="180"
+            height="56"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#2a4050"
+            stroke-width="2"
+          />
+        </g>
+        <text
+          x="86"
+          y="133"
+          fill="#c8d6de"
+          font-size="15"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="86" dy="0">Request A (DELETE)</tspan>
+        </text>
+        <g opacity="1">
+          <rect
+            x="340"
+            y="100"
+            width="180"
+            height="56"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#2a4050"
+            stroke-width="2"
+          />
+        </g>
+        <text
+          x="395"
+          y="133"
+          fill="#c8d6de"
+          font-size="15"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="395" dy="0">Key Lock</tspan>
+        </text>
+        <g opacity="1">
+          <rect
+            x="620"
+            y="100"
+            width="180"
+            height="56"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#2a4050"
+            stroke-width="2"
+          />
+        </g>
+        <text
+          x="660"
+          y="133"
+          fill="#c8d6de"
+          font-size="15"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="660" dy="0">FoundationDB</tspan>
+        </text>
+        <g opacity="1">
+          <rect
+            x="900"
+            y="100"
+            width="180"
+            height="56"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#62FEB5"
+            stroke-width="2.5"
+          />
+        </g>
+        <text
+          x="946"
+          y="133"
+          fill="#c8d6de"
+          font-size="15"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="946" dy="0">Edge Cache</tspan>
+        </text>
+        <g opacity="1">
+          <rect
+            x="1180"
+            y="100"
+            width="180"
+            height="56"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#2a4050"
+            stroke-width="2"
+          />
+        </g>
+        <text
+          x="1220"
+          y="133"
+          fill="#c8d6de"
+          font-size="15"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="1220" dy="0">Request B (GET)</tspan>
+        </text>
+        <g opacity="1">
+          <path
+            d="M150,156 L150,676"
+            fill="none"
+            stroke="#2a4050"
+            stroke-width="1"
+            stroke-dasharray="6 4"
+            stroke-linecap="round"
+          />
+        </g>
+        <g opacity="1">
+          <path
+            d="M430,156 L430,676"
+            fill="none"
+            stroke="#2a4050"
+            stroke-width="1"
+            stroke-dasharray="6 4"
+            stroke-linecap="round"
+          />
+        </g>
+        <g opacity="1">
+          <path
+            d="M710,156 L710,676"
+            fill="none"
+            stroke="#2a4050"
+            stroke-width="1"
+            stroke-dasharray="6 4"
+            stroke-linecap="round"
+          />
+        </g>
+        <g opacity="1">
+          <path
+            d="M990,156 L990,676"
+            fill="none"
+            stroke="#2a4050"
+            stroke-width="1"
+            stroke-dasharray="6 4"
+            stroke-linecap="round"
+          />
+        </g>
+        <g opacity="1">
+          <path
+            d="M1270,156 L1270,676"
+            fill="none"
+            stroke="#2a4050"
+            stroke-width="1"
+            stroke-dasharray="6 4"
+            stroke-linecap="round"
+          />
+        </g>
+        <g opacity="0.15">
+          <rect
+            x="100"
+            y="290"
+            width="1200"
+            height="110"
+            rx="8"
+            ry="8"
+            fill="#CF5B5B"
+            stroke="#CF5B5B"
+            stroke-width="1.5"
+            stroke-dasharray="6 4"
+          />
+        </g>
+        <text
+          x="112"
+          y="312"
+          fill="#CF5B5B"
+          font-size="14"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="112" dy="0">
+            RACE WINDOW — FDB deleted, cache still has object
+          </tspan>
+        </text>
+        <g opacity="1">
+          <path
+            d="M150,200 L430,200"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="423.5278640450004,204.7022820183398 430,200 423.5278640450004,195.2977179816602"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <text
+          x="192"
+          y="191"
+          fill="#8fa3b0"
+          font-size="13"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="192" dy="0">1. acquire lock</tspan>
+        </text>
+        <g opacity="1">
+          <path
+            d="M150,250 L710,250"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="703.5278640450005,254.7022820183398 710,250 703.5278640450005,245.2977179816602"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <text
+          x="332"
+          y="241"
+          fill="#8fa3b0"
+          font-size="13"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="332" dy="0">2. deleteObjects() — FDB delete succeeds</tspan>
+        </text>
+        <g opacity="1">
+          <path
+            d="M1270,330 L990,330"
+            fill="none"
+            stroke="#CF5B5B"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="996.4721359549995,325.2977179816602 990,330 996.4721359549995,334.70228201833976"
+            fill="none"
+            stroke="#CF5B5B"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <text
+          x="1048"
+          y="321"
+          fill="#CF5B5B"
+          font-size="13"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="1048" dy="0">3. GET arrives — hits cache</tspan>
+        </text>
+        <g opacity="1">
+          <path
+            d="M990,370 L1270,370"
+            fill="none"
+            stroke="#CF5B5B"
+            stroke-width="2"
+            stroke-dasharray="6 4"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="1263.5278640450003,374.70228201833976 1270,370 1263.5278640450003,365.29771798166024"
+            fill="none"
+            stroke="#CF5B5B"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <text
+          x="1032"
+          y="363"
+          fill="#CF5B5B"
+          font-size="13"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="1032" dy="0">4. 200 OK + stale body</tspan>
+        </text>
+        <g opacity="1">
+          <path
+            d="M150,440 L990,440"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="983.5278640450005,444.70228201833976 990,440 983.5278640450005,435.29771798166024"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <text
+          x="400"
+          y="431"
+          fill="#8fa3b0"
+          font-size="13"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="400" dy="0">5. (defer) evict cache — too late</tspan>
+        </text>
+        <g opacity="1">
+          <path
+            d="M150,490 L710,490"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="703.5278640450005,494.70228201833976 710,490 703.5278640450005,485.29771798166024"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <text
+          x="332"
+          y="481"
+          fill="#8fa3b0"
+          font-size="13"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="332" dy="0">6. (defer) write tombstone</tspan>
+        </text>
+        <g opacity="1">
+          <path
+            d="M150,540 L430,540"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="423.5278640450004,544.7022820183398 430,540 423.5278640450004,535.2977179816602"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <text
+          x="192"
+          y="531"
+          fill="#8fa3b0"
+          font-size="13"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="192" dy="0">7. release lock</tspan>
+        </text>
+        <g opacity="0.4">
+          <rect
+            x="60"
+            y="610"
+            width="1300"
+            height="70"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#CF5B5B"
+            stroke-width="1.5"
+            stroke-dasharray="6 4"
+          />
+        </g>
+        <text
+          x="80"
+          y="639"
+          fill="#CF5B5B"
+          font-size="14"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="80" dy="0">
+            Consistency violation: DELETE succeeded; next GET must return 404.
+            Instead it returns the deleted body.
+          </tspan>
+        </text>
+        <text
+          x="80"
+          y="663"
+          fill="#8fa3b0"
+          font-size="13"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="80" dy="0">
+            The gap between step 2 and step 5 is the race window — any
+            concurrent GET in that window sees stale state.
+          </tspan>
+        </text>
+      </svg>
+    </div>
+  </body>
+</html>

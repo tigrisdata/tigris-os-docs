@@ -175,7 +175,10 @@
     "id": "a-client-gw",
     "x": 200,
     "y": 295,
-    "points": [[0, 0], [160, 0]],
+    "points": [
+      [0, 0],
+      [160, 0]
+    ],
     "endArrowhead": "arrow",
     "strokeColor": "#c8d6de",
     "strokeWidth": 2
@@ -196,7 +199,10 @@
     "id": "a-gw-cache",
     "x": 530,
     "y": 295,
-    "points": [[0, 0], [160, 0]],
+    "points": [
+      [0, 0],
+      [160, 0]
+    ],
     "endArrowhead": "arrow",
     "strokeColor": "#c8d6de",
     "strokeWidth": 2
@@ -217,7 +223,12 @@
     "id": "a-hit",
     "x": 810,
     "y": 235,
-    "points": [[0, 0], [0, -70], [-680, -70], [-680, 25]],
+    "points": [
+      [0, 0],
+      [0, -70],
+      [-680, -70],
+      [-680, 25]
+    ],
     "endArrowhead": "arrow",
     "strokeColor": "#62FEB5",
     "strokeWidth": 2.5
@@ -238,7 +249,10 @@
     "id": "a-fdb",
     "x": 930,
     "y": 270,
-    "points": [[0, 0], [160, -90]],
+    "points": [
+      [0, 0],
+      [160, -90]
+    ],
     "endArrowhead": "arrow",
     "startArrowhead": "arrow",
     "strokeColor": "#5BA4CF",
@@ -261,7 +275,10 @@
     "id": "a-blocks",
     "x": 930,
     "y": 320,
-    "points": [[0, 0], [160, 100]],
+    "points": [
+      [0, 0],
+      [160, 100]
+    ],
     "endArrowhead": "arrow",
     "startArrowhead": "arrow",
     "strokeColor": "#5BA4CF",
@@ -320,7 +337,10 @@
     "id": "legend-req",
     "x": 90,
     "y": 560,
-    "points": [[0, 0], [60, 0]],
+    "points": [
+      [0, 0],
+      [60, 0]
+    ],
     "endArrowhead": "arrow",
     "strokeColor": "#c8d6de",
     "strokeWidth": 2
@@ -341,7 +361,10 @@
     "id": "legend-hit",
     "x": 410,
     "y": 560,
-    "points": [[0, 0], [60, 0]],
+    "points": [
+      [0, 0],
+      [60, 0]
+    ],
     "endArrowhead": "arrow",
     "strokeColor": "#62FEB5",
     "strokeWidth": 2.5
@@ -362,7 +385,10 @@
     "id": "legend-miss",
     "x": 860,
     "y": 560,
-    "points": [[0, 0], [60, 0]],
+    "points": [
+      [0, 0],
+      [60, 0]
+    ],
     "endArrowhead": "arrow",
     "startArrowhead": "arrow",
     "strokeColor": "#5BA4CF",

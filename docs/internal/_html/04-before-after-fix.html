@@ -1,62 +1,596 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><title>4 — Before/After Fix</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  body { margin: 0; background:#1a1a1a; color:#c8d6de; font-family: system-ui, sans-serif; padding: 24px; }
-  h1 { font-size: 14px; font-weight: 500; color:#8fa3b0; margin: 0 0 12px 0; letter-spacing: 0.5px; text-transform: uppercase; }
-  .meta { font-size: 12px; color:#667985; margin-bottom: 20px; }
-  .frame { max-width: 1400px; }
-  svg { display:block; width:100%; height:auto; }
-  /* Use Caveat as a Virgil fallback — similar hand-drawn feel, readily available. */
-  text { font-family: Virgil, 'Caveat', 'Comic Sans MS', cursive, sans-serif !important; }
-</style>
-</head><body>
-<div class="frame">
-  <h1>4 — Before/After Fix</h1>
-  <div class="meta">viewBox 20 0 1440 660 — 41 elements</div>
-  <svg viewBox="20 0 1440 660" xmlns="http://www.w3.org/2000/svg" style="background:#0e1920; border-radius:14px;">
-  <text x="480" y="44" fill="#c8d6de" font-size="24" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="480" dy="0">The Fix: Reorder, Evict Before Delete</tspan></text>
-<g opacity="0.3"><rect x="40" y="80" width="660" height="560" rx="8" ry="8" fill="#142229" stroke="#CF5B5B" stroke-width="1.5" stroke-dasharray="6 4"/></g>
-<text x="58" y="112" fill="#CF5B5B" font-size="16" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="58" dy="0">Before — race window</tspan></text>
-<g opacity="0.3"><rect x="780" y="80" width="660" height="560" rx="8" ry="8" fill="#142229" stroke="#62FEB5" stroke-width="1.5" stroke-dasharray="6 4"/></g>
-<text x="798" y="112" fill="#62FEB5" font-size="16" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="798" dy="0">After — eager eviction under lock</tspan></text>
-<g opacity="1"><rect x="80" y="150" width="480" height="46" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
-<text x="100" y="178" fill="#c8d6de" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="100" dy="0">1. acquire key lock</tspan></text>
-<g opacity="1"><rect x="80" y="216" width="480" height="46" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
-<text x="100" y="244" fill="#c8d6de" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="100" dy="0">2. deleteObjects() — FDB delete succeeds</tspan></text>
-<g opacity="0.2"><rect x="80" y="282" width="480" height="90" rx="8" ry="8" fill="#CF5B5B" stroke="#CF5B5B" stroke-width="1.5" stroke-dasharray="6 4"/></g>
-<text x="100" y="313" fill="#CF5B5B" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="100" dy="0">RACE WINDOW</tspan></text>
-<text x="100" y="341" fill="#CF5B5B" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="100" dy="0">concurrent GET hits cache → returns stale 200</tspan></text>
-<g opacity="1"><rect x="80" y="392" width="480" height="46" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
-<text x="100" y="420" fill="#c8d6de" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="100" dy="0">3. (deferred) evict cache entry</tspan></text>
-<g opacity="1"><rect x="80" y="458" width="480" height="46" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
-<text x="100" y="486" fill="#c8d6de" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="100" dy="0">4. (deferred) write tombstone</tspan></text>
-<g opacity="1"><rect x="80" y="524" width="480" height="46" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
-<text x="100" y="552" fill="#c8d6de" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="100" dy="0">5. release key lock</tspan></text>
-<g opacity="1"><path d="M320,196 L320,216" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round"/><polyline points="315.29771798166024,209.52786404500043 320,216 324.70228201833976,209.52786404500043" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<g opacity="1"><path d="M320,262 L320,282" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round"/><polyline points="315.29771798166024,275.5278640450004 320,282 324.70228201833976,275.5278640450004" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<g opacity="1"><path d="M320,372 L320,392" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round"/><polyline points="315.29771798166024,385.5278640450004 320,392 324.70228201833976,385.5278640450004" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<g opacity="1"><path d="M320,438 L320,458" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round"/><polyline points="315.29771798166024,451.5278640450004 320,458 324.70228201833976,451.5278640450004" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<g opacity="1"><path d="M320,504 L320,524" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round"/><polyline points="315.29771798166024,517.5278640450005 320,524 324.70228201833976,517.5278640450005" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<g opacity="1"><rect x="820" y="150" width="480" height="46" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
-<text x="840" y="178" fill="#c8d6de" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="840" dy="0">1. acquire key lock</tspan></text>
-<g opacity="1"><rect x="820" y="216" width="480" height="46" rx="8" ry="8" fill="#142229" stroke="#62FEB5" stroke-width="2.5"/></g>
-<text x="840" y="244" fill="#62FEB5" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="840" dy="0">2. evict cache entry   (moved up)</tspan></text>
-<g opacity="1"><rect x="820" y="282" width="480" height="46" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
-<text x="840" y="310" fill="#c8d6de" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="840" dy="0">3. deleteObjects() — FDB delete</tspan></text>
-<g opacity="0.15"><rect x="820" y="348" width="480" height="44" rx="8" ry="8" fill="#62FEB5" stroke="#62FEB5" stroke-width="1.5" stroke-dasharray="6 4"/></g>
-<text x="840" y="375" fill="#62FEB5" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="840" dy="0">no window — lock held, cache already empty</tspan></text>
-<g opacity="1"><rect x="820" y="412" width="480" height="46" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
-<text x="840" y="440" fill="#c8d6de" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="840" dy="0">4. (deferred) evict again + write tombstone</tspan></text>
-<g opacity="1"><rect x="820" y="478" width="480" height="46" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
-<text x="840" y="506" fill="#c8d6de" font-size="15" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="840" dy="0">5. release key lock</tspan></text>
-<g opacity="1"><path d="M1060,196 L1060,216" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round"/><polyline points="1055.2977179816603,209.52786404500043 1060,216 1064.7022820183397,209.52786404500043" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<g opacity="1"><path d="M1060,262 L1060,282" fill="none" stroke="#62FEB5" stroke-width="2" stroke-linecap="round"/><polyline points="1055.2977179816603,275.5278640450004 1060,282 1064.7022820183397,275.5278640450004" fill="none" stroke="#62FEB5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<g opacity="1"><path d="M1060,328 L1060,348" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round"/><polyline points="1055.2977179816603,341.5278640450004 1060,348 1064.7022820183397,341.5278640450004" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<g opacity="1"><path d="M1060,392 L1060,412" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round"/><polyline points="1055.2977179816603,405.5278640450004 1060,412 1064.7022820183397,405.5278640450004" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<g opacity="1"><path d="M1060,458 L1060,478" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round"/><polyline points="1055.2977179816603,471.5278640450004 1060,478 1064.7022820183397,471.5278640450004" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
-<text x="820" y="561" fill="#8fa3b0" font-size="13" font-family="Virgil, 'Comic Sans MS', sans-serif" opacity="1"><tspan x="820" dy="0">Defense-in-depth: deferred eviction + tombstone still run after —</tspan><tspan x="820" dy="15.6">blocks stale re-population from async replication.</tspan></text>
-  </svg>
-</div>
-</body></html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>4 — Before/After Fix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        background: #1a1a1a;
+        color: #c8d6de;
+        font-family: system-ui, sans-serif;
+        padding: 24px;
+      }
+      h1 {
+        font-size: 14px;
+        font-weight: 500;
+        color: #8fa3b0;
+        margin: 0 0 12px 0;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .meta {
+        font-size: 12px;
+        color: #667985;
+        margin-bottom: 20px;
+      }
+      .frame {
+        max-width: 1400px;
+      }
+      svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      /* Use Caveat as a Virgil fallback — similar hand-drawn feel, readily available. */
+      text {
+        font-family:
+          Virgil, "Caveat", "Comic Sans MS", cursive, sans-serif !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <h1>4 — Before/After Fix</h1>
+      <div class="meta">viewBox 20 0 1440 660 — 41 elements</div>
+      <svg
+        viewBox="20 0 1440 660"
+        xmlns="http://www.w3.org/2000/svg"
+        style="background: #0e1920; border-radius: 14px"
+      >
+        <text
+          x="480"
+          y="44"
+          fill="#c8d6de"
+          font-size="24"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="480" dy="0">The Fix: Reorder, Evict Before Delete</tspan>
+        </text>
+        <g opacity="0.3">
+          <rect
+            x="40"
+            y="80"
+            width="660"
+            height="560"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#CF5B5B"
+            stroke-width="1.5"
+            stroke-dasharray="6 4"
+          />
+        </g>
+        <text
+          x="58"
+          y="112"
+          fill="#CF5B5B"
+          font-size="16"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="58" dy="0">Before — race window</tspan>
+        </text>
+        <g opacity="0.3">
+          <rect
+            x="780"
+            y="80"
+            width="660"
+            height="560"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#62FEB5"
+            stroke-width="1.5"
+            stroke-dasharray="6 4"
+          />
+        </g>
+        <text
+          x="798"
+          y="112"
+          fill="#62FEB5"
+          font-size="16"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="798" dy="0">After — eager eviction under lock</tspan>
+        </text>
+        <g opacity="1">
+          <rect
+            x="80"
+            y="150"
+            width="480"
+            height="46"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#2a4050"
+            stroke-width="2"
+          />
+        </g>
+        <text
+          x="100"
+          y="178"
+          fill="#c8d6de"
+          font-size="15"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="100" dy="0">1. acquire key lock</tspan>
+        </text>
+        <g opacity="1">
+          <rect
+            x="80"
+            y="216"
+            width="480"
+            height="46"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#2a4050"
+            stroke-width="2"
+          />
+        </g>
+        <text
+          x="100"
+          y="244"
+          fill="#c8d6de"
+          font-size="15"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="100" dy="0">2. deleteObjects() — FDB delete succeeds</tspan>
+        </text>
+        <g opacity="0.2">
+          <rect
+            x="80"
+            y="282"
+            width="480"
+            height="90"
+            rx="8"
+            ry="8"
+            fill="#CF5B5B"
+            stroke="#CF5B5B"
+            stroke-width="1.5"
+            stroke-dasharray="6 4"
+          />
+        </g>
+        <text
+          x="100"
+          y="313"
+          fill="#CF5B5B"
+          font-size="15"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="100" dy="0">RACE WINDOW</tspan>
+        </text>
+        <text
+          x="100"
+          y="341"
+          fill="#CF5B5B"
+          font-size="13"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="100" dy="0">
+            concurrent GET hits cache → returns stale 200
+          </tspan>
+        </text>
+        <g opacity="1">
+          <rect
+            x="80"
+            y="392"
+            width="480"
+            height="46"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#2a4050"
+            stroke-width="2"
+          />
+        </g>
+        <text
+          x="100"
+          y="420"
+          fill="#c8d6de"
+          font-size="15"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="100" dy="0">3. (deferred) evict cache entry</tspan>
+        </text>
+        <g opacity="1">
+          <rect
+            x="80"
+            y="458"
+            width="480"
+            height="46"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#2a4050"
+            stroke-width="2"
+          />
+        </g>
+        <text
+          x="100"
+          y="486"
+          fill="#c8d6de"
+          font-size="15"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="100" dy="0">4. (deferred) write tombstone</tspan>
+        </text>
+        <g opacity="1">
+          <rect
+            x="80"
+            y="524"
+            width="480"
+            height="46"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#2a4050"
+            stroke-width="2"
+          />
+        </g>
+        <text
+          x="100"
+          y="552"
+          fill="#c8d6de"
+          font-size="15"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="100" dy="0">5. release key lock</tspan>
+        </text>
+        <g opacity="1">
+          <path
+            d="M320,196 L320,216"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="315.29771798166024,209.52786404500043 320,216 324.70228201833976,209.52786404500043"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <g opacity="1">
+          <path
+            d="M320,262 L320,282"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="315.29771798166024,275.5278640450004 320,282 324.70228201833976,275.5278640450004"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <g opacity="1">
+          <path
+            d="M320,372 L320,392"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="315.29771798166024,385.5278640450004 320,392 324.70228201833976,385.5278640450004"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <g opacity="1">
+          <path
+            d="M320,438 L320,458"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="315.29771798166024,451.5278640450004 320,458 324.70228201833976,451.5278640450004"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <g opacity="1">
+          <path
+            d="M320,504 L320,524"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="315.29771798166024,517.5278640450005 320,524 324.70228201833976,517.5278640450005"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <g opacity="1">
+          <rect
+            x="820"
+            y="150"
+            width="480"
+            height="46"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#2a4050"
+            stroke-width="2"
+          />
+        </g>
+        <text
+          x="840"
+          y="178"
+          fill="#c8d6de"
+          font-size="15"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="840" dy="0">1. acquire key lock</tspan>
+        </text>
+        <g opacity="1">
+          <rect
+            x="820"
+            y="216"
+            width="480"
+            height="46"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#62FEB5"
+            stroke-width="2.5"
+          />
+        </g>
+        <text
+          x="840"
+          y="244"
+          fill="#62FEB5"
+          font-size="15"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="840" dy="0">2. evict cache entry (moved up)</tspan>
+        </text>
+        <g opacity="1">
+          <rect
+            x="820"
+            y="282"
+            width="480"
+            height="46"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#2a4050"
+            stroke-width="2"
+          />
+        </g>
+        <text
+          x="840"
+          y="310"
+          fill="#c8d6de"
+          font-size="15"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="840" dy="0">3. deleteObjects() — FDB delete</tspan>
+        </text>
+        <g opacity="0.15">
+          <rect
+            x="820"
+            y="348"
+            width="480"
+            height="44"
+            rx="8"
+            ry="8"
+            fill="#62FEB5"
+            stroke="#62FEB5"
+            stroke-width="1.5"
+            stroke-dasharray="6 4"
+          />
+        </g>
+        <text
+          x="840"
+          y="375"
+          fill="#62FEB5"
+          font-size="13"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="840" dy="0">
+            no window — lock held, cache already empty
+          </tspan>
+        </text>
+        <g opacity="1">
+          <rect
+            x="820"
+            y="412"
+            width="480"
+            height="46"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#2a4050"
+            stroke-width="2"
+          />
+        </g>
+        <text
+          x="840"
+          y="440"
+          fill="#c8d6de"
+          font-size="15"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="840" dy="0">
+            4. (deferred) evict again + write tombstone
+          </tspan>
+        </text>
+        <g opacity="1">
+          <rect
+            x="820"
+            y="478"
+            width="480"
+            height="46"
+            rx="8"
+            ry="8"
+            fill="#142229"
+            stroke="#2a4050"
+            stroke-width="2"
+          />
+        </g>
+        <text
+          x="840"
+          y="506"
+          fill="#c8d6de"
+          font-size="15"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="840" dy="0">5. release key lock</tspan>
+        </text>
+        <g opacity="1">
+          <path
+            d="M1060,196 L1060,216"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="1055.2977179816603,209.52786404500043 1060,216 1064.7022820183397,209.52786404500043"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <g opacity="1">
+          <path
+            d="M1060,262 L1060,282"
+            fill="none"
+            stroke="#62FEB5"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="1055.2977179816603,275.5278640450004 1060,282 1064.7022820183397,275.5278640450004"
+            fill="none"
+            stroke="#62FEB5"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <g opacity="1">
+          <path
+            d="M1060,328 L1060,348"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="1055.2977179816603,341.5278640450004 1060,348 1064.7022820183397,341.5278640450004"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <g opacity="1">
+          <path
+            d="M1060,392 L1060,412"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="1055.2977179816603,405.5278640450004 1060,412 1064.7022820183397,405.5278640450004"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <g opacity="1">
+          <path
+            d="M1060,458 L1060,478"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+          <polyline
+            points="1055.2977179816603,471.5278640450004 1060,478 1064.7022820183397,471.5278640450004"
+            fill="none"
+            stroke="#c8d6de"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+        <text
+          x="820"
+          y="561"
+          fill="#8fa3b0"
+          font-size="13"
+          font-family="Virgil, 'Comic Sans MS', sans-serif"
+          opacity="1"
+        >
+          <tspan x="820" dy="0">
+            Defense-in-depth: deferred eviction + tombstone still run after —
+          </tspan>
+          <tspan x="820" dy="15.6">
+            blocks stale re-population from async replication.
+          </tspan>
+        </text>
+      </svg>
+    </div>
+  </body>
+</html>

@@ -23,82 +23,347 @@
   {
     "type": "rectangle",
     "id": "src1",
-    "x": 60, "y": 160, "width": 280, "height": 80,
-    "backgroundColor": "#142229", "fillStyle": "solid",
-    "roundness": { "type": 3 }, "strokeColor": "#2a4050", "strokeWidth": 2
+    "x": 60,
+    "y": 160,
+    "width": 280,
+    "height": 80,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
   },
-  { "type": "text", "id": "src1t", "x": 82, "y": 176, "text": "Normal read-through", "fontSize": 16, "fontFamily": 1, "strokeColor": "#c8d6de" },
-  { "type": "text", "id": "src1d", "x": 82, "y": 206, "text": "cache miss → fetch from FDB / S3", "fontSize": 12, "fontFamily": 1, "strokeColor": "#8fa3b0" },
+  {
+    "type": "text",
+    "id": "src1t",
+    "x": 82,
+    "y": 176,
+    "text": "Normal read-through",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "src1d",
+    "x": 82,
+    "y": 206,
+    "text": "cache miss → fetch from FDB / S3",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
 
   {
     "type": "rectangle",
     "id": "src2",
-    "x": 60, "y": 300, "width": 280, "height": 80,
-    "backgroundColor": "#142229", "fillStyle": "solid",
-    "roundness": { "type": 3 }, "strokeColor": "#2a4050", "strokeWidth": 2
+    "x": 60,
+    "y": 300,
+    "width": 280,
+    "height": 80,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
   },
-  { "type": "text", "id": "src2t", "x": 82, "y": 316, "text": "Async replication", "fontSize": 16, "fontFamily": 1, "strokeColor": "#c8d6de" },
-  { "type": "text", "id": "src2d", "x": 82, "y": 346, "text": "follower region delivers a copy", "fontSize": 12, "fontFamily": 1, "strokeColor": "#8fa3b0" },
+  {
+    "type": "text",
+    "id": "src2t",
+    "x": 82,
+    "y": 316,
+    "text": "Async replication",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "src2d",
+    "x": 82,
+    "y": 346,
+    "text": "follower region delivers a copy",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
 
   {
     "type": "rectangle",
     "id": "src3",
-    "x": 60, "y": 440, "width": 280, "height": 80,
-    "backgroundColor": "#142229", "fillStyle": "solid",
-    "roundness": { "type": 3 }, "strokeColor": "#2a4050", "strokeWidth": 2
+    "x": 60,
+    "y": 440,
+    "width": 280,
+    "height": 80,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#2a4050",
+    "strokeWidth": 2
   },
-  { "type": "text", "id": "src3t", "x": 82, "y": 456, "text": "Retried delayed event", "fontSize": 16, "fontFamily": 1, "strokeColor": "#c8d6de" },
-  { "type": "text", "id": "src3d", "x": 82, "y": 486, "text": "earlier event arrives late", "fontSize": 12, "fontFamily": 1, "strokeColor": "#8fa3b0" },
+  {
+    "type": "text",
+    "id": "src3t",
+    "x": 82,
+    "y": 456,
+    "text": "Retried delayed event",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "src3d",
+    "x": 82,
+    "y": 486,
+    "text": "earlier event arrives late",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
 
   {
     "type": "diamond",
     "id": "gate",
-    "x": 580, "y": 260, "width": 320, "height": 160,
-    "backgroundColor": "#142229", "fillStyle": "solid",
-    "strokeColor": "#62FEB5", "strokeWidth": 2.5
+    "x": 580,
+    "y": 260,
+    "width": 320,
+    "height": 160,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2.5
   },
-  { "type": "text", "id": "gatet", "x": 650, "y": 305, "text": "Tombstone check", "fontSize": 18, "fontFamily": 1, "strokeColor": "#c8d6de" },
-  { "type": "text", "id": "gated1", "x": 630, "y": 340, "text": "object.LastModified", "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0" },
-  { "type": "text", "id": "gated2", "x": 664, "y": 362, "text": "vs  tombstone_ts", "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0" },
+  {
+    "type": "text",
+    "id": "gatet",
+    "x": 650,
+    "y": 305,
+    "text": "Tombstone check",
+    "fontSize": 18,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "gated1",
+    "x": 630,
+    "y": 340,
+    "text": "object.LastModified",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "text",
+    "id": "gated2",
+    "x": 664,
+    "y": 362,
+    "text": "vs  tombstone_ts",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
 
-  { "type": "arrow", "id": "a1", "x": 340, "y": 200, "points": [[0, 0], [240, 140]], "endArrowhead": "arrow", "strokeColor": "#c8d6de", "strokeWidth": 2 },
-  { "type": "arrow", "id": "a2", "x": 340, "y": 340, "points": [[0, 0], [240, 0]], "endArrowhead": "arrow", "strokeColor": "#c8d6de", "strokeWidth": 2 },
-  { "type": "arrow", "id": "a3", "x": 340, "y": 480, "points": [[0, 0], [240, -140]], "endArrowhead": "arrow", "strokeColor": "#c8d6de", "strokeWidth": 2 },
+  {
+    "type": "arrow",
+    "id": "a1",
+    "x": 340,
+    "y": 200,
+    "points": [
+      [0, 0],
+      [240, 140]
+    ],
+    "endArrowhead": "arrow",
+    "strokeColor": "#c8d6de",
+    "strokeWidth": 2
+  },
+  {
+    "type": "arrow",
+    "id": "a2",
+    "x": 340,
+    "y": 340,
+    "points": [
+      [0, 0],
+      [240, 0]
+    ],
+    "endArrowhead": "arrow",
+    "strokeColor": "#c8d6de",
+    "strokeWidth": 2
+  },
+  {
+    "type": "arrow",
+    "id": "a3",
+    "x": 340,
+    "y": 480,
+    "points": [
+      [0, 0],
+      [240, -140]
+    ],
+    "endArrowhead": "arrow",
+    "strokeColor": "#c8d6de",
+    "strokeWidth": 2
+  },
 
   {
     "type": "rectangle",
     "id": "accept",
-    "x": 1120, "y": 210, "width": 360, "height": 80,
-    "backgroundColor": "#142229", "fillStyle": "solid",
-    "roundness": { "type": 3 }, "strokeColor": "#62FEB5", "strokeWidth": 2.5
+    "x": 1120,
+    "y": 210,
+    "width": 360,
+    "height": 80,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2.5
   },
-  { "type": "text", "id": "acceptt", "x": 1148, "y": 226, "text": "Accept — write to cache", "fontSize": 16, "fontFamily": 1, "strokeColor": "#62FEB5" },
-  { "type": "text", "id": "acceptd", "x": 1148, "y": 256, "text": "newer than tombstone, or none exists", "fontSize": 12, "fontFamily": 1, "strokeColor": "#8fa3b0" },
+  {
+    "type": "text",
+    "id": "acceptt",
+    "x": 1148,
+    "y": 226,
+    "text": "Accept — write to cache",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "acceptd",
+    "x": 1148,
+    "y": 256,
+    "text": "newer than tombstone, or none exists",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
 
   {
     "type": "rectangle",
     "id": "reject",
-    "x": 1120, "y": 400, "width": 360, "height": 80,
-    "backgroundColor": "#142229", "fillStyle": "solid",
-    "roundness": { "type": 3 }, "strokeColor": "#CF5B5B", "strokeWidth": 2.5
+    "x": 1120,
+    "y": 400,
+    "width": 360,
+    "height": 80,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#CF5B5B",
+    "strokeWidth": 2.5
   },
-  { "type": "text", "id": "rejectt", "x": 1148, "y": 416, "text": "Reject — stale data", "fontSize": 16, "fontFamily": 1, "strokeColor": "#CF5B5B" },
-  { "type": "text", "id": "rejectd", "x": 1148, "y": 446, "text": "older than tombstone, refuse cache write", "fontSize": 12, "fontFamily": 1, "strokeColor": "#8fa3b0" },
+  {
+    "type": "text",
+    "id": "rejectt",
+    "x": 1148,
+    "y": 416,
+    "text": "Reject — stale data",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#CF5B5B"
+  },
+  {
+    "type": "text",
+    "id": "rejectd",
+    "x": 1148,
+    "y": 446,
+    "text": "older than tombstone, refuse cache write",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
 
-  { "type": "arrow", "id": "out-accept", "x": 900, "y": 310, "points": [[0, 0], [220, -60]], "endArrowhead": "arrow", "strokeColor": "#62FEB5", "strokeWidth": 2.5 },
-  { "type": "text", "id": "out-acceptl", "x": 950, "y": 246, "text": "newer", "fontSize": 14, "fontFamily": 1, "strokeColor": "#62FEB5" },
+  {
+    "type": "arrow",
+    "id": "out-accept",
+    "x": 900,
+    "y": 310,
+    "points": [
+      [0, 0],
+      [220, -60]
+    ],
+    "endArrowhead": "arrow",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2.5
+  },
+  {
+    "type": "text",
+    "id": "out-acceptl",
+    "x": 950,
+    "y": 246,
+    "text": "newer",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
 
-  { "type": "arrow", "id": "out-reject", "x": 900, "y": 370, "points": [[0, 0], [220, 70]], "endArrowhead": "arrow", "strokeColor": "#CF5B5B", "strokeWidth": 2.5 },
-  { "type": "text", "id": "out-rejectl", "x": 950, "y": 400, "text": "older", "fontSize": 14, "fontFamily": 1, "strokeColor": "#CF5B5B" },
+  {
+    "type": "arrow",
+    "id": "out-reject",
+    "x": 900,
+    "y": 370,
+    "points": [
+      [0, 0],
+      [220, 70]
+    ],
+    "endArrowhead": "arrow",
+    "strokeColor": "#CF5B5B",
+    "strokeWidth": 2.5
+  },
+  {
+    "type": "text",
+    "id": "out-rejectl",
+    "x": 950,
+    "y": 400,
+    "text": "older",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#CF5B5B"
+  },
 
   {
     "type": "rectangle",
     "id": "callout",
-    "x": 60, "y": 580, "width": 1420, "height": 90,
-    "backgroundColor": "#142229", "fillStyle": "solid",
-    "roundness": { "type": 3 }, "strokeColor": "#1e3340", "strokeWidth": 1, "strokeStyle": "dashed", "opacity": 40
+    "x": 60,
+    "y": 580,
+    "width": 1420,
+    "height": 90,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#1e3340",
+    "strokeWidth": 1,
+    "strokeStyle": "dashed",
+    "opacity": 40
   },
-  { "type": "text", "id": "callouth", "x": 80, "y": 596, "text": "Source-agnostic — applies to every cache-write path", "fontSize": 15, "fontFamily": 1, "strokeColor": "#c8d6de" },
-  { "type": "text", "id": "calloutd", "x": 80, "y": 626, "text": "Works even if eager eviction failed or Redis was unreachable. Makes the cache structurally incapable of serving", "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0" },
-  { "type": "text", "id": "calloutd2", "x": 80, "y": 648, "text": "a stale entry after a successful mutation.", "fontSize": 13, "fontFamily": 1, "strokeColor": "#8fa3b0" }
+  {
+    "type": "text",
+    "id": "callouth",
+    "x": 80,
+    "y": 596,
+    "text": "Source-agnostic — applies to every cache-write path",
+    "fontSize": 15,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "calloutd",
+    "x": 80,
+    "y": 626,
+    "text": "Works even if eager eviction failed or Redis was unreachable. Makes the cache structurally incapable of serving",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "text",
+    "id": "calloutd2",
+    "x": 80,
+    "y": 648,
+    "text": "a stale entry after a successful mutation.",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  }
 ]

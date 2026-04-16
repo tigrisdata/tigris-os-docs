@@ -1,0 +1,33 @@
+.toggle {
+  display: inline-flex;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--docs-color-border);
+  margin-bottom: 0.75rem;
+}
+
+.option {
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--ifm-font-color-secondary);
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+.option:hover {
+  background: var(--ifm-color-emphasis-200);
+}
+
+.active {
+  background: var(--ifm-color-primary);
+  color: #000;
+}
+
+.active:hover {
+  background: var(--ifm-color-primary);
+}

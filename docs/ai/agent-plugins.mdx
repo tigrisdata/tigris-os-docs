@@ -10,6 +10,10 @@ give AI coding agents direct access to Tigris operations — managing buckets,
 objects, access keys, IAM policies, and migrations — without leaving your
 editor.
 
+The `tigris-storage` plugin is available in the
+[Claude Community Plugins](https://github.com/anthropics/claude-plugins-community)
+marketplace.
+
 ## Available skills
 
 The plugin provides five specialized skills:
@@ -24,15 +28,22 @@ The plugin provides five specialized skills:
 
 ## Install in Claude Code
 
-Use the plugin marketplace:
+Add the community plugins marketplace and install the Tigris Storage plugin:
 
-```
-/plugin marketplace add tigrisdata/tigris-agents-plugins
-/plugin install tigris-storage@tigris-agents-plugins
+```bash
+claude plugin marketplace add anthropics/claude-plugins-community
+claude plugin install tigris-storage@claude-community
 ```
 
-Or install manually by cloning the repo and copying the skill folders to
-`~/.claude/skills/`:
+Or install from the Tigris marketplace directly:
+
+```bash
+claude plugin marketplace add tigrisdata/tigris-agents-plugins
+claude plugin install tigris-storage@tigris-agents-plugins
+```
+
+You can also install manually by cloning the repo and copying the skill folders
+to `~/.claude/skills/`:
 
 ```bash
 git clone https://github.com/tigrisdata/tigris-agents-plugins.git

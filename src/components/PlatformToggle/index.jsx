@@ -17,7 +17,7 @@ export default function PlatformToggle({ options, children }) {
           </button>
         ))}
       </div>
-      {children[active]}
+      {React.Children.toArray(children)[active]}
     </div>
   );
 }

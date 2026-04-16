@@ -70,15 +70,15 @@ This gives you:
 
 ## Authentication
 
-You can authenticate with environment variables or by passing config directly.
+Pass your Tigris credentials when constructing `TigrisShell`. The examples on
+this page load them from the following environment variables:
 
-```ts
-const shell = new TigrisShell({
-  bucket: process.env.TIGRIS_STORAGE_BUCKET,
-  accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
-  secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
-});
-```
+- `TIGRIS_STORAGE_BUCKET` — target bucket name
+- `TIGRIS_STORAGE_ACCESS_KEY_ID` — access key ID
+- `TIGRIS_STORAGE_SECRET_ACCESS_KEY` — secret access key
+
+You can also pass literal strings or values from any other source — any
+`TigrisConfig` object works.
 
 ## Configuration
 

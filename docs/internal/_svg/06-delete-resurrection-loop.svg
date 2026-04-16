@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="20 0 1400 610" width="1400" height="610" style="background:#0e1920">
+  <text x="470" y="44" fill="#c8d6de" font-size="24" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="470" dy="0">The Delete-Resurrection Loop</tspan></text>
+  <text x="380" y="72" fill="#8fa3b0" font-size="14" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="380" dy="0">A textbook failure pattern when a cache sits in front of a consistent store</tspan></text>
+  <g opacity="1"><rect x="580" y="120" width="280" height="90" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
+  <text x="600" y="150" fill="#62FEB5" font-size="14" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="600" dy="0">1</tspan></text>
+  <text x="628" y="153" fill="#c8d6de" font-size="17" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="628" dy="0">Client DELETE</tspan></text>
+  <text x="600" y="182" fill="#8fa3b0" font-size="12" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="600" dy="0">client removes an object</tspan></text>
+  <g opacity="1"><rect x="1100" y="290" width="300" height="90" rx="8" ry="8" fill="#142229" stroke="#2a4050" stroke-width="2"/></g>
+  <text x="1120" y="320" fill="#62FEB5" font-size="14" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="1120" dy="0">2</tspan></text>
+  <text x="1148" y="323" fill="#c8d6de" font-size="17" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="1148" dy="0">Primary records delete</tspan></text>
+  <text x="1120" y="352" fill="#8fa3b0" font-size="12" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="1120" dy="0">authoritative store is correct</tspan></text>
+  <g opacity="1"><rect x="960" y="500" width="320" height="90" rx="8" ry="8" fill="#142229" stroke="#CF8E5B" stroke-width="2"/></g>
+  <text x="980" y="530" fill="#62FEB5" font-size="14" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="980" dy="0">3</tspan></text>
+  <text x="1008" y="533" fill="#c8d6de" font-size="17" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="1008" dy="0">Invalidation fails/delayed</tspan></text>
+  <text x="980" y="562" fill="#8fa3b0" font-size="12" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="980" dy="0">crash, timeout, or deferred step not run yet</tspan></text>
+  <g opacity="1"><rect x="160" y="500" width="320" height="90" rx="8" ry="8" fill="#142229" stroke="#CF5B5B" stroke-width="2.5"/></g>
+  <text x="180" y="530" fill="#62FEB5" font-size="14" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="180" dy="0">4</tspan></text>
+  <text x="208" y="533" fill="#c8d6de" font-size="17" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="208" dy="0">GET hits stale cache</tspan></text>
+  <text x="180" y="562" fill="#CF5B5B" font-size="12" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="180" dy="0">cache serves deleted object with 200 OK</tspan></text>
+  <g opacity="1"><rect x="40" y="290" width="320" height="90" rx="8" ry="8" fill="#142229" stroke="#CF8E5B" stroke-width="2"/></g>
+  <text x="60" y="320" fill="#62FEB5" font-size="14" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="60" dy="0">5</tspan></text>
+  <text x="88" y="323" fill="#c8d6de" font-size="17" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="88" dy="0">Follower re-populates</tspan></text>
+  <text x="60" y="352" fill="#8fa3b0" font-size="12" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="60" dy="0">cache miss reads stale replica, re-caches</tspan></text>
+  <g opacity="1"><path d="M860,190 L1100,290" fill="none" stroke="#c8d6de" stroke-width="2" stroke-linecap="round"/><polyline points="1092.2171506498696,291.8512849573138 1100,290 1095.8342906639773,283.17014892345577" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g opacity="1"><path d="M1240,380 L1140,500" fill="none" stroke="#c8d6de" stroke-width="2" stroke-linecap="round"/><polyline points="1140.5309673617417,492.0176398439581 1140,500 1147.755753580055,498.038295025886" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g opacity="1"><path d="M960,545 L480,545" fill="none" stroke="#CF5B5B" stroke-width="2.5" stroke-linecap="round"/><polyline points="486.4721359549996,540.2977179816602 480,545 486.4721359549996,549.7022820183398" fill="none" stroke="#CF5B5B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g opacity="1"><path d="M240,500 L200,380" fill="none" stroke="#c8d6de" stroke-width="2" stroke-linecap="round"/><polyline points="206.507645507929,384.6530151453796 200,380 197.58569268088456,387.62699942106104" fill="none" stroke="#c8d6de" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g opacity="1"><path d="M240,380 L280,500" fill="none" stroke="#CF5B5B" stroke-width="2" stroke-dasharray="6 4" stroke-linecap="round"/><polyline points="273.492354492071,495.3469848546204 280,500 282.41430731911544,492.37300057893896" fill="none" stroke="#CF5B5B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <text x="640" y="531" fill="#CF5B5B" font-size="13" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="640" dy="0">stale cache hit</tspan></text>
+  <text x="100" y="433" fill="#CF5B5B" font-size="13" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="100" dy="0">loop: re-cached from stale replica</tspan></text>
+  <g opacity="0.5"><rect x="580" y="320" width="320" height="130" rx="8" ry="8" fill="#142229" stroke="#1e3340" stroke-width="1.5" stroke-dasharray="6 4"/></g>
+  <text x="612" y="356" fill="#c8d6de" font-size="16" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="612" dy="0">The deleted record</tspan></text>
+  <text x="660" y="384" fill="#c8d6de" font-size="16" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="660" dy="0">keeps coming back</tspan></text>
+  <text x="620" y="421" fill="#8fa3b0" font-size="13" font-family="Virgil, 'Comic Sans MS', cursive, sans-serif" opacity="1"><tspan x="620" dy="0">until the cache TTL expires</tspan></text>
+</svg>

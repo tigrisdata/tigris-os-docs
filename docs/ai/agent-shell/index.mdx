@@ -11,24 +11,6 @@ and all file operations persist to Tigris.
 
 ## Getting Started
 
-### Setting up your account and bucket
-
-1. Create a Tigris account at [storage.new](https://storage.new)
-2. Create a bucket at
-   [console.storage.dev/createbucket](https://console.storage.dev/createbucket)
-3. Create an access key at
-   [console.storage.dev/createaccesskey](https://console.storage.dev/createaccesskey)
-
-### Configure your Project
-
-Create a `.env` file in your project root with your Tigris credentials:
-
-```bash
-TIGRIS_STORAGE_ACCESS_KEY_ID=tid_access_key_id
-TIGRIS_STORAGE_SECRET_ACCESS_KEY=tsec_secret_access_key
-TIGRIS_STORAGE_BUCKET=bucket_name
-```
-
 ### Installation
 
 <Tabs>
@@ -53,7 +35,11 @@ yarn add @tigrisdata/agent-shell
 ```ts
 import { TigrisShell } from "@tigrisdata/agent-shell";
 
-const shell = new TigrisShell();
+const shell = new TigrisShell({
+  bucket: process.env.TIGRIS_STORAGE_BUCKET,
+  accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
+  secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
+});
 
 // Write files
 await shell.exec('echo "Hello from agent-shell" > greeting.txt');
@@ -86,28 +72,11 @@ This gives you:
 
 You can authenticate with environment variables or by passing config directly.
 
-### Environment Variables
-
-Set the following environment variables and construct the shell with no
-arguments:
-
-```bash
-export TIGRIS_STORAGE_ACCESS_KEY_ID=tid_...
-export TIGRIS_STORAGE_SECRET_ACCESS_KEY=tsec_...
-export TIGRIS_STORAGE_BUCKET=my-bucket
-```
-
-```ts
-const shell = new TigrisShell();
-```
-
-### Explicit Configuration
-
 ```ts
 const shell = new TigrisShell({
-  bucket: "my-bucket",
-  accessKeyId: "tid_...",
-  secretAccessKey: "tsec_...",
+  bucket: process.env.TIGRIS_STORAGE_BUCKET,
+  accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
+  secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
 });
 ```
 
@@ -115,15 +84,11 @@ const shell = new TigrisShell({
 
 ### TigrisConfig
 
-| Option            | Type     | Default                            | Description              |
-| ----------------- | -------- | ---------------------------------- | ------------------------ |
-| `bucket`          | `string` | `TIGRIS_STORAGE_BUCKET`            | Target Tigris bucket     |
-| `accessKeyId`     | `string` | `TIGRIS_STORAGE_ACCESS_KEY_ID`     | Tigris access key ID     |
-| `secretAccessKey` | `string` | `TIGRIS_STORAGE_SECRET_ACCESS_KEY` | Tigris secret access key |
-| `endpoint`        | `string` | `https://t3.storage.dev`           | Tigris storage endpoint  |
-
-All fields are optional and fall back to their corresponding environment
-variables.
+| Option            | Type     | Description              |
+| ----------------- | -------- | ------------------------ |
+| `bucket`          | `string` | Target Tigris bucket     |
+| `accessKeyId`     | `string` | Tigris access key ID     |
+| `secretAccessKey` | `string` | Tigris secret access key |
 
 ### ShellOptions
 
@@ -134,7 +99,11 @@ variables.
 
 ```ts
 const shell = new TigrisShell(
-  { bucket: "my-bucket" },
+  {
+    bucket: process.env.TIGRIS_STORAGE_BUCKET,
+    accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
+    secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
+  },
   { cwd: "/workspace/project", env: { NODE_ENV: "production" } },
 );
 ```
@@ -143,13 +112,13 @@ const shell = new TigrisShell(
 
 ### TigrisShell
 
-| Method / Property | Type                                              | Description                     |
-| ----------------- | ------------------------------------------------- | ------------------------------- |
-| `constructor`     | `(config?: TigrisConfig, options?: ShellOptions)` | Create a new shell instance     |
-| `exec(command)`   | `Promise<BashExecResult>`                         | Execute a bash command          |
-| `flush()`         | `Promise<void>`                                   | Persist cached writes to Tigris |
-| `engine`          | `Bash`                                            | Underlying just-bash instance   |
-| `fs`              | `TigrisAdapter`                                   | Underlying filesystem instance  |
+| Method / Property | Type                                             | Description                     |
+| ----------------- | ------------------------------------------------ | ------------------------------- |
+| `constructor`     | `(config: TigrisConfig, options?: ShellOptions)` | Create a new shell instance     |
+| `exec(command)`   | `Promise<BashExecResult>`                        | Execute a bash command          |
+| `flush()`         | `Promise<void>`                                  | Persist cached writes to Tigris |
+| `engine`          | `Bash`                                           | Underlying just-bash instance   |
+| `fs`              | `TigrisAdapter`                                  | Underlying filesystem instance  |
 
 ### Sub-exports
 
@@ -245,7 +214,11 @@ bundle file1.txt file2.txt --zstd
 ```ts
 import { TigrisShell } from "@tigrisdata/agent-shell";
 
-const shell = new TigrisShell();
+const shell = new TigrisShell({
+  bucket: process.env.TIGRIS_STORAGE_BUCKET,
+  accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
+  secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
+});
 
 // Read a file already in the bucket
 const result = await shell.exec("cat data.csv");
@@ -270,8 +243,16 @@ import { Bash, MountableFs, InMemoryFs } from "just-bash";
 import { TigrisAdapter, TigrisConfig } from "@tigrisdata/agent-shell/fs";
 import { createTigrisCommands } from "@tigrisdata/agent-shell/commands";
 
-const workspaceFs = new TigrisAdapter({ bucket: "workspace-bucket" });
-const datasetFs = new TigrisAdapter({ bucket: "datasets-bucket" });
+const workspaceFs = new TigrisAdapter({
+  bucket: "workspace-bucket",
+  accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
+  secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
+});
+const datasetFs = new TigrisAdapter({
+  bucket: "datasets-bucket",
+  accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
+  secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
+});
 
 const fs = new MountableFs({ base: new InMemoryFs() });
 fs.mount("/workspace", workspaceFs);
@@ -292,7 +273,11 @@ await bash.exec("cp /datasets/data.csv /workspace/local-data.csv");
 ```ts
 import { TigrisShell } from "@tigrisdata/agent-shell";
 
-const shell = new TigrisShell();
+const shell = new TigrisShell({
+  bucket: process.env.TIGRIS_STORAGE_BUCKET,
+  accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
+  secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
+});
 
 // Write a file
 await shell.exec('echo "quarterly report" > report.txt');

@@ -1,5 +1,6 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
+import PlatformToggle from "@site/src/components/PlatformToggle";
 
 # Tigris CLI
 
@@ -8,74 +9,145 @@ Tigris resources such as buckets, objects, access keys, and IAM policies.
 
 ## Setup
 
-<div className="cli-setup-steps">
-<div className="step">
-<div className="step-header">
-  <span className="step-number">1</span>
-  <span className="step-title">Install</span>
-</div>
-
-<p>Install the Tigris CLI with npm:</p>
-
-```bash
-npm install -g @tigrisdata/cli
-```
-
-</div>
-<div className="step">
-<div className="step-header">
-  <span className="step-number">2</span>
-  <span className="step-title">Run</span>
-</div>
-
-<p>Get started by logging in:</p>
-
-```bash
-tigris login
-```
-
-</div>
-<div className="step">
-<div className="step-header">
-  <span className="step-number">3</span>
-  <span className="step-title">Upgrade</span>
-</div>
-
-<p>Get the latest updates using:</p>
-
-```bash
-npm install -g @tigrisdata/cli@latest
-```
-
-</div>
-</div>
-
-:::note
-
-Tigris CLI is now available as standalone binary without the dependency on
-nodejs runtime.
-
-:::
-
 {/* prettier-ignore */}
-<Tabs groupId="platform" label="Download">
-  <TabItem value="linux" label="macOS / Linux">
-    ```bash
-    curl -fsSL https://raw.githubusercontent.com/tigrisdata/cli/main/scripts/install.sh | sh
-    ```
+<Tabs groupId="install-method">
+  <TabItem value="npm" label="NPM" default>
+    <div className="cli-setup-steps">
+      <div className="step">
+        <div className="step-header">
+          <span className="step-number">1</span>
+          <span className="step-title">Install</span>
+        </div>
+        <p>Install the Tigris CLI with npm:</p>
+
+        ```bash
+        npm install -g @tigrisdata/cli
+        ```
+
+      </div>
+      <div className="step">
+        <div className="step-header">
+          <span className="step-number">2</span>
+          <span className="step-title">Run</span>
+        </div>
+        <p>Get started by logging in:</p>
+
+        ```bash
+        tigris login
+        ```
+
+      </div>
+      <div className="step">
+        <div className="step-header">
+          <span className="step-number">3</span>
+          <span className="step-title">Update</span>
+        </div>
+        <p>Get the latest updates using:</p>
+
+        ```bash
+        tigris update
+        ```
+
+      </div>
+    </div>
+
   </TabItem>
-  <TabItem value="macos" label="Windows">
-    ```bash
-    irm https://raw.githubusercontent.com/tigrisdata/cli/main/scripts/install.ps1 | iex
-    ```
+  <TabItem value="homebrew" label="Homebrew">
+    <div className="cli-setup-steps">
+      <div className="step">
+        <div className="step-header">
+          <span className="step-number">1</span>
+          <span className="step-title">Install</span>
+        </div>
+        <p>Install the Tigris CLI with Homebrew:</p>
+
+        ```bash
+        brew install tigrisdata/tap/tigris
+        ```
+
+      </div>
+      <div className="step">
+        <div className="step-header">
+          <span className="step-number">2</span>
+          <span className="step-title">Run</span>
+        </div>
+        <p>Get started by logging in:</p>
+
+        ```bash
+        tigris login
+        ```
+
+      </div>
+      <div className="step">
+        <div className="step-header">
+          <span className="step-number">3</span>
+          <span className="step-title">Update</span>
+        </div>
+        <p>Get the latest updates using:</p>
+
+        ```bash
+        brew upgrade tigrisdata/tap/tigris
+        ```
+
+      </div>
+    </div>
+
+  </TabItem>
+  <TabItem value="native" label="Native">
+    <div className="cli-setup-steps">
+      <div className="step">
+        <div className="step-header">
+          <span className="step-number">1</span>
+          <span className="step-title">Install</span>
+        </div>
+        <p>Download the standalone binary (no Node.js required):</p>
+
+        <PlatformToggle options={["macOS / Linux", "Windows"]}>
+          <div>
+
+            ```bash
+            curl -fsSL https://github.com/tigrisdata/cli/releases/latest/download/install.sh | sh
+            ```
+
+          </div>
+          <div>
+
+            ```powershell
+            irm https://github.com/tigrisdata/cli/releases/latest/download/install.ps1 | iex
+            ```
+
+          </div>
+        </PlatformToggle>
+
+      </div>
+      <div className="step">
+        <div className="step-header">
+          <span className="step-number">2</span>
+          <span className="step-title">Run</span>
+        </div>
+        <p>Get started by logging in:</p>
+
+        ```bash
+        tigris login
+        ```
+
+      </div>
+      <div className="step">
+        <div className="step-header">
+          <span className="step-number">3</span>
+          <span className="step-title">Update</span>
+        </div>
+        <p>Get the latest updates using:</p>
+
+        ```bash
+        tigris update
+        ```
+
+      </div>
+    </div>
+
   </TabItem>
 </Tabs>
-
-### Via Homebrew
-
-```bash
-brew install tigrisdata/tap/tigris
-```
 
 ## Authentication
 

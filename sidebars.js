@@ -68,6 +68,11 @@ const sidebars = {
               label: "Agent Plugins",
               id: "ai/agent-plugins",
             },
+            {
+              type: "doc",
+              label: "Agent Shell",
+              id: "ai/agent-shell/index",
+            },
           ],
         },
       ],
@@ -952,6 +957,11 @@ const sidebars = {
           type: "doc",
           label: "Agent Plugins",
           id: "ai/agent-plugins",
+        },
+        {
+          type: "doc",
+          label: "Agent Shell",
+          id: "ai/agent-shell/index",
         },
       ],
     },

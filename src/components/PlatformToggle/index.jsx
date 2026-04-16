@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import styles from "./styles.module.css";
 
 export default function PlatformToggle({ options, children }) {
@@ -21,3 +22,8 @@ export default function PlatformToggle({ options, children }) {
     </div>
   );
 }
+
+PlatformToggle.propTypes = {
+  options: PropTypes.arrayOf(PropTypes.string).isRequired,
+  children: PropTypes.node.isRequired,
+};

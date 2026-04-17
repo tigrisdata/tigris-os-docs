@@ -7,8 +7,8 @@ Persistent sandboxed storage for AI agents — a bash filesystem backed by Tigri
 object storage.
 
 AI agents produce artifacts — reports, data, configs, logs. These need to go
-somewhere durable, shareable, and globally accessible. Agent Shell gives agents a
-familiar bash interface (`cat`, `grep`, `sed`, `jq`, `awk`, pipes, redirects)
+somewhere durable, shareable, and globally accessible. Agent Shell gives agents
+a familiar bash interface (`cat`, `grep`, `sed`, `jq`, `awk`, pipes, redirects)
 where every file operation is backed by a Tigris bucket.
 
 **What makes it a storage sandbox:**
@@ -154,13 +154,13 @@ const shell = new TigrisShell(
 
 ### TigrisShell
 
-| Method / Property | Type                                             | Description                          |
-| ----------------- | ------------------------------------------------ | ------------------------------------ |
-| `constructor`     | `(config: TigrisConfig, options?: ShellOptions)` | Create a new shell instance          |
-| `exec(command)`   | `Promise<BashExecResult>`                        | Execute a bash command               |
-| `flush()`         | `Promise<void>`                                  | Persist cached writes to Tigris      |
-| `engine`          | `Bash`                                           | Underlying just-bash instance        |
-| `fs`              | `TigrisAdapter`                                  | Underlying filesystem adapter        |
+| Method / Property | Type                                             | Description                     |
+| ----------------- | ------------------------------------------------ | ------------------------------- |
+| `constructor`     | `(config: TigrisConfig, options?: ShellOptions)` | Create a new shell instance     |
+| `exec(command)`   | `Promise<BashExecResult>`                        | Execute a bash command          |
+| `flush()`         | `Promise<void>`                                  | Persist cached writes to Tigris |
+| `engine`          | `Bash`                                           | Underlying just-bash instance   |
+| `fs`              | `TigrisAdapter`                                  | Underlying filesystem adapter   |
 
 ### Sub-exports
 

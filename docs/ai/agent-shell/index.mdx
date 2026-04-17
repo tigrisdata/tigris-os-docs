@@ -3,11 +3,30 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-Agent Shell is a virtual bash environment for AI agents, backed by Tigris object
-storage. Built on top of [just-bash](https://github.com/vercel-labs/just-bash),
-it gives agents a full bash shell where the filesystem is a Tigris bucket.
-Agents can run standard Unix commands (`cat`, `grep`, `sed`, `jq`, `awk`, etc.)
-and all file operations persist to Tigris.
+Persistent sandboxed storage for AI agents — a bash filesystem backed by Tigris
+object storage.
+
+AI agents produce artifacts — reports, data, configs, logs. These need to go
+somewhere durable, shareable, and globally accessible. Agent Shell gives agents
+a familiar bash interface (`cat`, `grep`, `sed`, `jq`, `awk`, pipes, redirects)
+where every file operation is backed by a Tigris bucket.
+
+**What makes it a storage sandbox:**
+
+- **Isolated** — writes stay in-memory until you explicitly flush. No partial
+  state leaks to storage.
+- **Durable** — flush persists files to Tigris, globally distributed across 20+
+  regions.
+- **Checkpointable** — take snapshots of your storage at any point. Roll back if
+  needed.
+- **Forkable** — create copy-on-write forks of a bucket for safe
+  experimentation.
+- **Shareable** — generate presigned URLs for any stored file.
+
+Built on [just-bash](https://github.com/vercel-labs/just-bash) for the shell
+engine and
+[@tigrisdata/storage](https://www.npmjs.com/package/@tigrisdata/storage) for the
+storage layer.
 
 ## Getting Started
 
@@ -53,42 +72,65 @@ console.log(result.stdout); // "HELLO FROM AGENT-SHELL"
 await shell.flush();
 ```
 
-## How It Works
+## Storage Sandbox Model
 
-Agent Shell uses an **in-memory write-back cache**:
+Agent Shell uses an in-memory write-back cache that acts as a storage sandbox:
 
-- **Writes stay local** until you call `flush()`
-- **Reads check cache first**, then fetch from Tigris on cache miss
-- **Deletes are tracked** locally and applied on flush
+```
+Agent writes file  →  cached locally (isolated)
+Agent reads file   →  cache hit or fetch from Tigris
+Agent calls flush  →  all changes persisted atomically
+```
 
 This gives you:
 
+- **Isolation** — nothing touches storage until you say so
+- **Atomic commits** — if the agent fails midway, no partial state is written
 - **Fast execution** — most operations never hit the network
-- **Atomic commits** — if the agent fails midway, nothing is written to the
-  bucket
-- **Explicit control** — you decide when data is persisted
+
+```ts
+const shell = new TigrisShell({
+  bucket: process.env.TIGRIS_STORAGE_BUCKET,
+  accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
+  secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
+});
+
+try {
+  await shell.exec('echo "processing..." > status.txt');
+  await shell.exec("echo '{\"score\": 0.95}' > results.json");
+  await shell.exec("cat results.json | jq .score"); // "0.95\n"
+
+  // Only persist on success
+  await shell.flush();
+} catch (e) {
+  // Nothing was written to Tigris — storage is clean
+}
+```
 
 ## Authentication
 
-Pass your Tigris credentials when constructing `TigrisShell`. The examples on
-this page load them from the following environment variables:
+Pass your Tigris credentials when constructing `TigrisShell`. All three fields
+are required:
 
-- `TIGRIS_STORAGE_BUCKET` — target bucket name
-- `TIGRIS_STORAGE_ACCESS_KEY_ID` — access key ID
-- `TIGRIS_STORAGE_SECRET_ACCESS_KEY` — secret access key
+- `bucket` — target bucket name
+- `accessKeyId` — Tigris access key ID
+- `secretAccessKey` — Tigris secret access key
 
-You can also pass literal strings or values from any other source — any
-`TigrisConfig` object works.
+The examples on this page load them from environment variables
+(`TIGRIS_STORAGE_BUCKET`, `TIGRIS_STORAGE_ACCESS_KEY_ID`,
+`TIGRIS_STORAGE_SECRET_ACCESS_KEY`). You can also pass literal strings or values
+from any other source.
 
 ## Configuration
 
 ### TigrisConfig
 
-| Option            | Type     | Description              |
-| ----------------- | -------- | ------------------------ |
-| `bucket`          | `string` | Target Tigris bucket     |
-| `accessKeyId`     | `string` | Tigris access key ID     |
-| `secretAccessKey` | `string` | Tigris secret access key |
+| Option            | Type     | Required | Description              |
+| ----------------- | -------- | -------- | ------------------------ |
+| `bucket`          | `string` | Yes      | Target Tigris bucket     |
+| `accessKeyId`     | `string` | Yes      | Tigris access key ID     |
+| `secretAccessKey` | `string` | Yes      | Tigris secret access key |
+| `endpoint`        | `string` | No       | Tigris endpoint URL      |
 
 ### ShellOptions
 
@@ -118,14 +160,14 @@ const shell = new TigrisShell(
 | `exec(command)`   | `Promise<BashExecResult>`                        | Execute a bash command          |
 | `flush()`         | `Promise<void>`                                  | Persist cached writes to Tigris |
 | `engine`          | `Bash`                                           | Underlying just-bash instance   |
-| `fs`              | `TigrisAdapter`                                  | Underlying filesystem instance  |
+| `fs`              | `TigrisAdapter`                                  | Underlying filesystem adapter   |
 
 ### Sub-exports
 
 Agent Shell exposes additional modules for advanced use cases:
 
 ```ts
-// Filesystem adapter for custom mount setups
+// Filesystem adapter for custom storage layouts
 import { TigrisAdapter } from "@tigrisdata/agent-shell/fs";
 
 // Individual Tigris command factories
@@ -140,11 +182,12 @@ import {
 
 ## Built-in Tigris Commands
 
-Beyond standard bash commands, Agent Shell includes Tigris-specific commands.
+Beyond standard bash commands, Agent Shell includes Tigris-specific commands for
+storage management.
 
 ### presign
 
-Generate presigned URLs for objects:
+Generate presigned URLs for sharing or uploading:
 
 ```bash
 # GET URL with 1 hour expiry (default)
@@ -159,7 +202,7 @@ presign /path/to/file.txt --put
 
 ### snapshot
 
-Create or list point-in-time bucket snapshots:
+Checkpoint your storage. Create or list point-in-time bucket snapshots:
 
 ```bash
 # Create a snapshot
@@ -174,7 +217,7 @@ snapshot my-bucket --list
 
 ### fork
 
-Create a copy-on-write fork of a bucket:
+Branch your storage. Create a copy-on-write fork for safe experimentation:
 
 ```bash
 # Fork a bucket
@@ -194,7 +237,7 @@ forks my-bucket
 
 ### bundle
 
-Batch-download multiple objects as a tar archive:
+Batch-download multiple files as a tar archive:
 
 ```bash
 # Download as tar
@@ -233,26 +276,22 @@ await shell.exec("cat data.csv | wc -l > stats.txt");
 await shell.flush();
 ```
 
-### Multi-Bucket Setup
+### Multi-Bucket Storage Layout
 
-For advanced use cases, you can mount multiple Tigris buckets at different
-paths:
+For advanced use cases, mount multiple Tigris buckets at different paths:
 
 ```ts
 import { Bash, MountableFs, InMemoryFs } from "just-bash";
-import { TigrisAdapter, TigrisConfig } from "@tigrisdata/agent-shell/fs";
+import { TigrisAdapter } from "@tigrisdata/agent-shell/fs";
 import { createTigrisCommands } from "@tigrisdata/agent-shell/commands";
 
-const workspaceFs = new TigrisAdapter({
-  bucket: "workspace-bucket",
+const auth = {
   accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
   secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
-});
-const datasetFs = new TigrisAdapter({
-  bucket: "datasets-bucket",
-  accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
-  secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
-});
+};
+
+const workspaceFs = new TigrisAdapter({ bucket: "workspace-bucket", ...auth });
+const datasetFs = new TigrisAdapter({ bucket: "datasets-bucket", ...auth });
 
 const fs = new MountableFs({ base: new InMemoryFs() });
 fs.mount("/workspace", workspaceFs);
@@ -266,9 +305,12 @@ const bash = new Bash({
 
 // Copy across buckets
 await bash.exec("cp /datasets/data.csv /workspace/local-data.csv");
+
+// Flush each independently
+await workspaceFs.flush();
 ```
 
-### Using Tigris Commands
+### Snapshots, Forks, and Presigned URLs
 
 ```ts
 import { TigrisShell } from "@tigrisdata/agent-shell";
@@ -279,17 +321,17 @@ const shell = new TigrisShell({
   secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
 });
 
-// Write a file
+// Write a file and persist
 await shell.exec('echo "quarterly report" > report.txt');
 await shell.flush();
 
-// Generate presigned URLs
+// Generate a shareable URL
 const getUrl = await shell.exec("presign report.txt");
-const putUrl = await shell.exec("presign report.txt --put --expires 7200");
+console.log(getUrl.stdout.trim());
 
-// Create a snapshot
+// Checkpoint storage before changes
 await shell.exec("snapshot my-bucket --name before-migration");
 
-// Bundle multiple files
-await shell.exec("bundle report.txt data.csv --gzip");
+// Branch storage for safe experimentation
+await shell.exec("fork my-bucket my-bucket-experiment");
 ```

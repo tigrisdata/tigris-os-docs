@@ -29,7 +29,20 @@
       ]
     },
     {
-      "source": "/docs/:path((?!.*\\.(?:js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|json|xml|txt|md|map)$).*)",
+      "source": "/docs/",
+      "headers": [
+        {
+          "key": "Link",
+          "value": "</docs/llms.txt>; rel=\"alternate\"; type=\"text/plain\""
+        },
+        {
+          "key": "Vary",
+          "value": "Accept"
+        }
+      ]
+    },
+    {
+      "source": "/docs/:path+/",
       "headers": [
         {
           "key": "Link",
@@ -43,54 +56,6 @@
     }
   ],
   "redirects": [
-    {
-      "source": "/docs/",
-      "has": [
-        {
-          "type": "header",
-          "key": "accept",
-          "value": ".*text/markdown.*"
-        }
-      ],
-      "destination": "/docs/index.md",
-      "statusCode": 307
-    },
-    {
-      "source": "/docs/:path+/",
-      "has": [
-        {
-          "type": "header",
-          "key": "accept",
-          "value": ".*text/markdown.*"
-        }
-      ],
-      "destination": "/docs/:path.md",
-      "statusCode": 307
-    },
-    {
-      "source": "/docs/",
-      "has": [
-        {
-          "type": "header",
-          "key": "user-agent",
-          "value": ".*(ClaudeBot|ChatGPT-User|GPTBot|Google-Extended|PerplexityBot|Cohere-AI|OAI-SearchBot|YouBot|AI2Bot|Applebot-Extended|Meta-ExternalAgent|Meta-ExternalFetcher|Firecrawl|JinaBot).*"
-        }
-      ],
-      "destination": "/docs/index.md",
-      "statusCode": 307
-    },
-    {
-      "source": "/docs/:path+/",
-      "has": [
-        {
-          "type": "header",
-          "key": "user-agent",
-          "value": ".*(ClaudeBot|ChatGPT-User|GPTBot|Google-Extended|PerplexityBot|Cohere-AI|OAI-SearchBot|YouBot|AI2Bot|Applebot-Extended|Meta-ExternalAgent|Meta-ExternalFetcher|Firecrawl|JinaBot).*"
-        }
-      ],
-      "destination": "/docs/:path.md",
-      "statusCode": 307
-    },
     {
       "source": "/docs/caching/",
       "destination": "/docs/objects/caching/",
@@ -135,6 +100,54 @@
       "source": "/docs/get-started/",
       "destination": "/docs/",
       "permanent": true
+    },
+    {
+      "source": "/docs/",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept",
+          "value": ".*text/markdown.*"
+        }
+      ],
+      "destination": "/docs/index.md",
+      "statusCode": 307
+    },
+    {
+      "source": "/docs/:path+/",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept",
+          "value": ".*text/markdown.*"
+        }
+      ],
+      "destination": "/docs/:path.md",
+      "statusCode": 307
+    },
+    {
+      "source": "/docs/",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(ClaudeBot|ChatGPT-User|GPTBot|Google-Extended|PerplexityBot|Cohere-AI|OAI-SearchBot|YouBot|AI2Bot|Applebot-Extended|Meta-ExternalAgent|Meta-ExternalFetcher|Firecrawl|JinaBot).*"
+        }
+      ],
+      "destination": "/docs/index.md",
+      "statusCode": 307
+    },
+    {
+      "source": "/docs/:path+/",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(ClaudeBot|ChatGPT-User|GPTBot|Google-Extended|PerplexityBot|Cohere-AI|OAI-SearchBot|YouBot|AI2Bot|Applebot-Extended|Meta-ExternalAgent|Meta-ExternalFetcher|Firecrawl|JinaBot).*"
+        }
+      ],
+      "destination": "/docs/:path.md",
+      "statusCode": 307
     }
   ]
 }

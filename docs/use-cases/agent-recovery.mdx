@@ -23,9 +23,9 @@ conversation. When that happens, you need to rewind — not restart.
 any point via the append-only version log. When something goes wrong, fork from
 the last known-good snapshot and resume from there. The fork is instant and
 copy-on-write — no data is copied, and the original bucket is preserved for
-debugging. Unlike [experimentation](/docs/use-cases/agent-experimentation/),
-which compares multiple approaches side by side, recovery is about reverting a
-single agent to a previous state and continuing forward.
+debugging. Unlike experimentation, which compares multiple approaches side by
+side, recovery is about reverting a single agent to a previous state and
+continuing forward.
 
 [Snapshots and forks →](/docs/buckets/snapshots-and-forks/)
 

@@ -213,6 +213,12 @@ const sidebars = {
               label: "Agent Sandboxes",
               id: "use-cases/agent-sandboxes",
             },
+
+            {
+              type: "doc",
+              label: "Agent Recovery",
+              id: "use-cases/agent-recovery",
+            },
           ],
         },
         {

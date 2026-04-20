@@ -1,0 +1,209 @@
+---
+id: agent-experimentation
+title: "Agent Experimentation"
+---
+
+import AgentExperimentationDiagram from "@site/src/components/diagrams/AgentExperimentationDiagram";
+import DiagramLightbox from "@site/src/components/diagrams/DiagramLightbox";
+
+# Agent Experimentation
+
+## Try multiple approaches and keep the best
+
+_Fork the data, let each agent try a different approach, compare outcomes,
+promote the winner._
+
+<div className="use-case-hero">
+  <div className="use-case-hero__text">
+
+You want to try three different embedding models, or two chunking strategies, or
+a new prompt template against the old one. Each variant needs to run against the
+same data without stepping on the others. Copying the dataset per experiment is
+slow and multiplies your storage bill.
+
+[Tigris bucket forks](/docs/buckets/snapshots-and-forks/) give each variant its
+own writable copy of the data with no upfront cost. A fork is a copy-on-write
+clone: instant to create, zero storage until something new gets written. Unlike
+[sandboxes](/docs/use-cases/agent-sandboxes/), which focus on giving agents
+isolated environments, the experimentation pattern adds a comparison step at the
+end: run the same task multiple ways, score the outputs, keep the winner.
+
+[Snapshots and forks →](/docs/buckets/snapshots-and-forks/)
+
+  </div>
+  <div className="use-case-hero__diagram">
+    <DiagramLightbox>
+      <div className="mermaid-frame">
+        <AgentExperimentationDiagram />
+      </div>
+    </DiagramLightbox>
+  </div>
+</div>
+
+### Benefits
+
+<details>
+<summary>Non-destructive writes via fork isolation</summary>
+
+Each experiment runs inside its own fork. If an agent corrupts the data or
+produces garbage, the original dataset is untouched. Delete the fork and start
+over.
+
+</details>
+
+<details>
+<summary>Per-experiment S3 namespace</summary>
+
+Multiple agents can work on the same data at the same time. Each fork is its own
+S3 namespace, so there's no locking and no path-prefix conventions to manage.
+Writes in one fork don't show up in any other.
+
+</details>
+
+<details>
+<summary>Copy-on-write storage sharing</summary>
+
+Forks share the baseline data through copy-on-write. You only pay for bytes
+each experiment actually writes. If your experiments add scores or labels on top
+of the original data, overhead is small. If they rewrite most of the data (like
+re-embedding an entire corpus), each fork uses more storage.
+
+</details>
+
+<details>
+<summary>Snapshot-pinned baselines</summary>
+
+Snapshot the dataset before you start. Every fork branches from the same
+snapshot, so results are directly comparable. Weeks later, re-run any experiment
+by forking from the same snapshot version.
+
+```bash
+tigris snapshots take my-dataset baseline-v1
+```
+
+</details>
+
+<details>
+<summary>Collision-free output paths</summary>
+
+Each fork is its own S3 namespace. Every agent can write to
+`results/scores.json` without colliding. Collecting results across experiments
+is a loop over bucket names, not a query against a shared database.
+
+</details>
+
+### Patterns
+
+#### Prompt and model evaluation
+
+Test the same task across different models or prompt templates. Fork the test
+set, let each agent run its variant, and compare output quality. Each agent
+reads inputs from its fork and writes scores to a known path.
+
+```bash
+# Pin the test set
+tigris snapshots take eval-set "pre-eval"
+
+# One fork per variant
+tigris forks create eval-set eval-gpt4o
+tigris forks create eval-set eval-claude
+tigris forks create eval-set eval-llama
+
+# Each agent reads s3://eval-{model}/inputs/ and writes to
+# s3://eval-{model}/results/scores.json
+```
+
+#### Data preparation and enrichment
+
+Agents that clean, label, or transform datasets can try different approaches in
+parallel and keep the output that scores highest. The original raw data is
+shared across forks; each agent writes its transformed output on top.
+
+```bash
+tigris forks create raw-dataset cleaned-aggressive
+tigris forks create raw-dataset cleaned-conservative
+tigris forks create raw-dataset cleaned-llm-assisted
+
+# Each agent reads the original files (shared via copy-on-write)
+# and writes transformed output to s3://{fork}/processed/
+```
+
+#### RAG pipeline tuning
+
+Try different retrieval configurations against the same knowledge base. Each
+fork starts with the same source documents; each agent builds its own index
+inside the fork. Since re-indexing rewrites most of the data, the storage
+savings come from sharing the source documents, not the indices.
+
+```bash
+tigris forks create knowledge-base rag-chunk-256
+tigris forks create knowledge-base rag-chunk-512
+tigris forks create knowledge-base rag-with-reranker
+
+# Each agent reads s3://{fork}/documents/ (shared, zero-copy)
+# and writes its index to s3://{fork}/index/ (new per fork)
+```
+
+#### Rollout safety
+
+Before deploying a new agent version, fork production data and let the new
+version process it. Compare its output against the current version's results
+without touching live data.
+
+```bash
+# Snapshot current production state
+tigris snapshots take prod-data "pre-rollout-$(date +%s)"
+
+# Fork for the new version to run against
+tigris forks create prod-data rollout-candidate
+
+# New agent version reads from and writes to the fork
+# Diff s3://rollout-candidate/results/ against s3://prod-data/results/
+```
+
+#### Compare, promote, and clean up
+
+After all agents finish, collect results, keep the winner, and delete the rest.
+
+**1. Pull results from each fork.** Since every fork is an S3 bucket and agents
+write to the same relative path, collecting outputs is a loop over bucket names.
+
+```bash
+export AWS_ENDPOINT_URL="https://t3.storage.dev"
+
+for fork in eval-gpt4o eval-claude eval-llama; do
+  aws s3 cp "s3://${fork}/results/scores.json" "./results/${fork}.json"
+done
+```
+
+**2. Snapshot the winner.** This creates an immutable record of the experiment
+state that you can fork from later if you want to build on the result.
+
+```bash
+tigris snapshots take eval-claude "promoted-$(date +%s)"
+```
+
+**3. Delete the losing forks.** Only each fork's unique writes are reclaimed.
+The shared baseline is unaffected.
+
+```bash
+tigris rm -f eval-gpt4o
+tigris rm -f eval-llama
+```
+
+#### Iterative refinement
+
+An agent can fork its own fork to try a variation without losing intermediate
+state. If the variation doesn't work, delete it and try again from the same
+parent.
+
+```bash
+# Agent B has good results; try a refinement
+tigris forks create rag-chunk-512 rag-chunk-512-v2
+
+# If the refinement works, promote it
+tigris snapshots take rag-chunk-512-v2 "promoted"
+
+# If it doesn't, throw it away; the parent fork is unchanged
+tigris rm -f rag-chunk-512-v2
+```

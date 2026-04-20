@@ -55,7 +55,10 @@
     "strokeWidth": 1.5,
     "endArrowhead": "arrow",
     "startArrowhead": null,
-    "points": [[0, 0], [100, 0]]
+    "points": [
+      [0, 0],
+      [100, 0]
+    ]
   },
   {
     "type": "text",
@@ -104,7 +107,10 @@
     "strokeStyle": "dashed",
     "endArrowhead": "arrow",
     "startArrowhead": null,
-    "points": [[0, 0], [-280, 80]]
+    "points": [
+      [0, 0],
+      [-280, 80]
+    ]
   },
   {
     "type": "arrow",
@@ -118,7 +124,10 @@
     "strokeStyle": "dashed",
     "endArrowhead": "arrow",
     "startArrowhead": null,
-    "points": [[0, 0], [0, 80]]
+    "points": [
+      [0, 0],
+      [0, 80]
+    ]
   },
   {
     "type": "arrow",
@@ -132,7 +141,10 @@
     "strokeStyle": "dashed",
     "endArrowhead": "arrow",
     "startArrowhead": null,
-    "points": [[0, 0], [280, 80]]
+    "points": [
+      [0, 0],
+      [280, 80]
+    ]
   },
 
   {
@@ -259,7 +271,10 @@
     "strokeWidth": 1.5,
     "endArrowhead": "arrow",
     "startArrowhead": null,
-    "points": [[0, 0], [0, 50]]
+    "points": [
+      [0, 0],
+      [0, 50]
+    ]
   },
   {
     "type": "arrow",
@@ -272,7 +287,10 @@
     "strokeWidth": 1.5,
     "endArrowhead": "arrow",
     "startArrowhead": null,
-    "points": [[0, 0], [0, 50]]
+    "points": [
+      [0, 0],
+      [0, 50]
+    ]
   },
   {
     "type": "arrow",
@@ -285,7 +303,10 @@
     "strokeWidth": 1.5,
     "endArrowhead": "arrow",
     "startArrowhead": null,
-    "points": [[0, 0], [0, 50]]
+    "points": [
+      [0, 0],
+      [0, 50]
+    ]
   },
 
   {
@@ -372,7 +393,10 @@
     "strokeStyle": "dashed",
     "endArrowhead": "arrow",
     "startArrowhead": null,
-    "points": [[0, 0], [280, 70]]
+    "points": [
+      [0, 0],
+      [280, 70]
+    ]
   },
   {
     "type": "arrow",
@@ -386,7 +410,10 @@
     "strokeStyle": "dashed",
     "endArrowhead": "arrow",
     "startArrowhead": null,
-    "points": [[0, 0], [0, 70]]
+    "points": [
+      [0, 0],
+      [0, 70]
+    ]
   },
   {
     "type": "arrow",
@@ -400,7 +427,10 @@
     "strokeStyle": "dashed",
     "endArrowhead": "arrow",
     "startArrowhead": null,
-    "points": [[0, 0], [-280, 70]]
+    "points": [
+      [0, 0],
+      [-280, 70]
+    ]
   },
 
   {

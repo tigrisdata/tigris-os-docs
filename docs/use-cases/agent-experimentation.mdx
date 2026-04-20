@@ -63,9 +63,9 @@ Writes in one fork don't show up in any other.
 <details>
 <summary>Copy-on-write storage sharing</summary>
 
-Forks share the baseline data through copy-on-write. You only pay for bytes
-each experiment actually writes. If your experiments add scores or labels on top
-of the original data, overhead is small. If they rewrite most of the data (like
+Forks share the baseline data through copy-on-write. You only pay for bytes each
+experiment actually writes. If your experiments add scores or labels on top of
+the original data, overhead is small. If they rewrite most of the data (like
 re-embedding an entire corpus), each fork uses more storage.
 
 </details>

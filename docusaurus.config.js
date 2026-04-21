@@ -26,6 +26,24 @@ const config = {
 
   headTags: [
     {
+      tagName: "link",
+      attributes: {
+        rel: "alternate",
+        type: "text/plain",
+        href: "https://www.tigrisdata.com/docs/llms.txt",
+        title: "llms.txt",
+      },
+    },
+    {
+      tagName: "link",
+      attributes: {
+        rel: "alternate",
+        type: "text/plain",
+        href: "https://www.tigrisdata.com/docs/llms-full.txt",
+        title: "llms-full.txt",
+      },
+    },
+    {
       tagName: "script",
       attributes: { type: "application/ld+json" },
       innerHTML: JSON.stringify({
@@ -91,6 +109,17 @@ const config = {
         gtag: {
           trackingID: "G-GW2DNH9EW4",
           anonymizeIP: true,
+        },
+        sitemap: {
+          // Keep the sitemap in sync with the llms-txt plugin's excludeRoutes
+          // below so agent-score crawlers don't flag missing .md/llms-txt
+          // coverage for pages we intentionally omit.
+          ignorePatterns: [
+            "/docs/legal/**",
+            "/docs/changelog/**",
+            "/docs/partner-integrations/api/**",
+            "/docs/markdown-page/",
+          ],
         },
       }),
     ],

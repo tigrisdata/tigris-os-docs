@@ -119,6 +119,7 @@ const config = {
             "/docs/changelog/**",
             "/docs/partner-integrations/api/**",
             "/docs/markdown-page/",
+            "/docs/about/**",
           ],
         },
       }),
@@ -170,6 +171,7 @@ const config = {
             "/docs/legal/**",
             "/docs/changelog/**",
             "/docs/partner-integrations/api/**",
+            "/docs/about/**",
           ],
         },
         includeOrder: [

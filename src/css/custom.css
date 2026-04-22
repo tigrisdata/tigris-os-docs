@@ -1102,7 +1102,7 @@ table td {
 
 .cli-setup-steps {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 16px;
   margin: 1.5rem 0;
 }
@@ -1147,12 +1147,6 @@ table td {
 
 .cli-setup-steps .step pre {
   margin-bottom: 0;
-}
-
-@media screen and (max-width: 768px) {
-  .cli-setup-steps {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* Partner Dashboard doc: screenshot styling */

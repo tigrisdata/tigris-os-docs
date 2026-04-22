@@ -1,0 +1,293 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 320,
+    "y": 0,
+    "text": "Agent Recovery",
+    "fontSize": 18,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "agent-state",
+    "x": 300,
+    "y": 45,
+    "width": 220,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "agent-state-lbl",
+    "x": 335,
+    "y": 53,
+    "text": "Agent State Bucket",
+    "fontSize": 15,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "agent-state-sub",
+    "x": 335,
+    "y": 77,
+    "text": "messages, tools, config",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-state-snap",
+    "x": 410,
+    "y": 100,
+    "width": 0,
+    "height": 70,
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "startArrowhead": null,
+    "points": [
+      [0, 0],
+      [0, 70]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "snap-lbl",
+    "x": 425,
+    "y": 120,
+    "text": "snapshot",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "checkpoint",
+    "x": 300,
+    "y": 170,
+    "width": 220,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5
+  },
+  {
+    "type": "text",
+    "id": "checkpoint-lbl",
+    "x": 345,
+    "y": 178,
+    "text": "Checkpoint",
+    "fontSize": 15,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "checkpoint-sub",
+    "x": 345,
+    "y": 202,
+    "text": "known-good state",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-snap-bad",
+    "x": 410,
+    "y": 225,
+    "width": 0,
+    "height": 70,
+    "strokeColor": "#CF5B5B",
+    "strokeWidth": 1.5,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
+    "startArrowhead": null,
+    "points": [
+      [0, 0],
+      [0, 70]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "bad-lbl",
+    "x": 425,
+    "y": 248,
+    "text": "bad deploy",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#CF5B5B"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "corrupted",
+    "x": 300,
+    "y": 295,
+    "width": 220,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#CF5B5B",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "corrupted-lbl",
+    "x": 340,
+    "y": 303,
+    "text": "Corrupted State",
+    "fontSize": 15,
+    "fontFamily": 1,
+    "strokeColor": "#CF5B5B"
+  },
+  {
+    "type": "text",
+    "id": "corrupted-sub",
+    "x": 340,
+    "y": 327,
+    "text": "kept for debugging",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-checkpoint-fork",
+    "x": 300,
+    "y": 197,
+    "width": -180,
+    "height": 200,
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2,
+    "strokeStyle": "dashed",
+    "endArrowhead": "arrow",
+    "startArrowhead": null,
+    "points": [
+      [0, 0],
+      [-180, 0],
+      [-180, 200]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "fork-lbl",
+    "x": 50,
+    "y": 270,
+    "text": "zero-copy fork",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "recovery-fork",
+    "x": 20,
+    "y": 397,
+    "width": 200,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "fork-box-lbl",
+    "x": 55,
+    "y": 405,
+    "text": "Recovery Fork",
+    "fontSize": 15,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+  {
+    "type": "text",
+    "id": "fork-box-sub",
+    "x": 55,
+    "y": 429,
+    "text": "same data, new writes",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "a-fork-resume",
+    "x": 220,
+    "y": 424,
+    "width": 160,
+    "height": 0,
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "startArrowhead": null,
+    "points": [
+      [0, 0],
+      [160, 0]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "resume-lbl",
+    "x": 255,
+    "y": 400,
+    "text": "resume",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "resumed",
+    "x": 380,
+    "y": 397,
+    "width": 220,
+    "height": 55,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "resumed-lbl",
+    "x": 420,
+    "y": 405,
+    "text": "Agent Resumes",
+    "fontSize": 15,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+  {
+    "type": "text",
+    "id": "resumed-sub",
+    "x": 420,
+    "y": 429,
+    "text": "guardrails active",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  }
+]

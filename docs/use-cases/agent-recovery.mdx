@@ -1,0 +1,162 @@
+---
+id: agent-recovery
+title: "Agent Recovery"
+---
+
+import AgentRecoveryDiagram from "@site/src/components/diagrams/AgentRecoveryDiagram";
+import DiagramLightbox from "@site/src/components/diagrams/DiagramLightbox";
+
+# Agent Recovery
+
+## Roll back agent state to a known-good point
+
+_Snapshot before risky changes. Fork to recover. Inspect any moment in time._
+
+<div className="use-case-hero">
+  <div className="use-case-hero__text">
+
+Agents in production break. A prompt update causes hallucinations, a tool change
+corrupts downstream state, or an agent drifts from its guardrails over a long
+conversation. When that happens, you need to rewind — not restart.
+
+[Tigris snapshots](/docs/buckets/snapshots-and-forks/) capture agent state at
+any point via the append-only version log. When something goes wrong, fork from
+the last known-good snapshot and resume from there. The fork is instant and
+copy-on-write — no data is copied, and the original bucket is preserved for
+debugging. Unlike experimentation, which compares multiple approaches side by
+side, recovery is about reverting a single agent to a previous state and
+continuing forward.
+
+[Snapshots and forks →](/docs/buckets/snapshots-and-forks/)
+
+  </div>
+  <div className="use-case-hero__diagram">
+    <DiagramLightbox>
+      <div className="mermaid-frame">
+        <AgentRecoveryDiagram />
+      </div>
+    </DiagramLightbox>
+  </div>
+</div>
+
+### Benefits
+
+<details>
+<summary>Instant rollback via copy-on-write fork</summary>
+
+Forking from a snapshot is an O(1) metadata operation. A 50 GB state bucket
+forks in the same time as a 50 KB one. The agent can resume from the forked
+bucket immediately while the corrupted original stays intact for post-mortem
+analysis.
+
+</details>
+
+<details>
+<summary>Append-only version history</summary>
+
+Every S3 PUT to a snapshot-enabled bucket creates a new version in the
+append-only log. You can read the state of any object at any past nanosecond
+timestamp — no need to take explicit snapshots before every change. Named
+snapshots mark significant checkpoints (pre-deploy, pre-migration) for fast
+lookup.
+
+</details>
+
+<details>
+<summary>Original state preserved for debugging</summary>
+
+The corrupted bucket is never modified during recovery. Fork and resume in the
+new bucket; inspect the old one at your own pace. When the investigation is
+done, delete it or keep it as a record.
+
+</details>
+
+<details>
+<summary>Per-object granularity</summary>
+
+Agent state stored as individual S3 objects (one object per message, per tool
+call, per config change) gives you message-level granularity in the version
+history. You can inspect or roll back a single conversation thread without
+affecting the rest of the state.
+
+</details>
+
+<details>
+<summary>Zero-cost until you write</summary>
+
+Recovery forks share all data with the source snapshot through copy-on-write.
+The fork only consumes storage for objects the recovered agent writes going
+forward. If the agent resumes a conversation and adds 10 messages to a bucket
+with 100,000 objects, you store 10 new objects.
+
+</details>
+
+### Patterns
+
+#### Automated rollback on bad deploy
+
+Snapshot the state bucket before deploying a new prompt version or model update.
+If the new version produces bad output, fork from the pre-deploy snapshot and
+point the agent at the fork.
+
+```bash
+# Snapshot before deploying
+tigris snapshots take agent-state "pre-deploy-v2.3"
+
+# Deploy new prompt version...
+# Monitor for regressions...
+
+# Something goes wrong — fork from the snapshot
+tigris forks create agent-state recovery-v2.3
+
+# Point the agent at the fork bucket and resume
+```
+
+#### Multi-agent replay
+
+When agent B depends on agent A's output and agent A produces bad state, you
+don't need to re-run the entire pipeline. Fork agent A's bucket from a
+known-good snapshot and replay agent B against it.
+
+```bash
+# Agent A's state went bad after a tool change
+# Fork from the last good snapshot
+tigris forks create agent-a-state replay-from-good
+
+# Re-run agent B against the forked bucket
+# Agent B reads from s3://replay-from-good/ instead of s3://agent-a-state/
+```
+
+#### Time-travel audit
+
+Read any object at any past point in time without taking explicit snapshots
+first. The append-only log retains every write. Pass a nanosecond timestamp via
+the `X-Tigris-Snapshot-Version` header to answer "what did the agent know at
+time T?" during incident review.
+
+```bash
+# List named snapshots to find the right timestamp
+tigris snapshots list agent-state
+
+# Read the thread state at a specific point in time
+# Any nanosecond timestamp works, not just named snapshots
+tigris objects get agent-state threads/thread-42/thread.json \
+  --snapshot 1751631910196672425 \
+  --output thread-at-that-moment.json
+```
+
+#### Selective recovery via fork
+
+Fork from a pre-incident snapshot to get a clean copy of all state. The fork
+contains every thread at the known-good point. Copy forward any threads from the
+current bucket that weren't affected by the incident.
+
+```bash
+# Fork from the pre-deploy snapshot
+tigris forks create agent-state clean-state
+
+# The fork has all threads at the known-good point
+# Copy unaffected threads forward from the current bucket if needed
+tigris cp t3://agent-state/threads/thread-99/ \
+  t3://clean-state/threads/thread-99/ -r
+```

@@ -218,6 +218,11 @@ const sidebars = {
               label: "Agent Experimentation",
               id: "use-cases/agent-experimentation",
             },
+            {
+              type: "doc",
+              label: "Agent Recovery",
+              id: "use-cases/agent-recovery",
+            },
           ],
         },
         {

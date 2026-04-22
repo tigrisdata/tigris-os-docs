@@ -54,7 +54,7 @@ import { TigrisShell } from "@tigrisdata/agent-shell";
 const shell = new TigrisShell({
   accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
   secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
-  bucket: process.env.TIGRIS_STORAGE_BUCKET, // optional — auto-mounts at cwd
+  bucket: process.env.TIGRIS_STORAGE_BUCKET, // optional — auto-mounts at cwd (default: /workspace)
 });
 
 await shell.exec('echo "Hello from agent-shell" > greeting.txt');
@@ -159,8 +159,10 @@ try {
 | `organizationId`  | `string` | No\*     | Organization ID (required with token) |
 | `endpoint`        | `string` | No       | Tigris endpoint URL                   |
 
-\*At least one auth mode is required: (accessKeyId + secretAccessKey) or
+:::note
+At least one auth mode is required: (accessKeyId + secretAccessKey) or
 (sessionToken + organizationId).
+:::
 
 ### ShellOptions
 
@@ -273,7 +275,7 @@ import { TigrisShell } from "@tigrisdata/agent-shell";
 const shell = new TigrisShell({
   accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
   secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
-  bucket: "agent-workspace", // auto-mounted at /workspace
+  bucket: "agent-workspace", // auto-mounted at cwd (default: /workspace)
 });
 
 shell.mount("shared-datasets", "/datasets");

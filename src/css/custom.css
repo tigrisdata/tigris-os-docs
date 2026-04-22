@@ -1149,6 +1149,11 @@ table td {
   margin-bottom: 0;
 }
 
+.cli-setup-steps .step > *:last-child,
+.cli-setup-steps .step .theme-code-block:last-child {
+  margin-bottom: 0;
+}
+
 /* Partner Dashboard doc: screenshot styling */
 .dashboard-screenshot {
   margin: 1.5rem 0;

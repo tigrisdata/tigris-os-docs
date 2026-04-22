@@ -3,20 +3,17 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-Persistent sandboxed storage for AI agents — a bash filesystem backed by Tigris
-object storage.
+A virtual bash environment with a persistent filesystem backed by Tigris object
+storage, written in TypeScript and designed for AI agents.
 
 AI agents produce artifacts — reports, data, configs, logs. These need to go
 somewhere durable, shareable, and globally accessible. Agent Shell gives agents
 a familiar bash interface (`cat`, `grep`, `sed`, `jq`, `awk`, pipes, redirects)
 where every file operation is backed by a Tigris bucket.
 
-**What makes it a storage sandbox:**
-
 - **Isolated** — writes stay in-memory until you explicitly flush. No partial
   state leaks to storage.
-- **Durable** — flush persists files to Tigris, globally distributed across 20+
-  regions.
+- **Durable** — flush persists files to Tigris, globally distributed.
 - **Checkpointable** — take snapshots of your storage at any point. Roll back if
   needed.
 - **Forkable** — create copy-on-write forks of a bucket for safe
@@ -49,35 +46,77 @@ yarn add @tigrisdata/agent-shell
 </TabItem>
 </Tabs>
 
-### Basic Usage
+### Programmatic Usage
 
 ```ts
 import { TigrisShell } from "@tigrisdata/agent-shell";
 
 const shell = new TigrisShell({
-  bucket: process.env.TIGRIS_STORAGE_BUCKET,
   accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
   secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
+  bucket: process.env.TIGRIS_STORAGE_BUCKET, // optional — auto-mounts at cwd
 });
 
-// Write files
 await shell.exec('echo "Hello from agent-shell" > greeting.txt');
-await shell.exec("mkdir -p reports/2026");
-
-// Read and process files
-const result = await shell.exec("cat greeting.txt | tr a-z A-Z");
-console.log(result.stdout); // "HELLO FROM AGENT-SHELL"
+await shell.exec("cat greeting.txt | tr a-z A-Z");
+// stdout: "HELLO FROM AGENT-SHELL"
 
 // Persist changes to Tigris
 await shell.flush();
 ```
 
-## Storage Sandbox Model
+### Interactive Shell
 
-Agent Shell uses an in-memory write-back cache that acts as a storage sandbox:
+Launch a shell directly — no install needed:
+
+```bash
+npx @tigrisdata/agent-shell
+```
+
+Authenticate with access keys:
 
 ```
-Agent writes file  →  cached locally (isolated)
+$ configure --key tid_... --secret tsec_...
+Available buckets:
+  my-bucket
+  shared-data
+
+Mounted my-bucket at /my-bucket
+
+$ echo "hello" > greeting.txt
+$ cat greeting.txt
+hello
+$ ls
+greeting.txt
+$ flush
+Flushed 1 mount(s)
+```
+
+Or login with your Tigris account:
+
+```
+$ login
+Open this URL in your browser:
+  https://auth.storage.tigrisdata.io/activate?user_code=XKCD-1234
+
+Waiting for authorization... done!
+Logged in as you@example.com
+
+Mounted my-bucket at /my-bucket
+```
+
+You can also pass credentials as flags:
+
+```bash
+npx @tigrisdata/agent-shell --key tid_... --secret tsec_... --bucket my-bucket
+```
+
+## Storage Model
+
+Agent Shell uses an in-memory write-back cache that provides isolation:
+
+```
+Agent writes file  →  cached in memory (isolated)
 Agent reads file   →  cache hit or fetch from Tigris
 Agent calls flush  →  all changes persisted atomically
 ```
@@ -90,9 +129,9 @@ This gives you:
 
 ```ts
 const shell = new TigrisShell({
-  bucket: process.env.TIGRIS_STORAGE_BUCKET,
   accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
   secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
+  bucket: process.env.TIGRIS_STORAGE_BUCKET,
 });
 
 try {
@@ -107,46 +146,37 @@ try {
 }
 ```
 
-## Authentication
-
-Pass your Tigris credentials when constructing `TigrisShell`. All three fields
-are required:
-
-- `bucket` — target bucket name
-- `accessKeyId` — Tigris access key ID
-- `secretAccessKey` — Tigris secret access key
-
-The examples on this page load them from environment variables
-(`TIGRIS_STORAGE_BUCKET`, `TIGRIS_STORAGE_ACCESS_KEY_ID`,
-`TIGRIS_STORAGE_SECRET_ACCESS_KEY`). You can also pass literal strings or values
-from any other source.
-
 ## Configuration
 
 ### TigrisConfig
 
-| Option            | Type     | Required | Description              |
-| ----------------- | -------- | -------- | ------------------------ |
-| `bucket`          | `string` | Yes      | Target Tigris bucket     |
-| `accessKeyId`     | `string` | Yes      | Tigris access key ID     |
-| `secretAccessKey` | `string` | Yes      | Tigris secret access key |
-| `endpoint`        | `string` | No       | Tigris endpoint URL      |
+| Option            | Type     | Required | Description                           |
+| ----------------- | -------- | -------- | ------------------------------------- |
+| `bucket`          | `string` | No       | Bucket name — auto-mounted at cwd     |
+| `accessKeyId`     | `string` | No\*     | Tigris access key ID                  |
+| `secretAccessKey` | `string` | No\*     | Tigris secret access key              |
+| `sessionToken`    | `string` | No\*     | Session token (from OAuth)            |
+| `organizationId`  | `string` | No\*     | Organization ID (required with token) |
+| `endpoint`        | `string` | No       | Tigris endpoint URL                   |
+
+\*At least one auth mode is required: (accessKeyId + secretAccessKey) or
+(sessionToken + organizationId).
 
 ### ShellOptions
 
-| Option | Type                     | Default      | Description                                 |
-| ------ | ------------------------ | ------------ | ------------------------------------------- |
-| `cwd`  | `string`                 | `/workspace` | Starting working directory                  |
-| `env`  | `Record<string, string>` | `{}`         | Initial environment variables for the shell |
+| Option | Type                     | Default      | Description                                     |
+| ------ | ------------------------ | ------------ | ----------------------------------------------- |
+| `cwd`  | `string`                 | `/workspace` | Starting working directory and auto-mount point |
+| `env`  | `Record<string, string>` | `{}`         | Initial environment variables for the shell     |
 
 ```ts
 const shell = new TigrisShell(
   {
-    bucket: process.env.TIGRIS_STORAGE_BUCKET,
     accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
     secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
+    bucket: process.env.TIGRIS_STORAGE_BUCKET,
   },
-  { cwd: "/workspace/project", env: { NODE_ENV: "production" } },
+  { cwd: "/my-project", env: { NODE_ENV: "production" } },
 );
 ```
 
@@ -154,13 +184,15 @@ const shell = new TigrisShell(
 
 ### TigrisShell
 
-| Method / Property | Type                                             | Description                     |
-| ----------------- | ------------------------------------------------ | ------------------------------- |
-| `constructor`     | `(config: TigrisConfig, options?: ShellOptions)` | Create a new shell instance     |
-| `exec(command)`   | `Promise<BashExecResult>`                        | Execute a bash command          |
-| `flush()`         | `Promise<void>`                                  | Persist cached writes to Tigris |
-| `engine`          | `Bash`                                           | Underlying just-bash instance   |
-| `fs`              | `TigrisAdapter`                                  | Underlying filesystem adapter   |
+| Method / Property           | Type                                             | Description                        |
+| --------------------------- | ------------------------------------------------ | ---------------------------------- |
+| `constructor`               | `(config: TigrisConfig, options?: ShellOptions)` | Create a new shell instance        |
+| `exec(command)`             | `Promise<BashExecResult>`                        | Execute a bash command             |
+| `mount(bucket, mountPoint)` | `void`                                           | Mount a bucket at a path           |
+| `unmount(mountPoint)`       | `void`                                           | Unmount a path                     |
+| `listMounts()`              | `Array<{ bucket, mountPoint }>`                  | List current mounts                |
+| `flush(mountPoint?)`        | `Promise<void>`                                  | Flush all mounts or a specific one |
+| `engine`                    | `Bash`                                           | Underlying just-bash instance      |
 
 ### Sub-exports
 
@@ -182,22 +214,16 @@ import {
 
 ## Built-in Tigris Commands
 
-Beyond standard bash commands, Agent Shell includes Tigris-specific commands for
-storage management.
+Beyond standard bash commands, Agent Shell includes Tigris-specific commands.
 
 ### presign
 
 Generate presigned URLs for sharing or uploading:
 
 ```bash
-# GET URL with 1 hour expiry (default)
-presign /path/to/file.txt
-
-# GET URL with custom expiry (seconds)
-presign /path/to/file.txt --expires 7200
-
-# PUT URL for uploads
-presign /path/to/file.txt --put
+presign /path/to/file.txt                    # GET URL, 1 hour expiry
+presign /path/to/file.txt --expires 7200     # GET URL, 2 hour expiry
+presign /path/to/file.txt --put              # PUT URL for uploads
 ```
 
 ### snapshot
@@ -205,14 +231,9 @@ presign /path/to/file.txt --put
 Checkpoint your storage. Create or list point-in-time bucket snapshots:
 
 ```bash
-# Create a snapshot
-snapshot my-bucket
-
-# Create a named snapshot
-snapshot my-bucket --name "checkpoint-1"
-
-# List all snapshots
-snapshot my-bucket --list
+snapshot my-bucket                           # Create a snapshot
+snapshot my-bucket --name "checkpoint-1"     # Create a named snapshot
+snapshot my-bucket --list                    # List all snapshots
 ```
 
 ### fork
@@ -220,11 +241,8 @@ snapshot my-bucket --list
 Branch your storage. Create a copy-on-write fork for safe experimentation:
 
 ```bash
-# Fork a bucket
-fork source-bucket my-fork
-
-# Fork from a specific snapshot
-fork source-bucket my-fork --snapshot 1713200000
+fork source-bucket my-fork                   # Fork a bucket
+fork source-bucket my-fork --snapshot 1713200000   # Fork from a specific snapshot
 ```
 
 ### forks
@@ -240,14 +258,53 @@ forks my-bucket
 Batch-download multiple files as a tar archive:
 
 ```bash
-# Download as tar
-bundle file1.txt file2.txt
+bundle file1.txt file2.txt                   # Download as tar
+bundle file1.txt file2.txt --gzip           # Download as gzip tar
+bundle file1.txt file2.txt --zstd           # Download as zstd tar
+```
 
-# Download as gzip tar
-bundle file1.txt file2.txt --gzip
+## Multi-Bucket
 
-# Download as zstd tar
-bundle file1.txt file2.txt --zstd
+Mount multiple buckets at different paths:
+
+```ts
+import { TigrisShell } from "@tigrisdata/agent-shell";
+
+const shell = new TigrisShell({
+  accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
+  secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
+  bucket: "agent-workspace", // auto-mounted at /workspace
+});
+
+shell.mount("shared-datasets", "/datasets");
+
+await shell.exec("cat /datasets/training/labels.csv | head -10");
+await shell.exec("cp /datasets/training/labels.csv ./local-copy.csv");
+await shell.exec('echo "processed" > results.txt');
+
+// Flush all mounts, or a specific one
+await shell.flush(); // all
+await shell.flush("/datasets"); // just /datasets
+
+// List and unmount
+shell.listMounts();
+shell.unmount("/datasets");
+```
+
+Or in the interactive shell:
+
+```
+$ mount shared-datasets /datasets
+Mounted shared-datasets at /datasets
+
+$ cp /datasets/data.csv ./local.csv
+$ df
+Bucket                    Mounted on
+agent-workspace           /agent-workspace
+shared-datasets           /datasets
+
+$ umount /datasets
+Unmounted /datasets
 ```
 
 ## Examples
@@ -274,40 +331,6 @@ console.log(sorted.stdout);
 // Write results and persist
 await shell.exec("cat data.csv | wc -l > stats.txt");
 await shell.flush();
-```
-
-### Multi-Bucket Storage Layout
-
-For advanced use cases, mount multiple Tigris buckets at different paths:
-
-```ts
-import { Bash, MountableFs, InMemoryFs } from "just-bash";
-import { TigrisAdapter } from "@tigrisdata/agent-shell/fs";
-import { createTigrisCommands } from "@tigrisdata/agent-shell/commands";
-
-const auth = {
-  accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
-  secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
-};
-
-const workspaceFs = new TigrisAdapter({ bucket: "workspace-bucket", ...auth });
-const datasetFs = new TigrisAdapter({ bucket: "datasets-bucket", ...auth });
-
-const fs = new MountableFs({ base: new InMemoryFs() });
-fs.mount("/workspace", workspaceFs);
-fs.mount("/datasets", datasetFs);
-
-const bash = new Bash({
-  fs,
-  cwd: "/workspace",
-  customCommands: createTigrisCommands(workspaceFs.config),
-});
-
-// Copy across buckets
-await bash.exec("cp /datasets/data.csv /workspace/local-data.csv");
-
-// Flush each independently
-await workspaceFs.flush();
 ```
 
 ### Snapshots, Forks, and Presigned URLs

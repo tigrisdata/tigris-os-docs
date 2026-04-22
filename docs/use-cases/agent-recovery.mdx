@@ -140,8 +140,9 @@ tigris snapshots list agent-state
 
 # Read the thread state at a specific point in time
 # Any nanosecond timestamp works, not just named snapshots
-curl -H "X-Tigris-Snapshot-Version: 1751631910196672425" \
-  "https://t3.storage.dev/agent-state/threads/thread-42/thread.json"
+tigris objects get agent-state threads/thread-42/thread.json \
+  --snapshot 1751631910196672425 \
+  --output thread-at-that-moment.json
 ```
 
 #### Selective recovery via fork
@@ -156,7 +157,6 @@ tigris forks create agent-state clean-state
 
 # The fork has all threads at the known-good point
 # Copy unaffected threads forward from the current bucket if needed
-export AWS_ENDPOINT_URL="https://t3.storage.dev"
-aws s3 sync "s3://agent-state/threads/thread-99/" \
-  "s3://clean-state/threads/thread-99/"
+tigris cp t3://agent-state/threads/thread-99/ \
+  t3://clean-state/threads/thread-99/ -r
 ```

@@ -1,0 +1,20 @@
+/* Mirrors @docusaurus/theme-classic DocRoot/Layout styles, plus order rules
+   to restore the visual sidebar-left layout after the DOM swap in index.tsx. */
+
+.docRoot {
+  display: flex;
+  width: 100%;
+}
+
+.docsWrapper {
+  display: flex;
+  flex: 1 0 auto;
+}
+
+/* Sidebar is rendered second in the DOM for agent-crawler content-start-position,
+   but visually stays on the left on medium+ viewports. */
+@media (min-width: 997px) {
+  .docRoot > :global(.theme-doc-sidebar-container) {
+    order: -1;
+  }
+}

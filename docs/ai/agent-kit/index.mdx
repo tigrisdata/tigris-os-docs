@@ -3,8 +3,8 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-Agent Kit is a TypeScript library that packages storage workflows for AI
-agents on Tigris.
+Agent Kit is a TypeScript library that packages storage workflows for AI agents
+on Tigris.
 
 Agents need more than object storage. They need isolated sandboxes they can
 write into without stepping on each other, snapshots they can roll back to when
@@ -21,8 +21,8 @@ built.
   credentials. One function, one teardown, no loose keys.
 - **Checkpoints** — snapshot a bucket's state and restore into a fresh fork.
   Inspect what an agent saw at any moment without freezing the original.
-- **Coordination** — wire up webhooks on bucket events to trigger the next
-  stage in a multi-agent pipeline. No polling.
+- **Coordination** — wire up webhooks on bucket events to trigger the next stage
+  in a multi-agent pipeline. No polling.
 
 Agent Kit composes
 [`@tigrisdata/storage`](https://www.npmjs.com/package/@tigrisdata/storage) for
@@ -32,10 +32,9 @@ access keys — nothing more.
 
 :::info Pre-1.0
 
-Agent Kit is published on npm as `0.1.x`. The API is usable today but may
-evolve before 1.0 — pin the version if you need stability. Feedback on the
-abstractions is welcome on
-[GitHub](https://github.com/tigrisdata/storage/issues).
+Agent Kit is published on npm as `0.1.x`. The API is usable today but may evolve
+before 1.0 — pin the version if you need stability. Feedback on the abstractions
+is welcome on [GitHub](https://github.com/tigrisdata/storage/issues).
 
 :::
 
@@ -109,8 +108,8 @@ aggregate partial failures into a single error rather than throwing midway.
 ## Forks
 
 Forks are copy-on-write clones of a bucket. Fifty forks don't cost fifty times
-the storage — they cost one times the storage plus whatever the forks
-themselves produce.
+the storage — they cost one times the storage plus whatever the forks themselves
+produce.
 
 Reach for forks when multiple agents need the same starting dataset but
 divergent writes, or when you want to run an experiment against production data
@@ -120,8 +119,7 @@ without risking the real thing.
 
 The source bucket must have snapshots enabled. Verify with
 `tigris buckets get <bucket>` — the `Snapshots` field should read `enabled`.
-Create a snapshot-enabled bucket via the CLI, Agent Kit, or the Tigris
-Console:
+Create a snapshot-enabled bucket via the CLI, Agent Kit, or the Tigris Console:
 
 ```bash
 tigris buckets create <bucket> --enable-snapshots
@@ -134,8 +132,8 @@ await createWorkspace("my-bucket", { enableSnapshots: true });
 ### Create Forks
 
 `createForks` snapshots the source bucket once, then provisions N forks from
-that snapshot. Each fork is a new bucket, optionally paired with a scoped
-access key.
+that snapshot. Each fork is a new bucket, optionally paired with a scoped access
+key.
 
 ```typescript
 import { createForks, teardownForks } from "@tigrisdata/agent-kit";
@@ -156,8 +154,8 @@ for (const fork of forkSet.forks) {
 ```
 
 Without a `prefix`, fork bucket names default to
-`${sourceBucket}-fork-${timestamp}-${i}`. The timestamp prevents collisions
-when the same source bucket is forked repeatedly.
+`${sourceBucket}-fork-${timestamp}-${i}`. The timestamp prevents collisions when
+the same source bucket is forked repeatedly.
 
 ### Scoped Credentials
 
@@ -165,8 +163,8 @@ When you pass `credentials`, Agent Kit creates an IAM access key scoped to the
 fork bucket only. The key carries one of two roles: `Editor` (read/write) or
 `ReadOnly` (read only). Each fork gets its own key, so a leaked key scopes the
 blast radius to a single fork. The `secretAccessKey` is returned once at
-creation time — store it wherever your agent runtime expects credentials
-before moving on.
+creation time — store it wherever your agent runtime expects credentials before
+moving on.
 
 ### Teardown Forks
 
@@ -182,8 +180,8 @@ if (error) {
 ```
 
 Teardown is best-effort: it continues through failures and reports every error
-at the end. The source bucket and the snapshot `createForks` took are both
-left in place.
+at the end. The source bucket and the snapshot `createForks` took are both left
+in place.
 
 ### Failure Modes
 
@@ -196,8 +194,8 @@ tear down what you got back and start over. If zero forks succeed, you get an
 **Missing credentials.** If the fork bucket is created but the IAM key call
 fails (quota, transient IAM error), the fork is still in `forks[]` with
 `credentials` undefined — no top-level error. Check `fork.credentials` before
-using it. `createWorkspace` behaves the same way for both its TTL and
-credential calls.
+using it. `createWorkspace` behaves the same way for both its TTL and credential
+calls.
 
 **Snapshot retention.** Every snapshot pins the object versions it references.
 `createForks` takes a snapshot each call and leaves it in place on teardown;
@@ -233,13 +231,13 @@ console.log(workspace.credentials?.secretAccessKey);
 ```
 
 All options are optional — `createWorkspace("name")` creates a plain private
-bucket. TTL is applied at the bucket level, so every object written inherits
-it. Pass `enableSnapshots: true` only if you plan to [checkpoint](#checkpoints)
-the workspace later — snapshots pin versions until the bucket is deleted, and
-most transient workspaces don't need them.
+bucket. TTL is applied at the bucket level, so every object written inherits it.
+Pass `enableSnapshots: true` only if you plan to [checkpoint](#checkpoints) the
+workspace later — snapshots pin versions until the bucket is deleted, and most
+transient workspaces don't need them.
 
-Like `createForks`, both the TTL call and the credential call can silently
-fail after the bucket exists. The workspace is still returned; verify TTL with
+Like `createForks`, both the TTL call and the credential call can silently fail
+after the bucket exists. The workspace is still returned; verify TTL with
 `tigris buckets get <bucket>` and check `workspace.credentials` before use.
 
 ### Using the Workspace
@@ -267,14 +265,14 @@ A checkpoint is a named snapshot of a bucket. Restoring a checkpoint creates a
 new copy-on-write fork at that exact state, leaving the original bucket
 untouched.
 
-Checkpoints are how you mark progress during an agent run, preserve
-known-good state before a risky operation, or go back and inspect what an
-agent saw when something went wrong.
+Checkpoints are how you mark progress during an agent run, preserve known-good
+state before a risky operation, or go back and inspect what an agent saw when
+something went wrong.
 
 The bucket you're checkpointing must have snapshots enabled. For
-[workspaces](#workspaces), pass `enableSnapshots: true` at creation. For
-buckets created outside Agent Kit, use `tigris buckets create --enable-snapshots`
-or the Tigris Console.
+[workspaces](#workspaces), pass `enableSnapshots: true` at creation. For buckets
+created outside Agent Kit, use `tigris buckets create --enable-snapshots` or the
+Tigris Console.
 
 ### Take a Checkpoint
 
@@ -295,8 +293,8 @@ console.log(ckpt.createdAt); // Date
 The returned `snapshotId` is what you pass to `restore()` later. Save it
 somewhere durable — agent state, a database, logs — so you can reference it
 after the agent process exits. Names are optional and free-form, useful for
-labeling (epoch numbers, run IDs, semantic milestones) when listing
-checkpoints later.
+labeling (epoch numbers, run IDs, semantic milestones) when listing checkpoints
+later.
 
 :::note createdAt values
 
@@ -340,7 +338,7 @@ import { restore } from "@tigrisdata/agent-kit";
 const { data: restored, error } = await restore(
   "training-data",
   ckpt.snapshotId,
-  { forkName: "training-data-retry" } // optional — defaults to `${bucket}-restore-${timestamp}`
+  { forkName: "training-data-retry" }, // optional — defaults to `${bucket}-restore-${timestamp}`
 );
 
 if (error) throw error;
@@ -349,31 +347,31 @@ console.log(restored.bucket); // "training-data-retry"
 ```
 
 The restored bucket is a regular bucket. You can read and write to it, fork it
-further, or checkpoint it. Use a fresh set of scoped credentials if you want
-an agent to work against the restored state in isolation.
+further, or checkpoint it. Use a fresh set of scoped credentials if you want an
+agent to work against the restored state in isolation.
 
 ### Cleaning Up
 
-Individual checkpoints can't be deleted: per-snapshot deletion isn't exposed
-via the storage SDK or CLI today. Snapshots are released only when the bucket
-is deleted. If checkpoint retention matters for cost or data lifecycle, keep
+Individual checkpoints can't be deleted: per-snapshot deletion isn't exposed via
+the storage SDK or CLI today. Snapshots are released only when the bucket is
+deleted. If checkpoint retention matters for cost or data lifecycle, keep
 checkpoints on a disposable bucket you can drop wholesale rather than on a
 long-lived one.
 
 Restored forks, on the other hand, are regular buckets — delete them with
-`removeBucket` from `@tigrisdata/storage` or
-`tigris buckets delete <bucket>` when you're done.
+`removeBucket` from `@tigrisdata/storage` or `tigris buckets delete <bucket>`
+when you're done.
 
 ## Coordination
 
 Coordination wraps bucket notifications as an agent-oriented primitive. When
-objects are created, deleted, or modified in a bucket, Tigris fires a webhook
-at the URL you configure. No polling, no schedulers — the next stage runs
-when the previous stage writes its output.
+objects are created, deleted, or modified in a bucket, Tigris fires a webhook at
+the URL you configure. No polling, no schedulers — the next stage runs when the
+previous stage writes its output.
 
-Use coordination when one agent's output should trigger another agent's work,
-or when an external service should react to storage events (indexers,
-validators, notifiers).
+Use coordination when one agent's output should trigger another agent's work, or
+when an external service should react to storage events (indexers, validators,
+notifiers).
 
 ### Configure Notifications
 
@@ -389,11 +387,11 @@ const { error } = await setupCoordination("pipeline-bucket", {
 if (error) throw error;
 ```
 
-Once set up, every matching object event in the bucket posts a JSON payload
-to the webhook URL. Delivery is at-least-once with retries on 5xx — your
-endpoint must be idempotent. See
-[object notifications](/docs/buckets/object-notifications) for the full
-payload schema and filter syntax.
+Once set up, every matching object event in the bucket posts a JSON payload to
+the webhook URL. Delivery is at-least-once with retries on 5xx — your endpoint
+must be idempotent. See
+[object notifications](/docs/buckets/object-notifications) for the full payload
+schema and filter syntax.
 
 ### Key Filters
 
@@ -411,8 +409,8 @@ filter: 'WHERE `key` REGEXP "\\.json$"';
 filter: 'WHERE `key` REGEXP "^agent-42/output/"';
 ```
 
-Without a filter, every matching object event (create, delete, modify) fires
-the webhook.
+Without a filter, every matching object event (create, delete, modify) fires the
+webhook.
 
 ### Webhook Authentication
 
@@ -431,8 +429,8 @@ auth: {
 }
 ```
 
-Always use authentication in production. Public webhook URLs without auth are
-a standing invitation to replay attacks.
+Always use authentication in production. Public webhook URLs without auth are a
+standing invitation to replay attacks.
 
 ### Disable Notifications
 
@@ -445,7 +443,6 @@ await teardownCoordination("pipeline-bucket");
 
 This doesn't delete the bucket or any objects — only the notification
 configuration.
-
 
 ## API Reference
 
@@ -477,12 +474,12 @@ type TigrisAgentKitConfig = {
 function createForks(
   baseBucket: string,
   count: number,
-  options?: CreateForksOptions
+  options?: CreateForksOptions,
 ): Promise<TigrisResponse<Forks>>;
 
 function teardownForks(
   forkSet: Forks,
-  options?: TeardownForksOptions
+  options?: TeardownForksOptions,
 ): Promise<TigrisResponse<void>>;
 
 type CreateForksOptions = {
@@ -508,12 +505,12 @@ type Forks = {
 ```typescript
 function createWorkspace(
   name: string,
-  options?: CreateWorkspaceOptions
+  options?: CreateWorkspaceOptions,
 ): Promise<TigrisResponse<Workspace>>;
 
 function teardownWorkspace(
   workspace: Workspace,
-  options?: TeardownWorkspaceOptions
+  options?: TeardownWorkspaceOptions,
 ): Promise<TigrisResponse<void>>;
 
 type CreateWorkspaceOptions = {
@@ -535,18 +532,18 @@ type Workspace = {
 ```typescript
 function checkpoint(
   bucket: string,
-  options?: CheckpointOptions
+  options?: CheckpointOptions,
 ): Promise<TigrisResponse<Checkpoint>>;
 
 function restore(
   bucket: string,
   snapshotId: string,
-  options?: RestoreOptions
+  options?: RestoreOptions,
 ): Promise<TigrisResponse<RestoreResult>>;
 
 function listCheckpoints(
   bucket: string,
-  options?: ListCheckpointsOptions
+  options?: ListCheckpointsOptions,
 ): Promise<TigrisResponse<ListCheckpointsResponse>>;
 
 type CheckpointOptions = {
@@ -586,12 +583,12 @@ type ListCheckpointsResponse = {
 ```typescript
 function setupCoordination(
   bucket: string,
-  options: SetupCoordinationOptions
+  options: SetupCoordinationOptions,
 ): Promise<TigrisResponse<void>>;
 
 function teardownCoordination(
   bucket: string,
-  options?: TeardownCoordinationOptions
+  options?: TeardownCoordinationOptions,
 ): Promise<TigrisResponse<void>>;
 
 type SetupCoordinationOptions = {
@@ -614,13 +611,13 @@ Tigris Console.
 
 **`createForks` returns fewer forks than requested.** Bucket creation stopped
 partway through — most commonly a naming collision if you reused a `prefix`
-without clearing previous forks, or a project-level bucket quota. Tear down
-what you got back, vary the `prefix`, or reduce `count`.
+without clearing previous forks, or a project-level bucket quota. Tear down what
+you got back, vary the `prefix`, or reduce `count`.
 
-**Access keys silently missing.** IAM key creation can fail after the bucket
-is created (quota, transient IAM error). The fork or workspace is still
-returned with `credentials` undefined. Check for this explicitly rather than
-asserting the field is present.
+**Access keys silently missing.** IAM key creation can fail after the bucket is
+created (quota, transient IAM error). The fork or workspace is still returned
+with `credentials` undefined. Check for this explicitly rather than asserting
+the field is present.
 
 ## Resources
 

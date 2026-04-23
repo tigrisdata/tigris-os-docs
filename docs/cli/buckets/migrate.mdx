@@ -1,0 +1,29 @@
+# tigris buckets migrate
+
+Actively migrate all objects from a shadow bucket to Tigris by scheduling
+server-side migration for unmigrated objects. Pairs with
+[`set-migration`](./set-migration.mdx), which configures the shadow source.
+
+## Usage
+
+```bash
+tigris buckets migrate <path>
+t3 b migrate <path>
+```
+
+`<path>` is a bucket name, optionally with a key prefix. When a prefix is given,
+only objects under that prefix are migrated. Paths accept the optional `t3://`
+(or `tigris://`) scheme.
+
+## Examples
+
+```bash
+# Migrate every unmigrated object in the bucket
+tigris buckets migrate my-bucket
+
+# Migrate only objects under a prefix
+tigris buckets migrate my-bucket/images/
+
+# Using the t3:// scheme
+tigris buckets migrate t3://my-bucket/prefix/
+```

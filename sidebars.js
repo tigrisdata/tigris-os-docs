@@ -855,6 +855,7 @@ const sidebars = {
             "cli/buckets/set",
             "cli/buckets/set-ttl",
             "cli/buckets/set-migration",
+            "cli/buckets/migrate",
             "cli/buckets/set-transition",
             "cli/buckets/set-locations",
             "cli/buckets/set-notifications",

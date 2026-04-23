@@ -15,6 +15,12 @@ t3 list [path]
 Paths support the optional `t3://` (or `tigris://`) prefix (e.g.
 `t3://my-bucket/path` or just `my-bucket/path`).
 
+## Flags
+
+| Name       | Required | Default | Description                                                                                                                                                                                |
+| ---------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--source` | No       | —       | List objects from a specific storage source on buckets with shadow migration enabled. Accepted values: `tigris` (objects already in Tigris), `shadow` (objects still on the shadow source) |
+
 ## Examples
 
 ```bash
@@ -29,4 +35,10 @@ tigris ls my-bucket/images/
 
 # Using t3:// prefix
 tigris ls t3://my-bucket/prefix/
+
+# On a shadow-migrated bucket, list only objects still on the source
+tigris ls my-bucket --source shadow
+
+# Or only objects already migrated into Tigris
+tigris ls my-bucket --source tigris
 ```

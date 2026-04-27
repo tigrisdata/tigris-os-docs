@@ -6,9 +6,9 @@ import TabItem from "@theme/TabItem";
 Agent Kit is a TypeScript library that packages storage workflows for AI agents
 on Tigris.
 
-Agents need more than object storage. They need isolated sandboxes they can
-write into without stepping on each other, snapshots they can roll back to when
-a run goes sideways, scoped credentials so a single compromised key doesn't
+Agents need more than object storage. They need isolated storage workspaces they
+can write into without stepping on each other, snapshots they can roll back to
+when a run goes sideways, scoped credentials so a single compromised key doesn't
 expose the whole dataset, and events that fire when another agent finishes its
 work. Each of those is a handful of API calls against `@tigrisdata/storage` and
 `@tigrisdata/iam`. Agent Kit bundles them into four primitives — forks,
@@ -75,12 +75,8 @@ access-key env vars:
 TIGRIS_STORAGE_ACCESS_KEY_ID=tid_...
 TIGRIS_STORAGE_SECRET_ACCESS_KEY=tsec_...
 
-# Optional overrides
+# Optional override
 TIGRIS_STORAGE_ENDPOINT=https://t3.storage.dev
-TIGRIS_IAM_ENDPOINT=...
-TIGRIS_MGMT_ENDPOINT=...
-TIGRIS_SESSION_TOKEN=...
-TIGRIS_ORGANIZATION_ID=...
 ```
 
 Or pass a config object inline:
@@ -95,10 +91,6 @@ const { data, error } = await createWorkspace("agent-run-42", {
   },
 });
 ```
-
-The `TigrisAgentKitConfig` type covers both storage and IAM under one shape. If
-you need to override endpoints separately, `endpoint`, `iamEndpoint`, and
-`mgmtEndpoint` are all available as fields.
 
 Every function returns a `TigrisResponse<T>` — a discriminated union of
 `{ data: T }` on success or `{ error: Error }` on failure. No exceptions are
@@ -117,9 +109,10 @@ without risking the real thing.
 
 ### Prerequisites
 
-The source bucket must have snapshots enabled. Verify with
-`tigris buckets get <bucket>` — the `Snapshots` field should read `enabled`.
-Create a snapshot-enabled bucket via the CLI, Agent Kit, or the Tigris Console:
+The source bucket must have snapshots enabled. Verify by running
+`tigris buckets get <bucket>` in the CLI — the `Snapshots` field should read
+`enabled`. Create a snapshot-enabled bucket via the CLI, Agent Kit, or the
+Tigris Console:
 
 ```bash
 tigris buckets create <bucket> --enable-snapshots
@@ -200,10 +193,8 @@ calls.
 **Snapshot retention.** Every snapshot pins the object versions it references.
 `createForks` takes a snapshot each call and leaves it in place on teardown;
 Tigris only drops the pinned versions once every referencing snapshot is gone.
-Per-snapshot deletion isn't currently exposed via the storage SDK or CLI, so
-snapshots are released when the bucket itself is deleted. For high-churn
-workflows, fork from a disposable snapshot-enabled copy of your dataset rather
-than a long-lived production bucket.
+For high-churn workflows, fork from a disposable snapshot-enabled copy of your
+dataset rather than a long-lived production bucket.
 
 ## Workspaces
 
@@ -352,11 +343,9 @@ agent to work against the restored state in isolation.
 
 ### Cleaning Up
 
-Individual checkpoints can't be deleted: per-snapshot deletion isn't exposed via
-the storage SDK or CLI today. Snapshots are released only when the bucket is
-deleted. If checkpoint retention matters for cost or data lifecycle, keep
-checkpoints on a disposable bucket you can drop wholesale rather than on a
-long-lived one.
+Snapshots are released only when the bucket is deleted. If checkpoint retention
+matters for cost or data lifecycle, keep checkpoints on a disposable bucket you
+can drop wholesale rather than on a long-lived one.
 
 Restored forks, on the other hand, are regular buckets — delete them with
 `removeBucket` from `@tigrisdata/storage` or `tigris buckets delete <bucket>`
@@ -381,7 +370,7 @@ import { setupCoordination, teardownCoordination } from "@tigrisdata/agent-kit";
 const { error } = await setupCoordination("pipeline-bucket", {
   webhookUrl: "https://my-service.com/webhook",
   filter: 'WHERE `key` REGEXP "^results/"', // optional key filter
-  auth: { token: process.env.WEBHOOK_SECRET! }, // optional auth
+  auth: { token: process.env.WEBHOOK_SECRET }, // optional auth
 });
 
 if (error) throw error;
@@ -419,13 +408,13 @@ Two auth shapes are supported, and they're mutually exclusive:
 ```typescript
 // Bearer token — sent as Authorization: Bearer <token>
 auth: {
-  token: process.env.WEBHOOK_SECRET!,
+  token: process.env.WEBHOOK_SECRET,
 }
 
 // HTTP basic auth
 auth: {
-  username: process.env.WEBHOOK_USER!,
-  password: process.env.WEBHOOK_PASSWORD!,
+  username: process.env.WEBHOOK_USER,
+  password: process.env.WEBHOOK_PASSWORD,
 }
 ```
 
@@ -438,13 +427,15 @@ standing invitation to replay attacks.
 firing on the next write:
 
 ```typescript
-await teardownCoordination("pipeline-bucket");
 const { error } = await teardownCoordination("pipeline-bucket");
 
 if (error) {
   console.error("Teardown failed:", error.message);
 }
-configuration.
+```
+
+The bucket and its objects are untouched — only the notification configuration
+is cleared.
 
 ## API Reference
 
@@ -500,6 +491,10 @@ type Forks = {
   snapshotId: string;
   forks: Fork[];
 };
+
+type TeardownForksOptions = {
+  config?: TigrisAgentKitConfig;
+};
 ```
 
 ### Workspaces API
@@ -526,6 +521,10 @@ type CreateWorkspaceOptions = {
 type Workspace = {
   bucket: string;
   credentials?: { accessKeyId: string; secretAccessKey: string };
+};
+
+type TeardownWorkspaceOptions = {
+  config?: TigrisAgentKitConfig;
 };
 ```
 
@@ -599,6 +598,10 @@ type SetupCoordinationOptions = {
   auth?:
     | { token: string; username?: never; password?: never }
     | { username: string; password: string; token?: never };
+  config?: TigrisAgentKitConfig;
+};
+
+type TeardownCoordinationOptions = {
   config?: TigrisAgentKitConfig;
 };
 ```

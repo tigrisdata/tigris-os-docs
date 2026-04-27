@@ -439,9 +439,11 @@ firing on the next write:
 
 ```typescript
 await teardownCoordination("pipeline-bucket");
-```
+const { error } = await teardownCoordination("pipeline-bucket");
 
-This doesn't delete the bucket or any objects — only the notification
+if (error) {
+  console.error("Teardown failed:", error.message);
+}
 configuration.
 
 ## API Reference

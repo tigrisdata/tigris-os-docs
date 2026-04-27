@@ -72,6 +72,9 @@ tags:
   - name: buckets
     description: Bucket management
     x-displayName: Buckets
+  - name: snapshots
+    description: Bucket snapshots
+    x-displayName: Snapshots
   - name: billing
     description: Usage and billing
     x-displayName: Usage and Billing
@@ -434,6 +437,116 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DeleteLifecycleRulesResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
+  /v1/providers/{provider_id}/orgs/{org_id}/buckets/{bucket_name}/snapshots:
+    post:
+      tags:
+        - snapshots
+      summary: Take a snapshot of the bucket
+      description: |
+        Takes a snapshot of the bucket's current state. The bucket must have
+        snapshots enabled. See https://www.tigrisdata.com/docs/snapshots/.
+      operationId: Tigris_CreateSnapshot
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/bucket_name"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSnapshotRequest"
+        required: false
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateSnapshotResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+    get:
+      tags:
+        - snapshots
+      summary: List snapshots for a bucket
+      description: |
+        Lists snapshots for the bucket, ordered by creation time. See
+        https://www.tigrisdata.com/docs/snapshots/.
+      operationId: Tigris_ListSnapshots
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/bucket_name"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListSnapshotsResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
+  /v1/providers/{provider_id}/orgs/{org_id}/buckets/{bucket_name}/snapshots/{version}:
+    get:
+      tags:
+        - snapshots
+      summary: Get snapshot details
+      description: |
+        Returns snapshot metadata. See https://www.tigrisdata.com/docs/snapshots/.
+      operationId: Tigris_GetSnapshot
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/bucket_name"
+        - $ref: "#/components/parameters/version"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetSnapshotResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+    delete:
+      tags:
+        - snapshots
+      summary: Delete a snapshot
+      description: |
+        Deletes the snapshot. See https://www.tigrisdata.com/docs/snapshots/.
+      operationId: Tigris_DeleteSnapshot
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/bucket_name"
+        - $ref: "#/components/parameters/version"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteSnapshotResponse"
         default:
           description: Unexpected error
           content:
@@ -1051,6 +1164,20 @@ components:
           $ref: "#/components/schemas/BucketOptions"
         user_role:
           $ref: "#/components/schemas/OrgMembership"
+        fork_of:
+          type: string
+          description: |
+            Create this bucket as a fork of the named source bucket. The source
+            must belong to the same organization, and the acting user must
+            either have `user_role=Admin` or own the source bucket. See
+            https://www.tigrisdata.com/docs/forks/.
+        source_snapshot:
+          type: string
+          description: |
+            Fork from a specific snapshot of the source bucket. Accepts a snapshot
+            version string or any UNIX nanosecond-precision timestamp (e.g.
+            `1765889000501544464`). Requires `fork_of`. See
+            https://www.tigrisdata.com/docs/forks/.
     OrgMembership:
       type: string
       description: |
@@ -1097,6 +1224,11 @@ components:
           type: boolean
           description:
             If set to true, per object ACL will be enabled. Default is false.
+        enable_snapshots:
+          type: boolean
+          description: |
+            Enable snapshots on the bucket. Create-time only. See
+            https://www.tigrisdata.com/docs/snapshots/.
         object_notifications:
           $ref: "#/components/schemas/ObjectNotifications"
         lifecycle_rules:
@@ -1549,6 +1681,69 @@ components:
         - starting_after
         - price
         - subtotal
+    SnapshotInfo:
+      type: object
+      description: |
+        A point-in-time snapshot of a bucket. See
+        https://www.tigrisdata.com/docs/snapshots/.
+      properties:
+        version:
+          type: string
+          description: Snapshot version (UNIX nanosecond-precision timestamp).
+        created_at:
+          type: string
+          format: date-time
+        bucket:
+          type: string
+          description: Name of the bucket this snapshot belongs to.
+        description:
+          type: string
+          description: Optional name or description.
+    CreateSnapshotRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        description:
+          type: string
+          description: Optional name or description for the snapshot.
+    CreateSnapshotResponse:
+      type: object
+      properties:
+        snapshot:
+          $ref: "#/components/schemas/SnapshotInfo"
+    ListSnapshotsResponse:
+      type: object
+      properties:
+        snapshots:
+          type: array
+          items:
+            $ref: "#/components/schemas/SnapshotInfo"
+    GetSnapshotResponse:
+      type: object
+      properties:
+        snapshot:
+          $ref: "#/components/schemas/SnapshotInfo"
+    DeleteSnapshotResponse:
+      type: object
+    ForkInfo:
+      type: object
+      description: |
+        Fork metadata for a bucket that was created as a fork, or that has forks
+        depending on it. See https://www.tigrisdata.com/docs/forks/.
+      properties:
+        parent_bucket:
+          type: string
+          description:
+            Name of the immediate source bucket this bucket was forked from.
+        snapshot:
+          type: string
+          description:
+            Snapshot version this bucket was forked from (UNIX
+            nanosecond-precision timestamp).
+        has_children:
+          type: boolean
+          description:
+            True if one or more buckets have been forked from this bucket.
     BucketInfo:
       type: object
       properties:
@@ -1582,6 +1777,11 @@ components:
           type: boolean
           description:
             If true, anonymous users can list objects in this public bucket
+        snapshots_enabled:
+          type: boolean
+          description: True if the bucket was created with snapshots enabled.
+        fork_info:
+          $ref: "#/components/schemas/ForkInfo"
         website:
           $ref: "#/components/schemas/BucketWebsiteSettings"
         object_notifications:
@@ -1659,6 +1859,24 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/BucketAccess"
+        attach_policies:
+          type: array
+          items:
+            type: string
+          description: |
+            Names of existing IAM policies to attach to this access key.
+            All policies must already exist — if any policy name is invalid, the
+            request fails and no key is created.
+        create_policies:
+          type: array
+          items:
+            $ref: "#/components/schemas/CreatePolicyRequest"
+          description: |
+            New IAM policies to create and attach to this access key.
+            Each policy is created first, then attached atomically. If a policy
+            with the same name already exists the request fails — use
+            attach_policies to reuse an existing policy. If policy document
+            validation fails, no key is created.
     CreateAccessKeyResponse:
       type: object
       required:
@@ -2122,6 +2340,13 @@ components:
       in: path
       required: true
       description: Name of the IAM policy
+      schema:
+        type: string
+    version:
+      name: version
+      in: path
+      required: true
+      description: Snapshot version (UNIX nanosecond-precision timestamp).
       schema:
         type: string
   securitySchemes:

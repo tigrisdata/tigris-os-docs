@@ -1,0 +1,257 @@
+import DuckLakeArchitectureDiagram from "@site/src/components/diagrams/DuckLakeArchitectureDiagram";
+
+# Build a lakehouse with DuckLake on Tigris
+
+[DuckLake](https://ducklake.select/) is an open lakehouse format that stores
+table metadata in a SQL database and table data as Parquet files in object
+storage. Pair it with Tigris and you get a globally distributed, S3-compatible
+storage layer with no egress fees — so the run-anywhere promise of a separated
+catalog and storage actually pays off. DuckLake handles concurrent writes
+through the catalog database (Postgres, MySQL, SQLite, or an embedded DuckDB
+file), so you don't need DynamoDB or another coordination service the way
+Iceberg or Delta on plain S3 do.
+
+Tigris also handles small-file workloads efficiently, which matters for
+DuckLake: every `INSERT` writes a new Parquet file, so a busy lake produces a
+lot of small objects.
+
+## How DuckLake fits together
+
+The mental model worth holding onto: DuckLake splits a lakehouse into two
+pieces. A SQL database keeps the bookkeeping — what tables exist, what columns
+they have, which Parquet files belong to which snapshot. A bucket holds the
+actual data as immutable Parquet files. Your DuckDB process reads from both at
+query time and writes to both when you change anything.
+
+<div className="mermaid-frame">
+  <DuckLakeArchitectureDiagram />
+</div>
+
+The catalog and the bucket are independent: you can swap Postgres for SQLite
+without touching the data, or move the data between buckets without touching the
+catalog (assuming the paths still match).
+
+## Prerequisites
+
+Before you start, make sure you have credentials for Tigris, a bucket to write
+into, and a recent DuckDB on your machine. The catalog database is optional for
+local hacking but required if more than one process needs to write.
+
+You'll need:
+
+- A Tigris **Access Key ID** and **Secret Access Key**. Create one with the
+  [Access Key guide](https://www.tigrisdata.com/docs/iam/manage-access-key/) if
+  you don't have credentials yet.
+- A Tigris **bucket** to hold your Parquet files.
+- [DuckDB](https://duckdb.org/docs/installation/) v1.3 or newer installed
+  locally.
+- Optional: a Postgres database if you want to share the lake across machines.
+  For local experimentation you can skip this and use a DuckDB metadata file.
+
+## Install the DuckLake extension
+
+DuckLake ships as a DuckDB extension. You install it once per DuckDB instance,
+then load it at the start of every session.
+
+Open the DuckDB shell:
+
+```sql
+INSTALL ducklake;
+LOAD ducklake;
+```
+
+The extension ships with recent DuckDB releases. If you want the latest
+development build, use `FORCE INSTALL ducklake FROM core_nightly` instead.
+
+## Configure DuckDB to talk to Tigris
+
+DuckDB needs an S3 secret so it can read and write Parquet files in your bucket.
+Persistent secrets survive across DuckDB sessions, so you only do this once per
+machine.
+
+```sql
+CREATE OR REPLACE PERSISTENT SECRET tigris
+  (      TYPE  s3
+  ,  PROVIDER  config
+  ,    KEY_ID  'tid_access_key_id'
+  ,    SECRET  'tsec_secret_access_key'
+  ,    REGION  'auto'
+  ,  ENDPOINT  't3.storage.dev'
+  , URL_STYLE  'vhost'
+  );
+```
+
+Replace the key ID and secret with your own. The same secret works for every
+DuckLake you attach against Tigris.
+
+## Attach a DuckLake
+
+Attaching a DuckLake tells DuckDB where the catalog lives and where to put the
+Parquet files. You have two reasonable choices for the catalog: a local DuckDB
+file (great for one-machine work), or a shared Postgres database (necessary once
+a second process needs to write). The data path stays the same in both cases — a
+prefix in your Tigris bucket.
+
+### Option 1: local DuckDB metadata (single-machine development)
+
+Use this when you're hacking on a laptop and nobody else needs to write to the
+lake. The metadata file lives next to your DuckDB shell; the data lives in
+Tigris.
+
+```sql
+ATTACH 'ducklake:metadata.ducklake' AS my_lake
+  ( DATA_PATH 's3://my-bucket/lake/'
+  );
+
+USE my_lake;
+```
+
+### Option 2: Postgres metadata (shared, production)
+
+Use this when more than one machine needs to write to the lake — Lambda
+functions, multiple developers, scheduled jobs across regions. The Postgres
+database becomes the coordination point for concurrent writers.
+
+```sql
+INSTALL postgres;
+LOAD postgres;
+
+ATTACH 'ducklake:postgres:dbname=lake host=db.example.com user=lake password=...'
+  AS my_lake
+  ( DATA_PATH 's3://my-bucket/lake/'
+  );
+
+USE my_lake;
+```
+
+DuckLake creates its bookkeeping tables (`ducklake_table`, `ducklake_snapshot`,
+`ducklake_data_file`, etc.) the first time you attach. For other catalog options
+— MySQL, SQLite, MotherDuck — see
+[Choosing a Catalog Database](https://ducklake.select/docs/stable/duckdb/usage/choosing_a_catalog_database).
+
+## Create a table and insert data
+
+Once attached, DuckLake tables behave like normal SQL tables. Create them with
+`CREATE TABLE`, write to them with `INSERT`, query them with `SELECT`. Behind
+the scenes each write produces a new Parquet file in your bucket and a new
+snapshot row in the catalog.
+
+```sql
+CREATE TABLE my_lake.events
+  ( id          INTEGER NOT NULL
+  , user_id     INTEGER NOT NULL
+  , action      VARCHAR NOT NULL
+  , created_at  TIMESTAMP NOT NULL
+  );
+
+INSERT INTO my_lake.events VALUES
+  (1, 1337, 'CreateDocument', '2026-04-28 09:00:00'),
+  (2, 1337, 'OpenDocument',   '2026-04-28 09:01:00');
+
+SELECT * FROM my_lake.events;
+```
+
+Each `INSERT` writes a new Parquet file under
+`s3://my-bucket/lake/main/events/`. The Parquet files are immutable; DuckLake
+never rewrites them.
+
+## Query data already in Tigris
+
+If raw data is already sitting in your bucket as JSON, CSV, or Parquet, you can
+pull it into a DuckLake table without first copying it locally. The same
+`READ_*` functions that query files in place also work as a source for `INSERT`.
+
+```sql
+CREATE TABLE my_lake.telemetry
+  ( created_at  TIMESTAMP NOT NULL
+  , user_id     INTEGER NOT NULL
+  , action      VARCHAR NOT NULL
+  , metadata    MAP(VARCHAR, VARCHAR)
+  );
+
+INSERT INTO my_lake.telemetry
+  ( created_at, user_id, action, metadata )
+SELECT *
+FROM READ_JSON
+  ( 's3://my-bucket/raw-events/**/*.jsonl'
+  , columns =
+    { created_at: 'TIMESTAMP NOT NULL'
+    , user_id:    'INTEGER NOT NULL'
+    , action:     'VARCHAR NOT NULL'
+    , metadata:   'MAP(VARCHAR, VARCHAR)'
+    }
+  , format = 'nd'
+  );
+```
+
+## Time travel with snapshots
+
+Because Parquet files are never overwritten, every past version of every table
+is still on disk. DuckLake records each write as a snapshot in the catalog, so
+you can query the lake as it looked at any past moment without restoring from
+backups.
+
+List the snapshots:
+
+```sql
+FROM ducklake_snapshots('my_lake');
+```
+
+Query a single table at a previous version:
+
+```sql
+SELECT * FROM my_lake.events AT (VERSION => 4);
+```
+
+Attach the entire database at a previous version, useful for forking a timeline
+locally:
+
+```sql
+ATTACH 'ducklake:metadata.ducklake' AS my_lake_past
+  ( DATA_PATH 's3://my-bucket/lake/'
+  , SNAPSHOT_VERSION 4
+  );
+```
+
+Time travel costs nothing extra — you're just asking the catalog for an older
+view of the same files that are already in your bucket.
+
+## Schema evolution
+
+You can add or drop columns without rewriting the underlying Parquet files.
+DuckLake records the schema change as a snapshot, and reads of older snapshots
+still see the old shape.
+
+```sql
+ALTER TABLE my_lake.events ADD COLUMN session_id VARCHAR;
+```
+
+Reads of the current snapshot see the new column; reads of older snapshots see
+the schema as it was then.
+
+## Read-only access
+
+When a process should be able to read the lake but never modify it — a
+dashboard, an agent running with reduced privileges, a spot-instance worker —
+attach in read-only mode.
+
+```sql
+ATTACH 'ducklake:metadata.ducklake' AS my_lake_ro
+  ( DATA_PATH 's3://my-bucket/lake/'
+  , READ_ONLY
+  );
+```
+
+Any `INSERT`, `UPDATE`, `DELETE`, or `ALTER` against `my_lake_ro` will fail with
+a clear error rather than mutating the lake.
+
+## Further reading
+
+- [Get your data ducks in a row with DuckLake](https://www.tigrisdata.com/blog/ducklake/)
+  — why DuckLake matters, with a longer walkthrough.
+- [Data Time Travel with DuckLake and Tigris](https://www.tigrisdata.com/blog/ducklake-time-travel/)
+  — using snapshots to roll back changes and fork timelines.
+- [DuckDB on Tigris](https://www.tigrisdata.com/docs/quickstarts/duckdb/) — for
+  ad-hoc queries against files in a bucket without setting up a lakehouse.
+- [DuckLake usage guide](https://ducklake.select/docs/stable/duckdb/introduction)
+  —

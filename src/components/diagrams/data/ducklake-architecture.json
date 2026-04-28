@@ -1,0 +1,195 @@
+[
+  {
+    "type": "rectangle",
+    "id": "client",
+    "x": 240,
+    "y": 40,
+    "width": 240,
+    "height": 80,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 },
+    "label": {
+      "text": "DuckDB process\n(laptop · Lambda · CI)",
+      "fontSize": 18,
+      "color": "#c8d6de"
+    }
+  },
+  {
+    "type": "arrow",
+    "id": "a_client_catalog",
+    "x": 320,
+    "y": 120,
+    "width": -140,
+    "height": 100,
+    "points": [
+      [0, 0],
+      [-140, 100]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "label": { "text": "metadata", "fontSize": 16, "color": "#c8d6de" }
+  },
+  {
+    "type": "arrow",
+    "id": "a_client_tigris",
+    "x": 400,
+    "y": 120,
+    "width": 140,
+    "height": 100,
+    "points": [
+      [0, 0],
+      [140, 100]
+    ],
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "label": { "text": "data", "fontSize": 16, "color": "#c8d6de" }
+  },
+  {
+    "type": "rectangle",
+    "id": "catalog",
+    "x": 40,
+    "y": 220,
+    "width": 280,
+    "height": 220,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 }
+  },
+  {
+    "type": "text",
+    "id": "catalogTitle",
+    "x": 60,
+    "y": 240,
+    "text": "Catalog database",
+    "fontSize": 18,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "catalogSub",
+    "x": 60,
+    "y": 274,
+    "text": "Postgres · DuckDB file\nMySQL · SQLite",
+    "fontSize": 14,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "text",
+    "id": "catalogList",
+    "x": 60,
+    "y": 340,
+    "text": "tables and schemas\nsnapshots\nfile references",
+    "fontSize": 15,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "rectangle",
+    "id": "tigris",
+    "x": 400,
+    "y": 220,
+    "width": 280,
+    "height": 220,
+    "backgroundColor": "#101c24",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 }
+  },
+  {
+    "type": "text",
+    "id": "tigrisTitle",
+    "x": 420,
+    "y": 240,
+    "text": "Tigris bucket",
+    "fontSize": 18,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "tigrisPath",
+    "x": 420,
+    "y": 274,
+    "text": "s3://my-bucket/lake/",
+    "fontSize": 14,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "rectangle",
+    "id": "parq1",
+    "x": 420,
+    "y": 320,
+    "width": 78,
+    "height": 100,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1,
+    "roundness": { "type": 3 },
+    "label": {
+      "text": "Parquet\nsnap 1",
+      "fontSize": 14,
+      "color": "#c8d6de"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "parq2",
+    "x": 511,
+    "y": 320,
+    "width": 78,
+    "height": 100,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1,
+    "roundness": { "type": 3 },
+    "label": {
+      "text": "Parquet\nsnap 2",
+      "fontSize": 14,
+      "color": "#c8d6de"
+    }
+  },
+  {
+    "type": "rectangle",
+    "id": "parq3",
+    "x": 602,
+    "y": 320,
+    "width": 78,
+    "height": 100,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1,
+    "roundness": { "type": 3 },
+    "label": {
+      "text": "Parquet\nsnap 3",
+      "fontSize": 14,
+      "color": "#c8d6de"
+    }
+  },
+  {
+    "type": "text",
+    "id": "annotation1",
+    "x": 40,
+    "y": 470,
+    "text": "Every INSERT, UPDATE, or DELETE writes a new immutable Parquet",
+    "fontSize": 14,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "text",
+    "id": "annotation2",
+    "x": 40,
+    "y": 492,
+    "text": "file in Tigris and a new snapshot row in the catalog.",
+    "fontSize": 14,
+    "strokeColor": "#8fa3b0"
+  }
+]

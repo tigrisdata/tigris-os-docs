@@ -462,6 +462,11 @@ const sidebars = {
                 },
                 {
                   type: "doc",
+                  label: "DuckLake",
+                  id: "quickstarts/ducklake",
+                },
+                {
+                  type: "doc",
                   label: "Databricks",
                   id: "libraries/databricks/index",
                 },

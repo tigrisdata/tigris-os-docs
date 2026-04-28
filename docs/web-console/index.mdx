@@ -12,6 +12,73 @@ manage buckets, objects, and access keys from your browser.
    your data using any of the popular
    [S3 tools, libraries, and extensions](../sdks/s3/) — Tigris is S3-compatible.
 
+## Manage access with IAM
+
+Tigris IAM is built around access keys and policies — there are no IAM users or
+roles to manage. From the
+[Access Keys](https://console.storage.dev/createaccesskey) section of the
+console you can create keys, scope them to specific buckets with `Admin`,
+`Editor`, or `ReadOnly` permissions, and attach IAM policies for finer-grained
+control (such as IP restrictions or time-bounded access).
+
+For organization members, two prebuilt roles are available: `Member` (can list
+and create buckets) and `Admin` (full access plus member management).
+
+See [IAM Overview](/docs/iam/),
+[Manage Access Keys](/docs/iam/manage-access-key/), and
+[IAM Policies](/docs/iam/policies/) for details.
+
+## Choose a storage tier
+
+When you create a bucket, you can choose a default storage tier to optimize cost
+for your access patterns:
+
+- **Standard** — frequently accessed data.
+- **Infrequent Access** — lower cost for data accessed less often.
+- **Archive** — lowest cost; objects need a restore step (~1 hour) before
+  access.
+- **Archive Instant Retrieval** — low cost with no restore step.
+
+You can also override the tier per object at upload time using the S3-compatible
+storage class (`STANDARD`, `STANDARD_IA`, `GLACIER`, `GLACIER_IR`). See
+[Storage Tiers](/docs/objects/tiers/).
+
+## Configure bucket settings
+
+Open a bucket in the console and click **Settings** to configure:
+
+- **Public / Private Access** — set the default ACL for the bucket, and
+  optionally enable per-object ACLs. See
+  [Public Buckets](/docs/buckets/public-bucket/) and
+  [Object ACLs](/docs/objects/acl/).
+- **Snapshots and Forks** — point-in-time snapshots and zero-copy forks for a
+  bucket. This is opt-in at bucket creation time. See
+  [Bucket Snapshots and Forks](/docs/buckets/snapshots-and-forks/).
+- **Bucket Sharing** — share a bucket with other members of your organization or
+  with outside collaborators. See [Bucket Sharing](/docs/buckets/sharing/).
+- **Bucket Location**, **Cache Control**, **TTL**, **Object Lifecycle**,
+  **Custom Domains**, **CORS**, **Object Notifications**, and **Deletion
+  Protection**.
+
+For the full list, see [Bucket Settings](/docs/buckets/settings/).
+
+## Migrate from another S3 provider
+
+The console can configure a **shadow bucket** so Tigris lazily migrates data
+from your existing S3-compatible bucket as it's accessed — no large upfront copy
+required. With **write-through mode** enabled, new writes are mirrored back to
+your old bucket so you can verify and roll back at your own pace.
+
+To set it up: open a bucket → **Settings** → **Enable Data Migration** → provide
+the source bucket's endpoint and credentials.
+
+See [Migrate to Tigris](/docs/migration/) and the provider-specific guides
+([AWS S3](/docs/migration/aws-s3/),
+[Google Cloud Storage](/docs/migration/gcs/),
+[Cloudflare R2](/docs/migration/cloudflare-r2/),
+[MinIO](/docs/migration/minio/),
+[other S3-compatible](/docs/migration/s3-compatible/)).
+
 ## Next Steps
 
 Now that you have a bucket, you can start storing objects in it. An object can

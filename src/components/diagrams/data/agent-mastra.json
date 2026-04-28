@@ -1,0 +1,331 @@
+[
+  {
+    "type": "text",
+    "id": "title",
+    "x": 280,
+    "y": 0,
+    "text": "Mastra agents + Agent Kit on Tigris",
+    "fontSize": 18,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "orch-box",
+    "x": 60,
+    "y": 50,
+    "width": 320,
+    "height": 90,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "orch-lbl",
+    "x": 90,
+    "y": 65,
+    "text": "Orchestrator",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+  {
+    "type": "text",
+    "id": "orch-sub",
+    "x": 90,
+    "y": 95,
+    "text": "your code: starts and ends each run",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "orch-to-agent",
+    "x": 380,
+    "y": 95,
+    "width": 100,
+    "height": 0,
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "points": [
+      [0, 0],
+      [100, 0]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "ctx-lbl",
+    "x": 380,
+    "y": 65,
+    "text": "RequestContext",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "agent-box",
+    "x": 480,
+    "y": 50,
+    "width": 320,
+    "height": 90,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#5BA4CF",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "agent-lbl",
+    "x": 510,
+    "y": 65,
+    "text": "Mastra Agent",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#5BA4CF"
+  },
+  {
+    "type": "text",
+    "id": "agent-sub",
+    "x": 510,
+    "y": 95,
+    "text": "instructions + tools + memory",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "orch-down",
+    "x": 220,
+    "y": 140,
+    "width": 0,
+    "height": 60,
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "points": [
+      [0, 0],
+      [0, 60]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "orch-down-lbl",
+    "x": 230,
+    "y": 158,
+    "text": "provision",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "agent-down",
+    "x": 640,
+    "y": 140,
+    "width": 0,
+    "height": 60,
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "points": [
+      [0, 0],
+      [0, 60]
+    ]
+  },
+  {
+    "type": "text",
+    "id": "agent-down-lbl",
+    "x": 650,
+    "y": 158,
+    "text": "tool calls",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "ak-box",
+    "x": 60,
+    "y": 200,
+    "width": 320,
+    "height": 110,
+    "backgroundColor": "#0e1920",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "ak-lbl",
+    "x": 90,
+    "y": 215,
+    "text": "Agent Kit",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+  {
+    "type": "text",
+    "id": "ak-sub1",
+    "x": 90,
+    "y": 245,
+    "text": "createWorkspace · createForks",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "text",
+    "id": "ak-sub2",
+    "x": 90,
+    "y": 268,
+    "text": "checkpoint · setupCoordination",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "text",
+    "id": "ak-sub3",
+    "x": 90,
+    "y": 290,
+    "text": "+ matching teardowns",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "rectangle",
+    "id": "tools-box",
+    "x": 480,
+    "y": 200,
+    "width": 320,
+    "height": 110,
+    "backgroundColor": "#0e1920",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "tools-lbl",
+    "x": 510,
+    "y": 215,
+    "text": "Application tools",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
+  },
+  {
+    "type": "text",
+    "id": "tools-sub1",
+    "x": 510,
+    "y": 245,
+    "text": "read bucket + scoped key",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "text",
+    "id": "tools-sub2",
+    "x": 510,
+    "y": 268,
+    "text": "from RequestContext",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "text",
+    "id": "tools-sub3",
+    "x": 510,
+    "y": 290,
+    "text": "via @tigrisdata/storage",
+    "fontSize": 12,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+
+  {
+    "type": "arrow",
+    "id": "ak-to-tigris",
+    "x": 220,
+    "y": 310,
+    "width": 0,
+    "height": 50,
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "points": [
+      [0, 0],
+      [0, 50]
+    ]
+  },
+  {
+    "type": "arrow",
+    "id": "tools-to-tigris",
+    "x": 640,
+    "y": 310,
+    "width": 0,
+    "height": 50,
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow",
+    "points": [
+      [0, 0],
+      [0, 50]
+    ]
+  },
+
+  {
+    "type": "rectangle",
+    "id": "tigris",
+    "x": 60,
+    "y": 360,
+    "width": 740,
+    "height": 90,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "roundness": { "type": 3 },
+    "strokeColor": "#62FEB5",
+    "strokeWidth": 2
+  },
+  {
+    "type": "text",
+    "id": "tigris-lbl",
+    "x": 290,
+    "y": 375,
+    "text": "Tigris Object Storage",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "tigris-sub",
+    "x": 195,
+    "y": 405,
+    "text": "buckets  ·  scoped IAM keys  ·  snapshots  ·  object notifications",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  }
+]

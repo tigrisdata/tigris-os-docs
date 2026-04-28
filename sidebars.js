@@ -34,6 +34,11 @@ const sidebars = {
       items: [
         {
           type: "doc",
+          label: "Use the Web Console",
+          id: "web-console/index",
+        },
+        {
+          type: "doc",
           label: "Use the Tigris CLI",
           id: "cli/index",
         },

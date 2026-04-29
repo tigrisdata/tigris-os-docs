@@ -101,6 +101,7 @@ based on the role assigned to the it.
 | ListObjectParts                    | ✅    | ✅     | ❌       |
 | ListObjectsV1                      | ✅    | ✅     | ✅       |
 | ListObjectsV2                      | ✅    | ✅     | ✅       |
+| ListObjectVersions                 | ✅    | ✅     | ✅       |
 | NewMultipartUpload                 | ✅    | ✅     | ❌       |
 | GetBucketAccelerateConfiguration   | ✅    | ✅     | ✅       |
 | GetBucketOwnershipControls         | ✅    | ✅     | ✅       |

@@ -113,6 +113,7 @@ permissions (e.g. deleting the bucket).
 - List object parts (`ListObjectParts`)
 - List objects (V1) (`ListObjectsV1`)
 - List objects (V2) (`ListObjectsV2`)
+- List object versions (`ListObjectVersions`)
 - Start new multipart uploads (`NewMultipartUpload`)
 - Get bucket accelerate configuration (`GetBucketAccelerateConfiguration`)
 - Use POST policy (`PostPolicy`)

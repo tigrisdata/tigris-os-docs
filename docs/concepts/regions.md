@@ -37,7 +37,7 @@ availability guarantees, and cost — see
 | Asia-Pacific | `sin` | Singapore              |
 | Asia-Pacific | `nrt` | Tokyo, Japan           |
 
-### fly.storage.tigris.dev
+### Fly.io available regions
 
 | Geography     | Code  | Location                   |
 | ------------- | ----- | -------------------------- |

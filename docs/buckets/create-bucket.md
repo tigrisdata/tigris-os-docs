@@ -49,15 +49,6 @@ To create a bucket using the Tigris Dashboard, follow these steps:
 Assuming you have the AWS CLI configured as shown in the
 [AWS CLI guide](/docs/sdks/s3/aws-cli.md), you can create a bucket as follows:
 
-:::note
-
-If you are using Tigris outside of Fly, use the endpoint
-[https://t3.storage.dev](https://t3.storage.dev). If you are using Tigris from
-within Fly, use the endpoint
-[https://fly.storage.tigris.dev](https://fly.storage.tigris.dev).
-
-:::
-
 ```bash
 aws s3api --endpoint-url https://t3.storage.dev create-bucket --bucket foo-bucket
 ```

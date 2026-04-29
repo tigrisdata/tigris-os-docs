@@ -31,7 +31,6 @@ your S3 client accordingly.
 | ListObjects (V1/V2)  | Forwarded to Tigris                    |
 | ListMultipartUploads | Forwarded to Tigris                    |
 | GetBucketLocation    | Returns configured region              |
-| GetBucketVersioning  | Forwarded to Tigris                    |
 | GetBucketACL         | Forwarded to Tigris                    |
 | GetBucketPolicy      | Forwarded to Tigris                    |
 | GetBucketCORS        | Forwarded to Tigris                    |

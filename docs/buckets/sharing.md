@@ -103,7 +103,6 @@ permissions (e.g. deleting the bucket).
 - Get bucket policy status (`GetBucketPolicyStatus`)
 - Get bucket request payment configuration (`GetBucketRequestPayment`)
 - Get bucket tagging (`GetBucketTagging`)
-- Get bucket versioning (`GetBucketVersioning`)
 - Get objects (`GetObject`)
 - Get object ACL (`GetObjectACL`)
 - Get object tagging (`GetObjectTagging`)

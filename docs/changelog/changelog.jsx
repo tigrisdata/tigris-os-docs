@@ -8,6 +8,468 @@ import TabItem from "@theme/TabItem";
 
 export const changelogData = [
   {
+    date: "April 29, 2026",
+    title: "Agent Kit",
+    content: (
+      <>
+        <p>
+          We&apos;ve released <a href="/docs/ai/agent-kit/">Agent Kit</a> (
+          <a href="https://www.tigrisdata.com/blog/agent-kit/">
+            announcement blog
+          </a>
+          ), a TypeScript library that packages storage workflows for AI agents
+          on Tigris. Agent Kit bundles forks, workspaces, checkpoints, and
+          coordination — four primitives that match how agent systems are built
+          — into a single SDK on top of <code>@tigrisdata/storage</code> and{" "}
+          <code>@tigrisdata/iam</code>.
+        </p>
+
+        <p>
+          <strong>Installation</strong>
+        </p>
+        <CodeBlock language="bash">{`npm install @tigrisdata/agent-kit`}</CodeBlock>
+
+        <p>
+          <strong>
+            Provision a per-agent workspace with scoped credentials
+          </strong>
+        </p>
+        <CodeBlock language="typescript">{`import { createWorkspace, teardownWorkspace } from "@tigrisdata/agent-kit";
+
+const { data: workspace, error } = await createWorkspace("agent-run-abc", {
+  ttl: { days: 1 },
+  enableSnapshots: true,
+  credentials: { role: "Editor" },
+});
+
+if (error) throw error;
+
+console.log(workspace.bucket);
+console.log(workspace.credentials?.accessKeyId);
+
+// When the agent run finishes
+await teardownWorkspace(workspace);`}</CodeBlock>
+
+        <p>
+          <strong>Fork a dataset N ways for parallel agents</strong>
+        </p>
+        <CodeBlock language="typescript">{`import { createForks, teardownForks } from "@tigrisdata/agent-kit";
+
+const { data: forkSet, error } = await createForks("training-data", 5, {
+  prefix: "eval-run-42",
+  credentials: { role: "Editor" },
+});
+
+for (const fork of forkSet.forks) {
+  console.log(fork.bucket); // eval-run-42-0, eval-run-42-1, ...
+  console.log(fork.credentials?.accessKeyId);
+}
+
+await teardownForks(forkSet);`}</CodeBlock>
+
+        <p>
+          Read the <a href="/docs/ai/agent-kit/">Agent Kit documentation</a> for
+          the full API reference covering forks, workspaces, checkpoints, and
+          coordination webhooks.
+        </p>
+      </>
+    ),
+    subcategories: [
+      {
+        title: "Features",
+        items: [
+          {
+            title: "Forks",
+            description: (
+              <>
+                <p>
+                  Copy-on-write clones of a snapshot-enabled bucket. Provision N
+                  forks from a single snapshot, each with optional scoped
+                  credentials. Fifty forks don&apos;t cost fifty times the
+                  storage.
+                </p>
+              </>
+            ),
+            tag: { label: "SDK", color: "blue" },
+          },
+          {
+            title: "Workspaces",
+            description: (
+              <>
+                <p>
+                  Per-agent buckets with optional TTL and scoped IAM keys. One
+                  function to create, one to tear down — no loose access keys
+                  left behind.
+                </p>
+              </>
+            ),
+            tag: { label: "SDK", color: "blue" },
+          },
+          {
+            title: "Checkpoints",
+            description: (
+              <>
+                <p>
+                  Named snapshots of a bucket&apos;s state. Restore a checkpoint
+                  into a fresh fork to inspect what an agent saw at any moment
+                  without freezing the original.
+                </p>
+              </>
+            ),
+            tag: { label: "SDK", color: "blue" },
+          },
+          {
+            title: "Coordination",
+            description: (
+              <>
+                <p>
+                  Wire up webhooks on bucket events to trigger the next stage in
+                  a multi-agent pipeline. No polling — the next stage runs when
+                  the previous stage writes its output.
+                </p>
+              </>
+            ),
+            tag: { label: "SDK", color: "blue" },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    date: "April 22, 2026",
+    title: "Agent Shell",
+    content: (
+      <>
+        <p>
+          <a href="/docs/ai/agent-shell/">Agent Shell</a> is a virtual bash
+          environment with a persistent filesystem backed by Tigris object
+          storage. Agents get a familiar shell interface — <code>cat</code>,{" "}
+          <code>grep</code>, <code>sed</code>, <code>jq</code>, pipes, redirects
+          — where every file operation is backed by a Tigris bucket.
+        </p>
+
+        <p>
+          Writes stay in-memory until you explicitly <code>flush()</code>, so a
+          failed run never leaks partial state to storage. Built-in commands for{" "}
+          <code>presign</code>, <code>snapshot</code>, and <code>fork</code>{" "}
+          give agents direct access to Tigris primitives from the shell.
+        </p>
+
+        <p>
+          <strong>Programmatic usage</strong>
+        </p>
+        <CodeBlock language="bash">{`npm install @tigrisdata/agent-shell`}</CodeBlock>
+
+        <CodeBlock language="typescript">{`import { TigrisShell } from "@tigrisdata/agent-shell";
+
+const shell = new TigrisShell({
+  accessKeyId: process.env.TIGRIS_STORAGE_ACCESS_KEY_ID,
+  secretAccessKey: process.env.TIGRIS_STORAGE_SECRET_ACCESS_KEY,
+  bucket: process.env.TIGRIS_STORAGE_BUCKET,
+});
+
+await shell.exec('echo "processing..." > status.txt');
+await shell.exec("echo '{\\"score\\": 0.95}' > results.json");
+await shell.exec("cat results.json | jq .score"); // "0.95\\n"
+
+// Snapshot before changes, then persist atomically
+await shell.exec("snapshot my-bucket --name before-migration");
+await shell.flush();`}</CodeBlock>
+
+        <p>
+          <strong>Interactive shell</strong>
+        </p>
+        <CodeBlock language="bash">{`npx @tigrisdata/agent-shell`}</CodeBlock>
+
+        <p>
+          Read the <a href="/docs/ai/agent-shell/">Agent Shell documentation</a>{" "}
+          for the full storage model, multi-bucket mounting, and built-in
+          commands.
+        </p>
+      </>
+    ),
+    subcategories: [
+      {
+        title: "Features",
+        items: [
+          {
+            title: "Standard bash, persisted to Tigris",
+            description: (
+              <>
+                <p>
+                  Run <code>cat</code>, <code>grep</code>, <code>sed</code>,{" "}
+                  <code>awk</code>, <code>jq</code>, pipes, and redirects
+                  against a Tigris-backed filesystem. Multi-bucket support lets
+                  you mount datasets at different paths.
+                </p>
+              </>
+            ),
+            tag: { label: "SDK", color: "blue" },
+          },
+          {
+            title: "Atomic write-back cache",
+            description: (
+              <>
+                <p>
+                  Writes stay in memory until <code>flush()</code> persists
+                  them. If the agent fails midway, no partial state is written
+                  to storage.
+                </p>
+              </>
+            ),
+            tag: { label: "SDK", color: "blue" },
+          },
+          {
+            title: "Built-in Tigris commands",
+            description: (
+              <>
+                <p>
+                  <code>presign</code> for shareable URLs, <code>snapshot</code>{" "}
+                  for checkpoints, <code>fork</code> for copy-on-write branches
+                  — all available directly from the shell prompt.
+                </p>
+              </>
+            ),
+            tag: { label: "SDK", color: "blue" },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    date: "April 15, 2026",
+    title: "Agent Plugins for Claude Code & Cursor",
+    content: (
+      <>
+        <p>
+          The new{" "}
+          <a href="https://www.tigrisdata.com/blog/agent-plugins/">
+            Tigris agent plugins
+          </a>{" "}
+          give AI coding agents direct access to Tigris operations — managing
+          buckets, objects, access keys, IAM policies, and migrations — without
+          leaving your editor. The <code>tigris-storage</code> plugin is
+          available in the{" "}
+          <a href="https://github.com/anthropics/claude-plugins-community">
+            Claude Community Plugins
+          </a>{" "}
+          marketplace.
+        </p>
+
+        <p>
+          <strong>Install in Claude Code</strong>
+        </p>
+        <CodeBlock language="bash">{`claude plugin marketplace add anthropics/claude-plugins-community
+claude plugin install tigris-storage@claude-community`}</CodeBlock>
+
+        <p>
+          <strong>Install in Cursor</strong>
+        </p>
+        <p>
+          Navigate to{" "}
+          <strong>
+            Settings &gt; Rules &gt; Add Rule &gt; Remote Rule (GitHub)
+          </strong>{" "}
+          and enter <code>tigrisdata/tigris-agents-plugins</code>.
+        </p>
+
+        <p>
+          See the{" "}
+          <a href="/docs/ai/agent-plugins/">Agent Plugins documentation</a> for
+          installation, prerequisites, and the full skill reference.
+        </p>
+      </>
+    ),
+    subcategories: [
+      {
+        title: "Skills",
+        items: [
+          {
+            title: "tigris-authentication",
+            description: (
+              <>
+                <p>
+                  CLI installation, OAuth and credential login, configuration
+                  management.
+                </p>
+              </>
+            ),
+            tag: { label: "Plugin", color: "purple" },
+          },
+          {
+            title: "tigris-buckets",
+            description: (
+              <>
+                <p>
+                  Bucket creation, configuration, deletion, CORS, migrations,
+                  TTL, snapshots, and forks.
+                </p>
+              </>
+            ),
+            tag: { label: "Plugin", color: "purple" },
+          },
+          {
+            title: "tigris-objects",
+            description: (
+              <>
+                <p>
+                  Upload, download, list, move, delete, and presign objects.
+                </p>
+              </>
+            ),
+            tag: { label: "Plugin", color: "purple" },
+          },
+          {
+            title: "tigris-access-keys",
+            description: (
+              <>
+                <p>Create, list, assign roles, and delete access keys.</p>
+              </>
+            ),
+            tag: { label: "Plugin", color: "purple" },
+          },
+          {
+            title: "tigris-iam",
+            description: (
+              <>
+                <p>Manage IAM policies, users, invitations, and permissions.</p>
+              </>
+            ),
+            tag: { label: "Plugin", color: "purple" },
+          },
+          {
+            title: "tigris-storage-agent subagent",
+            description: (
+              <>
+                <p>
+                  Multi-step workflows like setting up a new project, migrating
+                  from AWS S3, creating dev sandboxes, running security audits,
+                  and configuring production deployments.
+                </p>
+              </>
+            ),
+            tag: { label: "Plugin", color: "purple" },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    date: "April 8, 2026",
+    title: "Multi-region & Dual-region buckets",
+    content: (
+      <>
+        <p>
+          Buckets now support an explicit <strong>location type</strong> so you
+          can pick the data placement, replication, availability, and
+          consistency model that fits your workload. Read the announcement on
+          the{" "}
+          <a href="https://www.tigrisdata.com/blog/multi-region-dual-region-buckets/">
+            Tigris blog
+          </a>
+          .
+        </p>
+
+        <p>Tigris supports four location types:</p>
+        <ul>
+          <li>
+            <strong>Global</strong> (default) — single copy distributed globally
+            based on access patterns.
+          </li>
+          <li>
+            <strong>Multi-region</strong> — highest availability across regions
+            in a chosen geography (USA or EUR), with strong consistency
+            globally. Tigris selects the underlying regions.
+          </li>
+          <li>
+            <strong>Dual-region</strong> — explicit pairing of two regions you
+            choose. High availability, eventual consistency across regions.
+          </li>
+          <li>
+            <strong>Single-region</strong> — redundancy across availability
+            zones in one region for the strictest data residency.
+          </li>
+        </ul>
+
+        <p>
+          <strong>Create a multi-region bucket via the CLI</strong>
+        </p>
+        <CodeBlock language="bash">{`# Multi-region in the USA geography
+tigris buckets create my-bucket --location-type multi-region --geography USA
+
+# Dual-region pairing two specific regions
+tigris buckets create my-bucket --location-type dual-region --regions iad,ord
+
+# Single-region for strict data residency
+tigris buckets create my-bucket --location-type single-region --region fra`}</CodeBlock>
+
+        <p>
+          <strong>Create a multi-region bucket via the JS/TS SDK</strong>
+        </p>
+        <CodeBlock language="typescript">{`import { createBucket } from "@tigrisdata/storage";
+
+const { data, error } = await createBucket("my-bucket", {
+  locationType: "multi-region",
+  geography: "USA",
+});`}</CodeBlock>
+
+        <p>
+          See <a href="/docs/buckets/locations/">Bucket Locations</a> for the
+          decision guide, consistency models, region pairings, and cost
+          considerations across all four location types.
+        </p>
+      </>
+    ),
+    subcategories: [
+      {
+        title: "Features",
+        items: [
+          {
+            title: "Multi-region buckets",
+            description: (
+              <>
+                <p>
+                  Highest availability with strong global consistency. Pick a
+                  geography (USA or EUR) and Tigris automatically replicates
+                  across the regions within it. Survives individual regional
+                  failures within the geography.
+                </p>
+              </>
+            ),
+            tag: { label: "Buckets", color: "blue" },
+          },
+          {
+            title: "Dual-region buckets",
+            description: (
+              <>
+                <p>
+                  Pair any two Tigris regions for compliance-driven data
+                  residency — for example, <code>fra</code> + <code>ams</code>{" "}
+                  for EU residency with redundancy, or <code>iad</code> +{" "}
+                  <code>sjc</code> for US East-West coverage.
+                </p>
+              </>
+            ),
+            tag: { label: "Buckets", color: "blue" },
+          },
+          {
+            title: "Location type at bucket creation",
+            description: (
+              <>
+                <p>
+                  Choose between Global, Multi-region, Dual-region, and
+                  Single-region when you create a bucket — via the Tigris
+                  Console, CLI, SDK, or Terraform provider.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "green" },
+          },
+        ],
+      },
+    ],
+  },
+  {
     date: "March 11, 2026",
     title: "Partner Integration API",
     content: (

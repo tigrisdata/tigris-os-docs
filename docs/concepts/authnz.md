@@ -90,7 +90,6 @@ based on the role assigned to the it.
 | GetBucketPolicyStatus              | ✅    | ✅     | ✅       |
 | GetBucketRequestPayment            | ✅    | ✅     | ❌       |
 | GetBucketTagging                   | ✅    | ✅     | ✅       |
-| GetBucketVersioning                | ✅    | ✅     | ✅       |
 | GetObject                          | ✅    | ✅     | ✅       |
 | GetObjectACL                       | ✅    | ✅     | ❌       |
 | GetObjectTagging                   | ✅    | ✅     | ✅       |

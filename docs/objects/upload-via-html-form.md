@@ -139,7 +139,7 @@ The signature of our example policy will be
   </head>
   <body>
     <form
-      action="https://my-user-images.fly.storage.tigris.dev/"
+      action="https://my-user-images.t3.storage.dev/"
       method="post"
       enctype="multipart/form-data"
     >

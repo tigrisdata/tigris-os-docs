@@ -85,7 +85,7 @@ the objects when requested from the Sydney region.
 
 ```curl
 GET /?list-type=2&continuation-token=ContinuationToken&delimiter=Delimiter&encoding-type=EncodingType&fetch-owner=FetchOwner&max-keys=MaxKeys&prefix=Prefix&start-after=StartAfter HTTP/1.1
-Host: bucket.fly.storage.tigris.dev
+Host: bucket.t3.storage.dev
 x-tigris-prefetch: true
 ```
 

@@ -116,11 +116,10 @@ SSRF attacks.
 
 **Allowed hosts:**
 
-| Pattern         | Example                          | Use case                  |
-| --------------- | -------------------------------- | ------------------------- |
-| `localhost`     | `http://localhost:8080`          | Development and testing   |
-| `*.tigris.dev`  | `https://fly.storage.tigris.dev` | Tigris production domains |
-| `*.storage.dev` | `https://t3.storage.dev`         | Tigris storage domains    |
+| Pattern         | Example                  | Use case                |
+| --------------- | ------------------------ | ----------------------- |
+| `localhost`     | `http://localhost:8080`  | Development and testing |
+| `*.storage.dev` | `https://t3.storage.dev` | Tigris storage domains  |
 
 Any other endpoint causes a fatal startup error.
 

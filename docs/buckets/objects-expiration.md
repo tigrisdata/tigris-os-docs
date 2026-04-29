@@ -1,7 +1,7 @@
 # Object Expiration
 
-If you use Tigris to store objects that have a limited lifetime, you can set
-up bucket lifecycle configuration rules to automatically delete them after a
+If you use Tigris to store objects that have a limited lifetime, you can set up
+bucket lifecycle configuration rules to automatically delete them after a
 specified period.
 
 ## Configuring object expiration
@@ -10,8 +10,8 @@ Tigris allows you to set up expiration configuration for objects in a bucket
 through bucket lifecycle rules. The expiration is based on the last modified
 time of the object.
 
-A bucket can have up to **10 lifecycle rules**, which can be a mix of
-expiration and transition rules scoped to different prefixes. See
+A bucket can have up to **10 lifecycle rules**, which can be a mix of expiration
+and transition rules scoped to different prefixes. See
 [Object Lifecycle Rules](/docs/buckets/object-lifecycle-rules/) for the
 transition form of these rules.
 
@@ -34,13 +34,13 @@ bucket:
 
 ### Specifying expiration rules via the AWS CLI
 
-You can configure expiration rules for objects in the bucket using the AWS
-CLI. Below are some examples.
+You can configure expiration rules for objects in the bucket using the AWS CLI.
+Below are some examples.
 
 #### Expire objects after 30 days
 
-Here's an example of a bucket lifecycle configuration that expires every
-object in the bucket after 30 days.
+Here's an example of a bucket lifecycle configuration that expires every object
+in the bucket after 30 days.
 
 Create a JSON file named `lifecycle.json` with the following content:
 
@@ -99,8 +99,8 @@ aws s3api put-bucket-lifecycle-configuration --bucket my-bucket --lifecycle-conf
 
 Each rule can be scoped to a key prefix using `Filter.Prefix`, so different
 parts of a bucket can have different expirations. The example below deletes
-objects under `tmp/` after 1 day and objects under `logs/` after 30 days,
-while leaving everything else untouched.
+objects under `tmp/` after 1 day and objects under `logs/` after 30 days, while
+leaving everything else untouched.
 
 ```json
 {
@@ -137,5 +137,5 @@ while leaving everything else untouched.
 - Tigris always rounds the expiration time to UTC midnight for the scheduled
   date.
 - The expiration time is based on the last modified time of the object.
-- When using the AWS CLI to apply a bucket lifecycle configuration, the JSON
-  can only contain the fields shown in the examples above.
+- When using the AWS CLI to apply a bucket lifecycle configuration, the JSON can
+  only contain the fields shown in the examples above.

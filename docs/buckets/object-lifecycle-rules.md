@@ -3,10 +3,10 @@
 As your data storage needs evolve, you may want to optimize costs by moving less
 frequently accessed objects to more cost-effective storage tiers. Tigris
 provides object lifecycle rules to automatically move objects between storage
-tiers. For example, you might want to move older log files or archived data to
-a lower-cost storage tier while keeping frequently accessed data in the
-standard tier. This helps to maintain optimal performance for active data while
-reducing storage costs for infrequently accessed objects.
+tiers. For example, you might want to move older log files or archived data to a
+lower-cost storage tier while keeping frequently accessed data in the standard
+tier. This helps to maintain optimal performance for active data while reducing
+storage costs for infrequently accessed objects.
 
 ## Configuring Object Lifecycle Rules
 
@@ -15,15 +15,14 @@ transition between storage tiers. Rules are configured at the bucket level and
 each rule can target the entire bucket or a subset of objects scoped by a key
 prefix.
 
-A bucket can have up to **10 lifecycle rules**, which can be a mix of
-transition and expiration rules scoped to different prefixes. See
+A bucket can have up to **10 lifecycle rules**, which can be a mix of transition
+and expiration rules scoped to different prefixes. See
 [Object Expiration](/docs/buckets/objects-expiration/) for the expiration form
 of these rules.
 
 The transition timing can be set in two ways:
 
-- **Days**: The objects will be transitioned after the specified number of
-  days.
+- **Days**: The objects will be transitioned after the specified number of days.
 - **Date**: The objects will be transitioned on the specified date.
 
 Tigris currently supports transitioning an object from **STANDARD** to one of
@@ -42,11 +41,11 @@ these three storage tiers:
    records, or completed projects.
 
 3. **GLACIER_IA**: Glacier Infrequent Access storage is designed for data that
-   requires immediate access but is accessed very infrequently. This tier
-   offers a balance between cost and retrieval time - it's more expensive than
-   GLACIER but provides faster access times. Ideal for data that needs to be
-   available quickly when requested, such as monthly reports, quarterly
-   analytics, or seasonal data that might be needed on short notice.
+   requires immediate access but is accessed very infrequently. This tier offers
+   a balance between cost and retrieval time - it's more expensive than GLACIER
+   but provides faster access times. Ideal for data that needs to be available
+   quickly when requested, such as monthly reports, quarterly analytics, or
+   seasonal data that might be needed on short notice.
 
 ### Specifying Object Lifecycle rules via the Tigris Dashboard
 
@@ -62,8 +61,8 @@ a bucket:
 
 ### Specifying Object Lifecycle rules via the AWS CLI
 
-You can configure Object Lifecycle rules for objects in the bucket using the
-AWS CLI. Below are some examples.
+You can configure Object Lifecycle rules for objects in the bucket using the AWS
+CLI. Below are some examples.
 
 #### Transition objects after 30 days
 
@@ -100,7 +99,7 @@ aws s3api put-bucket-lifecycle-configuration --bucket my-bucket --lifecycle-conf
 #### Transition objects at the end of the year 2025
 
 Here's an example of an Object lifecycle configuration that transitions objects
-at the end of the year 2026.
+at the end of the year 2025.
 
 Create a JSON file named `lifecycle.json` with the following content:
 
@@ -131,10 +130,10 @@ aws s3api put-bucket-lifecycle-configuration --bucket my-bucket --lifecycle-conf
 
 #### Multiple rules with prefix filters
 
-Each rule can be scoped to a key prefix using `Filter.Prefix`. The example
-below moves objects under `logs/` to `STANDARD_IA` after 30 days, archives
-objects under `archive/` to `GLACIER` after 90 days, and leaves the rest of
-the bucket on `STANDARD`.
+Each rule can be scoped to a key prefix using `Filter.Prefix`. The example below
+moves objects under `logs/` to `STANDARD_IA` after 30 days, archives objects
+under `archive/` to `GLACIER` after 90 days, and leaves the rest of the bucket
+on `STANDARD`.
 
 ```json
 {

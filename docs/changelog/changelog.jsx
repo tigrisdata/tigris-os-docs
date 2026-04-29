@@ -8,7 +8,7 @@ import TabItem from "@theme/TabItem";
 
 export const changelogData = [
   {
-    date: "April 29, 2026",
+    date: "April 28, 2026",
     title: "Agent Kit",
     content: (
       <>
@@ -136,7 +136,7 @@ await teardownForks(forkSet);`}</CodeBlock>
     ],
   },
   {
-    date: "April 22, 2026",
+    date: "April 16, 2026",
     title: "Agent Shell",
     content: (
       <>
@@ -237,7 +237,7 @@ await shell.flush();`}</CodeBlock>
     ],
   },
   {
-    date: "April 15, 2026",
+    date: "April 7, 2026",
     title: "Agent Plugins for Claude Code & Cursor",
     content: (
       <>
@@ -355,7 +355,7 @@ claude plugin install tigris-storage@claude-community`}</CodeBlock>
     ],
   },
   {
-    date: "April 8, 2026",
+    date: "March 24, 2026",
     title: "Multi-region & Dual-region buckets",
     content: (
       <>

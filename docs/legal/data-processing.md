@@ -352,6 +352,7 @@ conflicting terms of the Agreement.
    controlled by the Customer in its sole discretion subject to any constraints
    set forth in the Agreement), which may relate to the following categories of
    Data Subjects:
+
    - Employees, agents, advisors, and contractors of Customer (in each case, who
      are natural persons).
    - Users of Customer’s systems or users of systems over which the Customer has
@@ -368,6 +369,7 @@ conflicting terms of the Agreement.
    controlled by the Customer in its sole discretion subject to any constraints
    set forth in the Agreement), which may relate to the following categories of
    Personal Data:
+
    - First and last name, title, position, employment-related and professional
      information.
    - Contact information (company, email, phone, physical address).

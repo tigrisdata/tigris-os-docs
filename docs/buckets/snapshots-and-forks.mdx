@@ -573,10 +573,12 @@ forking feature with the Python boto3 SDK.
 
 ## Using object versioning APIs
 
-If you need more granular access to object versions in a snapshot-enabled
-bucket, you can use a subset of S3-compatible object versioning APIs without any
-additional changes. No special headers or extra steps are required. These APIs
-work with standard SDKs and tools.
+Working with a snapshot-enabled bucket sometimes requires reading or deleting a
+specific version of an object - for example, fetching a known prior version
+directly, or permanently removing a single version across the bucket and its
+snapshots. A subset of S3-compatible object versioning APIs supports these cases
+without any additional changes. No special headers or extra steps are required,
+and standard SDKs and tools work as-is.
 
 ### Supported APIs
 

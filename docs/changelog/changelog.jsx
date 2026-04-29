@@ -13,16 +13,24 @@ export const changelogData = [
     content: (
       <>
         <p>
-          We&apos;ve released <a href="/docs/ai/agent-kit/">Agent Kit</a> (
-          <a href="https://www.tigrisdata.com/blog/agent-kit/">
-            announcement blog
-          </a>
-          ), a TypeScript library that packages storage workflows for AI agents
-          on Tigris. Agent Kit bundles forks, workspaces, checkpoints, and
+          We&apos;ve released <a href="/docs/ai/agent-kit/">Agent Kit</a>, a
+          TypeScript library that packages storage workflows for AI agents on
+          Tigris. Agent Kit bundles forks, workspaces, checkpoints, and
           coordination — four primitives that match how agent systems are built
           — into a single SDK on top of <code>@tigrisdata/storage</code> and{" "}
           <code>@tigrisdata/iam</code>.
         </p>
+
+        <BlogPostPreview
+          href="https://www.tigrisdata.com/blog/agent-kit/"
+          title="Introducing Agent Kit"
+          description="A TypeScript library that packages storage workflows for AI agents — forks, workspaces, checkpoints, and coordination — into four primitives on top of @tigrisdata/storage and @tigrisdata/iam."
+          imageSrc={require("./assets/2026/04/agent-kit.webp").default}
+          imageAlt="Hero image for the Tigris Agent Kit announcement blog post"
+          buttonText="Read the Blog"
+          author="David Myriel"
+          date="April 2026"
+        />
 
         <p>
           <strong>Installation</strong>
@@ -242,10 +250,7 @@ await shell.flush();`}</CodeBlock>
     content: (
       <>
         <p>
-          The new{" "}
-          <a href="https://www.tigrisdata.com/blog/agent-plugins/">
-            Tigris agent plugins
-          </a>{" "}
+          The new <a href="/docs/ai/agent-plugins/">Tigris agent plugins</a>{" "}
           give AI coding agents direct access to Tigris operations — managing
           buckets, objects, access keys, IAM policies, and migrations — without
           leaving your editor. The <code>tigris-storage</code> plugin is
@@ -255,6 +260,17 @@ await shell.flush();`}</CodeBlock>
           </a>{" "}
           marketplace.
         </p>
+
+        <BlogPostPreview
+          href="https://www.tigrisdata.com/blog/agent-plugins/"
+          title="Tigris Agent Plugins for Claude Code & Cursor"
+          description="AI coding agents get direct access to Tigris operations — managing buckets, objects, access keys, IAM policies, and migrations — without leaving Claude Code or Cursor."
+          imageSrc={require("./assets/2026/04/agent-plugins.webp").default}
+          imageAlt="Hero image for the Tigris Agent Plugins announcement blog post"
+          buttonText="Read the Blog"
+          author="David Myriel"
+          date="April 2026"
+        />
 
         <p>
           <strong>Install in Claude Code</strong>
@@ -362,13 +378,21 @@ claude plugin install tigris-storage@claude-community`}</CodeBlock>
         <p>
           Buckets now support an explicit <strong>location type</strong> so you
           can pick the data placement, replication, availability, and
-          consistency model that fits your workload. Read the announcement on
-          the{" "}
-          <a href="https://www.tigrisdata.com/blog/multi-region-dual-region-buckets/">
-            Tigris blog
-          </a>
-          .
+          consistency model that fits your workload.
         </p>
+
+        <BlogPostPreview
+          href="https://www.tigrisdata.com/blog/multi-region-dual-region-buckets/"
+          title="Multi-Region & Dual-Region Buckets"
+          description="Pick the data placement, replication, availability, and consistency model that fits your workload with new Multi-region and Dual-region bucket location types."
+          imageSrc={
+            require("./assets/2026/03/multi-region-buckets.webp").default
+          }
+          imageAlt="Hero image for the Multi-Region and Dual-Region buckets announcement blog post"
+          buttonText="Read the Blog"
+          author="David Myriel"
+          date="March 2026"
+        />
 
         <p>Tigris supports four location types:</p>
         <ul>

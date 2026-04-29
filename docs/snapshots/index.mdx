@@ -164,12 +164,16 @@ No. Snapshots are metadata-only and don't slow down reads or writes.
 
 ### Can I enable snapshots on an existing bucket?
 
-No. Snapshot support must be enabled at bucket creation and cannot be added to
-existing buckets.
+Snapshot support can be enabled for existing buckets; however, this
+functionality is not yet exposed to users. If you would like to change the type
+of your bucket, please contact us at
+[help@tigrisdata.com](mailto:help@tigrisdata.com).
 
 ### Can I disable snapshots after enabling them?
 
-No. Once enabled, snapshot support cannot be disabled.
+Snapshots can be disabled for buckets; however, this functionality is not yet
+exposed to users. If you would like to change the type of your bucket, please
+contact us at [help@tigrisdata.com](mailto:help@tigrisdata.com).
 
 ### Can I restore a bucket to a previous snapshot?
 
@@ -181,3 +185,10 @@ recover individual objects or restore full bucket state.
 
 No. Object expiration and storage tier transitions are not supported on
 snapshot-enabled buckets.
+
+### Can I use object versioning APIs on snapshot-enabled buckets?
+
+Yes, a subset of S3-compatible object versioning APIs is available for
+snapshot-enabled buckets. See
+[this section](https://www.tigrisdata.com/docs/buckets/snapshots-and-forks/#using-object-versioning-apis)
+for more details.

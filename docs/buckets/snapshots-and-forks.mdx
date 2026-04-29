@@ -3,8 +3,8 @@ import TabItem from "@theme/TabItem";
 
 # Bucket snapshots and forks
 
-This page covers how to enable and use snapshots and forks on your Tigris
-buckets. For an overview of the concepts, see
+This page covers how to enable and use snapshots, forks, and object versioning
+on your Tigris buckets. For an overview of the concepts, see
 [Snapshots and Forks](/docs/snapshots-and-forks).
 
 Snapshots and forks are opt-in features. To enable them on a bucket, you must
@@ -570,6 +570,35 @@ the **tigris-boto3-ext** repo for more details on how to use the snapshot and
 forking feature with the Python boto3 SDK.
 
 :::
+
+## Using object versioning APIs
+
+Working with a snapshot-enabled bucket sometimes requires reading or deleting a
+specific version of an object - for example, fetching a known prior version
+directly, or permanently removing a single version across the bucket and its
+snapshots. A subset of S3-compatible object versioning APIs supports these cases
+without any additional changes. No special headers or extra steps are required,
+and standard SDKs and tools work as-is.
+
+### Supported APIs
+
+- `ListObjectVersions`
+- `HeadObject` with the `versionId` parameter
+- `GetObject` with the `versionId` parameter
+- `DeleteObject` with the `versionId` parameter
+
+:::note
+
+As in S3, deleting an object with a specified version ID permanently removes
+that version. It is also deleted from all snapshots.
+
+:::
+
+No additional authorization permissions are required to use the `HeadObject` or
+`GetObject` APIs with the `versionId` parameter. The `ListObjectVersions`
+operation is available to users with read-only (or higher) access to the bucket.
+However, note that this is a separate operation, and some IAM policies may need
+to be updated to allow it.
 
 ## Using a forked bucket
 

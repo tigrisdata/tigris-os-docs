@@ -165,9 +165,8 @@ deployments.
 
 ### Endpoint validation
 
-The upstream endpoint must match one of the allowed host patterns: `localhost`,
-`*.tigris.dev`, or `*.storage.dev`. TAG exits at startup if the endpoint does
-not match.
+The upstream endpoint must match one of the allowed host patterns: `localhost`
+or `*.storage.dev`. TAG exits at startup if the endpoint does not match.
 
 ### Cluster mode
 

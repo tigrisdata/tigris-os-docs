@@ -713,11 +713,6 @@ const sidebars = {
           ],
         },
         "training/tigrisfs",
-        {
-          type: "doc",
-          label: "Changelog",
-          id: "changelog/index",
-        },
       ],
     },
     {
@@ -1016,6 +1011,11 @@ const sidebars = {
         "legal/data-processing",
         "legal/sla",
       ],
+    },
+    {
+      type: "doc",
+      label: "Changelog",
+      id: "changelog/index",
     },
   ],
 };

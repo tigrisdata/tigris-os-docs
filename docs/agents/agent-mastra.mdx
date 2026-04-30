@@ -14,12 +14,14 @@ checkpoints, coordination — each with a matching teardown. This guide wires
 Agent Kit into a Mastra setup so every run gets an isolated bucket and,
 optionally, a writable copy of a dataset for the price of one copy._
 
-_The architecture: an **orchestrator** (your code that starts and ends each run)
-calls Agent Kit to provision storage, passes the resulting bucket and scoped
-credentials to the agent through Mastra's `RequestContext`, and tears storage
-down when the run ends. The agent itself never decides whether to provision
-storage — it just uses the storage that's there. This keeps the LLM out of
-infrastructure decisions and keeps credentials out of the prompt context._
+## The Architecture
+
+An **orchestrator** (your code that starts and ends each run) calls Agent Kit to
+provision storage, passes the resulting bucket and scoped credentials to the
+agent through Mastra's `RequestContext`, and tears storage down when the run
+ends. The agent itself never decides whether to provision storage — it just uses
+the storage that's there. This keeps the LLM out of infrastructure decisions and
+keeps credentials out of the prompt context.\_
 
 <div className="mermaid-frame">
   <AgentMastraDiagram />
@@ -339,42 +341,46 @@ Point the webhook at a Mastra server route (`registerApiRoute` from
 `@mastra/core/server`) and the next stage runs the moment a report lands in
 `reports/`.
 
-:::warning At-least-once delivery Webhook delivery is at-least-once with retries
-on `5xx`. Make the endpoint idempotent or deduplicate on the object key. :::
+:::warning At-least-once delivery
+
+Webhook delivery is at-least-once with retries on `5xx`. Make the endpoint
+idempotent or deduplicate on the object key.
+
+:::
 
 ## Production considerations
 
 _What changes when you take this past a prototype: where Mastra's Memory ends
 and Agent Kit begins, credential scoping, and partial-failure handling._
 
-**Memory vs. Agent Kit.** Mastra's `Memory` handles conversation state —
-threads, messages, working memory, semantic recall — backed by adapters like
-`@mastra/libsql` or `@mastra/postgres`. Agent Kit handles artifacts — files an
-agent produces, datasets it forks, snapshots it pins. They don't replace each
-other.
+- **Memory vs. Agent Kit.** Mastra's `Memory` handles conversation state —
+  threads, messages, working memory, semantic recall — backed by adapters like
+  `@mastra/libsql` or `@mastra/postgres`. Agent Kit handles artifacts — files an
+  agent produces, datasets it forks, snapshots it pins. They don't replace each
+  other.
 
-**Credential scoping.** Pass `credentials: { role: "Editor" }` (or `"ReadOnly"`)
-to every Agent Kit call. A leaked key then scopes the blast radius to one fork
-or one workspace, not the whole Tigris account. Because the agent only ever sees
-scoped credentials via `RequestContext`, those keys never end up in the prompt
-or chat transcript.
+- **Credential scoping.** Pass `credentials: { role: "Editor" }` (or
+  `"ReadOnly"`) to every Agent Kit call. A leaked key then scopes the blast
+  radius to one fork or one workspace, not the whole Tigris account. Because the
+  agent only ever sees scoped credentials via `RequestContext`, those keys never
+  end up in the prompt or chat transcript.
 
-**Teardown is best-effort.** `teardownForks`, `teardownWorkspace`, and
-`teardownCoordination` continue through individual failures and report every
-error in a single aggregated result. Inspect the result instead of assuming
-success. Always pair the teardown with a TTL on the workspace as a backstop in
-case the orchestrator process dies before `finally` runs.
+- **Teardown is best-effort.** `teardownForks`, `teardownWorkspace`, and
+  `teardownCoordination` continue through individual failures and report every
+  error in a single aggregated result. Inspect the result instead of assuming
+  success. Always pair the teardown with a TTL on the workspace as a backstop in
+  case the orchestrator process dies before `finally` runs.
 
-**Concurrency.** `createForks` provisions N buckets and N keys in one call. For
-very large N (hundreds), batch across calls and watch project-level bucket
-quotas.
+- **Concurrency.** `createForks` provisions N buckets and N keys in one call.
+  For very large N (hundreds), batch across calls and watch project-level bucket
+  quotas.
 
-**When to wrap Agent Kit as a tool instead.** The orchestrator pattern is the
-right default because provisioning is deterministic — every run needs storage at
-the start. Wrap an Agent Kit primitive as a Mastra tool only when the agent
-genuinely needs to make a runtime decision: "I might fork this dataset _if_ I
-discover it's too large to read in place." For the common case, keep
-provisioning out of the model.
+- **When to wrap Agent Kit as a tool instead.** The orchestrator pattern is the
+  right default because provisioning is deterministic — every run needs storage
+  at the start. Wrap an Agent Kit primitive as a Mastra tool only when the agent
+  genuinely needs to make a runtime decision: "I might fork this dataset _if_ I
+  discover it's too large to read in place." For the common case, keep
+  provisioning out of the model.
 
 ## Troubleshooting
 

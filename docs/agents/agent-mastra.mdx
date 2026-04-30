@@ -1,0 +1,406 @@
+---
+id: agent-mastra
+title: "Build Agents with Mastra and Tigris"
+---
+
+import AgentMastraDiagram from "@site/src/components/diagrams/AgentMastraDiagram";
+
+# Build Agents with Mastra and Tigris
+
+_Mastra is a TypeScript agent framework.
+[`@tigrisdata/agent-kit`](/docs/ai/agent-kit/) is the Tigris SDK that turns
+bucket and IAM APIs into four agent-shaped primitives — forks, workspaces,
+checkpoints, coordination — each with a matching teardown. This guide wires
+Agent Kit into a Mastra setup so every run gets an isolated bucket and,
+optionally, a writable copy of a dataset for the price of one copy._
+
+## The Architecture
+
+An **orchestrator** (your code that starts and ends each run) calls Agent Kit to
+provision storage, passes the resulting bucket and scoped credentials to the
+agent through Mastra's `RequestContext`, and tears storage down when the run
+ends. The agent itself never decides whether to provision storage — it just uses
+the storage that's there. This keeps the LLM out of infrastructure decisions and
+keeps credentials out of the prompt context.\_
+
+<div className="mermaid-frame">
+  <AgentMastraDiagram />
+</div>
+<div className="mermaid-caption">
+  Two paths into Tigris: the orchestrator calls Agent Kit to provision buckets
+  and credentials; the agent's tools read those values from RequestContext and
+  read or write objects directly.
+</div>
+
+## Prerequisites
+
+_Before starting: confirm Tigris credentials, Node.js, an LLM provider key, and
+(only if you'll fork a dataset) a snapshot-enabled source bucket._
+
+1. **Tigris credentials.** `TIGRIS_STORAGE_ACCESS_KEY_ID` (starts with `tid_`)
+   and `TIGRIS_STORAGE_SECRET_ACCESS_KEY` (starts with `tsec_`). Create via the
+   [Tigris Access Key guide](/docs/iam/manage-access-key/).
+2. **Node.js 20+** with `npm`, `pnpm`, or `yarn`.
+3. **LLM provider API key.** This guide uses OpenAI (`OPENAI_API_KEY`); swap for
+   any provider Mastra supports.
+4. **Source bucket with snapshots enabled** — only required for Step 7 (forks
+   and checkpoints). Create with
+   `tigris buckets create <name> --enable-snapshots`.
+
+## Step 1: Install dependencies
+
+_Installs Mastra core, the memory adapter, the OpenAI provider, Agent Kit, the
+Tigris storage SDK (for object operations from inside tools), and Zod._
+
+```bash
+npm install @mastra/core @mastra/memory @tigrisdata/agent-kit \
+  @tigrisdata/storage @ai-sdk/openai zod
+```
+
+What each package does: `@mastra/core` provides `Agent`, `createTool`, `Mastra`,
+and `RequestContext`. `@mastra/memory` is the default memory adapter.
+`@ai-sdk/openai` is one model provider — swap for `@ai-sdk/anthropic` or others.
+`@tigrisdata/agent-kit` is the SDK the orchestrator calls to provision storage.
+`@tigrisdata/storage` is the Tigris-native S3 client the agent's tools use to
+read and write objects in the workspace bucket.
+
+:::info Pre-1.0
+
+Agent Kit is published as `0.1.x`. Pin the version if you need stability.
+
+:::
+
+## Step 2: Configure environment variables
+
+_Sets the credentials Agent Kit and the model provider read from `process.env`._
+
+Create `.env` in the project root:
+
+```bash
+TIGRIS_STORAGE_ACCESS_KEY_ID=tid_YOUR_ACCESS_KEY_ID
+TIGRIS_STORAGE_SECRET_ACCESS_KEY=tsec_YOUR_SECRET_ACCESS_KEY
+OPENAI_API_KEY=sk-...
+```
+
+Mastra does not auto-load `.env`. Add `import "dotenv/config";` at the top of
+the entry file before any Mastra or Agent Kit imports.
+
+## Step 3: Define a tool that reads storage from RequestContext
+
+_The agent's tools don't provision storage — the orchestrator does that. The
+tool reads the per-run bucket and scoped credentials out of `RequestContext` and
+uses them to read or write objects in Tigris._
+
+Create `src/tools/append-note.ts`:
+
+```typescript
+import { createTool } from "@mastra/core/tools";
+import { put } from "@tigrisdata/storage";
+import { z } from "zod";
+
+export const appendNoteTool = createTool({
+  id: "append-note",
+  description:
+    "Persist a research note to the agent's workspace bucket on Tigris.",
+  inputSchema: z.object({
+    filename: z.string(),
+    content: z.string(),
+  }),
+  execute: async ({ filename, content }, context) => {
+    const bucket = context?.requestContext?.get("bucket") as string | undefined;
+    const accessKeyId = context?.requestContext?.get("accessKeyId") as
+      | string
+      | undefined;
+    const secretAccessKey = context?.requestContext?.get("secretAccessKey") as
+      | string
+      | undefined;
+    if (!bucket || !accessKeyId || !secretAccessKey) {
+      throw new Error("missing storage credentials in RequestContext");
+    }
+
+    const { data, error } = await put(`notes/${filename}`, content, {
+      config: { bucket, accessKeyId, secretAccessKey },
+    });
+    if (error) throw error;
+
+    return { written: data.path, url: data.url };
+  },
+});
+```
+
+The tool's job is to write a note. It does not know how the bucket was
+provisioned or whether it's a workspace, a fork, or a long-lived bucket — it
+just uses whatever's in `RequestContext`. Add a matching `readNoteTool`,
+`listNotesTool`, etc. as the application needs.
+
+## Step 4: Define the agent
+
+_Wires the tool into a Mastra agent. The agent's instructions tell it when to
+call `append-note`; Mastra executes the call with the live `RequestContext`._
+
+Create `src/agents/research-agent.ts`:
+
+```typescript
+import { Agent } from "@mastra/core/agent";
+import { Memory } from "@mastra/memory";
+import { openai } from "@ai-sdk/openai";
+import { appendNoteTool } from "../tools/append-note";
+
+export const researchAgent = new Agent({
+  id: "research-agent",
+  name: "Research Agent",
+  description:
+    "Researches a topic and writes intermediate notes to its workspace.",
+  instructions: `
+    You are a research agent. Use the append-note tool to persist
+    intermediate findings — one note per topic. The bucket and credentials
+    are configured for you; you do not need to ask for them.
+  `,
+  model: openai("gpt-4o-mini"),
+  tools: { appendNoteTool },
+  memory: new Memory(),
+});
+```
+
+Two storage layers now exist behind the agent: `Memory` for conversation state,
+and the workspace bucket for artifacts. They never overlap.
+
+## Step 5: Register the agent with Mastra
+
+_Mounts the agent on a `Mastra` instance so it can be served by the dev
+playground or your own server adapter._
+
+Create `src/mastra/index.ts`:
+
+```typescript
+import { Mastra } from "@mastra/core";
+import { researchAgent } from "../agents/research-agent";
+
+export const mastra = new Mastra({
+  agents: { researchAgent },
+});
+```
+
+Access elsewhere with `mastra.getAgent("researchAgent")`.
+
+## Step 6: Provision a workspace and run the agent
+
+_The orchestrator creates a workspace, hands the bucket and scoped credentials
+to the agent via `RequestContext`, runs the agent, and tears the workspace down
+— even if the run throws._
+
+Create `src/runs/research.ts`:
+
+```typescript
+import "dotenv/config";
+import { createWorkspace, teardownWorkspace } from "@tigrisdata/agent-kit";
+import { RequestContext } from "@mastra/core/request-context";
+import { mastra } from "../mastra";
+
+type RunContext = {
+  bucket: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+};
+
+export async function runResearch(sessionId: string, query: string) {
+  // 1. Provision the workspace bucket and a scoped Editor key.
+  const { data: workspace, error } = await createWorkspace(sessionId, {
+    ttl: { days: 1 },
+    credentials: { role: "Editor" },
+  });
+  if (error) throw error;
+  if (!workspace.credentials) {
+    await teardownWorkspace(workspace);
+    throw new Error("workspace credential mint failed");
+  }
+
+  try {
+    // 2. Hand bucket + credentials to the agent via RequestContext.
+    const ctx = new RequestContext<RunContext>();
+    ctx.set("bucket", workspace.bucket);
+    ctx.set("accessKeyId", workspace.credentials.accessKeyId);
+    ctx.set("secretAccessKey", workspace.credentials.secretAccessKey);
+
+    // 3. Run the agent. Its append-note tool reads bucket+creds from ctx.
+    const agent = mastra.getAgent("researchAgent");
+    return await agent.generate(query, { requestContext: ctx });
+  } finally {
+    // 4. Teardown is unconditional. Bucket deleted, credentials revoked.
+    await teardownWorkspace(workspace);
+  }
+}
+```
+
+The orchestrator owns the lifecycle. The agent never sees `createWorkspace` or
+`teardownWorkspace` — it only sees its own tools and a `RequestContext` that has
+bucket and credentials in it. If the run throws, the `finally` block still tears
+down the workspace.
+
+:::tip TTL is your safety net
+
+Even with the `finally` teardown, set `ttl: { days: 1 }`. If the process is
+killed before `finally` runs, Tigris will still expire the bucket's contents on
+its own.
+
+:::
+
+## Step 7: Run multiple agents on dataset forks
+
+_Same orchestrator pattern, but the orchestrator forks a dataset N times instead
+of creating an empty workspace. Each agent gets a per-fork `RequestContext`._
+
+A common use case is running the same dataset against different model variants
+in parallel. Each fork gives one model an isolated writable copy, so agents can
+write intermediate artifacts without colliding.
+
+Create `src/runs/eval.ts`:
+
+```typescript
+import "dotenv/config";
+import { createForks, teardownForks, checkpoint } from "@tigrisdata/agent-kit";
+import { RequestContext } from "@mastra/core/request-context";
+import { mastra } from "../mastra";
+
+type ForkContext = {
+  bucket: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+  checkpointId: string;
+};
+
+export async function runEval() {
+  // 1. Pin the corpus's known-good state with a named checkpoint. This is
+  //    separate from the snapshot createForks takes internally — the fork's
+  //    snapshot is consumed when teardownForks runs, while a named checkpoint
+  //    persists indefinitely (snapshot metadata is free) so you can restore
+  //    it into a fresh debug fork later.
+  const { data: baseline, error: ckptErr } = await checkpoint("training-data", {
+    name: "pre-eval-baseline",
+  });
+  if (ckptErr) throw ckptErr;
+
+  // 2. Fork the corpus 5 times — 1× the storage cost, 5 writable copies.
+  const { data: forkSet, error: forkErr } = await createForks(
+    "training-data",
+    5,
+    { credentials: { role: "Editor" } },
+  );
+  if (forkErr) throw forkErr;
+
+  try {
+    const agent = mastra.getAgent("researchAgent");
+
+    // 3. Run one agent per fork; per-fork credentials via RequestContext.
+    await Promise.all(
+      forkSet.forks.map(async (fork) => {
+        if (!fork.credentials) return; // skip forks whose key mint failed
+
+        const ctx = new RequestContext<ForkContext>();
+        ctx.set("bucket", fork.bucket);
+        ctx.set("accessKeyId", fork.credentials.accessKeyId);
+        ctx.set("secretAccessKey", fork.credentials.secretAccessKey);
+        ctx.set("checkpointId", baseline.snapshotId);
+
+        await agent.generate(
+          `Evaluate the dataset in ${fork.bucket} and score it for your assigned model.`,
+          {
+            requestContext: ctx,
+          },
+        );
+      }),
+    );
+  } finally {
+    // 4. Tear down every fork bucket and revoke its credentials in one call.
+    await teardownForks(forkSet);
+  }
+}
+```
+
+The baseline checkpoint persists on `training-data` after teardown — snapshot
+metadata is free. Restore it with
+`restore("training-data", baseline.snapshotId, { forkName: "debug-..." })` if a
+run produced a surprising result.
+
+## Step 8: Trigger the next stage with coordination
+
+_Optional. Fires a webhook when an agent writes to a watched prefix, so a
+downstream pipeline runs without polling._
+
+```typescript
+import { setupCoordination } from "@tigrisdata/agent-kit";
+
+await setupCoordination("eval-reports", {
+  webhookUrl: "https://orchestrator.example.com/eval-complete",
+  filter: 'WHERE `key` REGEXP "^reports/"',
+  auth: { token: process.env.WEBHOOK_SECRET },
+});
+```
+
+Point the webhook at a Mastra server route (`registerApiRoute` from
+`@mastra/core/server`) and the next stage runs the moment a report lands in
+`reports/`.
+
+:::warning At-least-once delivery
+
+Webhook delivery is at-least-once with retries on `5xx`. Make the endpoint
+idempotent or deduplicate on the object key.
+
+:::
+
+## Production considerations
+
+_What changes when you take this past a prototype: where Mastra's Memory ends
+and Agent Kit begins, credential scoping, and partial-failure handling._
+
+- **Memory vs. Agent Kit.** Mastra's `Memory` handles conversation state —
+  threads, messages, working memory, semantic recall — backed by adapters like
+  `@mastra/libsql` or `@mastra/postgres`. Agent Kit handles artifacts — files an
+  agent produces, datasets it forks, snapshots it pins. They don't replace each
+  other.
+
+- **Credential scoping.** Pass `credentials: { role: "Editor" }` (or
+  `"ReadOnly"`) to every Agent Kit call. A leaked key then scopes the blast
+  radius to one fork or one workspace, not the whole Tigris account. Because the
+  agent only ever sees scoped credentials via `RequestContext`, those keys never
+  end up in the prompt or chat transcript.
+
+- **Teardown is best-effort.** `teardownForks`, `teardownWorkspace`, and
+  `teardownCoordination` continue through individual failures and report every
+  error in a single aggregated result. Inspect the result instead of assuming
+  success. Always pair the teardown with a TTL on the workspace as a backstop in
+  case the orchestrator process dies before `finally` runs.
+
+- **Concurrency.** `createForks` provisions N buckets and N keys in one call.
+  For very large N (hundreds), batch across calls and watch project-level bucket
+  quotas.
+
+- **When to wrap Agent Kit as a tool instead.** The orchestrator pattern is the
+  right default because provisioning is deterministic — every run needs storage
+  at the start. Wrap an Agent Kit primitive as a Mastra tool only when the agent
+  genuinely needs to make a runtime decision: "I might fork this dataset _if_ I
+  discover it's too large to read in place." For the common case, keep
+  provisioning out of the model.
+
+## Troubleshooting
+
+_Symptom-to-fix for common errors._
+
+| Issue                                                       | Fix                                                                                                                                                  |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `createForks` reports "snapshots not enabled"               | Enable on the source bucket: `tigris buckets create <name> --enable-snapshots`, or pass `enableSnapshots: true` when creating it.                    |
+| Workspace returned but `workspace.credentials` is undefined | IAM mint failed silently. Tear down (`teardownWorkspace`) and retry, or mint a key directly with `@tigrisdata/iam`.                                  |
+| Tool can't read Tigris credentials                          | Add `import "dotenv/config";` at the top of the entry file. Mastra does not auto-load `.env`.                                                        |
+| Agent's `append-note` tool throws "missing credentials"     | The orchestrator didn't set `accessKeyId` / `secretAccessKey` on `RequestContext`, or `agent.generate` was called without `{ requestContext: ctx }`. |
+| Webhook not firing                                          | Confirm endpoint returns `2xx` and the `filter` regex matches the keys being written. Delivery is at-least-once; expect retries.                     |
+| `createForks` returns fewer forks than requested            | Naming collision or bucket quota stopped creation partway. Tear down the partial result, vary `prefix`, or reduce `count`.                           |
+
+## References
+
+_External docs and source for both projects._
+
+- [Agent Kit documentation](/docs/ai/agent-kit/)
+- [Mastra documentation](https://mastra.ai/docs)
+- [Mastra GitHub](https://github.com/mastra-ai/mastra)
+- [`@tigrisdata/agent-kit` on npm](https://www.npmjs.com/package/@tigrisdata/agent-kit)
+- [Snapshots and forks on Tigris](/docs/buckets/snapshots-and-forks/)

@@ -992,6 +992,11 @@ const sidebars = {
       ],
     },
     {
+      type: "doc",
+      label: "Changelog",
+      id: "changelog/index",
+    },
+    {
       type: "link",
       label: "Pricing",
       href: "https://www.tigrisdata.com/pricing/",
@@ -1011,11 +1016,6 @@ const sidebars = {
         "legal/data-processing",
         "legal/sla",
       ],
-    },
-    {
-      type: "doc",
-      label: "Changelog",
-      id: "changelog/index",
     },
   ],
 };

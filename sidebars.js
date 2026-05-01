@@ -713,11 +713,6 @@ const sidebars = {
           ],
         },
         "training/tigrisfs",
-        {
-          type: "doc",
-          label: "Changelog",
-          id: "changelog/index",
-        },
       ],
     },
     {
@@ -995,6 +990,11 @@ const sidebars = {
           id: "ai/agent-kit/index",
         },
       ],
+    },
+    {
+      type: "doc",
+      label: "Changelog",
+      id: "changelog/index",
     },
     {
       type: "link",

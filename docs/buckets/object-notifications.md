@@ -22,8 +22,8 @@ Object notifications are delivered via a webhook, and obey the following rules:
 - Tigris will make an HTTP POST request to the webhook URL with the event
   payload.
 - A `200` status code acknowledges the request was successful.
-- If a `200` status is not received, Tigris will retry for a maximum of 3 times
-  before giving up and marking the notifications as sent.
+- Delivery is at-least-once with retries on 5xx responses, so your endpoint
+  must be idempotent.
 - If a webhook request takes longer than 10 seconds the request will be aborted
   and retried.
 

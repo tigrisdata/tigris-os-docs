@@ -2,17 +2,23 @@
 
 As your data storage needs evolve, you may want to optimize costs by moving less
 frequently accessed objects to more cost-effective storage tiers. Tigris
-provides an object lifecycle rule to automatically move objects between storage
+provides object lifecycle rules to automatically move objects between storage
 tiers. For example, you might want to move older log files or archived data to a
 lower-cost storage tier while keeping frequently accessed data in the standard
 tier. This helps to maintain optimal performance for active data while reducing
 storage costs for infrequently accessed objects.
 
-## Configuring an Object Lifecycle Rule
+## Configuring Object Lifecycle Rules
 
 With Object Lifecycle rules, you can configure when and how your objects
-transition between storage tiers. This is done at the bucket level and applies
-to all objects within that bucket.
+transition between storage tiers. Rules are configured at the bucket level and
+each rule can target the entire bucket or a subset of objects scoped by a key
+prefix.
+
+A bucket can have up to **10 lifecycle rules**, which can be a mix of transition
+and expiration rules scoped to different prefixes. See
+[Object Expiration](/docs/buckets/objects-expiration/) for the expiration form
+of these rules.
 
 The transition timing can be set in two ways:
 
@@ -41,7 +47,7 @@ these three storage tiers:
    quickly when requested, such as monthly reports, quarterly analytics, or
    seasonal data that might be needed on short notice.
 
-### Specifying an Object Lifecycle rule via the Tigris Dashboard
+### Specifying Object Lifecycle rules via the Tigris Dashboard
 
 You can specify lifecycle transition rules for your bucket using the
 [Tigris Dashboard](https://console.storage.dev/).
@@ -53,16 +59,15 @@ a bucket:
   <img src="https://cdn.loom.com/sessions/thumbnails/cb502607f86c443b835575681922f01c-7a7b4d8fdc70c5ed-full-play.gif"/>
 </a>
 
-### Specifying an Object Lifecycle rule via the AWS CLI
+### Specifying Object Lifecycle rules via the AWS CLI
 
-You can configure an Object Lifecycle rule for objects in the bucket using AWS
-the CLI. Below are some examples of how you can configure the lifecycle
-transition rules.
+You can configure Object Lifecycle rules for objects in the bucket using the AWS
+CLI. Below are some examples.
 
 #### Transition objects after 30 days
 
-Here's an example of an Object Lifecycle configuration that transitions objects
-after 30 days.
+Here's an example of an Object Lifecycle configuration that transitions all
+objects in the bucket after 30 days.
 
 Create a JSON file named `lifecycle.json` with the following content:
 
@@ -70,7 +75,9 @@ Create a JSON file named `lifecycle.json` with the following content:
 {
   "Rules": [
     {
+      "ID": "transition-ia",
       "Status": "Enabled",
+      "Filter": {},
       "Transitions": [
         {
           "Days": 30,
@@ -100,7 +107,9 @@ Create a JSON file named `lifecycle.json` with the following content:
 {
   "Rules": [
     {
+      "ID": "archive-eoy",
       "Status": "Enabled",
+      "Filter": {},
       "Transitions": [
         {
           "Date": "2025-12-31T00:00:00Z",
@@ -119,10 +128,53 @@ bucket:
 aws s3api put-bucket-lifecycle-configuration --bucket my-bucket --lifecycle-configuration file://lifecycle.json
 ```
 
+#### Multiple rules with prefix filters
+
+Each rule can be scoped to a key prefix using `Filter.Prefix`. The example below
+moves objects under `logs/` to `STANDARD_IA` after 30 days, archives objects
+under `archive/` to `GLACIER` after 90 days, and leaves the rest of the bucket
+on `STANDARD`.
+
+```json
+{
+  "Rules": [
+    {
+      "ID": "logs-to-ia",
+      "Status": "Enabled",
+      "Filter": { "Prefix": "logs/" },
+      "Transitions": [
+        {
+          "Days": 30,
+          "StorageClass": "STANDARD_IA"
+        }
+      ]
+    },
+    {
+      "ID": "archive-to-glacier",
+      "Status": "Enabled",
+      "Filter": { "Prefix": "archive/" },
+      "Transitions": [
+        {
+          "Days": 90,
+          "StorageClass": "GLACIER"
+        }
+      ]
+    }
+  ]
+}
+```
+
 ## Things to note
 
+- A bucket can have at most 10 lifecycle rules. The 10-rule limit is shared
+  across transition and expiration rules.
+- Each rule may include an `ID` (up to 36 characters). If you omit `ID`, Tigris
+  generates one.
+- Use `Filter.Prefix` on a rule to scope it to a subset of objects. Omit
+  `Filter` (or pass an empty object `{}`) to apply the rule to every object in
+  the bucket.
+- Each rule can include at most one transition.
 - Tigris always rounds the transition time to UTC midnight for the scheduled
   date.
-- Only one Object Lifecycle rule can be applied to a bucket at a time.
 - When using the AWS CLI to apply an Object Lifecycle configuration, the JSON
   can only contain the fields shown in the examples above.

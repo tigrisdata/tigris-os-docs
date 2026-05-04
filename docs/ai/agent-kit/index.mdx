@@ -377,8 +377,8 @@ if (error) throw error;
 ```
 
 Once set up, every matching object event in the bucket posts a JSON payload to
-the webhook URL. Delivery is at-least-once and any non-2xx response is retried
-— your endpoint must be idempotent. See
+the webhook URL. Delivery is at-least-once and any non-2xx response is retried —
+your endpoint must be idempotent. See
 [object notifications](/docs/buckets/object-notifications) for the full payload
 schema and filter syntax.
 

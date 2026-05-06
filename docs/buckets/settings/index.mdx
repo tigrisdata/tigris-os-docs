@@ -11,7 +11,8 @@ Here's an overview of the settings you can configure:
 - Storage Tier: Set the storage tier for a bucket.
 - Cache Control: Set the default _Cache-Control_ header for objects in the
   bucket.
-- Data Migration: Migrate data from one bucket to another.
+- Data Migration: Migrate data from one bucket to another (also known as shadow
+  bucket migration).
 - TTL Configuration: Set the default time-to-live (TTL) for objects in the
   bucket.
 - Object Lifecycle: Set an Object Lifecycle rule for objects in the bucket.
@@ -73,10 +74,11 @@ public objects, but you can set an implicit default here.
 
 ![Shadow bucket migration](./shadow-bucket-migration.webp)
 
-You can migrate data from one bucket to another using the
-[data migration](/docs/migration/) feature. This will automatically copy data
-that isn't in Tigris over to Tigris when it's needed. Tigris implements the
-following migration strategy:
+You can migrate data from another S3-compatible bucket to Tigris using the
+[data migration](/docs/migration/) feature, also known as shadow bucket
+migration. The source bucket you migrate from is called a shadow bucket. Tigris
+copies data lazily as it's accessed, so there's no upfront transfer. Tigris
+implements the following migration strategy:
 
 1. When an object is requested, it is served from your Tigris bucket if it is
    found.

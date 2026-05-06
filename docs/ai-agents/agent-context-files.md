@@ -129,5 +129,7 @@ in this order:
 2. **Project context** — the agent reads `TIGRIS.md` in the project root for
    project-specific configuration
 3. **Global context** — the agent reads `SKILL.md` for general Tigris knowledge
-4. **Documentation** — the agent fetches [llms.txt](/docs/llms.txt) or
-   [llms-agents.txt](/docs/llms-agents.txt) for detailed reference
+4. **Documentation** — the agent fetches
+   [llms.txt](https://www.tigrisdata.com/docs/llms.txt) or
+   [llms-agents.txt](https://www.tigrisdata.com/docs/llms-agents.txt) for
+   detailed reference

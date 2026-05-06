@@ -11,7 +11,10 @@ while using DuckDB.
 Tigris is also compatible with [DuckLake](https://github.com/duckdb/ducklake), a
 lakehouse format that simplifies lakehouses by using a standard SQL database for
 all metadata, instead of complex file-based systems, while still storing data in
-open formats like Parquet, in object storage.
+open formats like Parquet, in object storage. For a walkthrough, see
+[Get your data ducks in a row with DuckLake](https://www.tigrisdata.com/blog/ducklake/)
+and
+[Data Time Travel with DuckLake and Tigris](https://www.tigrisdata.com/blog/ducklake-time-travel/).
 
 ## Prerequisites
 
@@ -23,7 +26,7 @@ Make sure you have the following information from your Tigris account:
 - Tigris **Bucket Name**
 
 If you don't yet have access credentials, follow the steps in the
-[Access Key guide](https://www.tigrisdata.com/docs/iam/create-access-key/) to
+[Access Key guide](https://www.tigrisdata.com/docs/iam/manage-access-key/) to
 create one.
 
 ## Configure DuckDB to use Tigris
@@ -109,3 +112,15 @@ FROM
 WHERE
   location LIKE 'Seattle%';
 ```
+
+## Further reading
+
+- [Get your data ducks in a row with DuckLake](https://www.tigrisdata.com/blog/ducklake/)
+  — a guided tour of running a DuckLake lakehouse on Tigris.
+- [Data Time Travel with DuckLake and Tigris](https://www.tigrisdata.com/blog/ducklake-time-travel/)
+  — using DuckLake snapshots to roll back changes and fork timelines.
+- [Fending off scrapers with Tigris and DuckDB](https://www.tigrisdata.com/blog/anubis/)
+  — a real-world example of analyzing honeypot logs in Tigris with DuckDB.
+- [Fifty agents for the price of one bucket](https://www.tigrisdata.com/blog/fifty-agents-one-bucket/)
+  — using DuckDB alongside LanceDB for agent memory and SQL analytics over a
+  single Lance file.

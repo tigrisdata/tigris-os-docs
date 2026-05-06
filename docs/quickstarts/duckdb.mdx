@@ -8,10 +8,12 @@ queries. Tigris dynamically distributes your data based on access patterns and
 handles lots of small files efficiently, enabling additional performance gains
 while using DuckDB.
 
-Tigris is also compatible with [DuckLake](https://github.com/duckdb/ducklake), a
-lakehouse format that simplifies lakehouses by using a standard SQL database for
-all metadata, instead of complex file-based systems, while still storing data in
-open formats like Parquet, in object storage.
+If you want a full SQL lakehouse on top of Tigris — with tables, transactions,
+snapshots, and time travel rather than ad-hoc queries against files in a bucket
+— see the [DuckLake guide](./ducklake.mdx).
+[DuckLake](https://github.com/duckdb/ducklake) stores data as Parquet files in
+your bucket and metadata in a separate SQL database, so you get an open
+lakehouse without the file-based-catalog complexity of Iceberg or Delta.
 
 ## Prerequisites
 

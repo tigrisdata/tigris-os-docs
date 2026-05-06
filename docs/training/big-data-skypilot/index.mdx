@@ -174,7 +174,7 @@ tokenizer.save_pretrained(f"{home_dir}/tigris/models/{model_name}")
 Note that the model weights are saved to Tigris using the `{home_dir}/tigris`
 folder. Tigris isn't normally a Linux filesystem, but this example uses
 [geesefs](https://github.com/yandex-cloud/geesefs) to
-[mount Tigris](/docs/training/geesefs-linux/) as a
+[mount Tigris](/docs/training/tigrisfs/) as a
 [FUSE](https://www.kernel.org/doc/html/latest/filesystems/fuse.html) (Filesystem
 in Userspace) filesystem. This allows you to use normal filesystem calls to
 interact with Tigris, which is useful for AI workloads that assume data is

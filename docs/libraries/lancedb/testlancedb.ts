@@ -32,7 +32,7 @@ const fnameToURL = (fname) => {
   if (ref.endsWith("/index")) {
     ref = ref.slice(0, -"index".length);
   }
-  return `https://tigrisdata.com/docs/${ref}`;
+  return `/docs/${ref}/`;
 };
 
 (async () => {

@@ -23,7 +23,7 @@ to AWS S3:
 - Due to Tigris being a globally accessible service with global replication, the
   region segment of the `X-Amz-Credential` is designated as `auto`.
 - Tigris supports only `public-read` and `private` ACLs at Object. Read more
-  about it [here](https://www.tigrisdata.com/docs/objects/acl/).
+  about it [here](/docs/objects/acl/).
 - For signature verification, Tigris only supports AWS signature version 4.
 
 ## Example

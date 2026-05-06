@@ -1012,7 +1012,7 @@ When asked about various services or tools, use these resources to help you:
         />
         <p>
           You can also do this from the{" "}
-          <a href="https://www.tigrisdata.com/docs/sdks/tigris/">
+          <a href="/docs/sdks/tigris/">
             Tigris SDK for JavaScript and TypeScript
           </a>
           :
@@ -1452,13 +1452,10 @@ const file = await get("object.txt", "string");`}</CodeBlock>
               <>
                 <p>
                   Multipart uploads now work with{" "}
-                  <a href="https://www.tigrisdata.com/docs/objects/presigned/">
-                    presigned URLs
-                  </a>
-                  , including for buckets with custom domains set. This allows
-                  you to distribute presigned URLs to clients and have them do
-                  the upload so it will always upload to the closest Tigris
-                  region.
+                  <a href="/docs/objects/presigned/">presigned URLs</a>,
+                  including for buckets with custom domains set. This allows you
+                  to distribute presigned URLs to clients and have them do the
+                  upload so it will always upload to the closest Tigris region.
                 </p>
               </>
             ),
@@ -1470,7 +1467,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
               <>
                 Accidents happen, but some accidents are easier to undo than
                 others. Tigris now offers{" "}
-                <a href="https://www.tigrisdata.com/docs/buckets/settings/#delete-protection">
+                <a href="/docs/buckets/settings/#delete-protection">
                   deletion protection
                 </a>{" "}
                 to prevent any users from deleting any objects in a bucket.
@@ -1631,9 +1628,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
               <>
                 <p>
                   {" "}
-                  <a href="https://www.tigrisdata.com/docs/objects/presigned/">
-                    Presigned URLs
-                  </a>
+                  <a href="/docs/objects/presigned/">Presigned URLs</a>
                   can now be set to a maximum of 90 days expiration.
                 </p>
               </>
@@ -1816,7 +1811,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
               <>
                 <p>
                   Buckets can be created in{" "}
-                  <a href="https://www.tigrisdata.com/docs/objects/consistency/">
+                  <a href="/docs/objects/consistency/">
                     strict consistency mode
                   </a>
                   . This serializes Tigris operations to a single region, which
@@ -1838,12 +1833,10 @@ const file = await get("object.txt", "string");`}</CodeBlock>
       <>
         <p>
           Our{" "}
-          <a href="https://www.tigrisdata.com/docs/partner-integrations/">
-            Partner Integration Program
-          </a>{" "}
+          <a href="/docs/partner-integrations/">Partner Integration Program</a>{" "}
           lets you offer Tigris as a storage service to your customers.
           We&apos;ve published details about the API in the{" "}
-          <a href="https://www.tigrisdata.com/docs/partner-integrations/api/">
+          <a href="/docs/partner-integrations/api/">
             Partner Integrations API reference guide
           </a>
           . This lets you handle billing, invoice management, and usage tracking

@@ -100,8 +100,8 @@ To enable data migration from any S3-compatible bucket:
 :::note
 
 Though Tigris supports a
-[single global endpoint](https://www.tigrisdata.com/docs/overview/#features-of-tigris),
-other storage services may require you to specify a regional endpoint. See the
+[single global endpoint](/docs/overview/#features-of-tigris), other storage
+services may require you to specify a regional endpoint. See the
 provider-specific guides above for the correct endpoint format.
 
 <!-- prettier-ignore -->

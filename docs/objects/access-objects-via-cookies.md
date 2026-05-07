@@ -67,10 +67,8 @@ Let's proceed with registering the public key with Tigris.
 
 Note: Replace the `EncodedKey` field with your own public key.
 
-Using your
-[configured AWS CLI](https://www.tigrisdata.com/docs/sdks/s3/aws-cli/#configuring-aws-cli)
-to interact with Tigris, execute the following command to register the public
-key:
+Using your [configured AWS CLI](/docs/sdks/s3/aws-cli/#configuring-aws-cli) to
+interact with Tigris, execute the following command to register the public key:
 
 ```shell
 aws cloudfront create-public-key --public-key-config file:///path/to/key.json
@@ -126,7 +124,7 @@ Set up custom domain to access this bucket.
 flyctl storage update  images.example.com  --custom-domain images.example.com
 ```
 
-See more [here](https://www.tigrisdata.com/docs/buckets/custom-domain/).
+See more [here](/docs/buckets/custom-domain/).
 
 ## Set up CORS
 
@@ -153,7 +151,7 @@ Then, register this CORS configuration with the bucket:
 aws s3api put-bucket-cors --bucket images.example.com --cors-configuration file:///path/to/cors.json
 ```
 
-Learn more [here](https://www.tigrisdata.com/docs/buckets/cors/).
+Learn more [here](/docs/buckets/cors/).
 
 ## Example code to issue signed cookies
 

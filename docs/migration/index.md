@@ -111,6 +111,42 @@ If the storage service does not require a region, set the region to `auto` in
 the `Enable Data Migration` settings. For example, GCS and Cloudflare R2 do not
 require a region to be set, and therefore use `auto`.
 
+## Enable Data Migration via the CLI
+
+If you prefer the command line, the [Tigris CLI](/docs/cli) configures the
+shadow bucket with
+[`tigris buckets set-migration`](/docs/cli/buckets/set-migration):
+
+```bash
+tigris buckets set-migration my-bucket \
+  --bucket source-bucket \
+  --endpoint https://<source-endpoint> \
+  --region <source-region> \
+  --access-key <key> \
+  --secret-key <secret>
+```
+
+Add `--write-through` to enable write-through mode, or `--disable` to clear the
+migration configuration.
+
+## Actively migrate all objects
+
+Lazy migration only copies objects when they're accessed. To migrate every
+remaining object server-side without reading each one through your application,
+run [`tigris buckets migrate`](/docs/cli/buckets/migrate):
+
+```bash
+# Migrate every unmigrated object in the bucket
+tigris buckets migrate my-bucket
+
+# Migrate only objects under a key prefix
+tigris buckets migrate my-bucket/images/
+```
+
+The command runs the migration server-side and reports progress as it goes, so
+you can fully drain the source bucket before cutting over without reading every
+object through your application.
+
 ## Copying object ACLs
 
 By default, migrated objects inherit the access control settings of the bucket

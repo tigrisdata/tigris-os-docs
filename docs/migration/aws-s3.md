@@ -87,6 +87,30 @@ Before starting, make sure you have:
    - **Secret Access Key**: Your AWS secret key from Step 1
    - **Bucket**: The name of your S3 source bucket
 
+### Or configure migration via the CLI
+
+The [Tigris CLI](/docs/cli) configures the same shadow bucket with
+[`tigris buckets set-migration`](/docs/cli/buckets/set-migration):
+
+```bash
+tigris buckets set-migration my-bucket \
+  --bucket source-bucket \
+  --endpoint https://s3.us-east-1.amazonaws.com \
+  --region us-east-1 \
+  --access-key AKIA... \
+  --secret-key wJal...
+```
+
+Add `--write-through` for write-through mode.
+
+To actively migrate every remaining object instead of waiting for them to be
+requested, run [`tigris buckets migrate`](/docs/cli/buckets/migrate). The
+command runs in the foreground and reports progress as it goes:
+
+```bash
+tigris buckets migrate my-bucket
+```
+
 ### Step 3: Update your application
 
 Point your application to Tigris by updating the endpoint and credentials in

@@ -141,6 +141,30 @@ configuration.
    - **Secret Access Key**: Your provider secret key
    - **Bucket**: The name of your source bucket
 
+## Or configure migration via the CLI
+
+The [Tigris CLI](/docs/cli) configures the same shadow bucket with
+[`tigris buckets set-migration`](/docs/cli/buckets/set-migration):
+
+```bash
+tigris buckets set-migration my-bucket \
+  --bucket source-bucket \
+  --endpoint <provider-endpoint> \
+  --region <provider-region> \
+  --access-key <key> \
+  --secret-key <secret>
+```
+
+Add `--write-through` for write-through mode.
+
+To actively migrate every remaining object instead of waiting for them to be
+requested, run [`tigris buckets migrate`](/docs/cli/buckets/migrate). The
+command runs in the foreground and reports progress as it goes:
+
+```bash
+tigris buckets migrate my-bucket
+```
+
 ## Update your application
 
 Point your application to Tigris by updating the endpoint and credentials in

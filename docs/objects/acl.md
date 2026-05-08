@@ -31,7 +31,7 @@ bucket settings.
 </a>
 
 For the object ACLs migration rules see the
-[Copying objects ACLs](/docs/migration/index.md#copying-objects-acls)
+[Copying objects ACLs](/docs/migration/#copying-object-acls)
 
 ## Applying ACLs to objects
 

@@ -15,6 +15,9 @@ keywords:
   ]
 ---
 
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
 # Migrate from AWS S3 to Tigris
 
 You can migrate from AWS S3 to Tigris with zero downtime using Tigris's shadow
@@ -74,6 +77,9 @@ Before starting, make sure you have:
 
 ### Step 2: Configure the shadow bucket
 
+<Tabs>
+<TabItem value="dashboard" label="Dashboard" default>
+
 1. Go to the [Tigris Dashboard](https://console.storage.dev)
 2. Click **Buckets** in the left menu
 3. Select the bucket you want to migrate data into
@@ -87,9 +93,13 @@ Before starting, make sure you have:
    - **Secret Access Key**: Your AWS secret key from Step 1
    - **Bucket**: The name of your S3 source bucket
 
-### Or configure migration via the CLI
+</TabItem>
+<TabItem value="cli" label="CLI">
 
-The [Tigris CLI](/docs/cli) configures the same shadow bucket with
+The CLI flow is two commands: configure the shadow source, then optionally drain
+it.
+
+**1. Configure the shadow bucket** with
 [`tigris buckets set-migration`](/docs/cli/buckets/set-migration):
 
 ```bash
@@ -101,15 +111,21 @@ tigris buckets set-migration my-bucket \
   --secret-key wJal...
 ```
 
-Add `--write-through` for write-through mode.
+Add `--write-through` for write-through mode, or `--disable` to clear the
+migration configuration.
 
-To actively migrate every remaining object instead of waiting for them to be
-requested, run [`tigris buckets migrate`](/docs/cli/buckets/migrate). The
-command runs in the foreground and reports progress as it goes:
+**2. Actively migrate (optional).** Lazy migration only copies objects when
+they're requested. To migrate every remaining object server-side, run
+[`tigris buckets migrate`](/docs/cli/buckets/migrate):
 
 ```bash
 tigris buckets migrate my-bucket
 ```
+
+The command runs in the foreground and reports progress as it goes.
+
+</TabItem>
+</Tabs>
 
 ### Step 3: Update your application
 

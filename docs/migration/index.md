@@ -113,9 +113,8 @@ require a region to be set, and therefore use `auto`.
 
 ## Enable Data Migration via the CLI
 
-If you prefer the command line, the [Tigris CLI](/docs/cli) configures the
-shadow bucket with
-[`tigris buckets set-migration`](/docs/cli/buckets/set-migration):
+If you prefer the command line, [Tigris CLI](/docs/cli) configures the shadow
+bucket with [`tigris buckets set-migration`](/docs/cli/buckets/set-migration):
 
 ```bash
 tigris buckets set-migration my-bucket \

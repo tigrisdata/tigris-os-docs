@@ -1,0 +1,126 @@
+.mcp-install-box {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  margin: 1.5rem 0 2rem;
+  border-radius: 14px;
+  border: 1px solid rgba(98, 254, 181, 0.28);
+  background:
+    radial-gradient(
+      120% 120% at 0% 0%,
+      rgba(98, 254, 181, 0.1) 0%,
+      transparent 60%
+    ),
+    var(--docs-color-background-100);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+}
+
+[data-theme="light"] .mcp-install-box {
+  border-color: rgba(56, 172, 140, 0.35);
+  background:
+    radial-gradient(
+      120% 120% at 0% 0%,
+      rgba(56, 172, 140, 0.08) 0%,
+      transparent 60%
+    ),
+    var(--docs-color-background-100);
+}
+
+.mcp-install-box-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.mcp-install-box-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ifm-color-primary);
+}
+
+.mcp-install-box-title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--docs-color-text);
+}
+
+.mcp-install-box-subtitle {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--docs-color-text-100);
+  margin: 0;
+  max-width: 60ch;
+}
+
+.mcp-install-box-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.mcp-install-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--docs-color-text);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.mcp-install-btn:hover,
+.mcp-install-btn:focus-visible {
+  background: rgba(98, 254, 181, 0.12);
+  border-color: rgba(98, 254, 181, 0.4);
+  color: var(--docs-color-text);
+  text-decoration: none;
+  transform: translateY(-1px);
+  outline: none;
+}
+
+[data-theme="light"] .mcp-install-btn {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: var(--docs-color-border);
+}
+
+[data-theme="light"] .mcp-install-btn:hover,
+[data-theme="light"] .mcp-install-btn:focus-visible {
+  background: rgba(56, 172, 140, 0.08);
+  border-color: rgba(56, 172, 140, 0.45);
+}
+
+.mcp-install-box-link {
+  align-self: flex-start;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+  padding-top: 0.25rem;
+}
+
+.mcp-install-box-link:hover,
+.mcp-install-box-link:focus-visible {
+  text-decoration: underline;
+  outline: none;
+}
+
+@media screen and (max-width: 640px) {
+  .mcp-install-box-buttons {
+    grid-template-columns: 1fr;
+  }
+}

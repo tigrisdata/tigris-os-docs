@@ -143,7 +143,7 @@ export default function ToolCards() {
           description="Manage buckets, keys, and global configurations from your terminal. Built for speed and scriptability in CI/CD pipelines."
           to="/cli/"
         >
-          <div className="tool-card-code">
+          <div className="tool-card-code tool-card-cli-code">
             <div className="tool-card-code-header">
               <div className="tool-card-dots">
                 <span />
@@ -204,81 +204,44 @@ export default function ToolCards() {
           description="Empower your AI assistants. Expose your Tigris buckets and objects to LLMs via the Model Context Protocol for seamless context integration."
           to="/quickstarts/mcp"
         >
-          <div className="tool-card-mcp-buttons">
-            <a
-              href="cursor://anysphere.cursor-deeplink/mcp/install?name=tigris&config=eyJ1cmwiOiJodHRwczovL21jcC5zdG9yYWdlLmRldi9tY3AifQ%3D%3D"
-              className="tool-card-mcp-btn"
+          <div className="tool-card-ai-buttons">
+            <Link
+              to="/skills"
+              className="tool-card-mcp-btn tool-card-ai-btn-featured"
               onClick={(e) => e.stopPropagation()}
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 256 256"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+              Agent Skills
+            </Link>
+            <div className="tool-card-ai-grid">
+              <Link
+                to="/quickstarts/mcp"
+                className="tool-card-mcp-btn"
+                onClick={(e) => e.stopPropagation()}
               >
-                <path
-                  d="M209.74 45.16L164.84 90.06L75.44 22.32L47.74 36.52L114.42 114.52L24 147.8L24 176.2L114.08 155.2L47.74 219.48L75.44 233.68L187.64 140.16L209.74 118.06L232 95.8L232 67.34L209.74 45.16Z"
-                  fill="currentColor"
-                />
-              </svg>
-              Add to Cursor
-            </a>
-            <a
-              href="vscode:mcp/install?%7B%22name%22%3A%22tigris%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.storage.dev%2Fmcp%22%7D"
-              className="tool-card-mcp-btn"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 100 100"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+                MCP Server
+              </Link>
+              <Link
+                to="/ai/agent-plugins"
+                className="tool-card-mcp-btn"
+                onClick={(e) => e.stopPropagation()}
               >
-                <path
-                  d="M95.4 16.4L71.9 5L29.7 42.1L12.3 28.3L4.6 31.9V68.1L12.3 71.7L29.7 57.9L71.9 95L95.4 83.6V16.4ZM29.7 62.6L12.3 50V50L29.7 37.4V62.6ZM71.9 77.4L42.1 50L71.9 22.6V77.4Z"
-                  fill="currentColor"
-                />
-              </svg>
-              Add to VS Code
-            </a>
-            <a
-              href="/docs/mcp/remote/#claude-desktop"
-              className="tool-card-mcp-btn"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+                Agent Plugins
+              </Link>
+              <Link
+                to="/ai/agent-shell/"
+                className="tool-card-mcp-btn"
+                onClick={(e) => e.stopPropagation()}
               >
-                <path
-                  d="M15.3 3.8C14.2 3.3 13.1 3 12 3C7 3 3 7 3 12s4 9 9 9c1.1 0 2.2-.3 3.3-.8"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-                <circle cx="9" cy="10" r="1.2" fill="currentColor" />
-                <circle cx="13.5" cy="10" r="1.2" fill="currentColor" />
-                <path
-                  d="M18.5 7.5L19.5 4M20 9L23 8M20.5 12L23 13"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                />
-              </svg>
-              Add to Claude
-            </a>
-            <a
-              href="/docs/mcp/remote/"
-              className="tool-card-mcp-link"
-              onClick={(e) => e.stopPropagation()}
-            >
-              See all integrations &rarr;
-            </a>
+                Agent Shell
+              </Link>
+              <Link
+                to="/ai/agent-kit/"
+                className="tool-card-mcp-btn"
+                onClick={(e) => e.stopPropagation()}
+              >
+                Agent Kit
+              </Link>
+            </div>
           </div>
         </ToolCard>
 

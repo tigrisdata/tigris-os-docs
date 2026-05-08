@@ -444,6 +444,11 @@ const sidebars = {
                 },
                 {
                   type: "doc",
+                  label: "Mastra",
+                  id: "agents/agent-mastra",
+                },
+                {
+                  type: "doc",
                   label: "Weka",
                   id: "guides/weka",
                 },

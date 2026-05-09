@@ -14,6 +14,9 @@ keywords:
   ]
 ---
 
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
 # Migrate from Any S3-Compatible Storage to Tigris
 
 Tigris can migrate data from any storage provider with an S3-compatible API.
@@ -129,6 +132,9 @@ configuration.
 
 ## Configure the shadow bucket
 
+<Tabs>
+<TabItem value="dashboard" label="Dashboard" default>
+
 1. Go to the [Tigris Dashboard](https://console.storage.dev)
 2. Click **Buckets** in the left menu
 3. Select the bucket you want to migrate data into
@@ -140,6 +146,40 @@ configuration.
    - **Access Key ID**: Your provider access key
    - **Secret Access Key**: Your provider secret key
    - **Bucket**: The name of your source bucket
+
+</TabItem>
+<TabItem value="cli" label="CLI">
+
+The CLI flow is two commands: configure the shadow source, then optionally drain
+it.
+
+**1. Configure the shadow bucket** with
+[`tigris buckets set-migration`](/docs/cli/buckets/set-migration):
+
+```bash
+tigris buckets set-migration my-bucket \
+  --bucket source-bucket \
+  --endpoint <provider-endpoint> \
+  --region <provider-region> \
+  --access-key <key> \
+  --secret-key <secret>
+```
+
+Add `--write-through` for write-through mode, or `--disable` to clear the
+migration configuration.
+
+**2. Actively migrate (optional).** Lazy migration only copies objects when
+they're requested. To migrate every remaining object server-side, run
+[`tigris buckets migrate`](/docs/cli/buckets/migrate):
+
+```bash
+tigris buckets migrate my-bucket
+```
+
+The command runs in the foreground and reports progress as it goes.
+
+</TabItem>
+</Tabs>
 
 ## Update your application
 

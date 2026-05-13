@@ -141,7 +141,7 @@ LOAD motherduck;
 
 ATTACH 'md:';
 
-CREATE DATABASE my_lake TYPE DUCKLAKE;
+CREATE DATABASE my_lake (TYPE DUCKLAKE);
 ```
 
 Then attach the lake locally with the data path pointing at your Tigris bucket:

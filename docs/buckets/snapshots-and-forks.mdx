@@ -457,19 +457,25 @@ print(f"Snapshot version: {fork_info['fork_source_snapshot']}")
 </TabItem>
 </Tabs>
 
-## Listing and retrieving objects from a snapshot
+## Retrieving objects in a snapshot
 
-Objects can be listed in a snapshot with the same ListObjectsV2 API call, with
-an additional header: `X-Tigris-Snapshot-Version: SNAPSHOT_VERSION`. Similarly,
-specific versions of an object in a particular snapshot can be retrieved with
-the same GetObject API call and header. The same approach also applies to
-HeadObject requests.
+Existing APIs can be used to retrieve objects in a snapshot when an additional
+header is set:
+
+- To list objects use `ListObjectsV2`
+- To get objects use `GetObject`
+- To head objects use `HeadObject`
+- To copy objects use `CopyObject`
+
+Additional header: `X-Tigris-Snapshot-Version: SNAPSHOT_VERSION` needs to be set
+when making these requests to retrieve objects from a specific snapshot.
 
 :::note
 
 Any UNIX nanosecond-precision timestamp (e.g., 1765889000501544464) can be used
-as snapshot parameter value for ListObjectsV2, GetObject and HeadObject API
-calls, even if there is no snapshot created at that particular time.
+as a snapshot parameter value for `ListObjectsV2`, `GetObject`, `HeadObject` and
+`CopyObject` API calls, even if there is no snapshot created at that particular
+time.
 
 :::
 

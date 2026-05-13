@@ -124,9 +124,45 @@ ATTACH 'ducklake:postgres:dbname=lake host=db.example.com user=lake password=...
 USE my_lake;
 ```
 
+### Option 3: MotherDuck catalog (fully managed)
+
+Use this when you don't want to run a catalog database at all. MotherDuck hosts
+the catalog and handles auth; Tigris still holds the data. This is the
+lowest-ops path to a shared lakehouse — no Postgres to provision, no schema
+migrations to babysit, and any team member with a MotherDuck token can attach
+from anywhere.
+
+First, create the DuckLake database in MotherDuck (one-time, from any DuckDB
+shell signed in to MotherDuck):
+
+```sql
+INSTALL motherduck;
+LOAD motherduck;
+
+ATTACH 'md:';
+
+CREATE DATABASE my_lake (TYPE DUCKLAKE);
+```
+
+Then attach the lake locally with the data path pointing at your Tigris bucket:
+
+```sql
+LOAD motherduck;
+
+ATTACH 'ducklake:md:__ducklake_metadata_my_lake' AS my_lake
+  ( DATA_PATH 's3://my-bucket/lake/'
+  );
+
+USE my_lake;
+```
+
+The `__ducklake_metadata_` prefix is MotherDuck's internal name for the catalog
+database that backs `my_lake`. MotherDuck runs the catalog, Tigris runs the
+storage, and there's nothing else to operate.
+
 DuckLake creates its bookkeeping tables (`ducklake_table`, `ducklake_snapshot`,
 `ducklake_data_file`, etc.) the first time you attach. For other catalog options
-— MySQL, SQLite, MotherDuck — see
+— MySQL, SQLite — see
 [Choosing a Catalog Database](https://ducklake.select/docs/stable/duckdb/usage/choosing_a_catalog_database).
 
 ## Create a table and insert data

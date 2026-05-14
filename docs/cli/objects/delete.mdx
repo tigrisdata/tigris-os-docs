@@ -1,8 +1,8 @@
 # tigris objects delete
 
-Delete one or more objects by key from the given bucket. On a versioned
-bucket, the default creates a delete marker; use `--version-id` or
-`--all-versions` to hard-delete versions.
+Delete one or more objects by key from the given bucket. On a versioned bucket,
+the default creates a delete marker; use `--version-id` or `--all-versions` to
+hard-delete versions.
 
 **Alias:** `d`
 
@@ -15,11 +15,11 @@ t3 o d <bucket> <key> [flags]
 
 ## Flags
 
-| Name             | Required | Default | Description                                                                                          |
-| ---------------- | -------- | ------- | ---------------------------------------------------------------------------------------------------- |
-| `--version-id`   | No       | —       | Hard-delete a specific object version (requires bucket versioning). Targets a single key             |
+| Name             | Required | Default | Description                                                                                              |
+| ---------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------- |
+| `--version-id`   | No       | —       | Hard-delete a specific object version (requires bucket versioning). Targets a single key                 |
 | `--all-versions` | No       | —       | Hard-delete every version and delete marker for the given key(s). Mutually exclusive with `--version-id` |
-| `--yes`, `-y`    | No       | —       | Skip confirmation prompts                                                                            |
+| `--yes`, `-y`    | No       | —       | Skip confirmation prompts                                                                                |
 
 ## Examples
 

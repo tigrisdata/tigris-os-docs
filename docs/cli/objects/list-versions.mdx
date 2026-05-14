@@ -1,8 +1,8 @@
 # tigris objects list-versions
 
-List object versions and delete markers in a bucket. Requires bucket
-versioning to be enabled. Returns versions and delete markers as two
-separate arrays to match the S3 `ListObjectVersions` response.
+List object versions and delete markers in a bucket. Requires bucket versioning
+to be enabled. Returns versions and delete markers as two separate arrays to
+match the S3 `ListObjectVersions` response.
 
 **Alias:** `lv`
 
@@ -18,14 +18,14 @@ applied automatically.
 
 ## Flags
 
-| Name                   | Required | Default | Description                                                                          |
-| ---------------------- | -------- | ------- | ------------------------------------------------------------------------------------ |
-| `--prefix`, `-p`       | No       | —       | Filter by key prefix                                                                 |
-| `--delimiter`, `-d`    | No       | —       | Group keys sharing a common prefix up to the delimiter (e.g. `/` for folder-style)   |
-| `--format`             | No       | `table` | Output format. Options: `json`, `table`, `xml`                                       |
-| `--limit`              | No       | —       | Maximum number of items to return per page                                           |
-| `--key-marker`         | No       | —       | Pagination marker — the key to start listing from (from a prior `nextKeyMarker`)     |
-| `--version-id-marker`  | No       | —       | Pagination marker — the version id to start listing from (from a prior `nextVersionIdMarker`) |
+| Name                  | Required | Default | Description                                                                                   |
+| --------------------- | -------- | ------- | --------------------------------------------------------------------------------------------- |
+| `--prefix`, `-p`      | No       | —       | Filter by key prefix                                                                          |
+| `--delimiter`, `-d`   | No       | —       | Group keys sharing a common prefix up to the delimiter (e.g. `/` for folder-style)            |
+| `--format`            | No       | `table` | Output format. Options: `json`, `table`, `xml`                                                |
+| `--limit`             | No       | —       | Maximum number of items to return per page                                                    |
+| `--key-marker`        | No       | —       | Pagination marker — the key to start listing from (from a prior `nextKeyMarker`)              |
+| `--version-id-marker` | No       | —       | Pagination marker — the version id to start listing from (from a prior `nextVersionIdMarker`) |
 
 ## Examples
 
@@ -51,10 +51,21 @@ results, so consumers don't have to special-case the empty case:
 ```json
 {
   "versions": [
-    { "name": "report.pdf", "versionId": "abc123", "isLatest": true, "size": 1024, "lastModified": "..." }
+    {
+      "name": "report.pdf",
+      "versionId": "abc123",
+      "isLatest": true,
+      "size": 1024,
+      "lastModified": "..."
+    }
   ],
   "deleteMarkers": [
-    { "name": "old.txt", "versionId": "def456", "isLatest": true, "lastModified": "..." }
+    {
+      "name": "old.txt",
+      "versionId": "def456",
+      "isLatest": true,
+      "lastModified": "..."
+    }
   ],
   "commonPrefixes": [],
   "nextKeyMarker": null,
@@ -63,5 +74,5 @@ results, so consumers don't have to special-case the empty case:
 }
 ```
 
-When the result set is paginated, the table-format output prints a hint with
-the `--key-marker` and `--version-id-marker` values needed for the next page.
+When the result set is paginated, the table-format output prints a hint with the
+`--key-marker` and `--version-id-marker` values needed for the next page.

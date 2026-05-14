@@ -102,6 +102,31 @@
       "permanent": true
     },
     {
+      "source": "/docs/cli/buckets/set-ttl/",
+      "destination": "/docs/cli/buckets/lifecycle/create/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/cli/buckets/set-transition/",
+      "destination": "/docs/cli/buckets/lifecycle/create/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/cli/forks/",
+      "destination": "/docs/cli/buckets/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/cli/forks/list/",
+      "destination": "/docs/cli/buckets/list/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/cli/forks/create/",
+      "destination": "/docs/cli/buckets/create/",
+      "permanent": true
+    },
+    {
       "source": "/docs/",
       "has": [
         {

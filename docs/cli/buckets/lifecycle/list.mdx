@@ -1,0 +1,28 @@
+# tigris buckets lifecycle list
+
+List lifecycle rules on a bucket.
+
+**Alias:** `l`
+
+## Usage
+
+```bash
+tigris buckets lifecycle list <name> [flags]
+t3 b lc l <name> [flags]
+```
+
+## Flags
+
+| Name       | Required | Default | Description                                    |
+| ---------- | -------- | ------- | ---------------------------------------------- |
+| `--format` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+
+## Examples
+
+```bash
+# List rules on a bucket
+tigris buckets lifecycle list my-bucket
+
+# JSON output
+tigris buckets lifecycle list my-bucket --format json
+```

@@ -53,7 +53,7 @@ goes from minutes (copying dependencies) to seconds (creating a fork).
 
 ```bash
 # Fork the base environment for a new agent
-tigris forks create agent-base --name agent-task-42
+tigris buckets create agent-task-42 --fork-of agent-base
 ```
 
 </details>
@@ -110,7 +110,7 @@ tigris snapshots take agent-base
 
 # Fork once per agent
 for i in $(seq 1 10); do
-  tigris forks create agent-base --name "agent-run-${i}"
+  tigris buckets create "agent-run-${i}" --fork-of agent-base
 done
 
 # Each agent reads and writes its own fork
@@ -134,7 +134,7 @@ aws s3 sync ./updated-deps s3://agent-base/deps/
 tigris snapshots take agent-base
 
 # All new forks automatically get the updated dependencies
-tigris forks create agent-base --name agent-next-task
+tigris buckets create agent-next-task --fork-of agent-base
 ```
 
 #### Ephemeral evaluation sandboxes
@@ -145,11 +145,11 @@ re-run evaluations deterministically.
 
 ```bash
 # Fork for eval
-tigris forks create eval-dataset --name eval-run-20240315
+tigris buckets create eval-run-20240315 --fork-of eval-dataset
 
 # Run evaluation
 python run_eval.py --bucket eval-run-20240315
 
 # Clean up
-tigris forks delete eval-run-20240315
+tigris buckets delete eval-run-20240315
 ```

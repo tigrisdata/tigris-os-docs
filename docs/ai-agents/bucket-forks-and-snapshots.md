@@ -209,10 +209,10 @@ tigris snapshots take my-data pre-training
 tigris snapshots list my-data
 
 # Create a fork
-tigris forks create my-data experiment-a
+tigris buckets create experiment-a --fork-of my-data
 
 # List forks
-tigris forks list my-data
+tigris buckets list --forks-of my-data
 ```
 
 ## Learn More

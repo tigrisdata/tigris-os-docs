@@ -1,0 +1,67 @@
+# tigris objects list-versions
+
+List object versions and delete markers in a bucket. Requires bucket
+versioning to be enabled. Returns versions and delete markers as two
+separate arrays to match the S3 `ListObjectVersions` response.
+
+**Alias:** `lv`
+
+## Usage
+
+```bash
+tigris objects list-versions <bucket> [flags]
+t3 o lv <bucket> [flags]
+```
+
+The bucket argument also accepts a `t3://bucket/prefix/` path; the prefix is
+applied automatically.
+
+## Flags
+
+| Name                   | Required | Default | Description                                                                          |
+| ---------------------- | -------- | ------- | ------------------------------------------------------------------------------------ |
+| `--prefix`, `-p`       | No       | —       | Filter by key prefix                                                                 |
+| `--delimiter`, `-d`    | No       | —       | Group keys sharing a common prefix up to the delimiter (e.g. `/` for folder-style)   |
+| `--format`             | No       | `table` | Output format. Options: `json`, `table`, `xml`                                       |
+| `--limit`              | No       | —       | Maximum number of items to return per page                                           |
+| `--key-marker`         | No       | —       | Pagination marker — the key to start listing from (from a prior `nextKeyMarker`)     |
+| `--version-id-marker`  | No       | —       | Pagination marker — the version id to start listing from (from a prior `nextVersionIdMarker`) |
+
+## Examples
+
+```bash
+# List all versions in a bucket
+tigris objects list-versions my-bucket
+
+# Scope to a path with a t3:// URI
+tigris objects list-versions t3://my-bucket/logs/
+
+# Filter by prefix
+tigris objects list-versions my-bucket --prefix images/
+
+# JSON output (suitable for jq)
+tigris objects list-versions my-bucket --format json
+```
+
+## Output shape
+
+The `json` and `xml` outputs always emit valid empty arrays when there are no
+results, so consumers don't have to special-case the empty case:
+
+```json
+{
+  "versions": [
+    { "name": "report.pdf", "versionId": "abc123", "isLatest": true, "size": 1024, "lastModified": "..." }
+  ],
+  "deleteMarkers": [
+    { "name": "old.txt", "versionId": "def456", "isLatest": true, "lastModified": "..." }
+  ],
+  "commonPrefixes": [],
+  "nextKeyMarker": null,
+  "nextVersionIdMarker": null,
+  "hasMore": false
+}
+```
+
+When the result set is paginated, the table-format output prints a hint with
+the `--key-marker` and `--version-id-marker` values needed for the next page.

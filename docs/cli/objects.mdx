@@ -14,22 +14,27 @@ t3 o <operation> [flags]
 
 ## Commands
 
-| Command            | Description                                                     |
-| ------------------ | --------------------------------------------------------------- |
-| [`list`](list)     | List objects in a bucket, optionally filtered by a key prefix   |
-| [`get`](get)       | Download an object by key                                       |
-| [`put`](put)       | Upload a local file as an object                                |
-| [`delete`](delete) | Delete one or more objects by key                               |
-| [`set`](set)       | Update settings on an existing object such as access level      |
-| [`info`](info)     | Show metadata for an object (content type, size, modified date) |
+| Command                          | Description                                                          |
+| -------------------------------- | -------------------------------------------------------------------- |
+| [`list`](list)                   | List objects in a bucket, optionally filtered by a key prefix        |
+| [`list-versions`](list-versions) | List object versions and delete markers (requires bucket versioning) |
+| [`get`](get)                     | Download an object by key                                            |
+| [`put`](put)                     | Upload a local file as an object                                     |
+| [`delete`](delete)               | Delete one or more objects by key                                    |
+| [`set-access`](set-access)       | Set the access level (public or private) on an existing object       |
+| [`info`](info)                   | Show metadata for an object (content type, size, modified date)      |
+
+`tigris objects set` is deprecated. Use [`set-access`](set-access) to change
+ACLs and [`tigris mv`](/docs/cli/mv) to rename objects.
 
 ## Examples
 
 ```bash
 tigris objects list my-bucket
+tigris objects list-versions my-bucket
 tigris objects get my-bucket report.pdf --output ./report.pdf
 tigris objects put my-bucket report.pdf ./report.pdf
 tigris objects delete my-bucket report.pdf
-tigris objects set my-bucket report.pdf --access public
+tigris objects set-access my-bucket report.pdf public
 tigris objects info my-bucket report.pdf
 ```

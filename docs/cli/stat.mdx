@@ -14,9 +14,11 @@ Paths support the optional `t3://` (or `tigris://`) prefix (e.g.
 
 ## Flags
 
-| Name             | Required | Default | Description                                    |
-| ---------------- | -------- | ------- | ---------------------------------------------- |
-| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+| Name                              | Required | Default | Description                                                                          |
+| --------------------------------- | -------- | ------- | ------------------------------------------------------------------------------------ |
+| `--format`, `-f`                  | No       | `table` | Output format. Options: `json`, `table`, `xml`                                       |
+| `--snapshot-version`, `-snapshot` | No       | —       | Show metadata for a specific bucket snapshot (object paths only)                     |
+| `--version-id`                    | No       | —       | Show metadata for a specific object version (requires bucket versioning, object only) |
 
 ## Examples
 

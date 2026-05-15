@@ -105,9 +105,9 @@ reads inputs from its fork and writes scores to a known path.
 tigris snapshots take eval-set "pre-eval"
 
 # One fork per variant
-tigris forks create eval-set eval-gpt4o
-tigris forks create eval-set eval-claude
-tigris forks create eval-set eval-llama
+tigris buckets create eval-gpt4o --fork-of eval-set
+tigris buckets create eval-claude --fork-of eval-set
+tigris buckets create eval-llama --fork-of eval-set
 
 # Each agent reads s3://eval-{model}/inputs/ and writes to
 # s3://eval-{model}/results/scores.json
@@ -120,9 +120,9 @@ parallel and keep the output that scores highest. The original raw data is
 shared across forks; each agent writes its transformed output on top.
 
 ```bash
-tigris forks create raw-dataset cleaned-aggressive
-tigris forks create raw-dataset cleaned-conservative
-tigris forks create raw-dataset cleaned-llm-assisted
+tigris buckets create cleaned-aggressive --fork-of raw-dataset
+tigris buckets create cleaned-conservative --fork-of raw-dataset
+tigris buckets create cleaned-llm-assisted --fork-of raw-dataset
 
 # Each agent reads the original files (shared via copy-on-write)
 # and writes transformed output to s3://{fork}/processed/
@@ -136,9 +136,9 @@ inside the fork. Since re-indexing rewrites most of the data, the storage
 savings come from sharing the source documents, not the indices.
 
 ```bash
-tigris forks create knowledge-base rag-chunk-256
-tigris forks create knowledge-base rag-chunk-512
-tigris forks create knowledge-base rag-with-reranker
+tigris buckets create rag-chunk-256 --fork-of knowledge-base
+tigris buckets create rag-chunk-512 --fork-of knowledge-base
+tigris buckets create rag-with-reranker --fork-of knowledge-base
 
 # Each agent reads s3://{fork}/documents/ (shared, zero-copy)
 # and writes its index to s3://{fork}/index/ (new per fork)
@@ -155,7 +155,7 @@ without touching live data.
 tigris snapshots take prod-data "pre-rollout-$(date +%s)"
 
 # Fork for the new version to run against
-tigris forks create prod-data rollout-candidate
+tigris buckets create rollout-candidate --fork-of prod-data
 
 # New agent version reads from and writes to the fork
 # Diff s3://rollout-candidate/results/ against s3://prod-data/results/
@@ -199,7 +199,7 @@ parent.
 
 ```bash
 # Agent B has good results; try a refinement
-tigris forks create rag-chunk-512 rag-chunk-512-v2
+tigris buckets create rag-chunk-512-v2 --fork-of rag-chunk-512
 
 # If the refinement works, promote it
 tigris snapshots take rag-chunk-512-v2 "promoted"

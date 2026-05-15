@@ -1,0 +1,39 @@
+# tigris objects set-access
+
+Set the access level (public or private) on an existing object.
+
+**Alias:** `sa`
+
+## Usage
+
+```bash
+tigris objects set-access <bucket> [key] <access> [flags]
+t3 o sa <bucket> [key] <access> [flags]
+```
+
+If the bucket argument contains the full path (e.g.
+`t3://my-bucket/my-file.txt`), the `key` argument can be omitted.
+
+## Arguments
+
+| Name     | Required | Description                                          |
+| -------- | -------- | ---------------------------------------------------- |
+| `bucket` | Yes      | Bucket name, or a full path (`t3://bucket/key`)      |
+| `key`    | No       | Object key. Omit if `bucket` contains the full path. |
+| `access` | Yes      | Access level. Options: `public`, `private`           |
+
+## Flags
+
+| Name       | Required | Default | Description                                    |
+| ---------- | -------- | ------- | ---------------------------------------------- |
+| `--format` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+
+## Examples
+
+```bash
+# Make an object public
+tigris objects set-access my-bucket my-file.txt public
+
+# Make an object private using a t3:// path
+tigris objects set-access t3://my-bucket/my-file.txt private
+```

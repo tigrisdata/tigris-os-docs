@@ -1,0 +1,40 @@
+# tigris buckets lifecycle
+
+Manage bucket lifecycle rules. Each rule combines an optional storage-class
+transition and/or expiration (TTL), scoped to an optional key prefix.
+
+**Alias:** `lc`
+
+## Usage
+
+```bash
+tigris buckets lifecycle <operation> [flags]
+t3 b lc <operation> [flags]
+```
+
+## Commands
+
+| Command            | Description                                                |
+| ------------------ | ---------------------------------------------------------- |
+| [`list`](list)     | List lifecycle rules on a bucket                           |
+| [`create`](create) | Create a new lifecycle rule (transition and/or expiration) |
+| [`edit`](edit)     | Edit an existing lifecycle rule by id                      |
+
+Lifecycle replaces the deprecated `set-ttl` and `set-transition` commands.
+
+## Examples
+
+```bash
+# List existing rules
+tigris buckets lifecycle list my-bucket
+
+# Move objects to STANDARD_IA after 30 days (bucket-wide)
+tigris buckets lifecycle create my-bucket --storage-class STANDARD_IA --days 30
+
+# Expire objects under tmp/ after 7 days
+tigris buckets lifecycle create my-bucket --prefix tmp/ --expire-days 7
+
+# Combine transition and expiration
+tigris buckets lifecycle create my-bucket --prefix archive/ \
+  --storage-class GLACIER --days 30 --expire-days 365
+```

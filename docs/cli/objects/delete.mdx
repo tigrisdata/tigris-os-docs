@@ -1,15 +1,25 @@
 # tigris objects delete
 
-Delete one or more objects by key from the given bucket.
+Delete one or more objects by key from the given bucket. On a versioned bucket,
+the default creates a delete marker; use `--version-id` or `--all-versions` to
+hard-delete versions.
 
 **Alias:** `d`
 
 ## Usage
 
 ```bash
-tigris objects delete <bucket> <key>
-t3 o d <bucket> <key>
+tigris objects delete <bucket> <key> [flags]
+t3 o d <bucket> <key> [flags]
 ```
+
+## Flags
+
+| Name             | Required | Default | Description                                                                                              |
+| ---------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------- |
+| `--version-id`   | No       | —       | Hard-delete a specific object version (requires bucket versioning). Targets a single key                 |
+| `--all-versions` | No       | —       | Hard-delete every version and delete marker for the given key(s). Mutually exclusive with `--version-id` |
+| `--yes`, `-y`    | No       | —       | Skip confirmation prompts                                                                                |
 
 ## Examples
 
@@ -19,4 +29,10 @@ tigris objects delete my-bucket old-file.txt
 
 # Delete multiple objects
 tigris objects delete my-bucket file-a.txt,file-b.txt
+
+# On a versioned bucket: delete a specific version (hard delete)
+tigris objects delete my-bucket old-file.txt --version-id abc123 --yes
+
+# On a versioned bucket: nuke every version and delete marker for a key
+tigris objects delete my-bucket old-file.txt --all-versions --yes
 ```

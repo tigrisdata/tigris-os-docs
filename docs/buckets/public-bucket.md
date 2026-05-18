@@ -1,5 +1,13 @@
 # Public Bucket
 
+:::info
+
+There is no additional charge to make buckets public. However, to prevent abuse,
+payment method verification is required to use public bucket functionality. This
+requirement applies to all organizations created after May 18, 2026.
+
+:::
+
 Sometimes you want to share your bucket with the world. You can do this by
 creating a public bucket. This will allow anyone to read the contents of your
 bucket. You can still control who can write to your bucket.

@@ -12,6 +12,18 @@ const tigrisConfig = require("./tigris.config");
 const lightCodeTheme = require("prism-react-renderer").themes.github;
 const darkCodeTheme = require("prism-react-renderer").themes.dracula;
 
+const rb2bHeadTag =
+  process.env.VERCEL_ENV === "production"
+    ? [
+        {
+          tagName: "script",
+          attributes: {},
+          innerHTML:
+            '(function(){var m=document.cookie.match(/(?:^|; )tigris_geo=([^;]*)/);var c=m?decodeURIComponent(m[1]):"";if(c!=="US"&&c!=="CA")return;if(window.reb2b)return;window.reb2b={loaded:true};var s=document.createElement("script");s.async=true;s.src="/_tigris/insights/Z6PVLHQKD16R/Z6PVLHQKD16R.js.gz";var f=document.getElementsByTagName("script")[0];f.parentNode.insertBefore(s,f);})();',
+        },
+      ]
+    : [];
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Tigris Object Storage Documentation",
@@ -25,6 +37,7 @@ const config = {
   trailingSlash: true,
 
   headTags: [
+    ...rb2bHeadTag,
     {
       tagName: "link",
       attributes: {

@@ -55,20 +55,17 @@ export function onRouteDidUpdate({ location, previousLocation }) {
   if (typeof window === "undefined") return;
 
   if (location.pathname !== previousLocation?.pathname) {
+    // posthog-docusaurus auto-captures $pageview on each route change but
+    // does not emit a corresponding $pageleave for the page being left —
+    // PostHog's built-in pageleave only fires on real tab close /
+    // visibilitychange. Without an explicit $pageleave, dwell-time math
+    // for per-page sessions is wrong. Emit it manually using the URL we
+    // recorded for the previous $pageview so the two events align.
     const posthog = window.posthog;
-    if (posthog && typeof posthog.capture === "function") {
-      // PostHog's capture_pageleave only fires on real tab close /
-      // visibilitychange. For Docusaurus SPA navigations we have to emit
-      // $pageleave manually. Use the URL we recorded when the previous
-      // $pageview fired (so the baseUrl and any search params match exactly
-      // what was captured), not a reconstruction from previousLocation
-      // which omits the Docusaurus baseUrl.
-      if (lastPageviewUrl) {
-        posthog.capture("$pageleave", { $current_url: lastPageviewUrl });
-      }
-      posthog.capture("$pageview", { $current_url: window.location.href });
-      lastPageviewUrl = window.location.href;
+    if (posthog && typeof posthog.capture === "function" && lastPageviewUrl) {
+      posthog.capture("$pageleave", { $current_url: lastPageviewUrl });
     }
+    lastPageviewUrl = window.location.href;
   }
 
   startRb2bPostHogBridge();

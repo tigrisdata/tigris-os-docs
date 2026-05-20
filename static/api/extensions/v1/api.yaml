@@ -1364,6 +1364,18 @@ components:
             Transitions must be in chronological order (earlier days/dates first).
           items:
             $ref: "#/components/schemas/LifecycleTransition"
+        filter:
+          $ref: "#/components/schemas/LifecycleRuleFilter"
+    LifecycleRuleFilter:
+      type: object
+      description: |
+        Optional scope for a lifecycle rule. When unset, the rule applies to every object in the bucket.
+      properties:
+        prefix:
+          type: string
+          description: |
+            Only apply this rule to objects whose keys start with the given prefix.
+            For example, `logs/` scopes the rule to objects under that prefix.
     LifecycleExpiration:
       type: object
       description: |

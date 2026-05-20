@@ -57,7 +57,7 @@ Refer to the [AWS CLI](/docs/sdks/s3/aws-cli/) and
 
 ### Access Key Operations: Tigris vs AWS IAM API
 
-Our [IAM APIs page](../api/s3/index.md#iam-apis) has more information, but at a
+Our [IAM APIs page](../api/s3/index.mdx#iam-apis) has more information, but at a
 high level:
 
 | Operation                               | Tigris Support | AWS Support | Description                                             |

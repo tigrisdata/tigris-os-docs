@@ -11,9 +11,11 @@ through bucket lifecycle rules. The expiration is based on the last modified
 time of the object.
 
 A bucket can have up to **10 lifecycle rules**, which can be a mix of expiration
-and transition rules scoped to different prefixes. See
+and transition rules scoped to different prefixes. A single rule can include
+**one transition and one expiration**, so the same rule can move an object to a
+colder [storage tier](/docs/objects/tiers/) and later delete it. See
 [Object Lifecycle Rules](/docs/buckets/object-lifecycle-rules/) for the
-transition form of these rules.
+transition form of these rules and an example of combining the two.
 
 The expiration can be set in two ways:
 
@@ -134,8 +136,18 @@ leaving everything else untouched.
 - Use `Filter.Prefix` on a rule to scope it to a subset of objects. Omit
   `Filter` (or pass an empty object `{}`) to apply the rule to every object in
   the bucket.
+- Each rule can include **at most one expiration and at most one transition**,
+  so the same rule can move an object to a colder tier and later delete it.
 - Tigris always rounds the expiration time to UTC midnight for the scheduled
   date.
 - The expiration time is based on the last modified time of the object.
 - When using the AWS CLI to apply a bucket lifecycle configuration, the JSON can
   only contain the fields shown in the examples above.
+
+## Related
+
+- [Object Lifecycle Rules](/docs/buckets/object-lifecycle-rules/) — transition
+  rules, including how to combine a transition and an expiration in one rule.
+- [Storage Tiers](/docs/objects/tiers/) — the storage tiers expiration rules
+  apply to.
+- [Create a bucket](/docs/buckets/create-bucket/) — bucket-level defaults.

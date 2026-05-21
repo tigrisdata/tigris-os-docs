@@ -11,12 +11,14 @@ storage costs for infrequently accessed objects.
 ## Configuring Object Lifecycle Rules
 
 With Object Lifecycle rules, you can configure when and how your objects
-transition between storage tiers. Rules are configured at the bucket level and
-each rule can target the entire bucket or a subset of objects scoped by a key
-prefix.
+transition between [storage tiers](/docs/objects/tiers/). Rules are configured
+at the bucket level and each rule can target the entire bucket or a subset of
+objects scoped by a key prefix.
 
 A bucket can have up to **10 lifecycle rules**, which can be a mix of transition
-and expiration rules scoped to different prefixes. See
+and expiration rules scoped to different prefixes. A single rule can include
+**one transition and one expiration**, so you can move objects to a colder tier
+and later delete them with the same rule. See
 [Object Expiration](/docs/buckets/objects-expiration/) for the expiration form
 of these rules.
 
@@ -26,7 +28,8 @@ The transition timing can be set in two ways:
 - **Date**: The objects will be transitioned on the specified date.
 
 Tigris currently supports transitioning an object from **STANDARD** to one of
-these three storage tiers:
+these three storage tiers (see [Storage Tiers](/docs/objects/tiers/) for the
+full description of each):
 
 1. **STANDARD_IA**: Infrequent Access storage is designed for data that is
    accessed less frequently, but requires rapid access when needed. This tier
@@ -164,6 +167,38 @@ on `STANDARD`.
 }
 ```
 
+#### Combining a transition and an expiration in one rule
+
+A single rule may carry **one transition and one expiration**. The example
+below moves objects under `logs/` to `STANDARD_IA` after 30 days and deletes
+them after 540 days, expressed in one rule. See
+[Object Expiration](/docs/buckets/objects-expiration/) for more on the
+expiration side.
+
+```json
+{
+  "Rules": [
+    {
+      "ID": "logs-tiered-retention",
+      "Status": "Enabled",
+      "Filter": { "Prefix": "logs/" },
+      "Transitions": [
+        {
+          "Days": 30,
+          "StorageClass": "STANDARD_IA"
+        }
+      ],
+      "Expiration": {
+        "Days": 540
+      }
+    }
+  ]
+}
+```
+
+To chain multiple transitions (for example, `STANDARD → STANDARD_IA → GLACIER`),
+use one rule per transition.
+
 ## Things to note
 
 - A bucket can have at most 10 lifecycle rules. The 10-rule limit is shared
@@ -173,8 +208,20 @@ on `STANDARD`.
 - Use `Filter.Prefix` on a rule to scope it to a subset of objects. Omit
   `Filter` (or pass an empty object `{}`) to apply the rule to every object in
   the bucket.
-- Each rule can include at most one transition.
+- Each rule can include **at most one transition and at most one expiration**.
+  Chain multiple transitions by writing one rule per transition.
+- Transitions are one-way to a colder tier. Once an object lands in `GLACIER`,
+  no rule can pull it back to `STANDARD_IA` or `STANDARD`.
 - Tigris always rounds the transition time to UTC midnight for the scheduled
   date.
 - When using the AWS CLI to apply an Object Lifecycle configuration, the JSON
   can only contain the fields shown in the examples above.
+
+## Related
+
+- [Object Expiration](/docs/buckets/objects-expiration/) — the expiration form
+  of lifecycle rules.
+- [Storage Tiers](/docs/objects/tiers/) — details on `STANDARD`, `STANDARD_IA`,
+  `GLACIER`, and `GLACIER_IA`.
+- [Create a bucket](/docs/buckets/create-bucket/) — set a default tier at
+  bucket creation time.

@@ -46,8 +46,8 @@ full description of each):
 3. **GLACIER_IR**: Archive Instant Retrieval storage offers archive-tier pricing
    while still serving GET requests directly, with no restore step. It's more
    expensive than `GLACIER` but cheaper than `STANDARD_IA` for cold-but-still-
-   readable data. Ideal for backups, compliance archives, or historical
-   datasets that are queried rarely but must respond immediately when they are.
+   readable data. Ideal for backups, compliance archives, or historical datasets
+   that are queried rarely but must respond immediately when they are.
 
 :::note Restore required for GLACIER
 
@@ -177,9 +177,9 @@ on `STANDARD`.
 
 #### Combining a transition and an expiration in one rule
 
-A single rule may carry **one transition and one expiration**. The example
-below moves objects under `logs/` to `STANDARD_IA` after 30 days and deletes
-them after 540 days, expressed in one rule. See
+A single rule may carry **one transition and one expiration**. The example below
+moves objects under `logs/` to `STANDARD_IA` after 30 days and deletes them
+after 540 days, expressed in one rule. See
 [Object Expiration](/docs/buckets/objects-expiration/) for more on the
 expiration side.
 
@@ -242,19 +242,19 @@ tigris buckets set-transition my-bucket --disable
 
 See [`tigris buckets set-transition`](/docs/cli/buckets/set-transition/) and
 [`tigris buckets set-ttl`](/docs/cli/buckets/set-ttl/). For multi-rule or
-prefix-filtered configurations, use the AWS CLI with a `lifecycle.json` file
-as shown above.
+prefix-filtered configurations, use the AWS CLI with a `lifecycle.json` file as
+shown above.
 
 ## How rules are evaluated
 
-Each rule runs on its own worker, walking the bucket oldest-first. If two
-rules match the same object, whichever worker reaches it first does the work
-— there is no preferred ordering between rules with overlapping prefixes.
+Each rule runs on its own worker, walking the bucket oldest-first. If two rules
+match the same object, whichever worker reaches it first does the work — there
+is no preferred ordering between rules with overlapping prefixes.
 
-Transitions are one-way toward colder tiers. Once an object lands in
-`GLACIER`, no rule can pull it back to `STANDARD_IA` or `STANDARD`. When two
-transitions race on the same object, the one that fires first wins; the other
-has nothing to do by the time it arrives.
+Transitions are one-way toward colder tiers. Once an object lands in `GLACIER`,
+no rule can pull it back to `STANDARD_IA` or `STANDARD`. When two transitions
+race on the same object, the one that fires first wins; the other has nothing to
+do by the time it arrives.
 
 After you apply a new configuration, expect the first action within a few
 minutes, or up to fifteen to twenty minutes if the scheduler just finished a
@@ -267,8 +267,8 @@ sweep. There is no backfill flag — rules apply on the next scan, oldest-first.
 - Each rule may include an `ID` (up to 36 characters). If you omit `ID`, Tigris
   generates one.
 - `Status` accepts `Enabled` or `Disabled`. A `Disabled` rule stays in the
-  configuration but does not execute — useful for pausing a rule without
-  losing the definition.
+  configuration but does not execute — useful for pausing a rule without losing
+  the definition.
 - Use `Filter.Prefix` on a rule to scope it to a subset of objects. Omit
   `Filter` (or pass an empty object `{}`) to apply the rule to every object in
   the bucket.
@@ -287,8 +287,8 @@ sweep. There is no backfill flag — rules apply on the next scan, oldest-first.
   of lifecycle rules.
 - [Storage Tiers](/docs/objects/tiers/) — details on `STANDARD`, `STANDARD_IA`,
   `GLACIER`, and `GLACIER_IR`, plus how to restore objects from `GLACIER`.
-- [Create a bucket](/docs/buckets/create-bucket/) — set a default tier at
-  bucket creation time.
+- [Create a bucket](/docs/buckets/create-bucket/) — set a default tier at bucket
+  creation time.
 - [`tigris buckets set-transition`](/docs/cli/buckets/set-transition/) and
-  [`tigris buckets set-ttl`](/docs/cli/buckets/set-ttl/) — Tigris CLI
-  shortcuts for single-rule configurations.
+  [`tigris buckets set-ttl`](/docs/cli/buckets/set-ttl/) — Tigris CLI shortcuts
+  for single-rule configurations.

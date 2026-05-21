@@ -133,10 +133,6 @@ earlier versions live and accessible.
 
 - Retention applies per bucket. Every soft-deleted bucket and object in the
   bucket uses the same retention window.
-- Soft-deleted data is billed for storage at the standard rate for the bucket.
-  Use the retention setting to balance recovery time against cost.
-- Soft-deleted buckets and objects are not returned by regular listings or reads
-  until they are restored.
 - Disabling soft delete on a bucket does not purge data that is already
   soft-deleted. It continues to age out on its original retention schedule.
 - Changing the retention value affects new soft deletes from that point forward.

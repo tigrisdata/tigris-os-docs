@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "@docusaurus/Link";
 import "./styles.css";
 
 /* eslint-disable react/prop-types */
 function ToolCard({ icon, title, description, to, children }) {
+  const handleCardClick = (e) => {
+    const sel = typeof window !== "undefined" ? window.getSelection() : null;
+    if (sel && sel.toString().length > 0) {
+      e.preventDefault();
+    }
+  };
+
   return (
-    <Link to={to} className="tool-card">
+    <Link to={to} className="tool-card" onClick={handleCardClick}>
       <div className="tool-card-header">
         <div className="tool-card-icon">{icon}</div>
         <div className="tool-card-title">{title}</div>
@@ -22,6 +29,87 @@ function ToolCard({ icon, title, description, to, children }) {
         {children}
       </div>
     </Link>
+  );
+}
+
+function TerminalPreview({ filename, copyText, style, children }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    try {
+      await navigator.clipboard.writeText(copyText);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Clipboard unavailable; ignore silently.
+    }
+  };
+
+  return (
+    <div className="tool-card-code" style={style}>
+      <div className="tool-card-code-header">
+        <div className="tool-card-dots">
+          <span />
+        </div>
+        <span className="tool-card-filename">{filename}</span>
+        {copyText && (
+          <button
+            type="button"
+            className="tool-card-copy"
+            onClick={handleCopy}
+            onMouseDown={(e) => e.stopPropagation()}
+            aria-label={copied ? "Copied" : "Copy to clipboard"}
+          >
+            {copied ? (
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M20 6L9 17L4 12"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            ) : (
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <rect
+                  x="9"
+                  y="9"
+                  width="11"
+                  height="11"
+                  rx="2"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+                <path
+                  d="M5 15V5a2 2 0 0 1 2-2h10"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            )}
+          </button>
+        )}
+      </div>
+      <div className="tool-card-terminal">{children}</div>
+    </div>
   );
 }
 
@@ -59,55 +147,50 @@ export default function ToolCards() {
           description="Type-safe libraries for TypeScript and Go. Integrate object storage directly into your application logic with zero friction."
           to="/sdks/tigris/"
         >
-          <div className="tool-card-code">
-            <div className="tool-card-code-header">
-              <div className="tool-card-dots">
-                <span />
-              </div>
-              <span className="tool-card-filename">terminal</span>
+          <TerminalPreview
+            filename="terminal"
+            copyText="npm install @tigrisdata/storage"
+          >
+            <div className="tool-card-terminal-line">
+              <span className="tool-card-prompt">$ </span>npm install
+              @tigrisdata/storage
             </div>
-            <div className="tool-card-terminal">
-              <div className="tool-card-terminal-line">
-                <span className="tool-card-prompt">$ </span>npm install
-                @tigrisdata/storage
-              </div>
+          </TerminalPreview>
+          <TerminalPreview
+            filename="app.ts"
+            style={{ marginTop: "8px" }}
+            copyText={`import { get, put } from '@tigrisdata/storage';
+
+await get('my-file.jpg', 'file');
+await put('object.txt', 'Hello, World!');`}
+          >
+            <div className="tool-card-terminal-line">
+              <span className="tool-card-keyword">import</span> {"{"} get, put{" "}
+              {"}"} <span className="tool-card-keyword">from</span>{" "}
+              <span className="tool-card-string">
+                &apos;@tigrisdata/storage&apos;
+              </span>
+              ;
             </div>
-          </div>
-          <div className="tool-card-code" style={{ marginTop: "8px" }}>
-            <div className="tool-card-code-header">
-              <div className="tool-card-dots">
-                <span />
-              </div>
-              <span className="tool-card-filename">app.ts</span>
+            <div className="tool-card-terminal-line">&nbsp;</div>
+            <div className="tool-card-terminal-line">
+              <span className="tool-card-keyword">await</span> get(
+              <span className="tool-card-string">
+                &apos;my-file.jpg&apos;
+              </span>,{" "}
+              <span className="tool-card-string">&apos;file&apos;</span>);
             </div>
-            <div className="tool-card-terminal">
-              <div className="tool-card-terminal-line">
-                <span className="tool-card-keyword">import</span> {"{"} get, put{" "}
-                {"}"} <span className="tool-card-keyword">from</span>{" "}
-                <span className="tool-card-string">
-                  &apos;@tigrisdata/storage&apos;
-                </span>
-                ;
-              </div>
-              <div className="tool-card-terminal-line">&nbsp;</div>
-              <div className="tool-card-terminal-line">
-                <span className="tool-card-keyword">await</span> get(
-                <span className="tool-card-string">
-                  &apos;my-file.jpg&apos;
-                </span>
-                , <span className="tool-card-string">&apos;file&apos;</span>);
-              </div>
-              <div className="tool-card-terminal-line">
-                <span className="tool-card-keyword">await</span> put(
-                <span className="tool-card-string">&apos;object.txt&apos;</span>
-                ,{" "}
-                <span className="tool-card-string">
-                  &apos;Hello, World!&apos;
-                </span>
-                );
-              </div>
+            <div className="tool-card-terminal-line">
+              <span className="tool-card-keyword">await</span> put(
+              <span className="tool-card-string">
+                &apos;object.txt&apos;
+              </span>,{" "}
+              <span className="tool-card-string">
+                &apos;Hello, World!&apos;
+              </span>
+              );
             </div>
-          </div>
+          </TerminalPreview>
         </ToolCard>
 
         <ToolCard
@@ -143,35 +226,31 @@ export default function ToolCards() {
           description="Manage buckets, keys, and global configurations from your terminal. Built for speed and scriptability in CI/CD pipelines."
           to="/cli/"
         >
-          <div className="tool-card-code">
-            <div className="tool-card-code-header">
-              <div className="tool-card-dots">
-                <span />
-              </div>
-              <span className="tool-card-filename">terminal</span>
+          <TerminalPreview
+            filename="terminal"
+            copyText={`npm install -g @tigrisdata/cli
+t3 mk my-bucket
+t3 touch my-bucket/key`}
+          >
+            <div className="tool-card-terminal-line">
+              <span className="tool-card-prompt">$ </span>npm install -g
+              @tigrisdata/cli
             </div>
-            <div className="tool-card-terminal">
-              <div className="tool-card-terminal-line">
-                <span className="tool-card-prompt">$ </span>npm install -g
-                @tigrisdata/cli
-              </div>
-              <div className="tool-card-terminal-line">&nbsp;</div>
-              <div className="tool-card-terminal-line">
-                <span className="tool-card-prompt">$ </span>t3 mk my-bucket
-              </div>
-              <div className="tool-card-terminal-line">
-                ✓ Bucket &apos;my-bucket&apos; created
-              </div>
-              <div className="tool-card-terminal-line">&nbsp;</div>
-              <div className="tool-card-terminal-line">
-                <span className="tool-card-prompt">$ </span>t3 touch
-                my-bucket/key
-              </div>
-              <div className="tool-card-terminal-line">
-                ✓ Created &apos;my-bucket/key&apos;
-              </div>
+            <div className="tool-card-terminal-line">&nbsp;</div>
+            <div className="tool-card-terminal-line">
+              <span className="tool-card-prompt">$ </span>t3 mk my-bucket
             </div>
-          </div>
+            <div className="tool-card-terminal-line">
+              ✓ Bucket &apos;my-bucket&apos; created
+            </div>
+            <div className="tool-card-terminal-line">&nbsp;</div>
+            <div className="tool-card-terminal-line">
+              <span className="tool-card-prompt">$ </span>t3 touch my-bucket/key
+            </div>
+            <div className="tool-card-terminal-line">
+              ✓ Created &apos;my-bucket/key&apos;
+            </div>
+          </TerminalPreview>
         </ToolCard>
 
         <ToolCard
@@ -310,41 +389,41 @@ export default function ToolCards() {
           description="Already using AWS S3 SDKs? Point your existing boto3, @aws-sdk, or any S3-compatible client at Tigris by updating your endpoint and keys."
           to="/sdks/s3/"
         >
-          <div className="tool-card-code">
-            <div className="tool-card-code-header">
-              <div className="tool-card-dots">
-                <span />
-              </div>
-              <span className="tool-card-filename">terminal</span>
+          <TerminalPreview
+            filename="terminal"
+            copyText={`export AWS_ENDPOINT_URL=https://t3.storage.dev
+export AWS_ACCESS_KEY_ID=tid_...
+export AWS_SECRET_ACCESS_KEY=tsec_...
+
+# Your existing code just works
+aws s3 cp file.bin s3://my-bucket/`}
+          >
+            <div className="tool-card-terminal-line">
+              <span className="tool-card-keyword">export</span>{" "}
+              AWS_ENDPOINT_URL=
+              <span className="tool-card-string">https://t3.storage.dev</span>
             </div>
-            <div className="tool-card-terminal">
-              <div className="tool-card-terminal-line">
-                <span className="tool-card-keyword">export</span>{" "}
-                AWS_ENDPOINT_URL=
-                <span className="tool-card-string">https://t3.storage.dev</span>
-              </div>
-              <div className="tool-card-terminal-line">
-                <span className="tool-card-keyword">export</span>{" "}
-                AWS_ACCESS_KEY_ID=
-                <span className="tool-card-string">tid_...</span>
-              </div>
-              <div className="tool-card-terminal-line">
-                <span className="tool-card-keyword">export</span>{" "}
-                AWS_SECRET_ACCESS_KEY=
-                <span className="tool-card-string">tsec_...</span>
-              </div>
-              <div className="tool-card-terminal-line">&nbsp;</div>
-              <div className="tool-card-terminal-line">
-                <span className="tool-card-comment">
-                  # Your existing code just works
-                </span>
-              </div>
-              <div className="tool-card-terminal-line">
-                <span className="tool-card-prompt">$ </span>aws s3 cp file.bin
-                s3://my-bucket/
-              </div>
+            <div className="tool-card-terminal-line">
+              <span className="tool-card-keyword">export</span>{" "}
+              AWS_ACCESS_KEY_ID=
+              <span className="tool-card-string">tid_...</span>
             </div>
-          </div>
+            <div className="tool-card-terminal-line">
+              <span className="tool-card-keyword">export</span>{" "}
+              AWS_SECRET_ACCESS_KEY=
+              <span className="tool-card-string">tsec_...</span>
+            </div>
+            <div className="tool-card-terminal-line">&nbsp;</div>
+            <div className="tool-card-terminal-line">
+              <span className="tool-card-comment">
+                # Your existing code just works
+              </span>
+            </div>
+            <div className="tool-card-terminal-line">
+              <span className="tool-card-prompt">$ </span>aws s3 cp file.bin
+              s3://my-bucket/
+            </div>
+          </TerminalPreview>
         </ToolCard>
       </div>
     </div>

@@ -125,6 +125,22 @@ cannot create a new bucket with the same name until either the bucket is
 restored or permanently removed. This prevents another account from
 inadvertently claiming the name during the recovery window.
 
+## Deleting an object in a soft-delete-enabled bucket
+
+Inside a soft-delete-enabled bucket, the files browser splits into an **All
+files** and a **Deleted files** segment above the list. **All files** is the
+regular live view; **Deleted files** is where every soft-deleted object in this
+bucket shows up while it's within its retention window.
+
+![Files browser with All files and Deleted files segments](/img/soft-delete-files-segment.png)
+
+Deleting an object from the **All files** view brings up a confirmation dialog
+that mirrors the bucket-level one. It tells you the file will be moved to the
+**Deleted files** tab and can be restored within the bucket's retention period —
+and that after that window passes, the file is permanently removed.
+
+![Soft delete confirmation dialog for an object](/img/soft-delete-object-delete-modal.png)
+
 ## Restoring a deleted object
 
 Every delete on a key produces its own soft-deleted version, stamped with the
@@ -135,11 +151,10 @@ that, then repeat one more time, the key will have three soft-deleted versions �
 one for each delete — all independently restorable until their retention windows
 expire.
 
-Inside a bucket, all soft-deleted objects are listed under the **Deleted files**
-tab. Selecting a deleted object opens its **Version history** panel on the
-right, which lists each soft-deleted version of that key along with its
-timestamp, version ID, size, and ETag. To restore the object, pick the version
-you want to recover and click **Restore this version**:
+In the **Deleted files** segment, selecting a deleted object opens its **Version
+history** panel on the right, which lists each soft-deleted version of that key
+along with its timestamp, version ID, size, and ETag. To restore the object,
+pick the version you want to recover and click **Restore this version**:
 
 ![Restore a soft-deleted object from the Deleted files tab](/img/soft-delete-restore-object.png)
 

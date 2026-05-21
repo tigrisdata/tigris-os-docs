@@ -549,6 +549,7 @@ const sidebars = {
             "buckets/objects-expiration",
             "buckets/object-lifecycle-rules",
             "buckets/object-notifications",
+            "buckets/soft-delete",
             "buckets/settings/index",
             "buckets/sharing",
           ],

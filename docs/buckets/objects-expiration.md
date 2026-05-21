@@ -137,13 +137,13 @@ aws s3api get-bucket-lifecycle-configuration --bucket my-bucket
 aws s3api delete-bucket-lifecycle --bucket my-bucket
 ```
 
-`get-bucket-lifecycle-configuration` returns `NoSuchLifecycleConfiguration` on
-a bucket that has never had rules applied — this is expected.
+`get-bucket-lifecycle-configuration` returns `NoSuchLifecycleConfiguration` on a
+bucket that has never had rules applied — this is expected.
 
 ### Specifying expiration via the Tigris CLI
 
-For a single expiration on a whole bucket, the
-[Tigris CLI](/docs/cli/) is a one-line shortcut:
+For a single expiration on a whole bucket, the [Tigris CLI](/docs/cli/) is a
+one-line shortcut:
 
 ```bash
 # Expire every object 30 days after it was last modified
@@ -153,16 +153,16 @@ tigris buckets set-ttl my-bucket --days 30
 tigris buckets set-ttl my-bucket --disable
 ```
 
-See [`tigris buckets set-ttl`](/docs/cli/buckets/set-ttl/). For prefix-scoped
-or multi-rule expirations, use the AWS CLI with a `lifecycle.json` file as
-shown above.
+See [`tigris buckets set-ttl`](/docs/cli/buckets/set-ttl/). For prefix-scoped or
+multi-rule expirations, use the AWS CLI with a `lifecycle.json` file as shown
+above.
 
 ## How rules are evaluated
 
-Each rule runs on its own worker, walking the bucket oldest-first. If two
-rules match the same object, whichever worker reaches it first does the work.
-When a transition and an expiration fire on the same object at roughly the
-same moment, the timestamp of each metadata update settles the outcome.
+Each rule runs on its own worker, walking the bucket oldest-first. If two rules
+match the same object, whichever worker reaches it first does the work. When a
+transition and an expiration fire on the same object at roughly the same moment,
+the timestamp of each metadata update settles the outcome.
 
 After you apply a new configuration, expect the first deletions within a few
 minutes, or up to fifteen to twenty minutes if the scheduler just finished a
@@ -175,8 +175,8 @@ sweep. There is no backfill flag — rules apply on the next scan, oldest-first.
 - Each rule may include an `ID` (up to 36 characters). If you omit `ID`, Tigris
   generates one.
 - `Status` accepts `Enabled` or `Disabled`. A `Disabled` rule stays in the
-  configuration but does not execute — useful for pausing a rule without
-  losing the definition.
+  configuration but does not execute — useful for pausing a rule without losing
+  the definition.
 - Use `Filter.Prefix` on a rule to scope it to a subset of objects. Omit
   `Filter` (or pass an empty object `{}`) to apply the rule to every object in
   the bucket.

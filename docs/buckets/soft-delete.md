@@ -79,7 +79,6 @@ func createBucketWithSoftDelete(ctx context.Context, client *s3.Client, bucketNa
 
 A **Soft Delete** column on the buckets list marks which buckets have soft
 delete enabled, showing **Enabled** or **Disabled** for each row.
-Snapshot-enabled buckets are included in the same list and marked the same way.
 
 ![Buckets list with the Deleted buckets tab and Soft Delete column](/img/soft-delete-col-segment.png)
 

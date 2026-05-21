@@ -122,7 +122,6 @@ window to expire, choose **Delete** from the same menu.
 While a bucket is in the soft-deleted state, its name stays reserved — you
 cannot create a new bucket with the same name until either the bucket is
 restored or permanently removed.
-inadvertently claiming the name during the recovery window.
 
 ## Deleting an object in a soft-delete-enabled bucket
 

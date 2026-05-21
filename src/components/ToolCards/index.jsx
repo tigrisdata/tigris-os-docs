@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "@docusaurus/Link";
 import "./styles.css";
 
@@ -34,6 +34,17 @@ function ToolCard({ icon, title, description, to, children }) {
 
 function TerminalPreview({ filename, copyText, style, children }) {
   const [copied, setCopied] = useState(false);
+  const timerRef = useRef(null);
+
+  useEffect(
+    () => () => {
+      if (timerRef.current !== null) {
+        window.clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    },
+    [],
+  );
 
   const handleCopy = async (e) => {
     e.stopPropagation();
@@ -41,7 +52,13 @@ function TerminalPreview({ filename, copyText, style, children }) {
     try {
       await navigator.clipboard.writeText(copyText);
       setCopied(true);
-      window.setTimeout(() => setCopied(false), 1500);
+      if (timerRef.current !== null) {
+        window.clearTimeout(timerRef.current);
+      }
+      timerRef.current = window.setTimeout(() => {
+        timerRef.current = null;
+        setCopied(false);
+      }, 1500);
     } catch {
       // Clipboard unavailable; ignore silently.
     }

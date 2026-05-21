@@ -159,8 +159,27 @@ pick the version you want to recover and click **Restore this version**:
 ![Restore a soft-deleted object from the Deleted files tab](/img/soft-delete-restore-object.png)
 
 The selected version becomes live immediately and is visible to all subsequent
-reads. To permanently remove a soft-deleted version before its retention window
-expires, click **Delete** on the same panel.
+reads.
+
+### Permanently deleting an object
+
+Permanently deleting a soft-deleted object is always scoped to a specific
+version of that object. There is no single "delete the object" button — because
+the same key can have many soft-deleted versions stacked up, you pick which
+version to purge from the **Version history** panel.
+
+To do this, open the **Version history** panel for the object in the **Deleted
+files** segment, select the version you want to purge, and click the red
+**Delete** button at the bottom of the panel. The panel shows a **Permanently
+delete this file?** confirmation just above the button, calling out that the
+version will be permanently deleted and cannot be restored.
+
+![Permanently delete a soft-deleted version from the Version history panel](/img/soft-delete-permanent-delete-version.png)
+
+Unlike the regular delete from the **All files** view, this action bypasses the
+retention window entirely — the selected version is purged immediately and is
+not recoverable. To fully remove an object that has multiple soft-deleted
+versions, repeat this for each version you want gone.
 
 ### Snapshot buckets
 

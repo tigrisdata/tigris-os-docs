@@ -64,7 +64,7 @@ tigris cp local-file.txt t3://your-bucket-name/path/file.txt
 tigris cp t3://your-bucket-name/path/file.txt local-file.txt
 
 # Create a fork for experimentation
-tigris forks create your-bucket-name --name experiment-fork
+tigris buckets create experiment-fork --fork-of your-bucket-name
 ```
 
 ## SDK Usage

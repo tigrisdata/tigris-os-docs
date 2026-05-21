@@ -15,6 +15,9 @@ keywords:
   ]
 ---
 
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
 # Migrate to Tigris Object Storage
 
 Tigris supports zero-downtime migration from any S3-compatible storage provider
@@ -83,7 +86,14 @@ in the shadow bucket are not listed until they are accessed and migrated.
 
 :::
 
-## Enable Data Migration in the Tigris Dashboard
+## Enable Data Migration
+
+Configure the shadow bucket from the Tigris Dashboard or the CLI. See the
+[provider-specific guides](#provider-specific-guides) above for the exact
+endpoint, region, and credential format for your source.
+
+<Tabs>
+<TabItem value="dashboard" label="Dashboard" default>
 
 To enable data migration from any S3-compatible bucket:
 
@@ -96,20 +106,46 @@ To enable data migration from any S3-compatible bucket:
 
 ![Shadow bucket migration](./shadow-bucket-migration.webp)
 
-<!-- prettier-ignore -->
-:::note
+If the storage service does not require a region, set the region to `auto`. For
+example, GCS and Cloudflare R2 use `auto`.
 
-Though Tigris supports a
-[single global endpoint](https://www.tigrisdata.com/docs/overview/#features-of-tigris),
-other storage services may require you to specify a regional endpoint. See the
-provider-specific guides above for the correct endpoint format.
+</TabItem>
+<TabItem value="cli" label="CLI">
 
-<!-- prettier-ignore -->
-:::
+The CLI flow is two commands: configure the shadow source, then optionally drain
+it.
 
-If the storage service does not require a region, set the region to `auto` in
-the `Enable Data Migration` settings. For example, GCS and Cloudflare R2 do not
-require a region to be set, and therefore use `auto`.
+**1. Configure the shadow bucket** with
+[`tigris buckets set-migration`](/docs/cli/buckets/set-migration):
+
+```bash
+tigris buckets set-migration my-bucket \
+  --bucket source-bucket \
+  --endpoint https://<source-endpoint> \
+  --region <source-region> \
+  --access-key <key> \
+  --secret-key <secret>
+```
+
+Add `--write-through` to enable write-through mode, or `--disable` to clear the
+migration configuration.
+
+**2. Actively migrate (optional).** Lazy migration only copies objects when
+they're accessed. To migrate every remaining object server-side, run
+[`tigris buckets migrate`](/docs/cli/buckets/migrate):
+
+```bash
+# Migrate every unmigrated object in the bucket
+tigris buckets migrate my-bucket
+
+# Migrate only objects under a key prefix
+tigris buckets migrate my-bucket/images/
+```
+
+The command runs in the foreground and reports progress as it goes.
+
+</TabItem>
+</Tabs>
 
 ## Copying object ACLs
 

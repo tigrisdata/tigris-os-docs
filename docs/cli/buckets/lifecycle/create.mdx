@@ -1,0 +1,46 @@
+# tigris buckets lifecycle create
+
+Create a new lifecycle rule. A rule must include a transition (`--storage-class`
+with `--days` or `--date`) and/or an expiration (`--expire-days` or
+`--expire-date`), and may optionally be scoped via `--prefix`.
+
+**Alias:** `c`
+
+## Usage
+
+```bash
+tigris buckets lifecycle create <name> [flags]
+t3 b lc c <name> [flags]
+```
+
+## Flags
+
+| Name                    | Required | Default | Description                                                             |
+| ----------------------- | -------- | ------- | ----------------------------------------------------------------------- |
+| `--prefix`, `-p`        | No       | —       | Key prefix to scope the rule to. Omit for a bucket-wide rule            |
+| `--storage-class`, `-s` | No       | —       | Target storage class for the transition                                 |
+| `--days`, `-d`          | No       | —       | Transition objects after this many days (used with `--storage-class`)   |
+| `--date`                | No       | —       | Transition objects on this date, ISO-8601 (used with `--storage-class`) |
+| `--expire-days`         | No       | —       | Expire (delete) objects after this many days                            |
+| `--expire-date`         | No       | —       | Expire (delete) objects on this date, ISO-8601                          |
+| `--disable`             | No       | —       | Create the rule in a disabled state                                     |
+
+A rule must include at least one of: a transition (`--storage-class` plus
+`--days` or `--date`) or an expiration (`--expire-days` or `--expire-date`).
+
+## Examples
+
+```bash
+# Transition all objects to STANDARD_IA after 30 days
+tigris buckets lifecycle create my-bucket --storage-class STANDARD_IA --days 30
+
+# Scope to a prefix: archive logs/ to GLACIER after 90 days
+tigris buckets lifecycle create my-bucket --prefix logs/ --storage-class GLACIER --days 90
+
+# Expire objects under tmp/ after 7 days
+tigris buckets lifecycle create my-bucket --prefix tmp/ --expire-days 7
+
+# Transition then expire: archive/ → GLACIER at 30d, delete at 365d
+tigris buckets lifecycle create my-bucket --prefix archive/ \
+  --storage-class GLACIER --days 30 --expire-days 365
+```

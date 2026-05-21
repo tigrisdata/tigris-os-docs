@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 boto3 = "*"
+tigris-boto3-ext = "*"
 
 [dev-packages]
 

@@ -84,14 +84,6 @@ https://my-assets.t3.tigrisfiles.io/logo.png
 No credentials or signed URLs are needed — the URL works directly in a browser,
 `curl`, `wget`, `<img>` tags, etc.
 
-:::info
-
-Existing Fly.io accounts can also access public content at
-`bucket-name.fly.storage.tigris.dev`. This continues to work but is not
-available for new accounts.
-
-:::
-
 For production use, we recommend setting up a
 [custom domain](/docs/buckets/custom-domain/) so your public URLs stay stable.
 See the [Public Bucket](/docs/buckets/public-bucket/) guide for full details.

@@ -85,7 +85,7 @@ snapshot once per configuration and let each fork write independently.
 tigris snapshots take my-checkpoints
 
 # Fork for parallel experiments
-tigris forks create my-checkpoints --name experiment-lr-1e-4
-tigris forks create my-checkpoints --name experiment-lr-3e-5
-tigris forks create my-checkpoints --name experiment-lr-1e-3
+tigris buckets create experiment-lr-1e-4 --fork-of my-checkpoints
+tigris buckets create experiment-lr-3e-5 --fork-of my-checkpoints
+tigris buckets create experiment-lr-1e-3 --fork-of my-checkpoints
 ```

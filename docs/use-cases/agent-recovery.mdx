@@ -107,7 +107,7 @@ tigris snapshots take agent-state "pre-deploy-v2.3"
 # Monitor for regressions...
 
 # Something goes wrong — fork from the snapshot
-tigris forks create agent-state recovery-v2.3
+tigris buckets create recovery-v2.3 --fork-of agent-state
 
 # Point the agent at the fork bucket and resume
 ```
@@ -121,7 +121,7 @@ known-good snapshot and replay agent B against it.
 ```bash
 # Agent A's state went bad after a tool change
 # Fork from the last good snapshot
-tigris forks create agent-a-state replay-from-good
+tigris buckets create replay-from-good --fork-of agent-a-state
 
 # Re-run agent B against the forked bucket
 # Agent B reads from s3://replay-from-good/ instead of s3://agent-a-state/
@@ -153,7 +153,7 @@ current bucket that weren't affected by the incident.
 
 ```bash
 # Fork from the pre-deploy snapshot
-tigris forks create agent-state clean-state
+tigris buckets create clean-state --fork-of agent-state
 
 # The fork has all threads at the known-good point
 # Copy unaffected threads forward from the current bucket if needed

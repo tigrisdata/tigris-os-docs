@@ -107,30 +107,49 @@ await renameObject(S3, bucket, object, newObject);
 
 </TabItem>
 <TabItem value="python" label="Python">
-Create a dedicated boto3 client for the rename operation, otherwise every copy_object call will become a rename operation.
+
+Use the [`tigris-boto3-ext`](https://github.com/tigrisdata/tigris-boto3-ext)
+package.
+
+```bash
+pip install tigris-boto3-ext
+```
+
+Use the `rename_object` helper for a single rename:
 
 ```python
-svc = boto3.client(
-    's3',
-    endpoint_url='https://t3.storage.dev',
-    config=Config(s3={'addressing_style': 'virtual'}),
+import boto3
+from tigris_boto3_ext import rename_object
+
+s3 = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    aws_access_key_id="your-access-key",
+    aws_secret_access_key="your-secret-key",
 )
 
-def _x_tigris_rename(request):
-    request.headers.add_header('X-Tigris-Rename', "true")
+rename_object(s3, "my-bucket", "old-name.txt", "new-name.txt")
+```
 
-# Register event into boto
-svc.meta.events.register(
-    "before-sign.s3.CopyObject",
-    lambda request, **kwargs: _x_tigris_rename(request),
-)
+Use the `TigrisRename` context manager when you want to issue several renames on
+the same client:
 
-# Rename object
-response = svc.copy_object(
-    Bucket='tigris-example',
-    CopySource='tigris-example/source-object.txt',
-    Key='renamed-object.txt',
-)
+```python
+from tigris_boto3_ext import TigrisRename
+
+pairs = [
+    ("a.txt", "renamed-a.txt"),
+    ("b.txt", "renamed-b.txt"),
+    ("c.txt", "renamed-c.txt"),
+]
+
+with TigrisRename(s3):
+    for src, dst in pairs:
+        s3.copy_object(
+            Bucket="my-bucket",
+            CopySource=f"my-bucket/{src}",
+            Key=dst,
+        )
 ```
 
 </TabItem>

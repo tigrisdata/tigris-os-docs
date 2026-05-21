@@ -49,7 +49,7 @@ and generated URL would look like:
 https://t3.storage.dev/mybucket.mydomain.com/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=tid_<>%2F20241210%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=<>X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=<>
 ```
 
-You can remove `fly.storage.tigris.dev/` and make it look like:
+You can remove `t3.storage.dev/` and make it look like:
 
 ```bash
 https://mybucket.mydomain.com/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=tid_<>%2F20241210%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=<>X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=<>
@@ -58,7 +58,7 @@ https://mybucket.mydomain.com/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-C
 Here is the bash one-liner to do the same:
 
 ```bash
-aws s3 presign s3://mybucket.mydomain.com/hello.txt |  sed 's/fly.storage.tigris.dev\///'
+aws s3 presign s3://mybucket.mydomain.com/hello.txt |  sed 's/t3.storage.dev\///'
 ```
 
 ## Security

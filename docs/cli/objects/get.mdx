@@ -14,10 +14,12 @@ t3 o g <bucket> <key> [flags]
 
 ## Flags
 
-| Name             | Required | Default | Description                                                                                                          |
-| ---------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------- |
-| `--output`, `-o` | No       | —       | Output file path (if not specified, prints to stdout)                                                                |
-| `--mode`, `-m`   | No       | —       | Response mode: "string" loads into memory, "stream" writes in chunks (auto-detected from extension if not specified) |
+| Name                              | Required | Default | Description                                                                                                          |
+| --------------------------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------- |
+| `--output`, `-o`                  | No       | —       | Output file path (if not specified, prints to stdout)                                                                |
+| `--mode`, `-m`                    | No       | —       | Response mode: "string" loads into memory, "stream" writes in chunks (auto-detected from extension if not specified) |
+| `--snapshot-version`, `-snapshot` | No       | —       | Read from a specific bucket snapshot                                                                                 |
+| `--version-id`                    | No       | —       | Download a specific object version (requires bucket versioning). Omit for latest                                     |
 
 ## Examples
 

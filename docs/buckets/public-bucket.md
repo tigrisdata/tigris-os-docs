@@ -1,5 +1,13 @@
 # Public Bucket
 
+:::info
+
+There is no additional charge to make buckets public. However, to prevent abuse,
+payment method verification is required to use public bucket functionality. This
+requirement applies to all organizations created after May 18, 2026.
+
+:::
+
 Sometimes you want to share your bucket with the world. You can do this by
 creating a public bucket. This will allow anyone to read the contents of your
 bucket. You can still control who can write to your bucket.
@@ -54,16 +62,6 @@ accessible at:
 
 All three domains serve the same content without authentication and are
 interchangeable.
-
-:::info[Existing Fly.io accounts]
-
-Existing Fly.io accounts can also access public content at
-`BUCKET_NAME.fly.storage.tigris.dev`. This continues to work but is not
-available for new accounts. We recommend setting up a
-[custom domain](#custom-domain) for production use regardless of which domain
-you currently use.
-
-:::
 
 :::warning
 

@@ -7,8 +7,7 @@ supports logging in with a Fly.io account through Single Sign-On (SSO), see the
 
 ## Create an account
 
-To get started, follow our
-[Get Started Guide](https://www.tigrisdata.com/docs/get-started/). You'll be up
+To get started, follow our [Get Started Guide](/docs/get-started/). You'll be up
 and running in a minute.
 
 ## Get invited by a team member

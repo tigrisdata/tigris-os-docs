@@ -90,7 +90,6 @@ based on the role assigned to the it.
 | GetBucketPolicyStatus              | ✅    | ✅     | ✅       |
 | GetBucketRequestPayment            | ✅    | ✅     | ❌       |
 | GetBucketTagging                   | ✅    | ✅     | ✅       |
-| GetBucketVersioning                | ✅    | ✅     | ✅       |
 | GetObject                          | ✅    | ✅     | ✅       |
 | GetObjectACL                       | ✅    | ✅     | ❌       |
 | GetObjectTagging                   | ✅    | ✅     | ✅       |
@@ -102,6 +101,7 @@ based on the role assigned to the it.
 | ListObjectParts                    | ✅    | ✅     | ❌       |
 | ListObjectsV1                      | ✅    | ✅     | ✅       |
 | ListObjectsV2                      | ✅    | ✅     | ✅       |
+| ListObjectVersions                 | ✅    | ✅     | ✅       |
 | NewMultipartUpload                 | ✅    | ✅     | ❌       |
 | GetBucketAccelerateConfiguration   | ✅    | ✅     | ✅       |
 | GetBucketOwnershipControls         | ✅    | ✅     | ✅       |

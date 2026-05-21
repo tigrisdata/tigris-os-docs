@@ -64,7 +64,7 @@ aws s3api put-object --bucket my-bucket --key my-object.txt --body bar.txt --sto
 
 ```http
 PUT /my-object.txt HTTP/1.1
-Host: my-bucket.storage.fly.tigris.dev
+Host: my-bucket.t3.storage.dev
 x-amz-storage-class: STANDARD_IA
 ```
 

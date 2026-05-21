@@ -178,13 +178,13 @@ tigris snapshots take my-bucket pre-release
 tigris snapshots list my-bucket
 
 # Create a fork
-tigris forks create my-bucket experiment-fork
+tigris buckets create experiment-fork --fork-of my-bucket
 
 # Create a fork from a snapshot
-tigris forks create my-bucket experiment-fork --snapshot pre-release
+tigris buckets create experiment-fork --fork-of my-bucket --source-snapshot pre-release
 
 # List forks
-tigris forks list my-bucket
+tigris buckets list --forks-of my-bucket
 ```
 
 ## Learn More

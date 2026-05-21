@@ -195,7 +195,7 @@ if config_env() == :prod do
 
   config :ex_aws, :s3,
     scheme: "https://",
-    host: "fly.storage.tigris.dev",
+    host: "t3.storage.dev",
     region: "auto"
     
 # List all buckets

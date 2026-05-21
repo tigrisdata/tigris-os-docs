@@ -444,6 +444,11 @@ const sidebars = {
                 },
                 {
                   type: "doc",
+                  label: "Mastra",
+                  id: "agents/agent-mastra",
+                },
+                {
+                  type: "doc",
                   label: "Weka",
                   id: "guides/weka",
                 },
@@ -459,6 +464,11 @@ const sidebars = {
                   type: "doc",
                   label: "DuckDB",
                   id: "quickstarts/duckdb",
+                },
+                {
+                  type: "doc",
+                  label: "DuckLake",
+                  id: "quickstarts/ducklake",
                 },
                 {
                   type: "doc",
@@ -713,11 +723,6 @@ const sidebars = {
           ],
         },
         "training/tigrisfs",
-        {
-          type: "doc",
-          label: "Changelog",
-          id: "changelog/index",
-        },
       ],
     },
     {
@@ -863,20 +868,22 @@ const sidebars = {
             "cli/buckets/get",
             "cli/buckets/delete",
             "cli/buckets/set",
-            "cli/buckets/set-ttl",
+            {
+              type: "category",
+              label: "tigris buckets lifecycle",
+              link: { type: "doc", id: "cli/buckets/lifecycle" },
+              items: [
+                "cli/buckets/lifecycle/list",
+                "cli/buckets/lifecycle/create",
+                "cli/buckets/lifecycle/edit",
+              ],
+            },
             "cli/buckets/set-migration",
             "cli/buckets/migrate",
-            "cli/buckets/set-transition",
             "cli/buckets/set-locations",
             "cli/buckets/set-notifications",
             "cli/buckets/set-cors",
           ],
-        },
-        {
-          type: "category",
-          label: "tigris forks",
-          link: { type: "doc", id: "cli/forks" },
-          items: ["cli/forks/list", "cli/forks/create"],
         },
         {
           type: "category",
@@ -890,10 +897,11 @@ const sidebars = {
           link: { type: "doc", id: "cli/objects" },
           items: [
             "cli/objects/list",
+            "cli/objects/list-versions",
             "cli/objects/get",
             "cli/objects/put",
             "cli/objects/delete",
-            "cli/objects/set",
+            "cli/objects/set-access",
             "cli/objects/info",
           ],
         },
@@ -995,6 +1003,11 @@ const sidebars = {
           id: "ai/agent-kit/index",
         },
       ],
+    },
+    {
+      type: "doc",
+      label: "Changelog",
+      id: "changelog/index",
     },
     {
       type: "link",

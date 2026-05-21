@@ -4,20 +4,22 @@ Soft delete protects your bucket against accidental deletion. When soft delete
 is enabled, deleting an object does not immediately remove its data. Tigris
 keeps the deleted object for a configurable retention window during which you
 can list it, restore it, or permanently remove it. Once the retention window
-expires, Tigris cleans the object up automatically.
+expires, Tigris cleans the data up automatically.
 
 The same retention policy also protects the bucket itself: deleting a bucket
 with soft delete enabled moves the bucket into a soft-deleted state instead of
 hard deleting it. A soft-deleted bucket can be restored back into an active
-bucket within the retention window.
+bucket within the retention window, and is permanently removed once the
+retention window expires.
 
 ## How soft delete works
 
 When soft delete is enabled on a bucket:
 
 - A delete on an object marks the object as soft-deleted instead of removing its
-  data. The object stops appearing in regular listings and reads, and is not
-  counted against your live object inventory.
+  data. The object stops appearing in regular listings and reads, but its data
+  is preserved and still counts toward your bucket's object count and storage
+  usage until it is permanently removed.
 - Soft-deleted objects remain restorable for the retention window. You can list
   them, restore them to a live state, or permanently delete them ahead of the
   schedule.
@@ -28,6 +30,18 @@ When soft delete is enabled on a bucket:
   data and reclaims its storage.
 - Soft-deleted data continues to consume storage and is billed at the same rate
   as live data until it is removed.
+
+At a glance, the lifecycle looks like this:
+
+```
+     DELETE        ──►   soft-deleted state   ──┬──►   permanently removed
+bucket or object         (recoverable)          │      (async, after retention)
+                                                │
+                              ◄─── restore ─────┘
+```
+
+Cleanup runs asynchronously, so data is removed shortly after the retention
+window passes.
 
 ## Enabling soft delete on a bucket
 
@@ -47,17 +61,27 @@ The retention window controls how long deleted buckets and objects remain
 recoverable. It must be between **7 and 90 days**, and defaults to **7 days**
 when soft delete is first enabled.
 
-## Restoring deleted buckets
+### Enabling soft delete via the S3 API
+
+Set the `X-Tigris-Soft-Delete` header on `CreateBucket` — use `true` for the
+default 7-day retention, or a number between `7` and `90` for a custom window.
+
+```go
+func createBucketWithSoftDelete(ctx context.Context, client *s3.Client, bucketName string) error {
+	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Soft-Delete", "30"))
+	})
+	return err
+}
+```
+
+## Restoring a deleted bucket
 
 A bucket deleted while soft delete was enabled is not removed immediately. It
 moves to a soft-deleted state where it is hidden from your normal bucket list
-but stays recoverable until the retention window expires.
-
-### Restore a bucket
-
-Soft-deleted buckets are listed under the **Deleted buckets** tab on the buckets
-page in the Tigris Dashboard. Each entry shows the bucket name, location,
-deletion time, soft delete status, and owner.
+but stays recoverable until the retention window expires. Soft-deleted buckets
+are listed under the **Deleted buckets** tab on the buckets page in the Tigris
+Dashboard, where each row represents a deleted bucket.
 
 To restore a bucket, open the row's overflow menu (`...`) and choose
 **Restore**:
@@ -65,26 +89,45 @@ To restore a bucket, open the row's overflow menu (`...`) and choose
 ![Restore a soft-deleted bucket from the Deleted buckets tab](/img/soft-delete-restore-bucket.png)
 
 After a successful restore, the bucket is fully active again — it moves back to
-the regular bucket list and all the objects it held at the time of deletion are
-available. If you want to remove a soft-deleted bucket immediately instead of
-waiting for the retention window to expire, choose **Delete** from the same
-menu.
+the regular bucket list and every object it held at the time of deletion is live
+and readable, exactly as it was before the bucket was deleted. If you want to
+remove a soft-deleted bucket immediately instead of waiting for the retention
+window to expire, choose **Delete** from the same menu.
+
+While a bucket is in the soft-deleted state, its name stays reserved — you
+cannot create a new bucket with the same name until either the bucket is
+restored or permanently removed. This prevents another account from
+inadvertently claiming the name during the recovery window.
 
 ## Restoring a deleted object
 
-Inside a bucket, soft-deleted objects are listed under the **Deleted files**
+Every delete on a key produces its own soft-deleted version, stamped with the
+time it was deleted. The same key can therefore have many soft-deleted versions
+stacked up if it has been written and deleted more than once. For example, if
+you write an object at key `a`, delete it, write a fresh copy at `a`, delete
+that, then repeat one more time, the key will have three soft-deleted versions —
+one for each delete — all independently restorable until their retention windows
+expire.
+
+Inside a bucket, all soft-deleted objects are listed under the **Deleted files**
 tab. Selecting a deleted object opens its **Version history** panel on the
 right, which lists each soft-deleted version of that key along with its
-timestamp, version ID, size, and ETag.
-
-To restore the object, pick the version you want to recover and click **Restore
-this version**:
+timestamp, version ID, size, and ETag. To restore the object, pick the version
+you want to recover and click **Restore this version**:
 
 ![Restore a soft-deleted object from the Deleted files tab](/img/soft-delete-restore-object.png)
 
 The selected version becomes live immediately and is visible to all subsequent
 reads. To permanently remove a soft-deleted version before its retention window
 expires, click **Delete** on the same panel.
+
+### Snapshot buckets
+
+On a snapshot-enabled bucket, deleting a specific version moves that version
+into the soft-deleted state, where it appears in the **Deleted files** tab and
+can be restored from its Version history panel the same way. A plain delete on a
+snapshot-enabled bucket behaves as usual — it records a delete marker and leaves
+earlier versions live and accessible.
 
 ## Things to note
 

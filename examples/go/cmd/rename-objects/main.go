@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -32,7 +33,16 @@ func main() {
 	}
 
 	bucketName := flag.Arg(0)
-	keyName := "examplefile-go.js"
+
+	// Use a timestamp suffix on both keys so re-runs (and concurrent CI
+	// jobs sharing the bucket) cannot collide with leftover state from a
+	// previous run that died between the rename and the cleanup delete.
+	// Tigris rename is atomic and does NOT silently overwrite — a 409
+	// KeyAlreadyExists from a stale destination key is the API working
+	// as designed, not a bug to paper over.
+	suffix := time.Now().UTC().Format("20060102-150405.000000000")
+	keyName := fmt.Sprintf("examplefile-go-%s.js", suffix)
+	targetName := fmt.Sprintf("examplefile-go-rename-%s.js", suffix)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -64,8 +74,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Unable to put object. Here's why: %v", err)
 	}
-
-	targetName := "examplefile-go-rename.js"
 
 	fmt.Println("Renaming object in the bucket:", keyName)
 

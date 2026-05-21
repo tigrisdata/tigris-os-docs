@@ -33,7 +33,7 @@ export default function FeaturesGrid() {
           icon="img/lightning"
           title="Global Distribution"
           description="Data automatically stored close to users for low latency everywhere."
-          to="/overview/#global-low-latency-access"
+          to="/overview/features/#global-distribution"
         />
         <FeatureTile
           icon="img/lightning"

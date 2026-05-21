@@ -75,13 +75,39 @@ func createBucketWithSoftDelete(ctx context.Context, client *s3.Client, bucketNa
 }
 ```
 
+## Viewing soft delete status on the buckets list
+
+A **Soft Delete** column on the buckets list marks which buckets have soft
+delete enabled, showing **Enabled** or **Disabled** for each row.
+Snapshot-enabled buckets are included in the same list and marked the same way.
+
+![Buckets list with the Deleted buckets tab and Soft Delete column](/img/soft-delete-col-segment.png)
+
+## Deleting a bucket with soft delete enabled
+
+When you delete a bucket that has soft delete enabled, the delete confirmation
+dialog reflects that the action is recoverable instead of permanent. It tells
+you the bucket can be restored from the **Deleted buckets** tab within its
+retention period — and that after that window passes, the deletion is permanent.
+The action button is labeled **Soft Delete** rather than **Delete**, and you
+still confirm by typing the bucket name.
+
+![Delete bucket confirmation dialog for a soft-delete-enabled bucket](/img/soft-delete-bucket-modal.png)
+
+This is the cue that the bucket is moving into the soft-deleted state covered
+below rather than being permanently removed.
+
 ## Restoring a deleted bucket
 
 A bucket deleted while soft delete was enabled is not removed immediately. It
 moves to a soft-deleted state where it is hidden from your normal bucket list
-but stays recoverable until the retention window expires. Soft-deleted buckets
-are listed under the **Deleted buckets** tab on the buckets page in the Tigris
-Dashboard, where each row represents a deleted bucket.
+but stays recoverable until the retention window expires.
+
+The buckets page in the Tigris Dashboard has a segmented control above the list
+with an **All buckets**, **Own by me**, and **Deleted buckets** segment. The
+**Deleted buckets** segment is where every bucket that was deleted while soft
+delete was enabled shows up — each row in this view represents a soft-deleted
+bucket that is still within its retention window.
 
 To restore a bucket, open the row's overflow menu (`...`) and choose
 **Restore**:

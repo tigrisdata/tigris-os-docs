@@ -147,15 +147,15 @@ one-line shortcut:
 
 ```bash
 # Expire every object 30 days after it was last modified
-tigris buckets set-ttl my-bucket --days 30
+tigris buckets lifecycle create my-bucket --expire-days 30
 
-# Pause the rule without removing it
-tigris buckets set-ttl my-bucket --disable
+# List existing rules (use the id to edit or remove a rule)
+tigris buckets lifecycle list my-bucket
 ```
 
-See [`tigris buckets set-ttl`](/docs/cli/buckets/set-ttl/). For prefix-scoped or
-multi-rule expirations, use the AWS CLI with a `lifecycle.json` file as shown
-above.
+See [`tigris buckets lifecycle`](/docs/cli/buckets/lifecycle/). For
+prefix-scoped or multi-rule expirations, use the AWS CLI with a `lifecycle.json`
+file as shown above.
 
 ## How rules are evaluated
 
@@ -195,5 +195,5 @@ sweep. There is no backfill flag — rules apply on the next scan, oldest-first.
 - [Storage Tiers](/docs/objects/tiers/) — the storage tiers expiration rules
   apply to.
 - [Create a bucket](/docs/buckets/create-bucket/) — bucket-level defaults.
-- [`tigris buckets set-ttl`](/docs/cli/buckets/set-ttl/) — Tigris CLI shortcut
-  for single-rule expiration.
+- [`tigris buckets lifecycle`](/docs/cli/buckets/lifecycle/) — Tigris CLI
+  shortcut for single-rule expiration.

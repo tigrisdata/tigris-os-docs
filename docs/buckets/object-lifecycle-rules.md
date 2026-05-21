@@ -234,16 +234,15 @@ For the common case of a single transition or expiration on a bucket, the
 
 ```bash
 # Move objects to Infrequent Access after 30 days
-tigris buckets set-transition my-bucket --storage-class STANDARD_IA --days 30
+tigris buckets lifecycle create my-bucket --storage-class STANDARD_IA --days 30
 
-# Disable existing transition rules (keeps them defined, pauses execution)
-tigris buckets set-transition my-bucket --disable
+# List existing rules (use the id to edit or remove a rule)
+tigris buckets lifecycle list my-bucket
 ```
 
-See [`tigris buckets set-transition`](/docs/cli/buckets/set-transition/) and
-[`tigris buckets set-ttl`](/docs/cli/buckets/set-ttl/). For multi-rule or
-prefix-filtered configurations, use the AWS CLI with a `lifecycle.json` file as
-shown above.
+See [`tigris buckets lifecycle`](/docs/cli/buckets/lifecycle/). For multi-rule
+or prefix-filtered configurations, use the AWS CLI with a `lifecycle.json` file
+as shown above.
 
 ## How rules are evaluated
 
@@ -289,6 +288,5 @@ sweep. There is no backfill flag — rules apply on the next scan, oldest-first.
   `GLACIER`, and `GLACIER_IR`, plus how to restore objects from `GLACIER`.
 - [Create a bucket](/docs/buckets/create-bucket/) — set a default tier at bucket
   creation time.
-- [`tigris buckets set-transition`](/docs/cli/buckets/set-transition/) and
-  [`tigris buckets set-ttl`](/docs/cli/buckets/set-ttl/) — Tigris CLI shortcuts
-  for single-rule configurations.
+- [`tigris buckets lifecycle`](/docs/cli/buckets/lifecycle/) — Tigris CLI
+  shortcut for single-rule configurations.

@@ -68,10 +68,10 @@ bucket:
 aws s3api put-bucket-lifecycle-configuration --bucket my-bucket --lifecycle-configuration file://lifecycle.json
 ```
 
-#### Expire objects at the end of the year 2025
+#### Expire objects at the end of the year
 
 Here's an example of a bucket lifecycle configuration that expires objects at
-the end of the year 2025.
+the end of the year 2026.
 
 Create a JSON file named `lifecycle.json` with the following content:
 
@@ -83,7 +83,7 @@ Create a JSON file named `lifecycle.json` with the following content:
       "Status": "Enabled",
       "Filter": {},
       "Expiration": {
-        "Date": "2025-12-31T00:00:00Z"
+        "Date": "2026-12-31T00:00:00Z"
       }
     }
   ]
@@ -127,12 +127,56 @@ leaving everything else untouched.
 }
 ```
 
+#### Inspect or remove the current configuration
+
+```bash
+# Show the current set of rules
+aws s3api get-bucket-lifecycle-configuration --bucket my-bucket
+
+# Remove all rules (transition and expiration alike)
+aws s3api delete-bucket-lifecycle --bucket my-bucket
+```
+
+`get-bucket-lifecycle-configuration` returns `NoSuchLifecycleConfiguration` on
+a bucket that has never had rules applied — this is expected.
+
+### Specifying expiration via the Tigris CLI
+
+For a single expiration on a whole bucket, the
+[Tigris CLI](/docs/cli/) is a one-line shortcut:
+
+```bash
+# Expire every object 30 days after it was last modified
+tigris buckets set-ttl my-bucket --days 30
+
+# Pause the rule without removing it
+tigris buckets set-ttl my-bucket --disable
+```
+
+See [`tigris buckets set-ttl`](/docs/cli/buckets/set-ttl/). For prefix-scoped
+or multi-rule expirations, use the AWS CLI with a `lifecycle.json` file as
+shown above.
+
+## How rules are evaluated
+
+Each rule runs on its own worker, walking the bucket oldest-first. If two
+rules match the same object, whichever worker reaches it first does the work.
+When a transition and an expiration fire on the same object at roughly the
+same moment, the timestamp of each metadata update settles the outcome.
+
+After you apply a new configuration, expect the first deletions within a few
+minutes, or up to fifteen to twenty minutes if the scheduler just finished a
+sweep. There is no backfill flag — rules apply on the next scan, oldest-first.
+
 ## Things to note
 
 - A bucket can have at most 10 lifecycle rules. The 10-rule limit is shared
   across expiration and transition rules.
 - Each rule may include an `ID` (up to 36 characters). If you omit `ID`, Tigris
   generates one.
+- `Status` accepts `Enabled` or `Disabled`. A `Disabled` rule stays in the
+  configuration but does not execute — useful for pausing a rule without
+  losing the definition.
 - Use `Filter.Prefix` on a rule to scope it to a subset of objects. Omit
   `Filter` (or pass an empty object `{}`) to apply the rule to every object in
   the bucket.
@@ -151,3 +195,5 @@ leaving everything else untouched.
 - [Storage Tiers](/docs/objects/tiers/) — the storage tiers expiration rules
   apply to.
 - [Create a bucket](/docs/buckets/create-bucket/) — bucket-level defaults.
+- [`tigris buckets set-ttl`](/docs/cli/buckets/set-ttl/) — Tigris CLI shortcut
+  for single-rule expiration.

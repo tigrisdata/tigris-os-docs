@@ -43,12 +43,20 @@ full description of each):
    archival purposes but rarely need to access, such as old backups, historical
    records, or completed projects.
 
-3. **GLACIER_IA**: Glacier Infrequent Access storage is designed for data that
-   requires immediate access but is accessed very infrequently. This tier offers
-   a balance between cost and retrieval time - it's more expensive than GLACIER
-   but provides faster access times. Ideal for data that needs to be available
-   quickly when requested, such as monthly reports, quarterly analytics, or
-   seasonal data that might be needed on short notice.
+3. **GLACIER_IR**: Archive Instant Retrieval storage offers archive-tier pricing
+   while still serving GET requests directly, with no restore step. It's more
+   expensive than `GLACIER` but cheaper than `STANDARD_IA` for cold-but-still-
+   readable data. Ideal for backups, compliance archives, or historical
+   datasets that are queried rarely but must respond immediately when they are.
+
+:::note Restore required for GLACIER
+
+Objects in the `GLACIER` storage class return a `403 InvalidObjectState` error
+on GET until you initiate a restore. See
+[Restoring objects from Archive tier](/docs/objects/tiers/#restoring-objects-from-archive-tier).
+`GLACIER_IR` does not require restore.
+
+:::
 
 ### Specifying Object Lifecycle rules via the Tigris Dashboard
 
@@ -99,10 +107,10 @@ bucket:
 aws s3api put-bucket-lifecycle-configuration --bucket my-bucket --lifecycle-configuration file://lifecycle.json
 ```
 
-#### Transition objects at the end of the year 2025
+#### Transition objects at the end of the year
 
 Here's an example of an Object lifecycle configuration that transitions objects
-at the end of the year 2025.
+at the end of the year 2026.
 
 Create a JSON file named `lifecycle.json` with the following content:
 
@@ -115,7 +123,7 @@ Create a JSON file named `lifecycle.json` with the following content:
       "Filter": {},
       "Transitions": [
         {
-          "Date": "2025-12-31T00:00:00Z",
+          "Date": "2026-12-31T00:00:00Z",
           "StorageClass": "GLACIER"
         }
       ]
@@ -199,12 +207,68 @@ expiration side.
 To chain multiple transitions (for example, `STANDARD → STANDARD_IA → GLACIER`),
 use one rule per transition.
 
+#### Inspect the current configuration
+
+```bash
+aws s3api get-bucket-lifecycle-configuration --bucket my-bucket
+```
+
+Returns the current set of rules. If no configuration is set, AWS returns a
+`NoSuchLifecycleConfiguration` error — this is expected on a bucket that has
+never had rules applied.
+
+#### Remove all rules
+
+```bash
+aws s3api delete-bucket-lifecycle --bucket my-bucket
+```
+
+To remove a single rule rather than all of them, fetch the current config with
+`get-bucket-lifecycle-configuration`, edit the JSON to drop the rule you don't
+want, and re-apply with `put-bucket-lifecycle-configuration`.
+
+### Specifying rules via the Tigris CLI
+
+For the common case of a single transition or expiration on a bucket, the
+[Tigris CLI](/docs/cli/) is a one-line shortcut:
+
+```bash
+# Move objects to Infrequent Access after 30 days
+tigris buckets set-transition my-bucket --storage-class STANDARD_IA --days 30
+
+# Disable existing transition rules (keeps them defined, pauses execution)
+tigris buckets set-transition my-bucket --disable
+```
+
+See [`tigris buckets set-transition`](/docs/cli/buckets/set-transition/) and
+[`tigris buckets set-ttl`](/docs/cli/buckets/set-ttl/). For multi-rule or
+prefix-filtered configurations, use the AWS CLI with a `lifecycle.json` file
+as shown above.
+
+## How rules are evaluated
+
+Each rule runs on its own worker, walking the bucket oldest-first. If two
+rules match the same object, whichever worker reaches it first does the work
+— there is no preferred ordering between rules with overlapping prefixes.
+
+Transitions are one-way toward colder tiers. Once an object lands in
+`GLACIER`, no rule can pull it back to `STANDARD_IA` or `STANDARD`. When two
+transitions race on the same object, the one that fires first wins; the other
+has nothing to do by the time it arrives.
+
+After you apply a new configuration, expect the first action within a few
+minutes, or up to fifteen to twenty minutes if the scheduler just finished a
+sweep. There is no backfill flag — rules apply on the next scan, oldest-first.
+
 ## Things to note
 
 - A bucket can have at most 10 lifecycle rules. The 10-rule limit is shared
   across transition and expiration rules.
 - Each rule may include an `ID` (up to 36 characters). If you omit `ID`, Tigris
   generates one.
+- `Status` accepts `Enabled` or `Disabled`. A `Disabled` rule stays in the
+  configuration but does not execute — useful for pausing a rule without
+  losing the definition.
 - Use `Filter.Prefix` on a rule to scope it to a subset of objects. Omit
   `Filter` (or pass an empty object `{}`) to apply the rule to every object in
   the bucket.
@@ -222,6 +286,9 @@ use one rule per transition.
 - [Object Expiration](/docs/buckets/objects-expiration/) — the expiration form
   of lifecycle rules.
 - [Storage Tiers](/docs/objects/tiers/) — details on `STANDARD`, `STANDARD_IA`,
-  `GLACIER`, and `GLACIER_IA`.
+  `GLACIER`, and `GLACIER_IR`, plus how to restore objects from `GLACIER`.
 - [Create a bucket](/docs/buckets/create-bucket/) — set a default tier at
   bucket creation time.
+- [`tigris buckets set-transition`](/docs/cli/buckets/set-transition/) and
+  [`tigris buckets set-ttl`](/docs/cli/buckets/set-ttl/) — Tigris CLI
+  shortcuts for single-rule configurations.

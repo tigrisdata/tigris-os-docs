@@ -712,12 +712,12 @@ paths:
       description: |
         Creates a new IAM policy with the given name and document.
         Returns 409 if a policy with the same name already exists — use
-        [Update Policy](#tag/iam/operation/Tigris_UpdatePolicy) to modify existing policies.
+        [Update Policy](/docs/partner-integrations/api/tigris-update-policy/) to modify existing policies.
 
         The policy document follows the [AWS IAM policy syntax](https://www.tigrisdata.com/docs/iam/policies/).
 
         After creating a policy, attach it to an access key using the
-        [Update Access Key](#tag/iam/operation/Tigris_UpdateAccessKey) endpoint
+        [Update Access Key](/docs/partner-integrations/api/tigris-update-access-key/) endpoint
         with the `add_policies` field.
 
         ##### Example: Read-write access to a prefix

@@ -96,7 +96,7 @@ by replacing the bucket host with your custom domain:
 
 ```go
 brandedURL := strings.ReplaceAll(
-    presignedGetReq.URL, "foo-bucket.t3.storage.dev", "your-domain.example.com")
+    presignedGetReq.URL, bucketName+".t3.storage.dev", "your-domain.example.com")
 fmt.Printf("Presigned URL for GET (custom domain): %s\n", brandedURL)
 ```
 

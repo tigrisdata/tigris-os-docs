@@ -124,7 +124,7 @@ download objects.
 
 You can also use a
 [presigned URL with a custom domain](../../objects/presigned.md#presigned-url-with-custom-domain)
-by replacing the Tigris domain name with your custom domain name:
+by replacing the bucket host with your custom domain:
 
 ```php
 $brandedURL = str_replace(

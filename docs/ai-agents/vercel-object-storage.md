@@ -204,8 +204,8 @@ For public buckets, files are accessible directly via a public content domain:
 https://your-bucket-name.t3.tigrisbucket.io/path/to/file.jpg
 ```
 
-See [Public Buckets](/docs/buckets/public-bucket/) for all available domains.
-Do not use `t3.storage.dev` domain for serving public content.
+See [Public Buckets](/docs/buckets/public-bucket/) for all available domains. Do
+not use `t3.storage.dev` for serving public content.
 
 For private buckets, generate presigned GET URLs in your API routes:
 

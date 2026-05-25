@@ -46,8 +46,8 @@ aws s3api --endpoint-url https://t3.storage.dev put-object --bucket foo-bucket -
 
 `--acl public-read` makes the object publicly viewable at
 `https://foo-bucket.t3.tigrisbucket.io/bar-public.txt` (or another
-[public bucket domain](/docs/buckets/public-bucket#public-bucket-domains)).
-Do not use `t3.storage.dev` URLs for serving public content.
+[public bucket domain](/docs/buckets/public-bucket#public-bucket-domains)). Do
+not use `t3.storage.dev` for serving public content.
 
 ### Private objects in a public bucket
 

@@ -118,7 +118,7 @@ func main() {
 	}
 
 	// Use a custom domain for presigned URLs
-	brandedURL := strings.ReplaceAll(presignedGetReq.URL, "tigris-example.t3.storage.dev", "your-domain.example.com")
+	brandedURL := strings.ReplaceAll(presignedGetReq.URL, bucketName+".t3.storage.dev", "your-domain.example.com")
 	fmt.Printf("Presigned URL for GET (custom domain): %s\n", brandedURL)
 
 	// Presigned URL to delete an object from the bucket

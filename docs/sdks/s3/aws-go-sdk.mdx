@@ -95,7 +95,8 @@ You can also use a
 by replacing the Tigris domain name with your custom domain name:
 
 ```go
-brandedURL := strings.ReplaceAll(presignedGetReq.URL, "tigris-example.t3.storage.dev", "your-domain.example.com")
+brandedURL := strings.ReplaceAll(
+    presignedGetReq.URL, "foo-bucket.t3.storage.dev", "your-domain.example.com")
 fmt.Printf("Presigned URL for GET (custom domain): %s\n", brandedURL)
 ```
 

@@ -128,11 +128,13 @@ public class AWSS3PresignedURLs {
 
 ### Presigned URLs with custom domains
 
-You can also use a
-[presigned URL with a custom domain](../../objects/presigned.md#presigned-url-with-custom-domain)
-by replacing the Tigris domain name with your custom domain name:
+SDKs sign presigned URLs against `https://t3.storage.dev`. Do not share these
+URLs with clients. Replace the host with your
+[custom domain](../../objects/presigned.md#sharing-presigned-urls-with-clients)
+before distributing them:
 
 ```java
-String brandedUrl = url.replace("t3.storage.dev", "your-domain.example.com");
+String brandedUrl = url.replace(
+    "foo-bucket.t3.storage.dev", "your-domain.example.com");
 System.out.println("Presigned URL for GET (custom domain): " + brandedUrl);
 ```

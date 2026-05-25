@@ -113,9 +113,10 @@ func main() {
 	presignedGetReq, err := presigner.GetObject(ctx, bucketName, "bar.txt", 60*time.Minute)
 	if err != nil {
 		log.Printf("Couldn't get a presigned request to get bar.txt. Here's why: %v\n", err)
-	} else {
-		fmt.Printf("Presigned URL for GET: %s\n", presignedGetReq.URL)
+		return
 	}
+
+	fmt.Printf("Presigned URL for GET: %s\n", presignedGetReq.URL)
 
 	// Use a custom domain for presigned URLs
 	brandedURL := strings.ReplaceAll(presignedGetReq.URL, bucketName+".t3.storage.dev", "your-domain.example.com")

@@ -8,6 +8,15 @@ requirement applies to all organizations created after May 18, 2026.
 
 :::
 
+:::info
+
+`https://t3.storage.dev` is the API endpoint for authenticated SDK and CLI
+requests. Public bucket objects are not served from this domain — use the
+[public bucket domains](#public-bucket-domains) below or a
+[custom domain](./custom-domain.md).
+
+:::
+
 Sometimes you want to share your bucket with the world. You can do this by
 creating a public bucket. This will allow anyone to read the contents of your
 bucket. You can still control who can write to your bucket.

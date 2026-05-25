@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"time"
 
@@ -76,7 +77,7 @@ func (p *Client) DeleteObject(ctx context.Context, bucket string, object string,
 func main() {
 	flag.Parse()
 	if flag.NArg() != 1 {
-		log.Fatalf("usage: %s <bucket>", flag.Arg(0))
+		log.Fatalf("usage: %s <bucket>", os.Args[0])
 	}
 
 	bucketName := flag.Arg(0)
@@ -113,12 +114,13 @@ func main() {
 	presignedGetReq, err := presigner.GetObject(ctx, bucketName, "bar.txt", 60*time.Minute)
 	if err != nil {
 		log.Printf("Couldn't get a presigned request to get bar.txt. Here's why: %v\n", err)
-	} else {
-		fmt.Printf("Presigned URL for GET: %s\n", presignedGetReq.URL)
+		return
 	}
 
-	// Use a custom domain for presigned URLs
-	brandedURL := strings.ReplaceAll(presignedGetReq.URL, "tigris-example.t3.storage.dev", "your-domain.example.com")
+	fmt.Printf("Presigned URL for GET: %s\n", presignedGetReq.URL)
+
+	// Replace the bucket host with your custom domain before sharing
+	brandedURL := strings.ReplaceAll(presignedGetReq.URL, bucketName+".t3.storage.dev", "your-domain.example.com")
 	fmt.Printf("Presigned URL for GET (custom domain): %s\n", brandedURL)
 
 	// Presigned URL to delete an object from the bucket

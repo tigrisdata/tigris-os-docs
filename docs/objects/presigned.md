@@ -28,42 +28,40 @@ Refer to the following examples to generate a presigned URL:
 
 ## Presigned URL with custom domain
 
-If you utilize a [custom domain with Tigris](../buckets/custom-domain.md), you
-can also generate the presigned URL with the custom domain. This allows you to
-have consistent branding and user experience. You can utilize any of the SDKs
+If you use a [custom domain with Tigris](../buckets/custom-domain.md), you can
+also generate the presigned URL with the custom domain. This allows you to have
+consistent branding and user experience. You can utilize any of the SDKs
 mentioned above to generate the presigned URL and do string manipulation to have
 your custom domain.
 
-For example:
-
-For my bucket `mybucket.mydomain.com` and object key `hello.txt`, AWS CLI
-command to generate a presigned URL would look like:
+For bucket `foo-bucket` with custom domain `cdn.example.com` and object key
+`hello.txt`, the AWS CLI command to generate a presigned URL looks like:
 
 ```bash
-aws s3 presign s3://mybucket.mydomain.com/hello.txt
+aws s3 presign s3://foo-bucket/hello.txt --endpoint-url https://t3.storage.dev
 ```
 
-and generated URL would look like:
+The generated URL looks like this:
 
-```bash
-https://t3.storage.dev/mybucket.mydomain.com/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=tid_<>%2F20241210%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=<>X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=<>
+```text
+https://foo-bucket.t3.storage.dev/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&...
 ```
 
-You can remove `t3.storage.dev/` and make it look like:
+Replace the host (`foo-bucket.t3.storage.dev` → `cdn.example.com`) before
+sharing:
 
 ```bash
-https://mybucket.mydomain.com/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=tid_<>%2F20241210%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=<>X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=<>
+aws s3 presign s3://foo-bucket/hello.txt --endpoint-url https://t3.storage.dev \
+  | sed 's/foo-bucket\.t3\.storage\.dev/cdn.example.com/'
 ```
 
-Here is the bash one-liner to do the same:
-
-```bash
-aws s3 presign s3://mybucket.mydomain.com/hello.txt |  sed 's/t3.storage.dev\///'
+```text
+https://cdn.example.com/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&...
 ```
 
 ## Security
 
-When utilizing a custom domain and sharing pre-signed URLs for uploading
-objects, be mindful that individuals could upload files like HTML, JS, SVG, or
-executable browser files. These could pose a risk of XSS (Cross-Site Scripting)
-on your domain. Proceed with caution in such scenarios.
+When utilizing a custom domain and sharing presigned URLs for uploading objects,
+be mindful that individuals could upload files like HTML, JS, SVG, or executable
+browser files. These could pose a risk of XSS (Cross-Site Scripting) on your
+domain. Proceed with caution in such scenarios.

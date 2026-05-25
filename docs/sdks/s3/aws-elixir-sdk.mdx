@@ -90,9 +90,10 @@ import presignedUrls from "!!raw-loader!../../../examples/elixir/examples/presig
 
 You can also use a
 [presigned URL with a custom domain](../../objects/presigned.md#presigned-url-with-custom-domain)
-by replacing the Tigris domain name with your custom domain name:
+by replacing the bucket host with your custom domain:
 
 ```elixir
-branded_url = String.replace(presigned_url, "t3.storage.dev", "your-domain.example.com")
+branded_url = String.replace(
+  presigned_url, "foo-bucket.t3.storage.dev", "your-domain.example.com")
 IO.puts("Presigned URL for GET (custom domain): #{branded_url}")
 ```

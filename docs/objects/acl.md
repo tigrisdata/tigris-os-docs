@@ -44,7 +44,10 @@ readable, you can do so by setting the object ACL to `public-read`.
 aws s3api --endpoint-url https://t3.storage.dev put-object --bucket foo-bucket --key bar-public.txt --body bar.txt --acl public-read
 ```
 
-`--acl public-read` makes the object publicly viewable.
+`--acl public-read` makes the object publicly viewable at
+`https://foo-bucket.t3.tigrisbucket.io/bar-public.txt` (or another
+[public bucket domain](/docs/buckets/public-bucket#public-bucket-domains)). Do
+not use `t3.storage.dev` for serving public content.
 
 ### Private objects in a public bucket
 

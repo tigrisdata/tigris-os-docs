@@ -82,10 +82,12 @@ import presignedURLs from "!!raw-loader!../../../examples/python/presigned-urls.
 
 You can also use a
 [presigned URL with a custom domain](../../objects/presigned.md#presigned-url-with-custom-domain)
-by replacing the Tigris domain name with your custom domain name:
+by replacing the bucket host with your custom domain:
 
 ```python
-branded_url = presigned_url.replace("t3.storage.dev", "your-domain.example.com")
+branded_url = presigned_url.replace(
+    "foo-bucket.t3.storage.dev", "your-domain.example.com"
+)
 print(f"Presigned URL for GET (custom domain): {branded_url}")
 ```
 

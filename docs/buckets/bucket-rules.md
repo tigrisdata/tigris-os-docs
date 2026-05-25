@@ -13,9 +13,9 @@ The following naming rules apply for buckets.
 
   :::info
 
-  Using a dot (.) will disable virtual-hosted style access (e.g.,
-  `https://foo.bucket.t3.storage.dev`) for a bucket. However, you can still
-  access it through a correctly configured
+  Using a dot (.) will disable virtual-hosted style access on public content
+  domains (e.g., `https://foo.bucket.t3.tigrisbucket.io`) for a bucket. However,
+  you can still access it through a correctly configured
   [custom domain](/docs/buckets/custom-domain.md).
 
   :::

@@ -1,12 +1,5 @@
 # Presigned URLs
 
-:::info
-
-`https://t3.storage.dev` is the API endpoint for authenticated SDK and CLI
-requests. Do not use it as the host in presigned URLs you share with clients.
-
-:::
-
 Presigned URLs are URLs that provide temporary access to private objects in a
 bucket. This is useful for allowing users to upload or download objects without
 requiring them to have AWS credentials or permissions.
@@ -33,63 +26,43 @@ Refer to the following examples to generate a presigned URL:
 - [AWS PHP SDK](/docs/sdks/s3/aws-php-sdk/#using-presigned-urls)
 - [AWS Python SDK](/docs/sdks/s3/aws-python-sdk/#using-presigned-urls)
 
-## Sharing presigned URLs with clients
+## Presigned URL with custom domain
 
-SDKs and the AWS CLI sign presigned URLs against `https://t3.storage.dev`. The
-generated URL uses a `t3.storage.dev` host and cannot be shared with clients
-directly.
+If you utilize a [custom domain with Tigris](../buckets/custom-domain.md), you
+can also generate the presigned URL with the custom domain. This allows you to
+have consistent branding and user experience. You can utilize any of the SDKs
+mentioned above to generate the presigned URL and do string manipulation to have
+your custom domain.
 
-After generating a presigned URL, replace the host with your
-[custom domain](../buckets/custom-domain.md) before distributing it. The query
-string (signature parameters) stays the same.
+For example:
 
-### Virtual-hosted style
-
-For bucket `foo-bucket` with custom domain `cdn.example.com`:
+For bucket `foo-bucket` with custom domain `cdn.example.com` and object key
+`hello.txt`, the AWS CLI command to generate a presigned URL looks like:
 
 ```bash
 aws s3 presign s3://foo-bucket/hello.txt --endpoint-url https://t3.storage.dev
 ```
 
-The generated URL looks like:
+The generated URL would look like:
 
 ```text
 https://foo-bucket.t3.storage.dev/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&...
 ```
 
-Replace the host before sharing:
-
-```text
-https://cdn.example.com/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&...
-```
-
-In code:
+Replace the host (`foo-bucket.t3.storage.dev` → `cdn.example.com`) before sharing:
 
 ```bash
 aws s3 presign s3://foo-bucket/hello.txt --endpoint-url https://t3.storage.dev \
   | sed 's/foo-bucket\.t3\.storage\.dev/cdn.example.com/'
 ```
 
-### Bucket name matches custom domain
-
-If your bucket name is the same as your custom domain (e.g. bucket
-`mybucket.mydomain.com` with domain `mybucket.mydomain.com`), the generated
-URL uses path-style addressing:
-
 ```text
-https://t3.storage.dev/mybucket.mydomain.com/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&...
-```
-
-Remove the `t3.storage.dev/` prefix:
-
-```bash
-aws s3 presign s3://mybucket.mydomain.com/hello.txt \
-  | sed 's/t3\.storage\.dev\///'
+https://cdn.example.com/hello.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&...
 ```
 
 ## Security
 
-When utilizing a custom domain and sharing pre-signed URLs for uploading
+When utilizing a custom domain and sharing presigned URLs for uploading
 objects, be mindful that individuals could upload files like HTML, JS, SVG, or
 executable browser files. These could pose a risk of XSS (Cross-Site Scripting)
 on your domain. Proceed with caution in such scenarios.

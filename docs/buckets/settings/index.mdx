@@ -22,8 +22,8 @@ Here's an overview of the settings you can configure:
 - CORS Configuration: Configure Cross-Origin Resource Sharing (CORS) rules for
   your bucket.
 - Object Notifications: Subscribe to events on your buckets.
-- Deletion Protection: Prevent accidental deletion of your bucket by enabling
-  this setting.
+- Soft Delete: Keep deleted buckets and objects recoverable for a configurable
+  retention window.
 - Delete This Bucket: Permanently delete a bucket.
 
 ## Sharing
@@ -169,13 +169,15 @@ Tigris will notify you on the following events:
 - New objects being put into buckets.
 - Existing objects being deleted from buckets.
 
-## Delete Protection
+## Soft Delete
 
-When Delete Protection is enabled, no files in the bucket can be deleted. This
-setting prevents accidental or unauthorized deletion of objects, ensuring that
-all data in the bucket remains safe until you turn off Delete Protection.
+Soft Delete keeps deleted buckets and objects recoverable for a configurable
+retention window (7–90 days, default 7) instead of removing them immediately.
+Within that window you can restore them; after it expires, Tigris purges them
+automatically. Enable it under **Bucket Settings → Data Management**. See the
+[Soft Delete](/docs/buckets/soft-delete/) page for the full feature.
 
-![Delete Protection](./delete-protection.webp)
+![Delete bucket](./bucket-soft-delete.png)
 
 ## Delete This Bucket
 

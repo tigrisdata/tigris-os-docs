@@ -138,6 +138,41 @@ an object private, you can set the object ACL to `private`. See the
 
 :::
 
+## Directory listing
+
+Public buckets allow anonymous reads of individual objects, but **anonymous
+directory listing is disabled by default**. A request for a specific key
+succeeds, while a `ListObjects` request on the bucket root returns
+`403 AccessDenied`:
+
+```bash
+# Works — anonymous object read
+$ curl https://foo-public-bucket.t3.tigrisbucket.io/bar.txt
+bar
+
+# Returns 403 — anonymous bucket listing is disabled by default
+$ curl https://foo-public-bucket.t3.tigrisbucket.io/
+<?xml version="1.0" encoding="UTF-8"?>
+<Error><Code>AccessDenied</Code><Message>Access Denied.</Message>...</Error>
+```
+
+This default applies to public buckets created through any path (Tigris console,
+Tigris CLI, Fly CLI, or the S3 API).
+
+To enable anonymous directory listing on a bucket:
+
+- **Tigris CLI:**
+
+  ```bash
+  tigris buckets set foo-public-bucket --disable-directory-listing=false
+  ```
+
+- **Tigris Console:** Bucket Settings → **Access and Sharing** → toggle **off**
+  the "Disable Directory Listing" switch. The toggle is intentionally inverted —
+  turning it **off** is what **enables** public listing.
+
+  ![Disable Directory Listing toggle in Tigris Console](./settings/switch-dir-enable.png)
+
 ## Custom domain
 
 For production use, we recommend configuring a

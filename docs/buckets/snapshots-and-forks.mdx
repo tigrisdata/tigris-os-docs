@@ -606,6 +606,10 @@ operation is available to users with read-only (or higher) access to the bucket.
 However, note that this is a separate operation, and some IAM policies may need
 to be updated to allow it.
 
+Versioned object operations support the same authentication mechanisms as
+non-versioned operations. Presigned URLs can target a specific object version by
+including `versionId` in presigned URL requests, matching S3 behavior.
+
 ## Using a forked bucket
 
 Forked buckets behave the same as regular buckets, and you can use the usual

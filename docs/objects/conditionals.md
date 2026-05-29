@@ -114,7 +114,7 @@ Copy object only if it was modified:
 ```text
 PUT /destination-bucket/object-copy HTTP/1.1
 X-Amz-Copy-Source: /source-bucket/source-object
-X-Amz-Copy-Source-If-Modified-Since: "some-cut-off-date"
+X-Amz-Copy-Source-If-Modified-Since: Mon, 01 Jan 2024 00:00:00 GMT
 ```
 
 ## Error Responses

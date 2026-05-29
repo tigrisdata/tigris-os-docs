@@ -108,7 +108,7 @@ If the object hasn't changed, the response is `304 Not Modified` with no body.
 
 ### Conditional copy
 
-Copy object only if it was modified:
+Copy object only if it was modified since a given date:
 
 ```text
 PUT /destination-bucket/object-copy HTTP/1.1

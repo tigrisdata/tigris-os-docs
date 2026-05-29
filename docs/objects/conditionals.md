@@ -55,6 +55,18 @@ consistent latest state, without any additional configuration.
 
 :::
 
+## Conditional copy
+
+Tigris supports extra set of conditional headers for source object in
+`CopyObject` operation.
+
+| Header                                  | Behavior                                                                                                                                        |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `X-Amz-Copy-Source-If-Match`            | Request proceeds only if the source object's ETag matches the provided value. Returns `412 Precondition Failed` otherwise.                      |
+| `X-Amz-Copy-Source-If-None-Match`       | Request proceeds only if the source object's ETag does **not** match the provided value. Returns `412 Precondition Failed` otherwise.           |
+| `X-Amz-Copy-Source-If-Modified-Since`   | Request proceeds only if the source object was modified after the provided date (RFC 1123 format). Returns `412 Precondition Failed` otherwise. |
+| `X-Amz-Copy-Source-If-Unmodified-Since` | Request proceeds only if the source object was **not** modified after the provided date. Returns `412 Precondition Failed` otherwise.           |
+
 ## Use Cases
 
 ### Create-if-not-exists
@@ -93,6 +105,16 @@ If-None-Match: "etag-from-cached-copy"
 ```
 
 If the object hasn't changed, the response is `304 Not Modified` with no body.
+
+### Conditional copy
+
+Copy object only if it was modified since a given date:
+
+```text
+PUT /destination-bucket/object-copy HTTP/1.1
+X-Amz-Copy-Source: /source-bucket/source-object
+X-Amz-Copy-Source-If-Modified-Since: Mon, 01 Jan 2024 00:00:00 GMT
+```
 
 ## Error Responses
 

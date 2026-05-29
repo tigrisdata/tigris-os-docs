@@ -57,15 +57,15 @@ consistent latest state, without any additional configuration.
 
 ## Conditional copy
 
-Tigris supports extra set of conditional headers for source object in `CopyObject` operation.
+Tigris supports extra set of conditional headers for source object in
+`CopyObject` operation.
 
-| Header                                  | Behavior                                                                                                                                                                                                                                         |
-| ----------------------------------------| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `X-Amz-Copy-Source-If-Match`            | Request proceeds only if the source object's ETag matches the provided value. Returns `412 Precondition Failed` otherwise.                                                                                                                       |
-| `X-Amz-Copy-Source-If-None-Match`       | Request proceeds only if the source object's ETag does **not** match the provided value. Returns `412 Precondition Failed` otherwise.                                                                                                            |
-| `X-Amz-Copy-Source-If-Modified-Since`   | Request proceeds only if the source object was modified after the provided date (RFC 1123 format). Returns `412 Precondition Failed` otherwise.                                                                                                  |
-| `X-Amz-Copy-Source-If-Unmodified-Since` | Request proceeds only if the source object was **not** modified after the provided date. Returns `412 Precondition Failed` otherwise.                                                                                                            |
-
+| Header                                  | Behavior                                                                                                                                        |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `X-Amz-Copy-Source-If-Match`            | Request proceeds only if the source object's ETag matches the provided value. Returns `412 Precondition Failed` otherwise.                      |
+| `X-Amz-Copy-Source-If-None-Match`       | Request proceeds only if the source object's ETag does **not** match the provided value. Returns `412 Precondition Failed` otherwise.           |
+| `X-Amz-Copy-Source-If-Modified-Since`   | Request proceeds only if the source object was modified after the provided date (RFC 1123 format). Returns `412 Precondition Failed` otherwise. |
+| `X-Amz-Copy-Source-If-Unmodified-Since` | Request proceeds only if the source object was **not** modified after the provided date. Returns `412 Precondition Failed` otherwise.           |
 
 ## Use Cases
 
@@ -105,7 +105,6 @@ If-None-Match: "etag-from-cached-copy"
 ```
 
 If the object hasn't changed, the response is `304 Not Modified` with no body.
-
 
 ### Conditional copy
 

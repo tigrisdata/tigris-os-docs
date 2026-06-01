@@ -3,15 +3,9 @@
 You can also use a custom domain with your bucket. To do this, the following
 requirements must be met first:
 
-1. The custom domain name must be a valid domain or subdomain. For example,
-   `images.example.com`, `example.com`.
-
-   :::note[Update]
-
-   Starting 7 April 2025, bucket names no longer need to match custom domain
-   names.
-
-   :::
+1. The custom domain name must be a valid domain or subdomain — for example,
+   `images.example.com` or `example.com`. The bucket name does not need to match
+   the custom domain name.
 
 2. The custom domain must have a CNAME record that points to the bucket URL. For
    example, if you own the domain `images.example.com` and bucket `foo-bucket`,

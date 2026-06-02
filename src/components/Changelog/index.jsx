@@ -86,9 +86,7 @@ const SubcategoryItem = ({ title, description, tag, defaultOpen = false }) => {
       </div>
 
       {isOpen && description && (
-        <div className={styles.subcategoryItemDescription}>
-          <p>{description}</p>
-        </div>
+        <div className={styles.subcategoryItemDescription}>{description}</div>
       )}
     </div>
   );
@@ -96,7 +94,7 @@ const SubcategoryItem = ({ title, description, tag, defaultOpen = false }) => {
 
 SubcategoryItem.propTypes = {
   title: PropTypes.string.isRequired,
-  description: PropTypes.string,
+  description: PropTypes.node,
   tag: PropTypes.shape({
     label: PropTypes.string.isRequired,
     color: PropTypes.string.isRequired,
@@ -127,7 +125,7 @@ Subcategory.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string.isRequired,
-      description: PropTypes.string,
+      description: PropTypes.node,
       tag: PropTypes.shape({
         label: PropTypes.string.isRequired,
         color: PropTypes.string.isRequired,
@@ -251,7 +249,7 @@ ChangelogItem.propTypes = {
       items: PropTypes.arrayOf(
         PropTypes.shape({
           title: PropTypes.string.isRequired,
-          description: PropTypes.string,
+          description: PropTypes.node,
           tag: PropTypes.shape({
             label: PropTypes.string.isRequired,
             color: PropTypes.string.isRequired,

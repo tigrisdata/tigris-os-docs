@@ -14,7 +14,9 @@ const may2026 = {
   content: (
     <>
       <p>
-        Tigris now supports soft-deleting buckets and objects. Enabling the <a href="/docs/buckets/soft-delete/">Soft Delete</a> feature makes every delete recoverable for up to 90 days after a mistake is made.
+        Tigris now supports soft-deleting buckets and objects. Enabling the{" "}
+        <a href="/docs/buckets/soft-delete/">Soft Delete</a> feature makes every
+        delete recoverable for up to 90 days after a mistake is made.
       </p>
       {/* <BlogPostPreview
         href="https://www.tigrisdata.com/blog/soft-delete/"
@@ -37,11 +39,20 @@ const may2026 = {
           description: (
             <>
               <p>
-                Previously buckets were only allowed to have one lifecycle rule. This change enables buckets to have multiple lifecycle rules and filter when they should be active based on the key prefix (folder) for an object. For example if you want to set up a lifecycle pipeline that gradually demotes old logs to Infrequent Access after 30 days and Archive after 90 days:
+                Previously buckets were only allowed to have one lifecycle rule.
+                This change enables buckets to have multiple lifecycle rules and
+                filter when they should be active based on the key prefix
+                (folder) for an object. For example if you want to set up a
+                lifecycle pipeline that gradually demotes old logs to Infrequent
+                Access after 30 days and Archive after 90 days:
               </p>
               <CodeBlock language="json">{may2026LifecycleRules}</CodeBlock>
               <p>
-                For more information, see <a href="/docs/buckets/object-lifecycle-rules/#multiple-rules-with-prefix-filters">the documentation</a>.
+                For more information, see{" "}
+                <a href="/docs/buckets/object-lifecycle-rules/#multiple-rules-with-prefix-filters">
+                  the documentation
+                </a>
+                .
               </p>
             </>
           ),
@@ -52,11 +63,19 @@ const may2026 = {
           description: (
             <>
               <p>
-                Actively migrate all objects in a bucket in one fell swoop with <code>tigris buckets migrate</code>:
+                Actively migrate all objects in a bucket in one fell swoop with{" "}
+                <code>tigris buckets migrate</code>:
               </p>
               <CodeBlock language="text">{`tigris buckets migrate t3://mybucket`}</CodeBlock>
               <p>
-                This will have your computer iterate over every object in a bucket with <a href="/docs/buckets/settings/#data-migration">Data Migration</a> enabled and make sure it is safely migrated to Tigris. Depending on the provider you are migrating from, this may incur that provider to charge you egress fees.
+                This will have your computer iterate over every object in a
+                bucket with{" "}
+                <a href="/docs/buckets/settings/#data-migration">
+                  Data Migration
+                </a>{" "}
+                enabled and make sure it is safely migrated to Tigris. Depending
+                on the provider you are migrating from, this may incur that
+                provider to charge you egress fees.
               </p>
             </>
           ),
@@ -71,12 +90,27 @@ const may2026 = {
           title: "Partner Dashboard invitation flow improvements",
           description: (
             <>
-              <p>Various fixes have been made to the <a href="https://www.tigrisdata.com/docs/partner-integrations/dashboard/">Partner Dashboard</a> invitation flow including:</p>
+              <p>
+                Various fixes have been made to the{" "}
+                <a href="https://www.tigrisdata.com/docs/partner-integrations/dashboard/">
+                  Partner Dashboard
+                </a>{" "}
+                invitation flow including:
+              </p>
               <ul>
-                <li>Email verification links now redirect to the right console depending on the needs of the email.</li>
-                <li>Email verification has been given more polish and automated testing.</li>
+                <li>
+                  Email verification links now redirect to the right console
+                  depending on the needs of the email.
+                </li>
+                <li>
+                  Email verification has been given more polish and automated
+                  testing.
+                </li>
                 <li>Resending email verification links has been added.</li>
-                <li>An edge case involving signing up for the Partner Dashboard with Single-Sign-On (SSO) has been mended.</li>
+                <li>
+                  An edge case involving signing up for the Partner Dashboard
+                  with Single-Sign-On (SSO) has been mended.
+                </li>
               </ul>
             </>
           ),
@@ -86,7 +120,14 @@ const may2026 = {
           title: "Large file uploads are more reliable in the console",
           description: (
             <>
-              <p>When uploading files bigger than 5 gigabytes, the web console will now use a <a href="/docs/objects/multipart-uploads">Multipart Upload</a>. This ensures that users can upload files of any size smaller than 5 terabytes (the maximum allowed object size) through the Tigris Web Console.</p>
+              <p>
+                When uploading files bigger than 5 gigabytes, the web console
+                will now use a{" "}
+                <a href="/docs/objects/multipart-uploads">Multipart Upload</a>.
+                This ensures that users can upload files of any size smaller
+                than 5 terabytes (the maximum allowed object size) through the
+                Tigris Web Console.
+              </p>
             </>
           ),
           tag: { label: "Web Console", color: "orange" },
@@ -95,7 +136,12 @@ const may2026 = {
           title: "Better surface errors when free allowances are exceeded",
           description: (
             <>
-              <p>Previously when you exceeded Tigris&apos; <a href="/pricing/">free allowances</a>, the web console would show cryptic errors. This has been fixed to better guide users to enter payment information to keep using the product.</p>
+              <p>
+                Previously when you exceeded Tigris&apos;{" "}
+                <a href="/pricing/">free allowances</a>, the web console would
+                show cryptic errors. This has been fixed to better guide users
+                to enter payment information to keep using the product.
+              </p>
             </>
           ),
           tag: { label: "Web Console", color: "orange" },
@@ -1405,7 +1451,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
           Tigris organization, not one created with fly.io.
         </p>
         <p>
-          { }
+          {}
           <img
             src={require("./assets/2025/08/mfa-enforcement.webp").default}
             alt='A screen recording of clicking the "Enable MFA" button in the Web Console. Clicking on it triggers a toast that says MFA settings are updated successfully.'
@@ -1452,7 +1498,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
             title: "IAM Policies can now be directly attached to keys",
             description: (
               <>
-                { }
+                {}
                 <img
                   src={
                     require("./assets/2025/08/iam-access-key-linking.webp")
@@ -1468,7 +1514,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
               "Each bucket has a breakdown of how much data is stored in each storage tier",
             description: (
               <>
-                { }
+                {}
                 <img
                   className={styles.deemphasize}
                   src={
@@ -1758,7 +1804,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
           accessed.
         </p>
         <p>
-          { }
+          {}
           <img
             src={require("./assets/2025/04/storage-tiers.webp").default}
             alt="The storage tiers selection page in the web console."
@@ -1790,7 +1836,7 @@ const file = await get("object.txt", "string");`}</CodeBlock>
           we&apos;re happy to simplify your workflow.
         </p>
         <p>
-          { }
+          {}
           <img
             src={require("./assets/2025/04/bucket-sharing.webp").default}
             alt='A screen recording of adding a user to a bucket and hitting the "save" button.'

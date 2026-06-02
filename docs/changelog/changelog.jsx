@@ -6,7 +6,153 @@ import CodeBlock from "@theme/CodeBlock";
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
+import may2026LifecycleRules from "!!raw-loader!./assets/2026/05/lifecycle-rule-example.json";
+
+const may2026 = {
+  date: "May 29, 2026",
+  title: "Bucket and object soft-deletes",
+  content: (
+    <>
+      <p>
+        Tigris now supports soft-deleting buckets and objects. Enabling the{" "}
+        <a href="/docs/buckets/soft-delete/">Soft Delete</a> feature makes every
+        delete recoverable for up to 90 days after a mistake is made.
+      </p>
+      {/* <BlogPostPreview
+        href="https://www.tigrisdata.com/blog/soft-delete/"
+        title="Introducing Soft Delete for Tigris Buckets and Objects"
+        description="Tigris now supports soft delete for buckets and objects. Enable it once, and every delete becomes recoverable for up to 90 days before it's permanently removed."
+        imageSrc={require("./assets/2026/05/soft-delete.webp").default}
+        imageAlt="Hero image for the Tigris Agent Kit announcement blog post"
+        buttonText="Read the Blog"
+        author="David Myriel"
+        date="May 2026"
+      /> */}
+    </>
+  ),
+  subcategories: [
+    {
+      title: "Features",
+      items: [
+        {
+          title: "Lifecycle rule filters",
+          description: (
+            <>
+              <p>
+                Previously buckets were only allowed to have one lifecycle rule.
+                This change enables buckets to have multiple lifecycle rules and
+                filter when they should be active based on the key prefix
+                (folder) for an object. For example if you want to set up a
+                lifecycle pipeline that gradually demotes old logs to Infrequent
+                Access after 30 days and Archive after 90 days:
+              </p>
+              <CodeBlock language="json">{may2026LifecycleRules}</CodeBlock>
+              <p>
+                For more information, see{" "}
+                <a href="/docs/buckets/object-lifecycle-rules/#multiple-rules-with-prefix-filters">
+                  the documentation
+                </a>
+                .
+              </p>
+            </>
+          ),
+          tag: { label: "Buckets", color: "blue" },
+        },
+        {
+          title: "Automated bucket migration command",
+          description: (
+            <>
+              <p>
+                Actively migrate all objects in a bucket in one fell swoop with{" "}
+                <code>tigris buckets migrate</code>:
+              </p>
+              <CodeBlock language="text">{`tigris buckets migrate t3://mybucket`}</CodeBlock>
+              <p>
+                This will have your computer iterate over every object in a
+                bucket with{" "}
+                <a href="/docs/buckets/settings/#data-migration">
+                  Data Migration
+                </a>{" "}
+                enabled and make sure it is safely migrated to Tigris. Depending
+                on the provider you are migrating from, this may incur that
+                provider to charge you egress fees.
+              </p>
+            </>
+          ),
+          tag: { label: "CLI", color: "blue" },
+        },
+      ],
+    },
+    {
+      title: "Fixes",
+      items: [
+        {
+          title: "Partner Dashboard invitation flow improvements",
+          description: (
+            <>
+              <p>
+                Various fixes have been made to the{" "}
+                <a href="https://www.tigrisdata.com/docs/partner-integrations/dashboard/">
+                  Partner Dashboard
+                </a>{" "}
+                invitation flow including:
+              </p>
+              <ul>
+                <li>
+                  Email verification links now redirect to the right console
+                  depending on the needs of the email.
+                </li>
+                <li>
+                  Email verification has been given more polish and automated
+                  testing.
+                </li>
+                <li>Resending email verification links has been added.</li>
+                <li>
+                  An edge case involving signing up for the Partner Dashboard
+                  with Single-Sign-On (SSO) has been mended.
+                </li>
+              </ul>
+            </>
+          ),
+          tag: { label: "Partner Portal", color: "orange" },
+        },
+        {
+          title: "Large file uploads are more reliable in the console",
+          description: (
+            <>
+              <p>
+                When uploading files bigger than 5 gigabytes, the web console
+                will now use a{" "}
+                <a href="/docs/objects/multipart-uploads">Multipart Upload</a>.
+                This ensures that users can upload files of any size smaller
+                than 5 terabytes (the maximum allowed object size) through the
+                Tigris Web Console.
+              </p>
+            </>
+          ),
+          tag: { label: "Web Console", color: "orange" },
+        },
+        {
+          title: "Better surface errors when free allowances are exceeded",
+          description: (
+            <>
+              <p>
+                Previously when you exceeded Tigris&apos;{" "}
+                <a href="/pricing/">free allowances</a>, the web console would
+                show cryptic errors. This has been fixed to better guide users
+                to enter payment information to keep using the product.
+              </p>
+            </>
+          ),
+          tag: { label: "Web Console", color: "orange" },
+        },
+      ],
+    },
+  ],
+};
+
 export const changelogData = [
+  may2026,
   {
     date: "April 28, 2026",
     title: "Agent Kit",
@@ -1465,12 +1611,14 @@ const file = await get("object.txt", "string");`}</CodeBlock>
             title: "Delete Protection",
             description: (
               <>
-                Accidents happen, but some accidents are easier to undo than
-                others. Tigris now offers{" "}
-                <a href="/docs/buckets/settings/#delete-protection">
-                  deletion protection
-                </a>{" "}
-                to prevent any users from deleting any objects in a bucket.
+                <p>
+                  Accidents happen, but some accidents are easier to undo than
+                  others. Tigris now offers{" "}
+                  <a href="/docs/buckets/settings/#delete-protection">
+                    deletion protection
+                  </a>{" "}
+                  to prevent any users from deleting any objects in a bucket.
+                </p>
               </>
             ),
             tag: { label: "Web Console", color: "orange" },

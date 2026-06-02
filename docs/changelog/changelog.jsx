@@ -16,7 +16,7 @@ const may2026 = {
       <p>
         Tigris now supports soft-deleting buckets and objects. Enabling the <a href="/docs/buckets/soft-delete/">Soft Delete</a> feature makes every delete recoverable for up to 90 days after a mistake is made.
       </p>
-      <BlogPostPreview
+      {/* <BlogPostPreview
         href="https://www.tigrisdata.com/blog/soft-delete/"
         title="Introducing Soft Delete for Tigris Buckets and Objects"
         description="Tigris now supports soft delete for buckets and objects. Enable it once, and every delete becomes recoverable for up to 90 days before it's permanently removed."
@@ -25,7 +25,7 @@ const may2026 = {
         buttonText="Read the Blog"
         author="David Myriel"
         date="May 2026"
-      />
+      /> */}
     </>
   ),
   subcategories: [

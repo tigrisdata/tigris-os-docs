@@ -95,7 +95,7 @@ const may2026 = {
           title: "Better surface errors when free allowances are exceeded",
           description: (
             <>
-              <p>Previously when you exceeded Tigris' <a href="/pricing/">free allowances</a>, the web console would show cryptic errors. This has been fixed to better guide users to enter payment information to keep using the product.</p>
+              <p>Previously when you exceeded Tigris&apos; <a href="/pricing/">free allowances</a>, the web console would show cryptic errors. This has been fixed to better guide users to enter payment information to keep using the product.</p>
             </>
           ),
           tag: { label: "Web Console", color: "orange" },

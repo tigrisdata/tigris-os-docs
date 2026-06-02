@@ -42,16 +42,15 @@ For token authentication, the header will set as follows:
 
 ## Notification Types
 
-Tigris currently supports the following notification types:
+Tigris supports the following notification types:
 
-- `OBJECT_CREATED_PUT`: When an object is created or updated.
-- `OBJECT_DELETED`: When an object is deleted.
-
-:::note
-
-More events will be supported in the future.
-
-:::
+- `OBJECT_CREATED_PUT`: An object was created via a PUT request.
+- `OBJECT_CREATED_MULTIPART`: An object was created via a multipart upload.
+- `OBJECT_CREATED_COPY`: An object was created by copying an existing object.
+- `OBJECT_DELETED`: An object was deleted.
+- `OBJECT_TRANSITIONED`: An object was transitioned to a different storage class
+  (for example, via a lifecycle rule).
+- `OBJECT_RENAME`: An object was renamed.
 
 ## Notification Format
 

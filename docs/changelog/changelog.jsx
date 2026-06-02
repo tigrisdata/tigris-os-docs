@@ -1611,12 +1611,14 @@ const file = await get("object.txt", "string");`}</CodeBlock>
             title: "Delete Protection",
             description: (
               <>
-                Accidents happen, but some accidents are easier to undo than
-                others. Tigris now offers{" "}
-                <a href="/docs/buckets/settings/#delete-protection">
-                  deletion protection
-                </a>{" "}
-                to prevent any users from deleting any objects in a bucket.
+                <p>
+                  Accidents happen, but some accidents are easier to undo than
+                  others. Tigris now offers{" "}
+                  <a href="/docs/buckets/settings/#delete-protection">
+                    deletion protection
+                  </a>{" "}
+                  to prevent any users from deleting any objects in a bucket.
+                </p>
               </>
             ),
             tag: { label: "Web Console", color: "orange" },

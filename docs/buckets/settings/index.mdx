@@ -9,6 +9,8 @@ Here's an overview of the settings you can configure:
 - Bucket Location: Set the location type for a bucket to control where your data
   is stored.
 - Storage Tier: Set the storage tier for a bucket.
+- Bucket Type: Switch a bucket between Regular and Snapshot to enable or disable
+  snapshots and forks.
 - Cache Control: Set the default _Cache-Control_ header for objects in the
   bucket.
 - Data Migration: Migrate data from one bucket to another (also known as shadow
@@ -60,6 +62,25 @@ please see the storage tiers page: [Storage Tiers](/docs/objects/tiers/).
 You can set the storage tier for individual objects when you upload them. For
 more information, please see the storage tiers page:
 [Storage Tiers: Setting object tier](/docs/objects/tiers/#setting-object-tier)
+
+## Bucket Type
+
+A bucket is either **Regular** or **Snapshot**. Snapshot buckets support
+whole-bucket point-in-time [snapshots](/docs/snapshots/) and zero-copy
+[forks](/docs/forks/).
+
+Some restrictions apply for bucket type changes:
+
+- **Regular to Snapshot**: the bucket must not use the GLACIER storage tier,
+  object lifecycle rules, or object expiration (TTL) rules, since these are not
+  supported on snapshot-enabled buckets.
+- **Snapshot to Regular**: the bucket must not be a fork parent or a fork child.
+
+Note: If a Snapshot bucket is converted to Regular, all object versions are
+still kept in the bucket.
+
+For more information, see
+[Bucket Snapshots and Forks](/docs/buckets/snapshots-and-forks/).
 
 ## Cache Control
 

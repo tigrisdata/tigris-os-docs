@@ -182,8 +182,9 @@ Scope each training job's credentials with a
 [fine-grained IAM policy](/docs/iam/policies/examples/training-job): read-only
 to the dataset bucket, read-only to the base model, write-only to the output
 bucket, with optional time-window and IP restrictions.
-`X-Tigris-Enable-Snapshot: true` must be set at bucket creation and cannot be
-changed afterward.
+`X-Tigris-Enable-Snapshot: true` enables snapshots at bucket creation. You can
+also switch a bucket between Regular and Snapshot later under **Bucket
+Settings** in the Tigris Dashboard.
 
 :::
 

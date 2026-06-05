@@ -20,7 +20,7 @@ To share a bucket with another user in your organization:
 - Click on the `Share` button.
 - Select the users you want to share the bucket with and the role you want to
   assign to them.
-- Click on the `Save` button.
+- Click on the `Save changes` button.
 
 The roles you can assign to the users are:
 
@@ -35,6 +35,31 @@ that bucket programmatically.
 When the share is revoked, the access keys created by the shared users will no
 longer have access to the bucket.
 
+## Sharing with a team
+
+If you have grouped members of your organization into a
+[Team](../account-management/teams.md), you can share a bucket with the whole
+Team at once instead of adding each user individually.
+
+To share a bucket with a Team:
+
+- Go to the [Tigris Dashboard](https://console.storage.dev).
+- Click on the bucket you want to share.
+- Click on the `Share` button.
+- Select the Team you want to share the bucket with and the role you want to
+  assign (`Read Only` or `Editor`).
+- Click on the `Save changes` button.
+
+Once the bucket is shared, all members of the Team — including members added
+later — will be able to see it in their dashboard and access its content based
+on the role you assigned. Team members can also create access keys for the
+shared bucket to access it programmatically.
+
+When you remove a member from the Team, that member immediately loses access to
+the bucket. When you revoke the Team's share entirely, all members lose access.
+In both cases, the access keys those users created for the bucket will no longer
+work.
+
 ## Sharing with your entire organization
 
 You can also share your buckets with your entire organization.
@@ -46,7 +71,7 @@ To share a bucket with all users in your organization:
 - Click on the `Share` button.
 - Modify the "Organization Access" settings to your desired permissions (Editor
   or Read Only).
-- Click on the `Save` button.
+- Click on the `Save changes` button.
 
 Once the bucket is shared, all users in the organization will be able to see it
 in their dashboard and access its content based on the role you assigned. Users
@@ -73,7 +98,7 @@ To share a bucket with users from another organization:
 - Enter the access key (starts with `tid_`) in the text box.
 - Click "Add External ID" to add the access key ID to the list. It should have
   the role `External`.
-- Click on the `Save` button at the top of the dialogue.
+- Click on the `Save changes` button at the top of the dialogue.
 
 Once the bucket is shared, the user from the other organization will be able to
 access the bucket using the access key.

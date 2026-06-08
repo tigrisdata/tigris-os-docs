@@ -121,10 +121,10 @@ To share a bucket with all users in your organization:
 
 - Click on the `Share` button.
 
-- Modify the "Organization Access" settings to your desired permissions (Editor
-  or Read Only).
+- Find your organization in the Access search bar and assign the desired
+  permission.
 
-- Click on the `Save` button.
+- Click on the `Save changes` button.
 
 Once the bucket is shared, all users in the organization will be able to see it
 in their dashboard and access its content based on the role you assigned. Users

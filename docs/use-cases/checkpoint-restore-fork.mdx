@@ -71,14 +71,15 @@ bucket, with optional time-window and IP restrictions.
 
 ### How it works
 
-Create the bucket with `X-Tigris-Enable-Snapshot: true` at creation time (this
-must be set at creation and cannot be changed afterward). Have your training
-loop write checkpoints on a fixed cadence — every N steps or at epoch
-boundaries.
+Create the bucket with `X-Tigris-Enable-Snapshot: true`, or enable snapshots
+later by switching the bucket type under **Bucket Settings** in the Tigris
+Dashboard.
 
-Store the snapshot version ID alongside run metadata in your experiment tracker.
-To resume, pass the version to the new job. To sweep hyperparameters, fork the
-snapshot once per configuration and let each fork write independently.
+Have your training loop write checkpoints on a fixed cadence — every N steps or
+at epoch boundaries. Store the snapshot version ID alongside run metadata in
+your experiment tracker. To resume, pass the version to the new job. To sweep
+hyperparameters, fork the snapshot once per configuration and let each fork
+write independently.
 
 ```bash
 # Take a snapshot after checkpoint write

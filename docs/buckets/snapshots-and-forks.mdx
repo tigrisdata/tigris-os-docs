@@ -13,9 +13,14 @@ To enable snapshots and forks at creation, set the
 `X-Tigris-Enable-Snapshot: true` header when creating the bucket.
 
 You can also switch an existing bucket between Regular and Snapshot under
-**Bucket Settings → Storage Settings** in the Tigris Dashboard. Note: to convert
-a Regular bucket to Snapshot, it must not use the GLACIER storage tier,
-lifecycle rules, or object expiration (TTL) rules.
+**Bucket Settings → Storage Settings** in the Tigris Dashboard.
+
+:::note
+
+To convert a Regular bucket to Snapshot, it must not use the GLACIER storage
+tier, lifecycle rules, or object expiration (TTL) rules.
+
+:::
 
 <Tabs groupId="languages">
 <TabItem value="go" label="Go">

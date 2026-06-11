@@ -11,18 +11,31 @@ Tigris resources such as buckets, objects, access keys, and IAM policies.
 
 {/* prettier-ignore */}
 <Tabs groupId="install-method">
-  <TabItem value="npm" label="NPM" default>
+  <TabItem value="native" label="Native" default>
     <div className="cli-setup-steps">
       <div className="step">
         <div className="step-header">
           <span className="step-number">1</span>
           <span className="step-title">Install</span>
         </div>
-        <p>Install the Tigris CLI with npm:</p>
+        <p>Download the standalone binary (no Node.js required):</p>
 
-        ```bash
-        npm install -g @tigrisdata/cli
-        ```
+        <PlatformToggle options={["macOS / Linux", "Windows"]}>
+          <div>
+
+            ```bash
+            curl -fsSL https://github.com/tigrisdata/cli/releases/latest/download/install.sh | sh
+            ```
+
+          </div>
+          <div>
+
+            ```powershell
+            irm https://github.com/tigrisdata/cli/releases/latest/download/install.ps1 | iex
+            ```
+
+          </div>
+        </PlatformToggle>
 
       </div>
       <div className="step">
@@ -93,31 +106,18 @@ Tigris resources such as buckets, objects, access keys, and IAM policies.
     </div>
 
   </TabItem>
-  <TabItem value="native" label="Native">
+  <TabItem value="npm" label="NPM">
     <div className="cli-setup-steps">
       <div className="step">
         <div className="step-header">
           <span className="step-number">1</span>
           <span className="step-title">Install</span>
         </div>
-        <p>Download the standalone binary (no Node.js required):</p>
+        <p>Install the Tigris CLI with npm:</p>
 
-        <PlatformToggle options={["macOS / Linux", "Windows"]}>
-          <div>
-
-            ```bash
-            curl -fsSL https://github.com/tigrisdata/cli/releases/latest/download/install.sh | sh
-            ```
-
-          </div>
-          <div>
-
-            ```powershell
-            irm https://github.com/tigrisdata/cli/releases/latest/download/install.ps1 | iex
-            ```
-
-          </div>
-        </PlatformToggle>
+        ```bash
+        npm install -g @tigrisdata/cli
+        ```
 
       </div>
       <div className="step">

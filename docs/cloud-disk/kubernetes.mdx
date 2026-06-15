@@ -1,0 +1,112 @@
+---
+title: cloud-disk on Kubernetes (CSI)
+sidebar_label: Kubernetes (CSI)
+description:
+  Provision Tigris-backed block storage as Kubernetes PersistentVolumes with the
+  cloud-disk CSI driver.
+---
+
+# cloud-disk on Kubernetes
+
+The cloud-disk CSI driver provisions PersistentVolumes backed by Tigris — each
+PVC becomes a Tigris-backed NBD block device, formatted with the filesystem of
+your choice and mounted into your pod.
+
+## Prerequisites
+
+- Kubernetes 1.26+
+- Linux worker nodes with the `nbd` kernel module available
+- A Tigris bucket and access keys from the
+  [Tigris console](https://console.storage.dev)
+
+:::note
+
+Nodes need the `nbd` kernel module, which isn't present on some minimal images
+(e.g. GKE Container-Optimized OS). Volumes are single-node — `ReadWriteOnce` or
+`ReadOnlyMany`.
+
+:::
+
+## 1. Create the credentials secret
+
+```bash
+kubectl create secret generic tigris-csi-aws -n kube-system \
+  --from-literal=AWS_ACCESS_KEY_ID=tid_... \
+  --from-literal=AWS_SECRET_ACCESS_KEY=tsec_... \
+  --from-literal=AWS_ENDPOINT_URL=https://t3.storage.dev
+```
+
+## 2. Deploy the driver
+
+```bash
+kubectl apply -f https://cloud-disk.t3.tigrisfiles.io/csi-driver.yaml
+```
+
+## 3. Create a StorageClass
+
+```yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: cloud-disk
+provisioner: csi.tigris.dev
+parameters:
+  bucket: my-volumes
+  endpoint: https://t3.storage.dev
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+```
+
+## 4. Claim it from a pod
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-data
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: cloud-disk
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-app
+spec:
+  containers:
+    - name: app
+      image: busybox
+      command: ["sh", "-c", "sleep 3600"]
+      volumeMounts:
+        - { name: data, mountPath: /data }
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: my-data
+```
+
+## StorageClass parameters
+
+| Parameter        | Default                  | Description                         |
+| ---------------- | ------------------------ | ----------------------------------- |
+| `bucket`         | _(required)_             | Tigris bucket name                  |
+| `endpoint`       | `https://t3.storage.dev` | Tigris endpoint                     |
+| `region`         | `us-east-1`              | Region                              |
+| `fstype`         | `ext4`                   | Filesystem (`ext4`, `xfs`, `btrfs`) |
+| `chunk-size`     | `1M`                     | Object size                         |
+| `max-cache-size` | `1G`                     | Local cache size                    |
+| `flush-workers`  | `8`                      | Concurrent upload workers to Tigris |
+
+Any disk setting can be a StorageClass parameter — see
+[Configuration & Tuning](./tuning.mdx) for the full list.
+
+## How it works
+
+A PVC writes a metadata marker into the bucket at `<bucket>/csi-vol-<name>/`.
+When a pod is scheduled, the node's DaemonSet starts a `cloud-disk` process for
+the volume, attaches it to a free `/dev/nbdN`, formats it on first use (`fsck`
+thereafter), and mounts it into the pod. Deleting the pod flushes the cache to
+Tigris and detaches; deleting the PVC removes the volume's objects.

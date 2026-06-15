@@ -24,7 +24,7 @@ and more from the terminal. It provides Unix-like commands (`ls`, `cp`, `mv`,
 ## Frequently Asked Questions
 
 **How do I install the Tigris CLI?** Install via npm:
-`npm install -g @tigrisdata/tigris-cli`. The command is available as both
+`npm install -g @tigrisdata/cli`. The command is available as both
 `tigris` and `t3`.
 
 **How do I authenticate?** Run `tigris login` for browser-based OAuth, or

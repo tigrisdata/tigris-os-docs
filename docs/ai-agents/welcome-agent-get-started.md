@@ -48,7 +48,7 @@ see [Choosing the Right Storage](/docs/ai-agents/choosing-the-right-storage/).
 ## Step 1: Install the Tigris CLI
 
 ```bash
-npm install -g @tigrisdata/tigris-cli
+npm install -g @tigrisdata/cli
 ```
 
 Verify the installation:
@@ -58,7 +58,7 @@ tigris --version
 ```
 
 If `npm` is not available, check if `npx` works as an alternative:
-`npx @tigrisdata/tigris-cli --version`.
+`npx @tigrisdata/cli --version`.
 
 ## Step 2: Authenticate (Requires Human)
 
@@ -305,8 +305,8 @@ go get github.com/aws/aws-sdk-go-v2/service/s3
 ## Troubleshooting
 
 **`tigris: command not found`** — The CLI is not in PATH. Try
-`npx @tigrisdata/tigris-cli` or reinstall with
-`npm install -g @tigrisdata/tigris-cli`.
+`npx @tigrisdata/cli` or reinstall with
+`npm install -g @tigrisdata/cli`.
 
 **`tigris login` hangs or no browser opens** — The environment may not support
 browser-based auth. Have the human create access keys at

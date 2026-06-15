@@ -24,7 +24,7 @@ A disk is just a name. With a single command you get a formatted, mounted,
 ready-to-use disk:
 
 ```bash
-cloud-disk create data1 --size 100G
+cloud-disk create data1 -size 100G
 ```
 
 Everything that defines the disk — its geometry, its tuning, its contents —
@@ -83,6 +83,15 @@ application's flush barriers created. That ordering is the key safety property:
 The window of recent writes at risk is bounded — cloud-disk throttles new writes
 rather than letting the not-yet-uploaded backlog grow without limit — and a
 planned unmount always drains fully before detaching.
+
+:::warning
+
+Write-back trades durability for latency: losing the entire host suddenly can
+roll the disk back by the seconds of writes not yet uploaded (crash-consistent,
+not corrupt). Use it only where that rollback is acceptable; keep the default
+write-through when every `fsync` must be on Tigris.
+
+:::
 
 Write-through when you want the bucket current at every `fsync`; write-back when
 you want local-disk latency and can tolerate seconds of rollback on sudden host

@@ -6,6 +6,8 @@ description:
   caching, write-through and write-back durability, snapshots, and leasing.
 ---
 
+import CloudDiskArchitectureDiagram from "@site/src/components/diagrams/CloudDiskArchitectureDiagram";
+
 # Architecture & Design
 
 An infinitely-scalable block device backed by Tigris.
@@ -41,16 +43,7 @@ replication jobs, no data movement.
 
 ## Architecture at a glance
 
-```mermaid
-graph TD
-    A[application · filesystem · database] --> B[Linux block device]
-    B --> C[cloud-disk]
-    subgraph C [cloud-disk]
-        D[memory cache<br/>hot reads + write coalescing]
-        E[local disk cache<br/>warm reads, survives remounts]
-    end
-    C -->|flush commits to the bucket| F[(your Tigris bucket<br/>source of truth)]
-```
+<CloudDiskArchitectureDiagram />
 
 The volume is divided into fixed-size chunks stored as individual objects.
 Unwritten regions are simply never stored — a 10 TB volume holding 50 GB of data

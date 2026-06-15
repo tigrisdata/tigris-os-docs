@@ -1,0 +1,125 @@
+---
+title: cloud-disk Architecture
+sidebar_label: Architecture
+description:
+  How cloud-disk turns a Tigris bucket into a Linux block device — chunks,
+  caching, write-through and write-back durability, snapshots, and leasing.
+---
+
+# Architecture & Design
+
+An infinitely-scalable block device backed by Tigris.
+
+## What it is
+
+cloud-disk presents a Linux block device backed by a Tigris bucket. You format
+it with any filesystem (ext4, XFS, btrfs), run any application on it — databases
+included. Capacity is effectively unlimited, you pay only for the data you
+actually store, and the volume inherits the durability, replication, and access
+controls of the object store underneath.
+
+A disk is just a name. With a single command you get a formatted, mounted,
+ready-to-use disk:
+
+```bash
+cloud-disk create data1 --size 100G
+```
+
+Everything that defines the disk — its geometry, its tuning, its contents —
+lives in the bucket, so the disk you unmount on one machine is byte-for-byte the
+disk you `cloud-disk mount` on the next.
+
+## Why
+
+Traditional cloud block storage is capacity-provisioned and locked to a single
+availability zone. Object storage is elastic and durable — but it isn't a disk.
+cloud-disk closes that gap: applications get an ordinary block device, while the
+data lives in Tigris and inherits its elastic capacity and global data
+distribution. Because Tigris is global, every disk lives in a global namespace:
+moving it between machines — or regions — is just unmount and mount. No
+replication jobs, no data movement.
+
+## Architecture at a glance
+
+```mermaid
+graph TD
+    A[application · filesystem · database] --> B[Linux block device]
+    B --> C[cloud-disk]
+    subgraph C [cloud-disk]
+        D[memory cache<br/>hot reads + write coalescing]
+        E[local disk cache<br/>warm reads, survives remounts]
+    end
+    C -->|flush commits to the bucket| F[(your Tigris bucket<br/>source of truth)]
+```
+
+The volume is divided into fixed-size chunks stored as individual objects.
+Unwritten regions are simply never stored — a 10 TB volume holding 50 GB of data
+stores only 50 GB.
+
+## Durability: the bucket is the disk
+
+By default cloud-disk operates **write-through**: when the application calls
+`fsync`, the acknowledged data is in the bucket. There is no local state that
+matters — the host can vanish the moment a flush returns and the disk is
+complete, current, and mountable elsewhere. Durability is exactly the durability
+of Tigris, which means surviving not just machine failure but region failure as
+well.
+
+This is the strongest possible guarantee, and it's the default because most
+workloads never notice the cost: writes land in the memory cache and are
+coalesced, so sequential and bursty workloads stream to the bucket at full
+bandwidth. What write-through cannot hide is flush latency — an `fsync` costs an
+object-store round trip.
+
+### Optional: write-back mode for latency-sensitive workloads
+
+For workloads that `fsync` constantly — OLTP databases, message queues — a disk
+can opt into **write-back** mode. Flushes then commit to a local write log at
+NVMe latency (milliseconds instead of an object-store round trip), and a
+background uploader drains to the bucket continuously, in strictly the order the
+application's flush barriers created. That ordering is the key safety property:
+
+- A process crash or host reboot loses nothing — the local log replays on the
+  next mount.
+- Losing the entire host rolls the disk back to a crash-consistent recent point
+  in time — exactly as if power had been cut at that moment. Filesystems and
+  databases recover with their normal journal replay; the bucket never holds a
+  state that reorders writes across an `fsync`, the failure mode that corrupts
+  data.
+
+The window of recent writes at risk is bounded — cloud-disk throttles new writes
+rather than letting the not-yet-uploaded backlog grow without limit — and a
+planned unmount always drains fully before detaching.
+
+Write-through when you want the bucket current at every `fsync`; write-back when
+you want local-disk latency and can tolerate seconds of rollback on sudden host
+loss. It's one setting, per disk.
+
+## Snapshots and forks
+
+A disk can be snapshotted at a point in time, and new disks can be created as
+instant forks of a snapshot — copy-on-write, no data copied, regardless of size.
+Cloning a multi-terabyte production database for a staging environment takes
+seconds. Forked disks are full first-class disks: mount them anywhere and tune
+them independently of their parent.
+
+## Operating it
+
+- **Config travels with the disk.** Tuning is stored in the bucket alongside the
+  data and applied wherever the disk is next mounted —
+  `cloud-disk config data1 set ...` from any machine with access.
+- **One writer at a time, enforced.** A lease in the bucket fences out
+  concurrent writers, so two hosts can never corrupt a disk by mounting it
+  read-write simultaneously. Mounting elsewhere after a host dies is safe as
+  soon as the lease expires — 30 seconds by default.
+
+## Operational properties
+
+- **Pay for what you store** — sparse volumes; deleted and never-written ranges
+  occupy no objects.
+- **Portable** — unmount on one host, mount on another; the bucket is the
+  volume.
+- **Your bucket, your controls** — data is stored in a bucket you own; access
+  policy is governed by your object-store configuration.
+- **Tunable per disk** — cache sizes and durability mode are per-disk settings,
+  so a scratch disk and a database disk can make different trade-offs.

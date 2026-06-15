@@ -724,6 +724,24 @@ const sidebars = {
             },
           ],
         },
+        {
+          type: "category",
+          label: "Cloud Disk",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              label: "Overview",
+              id: "cloud-disk/index",
+            },
+            {
+              type: "doc",
+              label: "Architecture",
+              id: "cloud-disk/architecture",
+            },
+          ],
+        },
         "training/tigrisfs",
       ],
     },

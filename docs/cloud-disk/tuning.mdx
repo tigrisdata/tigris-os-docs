@@ -1,0 +1,114 @@
+---
+title: cloud-disk Configuration & Tuning
+sidebar_label: Configuration & Tuning
+description:
+  The cloud-disk settings most worth knowing — cache sizes, write-back,
+  durability, reliability — and when to change them.
+---
+
+# Configuration & Tuning
+
+_The settings most worth knowing, and when to change them._
+
+Settings are stored with the disk and apply wherever it's mounted. Change them
+any time:
+
+```bash
+cloud-disk config mydata set flush-workers=16
+cloud-disk config mydata show
+cloud-disk config mydata unset flush-workers
+```
+
+While a disk is mounted, performance settings apply immediately — `config set`
+tells you which; the rest take effect on the next mount. Defaults are sensible —
+most deployments only change a few.
+
+## At create time
+
+| Option            | Example | Description                                                               |
+| ----------------- | ------- | ------------------------------------------------------------------------- |
+| `-size`           | `100G`  | Disk size (`500M`, `1G`, `2T`). Sparse — only written data costs storage. |
+| `-fstype`         | `xfs`   | Filesystem for the disk: `ext4` (default), `xfs`, `btrfs`.                |
+| `--set key=value` |         | Apply any setting below at create time (repeatable).                      |
+| `--no-mount`      |         | Create only; don't mount.                                                 |
+
+## Performance — the high-impact knobs
+
+| Setting                                       | Default    | When to raise it                                                                                                                                      |
+| --------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `max-cache-size`                              | `1G`       | The in-RAM cache. Raise it so your working set fits — fewer reads go to Tigris. For read-heavy workloads, a meaningful fraction of RAM (`4G`, `16G`). |
+| `flush-workers`                               | `8`        | Concurrent uploads to Tigris. Raise (`16`–`32`) for **write-heavy** workloads.                                                                        |
+| `read-ahead-workers`, `read-ahead-max-window` | `4` / auto | Prefetching for sequential reads. Raise the window for **streaming / scan-heavy** workloads; set workers to `-1` to disable prefetching.              |
+| `connections`                                 | CPU count  | Parallel device connections. Usually leave alone; lower it on small machines sharing many disks.                                                      |
+
+## Local disk cache
+
+A cache on local disk (SSD) between RAM and Tigris: reads that miss the RAM
+cache are served from local disk instead of Tigris, and write-back uses it to
+buffer writes.
+
+| Setting           | Default   | Description                                                                                                                                                                          |
+| ----------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `disk-cache-path` | —         | Local directory for the cache, e.g. `/var/lib/cloud-disk`. Each disk uses its own subdirectory, so one path is safe to share (and to inherit on forks). Required for write-back.     |
+| `disk-cache-size` | unlimited | How much local disk the cache may use, e.g. `4G`, `100G`. Size it to your working set for the biggest read speedup. `0` turns the read cache off while keeping write-back buffering. |
+
+## Write-back
+
+Write-back buffers writes locally and uploads in the background — much faster.
+Everything is flushed to Tigris on unmount.
+
+| Setting                | Default | Effect                                                                                |
+| ---------------------- | ------- | ------------------------------------------------------------------------------------- |
+| `write-back`           | off     | `true` enables write-back caching. Needs `disk-cache-path`.                           |
+| `max-staging-bytes`    | `1G`    | Write buffer budget. Raise (`16G`) for bursty write-heavy workloads.                  |
+| `max-dirty-ratio`      | `0.5`   | How full the cache gets before background uploading starts. Lower = upload sooner.    |
+| `sync-writeback-ratio` | `0.8`   | How full the cache gets before writes pause for the upload to catch up. `0` disables. |
+
+## Unmount durability
+
+What a clean unmount does with buffered data before finishing, via
+`shutdown-mode`:
+
+| Mode       | Behavior                                                                                              |
+| ---------- | ----------------------------------------------------------------------------------------------------- |
+| `remote`   | **(default)** Upload everything to Tigris — the bucket is the complete disk. Safest; slowest unmount. |
+| `local`    | Save to local disk only; the next mount finishes the upload. Faster unmount.                          |
+| `dirty`    | Exit fast. For quick restarts on the same machine.                                                    |
+| `ship-wal` | Like `remote`, plus uploads the recovery log for another machine to take over.                        |
+
+## Reliability
+
+| Setting               | Default               | When to change                                                                                                               |
+| --------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `retry-max-retries`   | `30`                  | How many times object-store operations retry before reporting an error. The default rides out ~2 minutes of unavailability.  |
+| `nbd-request-timeout` | kernel default (~30s) | How long a single disk I/O may take before the kernel gives up on it. Raise (`600s`) for slow links or heavily loaded disks. |
+
+## Filesystem & mount
+
+| Setting       | Default                  | Description                                                                             |
+| ------------- | ------------------------ | --------------------------------------------------------------------------------------- |
+| `fstype`      | `ext4`                   | Filesystem created on first mount (ext4, xfs, btrfs).                                   |
+| `mount-point` | `/mnt/cloud-disk/<disk>` | Where the disk is mounted. Set it on a fork so parent and fork can be mounted together. |
+| `mount-opts`  | —                        | Extra mount options, e.g. `noatime`.                                                    |
+| `readonly`    | off                      | `true` mounts the disk read-only.                                                       |
+
+## Observability
+
+| Setting                  | Default                                      | Description                                        |
+| ------------------------ | -------------------------------------------- | -------------------------------------------------- |
+| `metrics-addr`           | —                                            | Expose Prometheus metrics, e.g. `:9090`.           |
+| `stats-interval`         | —                                            | Log periodic throughput/latency stats, e.g. `10s`. |
+| `log-file`, `log-format` | `/var/log/cloud-disk-<disk>.log` / `console` | Log destination and format (`console` or `json`).  |
+
+## Example: tuned for a database
+
+```bash
+sudo -E cloud-disk create pg-data -size 200G \
+    --set write-back=true \
+    --set disk-cache-path=/var/lib/cloud-disk \
+    --set disk-cache-size=100G \
+    --set max-cache-size=16G \
+    --set flush-workers=16 \
+    --set max-staging-bytes=16G \
+    --set metrics-addr=:9090
+```

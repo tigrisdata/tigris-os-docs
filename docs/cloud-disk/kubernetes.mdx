@@ -32,9 +32,11 @@ Nodes need the `nbd` kernel module, which isn't present on some minimal images
 ```bash
 kubectl create secret generic tigris-csi-aws -n kube-system \
   --from-literal=AWS_ACCESS_KEY_ID=tid_... \
-  --from-literal=AWS_SECRET_ACCESS_KEY=tsec_... \
-  --from-literal=AWS_ENDPOINT_URL=https://t3.storage.dev
+  --from-literal=AWS_SECRET_ACCESS_KEY=tsec_...
 ```
+
+The endpoint defaults to Tigris. To use AWS, MinIO, or another endpoint, add
+`--from-literal=AWS_ENDPOINT_URL=<url>` and set `endpoint` on the StorageClass.
 
 ## 2. Deploy the driver
 
@@ -44,15 +46,15 @@ kubectl apply -f https://cloud-disk.t3.tigrisfiles.io/csi-driver.yaml
 
 ## 3. Create a StorageClass
 
+No parameters are required — a disk's bucket is derived from the PVC name and
+the endpoint defaults to Tigris:
+
 ```yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: cloud-disk
 provisioner: csi.tigris.dev
-parameters:
-  bucket: my-volumes
-  endpoint: https://t3.storage.dev
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
 ```
@@ -90,23 +92,61 @@ spec:
 
 ## StorageClass parameters
 
+All parameters are optional — the defaults target Tigris.
+
 | Parameter        | Default                  | Description                         |
 | ---------------- | ------------------------ | ----------------------------------- |
-| `bucket`         | _(required)_             | Tigris bucket name                  |
-| `endpoint`       | `https://t3.storage.dev` | Tigris endpoint                     |
+| `endpoint`       | `https://t3.storage.dev` | Endpoint (AWS / MinIO / other)      |
 | `region`         | `us-east-1`              | Region                              |
 | `fstype`         | `ext4`                   | Filesystem (`ext4`, `xfs`, `btrfs`) |
 | `chunk-size`     | `1M`                     | Object size                         |
 | `max-cache-size` | `1G`                     | Local cache size                    |
 | `flush-workers`  | `8`                      | Concurrent upload workers to Tigris |
 
-Any disk setting can be a StorageClass parameter — see
+A disk's bucket is **not** a parameter — it's derived from the PVC name, so each
+PVC is its own disk. Any other disk setting can be a StorageClass parameter; see
 [Configuration & Tuning](./tuning.mdx) for the full list.
 
 ## How it works
 
-A PVC writes a metadata marker into the bucket at `<bucket>/csi-vol-<name>/`.
-When a pod is scheduled, the node's DaemonSet starts a `cloud-disk` process for
-the volume, attaches it to a free `/dev/nbdN`, formats it on first use (`fsck`
+A PVC creates its own bucket (`csi-vol-<pvc-name>`) with a metadata marker. When
+a pod is scheduled, the node's DaemonSet starts a `cloud-disk` process for the
+volume, attaches it to a free `/dev/nbdN`, formats it on first use (`fsck`
 thereafter), and mounts it into the pod. Deleting the pod flushes the cache to
-Tigris and detaches; deleting the PVC removes the volume's objects.
+Tigris and detaches; deleting the PVC removes the bucket and its objects.
+
+## Raw block volumes
+
+For applications that manage their own storage (some databases), request a raw
+device with `volumeMode: Block` — no filesystem is created, and the device is
+exposed via `volumeDevices` instead of `volumeMounts`:
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-block
+spec:
+  volumeMode: Block
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: cloud-disk
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-block-app
+spec:
+  containers:
+    - name: app
+      image: busybox
+      command: ["sh", "-c", "sleep 3600"]
+      volumeDevices:
+        - { name: data, devicePath: /dev/xvda }
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: my-block
+```

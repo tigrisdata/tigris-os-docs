@@ -1,16 +1,24 @@
 ---
-title: cloud-disk on Kubernetes (CSI)
+title: Cloud Disk on Kubernetes (CSI)
 sidebar_label: Kubernetes (CSI)
 description:
   Provision Tigris-backed block storage as Kubernetes PersistentVolumes with the
-  cloud-disk CSI driver.
+  Cloud Disk CSI driver.
 ---
 
-# cloud-disk on Kubernetes
+# Cloud Disk on Kubernetes
 
-The cloud-disk CSI driver provisions PersistentVolumes backed by Tigris — each
+The Cloud Disk CSI driver provisions PersistentVolumes backed by Tigris. Each
 PVC becomes a Tigris-backed NBD block device, formatted with the filesystem of
 your choice and mounted into your pod.
+
+:::info Cloud Disk is in beta
+
+The CSI driver and its StorageClass parameters may change between releases. Pin
+the driver manifest to a known version for anything you don't want to re-test on
+upgrade.
+
+:::
 
 ## Prerequisites
 

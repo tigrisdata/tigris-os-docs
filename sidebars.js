@@ -740,6 +740,16 @@ const sidebars = {
               label: "Architecture",
               id: "cloud-disk/architecture",
             },
+            {
+              type: "doc",
+              label: "Kubernetes (CSI)",
+              id: "cloud-disk/kubernetes",
+            },
+            {
+              type: "doc",
+              label: "Configuration & Tuning",
+              id: "cloud-disk/tuning",
+            },
           ],
         },
         "training/tigrisfs",

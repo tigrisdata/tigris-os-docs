@@ -1,27 +1,35 @@
 ---
-title: cloud-disk
+title: Tigris Cloud Disk
 sidebar_label: Overview
 description:
-  cloud-disk presents a Tigris bucket as a Linux block device — format it with
-  any filesystem, run any application, and pay only for the data you store.
+  Tigris Cloud Disk presents a Tigris bucket as a Linux block device. Format it
+  with any filesystem, run any application, and pay only for the data you store.
 ---
 
 # Cloud Disk
 
-High-performance Tigris-backed block device.
-
-cloud-disk presents a Linux block device backed by a Tigris bucket. Format it
-with any filesystem (ext4, XFS, btrfs), run any application on it — databases
-included. Capacity is effectively unlimited, you pay only for the data you
-actually store, and the volume inherits the durability, replication, and access
+Tigris Cloud Disk presents a Tigris bucket as a Linux block device. You format
+it with any filesystem (ext4, XFS, btrfs) and run any application on it,
+databases included. Capacity is effectively unlimited, you pay only for the data
+you store, and the volume inherits the durability, replication, and access
 controls of the bucket underneath.
 
-A disk is just a name. Everything that defines it — geometry, tuning, contents —
-lives in the bucket, so the disk you unmount on one machine is byte-for-byte the
-disk you mount on the next.
+:::info Cloud Disk is in beta
 
-See [Architecture](./architecture.mdx) for how it works, or
-[Kubernetes (CSI)](./kubernetes.mdx) to provision disks as PersistentVolumes.
+The `cloud-disk` CLI, its defaults, and its on-disk format may change between
+releases. Don't yet depend on it for production data you can't reproduce, and
+pin a known version if you need stability.
+
+:::
+
+Everything that defines a disk — its geometry, its settings, its contents —
+lives in the bucket. The disk you unmount on one machine is the disk you mount
+on the next, including on another machine or in another region.
+
+To work with disks, install the CLI below. The
+[Architecture](./architecture.mdx) page covers how it works, and
+[Kubernetes (CSI)](./kubernetes.mdx) covers provisioning disks as
+PersistentVolumes.
 
 ## Install
 
@@ -56,7 +64,7 @@ the first command; after that they're remembered there as well.
 
 ## Snapshots & forks
 
-Snapshot a disk — even while it's mounted and in use — then fork the snapshot
+You can snapshot a disk while it's mounted and in use, then fork the snapshot
 into an independent copy. Everything is uploaded to Tigris before the snapshot
 is taken:
 
@@ -93,3 +101,11 @@ Deletes the disk and all its data, after asking for confirmation:
 ```bash
 cloud-disk delete mydata
 ```
+
+## Next steps
+
+- [Architecture](./architecture.mdx) — how a bucket becomes a block device, and
+  the durability trade-offs behind write-through and write-back.
+- [Kubernetes (CSI)](./kubernetes.mdx) — provision disks as PersistentVolumes.
+- [Configuration & Tuning](./tuning.mdx) — the settings worth knowing and when
+  to change them.

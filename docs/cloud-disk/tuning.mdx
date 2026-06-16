@@ -1,14 +1,21 @@
 ---
-title: cloud-disk Configuration & Tuning
+title: Cloud Disk Configuration & Tuning
 sidebar_label: Configuration & Tuning
 description:
-  The cloud-disk settings most worth knowing — cache sizes, write-back,
+  The Cloud Disk settings most worth knowing — cache sizes, write-back,
   durability, reliability — and when to change them.
 ---
 
 # Configuration & Tuning
 
-_The settings most worth knowing, and when to change them._
+This page covers the settings most worth knowing and when to change them.
+
+:::info Cloud Disk is in beta
+
+Setting names and defaults may change between releases. Run
+`cloud-disk config <disk> show` to see what a given build actually applies.
+
+:::
 
 Settings are stored with the disk and apply wherever it's mounted. Change them
 any time:
@@ -19,9 +26,9 @@ cloud-disk config mydata show
 cloud-disk config mydata unset flush-workers
 ```
 
-While a disk is mounted, performance settings apply immediately — `config set`
-tells you which; the rest take effect on the next mount. Defaults are sensible —
-most deployments only change a few.
+While a disk is mounted, performance settings apply immediately, and
+`config set` tells you which ones; the rest take effect on the next mount. The
+defaults cover most deployments, so you'll usually change only a few of these.
 
 ## At create time
 

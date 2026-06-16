@@ -737,11 +737,6 @@ const sidebars = {
             },
             {
               type: "doc",
-              label: "Kubernetes (CSI)",
-              id: "cloud-disk/kubernetes",
-            },
-            {
-              type: "doc",
               label: "Architecture",
               id: "cloud-disk/architecture",
             },

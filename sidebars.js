@@ -724,6 +724,34 @@ const sidebars = {
             },
           ],
         },
+        {
+          type: "category",
+          label: "Cloud Disk",
+          collapsible: true,
+          collapsed: true,
+          items: [
+            {
+              type: "doc",
+              label: "Overview",
+              id: "cloud-disk/index",
+            },
+            {
+              type: "doc",
+              label: "Architecture",
+              id: "cloud-disk/architecture",
+            },
+            {
+              type: "doc",
+              label: "Kubernetes (CSI)",
+              id: "cloud-disk/kubernetes",
+            },
+            {
+              type: "doc",
+              label: "Configuration & Tuning",
+              id: "cloud-disk/tuning",
+            },
+          ],
+        },
         "training/tigrisfs",
       ],
     },

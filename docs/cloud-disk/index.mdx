@@ -1,0 +1,109 @@
+---
+title: Tigris Cloud Disk
+sidebar_label: Overview
+description:
+  Tigris Cloud Disk presents a Tigris bucket as a Linux block device. Format it
+  with any filesystem, run any application, and pay only for the data you store.
+---
+
+# Cloud Disk
+
+Tigris Cloud Disk presents a Tigris bucket as a Linux block device. You format
+it with any filesystem (ext4, XFS, btrfs) and run any application on it,
+databases included. Capacity is effectively unlimited, you pay only for the data
+you store, and the volume inherits the durability, replication, and access
+controls of the bucket underneath.
+
+:::info Beta
+
+Cloud Disk is in beta and under active development.
+
+:::
+
+Everything that defines a disk — its geometry, its settings, its contents —
+lives in the bucket. The disk you unmount on one machine is the disk you mount
+on the next, including on another machine or in another region.
+
+To work with disks, install the CLI below. The
+[Architecture](./architecture.mdx) page covers how it works, and
+[Kubernetes (CSI)](./kubernetes.mdx) covers provisioning disks as
+PersistentVolumes.
+
+## Install
+
+Auto-detects CPU arch and package manager (Linux, amd64/arm64):
+
+```bash
+curl -fsSL https://cloud-disk.t3.tigrisfiles.io/install.sh | sh
+```
+
+## Quick start
+
+One command creates the disk, formats it, and mounts it at
+`/mnt/cloud-disk/<name>`. Get your access keys from the
+[Tigris console](https://console.storage.dev). Credentials are remembered, so
+it's the only time they're needed:
+
+```bash
+export AWS_ACCESS_KEY_ID=tid_... AWS_SECRET_ACCESS_KEY=tsec_...
+sudo -E cloud-disk create mydata -size 100G
+```
+
+From then on:
+
+```bash
+sudo cloud-disk umount mydata     # flushes everything to Tigris, unmounts
+sudo cloud-disk mount mydata      # mount again — here or on another machine
+```
+
+Different object-store endpoint or bucket name? Pass `-endpoint` / `-bucket` to
+`create` — they're remembered too. On a new machine, export the credentials for
+the first command; after that they're remembered there as well.
+
+## Snapshots & forks
+
+You can snapshot a disk while it's mounted and in use, then fork the snapshot
+into an independent copy. Everything is uploaded to Tigris before the snapshot
+is taken:
+
+```bash
+cloud-disk snapshot mydata create --name nightly    # prints the snapshot version
+cloud-disk create mydata-test --parent mydata --snapshot <version> \
+    --set mount-point=/mnt/cloud-disk/mydata-test
+```
+
+The fork starts with the parent's data and settings at that snapshot; the two
+disks are fully independent afterwards.
+
+## Settings
+
+Settings are stored with the disk — set once, they apply wherever it's mounted:
+
+```bash
+cloud-disk config mydata set max-cache-size=8G flush-workers=16
+cloud-disk config mydata show
+```
+
+See [Configuration & Tuning](./tuning.mdx) for the settings worth knowing.
+
+## Status
+
+```bash
+cloud-disk status mydata
+```
+
+## Delete
+
+Deletes the disk and all its data, after asking for confirmation:
+
+```bash
+cloud-disk delete mydata
+```
+
+## Next steps
+
+- [Architecture](./architecture.mdx) — how a bucket becomes a block device, and
+  the durability trade-offs behind write-through and write-back.
+- [Kubernetes (CSI)](./kubernetes.mdx) — provision disks as PersistentVolumes.
+- [Configuration & Tuning](./tuning.mdx) — the settings worth knowing and when
+  to change them.

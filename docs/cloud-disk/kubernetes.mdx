@@ -1,0 +1,158 @@
+---
+title: Cloud Disk on Kubernetes (CSI)
+sidebar_label: Kubernetes (CSI)
+description:
+  Provision Tigris-backed block storage as Kubernetes PersistentVolumes with the
+  Cloud Disk CSI driver.
+---
+
+# Cloud Disk on Kubernetes
+
+The Cloud Disk CSI driver provisions PersistentVolumes backed by Tigris. Each
+PVC becomes a Tigris-backed NBD block device, formatted with the filesystem of
+your choice and mounted into your pod.
+
+:::info Beta
+
+Cloud Disk is in beta and under active development.
+
+:::
+
+## Prerequisites
+
+- Kubernetes 1.26+
+- Linux worker nodes with the `nbd` kernel module available
+- A Tigris bucket and access keys from the
+  [Tigris console](https://console.storage.dev)
+
+:::note
+
+Nodes need the `nbd` kernel module, which isn't present on some minimal images
+(e.g. GKE Container-Optimized OS). Volumes are single-node — `ReadWriteOnce` or
+`ReadOnlyMany`.
+
+:::
+
+## 1. Create the credentials secret
+
+```bash
+kubectl create secret generic tigris-csi-aws -n kube-system \
+  --from-literal=AWS_ACCESS_KEY_ID=tid_... \
+  --from-literal=AWS_SECRET_ACCESS_KEY=tsec_...
+```
+
+The endpoint defaults to Tigris. To use AWS, MinIO, or another endpoint, add
+`--from-literal=AWS_ENDPOINT_URL=<url>` and set `endpoint` on the StorageClass.
+
+## 2. Deploy the driver
+
+```bash
+kubectl apply -f https://cloud-disk.t3.tigrisfiles.io/csi-driver.yaml
+```
+
+## 3. Create a StorageClass
+
+No parameters are required — a disk's bucket is derived from the PVC name and
+the endpoint defaults to Tigris:
+
+```yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: cloud-disk
+provisioner: csi.tigris.dev
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+```
+
+## 4. Claim it from a pod
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-data
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: cloud-disk
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-app
+spec:
+  containers:
+    - name: app
+      image: busybox
+      command: ["sh", "-c", "sleep 3600"]
+      volumeMounts:
+        - { name: data, mountPath: /data }
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: my-data
+```
+
+## StorageClass parameters
+
+All parameters are optional — the defaults target Tigris.
+
+| Parameter        | Default                  | Description                         |
+| ---------------- | ------------------------ | ----------------------------------- |
+| `endpoint`       | `https://t3.storage.dev` | Endpoint (AWS / MinIO / other)      |
+| `region`         | `us-east-1`              | Region                              |
+| `fstype`         | `ext4`                   | Filesystem (`ext4`, `xfs`, `btrfs`) |
+| `chunk-size`     | `1M`                     | Object size                         |
+| `max-cache-size` | `1G`                     | Local cache size                    |
+| `flush-workers`  | `8`                      | Concurrent upload workers to Tigris |
+
+A disk's bucket is **not** a parameter — it's derived from the PVC name, so each
+PVC is its own disk. Any other disk setting can be a StorageClass parameter; see
+[Configuration & Tuning](./tuning.mdx) for the full list.
+
+## How it works
+
+A PVC creates its own bucket (`csi-vol-<pvc-name>`) with a metadata marker. When
+a pod is scheduled, the node's DaemonSet starts a `cloud-disk` process for the
+volume, attaches it to a free `/dev/nbdN`, formats it on first use (`fsck`
+thereafter), and mounts it into the pod. Deleting the pod flushes the cache to
+Tigris and detaches; deleting the PVC removes the bucket and its objects.
+
+## Raw block volumes
+
+For applications that manage their own storage (some databases), request a raw
+device with `volumeMode: Block` — no filesystem is created, and the device is
+exposed via `volumeDevices` instead of `volumeMounts`:
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-block
+spec:
+  volumeMode: Block
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: cloud-disk
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-block-app
+spec:
+  containers:
+    - name: app
+      image: busybox
+      command: ["sh", "-c", "sleep 3600"]
+      volumeDevices:
+        - { name: data, devicePath: /dev/xvda }
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: my-block
+```

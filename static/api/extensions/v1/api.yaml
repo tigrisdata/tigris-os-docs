@@ -712,12 +712,12 @@ paths:
       description: |
         Creates a new IAM policy with the given name and document.
         Returns 409 if a policy with the same name already exists — use
-        [Update Policy](/docs/partner-integrations/api/tigris-update-policy/) to modify existing policies.
+        [Update Policy](#tag/iam/operation/Tigris_UpdatePolicy) to modify existing policies.
 
         The policy document follows the [AWS IAM policy syntax](https://www.tigrisdata.com/docs/iam/policies/).
 
         After creating a policy, attach it to an access key using the
-        [Update Access Key](/docs/partner-integrations/api/tigris-update-access-key/) endpoint
+        [Update Access Key](#tag/iam/operation/Tigris_UpdateAccessKey) endpoint
         with the `add_policies` field.
 
         ##### Example: Read-write access to a prefix
@@ -1229,8 +1229,7 @@ components:
           description: |
             Enable snapshots on the bucket at creation. Snapshots can also be
             enabled or disabled on an existing bucket from the Storage Settings
-            page in the Tigris Dashboard. See
-            https://www.tigrisdata.com/docs/snapshots/.
+            page in the Tigris Dashboard. See https://www.tigrisdata.com/docs/snapshots/.
         object_notifications:
           $ref: "#/components/schemas/ObjectNotifications"
         lifecycle_rules:
@@ -1855,6 +1854,13 @@ components:
         - starting_on
         - ending_before
         - value
+    AccessKeyScope:
+      type: string
+      enum: [standard, no_default_allow]
+      description: |
+        `standard` (default) grants the implicit default-allowed operations;
+        `no_default_allow` denies them so the key can only do what its
+        policies/roles grant. On update, omitting this leaves the scope unchanged.
     CreateAccessKeyRequest:
       type: object
       additionalProperties: false
@@ -1891,6 +1897,8 @@ components:
             with the same name already exists the request fails — use
             attach_policies to reuse an existing policy. If policy document
             validation fails, no key is created.
+        access_key_scope:
+          $ref: "#/components/schemas/AccessKeyScope"
     CreateAccessKeyResponse:
       type: object
       required:
@@ -1972,6 +1980,8 @@ components:
             type: string
           description: |
             Names of IAM policies to detach from this access key. Policies not currently attached are ignored.
+        access_key_scope:
+          $ref: "#/components/schemas/AccessKeyScope"
     UpdateAccessKeyResponse:
       type: object
     RotateAccessKeyRequest:
@@ -2181,6 +2191,8 @@ components:
               items:
                 type: string
               description: Names of IAM policies attached to this access key
+            access_key_scope:
+              $ref: "#/components/schemas/AccessKeyScope"
     CreatePolicyRequest:
       type: object
       additionalProperties: false

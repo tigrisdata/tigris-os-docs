@@ -53,22 +53,22 @@ A cache on local disk (SSD) between RAM and Tigris: reads that miss the RAM
 cache are served from local disk instead of Tigris, and write-back uses it to
 buffer writes.
 
-| Setting           | Default   | Description                                                                                                                                                                          |
-| ----------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `disk-cache-path` | —         | Local directory for the cache, e.g. `/var/lib/cloud-disk`. Each disk uses its own subdirectory, so one path is safe to share (and to inherit on forks). Required for write-back.     |
-| `disk-cache-size` | unlimited | How much local disk the cache may use, e.g. `4G`, `100G`. Size it to your working set for the biggest read speedup. `0` turns the read cache off while keeping write-back buffering. |
+| Setting           | Default               | Description                                                                                                                                                                                             |
+| ----------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `disk-cache-path` | `/var/lib/cloud-disk` | Local directory for the cache and write-back buffer. Each disk uses its own subdirectory, so one path is safe to share (and to inherit on forks).                                                       |
+| `disk-cache-size` | `0`                   | How much local disk the read cache may use, e.g. `4G`, `100G`. `0` (the default) turns the read cache off while keeping write-back buffering; size it to your working set for the biggest read speedup. |
 
 ## Write-back
 
 Write-back buffers writes locally and uploads in the background — much faster.
 Everything is flushed to Tigris on unmount.
 
-| Setting                | Default | Effect                                                                                |
-| ---------------------- | ------- | ------------------------------------------------------------------------------------- |
-| `write-back`           | off     | `true` enables write-back caching. Needs `disk-cache-path`.                           |
-| `max-staging-bytes`    | `1G`    | Write buffer budget. Raise (`16G`) for bursty write-heavy workloads.                  |
-| `max-dirty-ratio`      | `0.5`   | How full the cache gets before background uploading starts. Lower = upload sooner.    |
-| `sync-writeback-ratio` | `0.8`   | How full the cache gets before writes pause for the upload to catch up. `0` disables. |
+| Setting                | Default | Effect                                                                                         |
+| ---------------------- | ------- | ---------------------------------------------------------------------------------------------- |
+| `write-back`           | `true`  | On by default. Set `false` for write-through (every `fsync` lands in Tigris before returning). |
+| `max-staging-bytes`    | `1G`    | Write buffer budget. Raise (`16G`) for bursty write-heavy workloads.                           |
+| `max-dirty-ratio`      | `0.5`   | How full the cache gets before background uploading starts. Lower = upload sooner.             |
+| `sync-writeback-ratio` | `0.8`   | How full the cache gets before writes pause for the upload to catch up. `0` disables.          |
 
 ## Unmount durability
 
@@ -110,8 +110,6 @@ What a clean unmount does with buffered data before finishing, via
 
 ```bash
 sudo -E cloud-disk create pg-data -size 200G \
-    --set write-back=true \
-    --set disk-cache-path=/var/lib/cloud-disk \
     --set disk-cache-size=100G \
     --set max-cache-size=16G \
     --set flush-workers=16 \

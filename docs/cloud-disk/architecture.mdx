@@ -53,24 +53,10 @@ stores only 50 GB.
 
 ## Durability
 
-By default Cloud Disk runs **write-through**: when the application calls
-`fsync`, the acknowledged data is already in the bucket. No local state matters,
-so the host can disappear the moment a flush returns and the disk stays
-complete, current, and mountable elsewhere. Its durability is the durability of
-Tigris, which survives machine failure and region failure alike.
-
-This is the default because most workloads never feel the cost. Writes land in
-the memory cache and are coalesced, so sequential and bursty workloads stream to
-the bucket at full bandwidth. The cost write-through can't hide is flush
-latency: an `fsync` pays for an object-store round trip.
-
-### Write-back mode for latency-sensitive workloads
-
-Workloads that `fsync` constantly, such as OLTP databases and message queues,
-can opt a disk into **write-back** mode. Flushes then commit to a local write
-log at NVMe latency, milliseconds rather than an object-store round trip, and a
-background uploader drains to the bucket continuously. It uploads in exactly the
-order the application's flush barriers created, which is what keeps the disk
+By default Cloud Disk runs **write-back**: when the application calls `fsync`,
+the acknowledged data commits to a local write log at NVMe latency, and a
+background uploader drains it to the bucket continuously. It uploads in exactly
+the order the application's flush barriers created, which is what keeps the disk
 safe:
 
 - A process crash or host reboot loses nothing. The local log replays on the
@@ -83,20 +69,32 @@ safe:
 
 The amount of recent writes at risk is bounded: Cloud Disk throttles new writes
 rather than let the not-yet-uploaded backlog grow without limit, and a planned
-unmount drains fully before detaching.
+unmount drains fully before detaching. This is the default because it gives
+local-disk flush latency while staying crash-consistent — what OLTP databases,
+message queues, and most `fsync`-heavy workloads want.
 
-:::warning Write-back trades durability for latency
+### Write-through mode for strict durability
+
+Workloads that need every acknowledged write already in the bucket can opt a
+disk into **write-through** mode. An `fsync` then returns only once the data is
+in Tigris: no local state matters, so the host can disappear the moment a flush
+returns and the disk stays complete, current, and mountable elsewhere. Its
+durability is the durability of Tigris, which survives machine failure and
+region failure alike. The cost write-through can't hide is flush latency: an
+`fsync` pays for an object-store round trip.
+
+:::warning Write-back can roll back a few seconds on sudden host loss
 
 Losing the entire host suddenly can roll the disk back by the seconds of writes
-not yet uploaded. The result is crash-consistent, not corrupt, but use
-write-back only where that rollback is acceptable. Keep the default
-write-through when every `fsync` must be on Tigris before it returns.
+not yet uploaded. The result is crash-consistent, not corrupt — but opt into
+write-through (`--set write-back=false`) when every `fsync` must be on Tigris
+before it returns.
 
 :::
 
-It's one setting per disk: write-through keeps the bucket current at every
-`fsync`; write-back gives you local-disk latency in exchange for a few seconds
-of possible rollback on sudden host loss.
+It's one setting per disk: write-back gives you local-disk latency in exchange
+for a few seconds of possible rollback on sudden host loss; write-through keeps
+the bucket current at every `fsync`.
 
 ## Snapshots and forks
 

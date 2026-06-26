@@ -8,22 +8,45 @@ import TabItem from "@theme/TabItem";
 
 # Agent Memory with Cognee on Tigris S3 Storage
 
-AI agents are stateless by default. Each conversation starts from scratch unless
-you add a memory layer to store and recall what the agent has learned. Cognee
-solves that.
+An AI agent starts every conversation from scratch unless you give it a memory
+layer to hold what it has learned. Tigris makes a good home for that memory. It
+is S3-compatible object storage, and the part that matters here is that a whole
+memory state becomes something you can snapshot, fork, and roll back the way you
+branch code.
 
-**Cognee** is an open-source memory engine for AI agents. Feed it text, files,
-or URLs and it builds a knowledge graph: entities, relationships, and embeddings
-your agent can search. The API is three steps: `add` data, `cognify` it into
-structured knowledge, and `search` to recall what matters.
+Cognee is the memory engine that runs on top. Feed it text, files, or URLs and
+it builds a knowledge graph of entities, relationships, and the embeddings your
+agent searches against. Point Cognee at a Tigris bucket and that graph, its
+vector indexes, and the raw source data all live in storage you control. The
+memory API reads as a lifecycle of four verbs:
 
-Point Cognee at a Tigris bucket and your agent's memory (vector indexes,
-knowledge graphs, raw data) is stored on S3 with automatic global distribution.
-No database servers, no region config. This guide uses Cognee's file-based
-defaults, which work natively with S3. See the
-[Cognee documentation](https://docs.cognee.ai/) for other backends.
+| Verb       | What it does                                                                                |
+| ---------- | ------------------------------------------------------------------------------------------- |
+| `remember` | Store data permanently: ingest it and build the knowledge graph.                            |
+| `recall`   | Retrieve relevant knowledge, auto-routing across graph, vector, and lexical search.         |
+| `improve`  | Enrich the graph: apply feedback, build indexes, fold session memory into permanent memory. |
+| `forget`   | Remove memory. One item, a dataset, or everything, through one call.                        |
 
-Here is a basic Agent Memory architecture:
+The older `add`, `cognify`, `search`, and `memify` calls still exist as
+lower-level building blocks, but the four verbs above are the surface you reach
+for.
+
+Here is what storing that memory on Tigris buys you. In Cognee's default
+file-based mode, the entire memory lives as files under a single bucket: the raw
+data, the vector indexes, and the knowledge graph together. Snapshot the bucket
+and you capture all of it at one instant. Fork it and an agent gets a private
+copy to work in, where it can trial a new embedding model, test a risky
+`improve`, or explore a what-if without touching the memory that production
+depends on. A bad learning becomes a rollback rather than a re-ingestion, and
+global distribution and zero egress fees come along on top.
+
+This guide starts with those file-based defaults, which need no servers to run,
+then covers the **Postgres** backend for distributed, multi-instance
+deployments. The
+[snapshot and fork workflow](#experimenting-with-memory-snapshots-and-forks)
+comes later.
+
+Here is a basic agent memory architecture:
 
 <div className="mermaid-frame">
 ```mermaid
@@ -33,10 +56,10 @@ flowchart TB
     classDef agent fill:#37474f,stroke:#90a4ae,color:#fff
 
     subgraph Agent["Your AI Agent"]
-        add["cognee.add()"]:::agent
-        cognify["cognee.cognify()"]:::agent
-        search["cognee.search()"]:::agent
-        add --> cognify --> search
+        remember["cognee.remember()"]:::agent
+        recall["cognee.recall()"]:::agent
+        forget["cognee.forget()"]:::agent
+        remember --> recall --> forget
     end
     subgraph Cognee["Cognee"]
         memory["Agent memory + knowledge graph"]:::cognee
@@ -50,7 +73,7 @@ flowchart TB
 ````
 </div>
 <div className="mermaid-caption">
-  Agent → Cognee → Tigris: add, cognify, and search with memory stored on Tigris.
+  Agent → Cognee → Tigris: remember, recall, and forget with memory stored on Tigris.
 </div>
 
 ## Prerequisites
@@ -58,15 +81,19 @@ flowchart TB
 1. **A Tigris account** with an Access Key ID and Secret Access Key (keys start with `tid_` and `tsec_`). Create them via the [Tigris Access Key guide](/docs/iam/manage-access-key/).
 2. **A Tigris bucket** for storing agent memory.
 3. **Python 3.10+** installed.
-4. **An LLM API key** -- OpenAI by default, but Cognee supports Anthropic, Gemini, Ollama, and others.
+4. **An LLM API key**, OpenAI by default, though Cognee also supports Anthropic, Gemini, Ollama, and others.
 
 ## Step 1: Install Cognee
 
 ```bash
 pip install "cognee[aws]"
-```
+````
 
-The `[aws]` extra adds S3 support via `s3fs`. The default database backends (LanceDB for vectors, Kuzu for the knowledge graph, SQLite for metadata) are already included as core Cognee dependencies, so this one install covers the full stack.
+The `[aws]` extra adds S3 support through `s3fs`. The default database backends
+ship with core Cognee: LanceDB for vectors, Ladybug for the knowledge graph, and
+SQLite for metadata. This one install covers the full stack. For the Postgres
+backend (see [Choosing a database backend](#choosing-a-database-backend)),
+install `"cognee[postgres,aws]"` instead.
 
 ## Step 2: Create a Tigris bucket
 
@@ -103,16 +130,16 @@ s3.create_bucket(Bucket="my-agent-memory")
 </Tabs>
 
 :::note
-Tigris requires `virtual` addressing style when using boto3. The endpoint is `https://t3.storage.dev`.
+
+Tigris requires `virtual` addressing style when using boto3. The endpoint is
+`https://t3.storage.dev`.
+
 :::
 
 ## Step 3: Configure environment variables
 
-Create a `.env` file in your project root:
-
-:::tip
-This single file configures credentials, the LLM provider, and tells Cognee to store everything on Tigris instead of the local filesystem. Cognee loads `.env` automatically on import.
-:::
+Create a `.env` file in your project root. Cognee loads `.env` automatically on
+import, so it must exist before you `import cognee`.
 
 ```bash
 # Tigris credentials (boto3/s3fs read these automatically)
@@ -125,26 +152,28 @@ AWS_ENDPOINT_URL=https://t3.storage.dev
 LLM_API_KEY=sk-your-openai-api-key
 LLM_MODEL=openai/gpt-4o-mini
 
-# Cognee storage (all on Tigris)
+# Store everything on Tigris instead of the local filesystem
 STORAGE_BACKEND=s3
-STORAGE_BUCKET_NAME=my-agent-memory should also be added here
+STORAGE_BUCKET_NAME=my-agent-memory
 DATA_ROOT_DIRECTORY=s3://my-agent-memory/cognee/data
 SYSTEM_ROOT_DIRECTORY=s3://my-agent-memory/cognee/system
 ```
 
-| Variable | Purpose |
-|---|---|
-| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | Tigris credentials. Cognee and boto3 read these automatically. |
-| `AWS_REGION` | Set to `auto` -- Tigris handles region routing for you. |
-| `AWS_ENDPOINT_URL` | Points S3 requests at Tigris instead of AWS. Required for any S3-compatible endpoint. |
-| `STORAGE_BACKEND` | Use S3 instead of the local filesystem. Without this, Cognee writes to disk even if you've set S3 URIs elsewhere. |
-| `STORAGE_BUCKET_NAME` | Your Tigris bucket name. Cognee uses this to auto-configure the cache directory on S3 (e.g. `s3://my-bucket/cognee/cache`). Without it, cache operations may fail when the rest of storage is on S3. |
-| `DATA_ROOT_DIRECTORY` | Where Cognee stores raw ingested data and file uploads. |
-| `SYSTEM_ROOT_DIRECTORY` | Where Cognee stores its databases: vector indexes (LanceDB), the knowledge graph (Kuzu), and metadata (SQLite). |
+| Variable                                      | Purpose                                                                                                                                 |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | Tigris credentials. Cognee and boto3 read these automatically.                                                                          |
+| `AWS_REGION`                                  | Set to `auto`. Tigris handles region routing for you.                                                                                   |
+| `AWS_ENDPOINT_URL`                            | Points S3 requests at Tigris instead of AWS. Required for any S3-compatible endpoint.                                                   |
+| `STORAGE_BACKEND`                             | Set to `s3` to use Tigris instead of the local filesystem. Without it, Cognee writes to disk even if you've set `s3://` URIs elsewhere. |
+| `STORAGE_BUCKET_NAME`                         | Your Tigris bucket name. Cognee uses it to auto-configure the cache directory on S3 (e.g. `s3://my-bucket/cognee/cache`).               |
+| `DATA_ROOT_DIRECTORY`                         | Where Cognee stores raw ingested data and file uploads. This is your durable source of truth.                                           |
+| `SYSTEM_ROOT_DIRECTORY`                       | Where Cognee stores its databases: vector indexes (LanceDB), the knowledge graph (Ladybug), and metadata (SQLite).                      |
 
 ## Step 4: Build agent memory
 
-Here's a complete example that teaches your agent about some topics and then queries what it knows. Run this once to confirm everything is wired up correctly before integrating into your agent loop:
+Here's a complete example that teaches your agent a couple of facts and then
+queries what it knows. Run it once to confirm everything is wired up before
+integrating into your agent loop.
 
 ```python
 import asyncio
@@ -152,34 +181,26 @@ import cognee
 
 
 async def main():
-    # Start fresh (useful during development)
-    await cognee.prune.prune_data()
-    await cognee.prune.prune_system(metadata=True)
+    # Start fresh during development (drops all memory for the current user).
+    await cognee.forget(everything=True)
 
-    # Feed the agent's memory
-    await cognee.add(
+    # Teach the agent. remember() ingests the text AND builds the graph,
+    # so there's no separate "process" step.
+    await cognee.remember(
         "Tigris is a globally distributed, S3-compatible object storage "
-        "service. It automatically distributes data to regions closest to "
-        "your users and caches frequently accessed data at the edge. Tigris "
-        "is built on FoundationDB and uses a zero-copy design for minimal "
-        "latency."
+        "service. It distributes data to regions closest to your users and "
+        "caches frequently accessed data at the edge.",
+        dataset_name="facts",
+    )
+    await cognee.remember(
+        "Cognee is a memory engine for AI agents. It builds knowledge graphs "
+        "from unstructured data and retrieves with combined vector similarity "
+        "and graph traversal.",
+        dataset_name="facts",
     )
 
-    await cognee.add(
-        "Cognee is a memory engine for AI agents. It builds knowledge "
-        "graphs from unstructured data, extracts entities and relationships, "
-        "and enables retrieval combining vector similarity with graph "
-        "traversal."
-    )
-
-    # Process into structured memory.
-    # Cognee chunks the text, generates embeddings, extracts entities,
-    # and builds a knowledge graph -- all stored on Tigris.
-    await cognee.cognify()
-
-    # Query the agent's memory
-    results = await cognee.search("How does Tigris distribute data globally?")
-
+    # Recall. Cognee auto-routes to the best retrieval strategy.
+    results = await cognee.recall("How does Tigris distribute data globally?")
     for i, result in enumerate(results, 1):
         print(f"[{i}] {result}")
 
@@ -190,19 +211,35 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
+### What each verb does
+
+1. **`cognee.remember()`** ingests raw content _and_ builds structured memory in
+   one call: chunking, embedding generation, entity extraction, and knowledge
+   graph construction. With `STORAGE_BACKEND=s3`, the raw input is persisted to
+   Tigris immediately, so your source of truth is safe even if a later step
+   fails.
+2. **`cognee.recall()`** retrieves relevant information, querying vector indexes
+   for semantic matches and traversing the knowledge graph for related entities.
+   It auto-selects the retrieval strategy, so you usually just pass a question.
+3. **`cognee.improve()`** (optional) enriches an existing graph. It applies
+   feedback weights and builds indexes. `remember()` runs a light improvement
+   pass by default. Call it directly when you want heavier enrichment.
+4. **`cognee.forget()`** removes memory. See
+   [Managing memory with forget](#managing-memory-with-forget).
+
 :::note
-The `prune` calls above wipe all data and system state. Omit them in production — they're only for resetting during development.
+
+For short-term context, pass `session_id="..."` to `remember()` and `recall()`.
+Session data is stored for fast retrieval and bridged into the permanent graph
+in the background. This is how per-conversation memory graduates into long-term
+knowledge.
+
 :::
-
-### What happens at each step
-
-1. **`cognee.add()`** ingests raw content into the agent's memory. With `STORAGE_BACKEND=s3`, everything is persisted to your Tigris bucket immediately -- so even if the process crashes before `cognify()` runs, your source data is safe.
-2. **`cognee.cognify()`** is where the work happens: chunking, embedding generation, entity extraction, and knowledge graph construction. This is the step that turns raw text into something your agent can actually reason over. The structured output is stored on Tigris.
-3. **`cognee.search()`** recalls relevant information by querying vector indexes for semantic matches and traversing the knowledge graph for related entities. The combination of both retrieval strategies is what makes this more useful than a plain vector search.
 
 ## Step 5: Feed memory from files and S3
 
-Your agent can learn from local files, S3 objects, or a mix of both. This is useful when you want to bootstrap an agent with an existing document corpus:
+Your agent can learn from local files, S3 objects, or a mix. This is useful for
+bootstrapping an agent with an existing document corpus.
 
 ```python
 import asyncio
@@ -210,29 +247,12 @@ import cognee
 
 
 async def feed_documents():
-    # Local file -- gets uploaded to Tigris
-    await cognee.add("/path/to/research-paper.pdf")
+    await cognee.remember("/path/to/research-paper.pdf", dataset_name="corpus")
+    await cognee.remember("/path/to/documents/", dataset_name="corpus")          # whole directory
+    await cognee.remember("s3://my-agent-memory/uploads/report.txt", dataset_name="corpus")
+    await cognee.remember("s3://my-agent-memory/uploads/", dataset_name="corpus") # all files under a prefix
 
-    # Entire directory
-    await cognee.add("/path/to/documents/")
-
-    # File already on Tigris
-    await cognee.add("s3://my-agent-memory/uploads/report.txt")
-
-    # All files under an S3 prefix (recursive)
-    await cognee.add("s3://my-agent-memory/uploads/")
-
-    # Mix S3 paths and inline text in a single call
-    await cognee.add([
-        "s3://my-agent-memory/uploads/notes.txt",
-        "Some inline text to also remember",
-    ])
-
-    # Process everything into memory
-    await cognee.cognify()
-
-    # Recall
-    results = await cognee.search("key findings about distributed storage")
+    results = await cognee.recall("key findings about distributed storage")
     for result in results:
         print(result)
 
@@ -241,29 +261,195 @@ asyncio.run(feed_documents())
 ```
 
 :::tip
-An `s3://` URI pointing to a single file fetches that file. A prefix URI (ending in `/`) recursively discovers all files underneath it, so you can point Cognee at an entire document library in one call.
+
+An `s3://` URI to a single file ingests that file. A prefix URI (ending in `/`)
+recursively discovers everything underneath it, so you can point Cognee at an
+entire document library in one call. Inputs already on `s3://` are read in
+place. Cognee records them by reference rather than copying them.
+
+:::
+
+## Choosing a database backend
+
+Cognee is three stores plus a raw-data layer. The stores are relational (state),
+vector (embeddings), and graph (entities). **Raw data belongs on Tigris in every
+configuration.** The structured stores are pluggable. The right choice depends
+on whether you run one Cognee process or many.
+
+### Default: file-based stores (single instance)
+
+SQLite, Ladybug, and LanceDB are embedded engines. With the Step 3 config they
+live entirely on Tigris, with Cognee syncing the database files to and from S3,
+pulling on open and pushing on commit. This is ideal for development and
+single-worker agents, since there is no infrastructure to run and everything
+sits in one bucket.
+
+:::warning
+
+This sync is **last-writer-wins**. It is safe for a single Cognee process, but
+multiple instances writing concurrently can clobber each other's database files.
+For distributed deployments, use Postgres below.
+
+:::
+
+### Postgres: networked stores (distributed production)
+
+When several stateless Cognee instances share memory, the structured stores need
+a networked database. One Postgres instance backs all three: relational, vector
+(pgvector), and graph. Raw data stays on Tigris. Install
+`"cognee[postgres,aws]"` and use this `.env` instead:
+
+```bash
+# Raw data still on Tigris
+STORAGE_BACKEND=s3
+AWS_ENDPOINT_URL=https://t3.storage.dev
+AWS_REGION=auto
+AWS_ACCESS_KEY_ID=tid_YOUR_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY=tsec_YOUR_SECRET_ACCESS_KEY
+DATA_ROOT_DIRECTORY=s3://my-agent-memory/cognee/data
+SYSTEM_ROOT_DIRECTORY=s3://my-agent-memory/cognee/system
+
+# Structured stores on one Postgres (local, or managed: Neon / Supabase / RDS)
+DB_PROVIDER=postgres
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_USERNAME=cognee
+DB_PASSWORD=cognee
+DB_NAME=cognee_db
+VECTOR_DB_PROVIDER=pgvector
+GRAPH_DATABASE_PROVIDER=postgres
+
+# Embedding dims must stay within pgvector's index ceiling (2000)
+EMBEDDING_MODEL=openai/text-embedding-3-small
+EMBEDDING_DIMENSIONS=1536
+```
+
+The Postgres graph and pgvector adapters reuse the `DB_*` credentials, so one
+instance serves all three structured stores. The Postgres must have the `vector`
+extension available (managed providers like Neon and Supabase ship it).
+
+:::tip
+
+The application code does not change between backends. The same `remember`,
+`recall`, `improve`, and `forget` calls run the same way whether memory sits on
+the file-based defaults or Postgres. Only the `.env` differs.
+
+:::
+
+### What can live where
+
+| Layer      |         Tigris (`s3://`)         |      Networked DB      |
+| ---------- | :------------------------------: | :--------------------: |
+| Raw data   |         **Yes, always**          |           —            |
+| Vectors    |          Yes (LanceDB)           |     Yes (pgvector)     |
+| Relational | Single instance only (file sync) |     Yes (Postgres)     |
+| Graph      | Single instance only (file sync) | Yes (Postgres / Neo4j) |
+
+## Managing memory with forget
+
+`forget` replaces the older prune/delete calls with one set of patterns:
+
+```python
+# Forget a single item from a dataset
+await cognee.forget(data_id=item_id, dataset="corpus")
+
+# Forget an entire dataset (raw data + graph + vectors)
+await cognee.forget(dataset="corpus")
+
+# Drop only the graph/vectors but KEEP raw files, so you can re-process
+# with different settings (e.g. a new embedding model)
+await cognee.forget(dataset="corpus", memory_only=True)
+
+# Forget everything the current user owns (handy as a dev reset)
+await cognee.forget(everything=True)
+```
+
+Raw data is the durable source of truth on Tigris, which makes
+`memory_only=True` the safe way to rebuild derived memory. Drop the graph and
+vectors, then `remember` the same data again under new settings, and you never
+re-upload the files.
+
+## Experimenting with memory: snapshots and forks
+
+Because your memory lives in a bucket, you can treat whole memory states as
+cheap, branchable objects rather than just durable storage.
+
+- **Snapshot before anything destructive.** A bulk `forget` or a heavy `improve`
+  rewrites memory in place, so snapshot the bucket first and a bad run becomes a
+  one-command rollback instead of a full re-ingestion.
+- **Fork to experiment.** Fork the bucket and point a throwaway agent at the
+  copy to trial a new embedding model, a different ontology, or an aggressive
+  pruning policy, all against real memory with zero risk to production.
+- **Branch per tenant or per run.** Give each customer or each experiment its
+  own fork so their memories evolve independently from a shared baseline.
+
+In the default file-based config, a single bucket snapshot captures the _entire_
+memory, because raw data, vectors, and graph all live under one bucket. A fork
+is therefore a complete, independent memory the agent can mutate freely. The
+[storagesdk](https://storagesdk.dev) makes both a one-liner:
+
+```ts
+import { Storage } from "@storagesdk/core";
+import { tigris } from "@storagesdk/adapters/tigris";
+
+const storage = new Storage({ adapter: tigris({ bucket: "my-agent-memory" }) });
+
+// Capture the current memory state before a risky change
+const snap = await storage.snapshots.create({ name: "pre-improve" });
+
+// ...run cognee.improve(...) / cognee.forget(...)...
+// If it goes badly, the snapshot is your rollback.
+
+// Or branch the whole memory so an agent can experiment on a copy
+const fork = await storage.forks.create({
+  name: "exp-new-embeddings",
+  fromSnapshot: snap.id,
+});
+```
+
+:::note
+
+With the Postgres backend, the structured stores live in Postgres rather than
+the bucket, so a bucket snapshot captures only raw data. Pair it with a Postgres
+backup on the same schedule if you want derived memory restored to the same
+instant, too.
+
 :::
 
 ## Per-agent memory isolation
 
 :::tip
-When building multi-agent or multi-user systems, Cognee's `ENABLE_BACKEND_ACCESS_CONTROL` is `True` by default. Cognee creates separate databases for each user and dataset on Tigris, so agents can't read each other's memory. No extra configuration needed.
+
+For multi-agent or multi-user systems, Cognee's `ENABLE_BACKEND_ACCESS_CONTROL`
+is `True` by default. Cognee keeps separate databases per user and dataset, so
+agents can't read each other's memory. Scope memory by passing distinct
+`dataset_name` values to `remember` and `datasets=[...]` to `recall`.
+
 :::
 
 ## Production considerations
 
 ### Performance
 
-Tigris caches frequently accessed objects at edge locations closest to your users. For agents running repeated memory lookups against the same knowledge base, this caching happens automatically and requires no configuration. Expect S3-level latencies on cold reads; queries against recently accessed data will be faster.
+Tigris caches frequently accessed objects at edge locations closest to your
+users. Agents running repeated lookups against the same knowledge base benefit
+automatically, with no configuration needed. Cold reads see S3-level latency,
+and recently accessed data comes back faster.
 
 ### Cost
 
-Tigris charges for storage but has zero egress fees. For agent workloads that query memory repeatedly, and especially for multi-region deployments where agents and users may be in different locations, this matters. In practice, LLM API calls dominate cost for most agent workloads -- storage and transfer are rarely the constraint.
+Tigris charges for storage but has **zero egress fees**. That matters for agents
+that query memory repeatedly, and for multi-region deployments where agents and
+users sit far apart. Keeping raw data on Tigris also keeps Postgres sized to
+structured state, instead of bloating it with blobs.
 
 ### Security
 
 :::warning
-Never commit credentials to version control. In production, prefer IAM roles or instance profiles over static keys.
+
+Never commit credentials to version control. In production, prefer IAM roles or
+instance profiles over static keys.
+
 :::
 
 Lock down Cognee before exposing it to external traffic:
@@ -277,19 +463,21 @@ ENABLE_BACKEND_ACCESS_CONTROL=True  # Per-agent isolation
 
 ## Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| Environment variables not loaded | Call `load_dotenv()` before any Cognee imports so the environment variables are available when Cognee initializes. |
-| Authentication errors | Verify `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are set. Tigris keys start with `tid_` and `tsec_`. Check for accidental whitespace when copy-pasting from the dashboard. |
-| Region errors | Set `AWS_REGION=auto`. Tigris handles routing automatically. |
-| Wrong S3 endpoint | Confirm `AWS_ENDPOINT_URL=https://t3.storage.dev` is in your `.env` file. Cognee uses this for S3-compatible services. |
-| Cognee uses local storage | Ensure `STORAGE_BACKEND=s3` is set and that `DATA_ROOT_DIRECTORY` and `SYSTEM_ROOT_DIRECTORY` use `s3://` URIs. Cognee loads `.env` on import; variables set after import won't take effect. |
-| Slow first query | Expected. The first read fetches from Tigris; subsequent queries benefit from edge caching. |
-| boto3 addressing errors | Tigris requires `virtual` addressing style. Use `Config(s3={"addressing_style": "virtual"})` when using boto3 directly. LanceDB and s3fs handle this automatically. |
+| Issue                                  | Solution                                                                                                                                                      |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Environment variables not loaded       | Ensure `.env` exists before `import cognee` (it loads `.env` on import). Variables set after import won't take effect.                                        |
+| Authentication errors                  | Verify `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are set. Tigris keys start with `tid_` and `tsec_`. Watch for whitespace when copy-pasting.            |
+| Region errors                          | Set `AWS_REGION=auto`. Tigris handles routing automatically.                                                                                                  |
+| Wrong S3 endpoint                      | Confirm `AWS_ENDPOINT_URL=https://t3.storage.dev` is in your `.env`.                                                                                          |
+| Cognee uses local storage              | Ensure `STORAGE_BACKEND=s3` and that `DATA_ROOT_DIRECTORY` / `SYSTEM_ROOT_DIRECTORY` use `s3://` URIs.                                                        |
+| Database locked / corrupted under load | Multiple instances writing file-based stores on S3. Switch to the Postgres backend.                                                                           |
+| pgvector index creation fails          | Embedding dimensions exceed pgvector's 2000-dim index ceiling. Use a ≤1536-dim model like `text-embedding-3-small`.                                           |
+| Slow first query                       | Expected. The first read fetches from Tigris; subsequent queries benefit from edge caching.                                                                   |
+| boto3 addressing errors                | Tigris requires `virtual` addressing style. Use `Config(s3={"addressing_style": "virtual"})` with boto3 directly. LanceDB and s3fs handle this automatically. |
 
 ## References
 
 - [Cognee Documentation](https://docs.cognee.ai/)
 - [Cognee GitHub Repository](https://github.com/topoteretes/cognee)
+- [storagesdk: snapshots and forks for Tigris](https://storagesdk.dev)
 - [Tigris Object Storage Documentation](https://www.tigrisdata.com/docs/)
-````

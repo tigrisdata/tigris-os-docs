@@ -190,3 +190,35 @@ To set up a custom domain, create a CNAME record pointing your domain to
 `foo-public-bucket.t3.tigrisbucket.io` and then configure the domain in your
 bucket settings. See the [Custom Domains](./custom-domain.md) guide for full
 instructions.
+
+## Hosting a static website
+
+A public bucket can serve a static website directly, with no separate web server
+or CDN. Files are served over the
+[public bucket domains](#public-bucket-domains) or a
+[custom domain](#custom-domain), cached at the edge, with no egress charge.
+
+1. Make the bucket public, as shown above.
+2. Upload your files, setting `Content-Type` on each object so browsers render
+   them correctly. For example, use `text/html` for `.html` files.
+3. Link to each file by its full key, such as
+   `https://foo-public-bucket.t3.tigrisfiles.io/index.html`.
+
+:::warning[No default index document]
+
+Tigris serves objects by their exact key. A request to the bucket root (`/`)
+returns a directory listing (when [directory listing](#directory-listing) is
+enabled) or `403 AccessDenied`. It never serves `index.html`, and the same
+applies to subpaths: `/app/` returns `404 NoSuchKey` even when `app/index.html`
+exists. Link to each page by its full key, such as `/index.html` or
+`/app/index.html`.
+
+This shapes how single-page apps work. Load the app from an explicit key like
+`/index.html`, not the bare domain, which does not serve it. From there,
+hash-based routing (`/index.html#/dashboard`) works, because every route is
+served by the same `index.html` object. Path-based routing (`/dashboard`) does
+not: a direct request or refresh returns `404 NoSuchKey` before the app loads,
+which cannot be fixed in app code. It needs a CDN or edge layer in front of the
+bucket to rewrite unknown paths to `index.html`.
+
+:::

@@ -1,0 +1,47 @@
+# tigris objects restore
+
+Restore an archived object (e.g. one in the `GLACIER` tier) into an
+actively-readable copy for a number of days.
+
+**Alias:** `rs`
+
+## Usage
+
+```bash
+tigris objects restore <bucket> [key] [flags]
+t3 o rs <bucket> [key] [flags]
+```
+
+If the bucket argument contains the full path (e.g.
+`t3://my-bucket/archived.bin`), the `key` argument can be omitted.
+
+## Arguments
+
+| Name     | Required | Description                                          |
+| -------- | -------- | ---------------------------------------------------- |
+| `bucket` | Yes      | Bucket name, or a full path (`t3://bucket/key`)      |
+| `key`    | No       | Object key. Omit if `bucket` contains the full path. |
+
+## Flags
+
+| Name           | Required | Default | Description                                                                                         |
+| -------------- | -------- | ------- | --------------------------------------------------------------------------------------------------- |
+| `--days`, `-d` | No       | `1`     | How many days the restored copy stays available before reverting to its archived tier               |
+| `--version-id` | No       | —       | Restore a specific object version (requires bucket versioning). Omit to restore the current version |
+| `--format`     | No       | `table` | Output format. Options: `json`, `table`, `xml`                                                      |
+
+## Examples
+
+```bash
+# Restore for the default 1 day
+tigris objects restore my-bucket archived.bin
+
+# Restore for 3 days
+tigris objects restore my-bucket archived.bin --days 3
+
+# Restore using a t3:// path
+tigris objects restore t3://my-bucket/archived.bin --days 7
+```
+
+Use [`tigris objects restore-info`](restore-info) to check the restore state of
+an object.

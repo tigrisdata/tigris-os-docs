@@ -933,6 +933,8 @@ const sidebars = {
             "cli/objects/delete",
             "cli/objects/set-access",
             "cli/objects/info",
+            "cli/objects/restore",
+            "cli/objects/restore-info",
           ],
         },
         {
@@ -981,6 +983,16 @@ const sidebars = {
                 "cli/iam/users/revoke-invitation",
                 "cli/iam/users/update-role",
                 "cli/iam/users/remove",
+              ],
+            },
+            {
+              type: "category",
+              label: "tigris iam teams",
+              link: { type: "doc", id: "cli/iam/teams" },
+              items: [
+                "cli/iam/teams/list",
+                "cli/iam/teams/create",
+                "cli/iam/teams/edit",
               ],
             },
           ],

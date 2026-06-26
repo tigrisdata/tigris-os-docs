@@ -1,0 +1,23 @@
+# tigris iam teams
+
+Manage organization teams.
+
+**Alias:** `t`
+
+## Usage
+
+```bash
+tigris iam teams <operation> [flags]
+t3 iam t <operation> [flags]
+```
+
+Team management requires OAuth login (`tigris login oauth`).
+
+## Examples
+
+```bash
+tigris iam teams list
+tigris iam teams create engineering --description "Engineering team"
+tigris iam teams create engineering --members user@example.com
+tigris iam teams edit team_id --name platform
+```

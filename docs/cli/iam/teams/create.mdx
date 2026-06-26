@@ -1,0 +1,38 @@
+# tigris iam teams create
+
+Create a new team in the organization.
+
+**Alias:** `c`
+
+## Usage
+
+```bash
+tigris iam teams create <name> [flags]
+t3 iam t c <name> [flags]
+```
+
+## Arguments
+
+| Name   | Required | Description      |
+| ------ | -------- | ---------------- |
+| `name` | Yes      | Name of the team |
+
+## Flags
+
+| Name                  | Required | Default | Description                                                    |
+| --------------------- | -------- | ------- | -------------------------------------------------------------- |
+| `--description`, `-d` | No       | —       | Description for the team                                       |
+| `--members`, `-m`     | No       | —       | Member email address(es) to add (comma-separated for multiple) |
+
+## Examples
+
+```bash
+# Create a team
+tigris iam teams create engineering
+
+# Create a team with a description
+tigris iam teams create engineering --description "Engineering team"
+
+# Create a team with members
+tigris iam teams create engineering --members a@example.com,b@example.com
+```

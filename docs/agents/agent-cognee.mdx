@@ -129,8 +129,12 @@ s3.create_bucket(Bucket="my-agent-memory")
 </TabItem>
 </Tabs>
 
-:::note Tigris requires `virtual` addressing style when using boto3. The
-endpoint is `https://t3.storage.dev`. :::
+:::note
+
+Tigris requires `virtual` addressing style when using boto3. The endpoint is
+`https://t3.storage.dev`.
+
+:::
 
 ## Step 3: Configure environment variables
 
@@ -223,10 +227,14 @@ if __name__ == "__main__":
 4. **`cognee.forget()`** removes memory. See
    [Managing memory with forget](#managing-memory-with-forget).
 
-:::note For short-term context, pass `session_id="..."` to `remember()` and
-`recall()`. Session data is stored for fast retrieval and bridged into the
-permanent graph in the background. This is how per-conversation memory graduates
-into long-term knowledge. :::
+:::note
+
+For short-term context, pass `session_id="..."` to `remember()` and `recall()`.
+Session data is stored for fast retrieval and bridged into the permanent graph
+in the background. This is how per-conversation memory graduates into long-term
+knowledge.
+
+:::
 
 ## Step 5: Feed memory from files and S3
 
@@ -252,10 +260,14 @@ async def feed_documents():
 asyncio.run(feed_documents())
 ```
 
-:::tip An `s3://` URI to a single file ingests that file. A prefix URI (ending
-in `/`) recursively discovers everything underneath it, so you can point Cognee
-at an entire document library in one call. Inputs already on `s3://` are read in
-place. Cognee records them by reference rather than copying them. :::
+:::tip
+
+An `s3://` URI to a single file ingests that file. A prefix URI (ending in `/`)
+recursively discovers everything underneath it, so you can point Cognee at an
+entire document library in one call. Inputs already on `s3://` are read in
+place. Cognee records them by reference rather than copying them.
+
+:::
 
 ## Choosing a database backend
 
@@ -272,9 +284,13 @@ pulling on open and pushing on commit. This is ideal for development and
 single-worker agents, since there is no infrastructure to run and everything
 sits in one bucket.
 
-:::warning This sync is **last-writer-wins**. It is safe for a single Cognee
-process, but multiple instances writing concurrently can clobber each other's
-database files. For distributed deployments, use Postgres below. :::
+:::warning
+
+This sync is **last-writer-wins**. It is safe for a single Cognee process, but
+multiple instances writing concurrently can clobber each other's database files.
+For distributed deployments, use Postgres below.
+
+:::
 
 ### Postgres: networked stores (distributed production)
 
@@ -312,9 +328,13 @@ The Postgres graph and pgvector adapters reuse the `DB_*` credentials, so one
 instance serves all three structured stores. The Postgres must have the `vector`
 extension available (managed providers like Neon and Supabase ship it).
 
-:::tip The application code does not change between backends. The same
-`remember`, `recall`, `improve`, and `forget` calls run the same way whether
-memory sits on the file-based defaults or Postgres. Only the `.env` differs. :::
+:::tip
+
+The application code does not change between backends. The same `remember`,
+`recall`, `improve`, and `forget` calls run the same way whether memory sits on
+the file-based defaults or Postgres. Only the `.env` differs.
+
+:::
 
 ### What can live where
 
@@ -387,18 +407,25 @@ const fork = await storage.forks.create({
 });
 ```
 
-:::note With the Postgres backend, the structured stores live in Postgres rather
-than the bucket, so a bucket snapshot captures only raw data. Pair it with a
-Postgres backup on the same schedule if you want derived memory restored to the
-same instant, too. :::
+:::note
+
+With the Postgres backend, the structured stores live in Postgres rather than
+the bucket, so a bucket snapshot captures only raw data. Pair it with a Postgres
+backup on the same schedule if you want derived memory restored to the same
+instant, too.
+
+:::
 
 ## Per-agent memory isolation
 
-:::tip For multi-agent or multi-user systems, Cognee's
-`ENABLE_BACKEND_ACCESS_CONTROL` is `True` by default. Cognee keeps separate
-databases per user and dataset, so agents can't read each other's memory. Scope
-memory by passing distinct `dataset_name` values to `remember` and
-`datasets=[...]` to `recall`. :::
+:::tip
+
+For multi-agent or multi-user systems, Cognee's `ENABLE_BACKEND_ACCESS_CONTROL`
+is `True` by default. Cognee keeps separate databases per user and dataset, so
+agents can't read each other's memory. Scope memory by passing distinct
+`dataset_name` values to `remember` and `datasets=[...]` to `recall`.
+
+:::
 
 ## Production considerations
 
@@ -418,8 +445,12 @@ structured state, instead of bloating it with blobs.
 
 ### Security
 
-:::warning Never commit credentials to version control. In production, prefer
-IAM roles or instance profiles over static keys. :::
+:::warning
+
+Never commit credentials to version control. In production, prefer IAM roles or
+instance profiles over static keys.
+
+:::
 
 Lock down Cognee before exposing it to external traffic:
 

@@ -1178,6 +1178,8 @@ components:
             version string or any UNIX nanosecond-precision timestamp (e.g.
             `1765889000501544464`). Requires `fork_of`. See
             https://www.tigrisdata.com/docs/forks/.
+        access_key_scope:
+          $ref: "#/components/schemas/AccessKeyScope"
     OrgMembership:
       type: string
       description: |
@@ -1858,9 +1860,13 @@ components:
       type: string
       enum: [standard, no_default_allow]
       description: |
-        `standard` (default) grants the implicit default-allowed operations;
-        `no_default_allow` denies them so the key can only do what its
-        policies/roles grant. On update, omitting this leaves the scope unchanged.
+        Controls whether the key receives the implicit default-allowed operations
+        (such as create bucket or list buckets) on top of what its policies and
+        bucket roles grant.
+
+        - `standard` (default): grants the default-allowed operations.
+        - `no_default_allow`: denies them, so the key can do only what its policies
+          and bucket roles explicitly allow.
     CreateAccessKeyRequest:
       type: object
       additionalProperties: false
@@ -1981,7 +1987,10 @@ components:
           description: |
             Names of IAM policies to detach from this access key. Policies not currently attached are ignored.
         access_key_scope:
-          $ref: "#/components/schemas/AccessKeyScope"
+          allOf:
+            - $ref: "#/components/schemas/AccessKeyScope"
+          description: |
+            Omitting this field leaves the key's current scope unchanged.
     UpdateAccessKeyResponse:
       type: object
     RotateAccessKeyRequest:

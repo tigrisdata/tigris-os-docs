@@ -14,6 +14,7 @@ t3 iam <resource> <operation> [flags]
 - [`tigris iam policies`](/docs/cli/iam/policies) - Manage IAM policies
 - [`tigris iam users`](/docs/cli/iam/users) - Manage organization users and
   invitations
+- [`tigris iam teams`](/docs/cli/iam/teams) - Manage organization teams
 
 ## Examples
 
@@ -22,4 +23,6 @@ tigris iam policies list
 tigris iam policies create my-policy --document policy.json
 tigris iam users list
 tigris iam users invite user@example.com --role member
+tigris iam teams list
+tigris iam teams create engineering --members user@example.com
 ```

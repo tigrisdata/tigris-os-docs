@@ -1,0 +1,25 @@
+# tigris iam teams list
+
+List all teams in the organization.
+
+**Alias:** `l`
+
+## Usage
+
+```bash
+tigris iam teams list [flags]
+t3 iam t l [flags]
+```
+
+## Flags
+
+| Name             | Required | Default | Description                                    |
+| ---------------- | -------- | ------- | ---------------------------------------------- |
+| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+
+## Examples
+
+```bash
+tigris iam teams list
+tigris iam teams list --format json
+```

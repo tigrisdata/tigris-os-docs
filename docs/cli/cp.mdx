@@ -17,15 +17,19 @@ treated as local files. At least one side must be remote.
 
 ## Flags
 
-| Name                | Required | Default | Description                  |
-| ------------------- | -------- | ------- | ---------------------------- |
-| `--recursive`, `-r` | No       | —       | Copy directories recursively |
+| Name                | Required | Default | Description                                                                                              |
+| ------------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------- |
+| `--recursive`, `-r` | No       | —       | Copy directories recursively                                                                             |
+| `--access`, `-a`    | No       | —       | Access level for uploaded objects. Only applies to local-to-remote uploads. Options: `public`, `private` |
 
 ## Examples
 
 ```bash
 # Upload a local file to remote
 tigris cp ./file.txt t3://my-bucket/file.txt
+
+# Upload a local file and make it public
+tigris cp ./logo.png t3://my-bucket/logo.png --access public
 
 # Download a remote object to local
 tigris cp t3://my-bucket/file.txt ./local-copy.txt

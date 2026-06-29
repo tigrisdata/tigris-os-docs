@@ -23,6 +23,8 @@ t3 o <operation> [flags]
 | [`delete`](delete)               | Delete one or more objects by key                                    |
 | [`set-access`](set-access)       | Set the access level (public or private) on an existing object       |
 | [`info`](info)                   | Show metadata for an object (content type, size, modified date)      |
+| [`restore`](restore)             | Restore an archived object (e.g. GLACIER tier) for a number of days  |
+| [`restore-info`](restore-info)   | Show the restore state of an archived object                         |
 
 `tigris objects set` is deprecated. Use [`set-access`](set-access) to change
 ACLs and [`tigris mv`](/docs/cli/mv) to rename objects.
@@ -37,4 +39,6 @@ tigris objects put my-bucket report.pdf ./report.pdf
 tigris objects delete my-bucket report.pdf
 tigris objects set-access my-bucket report.pdf public
 tigris objects info my-bucket report.pdf
+tigris objects restore my-bucket archived.bin --days 3
+tigris objects restore-info my-bucket archived.bin
 ```

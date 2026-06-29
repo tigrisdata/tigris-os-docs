@@ -1,0 +1,43 @@
+# tigris objects restore-info
+
+Show the restore state of an archived object (`archived`, `in-progress`, or
+`restored`).
+
+**Alias:** `ri`
+
+## Usage
+
+```bash
+tigris objects restore-info <bucket> [key] [flags]
+t3 o ri <bucket> [key] [flags]
+```
+
+If the bucket argument contains the full path (e.g.
+`t3://my-bucket/archived.bin`), the `key` argument can be omitted. Objects that
+are not archived report no restore information.
+
+## Arguments
+
+| Name     | Required | Description                                          |
+| -------- | -------- | ---------------------------------------------------- |
+| `bucket` | Yes      | Bucket name, or a full path (`t3://bucket/key`)      |
+| `key`    | No       | Object key. Omit if `bucket` contains the full path. |
+
+## Flags
+
+| Name           | Required | Default | Description                                                                                      |
+| -------------- | -------- | ------- | ------------------------------------------------------------------------------------------------ |
+| `--version-id` | No       | —       | Inspect a specific object version (requires bucket versioning). Omit to read the current version |
+| `--format`     | No       | `table` | Output format. Options: `json`, `table`, `xml`                                                   |
+
+## Examples
+
+```bash
+# Show restore state
+tigris objects restore-info my-bucket archived.bin
+
+# Show restore state as JSON using a t3:// path
+tigris objects restore-info t3://my-bucket/archived.bin --format json
+```
+
+Use [`tigris objects restore`](/docs/cli/objects/restore) to request a restore.

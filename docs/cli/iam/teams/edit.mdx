@@ -1,0 +1,42 @@
+# tigris iam teams edit
+
+Update a team's name, description, or members. Members are replaced with the
+provided list.
+
+**Alias:** `e`
+
+## Usage
+
+```bash
+tigris iam teams edit <id> [flags]
+t3 iam t e <id> [flags]
+```
+
+Provide at least one of `--name`, `--description`, or `--members` to update.
+
+## Arguments
+
+| Name | Required | Description            |
+| ---- | -------- | ---------------------- |
+| `id` | Yes      | ID of the team to edit |
+
+## Flags
+
+| Name                  | Required | Default | Description                                                                            |
+| --------------------- | -------- | ------- | -------------------------------------------------------------------------------------- |
+| `--name`, `-n`        | No       | —       | New name for the team                                                                  |
+| `--description`, `-d` | No       | —       | New description for the team                                                           |
+| `--members`, `-m`     | No       | —       | Replace the team's members with these email address(es) (comma-separated for multiple) |
+
+## Examples
+
+```bash
+# Rename a team
+tigris iam teams edit team_id --name platform
+
+# Update the description
+tigris iam teams edit team_id --description "Platform team"
+
+# Replace the member list
+tigris iam teams edit team_id --members a@example.com,b@example.com
+```

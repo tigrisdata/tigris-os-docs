@@ -9,7 +9,7 @@ sidebar_label: API Reference
 
 API reference for
 [`@tigrisdata/storage`](https://www.npmjs.com/package/@tigrisdata/storage)
-v3.0.0.
+v3.16.0.
 
 For usage examples and guides, see [Using the SDK](/docs/sdks/tigris/using-sdk).
 
@@ -149,6 +149,38 @@ function put(
 function get(
   path: string,
   format: "string",
+  options: GetOptions & {
+    includeMetadata: true;
+  },
+): Promise<TigrisStorageResponse<GetResponseWithMetadata<string>, Error>>;
+```
+
+```ts
+function get(
+  path: string,
+  format: "file",
+  options: GetOptions & {
+    includeMetadata: true;
+  },
+): Promise<TigrisStorageResponse<GetResponseWithMetadata<File>, Error>>;
+```
+
+```ts
+function get(
+  path: string,
+  format: "stream",
+  options: GetOptions & {
+    includeMetadata: true;
+  },
+): Promise<
+  TigrisStorageResponse<GetResponseWithMetadata<ReadableStream>, Error>
+>;
+```
+
+```ts
+function get(
+  path: string,
+  format: "string",
   options?: GetOptions,
 ): Promise<TigrisStorageResponse<string, Error>>;
 ```
@@ -175,7 +207,7 @@ function get(
 function head(
   path: string,
   options?: HeadOptions,
-): Promise<TigrisStorageResponse<HeadResponse | void, Error>>;
+): Promise<TigrisStorageResponse<HeadResponse | undefined, Error>>;
 ```
 
 ### `list`
@@ -197,6 +229,10 @@ function remove(
 
 ### `updateObject`
 
+> **Deprecated** Use `setObjectAccess` to change object ACLs, or the dedicated
+> rename helper to change an object's key. `updateObject` will be removed in a
+> future major version.
+
 ```ts
 function updateObject(
   path: string,
@@ -215,6 +251,7 @@ type PutOptions = {
   allowOverwrite?: boolean;
   contentType?: string;
   contentDisposition?: "attachment" | "inline";
+  metadata?: Record<string, string>;
   multipart?: boolean;
   partSize?: number;
   queueSize?: number;
@@ -224,19 +261,20 @@ type PutOptions = {
 };
 ```
 
-| Property             | Type                       | Required | Description |
-| -------------------- | -------------------------- | -------- | ----------- |
-| `access`             | `'public' \| 'private'`    | No       |             |
-| `addRandomSuffix`    | `boolean`                  | No       |             |
-| `allowOverwrite`     | `boolean`                  | No       |             |
-| `contentType`        | `string`                   | No       |             |
-| `contentDisposition` | `'attachment' \| 'inline'` | No       |             |
-| `multipart`          | `boolean`                  | No       |             |
-| `partSize`           | `number`                   | No       |             |
-| `queueSize`          | `number`                   | No       |             |
-| `abortController`    | `AbortController`          | No       |             |
-| `onUploadProgress`   | `PutOnUploadProgress`      | No       |             |
-| `config`             | `TigrisStorageConfig`      | No       |             |
+| Property             | Type                           | Required | Description |
+| -------------------- | ------------------------------ | -------- | ----------- |
+| `access`             | `'public' \| 'private'`        | No       |             |
+| `addRandomSuffix`    | `boolean`                      | No       |             |
+| `allowOverwrite`     | `boolean`                      | No       |             |
+| `contentType`        | `string`                       | No       |             |
+| `contentDisposition` | `'attachment' \| 'inline'`     | No       |             |
+| `metadata`           | `Record&lt;string, string&gt;` | No       |             |
+| `multipart`          | `boolean`                      | No       |             |
+| `partSize`           | `number`                       | No       |             |
+| `queueSize`          | `number`                       | No       |             |
+| `abortController`    | `AbortController`              | No       |             |
+| `onUploadProgress`   | `PutOnUploadProgress`          | No       |             |
+| `config`             | `TigrisStorageConfig`          | No       |             |
 
 ### `PutResponse`
 
@@ -244,6 +282,8 @@ type PutOptions = {
 type PutResponse = {
   contentDisposition: string | undefined;
   contentType: string | undefined;
+  etag: string;
+  metadata: Record<string, string> | undefined;
   modified: Date;
   path: string;
   size: number;
@@ -251,14 +291,16 @@ type PutResponse = {
 };
 ```
 
-| Property             | Type                  | Required | Description |
-| -------------------- | --------------------- | -------- | ----------- |
-| `contentDisposition` | `string \| undefined` | Yes      |             |
-| `contentType`        | `string \| undefined` | Yes      |             |
-| `modified`           | `Date`                | Yes      |             |
-| `path`               | `string`              | Yes      |             |
-| `size`               | `number`              | Yes      |             |
-| `url`                | `string`              | Yes      |             |
+| Property             | Type                                        | Required | Description |
+| -------------------- | ------------------------------------------- | -------- | ----------- |
+| `contentDisposition` | `string \| undefined`                       | Yes      |             |
+| `contentType`        | `string \| undefined`                       | Yes      |             |
+| `etag`               | `string`                                    | Yes      |             |
+| `metadata`           | `Record&lt;string, string&gt; \| undefined` | Yes      |             |
+| `modified`           | `Date`                                      | Yes      |             |
+| `path`               | `string`                                    | Yes      |             |
+| `size`               | `number`                                    | Yes      |             |
+| `url`                | `string`                                    | Yes      |             |
 
 ### `PutOnUploadProgress`
 
@@ -282,17 +324,45 @@ type GetOptions = {
   contentDisposition?: "attachment" | "inline";
   contentType?: string;
   encoding?: string;
+  /**
+   * When true, `get` returns `{ body, metadata }` instead of the bare
+   * body, surfacing the object's etag, content metadata, user metadata,
+   * and (when `range` is used) `Content-Range` — all read from the same
+   * S3 response, no extra round-trip.
+   */
+  includeMetadata?: boolean;
+  /**
+   * Byte range to read. Both bounds are inclusive and 0-based, matching
+   * the HTTP `Range: bytes=…` semantics. Omit `end` to read from `start`
+   * to the end of the object. A range that falls entirely outside the
+   * object returns an error (HTTP 416). The returned body is the partial
+   * content only.
+   */
+  range?: {
+    start: number;
+    end?: number;
+  };
   snapshotVersion?: string;
+  versionId?: string;
 };
 ```
 
-| Property             | Type                       | Required | Description |
-| -------------------- | -------------------------- | -------- | ----------- |
-| `config`             | `TigrisStorageConfig`      | No       |             |
-| `contentDisposition` | `'attachment' \| 'inline'` | No       |             |
-| `contentType`        | `string`                   | No       |             |
-| `encoding`           | `string`                   | No       |             |
-| `snapshotVersion`    | `string`                   | No       |             |
+| Property             | Type                       | Required | Description                                                       |
+| -------------------- | -------------------------- | -------- | ----------------------------------------------------------------- |
+| `config`             | `TigrisStorageConfig`      | No       |                                                                   |
+| `contentDisposition` | `'attachment' \| 'inline'` | No       |                                                                   |
+| `contentType`        | `string`                   | No       |                                                                   |
+| `encoding`           | `string`                   | No       |                                                                   |
+| `includeMetadata`    | `boolean`                  | No       | When true, `get` returns `{ body, metadata }` instead of the bare |
+
+body, surfacing the object's etag, content metadata, user metadata, and (when
+`range` is used) `Content-Range` — all read from the same S3 response, no extra
+round-trip. | | `range` | `\{ start: number; end?: number; \}` | No | Byte range
+to read. Both bounds are inclusive and 0-based, matching the HTTP
+`Range: bytes=…` semantics. Omit `end` to read from `start` to the end of the
+object. A range that falls entirely outside the object returns an error (HTTP
+416). The returned body is the partial content only. | | `snapshotVersion` |
+`string` | No | | | `versionId` | `string` | No | |
 
 ### `GetResponse`
 
@@ -305,6 +375,7 @@ type GetResponse = string | File | ReadableStream;
 ```ts
 type HeadOptions = {
   snapshotVersion?: string;
+  versionId?: string;
   config?: TigrisStorageConfig;
 };
 ```
@@ -312,6 +383,7 @@ type HeadOptions = {
 | Property          | Type                  | Required | Description |
 | ----------------- | --------------------- | -------- | ----------- |
 | `snapshotVersion` | `string`              | No       |             |
+| `versionId`       | `string`              | No       |             |
 | `config`          | `TigrisStorageConfig` | No       |             |
 
 ### `HeadResponse`
@@ -320,6 +392,8 @@ type HeadOptions = {
 type HeadResponse = {
   contentDisposition: string;
   contentType: string;
+  etag: string;
+  metadata: Record<string, string>;
   modified: Date;
   path: string;
   size: number;
@@ -327,14 +401,16 @@ type HeadResponse = {
 };
 ```
 
-| Property             | Type     | Required | Description |
-| -------------------- | -------- | -------- | ----------- |
-| `contentDisposition` | `string` | Yes      |             |
-| `contentType`        | `string` | Yes      |             |
-| `modified`           | `Date`   | Yes      |             |
-| `path`               | `string` | Yes      |             |
-| `size`               | `number` | Yes      |             |
-| `url`                | `string` | Yes      |             |
+| Property             | Type                           | Required | Description |
+| -------------------- | ------------------------------ | -------- | ----------- |
+| `contentDisposition` | `string`                       | Yes      |             |
+| `contentType`        | `string`                       | Yes      |             |
+| `etag`               | `string`                       | Yes      |             |
+| `metadata`           | `Record&lt;string, string&gt;` | Yes      |             |
+| `modified`           | `Date`                         | Yes      |             |
+| `path`               | `string`                       | Yes      |             |
+| `size`               | `number`                       | Yes      |             |
+| `url`                | `string`                       | Yes      |             |
 
 ### `ListOptions`
 
@@ -345,18 +421,20 @@ type ListOptions = {
   limit?: number;
   paginationToken?: string;
   snapshotVersion?: string;
+  source?: "tigris" | "shadow";
   config?: TigrisStorageConfig;
 };
 ```
 
-| Property          | Type                  | Required | Description |
-| ----------------- | --------------------- | -------- | ----------- |
-| `delimiter`       | `string`              | No       |             |
-| `prefix`          | `string`              | No       |             |
-| `limit`           | `number`              | No       |             |
-| `paginationToken` | `string`              | No       |             |
-| `snapshotVersion` | `string`              | No       |             |
-| `config`          | `TigrisStorageConfig` | No       |             |
+| Property          | Type                   | Required | Description |
+| ----------------- | ---------------------- | -------- | ----------- |
+| `delimiter`       | `string`               | No       |             |
+| `prefix`          | `string`               | No       |             |
+| `limit`           | `number`               | No       |             |
+| `paginationToken` | `string`               | No       |             |
+| `snapshotVersion` | `string`               | No       |             |
+| `source`          | `'tigris' \| 'shadow'` | No       |             |
+| `config`          | `TigrisStorageConfig`  | No       |             |
 
 ### `ListItem`
 
@@ -366,6 +444,7 @@ type ListItem = {
   name: string;
   size: number;
   lastModified: Date;
+  etag: string;
 };
 ```
 
@@ -375,12 +454,14 @@ type ListItem = {
 | `name`         | `string` | Yes      |             |
 | `size`         | `number` | Yes      |             |
 | `lastModified` | `Date`   | Yes      |             |
+| `etag`         | `string` | Yes      |             |
 
 ### `ListResponse`
 
 ```ts
 type ListResponse = {
   items: ListItem[];
+  commonPrefixes: string[];
   paginationToken: string | undefined;
   hasMore: boolean;
 };
@@ -389,6 +470,7 @@ type ListResponse = {
 | Property          | Type                  | Required | Description |
 | ----------------- | --------------------- | -------- | ----------- |
 | `items`           | `ListItem[]`          | Yes      |             |
+| `commonPrefixes`  | `string[]`            | Yes      |             |
 | `paginationToken` | `string \| undefined` | Yes      |             |
 | `hasMore`         | `boolean`             | Yes      |             |
 
@@ -397,12 +479,14 @@ type ListResponse = {
 ```ts
 type RemoveOptions = {
   config?: TigrisStorageConfig;
+  versionId?: string;
 };
 ```
 
-| Property | Type                  | Required | Description |
-| -------- | --------------------- | -------- | ----------- |
-| `config` | `TigrisStorageConfig` | No       |             |
+| Property    | Type                  | Required | Description |
+| ----------- | --------------------- | -------- | ----------- |
+| `config`    | `TigrisStorageConfig` | No       |             |
+| `versionId` | `string`              | No       |             |
 
 ### `UpdateObjectOptions`
 
@@ -461,17 +545,44 @@ type GetPresignedUrlOptions = {
    * Default is 3600 seconds (1 hour).
    */
   expiresIn?: number;
+  /**
+   * Snapshot version to read from. When set, the presigned URL is
+   * pinned to the object version that was current at the time of the
+   * snapshot.
+   *
+   * The gateway's presign endpoint accepts a literal object versionId
+   * (not a snapshot version), so this function resolves the snapshot
+   * to the correct versionId client-side: lists the key's versions
+   * (and delete markers) and selects the newest entry with
+   * `versionId <= snapshotVersion`.
+   *
+   * Only valid with `operation: 'get'`. Returns an error if the object
+   * did not exist at the snapshot time (either never written, or
+   * deleted before the snapshot).
+   */
+  snapshotVersion?: string;
   config?: TigrisStorageConfig;
 } & MethodOrOperation;
 ```
 
-| Property                                                         | Type                  | Required | Description                                          |
-| ---------------------------------------------------------------- | --------------------- | -------- | ---------------------------------------------------- |
-| `accessKeyId`                                                    | `string`              | No       | The access key ID to use for the presigned URL.      |
+| Property                                                         | Type     | Required | Description                                                   |
+| ---------------------------------------------------------------- | -------- | -------- | ------------------------------------------------------------- |
+| `accessKeyId`                                                    | `string` | No       | The access key ID to use for the presigned URL.               |
 | If not provided, the access key ID from the config will be used. |
-| `expiresIn`                                                      | `number`              | No       | The expiration time of the presigned URL in seconds. |
+| `expiresIn`                                                      | `number` | No       | The expiration time of the presigned URL in seconds.          |
 | Default is 3600 seconds (1 hour).                                |
-| `config`                                                         | `TigrisStorageConfig` | No       |                                                      |
+| `snapshotVersion`                                                | `string` | No       | Snapshot version to read from. When set, the presigned URL is |
+
+pinned to the object version that was current at the time of the snapshot.
+
+The gateway's presign endpoint accepts a literal object versionId (not a
+snapshot version), so this function resolves the snapshot to the correct
+versionId client-side: lists the key's versions (and delete markers) and selects
+the newest entry with `versionId <= snapshotVersion`.
+
+Only valid with `operation: 'get'`. Returns an error if the object did not exist
+at the snapshot time (either never written, or deleted before the snapshot). | |
+`config` | `TigrisStorageConfig` | No | |
 
 ### `GetPresignedUrlResponse`
 
@@ -574,19 +685,23 @@ type CreateBucketOptions = {
   access?: "public" | "private";
   defaultTier?: StorageClass;
   locations?: BucketLocations;
+  enableDirectoryListing?: boolean;
+  allowObjectAcl?: boolean;
   config?: Omit<TigrisStorageConfig, "bucket">;
 };
 ```
 
-| Property               | Type                                        | Required | Description |
-| ---------------------- | ------------------------------------------- | -------- | ----------- |
-| `enableSnapshot`       | `boolean`                                   | No       |             |
-| `sourceBucketName`     | `string`                                    | No       |             |
-| `sourceBucketSnapshot` | `string`                                    | No       |             |
-| `access`               | `'public' \| 'private'`                     | No       |             |
-| `defaultTier`          | `StorageClass`                              | No       |             |
-| `locations`            | `BucketLocations`                           | No       |             |
-| `config`               | `Omit&lt;TigrisStorageConfig, 'bucket'&gt;` | No       |             |
+| Property                 | Type                                        | Required | Description |
+| ------------------------ | ------------------------------------------- | -------- | ----------- |
+| `enableSnapshot`         | `boolean`                                   | No       |             |
+| `sourceBucketName`       | `string`                                    | No       |             |
+| `sourceBucketSnapshot`   | `string`                                    | No       |             |
+| `access`                 | `'public' \| 'private'`                     | No       |             |
+| `defaultTier`            | `StorageClass`                              | No       |             |
+| `locations`              | `BucketLocations`                           | No       |             |
+| `enableDirectoryListing` | `boolean`                                   | No       |             |
+| `allowObjectAcl`         | `boolean`                                   | No       |             |
+| `config`                 | `Omit&lt;TigrisStorageConfig, 'bucket'&gt;` | No       |             |
 
 ### `CreateBucketResponse`
 
@@ -622,6 +737,19 @@ type GetBucketInfoOptions = {
 
 ```ts
 type BucketInfoResponse = {
+  /**
+   * @deprecated Use `locations` instead — it carries the same data with
+   * a structured `BucketLocations` shape that distinguishes `global` /
+   * `multi` / `single` / `dual`. `regions` will be removed in the next
+   * major version.
+   *
+   * Note: for region codes the SDK does not recognize, `regions` passes
+   * the raw value through (e.g. `['mars']`) while `locations` falls back
+   * defensively to `{ type: 'global' }`. The two fields can therefore
+   * disagree when the gateway returns a region code newer than the SDK.
+   */
+  regions: string[];
+  locations: BucketLocations;
   isSnapshotEnabled: boolean;
   forkInfo:
     | {
@@ -639,11 +767,27 @@ type BucketInfoResponse = {
     defaultTier: StorageClass;
     lifecycleRules?: BucketLifecycleRule[];
     dataMigration?: Omit<BucketMigration, "enabled">;
+    /**
+     * @deprecated Use `lifecycleRules` instead. This field is no longer
+     * populated — read the rule with only `expiration` (no transition,
+     * no filter) from `lifecycleRules` if you need the bucket-wide TTL.
+     */
     ttlConfig?: BucketTtl;
     customDomain?: string;
+    softDelete:
+      | {
+          enabled: true;
+          retentionDays: number;
+        }
+      | {
+          enabled: false;
+        };
+    /**
+     * @deprecated Use `softDelete` instead.
+     */
     deleteProtection: boolean;
     corsRules: BucketCorsRule[];
-    additionalHeaders?: Record<string, string>;
+    additionalHeaders?: GetBucketInfoApiResponseBody["additional_http_headers"];
     notifications?: BucketNotification;
   };
   sizeInfo: {
@@ -654,12 +798,24 @@ type BucketInfoResponse = {
 };
 ```
 
-| Property            | Type                                                                                                                                                                                                                                                                                                                                                    | Required | Description |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ----------- |
-| `isSnapshotEnabled` | `boolean`                                                                                                                                                                                                                                                                                                                                               | Yes      |             |
-| `forkInfo`          | `\{ hasChildren: boolean; parents: Array&lt;\{ bucketName: string; forkCreatedAt: Date; snapshot: string; snapshotCreatedAt: Date; \}&gt;; \} \| undefined`                                                                                                                                                                                             | Yes      |             |
-| `settings`          | `\{ allowObjectAcl: boolean; defaultTier: StorageClass; lifecycleRules?: BucketLifecycleRule[]; dataMigration?: Omit&lt;BucketMigration, 'enabled'&gt;; ttlConfig?: BucketTtl; customDomain?: string; deleteProtection: boolean; corsRules: BucketCorsRule[]; additionalHeaders?: Record&lt;string, string&gt;; notifications?: BucketNotification; \}` | Yes      |             |
-| `sizeInfo`          | `\{ numberOfObjects: number \| undefined; size: number \| undefined; numberOfObjectsAllVersions: number \| undefined; \}`                                                                                                                                                                                                                               | Yes      |             |
+| Property  | Type       | Required | Description                                                             |
+| --------- | ---------- | -------- | ----------------------------------------------------------------------- |
+| `regions` | `string[]` | Yes      | **Deprecated.** Use `locations` instead — it carries the same data with |
+
+a structured `BucketLocations` shape that distinguishes `global` / `multi` /
+`single` / `dual`. `regions` will be removed in the next major version.
+
+Note: for region codes the SDK does not recognize, `regions` passes the raw
+value through (e.g. `['mars']`) while `locations` falls back defensively to
+`{ type: 'global' }`. The two fields can therefore disagree when the gateway
+returns a region code newer than the SDK. | | `locations` | `BucketLocations` |
+Yes | | | `isSnapshotEnabled` | `boolean` | Yes | | | `forkInfo` |
+`\{ hasChildren: boolean; parents: Array&lt;\{ bucketName: string; forkCreatedAt: Date; snapshot: string; snapshotCreatedAt: Date; \}&gt;; \} \| undefined`
+| Yes | | | `settings` |
+`\{ allowObjectAcl: boolean; defaultTier: StorageClass; lifecycleRules?: BucketLifecycleRule[]; dataMigration?: Omit&lt;BucketMigration, 'enabled'&gt;; /** * @deprecated Use `lifecycleRules`instead. This field is no longer * populated — read the rule with only`expiration`(no transition, * no filter) from`lifecycleRules`if you need the bucket-wide TTL. */ ttlConfig?: BucketTtl; customDomain?: string; softDelete: \{ enabled: true; retentionDays: number; \} \| \{ enabled: false; \}; /** * @deprecated Use`softDelete` instead. */ deleteProtection: boolean; corsRules: BucketCorsRule[]; additionalHeaders?: GetBucketInfoApiResponseBody['additional_http_headers']; notifications?: BucketNotification; \}`
+| Yes | | | `sizeInfo` |
+`\{ numberOfObjects: number \| undefined; size: number \| undefined; numberOfObjectsAllVersions: number \| undefined; \}`
+| Yes | |
 
 ### `ListBucketsOptions`
 
@@ -668,6 +824,7 @@ type ListBucketsOptions = {
   config?: TigrisStorageConfig;
   paginationToken?: string;
   limit?: number;
+  deleted?: boolean;
 };
 ```
 
@@ -676,6 +833,7 @@ type ListBucketsOptions = {
 | `config`          | `TigrisStorageConfig` | No       |             |
 | `paginationToken` | `string`              | No       |             |
 | `limit`           | `number`              | No       |             |
+| `deleted`         | `boolean`             | No       |             |
 
 ### `ListBucketsResponse`
 
@@ -699,13 +857,34 @@ type ListBucketsResponse = {
 type Bucket = {
   name: string;
   creationDate: Date;
+  regions?: string[];
+  type?: BucketType;
+  visibility?: BucketVisibility;
+  softDeleteInfo?: {
+    enabled: boolean;
+    retentionDays: number;
+  };
+  forkInfo?: {
+    hasChildren: boolean;
+    parents: Array<{
+      bucketName: string;
+      forkCreatedAt: Date;
+      snapshot: string;
+      snapshotCreatedAt: Date;
+    }>;
+  };
 };
 ```
 
-| Property       | Type     | Required | Description |
-| -------------- | -------- | -------- | ----------- |
-| `name`         | `string` | Yes      |             |
-| `creationDate` | `Date`   | Yes      |             |
+| Property         | Type                                                                                                                                           | Required | Description |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ----------- |
+| `name`           | `string`                                                                                                                                       | Yes      |             |
+| `creationDate`   | `Date`                                                                                                                                         | Yes      |             |
+| `regions`        | `string[]`                                                                                                                                     | No       |             |
+| `type`           | `BucketType`                                                                                                                                   | No       |             |
+| `visibility`     | `BucketVisibility`                                                                                                                             | No       |             |
+| `softDeleteInfo` | `\{ enabled: boolean; retentionDays: number; \}`                                                                                               | No       |             |
+| `forkInfo`       | `\{ hasChildren: boolean; parents: Array&lt;\{ bucketName: string; forkCreatedAt: Date; snapshot: string; snapshotCreatedAt: Date; \}&gt;; \}` | No       |             |
 
 ### `BucketOwner`
 
@@ -732,22 +911,34 @@ type UpdateBucketOptions = {
   cacheControl?: string;
   customDomain?: string;
   enableAdditionalHeaders?: boolean;
+  softDelete?:
+    | {
+        enabled: true;
+        retentionDays: number;
+      }
+    | {
+        enabled: false;
+      };
+  /**
+   * @deprecated Use `softDelete` instead.
+   */
   enableDeleteProtection?: boolean;
   config?: Omit<TigrisStorageConfig, "bucket">;
 };
 ```
 
-| Property                  | Type                                        | Required | Description |
-| ------------------------- | ------------------------------------------- | -------- | ----------- |
-| `access`                  | `'public' \| 'private'`                     | No       |             |
-| `allowObjectAcl`          | `boolean`                                   | No       |             |
-| `disableDirectoryListing` | `boolean`                                   | No       |             |
-| `locations`               | `BucketLocations`                           | No       |             |
-| `cacheControl`            | `string`                                    | No       |             |
-| `customDomain`            | `string`                                    | No       |             |
-| `enableAdditionalHeaders` | `boolean`                                   | No       |             |
-| `enableDeleteProtection`  | `boolean`                                   | No       |             |
-| `config`                  | `Omit&lt;TigrisStorageConfig, 'bucket'&gt;` | No       |             |
+| Property                  | Type                                                                   | Required | Description                               |
+| ------------------------- | ---------------------------------------------------------------------- | -------- | ----------------------------------------- |
+| `access`                  | `'public' \| 'private'`                                                | No       |                                           |
+| `allowObjectAcl`          | `boolean`                                                              | No       |                                           |
+| `disableDirectoryListing` | `boolean`                                                              | No       |                                           |
+| `locations`               | `BucketLocations`                                                      | No       |                                           |
+| `cacheControl`            | `string`                                                               | No       |                                           |
+| `customDomain`            | `string`                                                               | No       |                                           |
+| `enableAdditionalHeaders` | `boolean`                                                              | No       |                                           |
+| `softDelete`              | `\{ enabled: true; retentionDays: number; \} \| \{ enabled: false; \}` | No       |                                           |
+| `enableDeleteProtection`  | `boolean`                                                              | No       | **Deprecated.** Use `softDelete` instead. |
+| `config`                  | `Omit&lt;TigrisStorageConfig, 'bucket'&gt;`                            | No       |                                           |
 
 ### `UpdateBucketResponse`
 
@@ -948,13 +1139,26 @@ type BucketCorsRule = {
 
 ### `BucketLifecycleRule`
 
+A bucket lifecycle rule. A rule can have at most one transition (top-level
+`storageClass` + `days`/`date`) and/or one `expiration`, optionally scoped to a
+key prefix via `filter.prefix`. At least one of transition or expiration must be
+present.
+
 ```ts
+/**
+ * A bucket lifecycle rule. A rule can have at most one transition
+ * (top-level `storageClass` + `days`/`date`) and/or one `expiration`,
+ * optionally scoped to a key prefix via `filter.prefix`. At least one
+ * of transition or expiration must be present.
+ */
 type BucketLifecycleRule = {
   id?: string;
   enabled?: boolean;
   storageClass?: Exclude<StorageClass, "STANDARD">;
   days?: number;
   date?: string;
+  expiration?: BucketLifecycleExpiration;
+  filter?: BucketLifecycleFilter;
 };
 ```
 
@@ -965,10 +1169,25 @@ type BucketLifecycleRule = {
 | `storageClass` | `Exclude&lt;StorageClass, 'STANDARD'&gt;` | No       |             |
 | `days`         | `number`                                  | No       |             |
 | `date`         | `string`                                  | No       |             |
+| `expiration`   | `BucketLifecycleExpiration`               | No       |             |
+| `filter`       | `BucketLifecycleFilter`                   | No       |             |
 
 ### `BucketTtl`
 
+Bucket-wide TTL configuration. Kept for back-compat with `setBucketTtl`, which
+manages a lifecycle rule with only `expiration` (no transition, no filter). New
+code should configure expirations via `BucketLifecycleRule.expiration` on
+`setBucketLifecycle` instead. This shape is expected to be removed in the next
+major version.
+
 ```ts
+/**
+ * Bucket-wide TTL configuration. Kept for back-compat with `setBucketTtl`,
+ * which manages a lifecycle rule with only `expiration` (no transition,
+ * no filter). New code should configure expirations via
+ * `BucketLifecycleRule.expiration` on `setBucketLifecycle` instead. This
+ * shape is expected to be removed in the next major version.
+ */
 type BucketTtl = {
   id?: string;
   enabled?: boolean;
@@ -1341,49 +1560,31 @@ function getStats(
 
 ```ts
 type GetStatsOptions = {
+  paginationToken?: string;
   config?: TigrisStorageConfig;
 };
 ```
 
-| Property | Type                  | Required | Description |
-| -------- | --------------------- | -------- | ----------- |
-| `config` | `TigrisStorageConfig` | No       |             |
+| Property          | Type                  | Required | Description |
+| ----------------- | --------------------- | -------- | ----------- |
+| `paginationToken` | `string`              | No       |             |
+| `config`          | `TigrisStorageConfig` | No       |             |
 
 ### `StatsResponse`
 
 ```ts
 type StatsResponse = {
-  stats: {
-    activeBuckets: number;
-    totalObjects: number;
-    totalStorageBytes: number;
-    totalUniqueObjects: number;
-  };
-  buckets: Array<{
-    name: string;
-    creationDate: Date;
-    forkInfo:
-      | {
-          hasChildren: boolean;
-          parents: Array<{
-            bucketName: string;
-            forkCreatedAt: Date;
-            snapshot: string;
-            snapshotCreatedAt: Date;
-          }>;
-        }
-      | undefined;
-    type: BucketType;
-    regions: Array<string>;
-    visibility: BucketVisibility;
-  }>;
+  paginationToken?: string;
+  stats: BucketsStats;
+  buckets: Bucket[];
 };
 ```
 
-| Property  | Type                                                                                                                                                                                                                                                                                                      | Required | Description |
-| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ----------- |
-| `stats`   | `\{ activeBuckets: number; totalObjects: number; totalStorageBytes: number; totalUniqueObjects: number; \}`                                                                                                                                                                                               | Yes      |             |
-| `buckets` | `Array&lt;\{ name: string; creationDate: Date; forkInfo: \{ hasChildren: boolean; parents: Array&lt;\{ bucketName: string; forkCreatedAt: Date; snapshot: string; snapshotCreatedAt: Date; \}&gt;; \} \| undefined; type: BucketType; regions: Array&lt;string&gt;; visibility: BucketVisibility; \}&gt;` | Yes      |             |
+| Property          | Type           | Required | Description |
+| ----------------- | -------------- | -------- | ----------- |
+| `paginationToken` | `string`       | No       |             |
+| `stats`           | `BucketsStats` | Yes      |             |
+| `buckets`         | `Bucket[]`     | Yes      |             |
 
 ### `BucketType`
 
@@ -1408,29 +1609,14 @@ Shared configuration and response types used across all API methods.
 ```ts
 type TigrisStorageConfig = {
   bucket?: string;
-  accessKeyId?: string;
-  secretAccessKey?: string;
-  endpoint?: string;
-  sessionToken?: string;
-  organizationId?: string;
-  credentialProvider?: () => Promise<{
-    accessKeyId: string;
-    secretAccessKey: string;
-    sessionToken?: string;
-    expiration?: Date;
-  }>;
-};
+  forcePathStyle?: boolean;
+} & TigrisConfig;
 ```
 
-| Property             | Type                                                                                                                    | Required | Description |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------- | ----------- |
-| `bucket`             | `string`                                                                                                                | No       |             |
-| `accessKeyId`        | `string`                                                                                                                | No       |             |
-| `secretAccessKey`    | `string`                                                                                                                | No       |             |
-| `endpoint`           | `string`                                                                                                                | No       |             |
-| `sessionToken`       | `string`                                                                                                                | No       |             |
-| `organizationId`     | `string`                                                                                                                | No       |             |
-| `credentialProvider` | `() =&gt; Promise&lt;\{ accessKeyId: string; secretAccessKey: string; sessionToken?: string; expiration?: Date; \}&gt;` | No       |             |
+| Property         | Type      | Required | Description |
+| ---------------- | --------- | -------- | ----------- |
+| `bucket`         | `string`  | No       |             |
+| `forcePathStyle` | `boolean` | No       |             |
 
 ### `TigrisStorageResponse`
 

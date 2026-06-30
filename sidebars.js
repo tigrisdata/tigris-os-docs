@@ -750,6 +750,11 @@ const sidebars = {
               label: "Configuration & Tuning",
               id: "cloud-disk/tuning",
             },
+            {
+              type: "doc",
+              label: "Changelog",
+              id: "cloud-disk/changelog",
+            },
           ],
         },
         "training/tigrisfs",

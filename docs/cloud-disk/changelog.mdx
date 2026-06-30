@@ -1,0 +1,61 @@
+---
+title: Cloud Disk Changelog
+sidebar_label: Changelog
+description:
+  Notable user-facing changes to Tigris Cloud Disk — new commands, defaults, and
+  behavior.
+---
+
+# Changelog
+
+Notable changes to Cloud Disk, newest first.
+
+:::info Beta
+
+Cloud Disk is in beta and under active development, so behavior and defaults may
+change between releases.
+
+:::
+
+## 2026-06-24
+
+- Cloud Disk now caps its own memory use automatically, keeping the daemon's
+  footprint predictable without manual tuning.
+
+## 2026-06-22
+
+- **Kubernetes (CSI):** non-root pods can now read and write Cloud Disk volumes.
+- **Kubernetes (CSI):** volume provisioning is now strongly consistent — a newly
+  created volume is immediately usable.
+- Discarding/`TRIM` now reclaims space within partially written chunks, not just
+  whole ones.
+
+## 2026-06-19
+
+- **Write-back caching is now the default**, so writes are acknowledged from the
+  local cache and flushed to Tigris in the background — noticeably faster for
+  write-heavy workloads. Opt into write-through if you need every write durable
+  on Tigris before it's acknowledged. See
+  [Configuration & Tuning](/docs/cloud-disk/tuning).
+- Reads are now strongly consistent: data you just wrote is always reflected,
+  even across mounts.
+
+## 2026-06-17
+
+- **Crash-consistent write-back across hosts:** after an unclean shutdown you
+  can remount the disk — including on a different machine — and it recovers
+  cleanly, without losing acknowledged writes.
+- New `-preset` option to pick a performance profile when creating a disk.
+
+## 2026-06-15
+
+- New `cloud-disk resize` command to grow a disk; the filesystem expands on the
+  next mount.
+
+## 2026-06-12
+
+- **Faster cold starts:** the cache pre-warms and reads ahead automatically, so
+  the disk is responsive sooner after mounting.
+- CLI improvements: mount and unmount show progress, a `status` command reports
+  a disk's state, config defaults are clearer, and a `version` command was
+  added.

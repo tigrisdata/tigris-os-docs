@@ -58,6 +58,19 @@ buffer writes.
 | `disk-cache-path` | `/var/lib/cloud-disk` | Local directory for the cache and write-back buffer. Each disk uses its own subdirectory, so one path is safe to share (and to inherit on forks).                                                       |
 | `disk-cache-size` | `0`                   | How much local disk the read cache may use, e.g. `4G`, `100G`. `0` (the default) turns the read cache off while keeping write-back buffering; size it to your working set for the biggest read speedup. |
 
+## Cache warming on mount
+
+On mount the disk preloads its index and recently-stored data into cache, so the
+first reads are fast instead of all going to Tigris. Both are on by default and
+self-limiting — warming never loads more than your cache can hold, counting the
+RAM cache (`max-cache-size`) and the local disk cache (`disk-cache-size`)
+together.
+
+| Setting              | Default | When to change                                                                                                                                                                                      |
+| -------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `warm-start-bytes`   | `1G`    | How much stored data to preload into cache on mount. Capped to the combined RAM + local-disk cache size, so it never evicts what it just loaded. Lower it for a faster mount; `0` preloads nothing. |
+| `prewarm-region-map` | `true`  | Preload the disk's index up front so reads don't pause for lookups. Cheap — leave on. Set `false` on a very large disk to skip it and mount sooner.                                                 |
+
 ## Write-back
 
 Write-back buffers writes locally and uploads in the background — much faster.

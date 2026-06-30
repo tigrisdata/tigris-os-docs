@@ -60,17 +60,19 @@ buffer writes.
 
 ## Cache warming on mount
 
-On mount the disk preloads its index and recently-stored data into cache, so the
-first reads are fast instead of all going to Tigris. This happens in the
-background — it never delays the mount; the disk serves immediately and warming
-fills the cache as it runs. Both are on by default and self-limiting — warming
-never loads more than your cache can hold, counting the RAM cache
-(`max-cache-size`) and the local disk cache (`disk-cache-size`) together.
+On mount the disk preloads its index and the data at the start of the disk into
+cache, so the first reads are fast instead of all going to Tigris. (The leading
+bytes are where a filesystem keeps most of its metadata, so this is what early
+reads tend to touch.) This happens in the background — it never delays the
+mount; the disk serves immediately and warming fills the cache as it runs. Both
+are on by default and self-limiting — warming never loads more than your cache
+can hold, counting the RAM cache (`max-cache-size`) and the local disk cache
+(`disk-cache-size`) together.
 
-| Setting              | Default | When to change                                                                                                                                                                                                                                                               |
-| -------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `warm-start-bytes`   | `1G`    | How much stored data to preload into cache on mount. Capped to the combined RAM + local-disk cache size, so it never evicts what it just loaded. Lower it to reduce background fetching after mount; `0` preloads no stored data (the index is still prewarmed — see below). |
-| `prewarm-region-map` | `true`  | Preload the disk's index up front so reads don't pause for lookups. Cheap — leave on. Set `false` on a very large disk to skip it.                                                                                                                                           |
+| Setting              | Default | When to change                                                                                                                                                                                                                                                                                                            |
+| -------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `warm-start-bytes`   | `1G`    | How much data from the start of the disk to preload into cache on mount (unwritten regions are skipped). Capped to the combined RAM + local-disk cache size, so it never evicts what it just loaded. Lower it to reduce background fetching after mount; `0` preloads no data (the index is still prewarmed — see below). |
+| `prewarm-region-map` | `true`  | Preload the disk's index up front so reads don't pause for lookups. Cheap — leave on. Set `false` on a very large disk to skip it.                                                                                                                                                                                        |
 
 ## Write-back
 

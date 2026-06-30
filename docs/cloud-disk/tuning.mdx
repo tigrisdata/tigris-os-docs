@@ -61,13 +61,11 @@ buffer writes.
 ## Cache warming on mount
 
 On mount the disk preloads its index and the data at the start of the disk into
-cache, so the first reads are fast instead of all going to Tigris. (The leading
-bytes are where a filesystem keeps most of its metadata, so this is what early
-reads tend to touch.) This happens in the background — it never delays the
-mount; the disk serves immediately and warming fills the cache as it runs. Both
-are on by default and self-limiting — warming never loads more than your cache
-can hold, counting the RAM cache (`max-cache-size`) and the local disk cache
-(`disk-cache-size`) together.
+cache, so the first reads are fast instead of all going to Tigris. This happens
+in the background — it never delays the mount; the disk serves immediately and
+warming fills the cache as it runs. Both are on by default and self-limiting —
+warming never loads more than your cache can hold, counting the RAM cache
+(`max-cache-size`) and the local disk cache (`disk-cache-size`) together.
 
 | Setting              | Default | When to change                                                                                                                                                                                                                                                                                                            |
 | -------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

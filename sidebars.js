@@ -449,6 +449,11 @@ const sidebars = {
                 },
                 {
                   type: "doc",
+                  label: "LangGraph",
+                  id: "agents/agent-langgraph",
+                },
+                {
+                  type: "doc",
                   label: "Weka",
                   id: "guides/weka",
                 },

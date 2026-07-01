@@ -1,0 +1,170 @@
+---
+id: agent-langgraph
+title: "Checkpoint LangGraph Agents on Tigris"
+---
+
+# Checkpoint LangGraph Agents on Tigris
+
+_[`langgraph-checkpoint-tigris`](https://pypi.org/project/langgraph-checkpoint-tigris/)
+is a LangGraph checkpoint saver. It stores each checkpoint as an immutable
+object in a Tigris bucket over the S3 API, and adds a zero-copy `fork()` that
+branches an agent's entire thread history by reference. That lets you test a
+change against real accumulated state instead of fixtures._
+
+## What a checkpointer does in LangGraph
+
+A LangGraph graph is a state machine. Each time it advances (a node runs, a tool
+returns, a message gets appended) the runtime can persist the graph's state as a
+**checkpoint**. Checkpoints are grouped by `thread_id`, so a thread is the full,
+ordered history of one conversation or task. That is where a LangGraph agent's
+memory lives. When the next request for `thread_id="cust-ana"` comes in, the
+runtime loads that thread's latest checkpoint and the agent picks up with its
+prior context, even after a process restart.
+
+The checkpointer is the storage behind this. LangGraph defines a
+`BaseCheckpointSaver` interface and ships savers for memory, SQLite, and
+Postgres. `TigrisSaver` implements the same interface, except it writes each
+checkpoint as an immutable, uniquely-keyed object in a Tigris bucket rather than
+rows in a database. It's the same interface, so you pass it as `checkpointer=`
+and your graph code stays the same.
+
+## Why back checkpoints with object storage
+
+For one agent on one machine, the saver you pick barely matters. It starts to
+matter when you run a fleet: many agents, or a multi-tenant platform where every
+tenant needs its own isolated state.
+
+Give each tenant or agent its own bucket and the isolation is a bucket boundary
+enforced by IAM, instead of a `WHERE tenant_id` you have to remember on every
+query. A leaked key is scoped to one bucket. Checkpoint reads and writes are
+plain S3 requests, so there's no connection pool to size or exhaust when traffic
+gets bursty and parallel. A bucket is one API call to create and costs nothing
+while it sits idle, so there's no stateful service to run and patch per tenant.
+And because Tigris serves objects close to the compute, an agent in another
+region reads its state locally rather than reaching back to a primary database.
+
+The catch: the saver finds a thread's latest checkpoint by listing objects, with
+no mutable pointer, so it needs strongly consistent reads. Use a Single-region
+or Multi-region bucket (see Prerequisites).
+
+## Prerequisites
+
+- **Python** 3.9+ and `pip`
+- A **Tigris account** with an access key (`tid_...` / `tsec_...`). Create one
+  with the [access key guide](/docs/iam/manage-access-key/).
+- A **Single-region or Multi-region** Tigris bucket. These give the strongly
+  consistent reads the saver needs to find the latest checkpoint. Global and
+  Dual-region buckets are only eventually consistent across regions.
+
+## 1. Install
+
+```bash
+pip install -U langgraph-checkpoint-tigris
+```
+
+## 2. Configure credentials
+
+The saver runs on `boto3` and reads the standard S3 environment variables. Point
+them at the Tigris endpoint:
+
+```bash
+AWS_ACCESS_KEY_ID=tid_your_access_key
+AWS_SECRET_ACCESS_KEY=tsec_your_secret_key
+AWS_ENDPOINT_URL_S3=https://t3.storage.dev
+```
+
+## 3. Use it as a checkpointer
+
+Pass a `TigrisSaver` as the `checkpointer=` for any compiled graph. Call
+`setup()` once to prepare the bucket layout; after that the graph writes a
+checkpoint for every thread as it runs.
+
+```python
+from langgraph.checkpoint.tigris import TigrisSaver
+
+with TigrisSaver.from_conn_string("my-agent-bucket") as checkpointer:
+    checkpointer.setup()
+    graph = build_graph().compile(checkpointer=checkpointer)
+
+    graph.invoke(
+        {"messages": [{"role": "user", "content": "hello"}]},
+        {"configurable": {"thread_id": "cust-ana"}},
+    )
+```
+
+The `thread_id` is the unit of memory. Reuse it on a later `invoke` and the
+conversation resumes from its last checkpoint; pass a new one and you get a
+fresh, isolated history. LangGraph's persistence features (conversation memory,
+human-in-the-loop interrupts, time-travel replay from an earlier checkpoint) all
+go through the saver, so they work the same way on Tigris.
+
+For async graphs, use `AsyncTigrisSaver` with `async with` and
+`await checkpointer.setup()`.
+
+## 4. Fork the whole agent for evaluation
+
+`fork()` branches the entire bucket (every thread, every checkpoint) by
+reference. It's O(1) and shares immutable blocks with the source, so the fork
+copies no data and returns immediately no matter how much history the bucket
+holds. Writes to the fork stay in the fork; the source is untouched. The source
+bucket has to be snapshot-enabled.
+
+```python
+from langgraph.checkpoint.tigris._fork import create_snapshot_bucket
+
+# One-time: make the production bucket snapshot-enabled.
+create_snapshot_bucket(checkpointer.client, "my-agent-bucket")
+
+# Branch prod into a throwaway bucket and point a candidate graph at it.
+fork = checkpointer.fork("my-agent-bucket-eval")
+candidate = build_graph(new_prompt).compile(checkpointer=fork)
+candidate.invoke(probe, {"configurable": {"thread_id": "cust-ana"}})
+
+# Writes land only in the fork. Drop it when you're done.
+```
+
+### Why this matters to LangGraph users
+
+Before you ship a prompt, model, or tool change, the thing you actually want to
+know is whether it helps on real conversations, not on fixtures you wrote to
+pass. Forking gives you a way to check. Fork production, point a candidate graph
+at the fork, and replay real threads through it. Every probe gets answered with
+the customer's actual history in context, because the fork inherited every
+checkpoint. Run a second fork as the baseline and compare the two.
+
+The same move covers debugging and experiments. To chase a bug, fork prod and
+step the one bad thread in isolation, with the exact state that produced it and
+no risk to live data. To compare variants, fork once per variant and run them in
+parallel for the storage cost of the shared source. Drop the forks afterward and
+nothing sticks around.
+
+On a Postgres-backed saver the closest equivalent is `pg_dump` and restore, and
+that cost grows with how much history you've accumulated. So in practice the
+eval quietly falls back to fixtures that don't look like production.
+
+### Pinning a fork to a point in time
+
+Tigris keeps snapshotting a snapshot-enabled bucket as it changes. By default
+`fork()` branches from the source's current state, but pass `snapshot_version`
+(a UNIX nanosecond timestamp) to branch from a past snapshot instead. That's how
+you ask "what would this thread have done last Tuesday" against the state as it
+was then:
+
+```python
+fork = checkpointer.fork(
+    "my-agent-bucket-debug",
+    snapshot_version="1751631910140685342",
+)
+```
+
+The checkpointer only forks and enables snapshots. It doesn't manage snapshots
+otherwise; to browse or restore them directly, use the Tigris snapshot API and
+dashboard.
+
+## References
+
+- [`langgraph-checkpoint-tigris` on PyPI](https://pypi.org/project/langgraph-checkpoint-tigris/)
+- [LangGraph documentation](https://langchain-ai.github.io/langgraph/)
+- [LangGraph persistence concepts](https://langchain-ai.github.io/langgraph/concepts/persistence/)
+- [Snapshots and forks on Tigris](/docs/buckets/snapshots-and-forks/)
+- [Tigris IAM and access keys](/docs/iam/manage-access-key/)

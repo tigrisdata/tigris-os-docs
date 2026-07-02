@@ -1,16 +1,20 @@
 # tigris objects put
 
-Upload a local file as an object. Content-type is auto-detected from extension
-unless overridden.
+Upload a local file — or data piped via stdin — as an object. Content-type is
+auto-detected from the file extension unless overridden.
 
 **Alias:** `p`
 
 ## Usage
 
 ```bash
-tigris objects put <bucket> <key> <file> [flags]
-t3 o p <bucket> <key> <file> [flags]
+tigris objects put <bucket> <key> [file] [flags]
+t3 o p <bucket> <key> [file] [flags]
 ```
+
+Omit the `<file>` argument to read the object data from **stdin** (piped input).
+Since piped data has no file extension to infer from, pass `--content-type` if
+you need a specific type.
 
 ## Flags
 
@@ -28,4 +32,10 @@ tigris objects put my-bucket report.pdf ./report.pdf
 
 # Upload with public access and explicit content type
 tigris objects put my-bucket logo.png ./logo.png --access public --content-type image/png
+
+# Upload piped data from stdin (omit the file argument)
+echo 'hello' | tigris objects put my-bucket hello.txt
+
+# Pipe a command's output straight into an object (t3:// paths work too)
+cat report.pdf | tigris objects put t3://my-bucket/report.pdf --content-type application/pdf
 ```

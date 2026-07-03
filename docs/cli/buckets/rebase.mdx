@@ -1,0 +1,41 @@
+# tigris buckets rebase
+
+Update a fork with the latest changes from its source bucket. Rebasing advances
+the fork onto the current state of the bucket it was forked from.
+
+## Usage
+
+```bash
+tigris buckets rebase <fork> [flags]
+t3 b rebase <fork> [flags]
+```
+
+You are asked to confirm before the fork is updated. Pass `--yes` (`-y`) to skip
+the prompt in scripts and other non-interactive shells. Add `--json` for
+machine-readable output, which includes the resulting snapshot version.
+
+## Flags
+
+| Name          | Required | Default | Description                                              |
+| ------------- | -------- | ------- | -------------------------------------------------------- |
+| `--yes`, `-y` | No       | —       | Skip the confirmation prompt                             |
+| `--json`      | No       | —       | Output as JSON, including the resulting snapshot version |
+
+## Examples
+
+```bash
+# Rebase a fork onto its source bucket
+tigris buckets rebase my-fork
+
+# Skip the confirmation prompt (e.g. in scripts)
+tigris buckets rebase my-fork --yes
+
+# Machine-readable output
+tigris buckets rebase my-fork --yes --json
+```
+
+## Related
+
+- [`buckets merge`](./merge.mdx) — merge a fork's changes back into its source
+- [`buckets create --fork-of`](./create.mdx) — create a fork of a bucket
+- [`buckets list --forks-of`](./list.mdx) — list the forks of a bucket

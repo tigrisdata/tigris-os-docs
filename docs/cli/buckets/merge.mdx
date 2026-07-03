@@ -1,0 +1,49 @@
+# tigris buckets merge
+
+Merge a fork's changes back into its source bucket. By default the source is
+resolved automatically from the fork's parent; use `--into` to target a
+different source bucket.
+
+## Usage
+
+```bash
+tigris buckets merge <fork> [flags]
+t3 b merge <fork> [flags]
+```
+
+You are asked to confirm before the source bucket is written. Pass `--yes`
+(`-y`) to skip the prompt in scripts and other non-interactive shells. Add
+`--json` for machine-readable output, which includes the resulting snapshot
+version.
+
+## Flags
+
+| Name                             | Required | Default       | Description                                                              |
+| -------------------------------- | -------- | ------------- | ------------------------------------------------------------------------ |
+| `--into`, `--source`             | No       | fork's parent | Source bucket to merge into. Defaults to the fork's parent source bucket |
+| `--from-snapshot`, `--from-snap` | No       | —             | Merge from a specific snapshot of the fork rather than its current state |
+| `--yes`, `-y`                    | No       | —             | Skip the confirmation prompt                                             |
+| `--json`                         | No       | —             | Output as JSON, including the resulting snapshot version                 |
+
+## Examples
+
+```bash
+# Merge a fork back into its source (parent resolved automatically)
+tigris buckets merge my-fork
+
+# Merge into an explicit source bucket
+tigris buckets merge my-fork --into my-bucket
+
+# Merge from a specific snapshot of the fork
+tigris buckets merge my-fork --from-snapshot 1765889000501544464
+
+# Skip the confirmation prompt (e.g. in scripts)
+tigris buckets merge my-fork --yes
+```
+
+## Related
+
+- [`buckets rebase`](./rebase.mdx) — update a fork with the latest changes from
+  its source
+- [`buckets create --fork-of`](./create.mdx) — create a fork of a bucket
+- [`buckets list --forks-of`](./list.mdx) — list the forks of a bucket

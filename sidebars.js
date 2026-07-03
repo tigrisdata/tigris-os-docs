@@ -900,6 +900,8 @@ const sidebars = {
           items: [
             "cli/buckets/list",
             "cli/buckets/create",
+            "cli/buckets/rebase",
+            "cli/buckets/merge",
             "cli/buckets/get",
             "cli/buckets/delete",
             "cli/buckets/set",

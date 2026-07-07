@@ -1,0 +1,262 @@
+---
+id: agent-daytona
+title: "Run Daytona Sandboxes on a Forkable Tigris Bucket"
+---
+
+# Run Daytona Sandboxes on a Forkable Tigris Bucket
+
+[Daytona](https://www.daytona.io) gives your agent a disposable microVM to run
+in. Tigris gives it a durable, forkable world to live in. This guide wires the
+two together end to end: every run gets a private copy-on-write fork of a base
+bucket and an access key scoped to that fork, the sandbox boots already bound to
+its fork, and when the run ends the harness promotes the changes or throws them
+away.
+
+The properties you get from this split:
+
+- **Isolation that is enforced, not conventional.** The sandbox only ever holds
+  credentials for its own fork. A prompt injection or a buggy tool can name the
+  base bucket all it wants; the API will refuse it.
+- **Free experiments.** A fork is a metadata-level, zero-copy clone, so it costs
+  the same whether the base holds megabytes or terabytes. Deleting a fork frees
+  only the deltas the run actually wrote.
+- **One snapshot boundary.** Working files, memory, and run metadata live as
+  keys in one namespace, so "what did the world look like before this run" is a
+  snapshot, not a forensics project.
+
+## Prerequisites
+
+- A Tigris account and the [Tigris CLI](/docs/cli/) installed and authenticated
+  on the machine that runs your harness (`npm install -g @tigrisdata/cli`)
+- A [Daytona](https://app.daytona.io) API key, exported as `DAYTONA_API_KEY`
+- The Daytona Python SDK: `pip install daytona`
+
+## Step 1: Create the base bucket
+
+The base bucket is the agent's world: the one layer you can't rebuild. Enable
+snapshots on it so every promotion below can be preceded by a point-in-time
+marker you can fork from later.
+
+```bash
+tigris buckets create agent-world --enable-snapshots
+```
+
+Seed it with whatever your agent needs to start: a repo under `workspace/`,
+memory under `memory/`, run records under `runs/`.
+
+## Step 2: Write the entrypoint
+
+The entrypoint is baked into the Daytona snapshot and runs before your agent's
+first instruction. It arrives holding fork-scoped credentials and nothing else,
+pulls the working set, and binds every storage tool to the fork.
+
+```bash
+#!/usr/bin/env bash
+# entrypoint.sh
+set -euo pipefail
+
+# 0. The harness set these three at sandbox creation. If any are
+#    missing, print which one and exit nonzero now, rather than
+#    failing partway through a run.
+: "${FORK:?FORK is not set}"
+: "${TIGRIS_ACCESS_KEY_ID:?TIGRIS_ACCESS_KEY_ID is not set}"
+: "${TIGRIS_SECRET_ACCESS_KEY:?TIGRIS_SECRET_ACCESS_KEY is not set}"
+
+# 1. Set the AWS credential chain envvars so anything speaking the
+#    S3 API (the Tigris CLI, mount-s3, boto3) can reach Tigris.
+#    storagesdk reads the TIGRIS_* originals directly.
+export AWS_ACCESS_KEY_ID="${TIGRIS_ACCESS_KEY_ID}"
+export AWS_SECRET_ACCESS_KEY="${TIGRIS_SECRET_ACCESS_KEY}"
+export AWS_REGION=auto
+export AWS_ENDPOINT_URL_S3=https://t3.storage.dev
+export AWS_ENDPOINT_URL_IAM=https://iam.storage.dev
+
+# 2. Copy the working set to local disk so ordinary file tools
+#    (git, editors, build steps) can work on it. Memory, run
+#    metadata, and artifacts stay in the fork, read by key.
+tigris cp -r "t3://${FORK}/workspace/" /workspace/
+
+# 3. Bind every storage tool to the fork. Any `storage` command or
+#    MCP tool call the agent makes sees the fork, not the base.
+export STORAGE_ADAPTER=tigris
+export TIGRIS_BUCKET="${FORK}"
+exec "$@"
+```
+
+## Step 3: Bake the Daytona snapshot
+
+Build a snapshot image that contains the Tigris CLI, the
+[storagesdk](https://github.com/storagesdk/storagesdk) MCP server, the
+entrypoint, and an MCP config entry so the agent can reach its world by key. Run
+this once, not per run.
+
+```python
+# build_snapshot.py
+from daytona import CreateSnapshotParams, Daytona, Image
+
+image = (
+    Image.debian_slim("3.13")
+    .run_commands(
+        "apt-get update && apt-get install -y nodejs npm",
+        "npm install -g @tigrisdata/cli @storagesdk/cli",
+    )
+    .add_local_file("entrypoint.sh", "/entrypoint.sh")
+    .add_local_file("mcp.json", "/etc/agent/mcp.json")
+    .run_commands("chmod +x /entrypoint.sh")
+)
+
+daytona = Daytona()  # reads DAYTONA_API_KEY
+daytona.snapshot.create(
+    CreateSnapshotParams(name="agent-runtime", image=image),
+    on_logs=print,
+)
+```
+
+The MCP config is one entry; point your agent framework at wherever it expects
+this file (for Claude Code, a `.mcp.json` in the workspace root):
+
+```json
+{
+  "mcpServers": {
+    "world": { "command": "storage", "args": ["mcp"] }
+  }
+}
+```
+
+Because the entrypoint exported `TIGRIS_BUCKET` as the fork, every tool the
+server offers (`download`, `upload`, `ls`, `snapshot_create`) is already aimed
+at the fork, and the fork-scoped key is what makes the aim binding.
+
+## Step 4: The harness: one fork, one key, one sandbox per run
+
+This is the complete per-run lifecycle: fork the world, mint a key that can see
+only the fork, boot the sandbox with those two facts in its environment, then
+promote or discard from the harness. The sandbox never holds credentials that
+can touch the base.
+
+```python
+# run.py
+import json
+import subprocess
+from collections.abc import Callable
+
+from daytona import CreateSandboxFromSnapshotParams, Daytona
+
+BASE_BUCKET = "agent-world"
+SNAPSHOT = "agent-runtime"
+
+
+def tigris(*args: str) -> str:
+    """Run a Tigris CLI command and return its stdout.
+
+    check=True means a failing command raises CalledProcessError,
+    so a failed fork or key mint aborts the run before the sandbox
+    ever boots.
+    """
+    return subprocess.run(
+        ["tigris", *args], check=True, capture_output=True, text=True
+    ).stdout
+
+
+def validate(fork: str) -> bool:
+    """Decide whether the run's changes deserve promotion.
+
+    Point your eval suite at t3://{fork} using the same fork-scoped
+    key. Returns False until you implement it, so nothing reaches
+    the base bucket by accident.
+    """
+    # TODO: implement your own validation logic
+    return False
+
+
+def run_agent(
+    run_id: str, command: str, validate: Callable[[str], bool]
+) -> None:
+    fork = f"run-{run_id}"
+
+    # 1. Fork the world. Copy-on-write and metadata-only, so it is
+    #    constant-time at any bucket size.
+    tigris("buckets", "create", fork, "--fork-of", BASE_BUCKET)
+
+    # 2. Mint a key scoped to the fork. The secret is returned
+    #    exactly once, so capture it here.
+    key = json.loads(
+        tigris("access-keys", "create", f"sandbox-{run_id}", "--format", "json")
+    )
+    tigris("access-keys", "assign", key["id"], "-b", fork, "-r", "Editor")
+
+    # 3. Boot the sandbox already bound to its fork. These env vars
+    #    are the only credentials it will ever hold.
+    daytona = Daytona()
+    sandbox = daytona.create(
+        CreateSandboxFromSnapshotParams(
+            snapshot=SNAPSHOT,
+            env_vars={
+                "FORK": fork,
+                "TIGRIS_ACCESS_KEY_ID": key["id"],
+                "TIGRIS_SECRET_ACCESS_KEY": key["secret"],
+            },
+        )
+    )
+
+    try:
+        # 4. Run the agent through the entrypoint.
+        result = sandbox.process.exec(f"/entrypoint.sh {command}", timeout=3600)
+
+        # 5. Decide what the fork was worth, from the harness, never
+        #    the sandbox.
+        if result.exit_code == 0 and validate(fork):
+            # Snapshot the base for provenance, then promote the
+            # prefixes the run actually changed.
+            tigris("snapshots", "take", BASE_BUCKET)
+            tigris(
+                "cp", "-r",
+                f"t3://{fork}/workspace/",
+                f"t3://{BASE_BUCKET}/workspace/",
+            )
+
+        # Either way the fork goes away; deleting it frees only the
+        # deltas the run wrote.
+        tigris("rm", f"t3://{fork}", "-f")
+    finally:
+        # The run's credentials die with the run.
+        tigris("access-keys", "delete", key["id"], "--yes")
+        sandbox.delete()
+
+
+if __name__ == "__main__":
+    run_agent(
+        run_id="4187",
+        command="python -m agent",
+        validate=validate,
+    )
+```
+
+`validate` ships as a stub that returns `False`, so nothing is promoted until
+you wire your eval suite into it. Failed runs cost you nothing but the deltas
+they wrote.
+
+One deliberate asymmetry in the cleanup: the access key and the sandbox are
+deleted in `finally`, so they die even when the run crashes or times out, but
+the fork is only deleted on the happy path. A run that died mid-flight leaves
+its fork behind, with dead credentials, so you can inspect exactly what the
+agent did before it failed. Sweep old `run-*` buckets on whatever schedule suits
+you.
+
+## Optional: mount the fork instead of copying
+
+If you'd rather not copy even the working set, Daytona documents
+[mounting a Tigris bucket straight into the sandbox](https://www.daytona.io/docs/mount-external-storage#mount-a-tigris-bucket)
+with `mount-s3` and the `https://t3.storage.dev` endpoint. Bake `mount-s3` into
+the snapshot, replace the `tigris cp` line in the entrypoint with a mount of
+`${FORK}`, and the whole world shows up as a local directory. The fork-scoped
+key works unchanged, because `mount-s3` reads the same `AWS_*` variables the
+entrypoint already exports.
+
+## References
+
+- [Snapshots and forks on Tigris](/docs/buckets/snapshots-and-forks/)
+- [Tigris CLI](/docs/cli/)
+- [Tigris IAM and access keys](/docs/iam/manage-access-key/)
+- [Daytona documentation](https://www.daytona.io/docs)
+- [storagesdk](https://github.com/storagesdk/storagesdk)

@@ -454,6 +454,11 @@ const sidebars = {
                 },
                 {
                   type: "doc",
+                  label: "Daytona",
+                  id: "agents/agent-daytona",
+                },
+                {
+                  type: "doc",
                   label: "Weka",
                   id: "guides/weka",
                 },

@@ -56,17 +56,24 @@ pulls the working set, and binds every storage tool to the fork.
 set -euo pipefail
 
 # 0. The harness set these three at sandbox creation. If any are
-#    missing, fail loudly now rather than partway through a run.
-: "${FORK:?}" "${TIGRIS_ACCESS_KEY_ID:?}" "${TIGRIS_SECRET_ACCESS_KEY:?}"
+#    missing, print which one and exit nonzero now, rather than
+#    failing partway through a run.
+: "${FORK:?FORK is not set}"
+: "${TIGRIS_ACCESS_KEY_ID:?TIGRIS_ACCESS_KEY_ID is not set}"
+: "${TIGRIS_SECRET_ACCESS_KEY:?TIGRIS_SECRET_ACCESS_KEY is not set}"
 
-# 1. The scoped key arrives as TIGRIS_ACCESS_KEY_ID and
-#    TIGRIS_SECRET_ACCESS_KEY (what storagesdk reads); mirror it
-#    to the AWS names the Tigris CLI reads.
+# 1. Set the AWS credential chain envvars so anything speaking the
+#    S3 API (the Tigris CLI, mount-s3, boto3) can reach Tigris.
+#    storagesdk reads the TIGRIS_* originals directly.
 export AWS_ACCESS_KEY_ID="${TIGRIS_ACCESS_KEY_ID}"
 export AWS_SECRET_ACCESS_KEY="${TIGRIS_SECRET_ACCESS_KEY}"
+export AWS_REGION=auto
+export AWS_ENDPOINT_URL_S3=https://t3.storage.dev
+export AWS_ENDPOINT_URL_IAM=https://iam.storage.dev
 
-# 2. Pull the working set only. Memory, run metadata, and artifacts
-#    stay in the fork and are read by key, never copied into the VM.
+# 2. Copy the working set to local disk so ordinary file tools
+#    (git, editors, build steps) can work on it. Memory, run
+#    metadata, and artifacts stay in the fork, read by key.
 tigris cp -r "t3://${FORK}/workspace/" /workspace/
 
 # 3. Bind every storage tool to the fork. Any `storage` command or
@@ -131,6 +138,7 @@ can touch the base.
 # run.py
 import json
 import subprocess
+from collections.abc import Callable
 
 from daytona import CreateSandboxFromSnapshotParams, Daytona
 
@@ -139,13 +147,31 @@ SNAPSHOT = "agent-runtime"
 
 
 def tigris(*args: str) -> str:
-    """Run a Tigris CLI command and return its stdout."""
+    """Run a Tigris CLI command and return its stdout.
+
+    check=True means a failing command raises CalledProcessError,
+    so a failed fork or key mint aborts the run before the sandbox
+    ever boots.
+    """
     return subprocess.run(
         ["tigris", *args], check=True, capture_output=True, text=True
     ).stdout
 
 
-def run_agent(run_id: str, command: str, validate) -> None:
+def validate(fork: str) -> bool:
+    """Decide whether the run's changes deserve promotion.
+
+    Point your eval suite at t3://{fork} using the same fork-scoped
+    key. Returns False until you implement it, so nothing reaches
+    the base bucket by accident.
+    """
+    # TODO: implement your own validation logic
+    return False
+
+
+def run_agent(
+    run_id: str, command: str, validate: Callable[[str], bool]
+) -> None:
     fork = f"run-{run_id}"
 
     # 1. Fork the world. Copy-on-write and metadata-only, so it is
@@ -202,13 +228,20 @@ if __name__ == "__main__":
     run_agent(
         run_id="4187",
         command="python -m agent",
-        validate=lambda fork: True,  # your eval suite goes here
+        validate=validate,
     )
 ```
 
-`validate` is where your eval suite runs against the fork before anything
-touches the base: point it at `t3://{fork}` with the same scoped key. Failed
-runs cost you nothing but the deltas they wrote.
+`validate` ships as a stub that returns `False`, so nothing is promoted until
+you wire your eval suite into it. Failed runs cost you nothing but the deltas
+they wrote.
+
+One deliberate asymmetry in the cleanup: the access key and the sandbox are
+deleted in `finally`, so they die even when the run crashes or times out, but
+the fork is only deleted on the happy path. A run that died mid-flight leaves
+its fork behind, with dead credentials, so you can inspect exactly what the
+agent did before it failed. Sweep old `run-*` buckets on whatever schedule suits
+you.
 
 ## Optional: mount the fork instead of copying
 

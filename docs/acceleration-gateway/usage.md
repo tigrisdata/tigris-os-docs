@@ -11,6 +11,15 @@ TAG works with any S3-compatible client. The only change you need to make is
 pointing the endpoint URL at TAG and enabling path-style addressing. Standard S3
 operations work as expected — this page covers the TAG-specific setup.
 
+:::info[Credentials by mode]
+
+In transparent proxy mode (the default), clients authenticate with their own
+Tigris credentials — TAG forwards the signature to Tigris and never stores
+client secrets. In signing mode, clients must use credentials known to TAG's
+credential store. See [Security and Access Control](./security) for details.
+
+:::
+
 ## AWS CLI
 
 Pass `--endpoint-url` with each command, or set up a named profile so you don't

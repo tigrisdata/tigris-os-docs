@@ -25,17 +25,22 @@ endpoint URL at TAG. TAG never sees or stores client secret keys.
 
 ### TAG's own credentials
 
-Your application must provide TAG with its own Tigris credentials via
-environment variables. These credentials must have read-only access to all
-buckets that clients will access through TAG:
+Your application must provide TAG with credentials via environment variables:
 
 ```bash
 export AWS_ACCESS_KEY_ID=<TAG's access key>
 export AWS_SECRET_ACCESS_KEY=<TAG's secret key>
 ```
 
-Both TAG's access key and client access keys must belong to the same Tigris
-organization.
+In **transparent proxy mode** (the default) these are TAG's own Tigris
+credentials, used only to sign proxy headers and perform background cache
+fetches — so **read-only** access to the cached buckets is sufficient, and TAG's
+access key must belong to the same Tigris organization as client access keys. In
+**signing mode** these credentials populate TAG's local credential store:
+clients authenticate with them and TAG re-signs every request with them, so they
+must carry whatever permissions clients need (read-only is not sufficient if
+clients write). See [Credential handling by mode](#credential-handling-by-mode)
+below.
 
 ## Authentication
 
@@ -50,6 +55,31 @@ signature in a single round-trip.
 TAG never sees client secret keys, client credentials do not need to be stored
 anywhere other than on the client, and Tigris retains full control over
 authorization decisions.
+
+### Signing mode
+
+Transparent proxy mode works only with Tigris (the `X-Tigris-Proxy-*` identity
+headers are meaningful only to Tigris). Set `TAG_TRANSPARENT_PROXY=false` (or
+`upstream.transparent_proxy: false`) to run **signing mode** instead, which
+works against any S3-compatible service — Tigris, AWS S3, MinIO, and others.
+
+In signing mode TAG validates the incoming request signature against its local
+credential store, then **re-signs** the request for the upstream with the **same
+access key and secret** and streams it on. It re-signs (rather than forwarding
+the original signature) because it may transform the request — this is _not_
+identity translation; the upstream sees the same identity as the client. Because
+TAG must know the secret for every access key it serves, clients must
+authenticate with the credentials in TAG's store (by default the
+`AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` pair).
+
+### Credential handling by mode
+
+| Aspect                            | Transparent proxy (default)                                                | Signing mode                                                                                     |
+| --------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Upstream request signature        | Client's original signature, forwarded unchanged                           | Re-signed by TAG with the client's own credentials                                               |
+| Does TAG need client secret keys? | No — cache hits are validated locally using keys learned from Tigris       | Yes — the secret for each client access key must be in TAG's store                               |
+| Role of `AWS_*` credentials       | TAG's own identity: signs proxy headers and background fetches (read-only) | The store's contents: clients present them and TAG re-signs every request (reads **and** writes) |
+| Works with non-Tigris backends    | No (Tigris only)                                                           | Yes (any S3-compatible service)                                                                  |
 
 ## Local authentication
 
@@ -111,17 +141,23 @@ which knows TAG's key) can produce a valid proxy signature.
 
 ## Endpoint validation
 
-TAG validates the upstream endpoint at startup to prevent misconfiguration and
-SSRF attacks.
+TAG validates the upstream endpoint at startup. In **every mode** it must be a
+well-formed absolute `http://` or `https://` URL with a host.
 
-**Allowed hosts:**
+In **transparent proxy mode** (the default) the host must additionally be one of
+the following — the `X-Tigris-Proxy-*` identity headers are meaningful only to
+Tigris:
 
-| Pattern         | Example                  | Use case                |
-| --------------- | ------------------------ | ----------------------- |
-| `localhost`     | `http://localhost:8080`  | Development and testing |
-| `*.storage.dev` | `https://t3.storage.dev` | Tigris storage domains  |
+| Pattern         | Example                          | Use case                  |
+| --------------- | -------------------------------- | ------------------------- |
+| `localhost`     | `http://localhost:8080`          | Development and testing   |
+| `*.tigris.dev`  | `https://fly.storage.tigris.dev` | Tigris production domains |
+| `*.storage.dev` | `https://t3.storage.dev`         | Tigris storage domains    |
 
-Any other endpoint causes a fatal startup error.
+Any other host is a fatal startup error in transparent mode. **Signing mode**
+does not apply this allowlist — it can front any S3-compatible endpoint. TAG
+only ever forwards to the single operator-configured upstream (never a
+client-chosen one), so this is not an open proxy.
 
 ## Error mapping
 

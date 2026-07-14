@@ -5,14 +5,20 @@ Run TAG using Docker Compose. For all configuration options, see the
 
 ## Prerequisites
 
-Clone the [tag-deploy](https://github.com/tigrisdata/tag-deploy) repository:
+Clone the [tigrisdata/tag](https://github.com/tigrisdata/tag) repository and
+switch to the deployment Compose directory:
 
 ```bash
-git clone https://github.com/tigrisdata/tag-deploy.git
-cd tag-deploy
+git clone https://github.com/tigrisdata/tag.git
+cd tag/deploy/docker
 ```
 
-Create a `.env` file in the `docker/` directory with your Tigris credentials:
+The examples below use the **released-image** Compose files (`*.release.yml`),
+which pull the published `tigrisdata/tag` image — nothing to build. (To build
+the image from source instead, use the plain Compose files in the repository's
+top-level `docker/` directory.)
+
+Create a `.env` file in this directory with your Tigris credentials:
 
 ```bash
 AWS_ACCESS_KEY_ID=your_access_key
@@ -26,18 +32,17 @@ use their own credentials directly.
 ## Single node
 
 ```bash
-cd docker
-docker compose up -d
+docker compose -f docker-compose.release.yml up -d
 ```
 
 TAG will be available at `http://localhost:8080`.
 
 ```bash
 # View logs
-docker compose logs -f tag
+docker compose -f docker-compose.release.yml logs -f tag
 
 # Stop
-docker compose down
+docker compose -f docker-compose.release.yml down
 ```
 
 ## Cluster mode
@@ -45,8 +50,7 @@ docker compose down
 Run 3 TAG nodes with an embedded distributed cache cluster:
 
 ```bash
-cd docker
-docker compose -f docker-compose-cluster.yml up -d
+docker compose -f docker-compose-cluster.release.yml up -d
 ```
 
 TAG endpoints:
@@ -60,19 +64,22 @@ cluster.
 
 ```bash
 # View logs
-docker compose -f docker-compose-cluster.yml logs -f
+docker compose -f docker-compose-cluster.release.yml logs -f
 
 # Stop and remove volumes
-docker compose -f docker-compose-cluster.yml down -v
+docker compose -f docker-compose-cluster.release.yml down -v
 ```
 
 ## Environment variables
 
-You can add optional environment variables to the `.env` file:
+You can add optional environment variables to the `.env` file. The
+released-image Compose files default to the `latest` published image; pin a
+specific release by setting `TAG_VERSION`:
 
 ```bash
 AWS_ACCESS_KEY_ID=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_key
+TAG_VERSION=v1.11.0
 TAG_LOG_LEVEL=info
 ```
 
@@ -80,11 +87,12 @@ See the full [Configuration Reference](configuration.md) for all options.
 
 ## Upgrading
 
-Update the image tag in your `docker-compose.yml` and recreate the container:
+Set `TAG_VERSION` in your `.env` (or leave it unset to track `latest`), then
+pull and recreate:
 
 ```bash
-docker compose pull
-docker compose up -d
+docker compose -f docker-compose.release.yml pull
+docker compose -f docker-compose.release.yml up -d
 ```
 
 The cache volume is preserved across container recreations — TAG picks up the

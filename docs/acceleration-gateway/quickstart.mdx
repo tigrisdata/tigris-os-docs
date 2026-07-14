@@ -20,8 +20,8 @@ authenticate separately with their own credentials.
 <TabItem value="native" label="Native Binary" default>
 
 ```bash
-# Download and install TAG
-curl -sSL https://raw.githubusercontent.com/tigrisdata/tag-deploy/main/native/install.sh | bash
+# Download and install TAG (latest release)
+curl -fsSL https://tag-releases.t3.storage.dev/latest/install.sh | bash
 
 # Set your Tigris credentials
 export AWS_ACCESS_KEY_ID=<your-access-key>
@@ -32,23 +32,25 @@ tag --config /etc/tag/config.yaml
 ```
 
 The install script auto-detects your OS (Linux/macOS) and architecture
-(amd64/arm64) and places the binary in `/usr/local/bin`.
+(amd64/arm64), places the binary in `/usr/local/bin`, and installs a default
+config at `/etc/tag/config.yaml`. To pin a specific release, use
+`https://tag-releases.t3.storage.dev/v1.11.0/install.sh`.
 
 </TabItem>
 <TabItem value="docker" label="Docker">
 
 ```bash
-git clone https://github.com/tigrisdata/tag-deploy.git
-cd tag-deploy
+git clone https://github.com/tigrisdata/tag.git
+cd tag/deploy/docker
 
-# Create docker/.env with credentials
-cat > docker/.env <<EOF
+# Create .env with credentials
+cat > .env <<EOF
 AWS_ACCESS_KEY_ID=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_key
 EOF
 
-# Start TAG
-cd docker && docker compose up -d
+# Start TAG (pulls the published tigrisdata/tag image)
+docker compose -f docker-compose.release.yml up -d
 ```
 
 The Docker image (`tigrisdata/tag`) uses Alpine Linux, runs as a non-root user,
@@ -60,8 +62,8 @@ For cluster mode and more options, see the [Docker guide](docker.md).
 <TabItem value="kubernetes" label="Kubernetes">
 
 ```bash
-git clone https://github.com/tigrisdata/tag-deploy.git
-cd tag-deploy
+git clone https://github.com/tigrisdata/tag.git
+cd tag
 
 kubectl create namespace tag
 
@@ -70,7 +72,7 @@ kubectl create secret generic tag-credentials \
   --from-literal=AWS_ACCESS_KEY_ID=your_access_key \
   --from-literal=AWS_SECRET_ACCESS_KEY=your_secret_key
 
-kubectl apply -k kubernetes/base/ -n tag
+kubectl apply -k deploy/kubernetes/base/ -n tag
 ```
 
 This deploys a 3-replica StatefulSet with embedded caching, gossip-based cluster

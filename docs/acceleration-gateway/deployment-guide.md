@@ -117,8 +117,10 @@ where the old one left off.
 application's. In Kubernetes, verify the secret exists:
 `kubectl get secret -n tag tag-credentials`
 
-**"invalid upstream endpoint"** — TAG only allows connections to `localhost` or
-`*.storage.dev`. Check `TAG_UPSTREAM_ENDPOINT`.
+**"invalid upstream endpoint"** — in transparent proxy mode TAG only allows
+`localhost`, `*.tigris.dev`, or `*.storage.dev`. Check `TAG_UPSTREAM_ENDPOINT`,
+or switch to signing mode (`TAG_TRANSPARENT_PROXY=false`) to use another
+S3-compatible endpoint.
 
 **"TLS certificate or key file not found"** — If either `TAG_TLS_CERT_FILE` or
 `TAG_TLS_KEY_FILE` is set, both must point to valid files.

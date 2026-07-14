@@ -38,13 +38,19 @@ and path:
 
 TAG supports AWS Signature Version 4 authentication in two modes:
 
-TAG forwards the client's original Authorization header as-is and adds
-cryptographically signed proxy headers so Tigris can validate both the client's
-identity and TAG's identity. TAG also performs local SigV4 validation using
-pre-derived signing keys learned from Tigris responses, enabling cache hits to
-be served without an upstream round-trip. Anonymous requests (missing auth) are
-forwarded to Tigris for authoritative handling (e.g., public bucket access),
-while malformed auth headers are rejected at TAG.
+- **Transparent proxy** (default, Tigris only): TAG forwards the client's
+  original Authorization header as-is and adds cryptographically signed proxy
+  headers so Tigris can validate both the client's identity and TAG's identity.
+  TAG also performs local SigV4 validation using pre-derived signing keys
+  learned from Tigris responses, enabling cache hits to be served without an
+  upstream round-trip.
+- **Signing mode** (any S3-compatible service): TAG validates the client's
+  signature against its local credential store and re-signs the request for the
+  upstream with the same credentials.
+
+Anonymous requests (missing auth) are forwarded upstream for authoritative
+handling (e.g., public bucket access), while malformed auth headers are rejected
+at TAG.
 
 See [Security and Access Control](security.mdx) for the full authentication
 flow.
@@ -90,12 +96,13 @@ checksum.
 
 ## Request forwarding
 
-TAG forwards client requests to Tigris as-is, preserving the original
-Authorization header. TAG adds four proxy headers so Tigris can validate the
-client's signature against the original host.
+In transparent proxy mode, TAG forwards client requests to Tigris as-is,
+preserving the original Authorization header. TAG adds four proxy headers so
+Tigris can validate the client's signature against the original host.
 
-No local credential store is needed. URL encoding is preserved exactly as
-received from the client.
+No local credential store is needed in this mode (signing mode validates against
+and re-signs from a local store). URL encoding is preserved exactly as received
+from the client.
 
 ## Request flows
 

@@ -16,7 +16,7 @@ operations work as expected — this page covers the TAG-specific setup.
 In transparent proxy mode (the default), clients authenticate with their own
 Tigris credentials — TAG forwards the signature to Tigris and never stores
 client secrets. In signing mode, clients must use credentials known to TAG's
-credential store. See [Security and Access Control](./security) for details.
+credential store. See [Security and Access Control](security.mdx) for details.
 
 :::
 

@@ -2,15 +2,15 @@
 title: Tigris Acceleration Gateway
 sidebar_label: Overview
 description:
-  Overview of Tigris Acceleration Gateway (TAG), an S3-compatible caching proxy
-  for Tigris object storage.
+  Overview of Tigris Acceleration Gateway (TAG), an open-source, S3-compatible
+  caching proxy for Tigris object storage.
 ---
 
 import TAGOverviewDiagram from "@site/src/components/diagrams/TAGOverviewDiagram";
 
 # TAG — Tigris Acceleration Gateway
 
-TAG is a high-performance S3-compatible caching proxy for
+TAG is a high-performance, **open-source** S3-compatible caching proxy for
 [Tigris object storage](https://www.tigrisdata.com). You deploy it between your
 application and Tigris, and it transparently caches objects on local NVMe
 storage — giving you sub-millisecond read latency without sacrificing S3 API
@@ -22,6 +22,14 @@ compatibility.
 
 You don't need to change any application code. Just point your S3 client at TAG
 instead of Tigris and your reads are automatically accelerated.
+
+:::info[Open source]
+
+TAG is free and open source under the Apache License 2.0. Browse the code,
+deployment manifests, and issues — or contribute — at
+[github.com/tigrisdata/tag](https://github.com/tigrisdata/tag).
+
+:::
 
 ## Why TAG
 
@@ -90,6 +98,9 @@ results, see [Benchmarks](./benchmarks).
 
 ## Key features
 
+- **Open source** — Apache 2.0 licensed. Self-host, inspect, and modify freely;
+  source and manifests at
+  [github.com/tigrisdata/tag](https://github.com/tigrisdata/tag).
 - **S3-compatible API** — Standard AWS SDKs, AWS CLI, or any S3-compatible
   library. Path-style addressing only.
 - **Transparent proxy** — TAG forwards your SigV4 credentials to Tigris as-is.
@@ -147,11 +158,13 @@ see [Cache Control](./cache-control).
 
 ## Security
 
-Your clients sign requests with their own Tigris credentials, and TAG forwards
-them to Tigris as-is — it never sees or stores your secret keys. After a
-client's first request, TAG learns derived signing keys from Tigris (encrypted
-with AES-256-GCM), so it can validate subsequent requests locally without
-calling home.
+In transparent proxy mode (the default), your clients sign requests with their
+own Tigris credentials and TAG forwards them to Tigris as-is — it never sees or
+stores your secret keys. After a client's first request, TAG learns derived
+signing keys from Tigris (encrypted with AES-256-GCM), so it can validate
+subsequent requests locally without calling home. TAG can also run in signing
+mode, which validates and re-signs requests and works with any S3-compatible
+backend.
 
 For the full authentication flow, authorization lifecycle, and credential setup,
 see [Security and Access Control](./security).
@@ -164,3 +177,12 @@ connection stats.
 
 For the full metrics reference, PromQL examples, alerting recommendations, and
 scrape configuration, see [Metrics Reference](./metrics).
+
+## Open source
+
+TAG is open source under the
+[Apache License 2.0](https://github.com/tigrisdata/tag/blob/main/LICENSE). The
+source, deployment manifests, and issue tracker live at
+[github.com/tigrisdata/tag](https://github.com/tigrisdata/tag), and
+contributions are welcome — see
+[CONTRIBUTING.md](https://github.com/tigrisdata/tag/blob/main/CONTRIBUTING.md).

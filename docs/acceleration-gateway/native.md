@@ -24,7 +24,7 @@ binary to `/usr/local/bin`, and installs a default config to
 `/etc/tag/config.yaml`:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/tigrisdata/tag-deploy/main/native/install.sh | bash
+curl -fsSL https://tag-releases.t3.storage.dev/latest/install.sh | bash
 ```
 
 Verify the installation:

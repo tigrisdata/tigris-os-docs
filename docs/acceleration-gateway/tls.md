@@ -63,7 +63,7 @@ variables:
 ```yaml
 services:
   tag:
-    image: tigrisdata/tag:v1.8.0
+    image: tigrisdata/tag:v1.11.0
     ports:
       - "8080:8080"
     environment:
@@ -135,7 +135,7 @@ Set the environment variables before starting TAG:
 ```bash
 export TAG_TLS_CERT_FILE=/path/to/cert.pem
 export TAG_TLS_KEY_FILE=/path/to/key.pem
-./native/run.sh start
+./deploy/native/run.sh start
 ```
 
 When TLS is enabled, test with:

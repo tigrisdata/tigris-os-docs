@@ -16,9 +16,9 @@ Benchmarks were run on Amazon EC2 using
 | Benchmark client | c6in.16xlarge | 64    | 128 GiB | —         | 100 Gbps |
 | TAG server       | i3en.24xlarge | 96    | 768 GiB | 60 TB SSD | 100 Gbps |
 
-TAG was run as a single instance via `native/run.sh`. During the benchmarks, TAG
-CPU usage stayed under 1200% and memory usage remained around 24 GB, leaving
-significant headroom on the server.
+TAG was run as a single instance via `deploy/native/run.sh`. During the
+benchmarks, TAG CPU usage stayed under 1200% and memory usage remained around 24
+GB, leaving significant headroom on the server.
 
 ## Results — warp
 

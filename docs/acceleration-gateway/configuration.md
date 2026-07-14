@@ -12,23 +12,32 @@ variables. Environment variables take precedence over file configuration.
 
 ## Environment variables
 
-| Variable                   | Description                                                       | Default                 |
-| -------------------------- | ----------------------------------------------------------------- | ----------------------- |
-| `AWS_ACCESS_KEY_ID`        | Tigris access key (TAG's own credentials, not client credentials) | (required)              |
-| `AWS_SECRET_ACCESS_KEY`    | Tigris secret key                                                 | (required)              |
-| `TAG_CACHE_DISK_PATH`      | Path to cache data directory                                      | `/var/tmp/tag`          |
-| `TAG_CACHE_MAX_DISK_USAGE` | Max disk usage in bytes (0 = unlimited)                           | `0`                     |
-| `TAG_HTTP_PORT`            | HTTP listen port                                                  | `8080`                  |
-| `TAG_LOG_LEVEL`            | Log level: `debug`, `info`, `warn`, `error`                       | `info`                  |
-| `TAG_LOG_FORMAT`           | Log format: `json` or `console`                                   | `json`                  |
-| `TAG_TLS_CERT_FILE`        | Path to TLS certificate file (PEM format)                         | (none)                  |
-| `TAG_TLS_KEY_FILE`         | Path to TLS private key file (PEM format)                         | (none)                  |
-| `TAG_CACHE_GRPC_ADDR`      | Address for gRPC server                                           | `:9000`                 |
-| `TAG_CACHE_NODE_ID`        | Unique node identifier for cluster mode (clustering)              | (none)                  |
-| `TAG_CACHE_CLUSTER_ADDR`   | Address for memberlist gossip (clustering)                        | `:7000`                 |
-| `TAG_CACHE_ADVERTISE_ADDR` | Address advertised to other nodes (clustering)                    | (defaults to gRPC addr) |
-| `TAG_CACHE_SEED_NODES`     | Comma-separated seed nodes for cluster discovery (clustering)     | (none)                  |
-| `TAG_PPROF_ENABLED`        | Enable pprof endpoints (`true` or `1`)                            | `false`                 |
+| Variable                          | Description                                                       | Default                  |
+| --------------------------------- | ----------------------------------------------------------------- | ------------------------ |
+| `AWS_ACCESS_KEY_ID`               | Tigris access key (TAG's own credentials, not client credentials) | (required)               |
+| `AWS_SECRET_ACCESS_KEY`           | Tigris secret key                                                 | (required)               |
+| `TAG_UPSTREAM_ENDPOINT`           | Upstream S3 endpoint URL                                          | `https://t3.storage.dev` |
+| `TAG_TRANSPARENT_PROXY`           | Transparent proxy mode; set `false`/`0` for signing mode          | `true`                   |
+| `TAG_MAX_IDLE_CONNS_PER_HOST`     | HTTP connection pool size per upstream host                       | `100`                    |
+| `TAG_MAX_INFLIGHT_REQUESTS`       | Max concurrent S3 requests before shedding with 503 SlowDown      | `1024`                   |
+| `TAG_CACHE_DISK_PATH`             | Path to cache data directory                                      | `/var/tmp/tag`           |
+| `TAG_CACHE_MAX_DISK_USAGE`        | Max disk usage in bytes (0 = unlimited)                           | `0`                      |
+| `TAG_CACHE_TTL`                   | Default TTL for cached objects (Go duration, e.g. `12h`, `30m`)   | `24h`                    |
+| `TAG_CACHE_DISABLED`              | Disable caching (`true` or `1`)                                   | `false`                  |
+| `TAG_CACHE_MAX_CONCURRENT_WRITES` | Max concurrent cache-populate operations                          | `256`                    |
+| `TAG_CACHE_DELETE_BATCH_SIZE`     | File deletions processed per deletion-queue batch                 | `1000`                   |
+| `TAG_CACHE_RECOVERY_WORKERS`      | Parallel workers for startup file recovery                        | `16`                     |
+| `TAG_HTTP_PORT`                   | HTTP listen port                                                  | `8080`                   |
+| `TAG_LOG_LEVEL`                   | Log level: `debug`, `info`, `warn`, `error`                       | `info`                   |
+| `TAG_LOG_FORMAT`                  | Log format: `json` or `console`                                   | `json`                   |
+| `TAG_TLS_CERT_FILE`               | Path to TLS certificate file (PEM format)                         | (none)                   |
+| `TAG_TLS_KEY_FILE`                | Path to TLS private key file (PEM format)                         | (none)                   |
+| `TAG_CACHE_GRPC_ADDR`             | Address for gRPC server                                           | `:9000`                  |
+| `TAG_CACHE_NODE_ID`               | Unique node identifier for cluster mode (clustering)              | (none)                   |
+| `TAG_CACHE_CLUSTER_ADDR`          | Address for memberlist gossip (clustering)                        | `:7000`                  |
+| `TAG_CACHE_ADVERTISE_ADDR`        | Address advertised to other nodes (clustering)                    | (defaults to gRPC addr)  |
+| `TAG_CACHE_SEED_NODES`            | Comma-separated seed nodes for cluster discovery (clustering)     | (none)                   |
+| `TAG_PPROF_ENABLED`               | Enable pprof endpoints (`true` or `1`)                            | `false`                  |
 
 `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` are TAG's own Tigris credentials
 with read-only access to all buckets accessed through TAG (required). Clients
@@ -84,6 +93,12 @@ upstream:
   # Higher values improve throughput for cache-miss scenarios
   # Default: 100
   max_idle_conns_per_host: 100
+
+  # Transparent proxy mode forwards client requests as-is with proxy headers
+  # (Tigris only). Set to false for signing mode, which validates and re-signs
+  # requests and works with any S3-compatible endpoint.
+  # Default: true
+  transparent_proxy: true
 
 # Cache configuration
 cache:
@@ -165,8 +180,35 @@ deployments.
 
 ### Endpoint validation
 
-The upstream endpoint must match one of the allowed host patterns: `localhost`
-or `*.storage.dev`. TAG exits at startup if the endpoint does not match.
+The upstream endpoint must be a well-formed absolute `http://` or `https://` URL
+with a host. In **transparent proxy mode** (the default) the host must also
+match one of `localhost`, `*.tigris.dev`, or `*.storage.dev`; TAG exits at
+startup otherwise. **Signing mode** does not apply this allowlist and accepts
+any S3-compatible endpoint — see
+[Using TAG with other S3-compatible services](#using-tag-with-other-s3-compatible-services).
+
+### Using TAG with other S3-compatible services
+
+Signing mode re-signs requests with standard AWS SigV4, so it works against any
+S3-compatible endpoint (AWS S3, MinIO, Ceph, etc.), not just Tigris:
+
+```yaml
+upstream:
+  transparent_proxy: false
+  endpoint: "https://s3.us-east-1.amazonaws.com"
+  # Set the backend's region; the default "auto" only works with Tigris. AWS and
+  # other region-sensitive services reject signatures whose credential-scope
+  # region does not match the endpoint.
+  region: "us-east-1"
+```
+
+- Transparent proxy mode and its zero-config, no-double-auth experience are
+  Tigris-only. Third-party backends are supported on a best-effort,
+  community-supported basis.
+- The `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` credentials are the
+  credentials for that backend; clients must present the same credentials, and
+  they need permissions covering whatever operations clients perform (read-only
+  is insufficient if clients write).
 
 ### Cluster mode
 

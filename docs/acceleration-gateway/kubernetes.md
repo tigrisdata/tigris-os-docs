@@ -10,11 +10,11 @@ options, see the [Configuration Reference](configuration.md).
 - `kubectl` configured to access the cluster
 - Tigris access key and secret key with read access to all buckets that will be
   accessed through TAG
-- Clone the [tag-deploy](https://github.com/tigrisdata/tag-deploy) repository:
+- Clone the [tigrisdata/tag](https://github.com/tigrisdata/tag) repository:
 
 ```bash
-git clone https://github.com/tigrisdata/tag-deploy.git
-cd tag-deploy
+git clone https://github.com/tigrisdata/tag.git
+cd tag
 ```
 
 ## Deploy
@@ -37,7 +37,7 @@ kubectl create secret generic tag-credentials \
 ### 3. Apply the manifests
 
 ```bash
-kubectl apply -k kubernetes/base/ -n tag
+kubectl apply -k deploy/kubernetes/base/ -n tag
 ```
 
 This deploys a 3-replica StatefulSet with:
@@ -59,7 +59,7 @@ kubectl exec -n tag tag-0 -- curl -s http://localhost:8080/health
 
 ## Kubernetes manifests
 
-The `kubernetes/base/` directory uses Kustomize:
+The `deploy/kubernetes/base/` directory uses Kustomize:
 
 | File                    | Description                                  |
 | ----------------------- | -------------------------------------------- |
@@ -72,14 +72,14 @@ The `kubernetes/base/` directory uses Kustomize:
 To customize the image version or other settings, create an overlay:
 
 ```yaml
-# kubernetes/overlays/production/kustomization.yaml
+# deploy/kubernetes/overlays/production/kustomization.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../base
 images:
   - name: tigrisdata/tag
-    newTag: v1.8.0
+    newTag: v1.11.0
 ```
 
 ## Production considerations
@@ -142,7 +142,7 @@ Update the image tag in your Kustomize overlay or directly in the StatefulSet,
 then apply:
 
 ```bash
-kubectl apply -k kubernetes/overlays/production/ -n tag
+kubectl apply -k deploy/kubernetes/overlays/production/ -n tag
 ```
 
 The StatefulSet performs a rolling update by default — one pod at a time is

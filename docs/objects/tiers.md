@@ -38,6 +38,11 @@ the [bucket configuration](../buckets/create-bucket.md#bucket-tier) during
 bucket creation time. If no tier is provided at bucket creation time, it
 defaults to Standard.
 
+The bucket's default tier can also be changed after creation from
+[Bucket Settings](../buckets/settings/index.mdx#storage-tier). Changing it
+applies only to new objects; existing objects remain in the tier they were
+written in.
+
 The object tier can also be set during PUT Object requests to override the
 bucket's default tier. To set the object tier:
 

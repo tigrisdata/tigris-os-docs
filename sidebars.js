@@ -472,6 +472,11 @@ const sidebars = {
               items: [
                 {
                   type: "doc",
+                  label: "ClickHouse",
+                  id: "guides/clickhouse",
+                },
+                {
+                  type: "doc",
                   label: "DuckDB",
                   id: "quickstarts/duckdb",
                 },

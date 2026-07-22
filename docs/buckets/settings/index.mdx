@@ -89,16 +89,12 @@ For more information, see
 
 ### Interaction with snapshots
 
-Only the Standard and Infrequent Access tiers support snapshots. Selecting
-Archive or Instant Retrieval Archive automatically disables snapshots for the
-bucket.
+Snapshots can be enabled on a bucket in any storage tier, both at creation and
+afterward. You can change the storage tier and turn snapshots on or off at the
+same time — the tier and snapshot state are independent, with no restrictions
+between them.
 
-The storage tier is locked while snapshots are enabled. To change the tier on a
-snapshot-enabled bucket, disable snapshots first (under **Storage Settings**),
-then change the tier.
-
-When moving a bucket to a snapshot-eligible tier and turning snapshots on, the
-snapshot toggle is also disabled when:
+The snapshot toggle is disabled only when:
 
 - The bucket is a fork (has parent buckets).
 - The bucket has dependent forks (child buckets rely on its snapshot state).
@@ -111,9 +107,9 @@ whole-bucket point-in-time [snapshots](/docs/snapshots/) and zero-copy
 
 Some restrictions apply for bucket type changes:
 
-- **Regular to Snapshot**: the bucket must not use the GLACIER storage tier,
-  object lifecycle rules, or object expiration (TTL) rules, since these are not
-  supported on snapshot-enabled buckets.
+- **Regular to Snapshot**: the bucket must not use object lifecycle rules or
+  object expiration (TTL) rules, since these are not supported on
+  snapshot-enabled buckets.
 - **Snapshot to Regular**: the bucket must not be a fork parent or a fork child.
 
 :::note

@@ -12,33 +12,35 @@ variables. Environment variables take precedence over file configuration.
 
 ## Environment variables
 
-| Variable                          | Description                                                             | Default                  |
-| --------------------------------- | ----------------------------------------------------------------------- | ------------------------ |
-| `AWS_ACCESS_KEY_ID`               | Tigris access key (TAG's own credentials, not client credentials)       | (required)               |
-| `AWS_SECRET_ACCESS_KEY`           | Tigris secret key                                                       | (required)               |
-| `TAG_UPSTREAM_ENDPOINT`           | Upstream S3 endpoint URL                                                | `https://t3.storage.dev` |
-| `TAG_TRANSPARENT_PROXY`           | Transparent proxy mode; set `false`/`0` for signing mode                | `true`                   |
-| `TAG_MAX_IDLE_CONNS_PER_HOST`     | HTTP connection pool size per upstream host                             | `100`                    |
-| `TAG_MAX_INFLIGHT_REQUESTS`       | Max concurrent S3 requests before shedding with 503 SlowDown            | `1024`                   |
-| `TAG_CACHE_DISK_PATH`             | Path to cache data directory                                            | `/var/tmp/tag`           |
-| `TAG_CACHE_MAX_DISK_USAGE`        | Max disk usage in bytes (0 = unlimited)                                 | `0`                      |
-| `TAG_CACHE_TTL`                   | Default TTL for cached objects (Go duration, e.g. `12h`, `30m`)         | `24h`                    |
-| `TAG_CACHE_DISABLED`              | Disable caching (`true` or `1`)                                         | `false`                  |
-| `TAG_CACHE_MAX_CONCURRENT_WRITES` | Max concurrent cache-populate operations                                | `256`                    |
-| `TAG_CACHE_MAX_POPULATE_MEMORY`   | Aggregate memory budget (bytes) for concurrent cache-populate buffering | `1073741824` (1 GiB)     |
-| `TAG_CACHE_DELETE_BATCH_SIZE`     | File deletions processed per deletion-queue batch                       | `1000`                   |
-| `TAG_CACHE_RECOVERY_WORKERS`      | Parallel workers for startup file recovery                              | `16`                     |
-| `TAG_HTTP_PORT`                   | HTTP listen port                                                        | `8080`                   |
-| `TAG_LOG_LEVEL`                   | Log level: `debug`, `info`, `warn`, `error`                             | `info`                   |
-| `TAG_LOG_FORMAT`                  | Log format: `json` or `console`                                         | `json`                   |
-| `TAG_TLS_CERT_FILE`               | Path to TLS certificate file (PEM format)                               | (none)                   |
-| `TAG_TLS_KEY_FILE`                | Path to TLS private key file (PEM format)                               | (none)                   |
-| `TAG_CACHE_GRPC_ADDR`             | Address for gRPC server                                                 | `:9000`                  |
-| `TAG_CACHE_NODE_ID`               | Unique node identifier for cluster mode (clustering)                    | (none)                   |
-| `TAG_CACHE_CLUSTER_ADDR`          | Address for memberlist gossip (clustering)                              | `:7000`                  |
-| `TAG_CACHE_ADVERTISE_ADDR`        | Address advertised to other nodes (clustering)                          | (defaults to gRPC addr)  |
-| `TAG_CACHE_SEED_NODES`            | Comma-separated seed nodes for cluster discovery (clustering)           | (none)                   |
-| `TAG_PPROF_ENABLED`               | Enable pprof endpoints (`true` or `1`)                                  | `false`                  |
+| Variable                          | Description                                                                     | Default                  |
+| --------------------------------- | ------------------------------------------------------------------------------- | ------------------------ |
+| `AWS_ACCESS_KEY_ID`               | Tigris access key (TAG's own credentials, not client credentials)               | (required)               |
+| `AWS_SECRET_ACCESS_KEY`           | Tigris secret key                                                               | (required)               |
+| `TAG_UPSTREAM_ENDPOINT`           | Upstream S3 endpoint URL                                                        | `https://t3.storage.dev` |
+| `TAG_TRANSPARENT_PROXY`           | Transparent proxy mode; set `false`/`0` for signing mode                        | `true`                   |
+| `TAG_MAX_IDLE_CONNS_PER_HOST`     | HTTP connection pool size per upstream host                                     | `100`                    |
+| `TAG_MAX_INFLIGHT_REQUESTS`       | Max concurrent S3 requests before shedding with 503 SlowDown                    | `1024`                   |
+| `TAG_CACHE_DISK_PATH`             | Path to cache data directory                                                    | `/var/tmp/tag`           |
+| `TAG_CACHE_MAX_DISK_USAGE`        | Max disk usage in bytes (0 = unlimited)                                         | `0`                      |
+| `TAG_CACHE_EVICTION_POLICY`       | Eviction order when the disk cap is hit: `lru` or `fifo` (oldest-written first) | `lru`                    |
+| `TAG_CACHE_TTL`                   | Default TTL for cached objects (Go duration, e.g. `12h`, `30m`)                 | `24h`                    |
+| `TAG_CACHE_DISABLED`              | Disable caching (`true` or `1`)                                                 | `false`                  |
+| `TAG_CACHE_WARM_ON_WRITE`         | Warm the cache after a successful write via a background fetch (`true`/`false`) | `false`                  |
+| `TAG_CACHE_MAX_CONCURRENT_WRITES` | Max concurrent cache-populate operations                                        | `256`                    |
+| `TAG_CACHE_MAX_POPULATE_MEMORY`   | Aggregate memory budget (bytes) for concurrent cache-populate buffering         | `1073741824` (1 GiB)     |
+| `TAG_CACHE_DELETE_BATCH_SIZE`     | File deletions processed per deletion-queue batch                               | `1000`                   |
+| `TAG_CACHE_RECOVERY_WORKERS`      | Parallel workers for startup file recovery                                      | `16`                     |
+| `TAG_HTTP_PORT`                   | HTTP listen port                                                                | `8080`                   |
+| `TAG_LOG_LEVEL`                   | Log level: `debug`, `info`, `warn`, `error`                                     | `info`                   |
+| `TAG_LOG_FORMAT`                  | Log format: `json` or `console`                                                 | `json`                   |
+| `TAG_TLS_CERT_FILE`               | Path to TLS certificate file (PEM format)                                       | (none)                   |
+| `TAG_TLS_KEY_FILE`                | Path to TLS private key file (PEM format)                                       | (none)                   |
+| `TAG_CACHE_GRPC_ADDR`             | Address for gRPC server                                                         | `:9000`                  |
+| `TAG_CACHE_NODE_ID`               | Unique node identifier for cluster mode (clustering)                            | (none)                   |
+| `TAG_CACHE_CLUSTER_ADDR`          | Address for memberlist gossip (clustering)                                      | `:7000`                  |
+| `TAG_CACHE_ADVERTISE_ADDR`        | Address advertised to other nodes (clustering)                                  | (defaults to gRPC addr)  |
+| `TAG_CACHE_SEED_NODES`            | Comma-separated seed nodes for cluster discovery (clustering)                   | (none)                   |
+| `TAG_PPROF_ENABLED`               | Enable pprof endpoints (`true` or `1`)                                          | `false`                  |
 
 `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` are TAG's own Tigris credentials
 with read-only access to all buckets accessed through TAG (required). Clients
@@ -124,6 +126,26 @@ cache:
   # Max disk usage in bytes (0 = unlimited)
   # Default: 0
   max_disk_usage_bytes: 0
+
+  # Eviction order when the disk cap is reached: "lru" (default) or "fifo".
+  # "fifo" evicts oldest-written objects first — better for write-once workloads
+  # (e.g. dated parquet) where a rare read of an old object should not keep it
+  # resident at the expense of newer, hotter data.
+  # NOTE: eviction only runs when max_disk_usage_bytes > 0. With no disk cap the
+  # cache is never evicted and this setting has no effect.
+  # Default: lru
+  eviction_policy: lru
+
+  # Warm the cache after a successful write (PutObject / CompleteMultipartUpload /
+  # CopyObject) by triggering a background full-object fetch, so a read soon after a
+  # write hits cache. This is cache-warm-on-write (write-around plus async warming),
+  # NOT strict write-through: the write still invalidates, and the warm is a
+  # separate, best-effort background fetch — deduplicated and shed under the cache
+  # populate budget. It costs one extra upstream GET per write, so it defaults off.
+  # An anonymous write warms with an unsigned fetch, so the object is cached as
+  # public-read only if it is genuinely publicly readable.
+  # Default: false
+  warm_on_write: false
 
   # Max concurrent cache-populate operations (upstream fetch + streaming write).
   # When saturated, objects are still served from upstream, just not cached.

@@ -113,6 +113,10 @@ results, see [Benchmarks](./benchmarks).
   the full object, so future ranges come from cache.
 - **Write-through invalidation** — Writes, deletes, and copies invalidate cache
   entries immediately.
+- **Cache warming on write** — Optionally (opt-in) warm the cache after a write
+  so a read soon after is a cache hit, ideal for write-then-read pipelines.
+- **Configurable eviction** — LRU or FIFO (oldest-written-first) eviction under
+  a disk cap; FIFO suits write-once workloads like dated parquet.
 - **Multi-node clustering** — Gossip discovery, consistent hashing, and gRPC
   routing for distributed caching across nodes.
 

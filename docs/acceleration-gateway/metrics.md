@@ -88,6 +88,22 @@ sum by (operation, result) (rate(tag_cache_operations_total[5m]))
 
 **Type:** Counter — number of range requests served from cached full objects.
 
+### tag_cache_size_bytes
+
+**Type:** Gauge — current logical size of **this node's** local cache in bytes
+(sum of stored object lengths). Per-node; sum across nodes for a cluster-wide
+total.
+
+```promql
+# Cluster-wide cache size
+sum(tag_cache_size_bytes)
+```
+
+The embedded cache also exports `ocache_disk_usage_bytes{type="total"}` (same
+logical size) and `ocache_segment_size_bytes` (physical on-disk segment bytes)
+directly; `tag_cache_size_bytes` is the stable, TAG-owned name for the logical
+size.
+
 ## Broadcast metrics
 
 ### tag_broadcast_shared_total
@@ -129,6 +145,12 @@ rate(tag_broadcast_shared_total[5m]) /
 ### tag_active_background_fetches
 
 **Type:** Gauge — currently active background fetches.
+
+### tag_warm_on_write_triggered_total
+
+**Type:** Counter — cache warms triggered by a successful write (when
+`cache.warm_on_write` is enabled). The warm's own outcome is recorded by the
+`tag_background_fetches_*` metrics.
 
 ```promql
 # Background fetch success rate

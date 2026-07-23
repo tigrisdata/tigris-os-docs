@@ -17,6 +17,7 @@ variables. Environment variables take precedence over file configuration.
 | `AWS_ACCESS_KEY_ID`               | Tigris access key (TAG's own credentials, not client credentials)               | (required)               |
 | `AWS_SECRET_ACCESS_KEY`           | Tigris secret key                                                               | (required)               |
 | `TAG_UPSTREAM_ENDPOINT`           | Upstream S3 endpoint URL                                                        | `https://t3.storage.dev` |
+| `TAG_UPSTREAM_REGION`             | Upstream region for SigV4 signing scope                                         | `auto`                   |
 | `TAG_TRANSPARENT_PROXY`           | Transparent proxy mode; set `false`/`0` for signing mode                        | `true`                   |
 | `TAG_MAX_IDLE_CONNS_PER_HOST`     | HTTP connection pool size per upstream host                                     | `100`                    |
 | `TAG_MAX_INFLIGHT_REQUESTS`       | Max concurrent S3 requests before shedding with 503 SlowDown                    | `1024`                   |

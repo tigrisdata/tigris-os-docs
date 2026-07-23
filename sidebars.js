@@ -487,6 +487,11 @@ const sidebars = {
                 },
                 {
                   type: "doc",
+                  label: "dlt",
+                  id: "guides/dlt",
+                },
+                {
+                  type: "doc",
                   label: "Databricks",
                   id: "libraries/databricks/index",
                 },

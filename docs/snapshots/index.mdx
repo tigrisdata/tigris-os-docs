@@ -7,7 +7,8 @@ A **snapshot** captures the state of an entire bucket at a specific point in
 time. Unlike per-object versioning which tracks individual objects, snapshots
 provide a consistent view of all objects in a bucket together.
 
-- Snapshots are immutable: once created, they never change.
+- Snapshots are immutable: once created, their contents change only if you
+  explicitly delete a specific object version.
 - Writes go to the live bucket; snapshots remain frozen.
 - Deletions in the live bucket don't affect prior snapshots.
 - Snapshots can seed a [fork](/docs/forks), an instant, isolated copy of a
@@ -24,8 +25,12 @@ impact performance.
 
 Once created, a snapshot cannot be changed. If you delete an object in the live
 bucket, it will still be in the snapshot. If you add an object to the live
-bucket, it will not be in the snapshot. Snapshots are only deleted when all
-references to them are removed, like when you delete the bucket.
+bucket, it will not be in the snapshot.
+
+The one exception: you can explicitly delete a specific object version from a
+snapshot. This is the only way a snapshot's contents change after creation. See
+[supported object versioning APIs](/docs/buckets/snapshots-and-forks#supported-apis)
+for details.
 
 The same way you'd git tag a release, you can name your snapshot with a
 meaningful version and reference it from other tools.

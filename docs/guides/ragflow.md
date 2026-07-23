@@ -42,8 +42,9 @@ as a supported backend, and this guide is the Tigris-side walkthrough.
   documents costs nothing in transfer, however often you tune.
 - **Snapshot before you re-parse.** Re-ingestion is RAGFlow's most destructive
   routine operation. [Snapshots](/docs/snapshots/) make a bad re-parse a
-  rollback instead of a restore-from-backup, and [forks](/docs/forks/) let you
-  A/B two chunking configurations against zero-copy branches of the same corpus.
+  rollback instead of a restore-from-backup, and [forks](/docs/forks/) give an
+  experiment its own zero-copy copy of the corpus to re-parse against, without
+  touching the original documents.
 - **Deployments anywhere, corpus in one place.** One global endpoint, served
   from the region nearest each deployment. A staging instance on another cloud
   reads the same bucket at local latency.
@@ -99,8 +100,11 @@ s3:
 
 Three values are load-bearing:
 
-- `region_name` must be `auto`. (The field is `region_name`, not `region` —
-  RAGFlow's connector reads `region_name`.)
+- `region_name` must be `auto`. The field is `region_name`, not `region`:
+  current RAGFlow connectors read `region_name` (the template's own commented
+  examples still show `region`, which those connectors ignore). If auth fails
+  with `SignatureDoesNotMatch` on an older release, check which key your
+  installed connector actually reads and set `auto` there.
 - `addressing_style` must be `virtual`.
 - `bucket` + `prefix_path` enable **single-bucket mode**: RAGFlow's logical
   buckets become prefixes under `ragflow/data/`, so the whole knowledge base
@@ -153,23 +157,29 @@ tigris buckets create ragflow-restored --fork-of ragflow --source-snapshot <vers
 Then set `bucket: "ragflow-restored"` in `service_conf.yaml.template` and
 restart.
 
-To compare two chunking configurations against the same corpus, fork the bucket
-and point a second RAGFlow instance at the fork:
+To test a different chunking or embedding configuration without risking your
+production corpus, fork the bucket and run a second RAGFlow instance against the
+fork:
 
 ```bash
 tigris buckets create ragflow-experiment --fork-of ragflow
 ```
 
 The second instance's config is identical except for
-`bucket: "ragflow-experiment"`. Forks are copy-on-write: instant regardless of
-corpus size, and unchanged documents share storage with the parent. Throw the
-experiment away when you've picked a winner.
+`bucket: "ragflow-experiment"`. The fork is copy-on-write, so it gives that
+instance a zero-copy copy of the same source documents — instant regardless of
+corpus size — to re-parse with different settings without touching the original.
+Note the fork isolates the **documents**, not the index: each RAGFlow instance
+builds its own chunk metadata and vectors (see below), so the second instance
+re-parses the corpus to produce its own index. Throw the experiment away when
+you've picked a winner.
 
 :::note
 
-The bucket holds your documents and parsed artifacts, but RAGFlow also keeps
-chunk metadata and vectors in its database and search engine. After rolling back
-the bucket, re-parse the affected knowledge bases so the index matches the
-restored corpus.
+A bucket snapshot or fork captures your documents and parsed artifacts, but not
+RAGFlow's database or search engine — where knowledge-base metadata, chunks, and
+vectors live. A bucket rollback or fork does not clone that index state: after
+either, re-parse the affected knowledge bases in the target instance so its
+index matches the bucket contents.
 
 :::

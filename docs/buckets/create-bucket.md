@@ -29,8 +29,11 @@ uploaded to it. The default tier can be one of the following:
 - Archive
 - Archive instant retrieval
 
-The default tier can be overridden at the object level. For more information,
-see the [Storage Tiers](/docs/objects/tiers/) guide.
+The default tier can be overridden at the object level. You can also change the
+bucket's default tier after creation from
+[Bucket Settings](/docs/buckets/settings/#storage-tier); the change applies only
+to new objects. For more information, see the
+[Storage Tiers](/docs/objects/tiers/) guide.
 
 ## Creating a bucket using the Dashboard
 

@@ -56,12 +56,48 @@ the [bucket locations](/docs/buckets/locations/) documentation.
 
 ## Storage Tier
 
-This is set on bucket creation and cannot be changed. For more information,
-please see the storage tiers page: [Storage Tiers](/docs/objects/tiers/).
+Select the storage tier for the bucket based on how frequently its data is
+accessed. For more information, see the [Storage Tiers](/docs/objects/tiers/)
+page.
 
-You can set the storage tier for individual objects when you upload them. For
-more information, please see the storage tiers page:
-[Storage Tiers: Setting object tier](/docs/objects/tiers/#setting-object-tier)
+![Storage Tier](./storage-tier.webp)
+
+### Available tiers
+
+| Tier                      | Value         | Best for                                                                            |
+| ------------------------- | ------------- | ----------------------------------------------------------------------------------- |
+| Standard                  | `STANDARD`    | Frequently accessed data. High durability, availability, and performance. (Default) |
+| Infrequent Access         | `STANDARD_IA` | Data accessed less often but needing rapid access when required.                    |
+| Archive                   | `GLACIER`     | Long-term archiving of data with infrequent access.                                 |
+| Instant Retrieval Archive | `GLACIER_IR`  | Rarely accessed, long-lived data that still needs millisecond retrieval.            |
+
+### Changing a bucket's storage tier
+
+The storage tier can be changed after a bucket is created under **Bucket
+Settings → Storage Settings**.
+
+Changing the tier applies only to new objects:
+
+- **New objects** — Objects uploaded after the change are stored in the newly
+  selected tier.
+- **Existing objects** — Existing objects are not migrated. They remain in the
+  tier they were written in until they are overwritten or re-uploaded.
+
+You can also set the storage tier for individual objects when you upload them.
+For more information, see
+[Storage Tiers: Setting object tier](/docs/objects/tiers/#setting-object-tier).
+
+### Interaction with snapshots
+
+Snapshots can be enabled on a bucket in any storage tier, both at creation and
+afterward. You can change the storage tier and turn snapshots on or off at the
+same time — the tier and snapshot state are independent, with no restrictions
+between them.
+
+The snapshot toggle is disabled only when:
+
+- The bucket is a fork (has parent buckets).
+- The bucket has dependent forks (child buckets rely on its snapshot state).
 
 ## Bucket Type
 
@@ -71,9 +107,9 @@ whole-bucket point-in-time [snapshots](/docs/snapshots/) and zero-copy
 
 Some restrictions apply for bucket type changes:
 
-- **Regular to Snapshot**: the bucket must not use the GLACIER storage tier,
-  object lifecycle rules, or object expiration (TTL) rules, since these are not
-  supported on snapshot-enabled buckets.
+- **Regular to Snapshot**: the bucket must not use object lifecycle rules or
+  object expiration (TTL) rules, since these are not supported on
+  snapshot-enabled buckets.
 - **Snapshot to Regular**: the bucket must not be a fork parent or a fork child.
 
 :::note

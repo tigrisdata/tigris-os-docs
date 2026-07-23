@@ -462,11 +462,6 @@ const sidebars = {
                   label: "Weka",
                   id: "guides/weka",
                 },
-                {
-                  type: "doc",
-                  label: "RAGFlow",
-                  id: "guides/ragflow",
-                },
               ],
             },
             {
@@ -489,6 +484,11 @@ const sidebars = {
                   type: "doc",
                   label: "DuckLake",
                   id: "quickstarts/ducklake",
+                },
+                {
+                  type: "doc",
+                  label: "dlt",
+                  id: "guides/dlt",
                 },
                 {
                   type: "doc",

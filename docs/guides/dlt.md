@@ -48,6 +48,13 @@ full configuration is below.
   open formats you can read with anything.
 - **One endpoint, no region config.** Tigris has a single global endpoint, so
   the same `secrets.toml` works wherever the pipeline runs.
+- **A strong landing zone for agent traces.** dlt increasingly ingests agent
+  traces and telemetry — dltHub's
+  [agent distillation work with Distil Labs](https://www.distillabs.ai/blog/distil-labs-launches-agent-distillation-with-dlthub/)
+  collects traces from Pydantic AI, Arize, and Langfuse and turns them into
+  fine-tuning datasets. Trace data is append-heavy and re-read in bulk — for
+  training, distillation, and analysis, often from GPU hosts in another region.
+  Egress-free, nearest-region reads make Tigris a natural destination for it.
 
 ## Prerequisites
 

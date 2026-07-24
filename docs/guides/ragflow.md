@@ -54,7 +54,11 @@ as a supported backend, and this guide is the Tigris-side walkthrough.
 - Tigris **Access Key ID** and **Secret Access Key** (see the
   [Access Key guide](/docs/iam/manage-access-key/#create-an-access-key)). When
   creating the key, grant it **Editor** access to just the `ragflow` bucket —
-  single-bucket mode (below) means that's all RAGFlow needs.
+  single-bucket mode (below) means that's all RAGFlow needs in normal operation.
+  If you later fork the bucket to roll back or experiment (see
+  [Snapshot before re-ingestion](#snapshot-before-re-ingestion)), extend the key
+  to the fork bucket as well: a key scoped to `ragflow` alone cannot reach
+  `ragflow-restored` or `ragflow-experiment`.
 - A Tigris **bucket** with snapshots enabled:
 
   ```bash
@@ -154,8 +158,11 @@ tigris snapshots list ragflow
 tigris buckets create ragflow-restored --fork-of ragflow --source-snapshot <version>
 ```
 
-Then set `bucket: "ragflow-restored"` in `service_conf.yaml.template` and
-restart.
+The fork is a separate bucket, so grant your access key **Editor** access to
+`ragflow-restored` before pointing RAGFlow at it — the single-bucket key from
+the [Prerequisites](#prerequisites) covers only `ragflow`, and RAGFlow's storage
+operations fail on restart if the key can't reach the fork. Then set
+`bucket: "ragflow-restored"` in `service_conf.yaml.template` and restart.
 
 To test a different chunking or embedding configuration without risking your
 production corpus, fork the bucket and run a second RAGFlow instance against the
@@ -166,13 +173,14 @@ tigris buckets create ragflow-experiment --fork-of ragflow
 ```
 
 The second instance's config is identical except for
-`bucket: "ragflow-experiment"`. The fork is copy-on-write, so it gives that
-instance a zero-copy copy of the same source documents — instant regardless of
-corpus size — to re-parse with different settings without touching the original.
-Note the fork isolates the **documents**, not the index: each RAGFlow instance
-builds its own chunk metadata and vectors (see below), so the second instance
-re-parses the corpus to produce its own index. Throw the experiment away when
-you've picked a winner.
+`bucket: "ragflow-experiment"` — and, as with the rollback bucket above, its
+access key must be authorized for `ragflow-experiment`. The fork is
+copy-on-write, so it gives that instance a zero-copy copy of the same source
+documents — instant regardless of corpus size — to re-parse with different
+settings without touching the original. Note the fork isolates the
+**documents**, not the index: each RAGFlow instance builds its own chunk
+metadata and vectors (see below), so the second instance re-parses the corpus to
+produce its own index. Throw the experiment away when you've picked a winner.
 
 :::note
 

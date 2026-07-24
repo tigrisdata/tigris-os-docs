@@ -462,6 +462,11 @@ const sidebars = {
                   label: "Weka",
                   id: "guides/weka",
                 },
+                {
+                  type: "doc",
+                  label: "RAGFlow",
+                  id: "guides/ragflow",
+                },
               ],
             },
             {

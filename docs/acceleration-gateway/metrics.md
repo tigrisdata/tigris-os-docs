@@ -60,11 +60,18 @@ histogram_quantile(0.99, sum(rate(tag_request_duration_seconds_bucket[5m])) by (
 
 ### tag_cache_hits_total
 
-**Type:** Counter — total number of cache hits.
+**Type:** Counter — every request served from cache, including range-from-cache
+hits and conditional 304 (Not Modified) responses. Recorded in lockstep with the
+`X-Cache: HIT` header.
 
 ### tag_cache_misses_total
 
-**Type:** Counter — total number of cache misses.
+**Type:** Counter — total number of cache misses (recorded in lockstep with
+`X-Cache: MISS`).
+
+These two counters count only `HIT` and `MISS`. `REVALIDATED` responses (object
+changed on upstream) are neither — they are tracked by the `tag_revalidations_*`
+metrics — and `BYPASS`/`DISABLED` requests are not counted at all.
 
 ### tag_cache_operations_total
 
@@ -76,7 +83,7 @@ histogram_quantile(0.99, sum(rate(tag_request_duration_seconds_bucket[5m])) by (
 | `result`    | Result: `hit`, `miss`, `success`, `error` |
 
 ```promql
-# Cache hit ratio
+# Cache hit ratio (of hit/miss decisions; excludes REVALIDATED)
 rate(tag_cache_hits_total[5m]) /
 (rate(tag_cache_hits_total[5m]) + rate(tag_cache_misses_total[5m]))
 

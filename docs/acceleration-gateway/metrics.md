@@ -95,6 +95,33 @@ sum by (operation, result) (rate(tag_cache_operations_total[5m]))
 
 **Type:** Counter — number of range requests served from cached full objects.
 
+### tag_cache_serve_locality_total
+
+**Type:** Counter — cache body reads labeled by whether this node owns the key
+(`locality="local"`, served from local storage) or had to pull it from a peer
+over gRPC (`locality="remote"`). In a cluster the single-owner consistent-hash
+ring routes most reads to the owning node, so a high `remote` share is the
+cross-node data-plane cost. Single-node mode is always `local`.
+
+| Label      | Description                                                       |
+| ---------- | ----------------------------------------------------------------- |
+| `locality` | `local` (this node owns the key) or `remote` (pulled from a peer) |
+
+```promql
+# Remote serve ratio (fraction of cache reads pulled cross-node; lower is better).
+# Aggregate with sum() so the denominator is local+remote; dividing the raw
+# vectors would match locality="remote" against itself and always report 1.
+sum(rate(tag_cache_serve_locality_total{locality="remote"}[5m]))
+/
+sum(rate(tag_cache_serve_locality_total[5m]))
+
+# Cross-node read rate per node
+sum by (pod) (rate(tag_cache_serve_locality_total{locality="remote"}[5m]))
+```
+
+Only populated when the embedded cache client can report key ownership (cluster
+mode). When it cannot, the counter stays at 0 rather than guessing a locality.
+
 ### tag_cache_size_bytes
 
 **Type:** Gauge — current logical size of **this node's** local cache in bytes

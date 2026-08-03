@@ -103,7 +103,7 @@ moves to a soft-deleted state where it is hidden from your normal bucket list
 but stays recoverable until the retention window expires.
 
 The buckets page in the Tigris Dashboard has a segmented control above the list
-with an **All buckets**, **Own by me**, and **Deleted buckets** segment. The
+with an **All buckets**, **Owned by me**, and **Deleted buckets** segment. The
 **Deleted buckets** segment is where every bucket that was deleted while soft
 delete was enabled shows up — each row in this view represents a soft-deleted
 bucket that is still within its retention window.

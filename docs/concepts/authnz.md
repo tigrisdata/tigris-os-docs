@@ -63,7 +63,7 @@ used to determine the access level of the key.
 ### Role-Based-Access-Control (RBAC)
 
 The table below shows the operations that can be performed by the access key
-based on the role assigned to the it.
+based on the role assigned to it.
 
 | Operation                          | Admin | Editor | ReadOnly |
 | ---------------------------------- | ----- | ------ | -------- |

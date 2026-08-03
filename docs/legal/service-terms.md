@@ -743,7 +743,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
 
     20.7 **Arbitration Relief.** Except as provided in Section 20.8, the
     arbitrator can award any relief that would be available if the claims had
-    been brough in a court of competent jurisdiction. If the arbitrator awards
+    been brought in a court of competent jurisdiction. If the arbitrator awards
     you an amount higher than the last written settlement amount offered by
     Tigris Data before an arbitrator was selected, Tigris Data will pay to you
     the higher of: (a) the amount awarded by the arbitrator and (b) US$10,000.

@@ -33,7 +33,7 @@ And for HTTP `GET` access you want to allow it from all the origins.
 
 You can achieve this behavior by specifying CORS rules. Tigris will serve the
 CORS headers according to the defined CORS rules, instructing modern web
-browsers to adhere security practices.
+browsers to adhere to security practices.
 
 Below is an example of a CORS configuration that achieves the desired behavior:
 

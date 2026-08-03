@@ -23,7 +23,7 @@ or about you or your devices from various sources, as described below.
   such as the names and email addresses of individuals who you would like to
   authorize to use our Services, as well as other relevant information we and
   our service providers may require to host your company's data on our Platform
-  or otherwise provide the Services. ‍
+  or otherwise provide the Services.
 - **Communications.** If you contact us directly, we receive additional
   information about you. For example, if you contact us for customer support, we
   may receive your name, email address, the contents of the message and any
@@ -31,7 +31,7 @@ or about you or your devices from various sources, as described below.
   If you subscribe to our newsletter, we will collect certain information from
   you, such as your name, company, and email address. When we send you emails,
   we may track whether you open them to learn how to deliver a better customer
-  experience and improve our Services. ‍
+  experience and improve our Services.
 - **Careers.** If you decide that you wish to apply for a job with us, you may
   submit your contact information and your resume online. We and our third-party
   service providers will collect the information you choose to provide on your
@@ -51,7 +51,7 @@ or about you or your devices from various sources, as described below.
   help us improve them, we automatically receive information about your
   interactions with our Services, like the pages or content you view and the
   dates and times of your visits.
-- ‍**Information from Cookies and Similar Technologies.** We and our third-party
+- **Information from Cookies and Similar Technologies.** We and our third-party
   partners collect information using cookies, pixel tags, or similar
   technologies. Our third-party partners, such as analytics and advertising
   partners, may use these technologies to collect information about your online
@@ -96,22 +96,22 @@ We use the information we collect:
 
 - **Affiliates.** We may share any information we receive with our affiliates
   for any of the purposes described in this Privacy Policy.
-- ‍Vendors and Service Providers. We may share any information we receive with
-  vendors and service providers retained in connection with the provision of our
-  Services.
+- **Vendors and Service Providers.** We may share any information we receive
+  with vendors and service providers retained in connection with the provision
+  of our Services.
 - **Analytics Partners.** We use analytics services such as Google Analytics to
   collect and process certain analytics data. These services may also collect
   information about your use of other websites, apps, and online resources. You
   can learn more about Google's practices by visiting
-  https://www.google.com/policies/privacy/partners/.
-- ‍**As Required By Law and Similar Disclosures.** We may access, preserve, and
+  [https://www.google.com/policies/privacy/partners/](https://www.google.com/policies/privacy/partners/).
+- **As Required By Law and Similar Disclosures.** We may access, preserve, and
   disclose your information if we believe doing so is required or appropriate
   to: (a) comply with law enforcement requests and legal process, such as a
   court order or subpoena; (b) respond to your requests; or (c) protect your,
   our, or others rights, property, or safety. For the avoidance of doubt, the
   disclosure of your information may occur if you post any objectionable content
   on or through the Services.
-- ‍**Merger, Sale, or Other Asset Transfers.** We may transfer your information
+- **Merger, Sale, or Other Asset Transfers.** We may transfer your information
   to service providers, advisors, potential transactional partners, or other
   third parties in connection with the consideration, negotiation, or completion
   of a corporate transaction in which we are acquired by or merged with another

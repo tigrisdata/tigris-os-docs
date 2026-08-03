@@ -28,7 +28,7 @@ leverages Tigris to store training data and SkyPilot to manage compute.
 - Accounts with your desired cloud providers (AWS, Lambda Labs, RunPod,
   Fluidstack, etc; we'll use AWS in this guide)
 
-## Setting up your enviroment variables
+## Setting up your environment variables
 
 Copy `.env.example` to `.env` in the root of the training repository.
 
@@ -274,8 +274,8 @@ And then we stack a new [LoRA](https://github.com/microsoft/LoRA) (Low-Rank
 Adaptation) model on top of it.
 
 We use a LoRA adapter here because this requires much less system resources to
-train than doing a full-blown finetuing run on the dataset. When you use a LoRA,
-you freeze most of the weights in the original model and only train a few
+train than doing a full-blown finetuning run on the dataset. When you use a
+LoRA, you freeze most of the weights in the original model and only train a few
 weights that are stacked on top of the original model. This allows you to train
 models on much larger datasets without having to worry about running out of GPU
 memory or cloud credits as quickly.

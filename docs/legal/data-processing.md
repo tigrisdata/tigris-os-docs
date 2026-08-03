@@ -3,7 +3,7 @@
 _Last updated: November 18, 2025_
 
 Pursuant to the Tigris Subscription Agreement (“**the Agreement**”), Customer,
-on behalf of itself and its affiliates, and Tigris Data Inc. (referred in herein
+on behalf of itself and its affiliates, and Tigris Data Inc. (referred to herein
 as “**Vendor**”) (each a “**Party**”; collectively the “**Parties**”), the
 Parties hereby adopt this Data Processing Addendum (“**DPA**”) for so long as
 Vendor processes Personal Data on behalf of Customer. This DPA prevails over any
@@ -89,7 +89,7 @@ conflicting terms of the Agreement.
    1.9 “**SCCs**” means the clauses annexed to the EU Commission Implementing
    Decision 2021/914 of June 4, 2021 on standard contractual clauses for the
    transfer of personal data to third countries pursuant to Regulation (EU)
-   2016/679 of the European Parliament and of the Council , as amended or
+   2016/679 of the European Parliament and of the Council, as amended or
    replaced from time to time.
 
    1.10 “**UK Addendum**” means the addendum to the SCCs issued by the UK
@@ -144,7 +144,7 @@ conflicting terms of the Agreement.
    consistent with Customer’s obligations under applicable Privacy Laws.
 
    3.3 **Compliance Monitoring** - Customer has the right to monitor Vendor’s
-   compliance with this. DPA through measures, including, but not limited to,
+   compliance with this DPA through measures, including, but not limited to,
    ongoing manual reviews, automated scans, regular assessments, audits, or
    other annual technical and operational testing not more than once every 12
    months. Vendor shall cooperate fully with any audit initiated by Customer,
@@ -163,7 +163,7 @@ conflicting terms of the Agreement.
    commercially reasonable security procedures and practices, appropriate to the
    nature of the information, to protect Customer Personal Data from
    unauthorized access, destruction, use, modification, or disclosure. Without
-   limiting the forgoing, the Parties shall comply with the Security Measures
+   limiting the foregoing, the Parties shall comply with the Security Measures
    set forth at Appendix B when Processing Customer Personal Data.
 
 4. **Restrictions on Processing.**
@@ -372,7 +372,7 @@ conflicting terms of the Agreement.
      information.
    - Contact information (company, email, phone, physical address).
    - Any other category of Personal Data contained within the data, information,
-     and materials Customer submits to the Services or has Tigris Data(or
+     and materials Customer submits to the Services or has Tigris Data (or
      another third party) submit into the Services on its behalf.
 
 3. **Tigris Object Storage Service is not intended to meet any legal obligations

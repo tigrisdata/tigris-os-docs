@@ -15,8 +15,8 @@ attached to access keys, Tigris focuses on what developers really need.
   storage management.
 - Access keys can have directly attached policies. Tigris does not use IAM
   Users, IAM Groups, or IAM Roles.
-- All users in an Organization and can create access keys and attach IAM
-  policies to them.
+- All users in an Organization can create access keys and attach IAM policies to
+  them.
 
 ## Prebuilt Roles for Organization Members
 

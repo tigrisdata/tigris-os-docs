@@ -90,7 +90,7 @@ organization. The sharing is limited to access keys from the other organization.
 To share a bucket with users from another organization:
 
 - Receive the access key ID (starts with `tid_`) from the user outside your
-  organization you want to share the bucket.
+  organization you want to share the bucket with.
 - Go to the [Tigris Dashboard](https://console.storage.dev).
 - Click on the bucket you want to share.
 - Click on the `Share` button.

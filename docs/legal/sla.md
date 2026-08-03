@@ -29,7 +29,7 @@ Tigris Data for the affected Services for the relevant calendar month
 corresponding with the Actual Availability provided (as a percentage of total
 time) for the relevant calendar month, as set forth in the table below.
 
-For requests to Standrad tier, and Archive tier, the following table applies:
+For requests to Standard tier, and Archive tier, the following table applies:
 
 | **Actual Availability**                            | **Credit Percentage** |
 | -------------------------------------------------- | --------------------- |

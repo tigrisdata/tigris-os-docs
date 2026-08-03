@@ -22,8 +22,8 @@ manager:
 brew install helm
 ```
 
-Create an admin token in the [Tigris Dash](https://console.storage.dev). Its
-credentials will be used in the next step.
+Create an admin token in the [Tigris Dashboard](https://console.storage.dev).
+Its credentials will be used in the next step.
 
 With that admin token, install the csi-s3 operator:
 
@@ -121,7 +121,7 @@ Using a bucket that already exists is easy but slightly more involved. You need
 to create a PersistentVolume pointing to the bucket and then a
 PersistentVolumeClaim that points to that PersistentVolume. For example, here is
 the PersistentVolume and PersistentVolumeClaim pair for the bucket named
-`mybucket` :
+`mybucket`:
 
 ```yaml
 apiVersion: v1

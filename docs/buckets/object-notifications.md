@@ -32,11 +32,11 @@ Tigris supports basic authentication and token authentication for webhooks. When
 configuring the webhook in the Tigris Dashboard, you can choose the
 authentication type and provide the necessary credentials.
 
-For basic authentication, the header will set as follows:
+For basic authentication, the header will be set as follows:
 
 `Authorization: Basic <base64 encoded username:password>`
 
-For token authentication, the header will set as follows:
+For token authentication, the header will be set as follows:
 
 `Authorization: Bearer <token>`
 

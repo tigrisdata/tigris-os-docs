@@ -37,7 +37,7 @@ condition on `Last-Modified` to enable efficient filtering. Other fields like
 
 ## SQL Operations
 
-Query supports following comparison operators:
+Query supports the following comparison operators:
 
 1. `=`: Equal
 2. `!=`: Not Equal

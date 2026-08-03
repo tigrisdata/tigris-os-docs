@@ -118,9 +118,9 @@ Signature = Hex(
 
 Note:
 
-- First argument in this illustrative function is the key and second argument is
-  the message to sign.
-- The date will be same as the expiration date. In our example it will be
+- The first argument in this illustrative function is the key and the second
+  argument is the message to sign.
+- The date will be the same as the expiration date. In our example it will be
   `20240330`
 - Region is marked as `auto` and service is `s3`
 

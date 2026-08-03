@@ -148,7 +148,7 @@ credentials. TAG forwards the first request to Tigris, which performs
 authentication.
 
 **403 after credential rotation** — After rotating credentials, restart TAG to
-clear auth related caches.
+clear auth-related caches.
 
 ### Client errors
 

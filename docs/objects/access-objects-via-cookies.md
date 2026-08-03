@@ -99,7 +99,7 @@ Notes:
 
 ## Create bucket on Tigris
 
-Create bucket named `images.example.com` on Tigris.
+Create a bucket named `images.example.com` on Tigris.
 
 using Fly:
 
@@ -118,7 +118,7 @@ use.
 
 ## Set up custom domain
 
-Set up custom domain to access this bucket.
+Set up a custom domain to access this bucket.
 
 ```shell
 flyctl storage update  images.example.com  --custom-domain images.example.com

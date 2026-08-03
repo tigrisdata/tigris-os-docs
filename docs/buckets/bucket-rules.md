@@ -25,7 +25,7 @@ The following naming rules apply for buckets.
 - Name must end with a number or a lowercase character
 - Prefix `xn--` is reserved and not allowed in the bucket prefix
 - Suffix `-s3alias` is reserved and not allowed in the bucket suffix
-- Bucket name cannot be IP addresses
+- Bucket name cannot be an IP address
 
 ## Example bucket names
 

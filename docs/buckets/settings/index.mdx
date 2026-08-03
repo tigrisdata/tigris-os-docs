@@ -143,8 +143,8 @@ implements the following migration strategy:
 
 1. When an object is requested, it is served from your Tigris bucket if it is
    found.
-2. If the object is not found in Tigris bucket, the object will be returned from
-   your source bucket and asynchronously copied to Tigris.
+2. If the object is not found in the Tigris bucket, the object will be returned
+   from your source bucket and asynchronously copied to Tigris.
 3. All other operations, including put and delete, continue to work as usual
 
 If you enable the write-through option, Tigris will write the object to your

@@ -123,4 +123,4 @@ TAG's compatibility is validated using a curated subset of tests from
 | **Total**            | **214** |                                                         |
 
 The test suite is executed as part of TAG's CI pipeline on every release to
-ensure that there is no regressions in S3 API compatibility.
+ensure that there are no regressions in S3 API compatibility.

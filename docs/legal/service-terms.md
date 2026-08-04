@@ -198,7 +198,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     any Customer Content. By Transmitting Customer Content to Tigris Data or the
     Tigris Object Storage Service, User consents to Tigris Data's use of
     Customer Content to provide the Tigris Object Storage Service to User and
-    hereby grant Tigris Data a worldwide, non-exclusive, irrevocable,
+    hereby grants Tigris Data a worldwide, non-exclusive, irrevocable,
     royalty-free, fully paid right and license (with the right to sublicense
     through multiple tiers) to host, store and transfer such Customer Content,
     in whole or in part, solely to provide the Tigris Object Storage Service to
@@ -211,7 +211,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     to Customer Content.
 
     10.2 **Adequate Rights.** User represents and warrants to Tigris Data that:
-    (a) User or User's licensors owns all right, title, and interest in and to
+    (a) User or User's licensors own all right, title, and interest in and to
     Customer Content; (b) User has all rights in Customer Content necessary to
     grant the rights contemplated by this Agreement; and (c) none of Customer's
     Content or User's use of the Tigris Object Storage Service will violate the
@@ -248,7 +248,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
 
 11. **User Data**
 
-    11.1 **Use of User Data.** User grant Tigris Data a non-exclusive,
+    11.1 **Use of User Data.** User grants Tigris Data a non-exclusive,
     worldwide, sublicensable right to use, copy, store, disclose, transmit,
     transfer, publicly display, modify, and create derivative works from User
     Data only as necessary to (a) provide the Tigris Object Storage Service; (b)
@@ -923,7 +923,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     manuals, is restricted by the terms of this Agreement in accordance with
     Federal Acquisition Regulation 12.212 for civilian purposes and Defense
     Federal Acquisition Regulation Supplement 227.7202 for military purposes.
-    The Tigris Object Storage Service were developed fully at private expense.
+    The Tigris Object Storage Service was developed fully at private expense.
     All other use is prohibited.
 
 23. **Definitions**
@@ -1008,7 +1008,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     User Data.
 
     "**User Data**" means any data or information (other than Customer Content)
-    that: (i) User submit to the Tigris Object Storage Service, including from
+    that: (i) User submits to the Tigris Object Storage Service, including from
     any third-party platform, add-on, service, or product not provided by Tigris
     Data that User elects to integrate or enable for use with the Tigris Object
     Storage Service; and (b) is collected, accessed, used, stored, hosted, or

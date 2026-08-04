@@ -82,8 +82,8 @@ high-concurrency, low-latency access patterns typical of small objects.
 **Medium objects** are initially written as individual raw files. A background
 compactor then consolidates them into immutable segment files. Each segment is
 append-only and write-once — once sealed, it serves only read traffic with no
-locking overhead. A recompactor reclaims space from segments where large portion
-of entries have been deleted.
+locking overhead. A recompactor reclaims space from segments where a large
+portion of entries has been deleted.
 
 **Large objects** are stored as permanent raw files and are never compacted.
 These objects benefit from direct file access for streaming reads with high

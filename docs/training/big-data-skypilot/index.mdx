@@ -7,7 +7,7 @@ involved tools like Terraform, SkyPilot provides an effortless way to deploy
 workloads seamlessly across clouds, eliminating the need for manual
 intervention.
 
-While multi-cloud tools like SkyPilot abstract away cloud provider specific
+While multi-cloud tools like SkyPilot abstract away cloud-provider-specific
 quirks, underlying egress costs and bottlenecks in the storage layer can be
 roadblocks. Combining Tigris with SkyPilot ensures there are no cross-cloud
 egress costs, all while ensuring consistent performance and reliability in any
@@ -26,7 +26,7 @@ leverages Tigris to store training data and SkyPilot to manage compute.
   [demo training repository](https://github.com/tigrisdata-community/skypilot-training-demo)
   cloned
 - Accounts with your desired cloud providers (AWS, Lambda Labs, RunPod,
-  Fluidstack, etc; we'll use AWS in this guide)
+  Fluidstack, etc.; we'll use AWS in this guide)
 
 ## Setting up your environment variables
 
@@ -92,7 +92,7 @@ scripts in the
 ### Importing and sharding the dataset
 
 One of the biggest things that's hard with managing training data with AI stuff
-is dealing with data that is larger than ram. Most of the time when you load a
+is dealing with data that is larger than RAM. Most of the time when you load a
 dataset with the
 [`load_dataset` function](https://huggingface.co/docs/datasets/loading), it
 downloads all of the data files to the disk and then loads them directly into
@@ -183,7 +183,7 @@ accessible via a filesystem.
 The model has two main components that we care about:
 
 - The model weights themselves, these are the weights that get loaded into GPU
-  ram and used to inference results based on input data.
+  RAM and used to inference results based on input data.
 - The tokenizer model for that model in particular. This is used to convert text
   into the format that the model understands beneath the hood. Among other
   things, this also provides a string templating function that turns chat
@@ -195,7 +195,7 @@ Both of those are stored in Tigris for later use.
 
 Once the model is saved into Tigris, we have up to `n` shards of up to `m`
 examples per shard and a model that we want to finetune with. All of these
-examples are in a standard-ish format, but still needs to be pre-chewed for the
+examples are in a standard-ish format, but still need to be pre-chewed for the
 exact tokenization format of the model. This is done by loading each shard from
 Tigris, using the model's chat tokenization formatting function to pre-chew the
 dataset, and then saving the results back to Tigris:
@@ -273,7 +273,7 @@ model = FastLanguageModel.from_pretrained(f"{home_folder}/tigris/models/{model_n
 And then we stack a new [LoRA](https://github.com/microsoft/LoRA) (Low-Rank
 Adaptation) model on top of it.
 
-We use a LoRA adapter here because this requires much less system resources to
+We use a LoRA adapter here because this requires far fewer system resources to
 train than doing a full-blown finetuning run on the dataset. When you use a
 LoRA, you freeze most of the weights in the original model and only train a few
 weights that are stacked on top of the original model. This allows you to train
@@ -364,16 +364,16 @@ model.save_pretrained_merged(f"{home_dir}/tigris/done/{model_name}/{dataset_name
 
 ### Other things to have in mind
 
-Each of the scripts that run in the instance are designed to be idempotent and
-are intended to run in sequence, but `import-dataset.py` and `import-model.py`
-can be run in parallel.
+Each of the scripts that run in the instance is designed to be idempotent and is
+intended to run in sequence, but `import-dataset.py` and `import-model.py` can
+be run in parallel.
 
 Training this LoRA adapter on a dataset of 100k examples takes about 15 minutes
 including downloading the dataset, standardizing it, downloading the model,
 saving it to Tigris, loading the model, pre-chewing the dataset, and training
 the model.
 
-In theory, this example can run on any nVidia GPU with at least 16 GB of vram
+In theory, this example can run on any NVIDIA GPU with at least 16 GB of VRAM
 and in an environment with the FUSE character device `/dev/fuse` usable. If you
 can't use FUSE for some reason, you will need to write custom python code to
 interact with Tigris directly. This is left as an exercise for the reader. Hint:

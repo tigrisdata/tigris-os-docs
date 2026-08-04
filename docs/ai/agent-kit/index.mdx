@@ -154,7 +154,7 @@ the same source bucket is forked repeatedly.
 
 When you pass `credentials`, Agent Kit creates an IAM access key scoped to the
 fork bucket only. The key carries one of two roles: `Editor` (read/write) or
-`ReadOnly` (read only). Each fork gets its own key, so a leaked key scopes the
+`ReadOnly` (read-only). Each fork gets its own key, so a leaked key scopes the
 blast radius to a single fork. The `secretAccessKey` is returned once at
 creation time — store it wherever your agent runtime expects credentials before
 moving on.

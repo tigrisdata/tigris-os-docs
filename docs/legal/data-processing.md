@@ -275,7 +275,7 @@ conflicting terms of the Agreement.
    7.1 Upon direction by Customer, and in any event no later than 180 days after
    receipt of a request from Customer, Vendor shall promptly delete or anonymize
    Customer Personal Data, unless Vendor is required by law to retain such data,
-   in which case Vendor shall, on ongoing basis, isolate and protect the
+   in which case Vendor shall, on an ongoing basis, isolate and protect the
    security and confidentiality of such Personal Data and prevent any further
    processing except to the extent required by such law and shall destroy or
    return to Customer all other Personal Data not required to be retained by
@@ -290,9 +290,9 @@ conflicting terms of the Agreement.
 
    8.2 Upon becoming aware of an actual unauthorized access, destruction, use,
    modification, or disclosure of Customer Personal Data (“Security Incident”),
-   the Party experiencing the Security Incident shall notify other Party without
-   undue delay and shall provide timely updates and information relating to the
-   Security Incident as it becomes known or as is reasonably requested by
+   the Party experiencing the Security Incident shall notify the other Party
+   without undue delay and shall provide timely updates and information relating
+   to the Security Incident as it becomes known or as is reasonably requested by
    Customer.
 
    8.3 Vendor and Customer shall comply with the Data Security Addendum attached

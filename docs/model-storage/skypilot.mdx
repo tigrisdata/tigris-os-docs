@@ -6,7 +6,7 @@ state the underlying hardware is in. You don’t know if you have your models
 cached, and in the worst case you need to do a cold start and download your
 model weights from scratch.
 
-A couple fixable problems arise when running your models on serverless or any
+A couple of fixable problems arise when running your models on serverless or any
 frequently changing infrastructure:
 
 - Model distribution that's not optimized for latency causes needless GPU idle
@@ -44,7 +44,7 @@ on how to do this. We have tested this against a few clouds:
 
 However the other providers should work fine.
 
-## Usecase
+## Use case
 
 You can put AI model weights into Tigris so that they are cached and fast no
 matter where you’re inferencing from. This allows you to have cold starts be

@@ -50,7 +50,7 @@ bucket's default tier. To set the object tier:
   field of PutObject, CreateMultipartUpload SDK APIs input, or
 - set the `x-amz-storage-class` header when using the REST API.
 
-**Tigris accepts S3 compatible storage classes:**
+**Tigris accepts S3-compatible storage classes:**
 
 | Storage Class | Description                        |
 | ------------- | ---------------------------------- |
@@ -76,7 +76,7 @@ x-amz-storage-class: STANDARD_IA
 ## Restoring objects from Archive tier
 
 Objects written to the Archive storage class are not immediately available for
-access. Get requests for objects in the Archive storage class will return 403
+access. Get requests for objects in the Archive storage class will return a 403
 (InvalidObjectState) error. To restore objects from the Archive storage class,
 initiate a restore request.
 

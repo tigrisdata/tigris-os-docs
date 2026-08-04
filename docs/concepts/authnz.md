@@ -33,7 +33,7 @@ Tigris server in an encrypted form with `AES` `256-bit` encryption.
 
 ### Session Token
 
-This mechanism is based on the idea of temporary credentials. Within the Tigris,
+This mechanism is based on the idea of temporary credentials. Within Tigris,
 this is mainly used for human users when interacting with Tigris’s web console.
 The session token has a limited lifetime. Tigris uses `JWT` (JSON Web Token) as
 the session token. This token is signed by an authentication provider using the

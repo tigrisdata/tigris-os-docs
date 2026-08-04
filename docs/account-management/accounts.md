@@ -37,7 +37,7 @@ To permanently delete your account and purge the data, please contact us at
 ## Recovering your account
 
 All Tigris accounts require multi-factor authentication (MFA). On sign up,
-you’ll be prompted to setup MFA and save a recovery code. If you lose your MFA
+you’ll be prompted to set up MFA and save a recovery code. If you lose your MFA
 device, you can use your recovery code to access your account.
 
 If a former employee owned a Tigris Account and didn't shut it down or transfer

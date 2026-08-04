@@ -17,12 +17,12 @@ Data consistency depends on where replicas exist relative to the request origin:
 
 ### Consistency by Location Type
 
-| Location Type     | Same-region | Cross-region | How it works                                                                                                     |
-| ----------------- | ----------- | ------------ | ---------------------------------------------------------------------------------------------------------------- |
-| **Global**        | Strong      | Eventual     | Cross-region reads may serve a cached or on-demand copy that is eventually consistent.                           |
-| **Multi-region**  | Strong      | Strong       | Any region can serve a strongly consistent read.                                                                 |
-| **Dual-region**   | Strong      | Eventual     | Reads from within same region as the data are strongly consistent. Reads from outside are eventually consistent. |
-| **Single-region** | Strong      | Strong       | All requests, regardless of origin, are routed to one region, providing strong consistency globally.             |
+| Location Type     | Same-region | Cross-region | How it works                                                                                                         |
+| ----------------- | ----------- | ------------ | -------------------------------------------------------------------------------------------------------------------- |
+| **Global**        | Strong      | Eventual     | Cross-region reads may serve a cached or on-demand copy that is eventually consistent.                               |
+| **Multi-region**  | Strong      | Strong       | Any region can serve a strongly consistent read.                                                                     |
+| **Dual-region**   | Strong      | Eventual     | Reads from within the same region as the data are strongly consistent. Reads from outside are eventually consistent. |
+| **Single-region** | Strong      | Strong       | All requests, regardless of origin, are routed to one region, providing strong consistency globally.                 |
 
 ## What Strong Consistency Means in Practice
 

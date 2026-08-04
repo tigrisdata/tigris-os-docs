@@ -115,7 +115,7 @@ storage.
 
 ### Cache sizing
 
-TigrisFS uses cache for both read buffers when it needs to read data from your
+TigrisFS uses a cache for both read buffers when it needs to read data from your
 Tigris bucket, and write buffers when it needs to write data to Tigris. The
 cache can be configured using the `--memory-limit` flag when mounting the
 bucket. The default value is 1GB. You can increase it to 4GB or more, depending
@@ -156,7 +156,7 @@ metadata operations.
 To improve performance for small files, you can increase the TTL of the cached
 entries in the metadata cache using the `--stat-cache-ttl` flag when mounting
 the bucket. The default value is 60 seconds. For example, below is how to mount
-a bucket with a 15 minutes metadata cache TTL:
+a bucket with a 15-minute metadata cache TTL:
 
 ```bash
 /usr/local/bin/tigrisfs --memory-limit 4096 --max-flushers 64 --stat-cache-ttl 15m <bucket> <mountpoint>

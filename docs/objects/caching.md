@@ -19,7 +19,7 @@ fetched. This allows the user to control the caching behavior of the object.
 
 ### Public Buckets
 
-Tigris sets default cache header for public buckets for static assets if no
+Tigris sets a default cache header for public buckets for static assets if no
 cache headers are provided by the user. The default cache header is set to
 `Cache-Control: public, max-age=3600`. This applies to the following static
 assets:

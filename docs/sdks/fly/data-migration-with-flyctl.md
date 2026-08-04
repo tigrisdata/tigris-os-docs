@@ -19,7 +19,7 @@ This command will create a new bucket `tigris-bucket-name` in the organization
 `your-fly-org` and will migrate the data from the S3 bucket `your-s3-bucket` as
 data is requested.
 
-The endpoint and region are provider specific and should be set accordingly. You
+The endpoint and region are provider-specific and should be set accordingly. You
 can find the endpoint and region for AWS S3 in the
 [AWS documentation](https://docs.aws.amazon.com/general/latest/gr/s3.html).
 

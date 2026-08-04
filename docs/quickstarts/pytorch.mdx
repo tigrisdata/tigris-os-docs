@@ -262,8 +262,8 @@ A few best practices are illustrated above:
 - **Batch Size:** Adjust `batch_size` based on your data size and GPU memory.
   Each worker will load items for a batch. The `DataLoader` will concatenate
   them into a single batch before yielding it. Ensure the batch is large enough
-  to utilize GPU efficiently, but not so large that the GPU runs out of memory
-  or that data loading becomes a bottleneck.
+  to utilize the GPU efficiently, but not so large that the GPU runs out of
+  memory or that data loading becomes a bottleneck.
 - **Pinned Memory:** Setting `pin_memory=True` is recommended when transferring
   data to CUDA. It allows DataLoader workers to allocate tensors in page-locked
   memory, which accelerates the copy from host to GPU. In your training loop,

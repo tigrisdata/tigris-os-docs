@@ -1,4 +1,4 @@
-# AWS .Net SDK
+# AWS .NET SDK
 
 import CodeBlock from "@theme/CodeBlock";
 
@@ -6,11 +6,11 @@ This guide assumes that you have followed the steps in the
 [Getting Started](/docs/get-started/index.mdx) guide, and have the access keys
 available.
 
-You may continue to use the AWS .Net SDK as you normally would, but with the
+You may continue to use the AWS .NET SDK as you normally would, but with the
 endpoint set to Tigris at [https://t3.storage.dev](https://t3.storage.dev).
 
 This example uses the
-[AWS .Net SDK v3](https://www.nuget.org/packages/AWSSDK.S3) and reads the
+[AWS .NET SDK v3](https://www.nuget.org/packages/AWSSDK.S3) and reads the
 default credentials file or the environment variables `AWS_ACCESS_KEY_ID` and
 `AWS_SECRET_ACCESS_KEY`.
 
@@ -43,7 +43,7 @@ import putObject from "!!raw-loader!../../../examples/dotnet/PutObject.csx";
 
 ## Pre-signed URLs
 
-Using Tigris with the .NET SDK is easy with one small change. The .Net SDK
+Using Tigris with the .NET SDK is easy with one small change. The .NET SDK
 defaults to using v2 signatures, Tigris only supports v4 signatures. In order to
 use pre-signed URLs, you must set `UseSignatureV4` to `true` in the global
 `AWSConfigsS3` object in the Amazon namespace.

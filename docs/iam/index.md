@@ -26,8 +26,8 @@ are available for organization members:
 
 - `Member` can list all buckets and create new buckets within the Organization.
   They have access to all buckets shared with the Organization.
-- `Admin` have full access to all buckets and can manage Organization members
-  and their permissions.
+- `Admin` has full access to all buckets and can manage Organization members and
+  their permissions.
 
 These roles apply to users in the Tigris Dashboard. Programmatic access is
 controlled by

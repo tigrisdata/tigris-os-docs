@@ -21,7 +21,7 @@ provision storage, passes the resulting bucket and scoped credentials to the
 agent through Mastra's `RequestContext`, and tears storage down when the run
 ends. The agent itself never decides whether to provision storage — it just uses
 the storage that's there. This keeps the LLM out of infrastructure decisions and
-keeps credentials out of the prompt context.\_
+keeps credentials out of the prompt context.
 
 <div className="mermaid-frame">
   <AgentMastraDiagram />

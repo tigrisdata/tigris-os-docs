@@ -20,9 +20,8 @@ The **Owner** – the user who created the Organization – has the same privile
 as an Admin but cannot be removed from the Organization or downgraded from Admin
 to Member. The Owner is also responsible for the Organization’s billing.
 
-|                              |           |            |
-| ---------------------------- | --------- | ---------- |
 | **Action**                   | **Admin** | **Member** |
+| ---------------------------- | --------- | ---------- |
 | Invite organization members  | YES       | NO         |
 | Set organization permissions | YES       | NO         |
 | Rename organization          | YES       | NO         |
@@ -61,7 +60,7 @@ To invite a new member to an Organization:
 
 Tigris supports logging in natively and logging in with a Fly account. Only
 users with a Tigris native account may join a Tigris Organization. If you’re
-using your Fly account to login to Tigris, you must use Fly Organizations to
+using your Fly account to log in to Tigris, you must use Fly Organizations to
 manage your team.  
 \
 If you would like to manage your team in a native Tigris Organization, you can
@@ -90,10 +89,10 @@ bill.
 
 - To remove a Member from the Organization, click `Remove`.
 
-If you use Fly to login to Tigris, Tigris will use the Fly Organization to
+If you use Fly to log in to Tigris, Tigris will use the Fly Organization to
 manage access. All changes to Fly Organizations are reflected in Tigris access
 controls, but creating a Fly Organization does not create a Tigris Organization.
-Users who login with Fly must use Fly Organizations.
+Users who log in with Fly must use Fly Organizations.
 
 ## Manage permissions
 

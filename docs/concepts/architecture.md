@@ -19,10 +19,10 @@ detail.
 
 ## API Gateway
 
-API Gateway layer is the first layer of interaction between users' applications
-and the Tigris object storage service. The gateway layer conforms to S3 APIs,
-understands the semantics of the request, and is responsible for authentication,
-authorization, request processing, and routing.
+The API Gateway layer is the first layer of interaction between users'
+applications and the Tigris object storage service. The gateway layer conforms
+to S3 APIs, understands the semantics of the request, and is responsible for
+authentication, authorization, request processing, and routing.
 
 The API gateway is deployed across multiple regions as stateless compute workers
 and handles the requests close to the user.
@@ -43,9 +43,9 @@ Similar deployments exist in all the regions.
 
 Tigris supports two caching strategies:
 
-- Cache on Read (default) Depending on the access pattern of objects, the
+- Cache on Read (default): Depending on the access pattern of objects, the
   objects get cached.
-- Cache on Write (configurable) This is eager caching, where the cache is
+- Cache on Write (configurable): This is eager caching, where the cache is
   populated when the object is written. Cache-on-Write can be configured on a
   per-bucket basis. We have found Cache-on-Read to be sufficient for most of the
   use cases and the most cost-effective, but Cache-on-Write is available for use
@@ -61,7 +61,7 @@ Transactions over objects, and rich querying functionality, none of which is
 provided by S3.
 
 Metadata includes metadata about the objects (such as object location,
-user-supplied metadata, etc), buckets information, users and organization
+user-supplied metadata, etc), bucket information, users and organization
 information, access policies, and permissions.
 
 ### FoundationDB
@@ -81,7 +81,7 @@ and has an amazing correctness story through
 [https://apple.github.io/foundationdb/architecture.html](https://apple.github.io/foundationdb/architecture.html))
 
 FoundationDB provides us the ability to store large amounts of metadata while
-ensuring high availability, high degree of consistency, and durability.
+ensuring high availability, a high degree of consistency, and durability.
 
 FoundationDB inherently supports sharding through the lexicographical sorting of
 keys. We construct a unique object key and use that for sharding, with each

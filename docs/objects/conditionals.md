@@ -57,7 +57,7 @@ consistent latest state, without any additional configuration.
 
 ## Conditional copy
 
-Tigris supports extra set of conditional headers for source object in
+Tigris supports an extra set of conditional headers for the source object in the
 `CopyObject` operation.
 
 | Header                                  | Behavior                                                                                                                                        |

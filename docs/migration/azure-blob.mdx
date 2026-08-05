@@ -270,6 +270,105 @@ Once your workloads run well on Tigris, disable the shadow bucket configuration.
 Tigris becomes your primary object store. You can then shut down s3proxy and
 decommission your Azure Blob Storage.
 
+## Access Tigris from your application
+
+Tigris exposes an S3-compatible API, not the Azure Blob Storage API. After you
+move to Tigris, your application must talk to Tigris through the Tigris SDK or
+an AWS S3 SDK. The Azure Blob Storage SDK will not work against Tigris. Set the
+endpoint to `https://t3.storage.dev` and the region to `auto`. The SDK reads
+your credentials from the environment variables `AWS_ACCESS_KEY_ID` and
+`AWS_SECRET_ACCESS_KEY`.
+
+The examples below configure an S3 client against the Tigris endpoint and list
+the objects in a bucket.
+
+<Tabs>
+<TabItem value="javascript" label="JavaScript" default>
+
+```js
+import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
+
+const S3 = new S3Client({
+  region: "auto",
+  endpoint: "https://t3.storage.dev",
+  s3ForcePathStyle: false,
+});
+
+const response = await S3.send(
+  new ListObjectsV2Command({ Bucket: "your-bucket" }),
+);
+
+for (const object of response.Contents ?? []) {
+  console.log(object.Key);
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import boto3
+from botocore.client import Config
+
+svc = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    region_name="auto",
+    config=Config(s3={"addressing_style": "virtual"}),
+)
+
+response = svc.list_objects_v2(Bucket="your-bucket")
+
+for obj in response.get("Contents", []):
+    print(obj["Key"])
+```
+
+</TabItem>
+<TabItem value="go" label="Go">
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+)
+
+func main() {
+	ctx := context.Background()
+
+	sdkConfig, err := config.LoadDefaultConfig(ctx)
+	if err != nil {
+		log.Fatalf("Couldn't load default configuration: %v", err)
+	}
+
+	svc := s3.NewFromConfig(sdkConfig, func(o *s3.Options) {
+		o.BaseEndpoint = aws.String("https://t3.storage.dev")
+		o.Region = "auto"
+		o.UsePathStyle = false
+	})
+
+	resp, err := svc.ListObjectsV2(ctx, &s3.ListObjectsV2Input{
+		Bucket: aws.String("your-bucket"),
+	})
+	if err != nil {
+		log.Fatalf("Unable to list objects: %v", err)
+	}
+
+	for _, obj := range resp.Contents {
+		fmt.Println(aws.ToString(obj.Key))
+	}
+}
+```
+
+</TabItem>
+</Tabs>
+
 ## Azure-specific considerations
 
 - **s3proxy is an extra component.** You must run, secure, and monitor it for

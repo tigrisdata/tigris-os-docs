@@ -26,6 +26,16 @@ need for a large upfront data transfer. With write-through mode enabled, new
 writes are synced back to your old bucket, so you can take as long as you need
 to complete the migration.
 
+<!-- prettier-ignore -->
+:::note
+The shadow bucket source must be S3-compatible. Azure Blob Storage is not
+S3-compatible, so you cannot use it as a shadow bucket source directly. To
+migrate from Azure Blob Storage, front it with an S3-compatible shim such as
+[s3proxy](https://github.com/gaul/s3proxy), then point the shadow bucket at that
+S3 endpoint. See the
+[Azure Blob Storage guide](/docs/migration/azure-blob) for the steps.
+:::
+
 ## Provider-specific guides
 
 - [Migrate from AWS S3](/docs/migration/aws-s3)
@@ -35,6 +45,8 @@ to complete the migration.
 - [Migrate from any S3-compatible storage](/docs/migration/s3-compatible)
   (Backblaze B2, DigitalOcean Spaces, Wasabi, Hetzner, Vultr, Linode, and
   others)
+- [Migrate from Azure Blob Storage](/docs/migration/azure-blob) (via an s3proxy
+  S3 shim)
 
 ## How shadow bucket migration works
 

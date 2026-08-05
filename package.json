@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
-    "prepare": "[ -f .env.local ] || cp .env.local.example .env.local",
+    "prepare": "node scripts/prepare-env-local.js",
     "predev": "npm run build:apidocs",
     "dev": "docusaurus start --host 0.0.0.0",
     "start": "docusaurus start",

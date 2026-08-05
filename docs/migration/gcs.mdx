@@ -46,9 +46,10 @@ Tigris supports [lazy migration](/docs/migration/) using **shadow buckets**.
 Instead of copying all your data upfront, Tigris fetches objects from your GCS
 bucket on demand and caches them for future access. No downtime required.
 
-You can also enable **write-through** mode, which syncs new writes back to your
-GCS bucket. This means your existing GCS bucket stays up to date throughout the
-migration, and you can take as long as you need before completing the cutover.
+You can also enable **write-through** mode. This mode syncs new writes back to
+your GCS bucket, so your existing GCS bucket stays up to date throughout the
+migration. You can take as much time as you need before you complete the
+cutover.
 
 ### Prerequisites
 
@@ -65,11 +66,11 @@ for GCS access.
 
 1. Go to the
    [Google Cloud Console Interoperability page](https://console.cloud.google.com/storage/settings;tab=interoperability).
-2. If you don't already have a service account with access to your GCS bucket,
-   create one in the
+2. Make sure that you have a service account with access to your GCS bucket. If
+   you do not have one, create it in the
    [IAM & Admin section](https://console.cloud.google.com/iam-admin/serviceaccounts).
-   Assign it `Storage Object Viewer` for read-only migration, or
-   `Storage Object Admin` if you plan to use write-through mode.
+   If you plan to use write-through mode, assign `Storage Object Admin`.
+   Otherwise, assign `Storage Object Viewer` for read-only migration.
 3. On the Interoperability page, find the service account and click **Create
    Key** under the **HMAC Keys** section.
 4. Copy and securely store the **Access Key** and **Secret Key**.
@@ -112,8 +113,8 @@ tigris buckets set-migration my-bucket \
 Add `--write-through` for write-through mode, or `--disable` to clear the
 migration configuration.
 
-**2. Actively migrate (optional).** Lazy migration only copies objects when
-they're requested. To migrate every remaining object server-side, run
+**2. Actively migrate (optional).** Lazy migration only copies objects when your
+application requests them. To migrate every remaining object server-side, run
 [`tigris buckets migrate`](/docs/cli/buckets/migrate):
 
 ```bash
@@ -157,17 +158,17 @@ existing bucket names, object keys, and API calls stay the same.
 
 ### Step 4: Verify the migration
 
-Once your application points to Tigris, objects are migrated on first access. To
-verify:
+After you point your application to Tigris, Tigris migrates objects on first
+access. To make sure that the migration works:
 
 1. Request an object that exists in your GCS bucket
-2. Confirm it returns successfully through Tigris
-3. Check that subsequent requests are served directly from Tigris
+2. Make sure that the object returns successfully through Tigris
+3. Make sure that Tigris serves subsequent requests directly
 
 ### Step 5: Enable write-through (optional)
 
 To keep your GCS bucket in sync during the migration, enable **write-through**
-in the shadow bucket settings. With write-through enabled:
+in the shadow bucket configuration. With write-through enabled:
 
 - New objects written to Tigris are also written to your GCS bucket
 - Deletes apply to both Tigris and GCS
@@ -177,15 +178,15 @@ This keeps your GCS bucket current so you can fall back at any point.
 
 ### Step 6: Complete the migration
 
-Once your workloads are running well on Tigris, disable the shadow bucket
+After your workloads run well on Tigris, disable the shadow bucket
 configuration. Tigris becomes your primary object store.
 
 ## FAQ
 
 ### Does migration require downtime?
 
-No. Shadow bucket migration happens transparently. Your application continues
-serving requests while objects are migrated on first access.
+No. Shadow bucket migration happens transparently. Your application continues to
+serve requests while Tigris migrates objects on first access.
 
 ### Do I need to change my application code?
 
@@ -204,10 +205,10 @@ Tigris uses S3-compatible APIs for migration. GCS supports S3-compatible access
 through its Interoperability API, which requires HMAC-style credentials rather
 than the OAuth tokens used by GCS's native JSON API.
 
-### What happens to objects I haven't accessed yet?
+### What happens to objects I have not accessed yet?
 
-They remain in your GCS bucket. Tigris only copies objects when they're first
-requested. Objects that are never accessed are never transferred.
+They remain in your GCS bucket. Tigris only copies objects when they are first
+requested. Tigris never transfers objects that you never access.
 
 ### How much does Tigris cost compared to GCS?
 

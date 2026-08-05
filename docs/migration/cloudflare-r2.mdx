@@ -33,9 +33,9 @@ APIs. The differences are in performance, global distribution, and features.
   global distribution that follows access patterns, multi-region geo-redundancy,
   dual-region, or single-region — each with built-in consistency and
   availability guarantees. R2 does not offer configurable data placement.
-- **Storage tiers.** R2 offers a single storage class. Tigris provides Standard,
+- **Storage tiers.** R2 offers a single storage class. Tigris has Standard,
   Infrequent Access, and Archive tiers.
-- **IAM policies.** R2 has limited access control. Tigris provides
+- **IAM policies.** R2 has limited access control. Tigris has
   [fine-grained IAM policies](/docs/iam/) with IP-based restrictions, time-based
   conditions, and per-key policy attachments.
 - **Higher availability.** Tigris offers a 99.99% availability SLA compared to
@@ -48,8 +48,8 @@ Instead of copying all your data upfront, Tigris fetches objects from your R2
 bucket on demand and caches them for future access. No downtime required.
 
 You can also enable **write-through** mode, which syncs new writes back to your
-R2 bucket. This means your existing R2 bucket stays up to date throughout the
-migration, and you can take as long as you need before completing the cutover.
+R2 bucket. Your existing R2 bucket stays up to date throughout the migration.
+You can take as long as you need before you complete the cutover.
 
 ### Prerequisites
 
@@ -68,8 +68,8 @@ Before starting, make sure you have:
 4. Click **Create Account API token** and select the appropriate permissions.
    Use read-only for basic migration, or read-write if you plan to use
    write-through mode.
-5. Copy and securely store the **Access Key ID** and **Secret Access Key**. The
-   secret won't be shown again.
+5. Copy and securely store the **Access Key ID** and **Secret Access Key**.
+   Cloudflare does not show the secret again.
 6. Note your account-specific endpoint, shown alongside your access keys. It
    looks like `https://<account-id>.r2.cloudflarestorage.com`.
 
@@ -112,8 +112,8 @@ tigris buckets set-migration my-bucket \
 Add `--write-through` for write-through mode, or `--disable` to clear the
 migration configuration.
 
-**2. Actively migrate (optional).** Lazy migration only copies objects when
-they're requested. To migrate every remaining object server-side, run
+**2. Actively migrate (optional).** Lazy migration only copies objects when your
+application requests them. To migrate every remaining object server-side, run
 [`tigris buckets migrate`](/docs/cli/buckets/migrate):
 
 ```bash
@@ -157,17 +157,17 @@ existing bucket names, object keys, and API calls stay the same.
 
 ### Step 4: Verify the migration
 
-Once your application points to Tigris, objects are migrated on first access. To
-verify:
+After you point your application to Tigris, Tigris migrates objects on first
+access. To make sure that the migration works:
 
 1. Request an object that exists in your R2 bucket
-2. Confirm it returns successfully through Tigris
-3. Check that subsequent requests are served directly from Tigris
+2. Make sure that Tigris returns the object without errors
+3. Make sure that Tigris serves later requests directly
 
 ### Step 5: Enable write-through (optional)
 
 To keep your R2 bucket in sync during the migration, enable **write-through** in
-the shadow bucket settings. With write-through enabled:
+the shadow bucket configuration. With write-through enabled:
 
 - New objects written to Tigris are also written to your R2 bucket
 - Deletes apply to both Tigris and R2
@@ -177,7 +177,7 @@ This keeps your R2 bucket current so you can fall back at any point.
 
 ### Step 6: Complete the migration
 
-Once your workloads are running well on Tigris, disable the shadow bucket
+After your workloads run well on Tigris, disable the shadow bucket
 configuration. Tigris becomes your primary object store.
 
 ## FAQ
@@ -185,7 +185,7 @@ configuration. Tigris becomes your primary object store.
 ### Does migration require downtime?
 
 No. Shadow bucket migration happens transparently. Your application continues
-serving requests while objects are migrated on first access.
+serving requests while Tigris migrates objects on first access.
 
 ### Do I need to change my application code?
 
@@ -205,7 +205,7 @@ is significantly faster for small object workloads, automatically distributes
 data across regions, and offers storage tiers and fine-grained IAM policies that
 R2 does not.
 
-### What happens to objects I haven't accessed yet?
+### What happens to objects I have not accessed yet?
 
-They remain in your R2 bucket. Tigris only copies objects when they're first
+They remain in your R2 bucket. Tigris only copies objects when they are first
 requested. Objects that are never accessed are never transferred.

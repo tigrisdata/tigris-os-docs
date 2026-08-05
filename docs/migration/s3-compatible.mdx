@@ -20,9 +20,9 @@ import TabItem from "@theme/TabItem";
 # Migrate from Any S3-Compatible Storage to Tigris
 
 Tigris can migrate data from any storage provider with an S3-compatible API.
-This guide covers providers that don't have a dedicated migration guide,
-including Backblaze B2, DigitalOcean Spaces, Wasabi, Hetzner Object Storage,
-Vultr Object Storage, and Linode/Akamai Object Storage.
+This guide covers providers that do not have a dedicated migration guide. These
+providers include Backblaze B2, DigitalOcean Spaces, Wasabi, Hetzner Object
+Storage, Vultr Object Storage, and Linode/Akamai Object Storage.
 
 For AWS S3, Google Cloud Storage, Cloudflare R2, or MinIO, see the
 [provider-specific guides](/docs/migration/).
@@ -56,7 +56,7 @@ provider:
 
 1. An S3-compatible endpoint URL
 2. An access key ID and secret access key
-3. The region (if the provider uses regions; otherwise set to `auto`)
+3. The region (or `auto` if the provider does not use regions)
 
 Check your provider's documentation for S3 compatibility or interoperability
 settings. Below are instructions for some common providers.
@@ -168,8 +168,8 @@ tigris buckets set-migration my-bucket \
 Add `--write-through` for write-through mode, or `--disable` to clear the
 migration configuration.
 
-**2. Actively migrate (optional).** Lazy migration only copies objects when
-they're requested. To migrate every remaining object server-side, run
+**2. Actively migrate (optional).** Lazy migration only copies an object when
+your application requests it. To migrate every remaining object server-side, run
 [`tigris buckets migrate`](/docs/cli/buckets/migrate):
 
 ```bash
@@ -213,22 +213,23 @@ existing bucket names, object keys, and API calls stay the same.
 
 ## Verify and complete
 
-Once your application points to Tigris, objects are migrated on first access.
-Request a few objects to confirm they're returned successfully.
+After you point your application to Tigris, Tigris migrates objects on first
+access. Request a few objects and make sure that Tigris returns them
+successfully.
 
 To keep your old bucket in sync during the migration, enable **write-through**
-in the shadow bucket settings. Your old bucket stays current so you can fall
-back at any point.
+in the shadow bucket configuration. Your old bucket stays current so you can
+fall back at any point.
 
-Once your workloads are running well on Tigris, disable the shadow bucket
-configuration and decommission your old storage.
+After your workloads run well on Tigris, disable the shadow bucket configuration
+and decommission your old storage.
 
 ## FAQ
 
 ### Does migration require downtime?
 
 No. Shadow bucket migration happens transparently. Your application continues
-serving requests while objects are migrated on first access.
+serving requests while Tigris migrates objects on first access.
 
 ### Do I need to change my application code?
 
@@ -241,12 +242,12 @@ Yes. If you enable write-through mode, your old bucket stays in sync with all
 new writes. You can switch back at any point by reverting your endpoint
 configuration.
 
-### My provider isn't listed. Can I still migrate?
+### My provider is not listed. Can I still migrate?
 
 Yes. Tigris can migrate from any storage that supports the S3 API. You need your
 provider's S3-compatible endpoint URL, access credentials, and region.
 
-### What happens to objects I haven't accessed yet?
+### What happens to objects I have not accessed yet?
 
-They remain in your old bucket. Tigris only copies objects when they're first
+They remain in your old bucket. Tigris only copies objects when they are first
 requested. Objects that are never accessed are never transferred.

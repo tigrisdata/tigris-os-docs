@@ -49,7 +49,7 @@ bucket on demand and caches them for future access. No downtime required.
 
 You can also enable **write-through** mode, which syncs new writes back to your
 S3 bucket. This means your existing S3 bucket stays up to date throughout the
-migration, and you can take as long as you need before completing the cutover.
+migration. You can take as long as you need before you complete the cutover.
 
 ### Prerequisites
 
@@ -73,7 +73,7 @@ Before starting, make sure you have:
 4. Go to the user's **Security credentials** tab and click **Create access key**
    under the **Access keys** section.
 5. Select **Third-party service** as the use case, then copy the **Access key
-   ID** and **Secret access key**. The secret won't be shown again.
+   ID** and **Secret access key**. AWS does not show the secret again.
 
 ### Step 2: Configure the shadow bucket
 
@@ -114,8 +114,8 @@ tigris buckets set-migration my-bucket \
 Add `--write-through` for write-through mode, or `--disable` to clear the
 migration configuration.
 
-**2. Actively migrate (optional).** Lazy migration only copies objects when
-they're requested. To migrate every remaining object server-side, run
+**2. Actively migrate (optional).** Lazy migration only copies objects when your
+application requests them. To migrate every remaining object server-side, run
 [`tigris buckets migrate`](/docs/cli/buckets/migrate):
 
 ```bash
@@ -159,17 +159,17 @@ existing bucket names, object keys, and API calls stay the same.
 
 ### Step 4: Verify the migration
 
-Once your application points to Tigris, objects are migrated on first access. To
-verify:
+After you point your application to Tigris, Tigris migrates objects on first
+access. To make sure that the migration works:
 
 1. Request an object that exists in your S3 bucket
-2. Confirm it returns successfully through Tigris
-3. Check that subsequent requests are served directly from Tigris
+2. Make sure that it returns successfully through Tigris
+3. Make sure that Tigris serves subsequent requests directly
 
 ### Step 5: Enable write-through (optional)
 
 To keep your S3 bucket in sync during the migration, enable **write-through** in
-the shadow bucket settings. With write-through enabled:
+the shadow bucket configuration. With write-through enabled:
 
 - New objects written to Tigris are also written to your S3 bucket
 - Deletes apply to both Tigris and S3
@@ -179,7 +179,7 @@ This keeps your S3 bucket current so you can fall back at any point.
 
 ### Step 6: Complete the migration
 
-Once your workloads are running well on Tigris, disable the shadow bucket
+After your workloads run well on Tigris, disable the shadow bucket
 configuration. Tigris becomes your primary object store.
 
 ## FAQ
@@ -187,7 +187,7 @@ configuration. Tigris becomes your primary object store.
 ### Does migration require downtime?
 
 No. Shadow bucket migration happens transparently. Your application continues
-serving requests while objects are migrated on first access.
+serving requests while Tigris migrates objects on first access.
 
 ### Do I need to change my application code?
 
@@ -200,9 +200,9 @@ Yes. If you enable write-through mode, your S3 bucket stays in sync with all new
 writes. You can switch back to S3 at any point by reverting your endpoint
 configuration.
 
-### What happens to objects I haven't accessed yet?
+### What happens to objects I have not accessed yet?
 
-They remain in your S3 bucket. Tigris only copies objects when they're first
+They remain in your S3 bucket. Tigris only copies objects when they are first
 requested. Objects that are never accessed are never transferred.
 
 ### How much does Tigris cost compared to S3?

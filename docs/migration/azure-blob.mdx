@@ -401,8 +401,9 @@ serve requests while objects migrate on first access.
 
 ### Do I need to change my application code?
 
-Only the endpoint URL, region, and credentials. Tigris supports the S3 API, so
-your existing bucket names, object keys, and API calls work without changes.
+Yes. You need to change your application code. Tigris is not compatible with the
+Azure Blob Storage API. You must change your application source code to use the
+Tigris SDK or S3 API instead of the Azure Blob Storage API.
 
 ### Can I roll back to Azure Blob Storage?
 

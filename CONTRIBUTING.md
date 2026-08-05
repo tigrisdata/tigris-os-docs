@@ -35,7 +35,7 @@ Read the file for your task. Do not read all of the files.
 
 | Task                                         | File or skill                                                                                                                   |
 | :------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------ |
-| Write or edit a procedure or a runbook       | Use the `simple-english` skill` to write procedures using [STE-100](https://www.asd-ste100.org/).                               |
+| Write or edit a procedure or a runbook       | Use the `simple-english` skill to write procedures using [STE-100](https://www.asd-ste100.org/).                                |
 | Write or edit other prose                    | Use the `stop-slop` skill when reviewing the prose.                                                                             |
 | Add tabs or an expando, or write a blog post | Read `.agents/references/mdx-content.md` for a quick reference.                                                                 |
 | Create or edit a diagram                     | Use the `excalidraw-diagrams` skill or make diagrams using https://mermaid.live.                                                |

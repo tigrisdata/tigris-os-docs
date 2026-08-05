@@ -1,6 +1,6 @@
 # MDX content conventions
 
-Read this file before you write a page or a blog post. Also read it before you
+Read this file before you write a documentation page. Also read it before you
 convert a draft into MDX.
 
 ## File format
@@ -12,11 +12,6 @@ components include `<Tabs>`, `<TabItem>`, and the diagrams.
 Many pages in `docs/` are still `.md`. When you edit one of these pages, keep
 the `.md` extension. If a `.md` page needs a React component, rename it to
 `.mdx` in the same change.
-
-## Blog posts
-
-Put `{/* truncate */}` after the first paragraph. The text before this marker is
-the summary on the blog index.
 
 ## Expandos
 

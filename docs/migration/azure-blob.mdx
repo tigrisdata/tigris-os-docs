@@ -82,6 +82,18 @@ permission on the container.
 s3proxy reads its settings from a properties file. Create a file named
 `s3proxy.conf` with the Azure Blob backend.
 
+<!-- prettier-ignore -->
+:::caution
+Do not deploy the example credential values. Anyone with these public values can
+read, modify, or delete your Azure Blob objects. The s3proxy endpoint must stay
+publicly reachable. Generate your own strong, unique S3 credentials for
+`s3proxy.identity` and `s3proxy.credential`. Use the same credential values in
+both the s3proxy config and the Tigris shadow-bucket command. The
+`s3proxy.identity` value must match the `--access-key` value. The
+`s3proxy.credential` value must match the `--secret-key` value. Replace the
+example credential values with your own secrets.
+:::
+
 ```properties
 s3proxy.endpoint=http://0.0.0.0:8080
 s3proxy.authorization=aws-v2-or-v4
@@ -168,15 +180,17 @@ tigris buckets set-migration my-bucket \
 Add `--write-through` for write-through mode, or `--disable` to clear the
 migration configuration.
 
-**2. Actively migrate (optional).** Lazy migration only copies objects when they
-are requested. To migrate every remaining object server-side, run
+**2. Actively migrate.** Lazy migration copies objects only when a request
+touches them. To copy every remaining object server-side, run
 [`tigris buckets migrate`](/docs/cli/buckets/migrate):
 
 ```bash
 tigris buckets migrate my-bucket
 ```
 
-The command runs in the foreground and reports progress as it goes.
+The command runs in the foreground and reports progress as it runs. This step is
+required before you decommission Azure Blob Storage. This step is optional only
+if you keep Azure Blob Storage as the source of truth.
 
 </TabItem>
 </Tabs>
@@ -240,6 +254,17 @@ To keep your Azure Blob container in sync during the migration, enable
 This keeps your Azure Blob container current so you can fall back at any point.
 
 ## Step 7: Complete the migration
+
+<!-- prettier-ignore -->
+:::caution
+Run `tigris buckets migrate` and verify that it completes before you disable the
+shadow bucket configuration. The command copies all objects to Tigris
+server-side. Lazy migration copies an object only on first access. Objects that
+no request ever touches stay only in Azure Blob Storage. If you disable the
+shadow configuration and decommission Azure Blob Storage before the full
+migration completes, Tigris cannot serve those objects. The data becomes
+unavailable.
+:::
 
 Once your workloads run well on Tigris, disable the shadow bucket configuration.
 Tigris becomes your primary object store. You can then shut down s3proxy and

@@ -23,11 +23,12 @@ Azure Blob Storage is not S3-compatible. Tigris shadow buckets require an
 S3-compatible source. You cannot point a Tigris shadow bucket at Azure Blob
 Storage directly.
 
-To migrate from Azure Blob Storage, put an S3-compatible shim in front of your
-Azure Blob account. This guide uses [s3proxy](https://github.com/gaul/s3proxy),
-an open-source proxy that exposes an S3 API and forwards requests to Azure Blob
-Storage. You point the Tigris shadow bucket at the s3proxy endpoint. Tigris then
-migrates your data with zero downtime.
+To migrate from Azure Blob Storage, you must put an S3-compatible shim in front
+of your Azure Blob account. This guide uses
+[s3proxy](https://github.com/gaul/s3proxy), an open-source proxy that exposes an
+S3 API and forwards requests to Azure Blob Storage. You point the Tigris shadow
+bucket at the s3proxy endpoint. Tigris then migrates your data with zero
+downtime.
 
 <!-- prettier-ignore -->
 :::note
@@ -49,9 +50,9 @@ standard S3 source. Azure Blob Storage stays unchanged.
 
 ## Migration approach
 
-Tigris supports [lazy migration](/docs/migration/) using **shadow buckets**.
-Instead of copying all your data upfront, Tigris fetches objects from the
-s3proxy endpoint on demand and caches them for future access. No downtime is
+Tigris supports [lazy migration](/docs/migration/) with **shadow buckets**.
+Tigris does not copy all your data upfront. Instead, Tigris fetches objects from
+the s3proxy endpoint on demand. It caches them for future access. No downtime is
 required.
 
 You can also enable **write-through** mode, which syncs new writes back through
@@ -96,8 +97,9 @@ jclouds.endpoint=https://<azure-storage-account-name>.blob.core.windows.net
 The two credential pairs serve different roles:
 
 - `s3proxy.identity` and `s3proxy.credential` are the S3 access key and secret
-  that Tigris uses to authenticate to s3proxy. Set them to values you choose.
-  You enter these same values in the shadow bucket configuration in Step 3.
+  that Tigris uses to authenticate to s3proxy. You set them to values you
+  choose. You enter these same values in the shadow bucket configuration in
+  Step 3.
 - `jclouds.identity` and `jclouds.credential` are your Azure storage account
   name and account access key. s3proxy uses them to reach Azure Blob Storage.
 
@@ -191,7 +193,7 @@ data.
 Point your application to Tigris. Update the endpoint and credentials in your S3
 client configuration.
 
-Using the AWS CLI:
+With the AWS CLI:
 
 ```bash
 aws s3 ls s3://your-bucket/ \
@@ -222,8 +224,8 @@ Once your application points to Tigris, objects migrate on first access. To
 verify:
 
 1. Request an object that exists in your Azure Blob container
-2. Confirm that it returns successfully through Tigris
-3. Check that later requests are served directly from Tigris
+2. Verify that it returns successfully through Tigris
+3. Verify that later requests are served directly from Tigris
 
 ## Step 6: Enable write-through (optional)
 
@@ -281,10 +283,10 @@ your existing bucket names, object keys, and API calls work without changes.
 ### Can I roll back to Azure Blob Storage?
 
 Yes. If you enable write-through mode, your Azure Blob container stays in sync
-with all new writes. You can switch back at any point by reverting your endpoint
-configuration.
+with all new writes. You can revert your endpoint configuration to switch back
+at any point.
 
-### What happens to objects I have not accessed yet?
+### What happens to objects I do not access?
 
 They remain in your Azure Blob container. Tigris only copies objects when they
 are first requested. Objects that are never accessed are never transferred.

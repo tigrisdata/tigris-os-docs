@@ -30,9 +30,9 @@ to complete the migration.
 :::note
 The shadow bucket source must be S3-compatible. Azure Blob Storage is not
 S3-compatible, so you cannot use it as a shadow bucket source directly. To
-migrate from Azure Blob Storage, front it with an S3-compatible shim such as
-[s3proxy](https://github.com/gaul/s3proxy), then point the shadow bucket at that
-S3 endpoint. See the
+migrate from Azure Blob Storage, you must front it with an S3-compatible shim
+such as [s3proxy](https://github.com/gaul/s3proxy). You then point the shadow
+bucket at that S3 endpoint. See the
 [Azure Blob Storage guide](/docs/migration/azure-blob) for the steps.
 :::
 

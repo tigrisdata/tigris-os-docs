@@ -44,7 +44,8 @@ Read the file for your task. Do not read all of the files.
 
 ## Rules
 
-1. Always write documentation as `.mdx` files.
+1. Write every new documentation page as `.mdx`. Keep the existing `.md` pages
+   as `.md`.
 2. Run `npm run lint` before you commit.
 3. If you are an AI agent, put your tool and your model in an `Assisted-by:`
    commit footer. Read `.agents/references/commits.md` for more information.

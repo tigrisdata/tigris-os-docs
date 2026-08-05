@@ -5,8 +5,13 @@ convert a draft into MDX.
 
 ## File format
 
-Use `.md` for pure Markdown. If the file imports a React component, use `.mdx`.
-The components include `<Tabs>`, `<TabItem>`, and the diagrams.
+Write every new documentation page as `.mdx`. Do not create new `.md` pages. The
+`.mdx` format accepts plain Markdown, and it also accepts React components. The
+components include `<Tabs>`, `<TabItem>`, and the diagrams.
+
+Many pages in `docs/` are still `.md`. When you edit one of these pages, keep
+the `.md` extension. If a `.md` page needs a React component, rename it to
+`.mdx` in the same change.
 
 ## Blog posts
 
@@ -33,7 +38,7 @@ Do these three steps:
 
 The result looks like this:
 
-```markdown
+```mdx
 <details>
 <summary>One sentence summary of the text in the expando</summary>
 

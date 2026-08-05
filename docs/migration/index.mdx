@@ -21,10 +21,10 @@ import TabItem from "@theme/TabItem";
 # Migrate to Tigris Object Storage
 
 Tigris supports zero-downtime migration from any S3-compatible storage provider
-using shadow buckets. Data is migrated lazily as it's accessed, so there's no
-need for a large upfront data transfer. With write-through mode enabled, new
-writes are synced back to your old bucket, so you can take as long as you need
-to complete the migration.
+with shadow buckets. Tigris migrates data lazily as clients access it. This
+removes the need for a large upfront data transfer. When you enable
+write-through mode, Tigris syncs new writes back to your old bucket. You can
+take as long as you need to complete the migration.
 
 ## Provider-specific guides
 
@@ -38,52 +38,57 @@ to complete the migration.
 
 ## How shadow bucket migration works
 
-Once you've specified your **shadow bucket** (the source S3-compatible bucket),
-Tigris handles requests so that data is gradually migrated as it is accessed.
+After you specify your **shadow bucket** (the source S3-compatible bucket),
+Tigris handles requests and migrates data gradually as clients access it.
 
-This approach works well for large-scale migrations where copying all data at
-once would be slow or expensive. Instead of migrating everything up front,
-Tigris fetches objects from the shadow bucket only when requested and copies
-them into your Tigris bucket asynchronously. Only actively used data is
-migrated, reducing both latency and cost.
+This approach works well for large-scale migrations, where copying all data at
+once can be slow or expensive. Instead of migrating everything up front, Tigris
+fetches objects from the shadow bucket only when a client requests them. Tigris
+copies the objects into your Tigris bucket asynchronously. Tigris migrates only
+actively used data. This reduces both latency and cost.
 
 ## Write-through mode: migrate at your own pace
 
 Most migration tools force a hard cutover: you copy your data, switch over, and
 hope nothing breaks. Tigris takes a different approach.
 
-With the optional **write-through** setting enabled, Tigris syncs all new writes
+With the optional **write-through** mode enabled, Tigris syncs all new writes
 back to your original bucket. Your old bucket stays up to date with every new
 object, update, and delete. This means you can run on Tigris in production while
 keeping your previous storage provider fully current.
 
-There's no deadline to finish the migration. You can run in write-through mode
-for days, weeks, or months while you verify that everything works. If you need
-to roll back, your old bucket has all the latest data. When you're ready, turn
-off write-through and decommission the old bucket.
+There is no deadline to finish the migration. You can run in write-through mode
+for days, weeks, or months while you make sure that everything works. If you
+need to roll back, your old bucket has all the latest data. When you are ready,
+turn off write-through and decommission the old bucket.
 
-Under the hood:
+Internally, Tigris does the following:
 
-- When an object is requested, Tigris checks its own bucket first. If the object
-  is not found, Tigris fetches it from the shadow bucket, returns it, and
-  asynchronously copies it for future access.
-- When uploading an object with write-through enabled, Tigris writes it to both
-  the shadow bucket and the Tigris bucket at the same time, keeping both in
-  sync.
-- Objects in the Tigris bucket are stored in the region closest to the user.
-- When an object is deleted, it's removed from both the Tigris and shadow
-  buckets.
+- When a client requests an object, Tigris checks its own bucket first. If
+  Tigris does not find the object, it fetches the object from the shadow bucket,
+  returns the object, and copies it asynchronously for future access.
+- When a client uploads an object with write-through enabled, Tigris writes it
+  to the shadow bucket and the Tigris bucket at the same time. This keeps both
+  buckets in sync.
+- Tigris stores objects in the Tigris bucket in the region closest to the user.
+- When a client deletes an object, Tigris removes it from both the Tigris bucket
+  and the shadow bucket.
 
-<!-- prettier-ignore -->
+{/* prettier-ignore */}
 :::note
-Object listing behavior depends on whether write-through mode is
-enabled. When write-through is enabled, the list API returns the full contents
-of the shadow bucket. When write-through is disabled, the list API only includes
-objects that have already been migrated into Tigris; objects that exist solely
-in the shadow bucket are not listed until they are accessed and migrated.
 
-  <!-- prettier-ignore -->
+Object listing behavior depends on whether you enable or disable write-through
+mode.
 
+When you enable write-through mode, the list API returns the full contents of
+the shadow bucket.
+
+When you disable write-through mode, the list API includes only the objects that
+are already in the Tigris bucket. The API does not list objects that exist only
+in the shadow bucket. Tigris lists these objects only after a client accesses
+them and Tigris migrates them.
+
+{/* prettier-ignore */}
 :::
 
 ## Enable Data Migration
@@ -101,8 +106,8 @@ To enable data migration from any S3-compatible bucket:
 - Click on `Buckets` in the left menu.
 - Click on the bucket to which you wish to migrate data.
 - Click `Settings`.
-- Find the `Enable Data Migration` setting and enable the toggle.
-- Provide the access details for your source bucket, or `Shadow Bucket`.
+- Find `Enable Data Migration` and turn on the toggle.
+- Enter the access details for your source bucket, or `Shadow Bucket`.
 
 ![Shadow bucket migration](./shadow-bucket-migration.webp)
 
@@ -130,8 +135,8 @@ tigris buckets set-migration my-bucket \
 Add `--write-through` to enable write-through mode, or `--disable` to clear the
 migration configuration.
 
-**2. Actively migrate (optional).** Lazy migration only copies objects when
-they're accessed. To migrate every remaining object server-side, run
+**2. Actively migrate (optional).** Lazy migration only copies objects when a
+client accesses them. To migrate every remaining object server-side, run
 [`tigris buckets migrate`](/docs/cli/buckets/migrate):
 
 ```bash
@@ -149,17 +154,19 @@ The command runs in the foreground and reports progress as it goes.
 
 ## Copying object ACLs
 
-By default, migrated objects inherit the access control settings of the bucket
-to which they are migrated. However, if the bucket is configured to
-[allow object ACLs](/docs/objects/acl.md#enabling-object-acls), the migration
-process will copy object ACLs from the shadow bucket to the Tigris bucket. The
-following rules apply:
+By default, Tigris configures access control on migrated objects to match the
+destination bucket. However, if you configure the bucket to
+[allow object ACLs](/docs/objects/acl.md#enabling-object-acls), Tigris copies
+object ACLs during migration. Tigris copies these ACLs from the shadow bucket to
+the Tigris bucket. The following rules apply:
 
 - Tigris bucket is private:
-  - Public S3 objects will be migrated as public and have explicit `public-read`
-    ACL set.
-  - Private S3 objects will be migrated as private and inherit bucket ACL.
+  - Tigris migrates public S3 objects as public objects and sets an explicit
+    `public-read` ACL.
+  - Tigris migrates private S3 objects as private objects. These objects inherit
+    the bucket ACL.
 - Tigris bucket is public:
-  - Public S3 objects will be migrated as public and inherit bucket ACL.
-  - Private S3 objects will be copied as private and have explicit `private` ACL
-    set.
+  - Tigris migrates public S3 objects as public objects. These objects inherit
+    the bucket ACL.
+  - Tigris copies private S3 objects as private objects and sets an explicit
+    `private` ACL.

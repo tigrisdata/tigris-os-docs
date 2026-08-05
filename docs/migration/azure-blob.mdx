@@ -62,7 +62,7 @@ the cutover.
 
 ## Prerequisites
 
-Before you start, make sure you have:
+Before you start, verify that you have:
 
 - A [Tigris account](https://console.storage.dev) with a bucket created
 - An Azure Storage account and the container you want to migrate from
@@ -189,8 +189,9 @@ tigris buckets migrate my-bucket
 ```
 
 The command runs in the foreground and reports progress as it runs. This step is
-required before you decommission Azure Blob Storage. If you keep Azure Blob
-Storage as the source of truth, this step is optional.
+required before you disable the shadow configuration and decommission Azure Blob
+Storage. If you keep Azure Blob Storage as the source of truth, this step is
+optional.
 
 </TabItem>
 </Tabs>
@@ -204,8 +205,10 @@ data.
 
 ## Step 4: Update your application
 
-Point your application to Tigris. Update the endpoint and credentials in your S3
-client configuration.
+Tigris exposes an S3-compatible API, not the Azure Blob Storage API. You must
+change your application to use the Tigris SDK or an AWS S3 SDK. The Azure Blob
+Storage SDK will not work against Tigris. Set the endpoint and credentials for
+Tigris in your S3 client configuration.
 
 With the AWS CLI:
 
@@ -229,8 +232,9 @@ s3 = boto3.client(
 )
 ```
 
-The only changes are the endpoint URL, region, and credentials. Your existing
-bucket names, object keys, and API calls stay the same.
+Your bucket names and object keys stay the same after migration. You must change
+your application source code to use the Tigris SDK or an AWS S3 SDK, not the
+Azure Blob Storage SDK.
 
 ## Step 5: Verify the migration
 

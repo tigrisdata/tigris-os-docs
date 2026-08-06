@@ -366,6 +366,7 @@ const sidebars = {
             "migration/cloudflare-r2",
             "migration/minio",
             "migration/s3-compatible",
+            "migration/azure-blob",
           ],
         },
         {

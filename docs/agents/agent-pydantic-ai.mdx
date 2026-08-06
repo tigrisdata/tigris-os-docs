@@ -60,7 +60,7 @@ tigris = MCPToolset(
     StdioTransport(
         "npx",
         ["-y", "@tigrisdata/tigris-mcp-server", "run"],
-        env={"AWS_PROFILE": "tigris"},
+        env={"AWS_PROFILE": "tigris", "USE_AWS_PROFILES": "true"},
     )
 )
 

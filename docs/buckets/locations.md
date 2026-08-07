@@ -174,6 +174,32 @@ dual-region only when compliance or policy requires data in specific regions.
 - If compute and storage are co-located, **Single-region** eliminates
   cross-region latency entirely.
 
+### Global Bucket Trade-offs
+
+Global buckets move data to the regions where users request it. This gives low
+latency for distributed access patterns. The same model has three trade-offs for
+workloads that operate from one region. A single-region bucket removes each of
+them because all operations resolve in one region.
+
+- **Negative lookups**: A GET or HEAD request for a key that does not exist
+  causes an existence check across regions. This check can add several hundred
+  milliseconds to the response. Workloads that poll for keys that do not exist
+  pay this cost on each request. A single-region bucket resolves negative
+  lookups within its one region.
+- **Remote reads**: In a global bucket, a read can go to a remote region when
+  the local region does not have a copy of the object. A small part of the read
+  traffic then gets cross-region latency. In a single-region bucket, all reads
+  resolve in the one region that stores the data.
+- **Conditional writes**: Global buckets give strong consistency in the same
+  region and eventual consistency across regions. When clients in more than one
+  region send conditional writes to the same object, a precondition can evaluate
+  against a stale state. See
+  [Consistency and Conditional Operations](/docs/objects/conditionals/#consistency-and-conditional-operations).
+  A single-region bucket evaluates every precondition against the latest state,
+  independent of the region of each writer. The latency of a conditional write
+  then stays within the region. A multi-region bucket also gives strong global
+  consistency for conditional writes.
+
 ### Compliance and Data Residency
 
 - **Single-region** gives you the strictest data residency — data never leaves

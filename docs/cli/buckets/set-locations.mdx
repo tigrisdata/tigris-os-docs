@@ -30,7 +30,8 @@ tigris buckets set-locations my-bucket --locations global
 
 :::note
 
-A location change applies to new objects only. Existing objects stay in their
-current locations. Tigris does not move existing objects to the new locations.
+A location change applies to new writes only. Tigris does not move existing
+objects to the new locations. If you overwrite an existing object, Tigris writes
+the new version to the current locations of the bucket.
 
 :::

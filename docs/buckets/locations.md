@@ -177,7 +177,7 @@ dual-region only when compliance or policy requires data in specific regions.
 ### Global Bucket Trade-offs
 
 Global buckets move data to the regions where users request it. This gives low
-latency for distributed access patterns. The same model has three trade-offs for
+latency for distributed access patterns. The same model has two trade-offs for
 workloads that operate from one region. A single-region bucket removes each of
 them because all operations resolve in one region.
 
@@ -186,10 +186,6 @@ them because all operations resolve in one region.
   milliseconds to the response. Workloads that poll for keys that do not exist
   pay this cost on each request. A single-region bucket resolves negative
   lookups within its one region.
-- **Remote reads**: In a global bucket, a read can go to a remote region when
-  the local region does not have a copy of the object. A small part of the read
-  traffic then gets cross-region latency. In a single-region bucket, all reads
-  resolve in the one region that stores the data.
 - **Conditional writes**: Global buckets give strong consistency in the same
   region and eventual consistency across regions. When clients in more than one
   region send conditional writes to the same object, a precondition can evaluate

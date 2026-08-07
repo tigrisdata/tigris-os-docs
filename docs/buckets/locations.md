@@ -174,6 +174,77 @@ dual-region only when compliance or policy requires data in specific regions.
 - If compute and storage are co-located, **Single-region** eliminates
   cross-region latency entirely.
 
+### Global Bucket Trade-offs
+
+Global buckets move data to the regions where users request it. This gives low
+latency for distributed access patterns. The same model has two trade-offs for
+workloads that operate from one region. A single-region bucket removes each of
+them because all operations resolve in one region.
+
+- **Negative lookups**: A GET or HEAD request for a key that does not exist
+  causes an existence check across regions. This check can add several hundred
+  milliseconds to the response. Workloads that poll for keys that do not exist
+  pay this cost on each request. A single-region bucket resolves negative
+  lookups within its one region.
+- **Conditional writes**: Global buckets give strong consistency in the same
+  region and eventual consistency across regions. When clients in more than one
+  region send conditional writes to the same object, a precondition can evaluate
+  against a stale state. See
+  [Consistency and Conditional Operations](/docs/objects/conditionals/#consistency-and-conditional-operations).
+  A single-region bucket evaluates every precondition against the latest state,
+  independent of the region of each writer. The latency of a conditional write
+  then stays within the region. A multi-region bucket also gives strong global
+  consistency for conditional writes.
+
+### Multi-Region Bucket Trade-offs
+
+Multi-region buckets replicate data across two or more regions in a chosen
+geography. This gives strong global consistency and the highest availability.
+The same model has three trade-offs.
+
+- **Write latency**: Tigris replicates the metadata of each write synchronously
+  to more than one region before the write completes. Writes to a multi-region
+  bucket therefore have higher latency than writes to a global or single-region
+  bucket.
+- **Storage cost**: The per-GB storage price is higher than the single-region
+  price. You are billed once for the bucket, not once for each region. See
+  [Cost](#cost).
+- **Region selection**: You select the geography (USA or EUR). Tigris selects
+  the regions within that geography. If your policy requires specific regions,
+  use a [dual-region](#dual-region) bucket.
+
+### Dual-Region Bucket Trade-offs
+
+Dual-region buckets store your data in the two regions that you select.
+Replication between the two regions is eager. This gives high availability and
+explicit control over data placement. The same model has three trade-offs.
+
+- **Storage cost**: Tigris bills the bucket at the single-region price for each
+  of the two regions. The storage cost is about two times the cost of a
+  single-region bucket. See [Cost](#cost).
+- **Cross-region reads**: A read in one region can return stale data only until
+  the metadata of a write replicates from the other region. This window is small
+  because metadata is much smaller than data. After the metadata replicates, a
+  read returns the correct object. If the data itself has not replicated yet,
+  Tigris fetches it from the other region, which adds cross-region latency to
+  that read. See the [Consistency Model Summary](#consistency-model-summary).
+- **Negative lookups**: A GET or HEAD request for a key that does not exist
+  causes an existence check in the bucket's other region. This check adds
+  cross-region latency to the response.
+
+### Single-Region Bucket Trade-offs
+
+Single-region buckets store all data in one region. This gives the lowest
+storage cost, the strictest data residency, and strong consistency. The single
+location has two trade-offs.
+
+- **Remote access latency**: A client outside the bucket's region pays a full
+  cross-region round trip on each request. The data does not move closer to
+  remote clients.
+- **Availability**: The bucket has redundancy across availability zones within
+  its region only. There is no failover to another region. If the region is
+  unavailable, the data is unavailable.
+
 ### Compliance and Data Residency
 
 - **Single-region** gives you the strictest data residency — data never leaves

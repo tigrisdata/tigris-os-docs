@@ -27,3 +27,11 @@ tigris buckets set-locations my-bucket --locations iad,fra
 # Set to global
 tigris buckets set-locations my-bucket --locations global
 ```
+
+:::note
+
+A location change applies to new writes only. Tigris does not move existing
+objects to the new locations. If you overwrite an existing object, Tigris writes
+the new version to the current locations of the bucket.
+
+:::

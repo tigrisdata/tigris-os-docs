@@ -217,21 +217,20 @@ The same model has three trade-offs.
 
 Dual-region buckets store your data in the two regions that you select.
 Replication between the two regions is eager. This gives high availability and
-explicit control over data placement. The same model has four trade-offs.
+explicit control over data placement. The same model has three trade-offs.
 
 - **Storage cost**: Tigris bills the bucket at the single-region price for each
   of the two regions. The storage cost is about two times the cost of a
   single-region bucket. See [Cost](#cost).
-- **Cross-region reads**: Replication between the two regions is eager but
-  asynchronous. A read in one region can return stale data until replication
-  from the other region completes. See the
-  [Consistency Model Summary](#consistency-model-summary).
+- **Cross-region reads**: A read in one region can return stale data only until
+  the metadata of a write replicates from the other region. This window is small
+  because metadata is much smaller than data. After the metadata replicates, a
+  read returns the correct object. If the data itself has not replicated yet,
+  Tigris fetches it from the other region, which adds cross-region latency to
+  that read. See the [Consistency Model Summary](#consistency-model-summary).
 - **Negative lookups**: A GET or HEAD request for a key that does not exist
   causes an existence check in the bucket's other region. This check adds
   cross-region latency to the response.
-- **Region count**: A dual-region bucket spans exactly two regions. If you need
-  redundancy across more than two regions, use a [multi-region](#multi-region)
-  bucket.
 
 ### Single-Region Bucket Trade-offs
 

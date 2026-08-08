@@ -61,7 +61,7 @@ The core request handling layer that coordinates:
 
 - Cache lookups and writes
 - Request coalescing
-- Range request optimization with background fetching
+- Range request serving (block-aligned caching by default)
 - Request forwarding to Tigris
 - Cache invalidation on write operations
 
@@ -193,10 +193,49 @@ Key behaviors:
 - Once streaming starts, new requests for the same key start their own fetch
 - Listeners that read too slowly are disconnected to prevent memory buildup
 
-### Range request optimization
+### Range request serving
 
-When a byte-range request arrives for an uncached object, TAG serves the range
-immediately while fetching the full object in the background:
+TAG serves a byte-range request for an uncached object with one of two
+strategies, selected by the `block_caching_enabled` setting.
+
+#### Block caching (default)
+
+TAG fetches and caches only the fixed-size **blocks** covering the requested
+range — not the whole object — so range reads of large objects stay cheap and
+the cache holds only the regions actually read. It serves the requested bytes
+from those blocks, pulling any missing covering block from Tigris with an
+aligned range GET, and later reads of the same block are cache hits.
+
+```text
+Client                 TAG                    Embedded Cache         Tigris
+  │                     │                       │                    │
+  │ GET /bucket/key     │                       │                    │
+  │ Range: bytes=0-1023 │                       │                    │
+  │────────────────────▶│                       │                    │
+  │                     │ Covering block(s)?    │                    │
+  │                     │ Get block 0           │                    │
+  │                     │──────────────────────▶│                    │
+  │                     │◀──────────────────────│ not cached         │
+  │                     │                       │                    │
+  │                     │ GET Range: bytes=0-1048575 (aligned block) │
+  │                     │───────────────────────────────────────────▶│
+  │                     │◀───────────────────────────────────────────│
+  │                     │ Put block 0           │      206 Partial   │
+  │                     │──────────────────────▶│                    │
+  │◀────────────────────│  206 Partial (0-1023) │                    │
+  │  206 Partial        │                       │                    │
+```
+
+Because only the touched blocks are cached, block caching suits **sparse reads
+of large objects** (Parquet footers/row-groups, SST blocks). Size `block_size`
+to your workload's read granularity — see the
+[deployment guide](deployment-guide.md#block-aligned-caching).
+
+#### Whole-object caching
+
+With `block_caching_enabled: false`, TAG serves the requested range immediately
+while fetching the **full object** in the background, so any later byte range of
+that object is served from cache:
 
 ```text
 Client                 TAG                    Embedded Cache         Tigris
@@ -222,7 +261,7 @@ Client                 TAG                    Embedded Cache         Tigris
   │                     │──────────────────────▶│                    │
 ```
 
-Benefits:
+Benefits of the whole-object background fetch:
 
 - **Low latency** — the client gets the requested range immediately
 - **Future ranges served from cache** — any byte range of the same object comes

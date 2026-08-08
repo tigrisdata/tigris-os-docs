@@ -193,10 +193,18 @@ Key behaviors:
 - Once streaming starts, new requests for the same key start their own fetch
 - Listeners that read too slowly are disconnected to prevent memory buildup
 
-### Range request optimization
+### Range request serving
 
-When a byte-range request arrives for an uncached object, TAG serves the range
-immediately while fetching the full object in the background:
+By default (block-aligned caching), a byte-range request for an uncached object
+fetches and caches only the fixed-size **blocks** covering the requested range —
+not the whole object — so range reads of large objects stay cheap and the cache
+holds only the regions actually read. TAG serves the requested bytes
+immediately, pulling any missing covering blocks from Tigris, and later reads of
+the same blocks are served from local cache.
+
+With block caching disabled (`block_caching_enabled: false`), TAG instead serves
+the range immediately while fetching the **full object** in the background, so
+any later byte range of that object is served from cache:
 
 ```text
 Client                 TAG                    Embedded Cache         Tigris
@@ -222,7 +230,7 @@ Client                 TAG                    Embedded Cache         Tigris
   │                     │──────────────────────▶│                    │
 ```
 
-Benefits:
+Benefits of the whole-object background fetch:
 
 - **Low latency** — the client gets the requested range immediately
 - **Future ranges served from cache** — any byte range of the same object comes

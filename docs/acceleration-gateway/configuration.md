@@ -28,7 +28,9 @@ variables. Environment variables take precedence over file configuration.
 | `TAG_CACHE_DISABLED`              | Disable caching (`true` or `1`)                                                 | `false`                  |
 | `TAG_CACHE_WARM_ON_WRITE`         | Warm the cache after a successful write via a background fetch (`true`/`false`) | `false`                  |
 | `TAG_CACHE_MAX_CONCURRENT_WRITES` | Max concurrent cache-populate operations                                        | `256`                    |
-| `TAG_CACHE_MAX_POPULATE_MEMORY`   | Aggregate memory budget (bytes) for concurrent cache-populate buffering         | `1073741824` (1 GiB)     |
+| `TAG_CACHE_MAX_POPULATE_MEMORY`   | Aggregate memory budget (bytes) for all cache buffering — populate + block-serve staging (one honest total) | `2147483648` (2 GiB)     |
+| `TAG_CACHE_BLOCK_CACHING_ENABLED` | Cache large objects as fixed-size blocks (RFC 0001) so a range read fetches only the covering blocks (`true`/`false`) | `true`                   |
+| `TAG_CACHE_BLOCK_SIZE`            | Block granularity and the whole-vs-block boundary (bytes); size to your workload's read granularity | `1048576` (1 MiB)        |
 | `TAG_CACHE_DELETE_BATCH_SIZE`     | File deletions processed per deletion-queue batch                               | `1000`                   |
 | `TAG_CACHE_RECOVERY_WORKERS`      | Parallel workers for startup file recovery                                      | `16`                     |
 | `TAG_HTTP_PORT`                   | HTTP listen port                                                                | `8080`                   |
@@ -158,8 +160,18 @@ cache:
   # small objects populate concurrently while a burst of large objects is throttled
   # to keep buffered memory bounded. This, rather than the raw count above, is what
   # bounds populate memory; both limits apply.
-  # Default: 1073741824 (1 GiB) (0 or unset = default; negative = memory cap disabled)
-  max_populate_memory_bytes: 1073741824
+  # Default: 2147483648 (2 GiB) (0 or unset = default; negative = disabled). One honest
+  # total: block-serve staging draws from this same budget, capped at half of it.
+  max_populate_memory_bytes: 2147483648
+
+  # Block-aligned caching for large objects (RFC 0001). On by default: any object at or
+  # above block_size is cached as fixed-size blocks, so a range read populates and serves
+  # only the blocks it touches. Set false to cache whole objects instead.
+  block_caching_enabled: true
+
+  # Block granularity AND the whole-vs-block boundary. Size it to your workload's read
+  # granularity — an oversized block over-fetches on every miss. 0/unset = default (1 MiB).
+  block_size: 1048576
 
   # Unique node identifier for cluster mode
   # Required for multi-node deployments

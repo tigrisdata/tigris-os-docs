@@ -54,6 +54,28 @@ details on how clustering works.
 - [Kubernetes](kubernetes.md) — StatefulSet with autoscaling (recommended for
   production clusters)
 
+## Block-aligned caching
+
+**Block-aligned caching is on by default** (RFC 0001): any object at or above `block_size` is
+cached as fixed-size blocks, so a range read fetches and caches only the covering blocks instead of
+the whole object — ideal for **small ranges of large objects** (Parquet footers/row-groups,
+SlateDB/SST blocks, columnar analytics).
+
+The one knob that matters is **`block_size`** — size it to your workload's dominant read size:
+
+- **Too large** and every cache miss pulls a full block to serve a small range (upstream read
+  amplification). A 4 MiB block serving ~400 KB reads amplifies upstream traffic several-fold and
+  can be _worse_ than whole-object caching.
+- **Too small** adds per-block bookkeeping and more fetches per read.
+
+The `1048576` (1 MiB) default suits typical analytics footers/row-groups; raise it for larger reads,
+lower it (e.g. `65536` for 64 KiB reads), or set `TAG_CACHE_BLOCK_CACHING_ENABLED=false` to cache
+whole objects. Verify the fit with Prometheus:
+
+- **Upstream read amplification** — `sum(rate(tag_cache_block_bytes_populated_total[5m])) / sum(rate(tag_bytes_transferred_total{direction="out"}[5m]))` (bytes fetched into blocks ÷ bytes served). Aim for **≤ 1**; well above 1 means the block size is too large for the read pattern.
+- **Block hit ratio** — `tag_cache_block_hits_total / (tag_cache_block_hits_total + tag_cache_block_misses_total)`.
+- **Serve latency** — `histogram_quantile(0.95, sum(rate(tag_request_duration_seconds_bucket[5m])) by (le))`.
+
 ## TLS
 
 TAG supports HTTPS with TLS certificates for encrypted client connections. See

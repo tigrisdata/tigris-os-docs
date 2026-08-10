@@ -11,7 +11,8 @@ patterns of your data. The following storage tiers are available:
 ## Standard tier
 
 The default storage tier. It provides high durability, availability, and
-performance for frequently accessed data.
+performance for frequently accessed data. This tier is designed for 99.99%
+availability.
 
 ## Infrequent Access tier
 

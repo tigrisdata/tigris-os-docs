@@ -1,6 +1,6 @@
 # Service Level Agreement
 
-_Last updated: Oct 31, 2024_
+_Last updated: Aug 10, 2026_
 
 The following Service Level Agreement between Tigris Data, Inc., a Delaware
 corporation ("Tigris Data," "we," or "us"), and Customer will apply to the
@@ -15,6 +15,12 @@ Tigris Data will use commercially reasonable efforts to make the Service
 available with Actual Availability as described below in each calendar month
 during the Subscription Term, as measured by Tigris Data (the "Uptime
 Commitment").
+
+The Service is designed for 99.99% availability. The Uptime Commitment is 99.9%
+Actual Availability in each calendar month for Standard tier and Archive tier,
+and 99.0% Actual Availability in each calendar month for Infrequent Access tier.
+The design target is descriptive. The tables in Section 2 govern eligibility for
+Service Credits.
 
 ### 2. Service Credits
 

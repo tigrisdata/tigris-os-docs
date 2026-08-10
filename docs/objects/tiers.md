@@ -12,8 +12,7 @@ patterns of your data. The following storage tiers are available:
 
 The default storage tier. It provides high durability, availability, and
 performance for frequently accessed data. This tier is designed for 99.99%
-availability. The [Service Level Agreement](../legal/sla.md) commits to 99.9%
-availability per calendar month.
+availability.
 
 ## Infrequent Access tier
 

@@ -96,12 +96,20 @@ A retry after a failed drain is expensive. The `tigris buckets migrate` command
 walks the full container again from the start on each run. Rehydrate all
 archived blobs first, then run the drain once.
 
+Rehydration changes blob data. Run the commands in this section with your own
+Azure identity, not with the read-only migration identity from the
+prerequisites. The commands use `--auth-mode login` to authenticate as the
+identity from `az login`. That identity must have the **Storage Blob Data
+Contributor** role, or a higher role, on the container. The **Storage Blob Data
+Reader** role can list blobs but cannot change their tier.
+
 To find the archived blobs in a container:
 
 ```bash
 az storage blob list \
   --account-name <azure-storage-account-name> \
   --container-name <container-name> \
+  --auth-mode login \
   --query "[?properties.blobTier=='Archive'].name" \
   --output tsv
 ```
@@ -112,23 +120,34 @@ To rehydrate one blob, set its tier to `Hot` or `Cool`:
 az storage blob set-tier \
   --account-name <azure-storage-account-name> \
   --container-name <container-name> \
+  --auth-mode login \
   --name <blob-name> \
   --tier Hot
 ```
 
-To rehydrate every archived blob, pipe the list into the same command:
+To rehydrate every archived blob, pipe the list into a loop that runs the same
+command one time for each blob:
 
 ```bash
 az storage blob list \
   --account-name <azure-storage-account-name> \
   --container-name <container-name> \
+  --auth-mode login \
   --query "[?properties.blobTier=='Archive'].name" \
   --output tsv |
-  xargs -I{} az storage blob set-tier \
-    --account-name <azure-storage-account-name> \
-    --container-name <container-name> \
-    --name {} --tier Hot
+  while IFS= read -r blob_name; do
+    az storage blob set-tier \
+      --account-name <azure-storage-account-name> \
+      --container-name <container-name> \
+      --auth-mode login \
+      --name "$blob_name" \
+      --tier Hot
+  done
 ```
+
+The loop reads one blob name from each line and keeps spaces, quotes, and
+backslashes in the name intact. A blob name that contains a newline character is
+the one exception. Rehydrate such a blob with the single-blob command.
 
 <!-- prettier-ignore -->
 :::caution

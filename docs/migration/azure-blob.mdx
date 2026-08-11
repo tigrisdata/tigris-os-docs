@@ -66,15 +66,74 @@ Before you start, verify that you have:
 
 - A [Tigris account](https://console.storage.dev) with a bucket created
 - An Azure Storage account and the container you want to migrate from
-- The Azure storage account name and an account access key with read access to
-  that container
+- An Entra ID identity with the **Storage Blob Data Reader** role on that
+  container (recommended), or the storage account access key
 - A host to run s3proxy that Tigris can reach over the public internet
-- Java 17 or newer on that host to run s3proxy
+- s3proxy 4.0.0 or newer, and Java 17 or newer on that host
+- No blobs in the **Archive** access tier (see the next section)
 
 <!-- prettier-ignore -->
 :::note
-For write-through mode, the Azure account key also needs write and delete
-permission on the container.
+This guide uses the configuration properties of s3proxy 4.0.0. Releases before
+4.0.0 use a different Azure backend with different properties and support
+account keys only.
+:::
+
+## Rehydrate archived blobs before you migrate
+
+s3proxy cannot read blobs in the Azure **Archive** access tier. Archive-tier
+blobs are offline in Azure. When the migration reaches an archived blob, the
+`tigris buckets migrate` command fails with the message
+`an internal error occurred, try again`. The message does not name the archived
+blob as the cause.
+
+Containers with lifecycle management policies commonly contain archived blobs,
+because those policies move cold objects to the Archive tier automatically. No
+S3 shim reads archived blobs transparently. You must rehydrate them to the
+**Hot** or **Cool** tier before you migrate.
+
+A retry after a failed drain is expensive. The `tigris buckets migrate` command
+walks the full container again from the start on each run. Rehydrate all
+archived blobs first, then run the drain once.
+
+To find the archived blobs in a container:
+
+```bash
+az storage blob list \
+  --account-name <azure-storage-account-name> \
+  --container-name <container-name> \
+  --query "[?properties.blobTier=='Archive'].name" \
+  --output tsv
+```
+
+To rehydrate one blob, set its tier to `Hot` or `Cool`:
+
+```bash
+az storage blob set-tier \
+  --account-name <azure-storage-account-name> \
+  --container-name <container-name> \
+  --name <blob-name> \
+  --tier Hot
+```
+
+To rehydrate every archived blob, pipe the list into the same command:
+
+```bash
+az storage blob list \
+  --account-name <azure-storage-account-name> \
+  --container-name <container-name> \
+  --query "[?properties.blobTier=='Archive'].name" \
+  --output tsv |
+  xargs -I{} az storage blob set-tier \
+    --account-name <azure-storage-account-name> \
+    --container-name <container-name> \
+    --name {} --tier Hot
+```
+
+<!-- prettier-ignore -->
+:::caution
+Rehydration is not immediate. A standard-priority rehydration can take up to 15
+hours. Wait until no blob reports `Archive` before you start the migration.
 :::
 
 ## Step 1: Configure s3proxy for Azure Blob Storage
@@ -82,11 +141,15 @@ permission on the container.
 s3proxy reads its settings from a properties file. Create a file named
 `s3proxy.conf` with the Azure Blob backend.
 
+s3proxy 4.0.0 authenticates to Azure Blob Storage in two ways. Entra ID is the
+recommended way because you can scope it to one container with a read-only role.
+The storage account access key is the fallback.
+
 <!-- prettier-ignore -->
 :::caution
 Do not deploy the example credential values. Anyone with these public values can
-read, modify, or delete your Azure Blob objects. The s3proxy endpoint must stay
-publicly reachable. Generate your own strong, unique S3 credentials for
+read your Azure Blob objects. The s3proxy endpoint must stay publicly
+reachable. Generate your own strong, unique S3 credentials for
 `s3proxy.identity` and `s3proxy.credential`. Use the same credential values in
 both the s3proxy config and the Tigris shadow-bucket command. The
 `s3proxy.identity` value must match the `--access-key` value. The
@@ -94,17 +157,80 @@ both the s3proxy config and the Tigris shadow-bucket command. The
 example credential values with your own secrets.
 :::
 
+<Tabs>
+<TabItem value="entra" label="Entra ID (recommended)" default>
+
+Create a service principal with the **Storage Blob Data Reader** role. Scope the
+role to the one container that you migrate from:
+
+```bash
+az ad sp create-for-rbac \
+  --name s3proxy-migration \
+  --role "Storage Blob Data Reader" \
+  --scopes "/subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.Storage/storageAccounts/<azure-storage-account-name>/blobServices/default/containers/<container-name>"
+```
+
+Leave `jclouds.identity` and `jclouds.credential` empty in the properties file.
+s3proxy then authenticates with `DefaultAzureCredential` from the Azure SDK:
+
 ```properties
 s3proxy.endpoint=http://0.0.0.0:8080
 s3proxy.authorization=aws-v2-or-v4
 s3proxy.identity=local-identity
 s3proxy.credential=local-credential
-jclouds.azureblob.auth=azureKey
+s3proxy.read-only-blobstore=true
+jclouds.provider=azureblob
+jclouds.identity=
+jclouds.credential=
+jclouds.endpoint=https://<azure-storage-account-name>.blob.core.windows.net
+```
+
+Give the service principal credentials to s3proxy through environment variables.
+Set them in the environment that starts s3proxy in Step 2:
+
+```bash
+export AZURE_CLIENT_ID=<service-principal-app-id>
+export AZURE_TENANT_ID=<entra-tenant-id>
+export AZURE_CLIENT_SECRET=<service-principal-secret>
+```
+
+<!-- prettier-ignore -->
+:::note
+`DefaultAzureCredential` also supports managed identities. If s3proxy runs on
+an Azure VM with a managed identity, assign the **Storage Blob Data Reader**
+role to that identity and set no environment variables.
+:::
+
+</TabItem>
+<TabItem value="key" label="Account key (fallback)">
+
+<!-- prettier-ignore -->
+:::warning
+An Azure storage account access key cannot be scoped to one container and
+cannot be made read-only. Each key grants full control of every container in
+the storage account, and the holder can mint SAS tokens. If the key leaks
+through your public s3proxy endpoint, the whole storage account is exposed.
+Use Entra ID instead when you can, and always set
+`s3proxy.read-only-blobstore=true`.
+:::
+
+Set your Azure storage account name and account access key in the properties
+file:
+
+```properties
+s3proxy.endpoint=http://0.0.0.0:8080
+s3proxy.authorization=aws-v2-or-v4
+s3proxy.identity=local-identity
+s3proxy.credential=local-credential
+s3proxy.read-only-blobstore=true
 jclouds.provider=azureblob
 jclouds.identity=<azure-storage-account-name>
 jclouds.credential=<azure-storage-account-key>
 jclouds.endpoint=https://<azure-storage-account-name>.blob.core.windows.net
 ```
+
+</TabItem>
+</Tabs>
 
 The two credential pairs serve different roles:
 
@@ -113,10 +239,20 @@ The two credential pairs serve different roles:
   choose. You enter these same values in the shadow bucket configuration in
   Step 3.
 - `jclouds.identity` and `jclouds.credential` are your Azure storage account
-  name and account access key. s3proxy uses them to reach Azure Blob Storage.
+  name and account access key. When you leave them empty, s3proxy reads Entra ID
+  credentials from its environment instead.
 
-The `azureblob` backend supports static key authorization only. Set
-`jclouds.azureblob.auth=azureKey` and provide the account key.
+Set `s3proxy.read-only-blobstore=true` in every setup. Migration only reads from
+the source. With this property, s3proxy rejects write and delete requests with a
+`NotImplemented` error, and read requests continue to work. This limits the
+damage if your s3proxy credentials leak.
+
+<!-- prettier-ignore -->
+:::note
+Write-through mode (Step 6) writes back to Azure through s3proxy. If you plan
+to use write-through, remove `s3proxy.read-only-blobstore=true`, and give the
+Entra ID identity the **Storage Blob Data Contributor** role instead.
+:::
 
 ## Step 2: Run s3proxy
 
@@ -257,6 +393,11 @@ To keep your Azure Blob container in sync during the migration, enable
 
 This keeps your Azure Blob container current so you can fall back at any point.
 
+Write-through needs write access through s3proxy. Remove
+`s3proxy.read-only-blobstore=true` from `s3proxy.conf` and restart s3proxy. If
+you use Entra ID, give the identity the **Storage Blob Data Contributor** role
+on the container.
+
 ## Step 7: Complete the migration
 
 <!-- prettier-ignore -->
@@ -383,12 +524,22 @@ func main() {
   endpoint to production traffic.
 - **Container-to-bucket mapping.** s3proxy maps an S3 bucket name to an Azure
   Blob container. Use the container name as the shadow bucket **Bucket** value.
-- **Credential handling.** The `s3proxy.conf` file holds your Azure account key.
-  Restrict access to the file. Tigris never receives the Azure key. Tigris
-  authenticates to s3proxy with the separate `s3proxy.identity` and
-  `s3proxy.credential` values.
-- **Static key authorization.** The `azureblob` backend supports static account
-  keys only. It does not support managed identities.
+- **Credential handling.** The `s3proxy.conf` file and the s3proxy environment
+  hold your Azure credentials. Restrict access to both. Tigris never receives
+  the Azure credentials. Tigris authenticates to s3proxy with the separate
+  `s3proxy.identity` and `s3proxy.credential` values.
+- **Least privilege.** Prefer an Entra ID identity with the **Storage Blob Data
+  Reader** role on one container. An account access key grants full control of
+  the whole storage account and cannot be restricted. Set
+  `s3proxy.read-only-blobstore=true` in every setup that does not use
+  write-through.
+- **Authentication support.** s3proxy 4.0.0 supports account keys and Entra ID
+  through `DefaultAzureCredential`, which includes service principals and
+  managed identities. Releases before 4.0.0 default to an older backend that
+  supports account keys only.
+- **Archived blobs block the migration.** s3proxy cannot read blobs in the
+  Archive access tier. Rehydrate them before you migrate. See
+  [Rehydrate archived blobs before you migrate](#rehydrate-archived-blobs-before-you-migrate).
 
 ## FAQ
 
@@ -397,6 +548,16 @@ func main() {
 No. Azure Blob Storage is not S3-compatible. A Tigris shadow bucket needs an
 S3-compatible source. You must front Azure Blob Storage with an S3 shim such as
 s3proxy.
+
+### Why does `tigris buckets migrate` fail with "an internal error occurred, try again"?
+
+A blob in the Azure Archive access tier is a common cause. s3proxy cannot read
+archived blobs, and the error message does not name them as the cause. List the
+archived blobs in the container and rehydrate them, then run the drain again.
+See
+[Rehydrate archived blobs before you migrate](#rehydrate-archived-blobs-before-you-migrate).
+Each retry walks the full container again, so rehydrate all archived blobs
+before you retry.
 
 ### Does migration require downtime?
 

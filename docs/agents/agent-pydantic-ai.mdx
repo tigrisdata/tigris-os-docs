@@ -1,0 +1,124 @@
+---
+id: agent-pydantic-ai
+title: "Give PydanticAI Agents Object Storage"
+---
+
+# Give PydanticAI Agents Object Storage
+
+_[PydanticAI](https://ai.pydantic.dev) is a Python agent framework from the
+Pydantic team. It is a first-class MCP client, and Tigris ships an MCP server,
+so a PydanticAI agent gets bucket tools with no integration code: no SDK to
+wrap, no custom tools to write and maintain._
+
+## Why put your agent's files on Tigris
+
+- **Durable working storage.** Agents produce artifacts: reports, generated
+  files, intermediate state, memory. A bucket outlives the process, the
+  container, and the machine, so anything the agent writes survives restarts and
+  is visible to every other run.
+- **Runs anywhere, same bucket.** Agents deploy to serverless platforms,
+  laptops, and whichever cloud has capacity. Tigris has one global endpoint and
+  serves each reader from the nearest region, so the agent's storage follows it
+  without region configuration.
+- **Zero egress fees.** Agent workloads re-read their own state constantly. On
+  Tigris, reads from any cloud or region cost nothing in transfer.
+- **Shareable results.** The MCP server can create presigned links, so an agent
+  can hand a human a URL to the file it just produced.
+
+## Prerequisites
+
+Make sure you have the following:
+
+- Tigris **Access Key ID** and **Secret Access Key** (see the
+  [Access Key guide](/docs/iam/manage-access-key/#create-an-access-key))
+- A Tigris **bucket** for your agent to work in
+- **Node.js** (the Tigris MCP server runs via `npx`)
+- An AWS profile named `tigris` with your credentials and the Tigris endpoint,
+  as described in the
+  [AWS CLI configuration guide](/docs/sdks/s3/aws-cli/#setting-the-endpoint-url-in-credentials-file)
+
+Install PydanticAI with MCP support:
+
+```text
+pip install "pydantic-ai-slim[mcp]"
+```
+
+## Connect the agent to Tigris
+
+Register the [Tigris MCP server](/docs/mcp/local/) as a toolset. PydanticAI
+starts the server as a subprocess and exposes its bucket and object tools to the
+model:
+
+```python
+import asyncio
+
+from fastmcp.client.transports import StdioTransport
+from pydantic_ai import Agent
+from pydantic_ai.mcp import MCPToolset
+
+tigris = MCPToolset(
+    StdioTransport(
+        "npx",
+        ["-y", "@tigrisdata/tigris-mcp-server", "run"],
+        env={"AWS_PROFILE": "tigris", "USE_AWS_PROFILES": "true"},
+    )
+)
+
+agent = Agent(
+    "openai:gpt-5.2",
+    toolsets=[tigris],
+    instructions=(
+        "You have Tigris object storage tools. "
+        "Store everything you produce in the bucket 'my-agent-bucket'."
+    ),
+)
+
+
+async def main():
+    async with agent:
+        result = await agent.run(
+            "Write a file notes/hello.txt containing 'Hello from PydanticAI' "
+            "to the bucket, then give me a share link for it."
+        )
+    print(result.output)
+
+
+asyncio.run(main())
+```
+
+The agent now decides when to call the storage tools. In this run it will create
+the object, then return a presigned URL you can open in a browser.
+
+The MCP server's tools cover bucket management (list, create, delete), object
+operations (upload, download, list, delete, create folders and text files), and
+presigned share links. The full list is in the
+[Tigris MCP server docs](/docs/mcp/local/).
+
+## Verify
+
+Check that the object landed, from the agent's output URL or with the AWS CLI:
+
+```bash
+aws s3 ls s3://my-agent-bucket/notes/ --profile tigris
+```
+
+You should see `hello.txt`. If the agent reports it cannot access storage,
+confirm the `tigris` AWS profile exists and that
+`npx -y @tigrisdata/tigris-mcp-server run` starts without errors on its own.
+
+## Notes for production agents
+
+- **Scope the credentials.** Give the agent an access key
+  [scoped to its bucket](/docs/iam/manage-access-key/), not your admin key. The
+  agent can only touch what the key can.
+- **One bucket per agent (or per tenant).** Buckets are cheap and the blast
+  radius of a confused agent is the bucket its key can reach.
+- **Remote MCP option.** If your environment can complete an OAuth flow, the
+  [remote MCP server](/docs/mcp/remote/) at `https://mcp.storage.dev/mcp` works
+  without Node.js: pass the URL directly to `MCPToolset`. For unattended,
+  server-side agents, prefer the stdio setup above with access keys, since it
+  needs no interactive authentication.
+- **Beyond MCP.** If you want typed, code-defined tools instead of MCP (narrower
+  surface, validated arguments), the same operations are a few lines of `boto3`
+  against `https://t3.storage.dev` registered as regular PydanticAI tools. MCP
+  is the zero-code path; native tools are the locked-down path.

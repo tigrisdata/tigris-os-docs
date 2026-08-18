@@ -250,7 +250,7 @@ paths:
       description: |
         Lists buckets that were deleted while soft-delete was enabled on them. A bucket stays here,
         and keeps counting toward storage usage, until it is restored or permanently deleted.
-        See https://www.tigrisdata.com/docs/soft-delete/.
+        See https://www.tigrisdata.com/docs/buckets/soft-delete/.
       operationId: Tigris_ListDeletedBuckets
       parameters:
         - $ref: "#/components/parameters/provider_id"
@@ -312,7 +312,7 @@ paths:
       description: |
         Permanently deletes a soft-deleted bucket along with everything retained with it. 
         This cannot be undone. This is only applicable to soft deleted buckets. 
-        See https://www.tigrisdata.com/docs/soft-delete/.
+        See https://www.tigrisdata.com/docs/buckets/soft-delete/.
       operationId: Tigris_PurgeBucket
       parameters:
         - $ref: "#/components/parameters/provider_id"
@@ -340,7 +340,7 @@ paths:
       description: |
         Makes a soft-deleted bucket usable again, along with the objects retained with it.
         Once a bucket has been permanently deleted there is nothing left to restore and
-        the call returns 404. See https://www.tigrisdata.com/docs/soft-delete/.
+        the call returns 404. See https://www.tigrisdata.com/docs/buckets/soft-delete/.
       operationId: Tigris_RestoreBucket
       parameters:
         - $ref: "#/components/parameters/provider_id"
@@ -1510,7 +1510,7 @@ components:
       description: |
         Retains deleted objects for a retention window instead of removing them immediately. A bucket
         deleted while this is enabled also stays recoverable, until it is restored or permanently deleted from deleted-buckets.
-        See https://www.tigrisdata.com/docs/soft-delete/.
+        See https://www.tigrisdata.com/docs/buckets/soft-delete/.
       required:
         - enabled
       properties:

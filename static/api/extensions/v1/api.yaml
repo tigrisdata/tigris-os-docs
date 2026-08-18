@@ -213,7 +213,7 @@ paths:
         - buckets
       summary: List all buckets for an organization
       description: |
-        Lists all the buckets provisioned in the organization account.
+        Lists the active buckets provisioned in this organization account.
       operationId: Tigris_ListBuckets
       parameters:
         - $ref: "#/components/parameters/provider_id"
@@ -242,6 +242,124 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GenericError"
+  /v1/providers/{provider_id}/orgs/{org_id}/deleted-buckets:
+    get:
+      tags:
+        - buckets
+      summary: List soft-deleted buckets for an organization
+      description: |
+        Lists buckets that were deleted while soft-delete was enabled on them. A bucket stays here,
+        and keeps counting toward storage usage, until it is restored or permanently deleted.
+        See https://www.tigrisdata.com/docs/soft-delete/.
+      operationId: Tigris_ListDeletedBuckets
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - name: limit
+          in: query
+          description:
+            Maximum number of buckets to return. Defaults to 500, max 5000.
+          schema:
+            type: integer
+        - name: continuation_token
+          in: query
+          description: Token from previous response to fetch next page
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListBucketsResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
+  /v1/providers/{provider_id}/orgs/{org_id}/deleted-buckets/{bucket_name}:
+    get:
+      tags:
+        - buckets
+      summary: Get a soft-deleted bucket
+      description: |
+        Retrieve a soft deleted bucket
+      operationId: Tigris_GetDeletedBucket
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/bucket_name"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetBucketResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+    delete:
+      tags:
+        - buckets
+      summary: Permanently delete a soft-deleted bucket
+      description: |
+        Permanently deletes a soft-deleted bucket along with everything retained with it. 
+        This cannot be undone. This is only applicable to soft deleted buckets. 
+        See https://www.tigrisdata.com/docs/soft-delete/.
+      operationId: Tigris_PurgeBucket
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/bucket_name"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PurgeBucketResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
+  /v1/providers/{provider_id}/orgs/{org_id}/deleted-buckets/{bucket_name}/restore:
+    post:
+      tags:
+        - buckets
+      summary: Restore a soft-deleted bucket
+      description: |
+        Makes a soft-deleted bucket usable again, along with the objects retained with it.
+        Once a bucket has been permanently deleted there is nothing left to restore and
+        the call returns 404. See https://www.tigrisdata.com/docs/soft-delete/.
+      operationId: Tigris_RestoreBucket
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/bucket_name"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestoreBucketResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
   /v1/providers/{provider_id}/orgs/{org_id}/buckets/{bucket_name}/domain:
     post:
       tags:
@@ -437,6 +555,89 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DeleteLifecycleRulesResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
+  /v1/providers/{provider_id}/orgs/{org_id}/buckets/{bucket_name}/soft-delete:
+    put:
+      tags:
+        - buckets
+      summary: Set the soft-delete configuration for a bucket
+      description: |
+        Replaces the bucket's soft-delete configuration. The request describes the complete desired
+        state: omitting `retention_days` while enabling sets it to the default rather than preserving
+        the current value.
+      operationId: Tigris_SetSoftDelete
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/bucket_name"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SoftDelete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SetSoftDeleteResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+    get:
+      tags:
+        - buckets
+      summary: Get the soft-delete configuration for a bucket
+      description: |
+        Returns the bucket's current soft-delete configuration.
+      operationId: Tigris_GetSoftDelete
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/bucket_name"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetSoftDeleteResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+    delete:
+      tags:
+        - buckets
+      summary: Disable soft-delete on a bucket
+      description: |
+        Turns off soft-delete. Objects deleted from this point on are removed immediately. Objects
+        already retained become eligible for cleanup. Equivalent to a PUT with `enabled` set to false.
+      operationId: Tigris_DeleteSoftDelete
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+        - $ref: "#/components/parameters/bucket_name"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteSoftDeleteResponse"
         default:
           description: Unexpected error
           content:
@@ -1236,6 +1437,8 @@ components:
           $ref: "#/components/schemas/ObjectNotifications"
         lifecycle_rules:
           $ref: "#/components/schemas/LifecycleRules"
+        soft_delete:
+          $ref: "#/components/schemas/SoftDelete"
     ObjectNotifications:
       type: object
       description: |
@@ -1301,6 +1504,33 @@ components:
           type: string
           description: Bearer token for authorization
           format: password
+    SoftDelete:
+      type: object
+      additionalProperties: false
+      description: |
+        Retains deleted objects for a retention window instead of removing them immediately. A bucket
+        deleted while this is enabled also stays recoverable, until it is restored or permanently deleted from deleted-buckets.
+        See https://www.tigrisdata.com/docs/soft-delete/.
+      required:
+        - enabled
+      properties:
+        enabled:
+          type: boolean
+          description: If set to true, soft-delete is enabled on the bucket.
+        retention_days:
+          type: integer
+          format: int32
+          description:
+            Days deleted objects are retained, between 7 and 90. Defaults to 7.
+    SetSoftDeleteResponse:
+      type: object
+    GetSoftDeleteResponse:
+      type: object
+      properties:
+        soft_delete:
+          $ref: "#/components/schemas/SoftDelete"
+    DeleteSoftDeleteResponse:
+      type: object
     LifecycleRules:
       type: object
       description: |
@@ -1351,8 +1581,7 @@ components:
         id:
           type: string
           description: |
-            Unique identifier for the rule (max 255 chars). Use a descriptive name like `archive-old-logs` or `expire-temp-uploads`.
-          maxLength: 255
+            Unique identifier for the rule (max 36 chars). Use a descriptive name like `archive-old-logs` or `expire-temp-uploads`.
         enabled:
           type: boolean
           description: |
@@ -1466,9 +1695,15 @@ components:
           $ref: "#/components/schemas/ObjectNotifications"
         regions:
           $ref: "#/components/schemas/Regions"
+        storage_class:
+          $ref: "#/components/schemas/StorageClass"
     UpdateBucketResponse:
       type: object
     DeleteBucketResponse:
+      type: object
+    RestoreBucketResponse:
+      type: object
+    PurgeBucketResponse:
       type: object
     GetBucketResponse:
       type: object
@@ -1803,6 +2038,14 @@ components:
           $ref: "#/components/schemas/ObjectNotifications"
         lifecycle_rules:
           $ref: "#/components/schemas/LifecycleRules"
+        soft_delete:
+          $ref: "#/components/schemas/SoftDelete"
+        deleted_at:
+          type: string
+          format: date-time
+          description:
+            When the bucket was soft-deleted. Only set on buckets returned from
+            deleted-buckets.
     GetUsageResponse:
       type: object
       properties:
@@ -1875,7 +2118,9 @@ components:
       properties:
         name:
           type: string
-          description: Name of the access key
+          description:
+            Name of the access key. 1-128 characters; only alphanumeric and
+            +=,.@_- characters are allowed.
         user_id:
           type: string
           description: ID of the user for whom the access key is being created
@@ -1885,6 +2130,9 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/BucketAccess"
+          description: |
+            Bucket roles to assign to the new key. Omit to create a key with no
+            bucket roles.
         attach_policies:
           type: array
           items:
@@ -1973,6 +2221,28 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/BucketAccess"
+          description: |
+            Replaces the key's bucket roles. Omitting the field or sending an
+            empty array leaves existing roles unchanged. Cannot be combined with
+            `remove_buckets_roles`; an empty array still counts as providing
+            this field.
+        remove_buckets_roles:
+          type: array
+          items:
+            $ref: "#/components/schemas/BucketAccess"
+          description: |
+            Bucket roles to remove. Each entry must match an existing role on
+            both `bucket_name` and `role`. Entries that match no existing role
+            are ignored. Removing every role is allowed. Cannot be combined with
+            `buckets_roles`.
+
+            To revoke org-wide admin, remove the wildcard role:
+            ```
+            {
+              "bucket_name": "*",
+              "role": "Admin"
+            }
+            ```
         add_policies:
           type: array
           items:
@@ -2069,6 +2339,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/BucketAccess"
+          description: |
+            Bucket roles currently assigned to the key.
     DeleteAccessKeyRequest:
       type: object
       additionalProperties: false
@@ -2213,14 +2485,13 @@ components:
           type: string
           description: |
             Name of the policy. Must be unique within the organization.
-            Only alphanumeric characters and `+=,.@_-` are allowed.
-          maxLength: 128
+            1-128 characters; only alphanumeric characters and `+=,.@_-` are
+            allowed.
         document:
           $ref: "#/components/schemas/PolicyDocument"
         description:
           type: string
-          description: A description for the policy
-          maxLength: 1000
+          description: A description for the policy. Max 1000 characters.
     UpdatePolicyRequest:
       type: object
       additionalProperties: false
@@ -2231,8 +2502,7 @@ components:
           $ref: "#/components/schemas/PolicyDocument"
         description:
           type: string
-          description: A description for the policy
-          maxLength: 1000
+          description: A description for the policy. Max 1000 characters.
     PolicyDocument:
       type: object
       description: |

@@ -132,6 +132,23 @@ rate(tag_auth_failures_total[5m])
 
 Spikes indicate credential misconfiguration or unauthorized access attempts.
 
+**Unreclaimed cache disk:**
+
+```promql
+kubelet_volume_stats_used_bytes{persistentvolumeclaim="cache-data-tag-0"}
+  - ocache_disk_usage_bytes
+```
+
+`ocache_disk_usage_bytes` counts the objects the cache considers live. The
+filesystem also holds space that overwritten, deleted, and expired objects left
+behind inside the cache's storage files. Background compaction reclaims that
+space, so the difference between the two should rise and fall. A difference that
+only rises means compaction is not keeping up, and the volume will eventually
+fill even though the cache is under its configured size limit.
+
+Compaction reclaims space in files that are at least two hours old, so expect no
+reclamation in the first two hours after a restart.
+
 ## Upgrading
 
 TAG's on-disk cache is persistent and compatible across versions. Upgrading TAG
@@ -218,6 +235,31 @@ determine whether latency comes from Tigris or TAG. High request coalescing
 (`tag_broadcast_shared_total`) is normal and reduces upstream load. High
 `tag_broadcast_slow_consumers_total` indicates clients are reading too slowly.
 In Kubernetes, also check disk I/O performance on the storage class.
+
+### Cache disk keeps growing
+
+The cache stores objects in large files. When an object is overwritten, deleted,
+or expires, its bytes stay in the file until background compaction rewrites the
+file without them. Disk usage that climbs while `ocache_disk_usage_bytes` stays
+flat means this space is not coming back.
+
+Check that compaction runs at all:
+
+```promql
+rate(ocache_segment_walks_total[10m])
+```
+
+A rate of zero on a node older than two hours means compaction is not examining
+files. Confirm the cache is not configured with recompaction disabled, and
+confirm the node has more than one storage file.
+
+If compaction runs but reclaims nothing, check whether
+`TAG_CACHE_COMPACTION_BPS` is set so low that compaction cannot keep up with the
+rate at which objects are replaced. One node at 32 MiB/s rewrites about 2.7 TB
+per day.
+
+TAG versions before v1.17.7 could not reclaim space in files written before the
+process last restarted. Upgrade first if you see this on an older version.
 
 ### Debug mode
 

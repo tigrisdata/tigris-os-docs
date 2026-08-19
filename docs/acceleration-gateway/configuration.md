@@ -24,6 +24,7 @@ variables. Environment variables take precedence over file configuration.
 | `TAG_CACHE_DISK_PATH`             | Path to cache data directory                                                                                          | `/var/tmp/tag`           |
 | `TAG_CACHE_MAX_DISK_USAGE`        | Max disk usage in bytes (0 = unlimited)                                                                               | `0`                      |
 | `TAG_CACHE_EVICTION_POLICY`       | Eviction order when the disk cap is hit: `lru` or `fifo` (oldest-written first)                                       | `lru`                    |
+| `TAG_CACHE_COMPACTION_BPS`        | Read budget in bytes/second for background compaction of the cache's on-disk storage. `0` leaves it unthrottled       | `0`                      |
 | `TAG_CACHE_TTL`                   | Default TTL for cached objects (Go duration, e.g. `12h`, `30m`)                                                       | `24h`                    |
 | `TAG_CACHE_DISABLED`              | Disable caching (`true` or `1`)                                                                                       | `false`                  |
 | `TAG_CACHE_WARM_ON_WRITE`         | Warm the cache after a successful write via a background fetch (`true`/`false`)                                       | `false`                  |
@@ -138,6 +139,15 @@ cache:
   # cache is never evicted and this setting has no effect.
   # Default: lru
   eviction_policy: lru
+
+  # Read budget in bytes/second for background compaction, which consolidates
+  # cached objects into larger files and reclaims the space left by objects that
+  # were overwritten, deleted, or expired. Unthrottled compaction can saturate a
+  # throughput-capped cloud volume and stall reads. Set this to a small fraction
+  # of the volume's throughput limit, for example 33554432 (32 MiB/s) on a volume
+  # capped at 240 MB/s. Populate writes are never throttled.
+  # Default: 0 (unthrottled)
+  compaction_bytes_per_second: 0
 
   # Warm the cache after a successful write (PutObject / CompleteMultipartUpload /
   # CopyObject) by triggering a background full-object fetch, so a read soon after a

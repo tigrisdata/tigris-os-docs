@@ -138,6 +138,38 @@ logical size) and `ocache_segment_size_bytes` (physical on-disk segment bytes)
 directly; `tag_cache_size_bytes` is the stable, TAG-owned name for the logical
 size.
 
+Logical size is smaller than the space the cache occupies on disk. Objects that
+are overwritten, deleted, or expired leave their bytes behind inside the storage
+files until background compaction rewrites those files. To see whether that
+space is being reclaimed, compare the filesystem usage against this gauge, and
+watch the compaction metrics below.
+
+### ocache_segment_walks_total
+
+**Type:** Counter — storage files examined to determine how much of each one is
+still in use. Compaction uses the result to decide what to rewrite.
+
+```promql
+# Examination rate
+rate(ocache_segment_walks_total[10m])
+```
+
+Zero on a node that has been running for more than two hours suggests compaction
+is disabled.
+
+### ocache_recompaction_segments_total
+
+**Type:** Counter — storage files rewritten to reclaim space, with
+`ocache_recompaction_bytes_freed_total` reporting the bytes recovered.
+
+```promql
+# Space reclaimed per hour
+increase(ocache_recompaction_bytes_freed_total[1h])
+```
+
+If disk usage grows while this counter stays flat, space is not being reclaimed.
+See the deployment guide for the alert to configure.
+
 ## Broadcast metrics
 
 ### tag_broadcast_shared_total

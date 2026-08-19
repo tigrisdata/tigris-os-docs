@@ -135,9 +135,13 @@ Spikes indicate credential misconfiguration or unauthorized access attempts.
 **Unreclaimed cache disk:**
 
 ```promql
-kubelet_volume_stats_used_bytes{persistentvolumeclaim="cache-data-tag-0"}
-  - ocache_disk_usage_bytes
+sum(kubelet_volume_stats_used_bytes{persistentvolumeclaim=~"cache-data-tag-.*"})
+  - sum(ocache_disk_usage_bytes{type="total"})
 ```
+
+The two metrics come from different exporters and carry different labels, so
+each side must be aggregated. Without `sum()` the subtraction matches no series
+and returns nothing, which makes the alert silently useless.
 
 `ocache_disk_usage_bytes` counts the objects the cache considers live. The
 filesystem also holds space that overwritten, deleted, and expired objects left

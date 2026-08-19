@@ -551,7 +551,7 @@ const sidebars = {
     {
       type: "category",
       label: "Product",
-      collapsed: true,
+      collapsed: false,
       items: [
         {
           type: "category",

@@ -79,7 +79,7 @@ specific release by setting `TAG_VERSION`:
 ```bash
 AWS_ACCESS_KEY_ID=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_key
-TAG_VERSION=v1.17.0
+TAG_VERSION=v1.17.7
 TAG_LOG_LEVEL=info
 ```
 

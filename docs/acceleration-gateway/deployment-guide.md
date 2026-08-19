@@ -135,13 +135,16 @@ Spikes indicate credential misconfiguration or unauthorized access attempts.
 **Unreclaimed cache disk:**
 
 ```promql
-sum(kubelet_volume_stats_used_bytes{persistentvolumeclaim=~"cache-data-tag-.*"})
-  - sum(ocache_disk_usage_bytes{type="total"})
+sum(kubelet_volume_stats_used_bytes{namespace="tag", persistentvolumeclaim=~"cache-data-tag-.*"})
+  - sum(ocache_disk_usage_bytes{namespace="tag", type="total"})
 ```
 
 The two metrics come from different exporters and carry different labels, so
-each side must be aggregated. Without `sum()` the subtraction matches no series
-and returns nothing, which makes the alert silently useless.
+each side must be aggregated, and both sides must be scoped to the same
+deployment. Without `sum()` the subtraction matches no series and returns
+nothing. Without the matching `namespace` selector on both sides, a Prometheus
+that scrapes more than one deployment compares one deployment's volumes against
+every deployment's cache, which can report a negative or understated gap.
 
 `ocache_disk_usage_bytes` counts the objects the cache considers live. The
 filesystem also holds space that overwritten, deleted, and expired objects left

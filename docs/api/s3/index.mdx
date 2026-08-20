@@ -84,7 +84,7 @@ The complete list of S3 APIs is in the
 
 | Operation                          | Tigris                                                                                                                   | R2  | GCS                                                                                                                            |
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | --- | ------------------------------------------------------------------------------------------------------------------------------ |
-| CreateBucket                       | ✅                                                                                                                       | ✅  | ✅                                                                                                                             |
+| CreateBucket                       | ✅ [6](#notes)                                                                                                           | ✅  | ✅                                                                                                                             |
 | DeleteBucket                       | ✅                                                                                                                       | ✅  | ✅                                                                                                                             |
 | DeleteBucketCors                   | ✅                                                                                                                       | ✅  | ❌                                                                                                                             |
 | DeleteBucketEncryption             | <abbr title="Tigris encrypts all data at rest automatically — managed-key encryption is always on">⚠️</abbr> [1](#notes) | ✅  | ❌                                                                                                                             |
@@ -143,6 +143,11 @@ The complete list of S3 APIs is in the
    S3-style ACL XML is accepted but behavior differs from AWS S3.
 5. <span id="note-5"></span> **GCS versioning**: GCS maps versioning to its own
    generation number system, which differs from S3 version IDs.
+6. <span id="note-6"></span> **Bucket location**: `CreateBucket` accepts a
+   `LocationConstraint` that names one Tigris region (`iad`), two regions
+   separated by a comma (`iad,sjc`), or one geography (`usa`, `eur`). Omit the
+   value or use `auto` for a global bucket. See [Creating a bucket in a specific
+   location](/docs/buckets/create-bucket/#creating-a-bucket-in-a-specific-location).
 
 ## Presigned URLs
 

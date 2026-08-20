@@ -19,6 +19,10 @@ location type controls where your data is stored and how it is replicated across
 regions. For more information on location types, please see the bucket locations
 documentation: [Bucket Locations](/docs/buckets/locations/).
 
+The default location type is global. To select a different location type with
+the S3 API, see
+[Creating a bucket in a specific location](#creating-a-bucket-in-a-specific-location).
+
 ## Bucket tier
 
 When you create a bucket, you can set the default object tier for all objects
@@ -62,6 +66,48 @@ $ aws s3api --endpoint-url https://t3.storage.dev create-bucket --bucket foo-buc
     "Location": "/foo-bucket"
 }
 ```
+
+## Creating a bucket in a specific location
+
+To select a location type, set `LocationConstraint` in the create bucket
+request. The value selects the location type:
+
+| Location type | `LocationConstraint` value         | Example   |
+| ------------- | ---------------------------------- | --------- |
+| Global        | Omit the value, or use `auto`      | `auto`    |
+| Single-region | One region code                    | `iad`     |
+| Dual-region   | Two region codes, separated by `,` | `iad,sjc` |
+| Multi-region  | One geography name: `usa` or `eur` | `usa`     |
+
+The region codes are in the
+[Regions Reference](/docs/concepts/regions.md#available-regions).
+
+To create a single-region bucket in Ashburn, Virginia:
+
+```bash
+aws s3api --endpoint-url https://t3.storage.dev create-bucket \
+  --bucket foo-bucket \
+  --create-bucket-configuration '{"LocationConstraint":"iad"}'
+```
+
+For a different location type, replace the value with `iad,sjc` or `usa`. Use
+the JSON form shown above: the shorthand form of `--create-bucket-configuration`
+splits the value on each comma.
+
+Write the value in lower case, with no space after a comma, and do not repeat a
+region. Tigris rejects any other value with HTTP 400 `InvalidArgument`.
+
+:::info
+
+Some S3 clients put their configured region into `LocationConstraint`
+automatically. Set the client region to `auto` so that it does not conflict with
+the bucket location. See [Regions](/docs/concepts/regions.md).
+
+:::
+
+If your SDK cannot set `LocationConstraint`, send the same value in the
+`X-Tigris-Regions` header. The header takes precedence over
+`LocationConstraint`.
 
 ## Creating a bucket using flyctl
 

@@ -9,12 +9,16 @@ model** for all objects in that bucket.
 
 Tigris supports four bucket location types:
 
-| Location Type                   | Description                                               |
-| ------------------------------- | --------------------------------------------------------- |
-| [Global](#global)               | Data distributed globally (default)                       |
-| [Multi-region](#multi-region)   | Highest availability across regions in a chosen geography |
-| [Dual-region](#dual-region)     | High availability across specific regions of your choice  |
-| [Single-region](#single-region) | Data redundancy across availability zones in one region   |
+| Location Type                   | Description                                               | `LocationConstraint` |
+| ------------------------------- | --------------------------------------------------------- | -------------------- |
+| [Global](#global)               | Data distributed globally (default)                       | Omit, or `auto`      |
+| [Multi-region](#multi-region)   | Highest availability across regions in a chosen geography | `usa` or `eur`       |
+| [Dual-region](#dual-region)     | High availability across specific regions of your choice  | `iad,sjc`            |
+| [Single-region](#single-region) | Data redundancy across availability zones in one region   | `iad`                |
+
+You select the location type when you create the bucket. To set it with the S3
+API, see
+[Creating a bucket in a specific location](/docs/buckets/create-bucket/#creating-a-bucket-in-a-specific-location).
 
 ## Location Types
 
@@ -46,7 +50,8 @@ any use case where you want zero-configuration global performance.
 :::info
 
 Global is the default location type. If you create a bucket without specifying a
-location type, it will be Global.
+location type, it will be Global. `GetBucketLocation` returns `global` for these
+buckets.
 
 :::
 
@@ -66,10 +71,10 @@ within that geography where data is stored.
 
 **Supported geographies:**
 
-| Geography | Candidate Regions                                  |
-| --------- | -------------------------------------------------- |
-| USA       | `sjc` (San Jose), `ord` (Chicago), `iad` (Ashburn) |
-| EUR       | `ams` (Amsterdam), `fra` (Frankfurt)               |
+| Geography | `LocationConstraint` | Candidate Regions                                  |
+| --------- | -------------------- | -------------------------------------------------- |
+| USA       | `usa`                | `sjc` (San Jose), `ord` (Chicago), `iad` (Ashburn) |
+| EUR       | `eur`                | `ams` (Amsterdam), `fra` (Frankfurt)               |
 
 **Best for:** Mission-critical data requiring the highest availability,
 enterprise workloads where regional failures cannot cause downtime, and
@@ -88,7 +93,8 @@ over exactly which regions store your data.
 | **Consistency**    | Strong consistency for requests in the same region. Eventual consistency globally. |
 | **Replication**    | Data is replicated between the chosen regions                                      |
 
-**Region pairing:** You can pair any two Tigris regions. Common examples:
+**Region pairing:** You can pair any two Tigris regions. To select a pair, give
+the two region codes separated by a comma, such as `fra,ams`. Common examples:
 
 | Use Case                          | Region Pair   |
 | --------------------------------- | ------------- |
@@ -116,8 +122,8 @@ maintaining durability within the region.
 | **Consistency**    | Strong consistency globally                       |
 | **Replication**    | Redundancy within the region's availability zones |
 
-You can find the list of available regions in the
-[Regions Reference](/docs/concepts/regions.md).
+To select a single region, give its region code, such as `iad`. You can find the
+list of available regions in the [Regions Reference](/docs/concepts/regions.md).
 
 **Best for:** Strict data residency and sovereignty requirements, cost
 optimization for region-local workloads, and applications where compute and

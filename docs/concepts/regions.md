@@ -5,6 +5,11 @@ through a single endpoint — `t3.storage.dev` — which handles routing
 automatically. You never need to specify a region in your SDK or CLI
 configuration; set the region to `auto` and Tigris takes care of the rest.
 
+The region in your client configuration does not select where Tigris stores your
+data. To store data in specific regions, set the bucket location when you create
+the bucket. See
+[Creating a bucket in a specific location](/docs/buckets/create-bucket/#creating-a-bucket-in-a-specific-location).
+
 ## Bucket Locations
 
 A bucket's location type controls how your data is distributed across regions.

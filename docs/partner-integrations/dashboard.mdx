@@ -45,13 +45,18 @@ your provider and their pending invitations.
 - **Invite members** by email, up to 10 at a time (paste a comma- or
   whitespace-separated list to add several at once). Each invitee receives an
   email with a link to accept and join.
-- **All members are administrators.** Everyone you invite gets full access to
-  the provider: they can manage organizations, buckets, keys, billing, and the
-  team itself. The `Admin`/`Member` roles described in
-  [Access control](/docs/partner-integrations/access-control) apply to users
-  _within your customer organizations_, not to your provider team.
 - **Revoke a pending invitation** any time before it is accepted.
 - **Remove a member** to take away their portal access immediately.
+
+:::warning All members are administrators
+
+Everyone you invite gets full access to the provider: they can manage
+organizations, buckets, keys, billing, and the team itself. Only invite people
+who should have that level of access. The `Admin`/`Member` roles described in
+[Access control](/docs/partner-integrations/access-control) apply to users
+_within your customer organizations_, not to your provider team.
+
+:::
 
 An email can only be invited once: if the address already belongs to a member or
 has a pending invitation, the invite is rejected. Inviting, revoking, and

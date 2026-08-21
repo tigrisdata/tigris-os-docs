@@ -36,6 +36,33 @@ Use the dashboard to create and manage organizations for your customers.
   />
 </div>
 
+## Team members
+
+Every provider has its own team of portal users, separate from the customer
+organizations you create. The **Members** page lists everyone with access to
+your provider and their pending invitations.
+
+- **Invite members** by email, up to 10 at a time (paste a comma- or
+  whitespace-separated list to add several at once). Each invitee receives an
+  email with a link to accept and join.
+- **Revoke a pending invitation** any time before it is accepted.
+- **Remove a member** to take away their portal access immediately.
+
+:::warning All members are administrators
+
+Everyone you invite gets full access to the provider: they can manage
+organizations, buckets, keys, billing, and the team itself. Only invite people
+who should have that level of access. The `Admin`/`Member` roles described in
+[Access control](/docs/partner-integrations/access-control) apply to users
+_within your customer organizations_, not to your provider team.
+
+:::
+
+An email can only be invited once: if the address already belongs to a member or
+has a pending invitation, the invite is rejected. Inviting, revoking, and
+removing are administrator actions -- since every member is an administrator,
+any member of your team can manage the team.
+
 ## Buckets
 
 Buckets are created within an organization. From the dashboard you can:

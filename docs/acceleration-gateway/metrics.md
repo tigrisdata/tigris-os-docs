@@ -170,6 +170,75 @@ increase(ocache_recompaction_bytes_freed_total[1h])
 If disk usage grows while this counter stays flat, space is not being reclaimed.
 See the deployment guide for the alert to configure.
 
+## Block cache metrics
+
+Block-aligned caching is on by default, so these apply to most deployments. They
+describe cache behaviour at block granularity, which is what a range read
+actually touches.
+
+### tag_cache_block_hits_total / tag_cache_block_misses_total
+
+**Type:** Counters — blocks served from cache, and blocks that had to be
+fetched. Together they give the ratio that matters for range-read workloads.
+
+```promql
+# Block cache hit ratio
+sum(rate(tag_cache_block_hits_total[30m]))
+/
+(sum(rate(tag_cache_block_hits_total[30m])) + sum(rate(tag_cache_block_misses_total[30m])))
+```
+
+A hit ratio that will not rise despite a warm cache usually means `block_size`
+does not match the workload's read granularity. See
+[Configuration](./configuration.md).
+
+### tag_cache_block_bytes_populated_total
+
+**Type:** Counter — bytes fetched from upstream into blocks. Divide by bytes
+served to clients to measure read amplification:
+
+```promql
+# Upstream read amplification. Aim for <= 1.
+sum(rate(tag_cache_block_bytes_populated_total[5m]))
+/
+sum(rate(tag_bytes_transferred_total{direction="out"}[5m]))
+```
+
+Well above 1 means the block size is too large for the read pattern — every miss
+pulls a full block to serve a small range. Do **not** substitute
+`tag_bytes_transferred_total{direction="in"}` here: that counts client upload
+bodies, not upstream fetches.
+
+### tag_cache_block_prefetched_total
+
+**Type:** Counter, labelled by `trigger` — blocks fetched speculatively rather
+than because a client asked for them.
+
+```promql
+# Speculative fetching by trigger
+sum by (trigger) (rate(tag_cache_block_prefetched_total[30m]))
+```
+
+Judge this against the block hit ratio above, not on its own. Volume rising
+without the hit ratio rising means the speculation is not landing where reads
+go.
+
+### tag_cache_parquet_footer_bytes
+
+**Type:** Histogram — the size of parquet metadata footers observed. Recorded
+for every parquet object whose trailer is read, including ones that are not
+prefetched, so it describes the whole population.
+
+```promql
+# Median footer size, in bytes.
+histogram_quantile(0.5, sum(rate(tag_cache_parquet_footer_bytes_bucket[1h])) by (le))
+```
+
+This is the measurement that tells you whether
+[Parquet optimization](./parquet-optimization.md) is worth enabling. Compare it
+against the tail block rather than the full `block_size` — the tail averages
+half a block, so `block_size / 2` is the practical yardstick.
+
 ## Broadcast metrics
 
 ### tag_broadcast_shared_total

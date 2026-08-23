@@ -675,11 +675,6 @@ const sidebars = {
               id: "acceleration-gateway/architecture",
             },
             {
-              type: "doc",
-              label: "Benchmarks",
-              id: "acceleration-gateway/benchmarks",
-            },
-            {
               type: "category",
               label: "Deployment",
               collapsible: true,
@@ -702,6 +697,34 @@ const sidebars = {
                   type: "doc",
                   label: "Kubernetes",
                   id: "acceleration-gateway/kubernetes",
+                },
+                {
+                  type: "doc",
+                  label: "TLS",
+                  id: "acceleration-gateway/tls",
+                },
+              ],
+            },
+            {
+              type: "category",
+              label: "Performance",
+              collapsible: true,
+              collapsed: true,
+              items: [
+                {
+                  type: "doc",
+                  label: "Benchmarks",
+                  id: "acceleration-gateway/benchmarks",
+                },
+                {
+                  type: "doc",
+                  label: "Cache Control",
+                  id: "acceleration-gateway/cache-control",
+                },
+                {
+                  type: "doc",
+                  label: "Parquet Optimization",
+                  id: "acceleration-gateway/parquet-optimization",
                 },
               ],
             },
@@ -728,23 +751,13 @@ const sidebars = {
                 },
                 {
                   type: "doc",
-                  label: "Cache Control",
-                  id: "acceleration-gateway/cache-control",
-                },
-                {
-                  type: "doc",
-                  label: "TLS",
-                  id: "acceleration-gateway/tls",
+                  label: "Metrics",
+                  id: "acceleration-gateway/metrics",
                 },
                 {
                   type: "doc",
                   label: "Security",
                   id: "acceleration-gateway/security",
-                },
-                {
-                  type: "doc",
-                  label: "Metrics",
-                  id: "acceleration-gateway/metrics",
                 },
               ],
             },

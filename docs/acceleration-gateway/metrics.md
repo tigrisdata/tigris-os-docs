@@ -230,12 +230,14 @@ for every parquet object whose trailer is read, including ones that are not
 prefetched, so it describes the whole population.
 
 ```promql
-# Median footer size. Compare against cache.block_size.
+# Median footer size, in bytes.
 histogram_quantile(0.5, sum(rate(tag_cache_parquet_footer_bytes_bucket[1h])) by (le))
 ```
 
 This is the measurement that tells you whether
-[Parquet optimization](./parquet-optimization.md) is worth enabling.
+[Parquet optimization](./parquet-optimization.md) is worth enabling. Compare it
+against the tail block rather than the full `block_size` — the tail averages
+half a block, so `block_size / 2` is the practical yardstick.
 
 ## Broadcast metrics
 

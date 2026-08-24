@@ -68,15 +68,41 @@ when soft delete is first enabled.
 
 Set the `X-Tigris-Soft-Delete` header on `CreateBucket` — use `true` for the
 default 7-day retention, or a number between `7` and `90` for a custom window.
+The Tigris SDKs take the retention window as an argument.
+
+<Tabs groupId="languages">
+<TabItem value="tigris-go" label="Go">
 
 ```go
-func createBucketWithSoftDelete(ctx context.Context, client *s3.Client, bucketName string) error {
-	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
-		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Soft-Delete", "30"))
-	})
-	return err
-}
+import (
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/tigrisdata/storage-go"
+)
+
+client, err := storage.New(ctx)
+
+_, err = client.CreateBucketWithSoftDelete(ctx, &storage.CreateBucketWithSoftDeleteInput{
+	CreateBucketInput: &s3.CreateBucketInput{Bucket: aws.String("my-bucket")},
+	RetentionDays:     30,
+})
 ```
+
+</TabItem>
+<TabItem value="ts" label="TypeScript">
+
+Soft delete goes on an existing bucket through `updateBucket`:
+
+```ts
+import { updateBucket } from "@tigrisdata/storage";
+
+await updateBucket("my-bucket", {
+  softDelete: { enabled: true, retentionDays: 30 },
+});
+```
+
+</TabItem>
+</Tabs>
 
 ## Viewing soft delete status on the buckets list
 
@@ -128,16 +154,6 @@ restored or permanently removed.
 
 A bucket can also be restored over the API — see
 [Restoring a whole bucket](#restoring-a-whole-bucket).
-
-Partners have HTTP endpoints for these operations:
-[list](/docs/partner-integrations/api/tigris-list-deleted-buckets),
-[get](/docs/partner-integrations/api/tigris-get-deleted-bucket),
-[restore](/docs/partner-integrations/api/tigris-restore-bucket), and
-[purge](/docs/partner-integrations/api/tigris-purge-bucket) a deleted bucket.
-The soft-delete configuration of a bucket has endpoints as well:
-[set](/docs/partner-integrations/api/tigris-set-soft-delete),
-[get](/docs/partner-integrations/api/tigris-get-soft-delete), and
-[disable](/docs/partner-integrations/api/tigris-delete-soft-delete).
 
 ## Deleting an object in a soft-delete-enabled bucket
 
@@ -216,6 +232,11 @@ Tigris header.
 
 Objects that you deleted before you enabled soft delete are not recoverable.
 
+The Go examples use [`storage-go`](https://github.com/tigrisdata/storage-go),
+which wraps each of these calls. The SDK for JavaScript covers soft delete on a
+bucket, not yet on an object, so send the requests below with the AWS SDK for
+JavaScript until it does.
+
 ### Listing the deleted objects in a bucket
 
 `ListObjectVersions` returns every deleted version of every key, each with the
@@ -232,77 +253,7 @@ X-Tigris-Soft-Delete: true
 `LastModified` on each entry is the time of the delete, not the time of the last
 write. A key deleted more than once has one entry for each delete, newest first.
 
-<Tabs groupId="languages">
-<TabItem value="python" label="Python">
-
-```python
-import boto3
-
-s3 = boto3.client("s3", endpoint_url="https://t3.storage.dev")
-
-def add_soft_delete(params, **kwargs):
-    params["headers"]["X-Tigris-Soft-Delete"] = "true"
-
-s3.meta.events.register("before-call.s3.ListObjectVersions", add_soft_delete)
-
-versions = s3.list_object_versions(Bucket="my-bucket", Prefix="contracts/")
-for version in versions.get("Versions", []):
-    print(version["Key"], version["VersionId"], version["Size"])
-```
-
-</TabItem>
-<TabItem value="go" label="Go">
-
-```go
-import (
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/aws/smithy-go/transport/http"
-)
-
-// listDeletedVersions returns every deleted version of every key under prefix,
-// each carrying the version id a restore takes.
-func listDeletedVersions(ctx context.Context, client *s3.Client, bucket, prefix string) (*s3.ListObjectVersionsOutput, error) {
-	return client.ListObjectVersions(ctx, &s3.ListObjectVersionsInput{
-		Bucket: aws.String(bucket),
-		Prefix: aws.String(prefix),
-	}, func(options *s3.Options) {
-		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Soft-Delete", "true"))
-	})
-}
-```
-
-</TabItem>
-<TabItem value="js" label="JavaScript">
-
-```js
-import { S3Client, ListObjectVersionsCommand } from "@aws-sdk/client-s3";
-
-const S3 = new S3Client({ region: "auto", endpoint: "https://t3.storage.dev" });
-
-// Attach the header to this command rather than to the client: middleware on
-// the client reaches every other command it sends, including ones in flight.
-const command = new ListObjectVersionsCommand({
-  Bucket: "my-bucket",
-  Prefix: "contracts/",
-});
-
-command.middlewareStack.add(
-  (next) => async (args) => {
-    args.request.headers["X-Tigris-Soft-Delete"] = "true";
-    return next(args);
-  },
-  { step: "build", name: "softDelete" },
-);
-
-// Deleted entries arrive in versions, never in deleteMarkers.
-const { Versions } = await S3.send(command);
-```
-
-</TabItem>
-<TabItem value="tigris-go" label="Tigris Go">
-
-[`storage-go`](https://github.com/tigrisdata/storage-go) wraps both listings, so
+[`storage-go`](https://github.com/tigrisdata/storage-go) wraps the listing, so
 there is no header to attach. It also reports `SoftDeleted`, which the AWS SDK
 has no field for.
 
@@ -312,27 +263,18 @@ import "github.com/tigrisdata/storage-go"
 client, err := storage.New(ctx)
 
 // Every deleted version of every key, newest delete first.
-deleted, err := client.ListSoftDeletedObjects(ctx, &storage.ListSoftDeletedObjectsInput{
-	Bucket: "my-bucket",
-	Prefix: "contracts/",
-})
+in := &storage.ListSoftDeletedObjectsInput{Bucket: "my-bucket", Prefix: "contracts/"}
+
+deleted, err := client.ListSoftDeletedObjects(ctx, in)
 for _, obj := range deleted.Objects {
 	// LastModified is the time of the delete. VersionID is what a restore takes.
 	fmt.Println(obj.Key, obj.VersionID, obj.Size, obj.SoftDeleted, obj.LastModified)
 }
 
-// Continue while deleted.IsTruncated is true.
-next := &storage.ListSoftDeletedObjectsInput{
-	Bucket:          "my-bucket",
-	Prefix:          "contracts/",
-	KeyMarker:       deleted.NextKeyMarker,
-	VersionIDMarker: deleted.NextVersionIDMarker,
-}
-_ = next
+// Carry the markers forward while deleted.IsTruncated is true.
+in.KeyMarker = deleted.NextKeyMarker
+in.VersionIDMarker = deleted.NextVersionIDMarker
 ```
-
-</TabItem>
-</Tabs>
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -393,63 +335,6 @@ all subsequent reads. The request body is ignored.
 `X-Tigris-Restore-Version` takes a `VersionId` from the versions listing.
 Without this header, Tigris restores the most recent deleted version of the key.
 
-<Tabs groupId="languages">
-<TabItem value="python" label="Python">
-
-```python
-def add_restore_headers(params, **kwargs):
-    params["headers"]["X-Tigris-Restore-Type"] = "soft-delete"
-    params["headers"]["X-Tigris-Restore-Version"] = "1755820800123456789"
-
-s3.meta.events.register("before-call.s3.RestoreObject", add_restore_headers)
-
-s3.restore_object(Bucket="my-bucket", Key="contracts/2026/q1.pdf")
-```
-
-</TabItem>
-<TabItem value="go" label="Go">
-
-```go
-func restoreDeleted(ctx context.Context, client *s3.Client, bucket, key, version string) error {
-	_, err := client.RestoreObject(ctx, &s3.RestoreObjectInput{
-		Bucket: aws.String(bucket),
-		Key:    aws.String(key),
-	}, func(options *s3.Options) {
-		options.APIOptions = append(options.APIOptions,
-			http.AddHeaderValue("X-Tigris-Restore-Type", "soft-delete"),
-			http.AddHeaderValue("X-Tigris-Restore-Version", version),
-		)
-	})
-	return err
-}
-```
-
-</TabItem>
-<TabItem value="js" label="JavaScript">
-
-```js
-import { RestoreObjectCommand } from "@aws-sdk/client-s3";
-
-const command = new RestoreObjectCommand({
-  Bucket: "my-bucket",
-  Key: "contracts/2026/q1.pdf",
-});
-
-command.middlewareStack.add(
-  (next) => async (args) => {
-    args.request.headers["X-Tigris-Restore-Type"] = "soft-delete";
-    args.request.headers["X-Tigris-Restore-Version"] = "1755820800123456789";
-    return next(args);
-  },
-  { step: "build", name: "restoreDeleted" },
-);
-
-await S3.send(command);
-```
-
-</TabItem>
-<TabItem value="tigris-go" label="Tigris Go">
-
 ```go
 // An empty VersionID restores the most recent deleted version of the key.
 _, err = client.RestoreSoftDeletedObject(ctx, &storage.RestoreSoftDeletedObjectInput{
@@ -457,15 +342,7 @@ _, err = client.RestoreSoftDeletedObject(ctx, &storage.RestoreSoftDeletedObjectI
 	Key:       "contracts/2026/q1.pdf",
 	VersionID: "1787441627070249004",
 })
-
-// Remove one version for good, ahead of its retention window. The version id
-// is required: without it the call would delete the live object instead.
-_, err = client.PermanentlyDeleteObject(ctx, "my-bucket",
-	"contracts/2026/q1.pdf", "1787441627070249004")
 ```
-
-</TabItem>
-</Tabs>
 
 A restore keeps the content, the ETag, the content type, the user metadata, and
 the storage class of the deleted object. It gives the object a new
@@ -595,6 +472,12 @@ A permanent delete cannot be undone. The object is not recoverable after this
 call.
 
 :::
+
+```go
+// The version id is required: without it the call would delete the live object.
+_, err = client.PermanentlyDeleteObject(ctx, "my-bucket",
+	"contracts/2026/q1.pdf", "1787441627070249004")
+```
 
 `versionId` names the version to remove, so it is required. A `DELETE` that
 carries the `X-Tigris-Soft-Delete` header without one is refused:

@@ -280,6 +280,8 @@ import { S3Client, ListObjectVersionsCommand } from "@aws-sdk/client-s3";
 
 const S3 = new S3Client({ region: "auto", endpoint: "https://t3.storage.dev" });
 
+// Scope the header to this one call: middleware left on the stack would attach
+// it to every later command on this client.
 S3.middlewareStack.add(
   (next) => async (args) => {
     args.request.headers["X-Tigris-Soft-Delete"] = "true";
@@ -288,10 +290,17 @@ S3.middlewareStack.add(
   { step: "build", name: "softDelete" },
 );
 
-// Deleted entries arrive in versions, never in deleteMarkers.
-const { Versions } = await S3.send(
-  new ListObjectVersionsCommand({ Bucket: "my-bucket", Prefix: "contracts/" }),
-);
+try {
+  // Deleted entries arrive in versions, never in deleteMarkers.
+  const { Versions } = await S3.send(
+    new ListObjectVersionsCommand({
+      Bucket: "my-bucket",
+      Prefix: "contracts/",
+    }),
+  );
+} finally {
+  S3.middlewareStack.remove("softDelete");
+}
 ```
 
 </TabItem>
@@ -434,12 +443,17 @@ S3.middlewareStack.add(
   { step: "build", name: "restoreDeleted" },
 );
 
-await S3.send(
-  new RestoreObjectCommand({
-    Bucket: "my-bucket",
-    Key: "contracts/2026/q1.pdf",
-  }),
-);
+try {
+  await S3.send(
+    new RestoreObjectCommand({
+      Bucket: "my-bucket",
+      Key: "contracts/2026/q1.pdf",
+    }),
+  );
+} finally {
+  // The version is pinned in the middleware, so remove it before the next call.
+  S3.middlewareStack.remove("restoreDeleted");
+}
 ```
 
 </TabItem>
@@ -466,8 +480,12 @@ A restore keeps the content, the ETag, the content type, the user metadata, and
 the storage class of the deleted object. It gives the object a new
 `Last-Modified`, which is the time of the restore.
 
-CAUTION: A restore replaces a live object at the same key. The replaced object
-becomes a new deleted version.
+:::warning
+
+A restore replaces a live object at the same key. The replaced object becomes a
+new deleted version.
+
+:::
 
 The deleted version stays in the deleted listing until its retention window
 ends, also after a restore. A second restore of the same version writes the same
@@ -580,8 +598,12 @@ X-Tigris-Soft-Delete: true
 
 The response is 204.
 
-CAUTION: A permanent delete cannot be undone. The object is not recoverable
-after this call.
+:::warning
+
+A permanent delete cannot be undone. The object is not recoverable after this
+call.
+
+:::
 
 `versionId` names the version to remove, so it is required. A `DELETE` that
 carries the `X-Tigris-Soft-Delete` header without one is refused:

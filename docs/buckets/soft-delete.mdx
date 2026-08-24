@@ -280,9 +280,14 @@ import { S3Client, ListObjectVersionsCommand } from "@aws-sdk/client-s3";
 
 const S3 = new S3Client({ region: "auto", endpoint: "https://t3.storage.dev" });
 
-// Scope the header to this one call: middleware left on the stack would attach
-// it to every later command on this client.
-S3.middlewareStack.add(
+// Attach the header to this command rather than to the client: middleware on
+// the client reaches every other command it sends, including ones in flight.
+const command = new ListObjectVersionsCommand({
+  Bucket: "my-bucket",
+  Prefix: "contracts/",
+});
+
+command.middlewareStack.add(
   (next) => async (args) => {
     args.request.headers["X-Tigris-Soft-Delete"] = "true";
     return next(args);
@@ -290,17 +295,8 @@ S3.middlewareStack.add(
   { step: "build", name: "softDelete" },
 );
 
-try {
-  // Deleted entries arrive in versions, never in deleteMarkers.
-  const { Versions } = await S3.send(
-    new ListObjectVersionsCommand({
-      Bucket: "my-bucket",
-      Prefix: "contracts/",
-    }),
-  );
-} finally {
-  S3.middlewareStack.remove("softDelete");
-}
+// Deleted entries arrive in versions, never in deleteMarkers.
+const { Versions } = await S3.send(command);
 ```
 
 </TabItem>
@@ -434,7 +430,12 @@ func restoreDeleted(ctx context.Context, client *s3.Client, bucket, key, version
 ```js
 import { RestoreObjectCommand } from "@aws-sdk/client-s3";
 
-S3.middlewareStack.add(
+const command = new RestoreObjectCommand({
+  Bucket: "my-bucket",
+  Key: "contracts/2026/q1.pdf",
+});
+
+command.middlewareStack.add(
   (next) => async (args) => {
     args.request.headers["X-Tigris-Restore-Type"] = "soft-delete";
     args.request.headers["X-Tigris-Restore-Version"] = "1755820800123456789";
@@ -443,17 +444,7 @@ S3.middlewareStack.add(
   { step: "build", name: "restoreDeleted" },
 );
 
-try {
-  await S3.send(
-    new RestoreObjectCommand({
-      Bucket: "my-bucket",
-      Key: "contracts/2026/q1.pdf",
-    }),
-  );
-} finally {
-  // The version is pinned in the middleware, so remove it before the next call.
-  S3.middlewareStack.remove("restoreDeleted");
-}
+await S3.send(command);
 ```
 
 </TabItem>

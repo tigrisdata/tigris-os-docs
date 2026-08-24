@@ -1,0 +1,638 @@
+# Soft Delete
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+Soft delete protects your bucket against accidental deletion. When soft delete
+is enabled, deleting an object does not immediately remove its data. Tigris
+keeps the deleted object for a configurable retention window during which you
+can list it, restore it, or permanently remove it. Once the retention window
+expires, Tigris cleans the data up automatically.
+
+The same retention policy also protects the bucket itself: deleting a bucket
+with soft delete enabled moves the bucket into a soft-deleted state instead of
+hard deleting it. A soft-deleted bucket can be restored back into an active
+bucket within the retention window, and is permanently removed once the
+retention window expires.
+
+## How soft delete works
+
+When soft delete is enabled on a bucket:
+
+- A delete on an object marks the object as soft-deleted instead of removing its
+  data. The object stops appearing in regular listings and reads, but its data
+  is preserved and still counts toward your bucket's object count and storage
+  usage until it is permanently removed.
+- Soft-deleted objects remain restorable for the retention window. You can list
+  them, restore them to a live state, or permanently delete them ahead of the
+  schedule.
+- Deleting a bucket with soft delete enabled moves the bucket itself into a
+  soft-deleted state. The bucket and its data stay recoverable for the retention
+  window.
+- After the retention window passes, Tigris permanently removes the soft-deleted
+  data and reclaims its storage.
+- Soft-deleted data continues to consume storage and is billed at the same rate
+  as live data until it is removed.
+
+At a glance, the lifecycle looks like this:
+
+```
+     DELETE        ──►   soft-deleted state   ──┬──►   permanently removed
+bucket or object         (recoverable)          │      (async, after retention)
+                                                │
+                              ◄─── restore ─────┘
+```
+
+Cleanup runs asynchronously, so data is removed shortly after the retention
+window passes.
+
+## Enabling soft delete on a bucket
+
+Soft delete is configured per bucket from the Tigris Dashboard.
+
+You can enable it when creating a bucket by toggling **Enable Soft Delete** in
+the Create Bucket dialog and choosing a retention window:
+
+![Enable soft delete during bucket creation](/img/soft-delete-create-bucket.png)
+
+For an existing bucket, open **Bucket Settings → Data Management** and toggle
+**Enable Soft Delete**:
+
+![Enable soft delete from bucket settings](/img/soft-delete-settings.png)
+
+The retention window controls how long deleted buckets and objects remain
+recoverable. It must be between **7 and 90 days**, and defaults to **7 days**
+when soft delete is first enabled.
+
+### Enabling soft delete via the S3 API
+
+Set the `X-Tigris-Soft-Delete` header on `CreateBucket` — use `true` for the
+default 7-day retention, or a number between `7` and `90` for a custom window.
+
+```go
+func createBucketWithSoftDelete(ctx context.Context, client *s3.Client, bucketName string) error {
+	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{Bucket: aws.String(bucketName)}, func(options *s3.Options) {
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Soft-Delete", "30"))
+	})
+	return err
+}
+```
+
+## Viewing soft delete status on the buckets list
+
+A **Soft Delete** column on the buckets list marks which buckets have soft
+delete enabled, showing **Enabled** or **Disabled** for each row.
+
+![Buckets list with the Deleted buckets tab and Soft Delete column](/img/soft-delete-col-segment.png)
+
+## Deleting a bucket with soft delete enabled
+
+When you delete a bucket that has soft delete enabled, the delete confirmation
+dialog reflects that the action is recoverable instead of permanent. It tells
+you the bucket can be restored from the **Deleted buckets** tab within its
+retention period — and that after that window passes, the deletion is permanent.
+The action button is labeled **Soft Delete** rather than **Delete**, and you
+still confirm by typing the bucket name.
+
+![Delete bucket confirmation dialog for a soft-delete-enabled bucket](/img/soft-delete-bucket-modal.png)
+
+This is the cue that the bucket is moving into the soft-deleted state covered
+below rather than being permanently removed.
+
+## Restoring a deleted bucket
+
+A bucket deleted while soft delete was enabled is not removed immediately. It
+moves to a soft-deleted state where it is hidden from your normal bucket list
+but stays recoverable until the retention window expires.
+
+The buckets page in the Tigris Dashboard has a segmented control above the list
+with an **All buckets**, **Owned by me**, and **Deleted buckets** segment. The
+**Deleted buckets** segment is where every bucket that was deleted while soft
+delete was enabled shows up — each row in this view represents a soft-deleted
+bucket that is still within its retention window.
+
+To restore a bucket, open the row's overflow menu (`...`) and choose
+**Restore**:
+
+![Restore a soft-deleted bucket from the Deleted buckets tab](/img/soft-delete-restore-bucket.png)
+
+After a successful restore, the bucket is fully active again — it moves back to
+the regular bucket list and every object it held at the time of deletion is live
+and readable, exactly as it was before the bucket was deleted. If you want to
+remove a soft-deleted bucket immediately instead of waiting for the retention
+window to expire, choose **Delete** from the same menu.
+
+While a bucket is in the soft-deleted state, its name stays reserved — you
+cannot create a new bucket with the same name until either the bucket is
+restored or permanently removed.
+
+A bucket can also be restored over the API — see
+[Restoring a whole bucket](#restoring-a-whole-bucket).
+
+Partners have HTTP endpoints for these operations:
+[list](/docs/partner-integrations/api/tigris-list-deleted-buckets),
+[get](/docs/partner-integrations/api/tigris-get-deleted-bucket),
+[restore](/docs/partner-integrations/api/tigris-restore-bucket), and
+[purge](/docs/partner-integrations/api/tigris-purge-bucket) a deleted bucket.
+The soft-delete configuration of a bucket has endpoints as well:
+[set](/docs/partner-integrations/api/tigris-set-soft-delete),
+[get](/docs/partner-integrations/api/tigris-get-soft-delete), and
+[disable](/docs/partner-integrations/api/tigris-delete-soft-delete).
+
+## Deleting an object in a soft-delete-enabled bucket
+
+Inside a soft-delete-enabled bucket, the files browser splits into an **All
+files** and a **Deleted files** segment above the list. **All files** is the
+regular live view; **Deleted files** is where every soft-deleted object in this
+bucket shows up while it's within its retention window.
+
+![Files browser with All files and Deleted files segments](/img/soft-delete-files-segment.png)
+
+Deleting an object from the **All files** view brings up a confirmation dialog
+that mirrors the bucket-level one. It tells you the file will be moved to the
+**Deleted files** tab and can be restored within the bucket's retention period —
+and that after that window passes, the file is permanently removed.
+
+![Soft delete confirmation dialog for an object](/img/soft-delete-object-delete-modal.png)
+
+## Restoring a deleted object
+
+Every delete on a key produces its own soft-deleted version, stamped with the
+time it was deleted. The same key can therefore have many soft-deleted versions
+stacked up if it has been written and deleted more than once. For example, if
+you write an object at key `a`, delete it, write a fresh copy at `a`, delete
+that, then repeat one more time, the key will have three soft-deleted versions —
+one for each delete — all independently restorable until their retention windows
+expire.
+
+In the **Deleted files** segment, selecting a deleted object opens its **Version
+history** panel on the right, which lists each soft-deleted version of that key
+along with its timestamp, version ID, size, and ETag. To restore the object,
+pick the version you want to recover and click **Restore this version**:
+
+![Restore a soft-deleted object from the Deleted files tab](/img/soft-delete-restore-object.png)
+
+The selected version becomes live immediately and is visible to all subsequent
+reads.
+
+To restore objects programmatically, or to restore many at once, see
+[Soft delete with S3 APIs](#soft-delete-with-s3-apis) below.
+
+### Permanently deleting an object
+
+Permanently deleting a soft-deleted object is always scoped to a specific
+version of that object. There is no single "delete the object" button — because
+the same key can have many soft-deleted versions stacked up, you pick which
+version to purge from the **Version history** panel.
+
+To do this, open the **Version history** panel for the object in the **Deleted
+files** segment, select the version you want to purge, and click the red
+**Delete** button at the bottom of the panel. The panel shows a **Permanently
+delete this file?** confirmation just above the button, calling out that the
+version will be permanently deleted and cannot be restored.
+
+![Permanently delete a soft-deleted version from the Version history panel](/img/soft-delete-permanent-delete-version.png)
+
+Unlike the regular delete from the **All files** view, this action bypasses the
+retention window entirely — the selected version is purged immediately and is
+not recoverable. To fully remove an object that has multiple soft-deleted
+versions, repeat this for each version you want gone.
+
+### Snapshot buckets
+
+On a snapshot-enabled bucket, deleting a specific version moves that version
+into the soft-deleted state, where it appears in the **Deleted files** tab and
+can be restored from its Version history panel the same way. A plain delete on a
+snapshot-enabled bucket behaves as usual — it records a delete marker and leaves
+earlier versions live and accessible.
+
+## Soft delete with S3 APIs
+
+The **Deleted files** view and the actions in the Tigris Dashboard are also
+available through the S3 API: list the deleted objects in a bucket, restore one
+of them, delete one permanently before its retention window ends, or bring back
+a whole bucket. The object operations are standard S3 requests carrying one
+Tigris header.
+
+Objects that you deleted before you enabled soft delete are not recoverable.
+
+### Listing the deleted objects in a bucket
+
+`ListObjectVersions` returns every deleted version of every key, each with the
+version ID that a restore or a permanent delete needs. It accepts `prefix`,
+`delimiter`, `max-keys`, and the usual pagination parameters, and it works on a
+bucket without versioning.
+
+```http
+GET /my-bucket?versions&prefix=contracts/ HTTP/1.1
+Host: t3.storage.dev
+X-Tigris-Soft-Delete: true
+```
+
+`LastModified` on each entry is the time of the delete, not the time of the last
+write. A key deleted more than once has one entry for each delete, newest first.
+
+<Tabs groupId="languages">
+<TabItem value="python" label="Python">
+
+```python
+import boto3
+
+s3 = boto3.client("s3", endpoint_url="https://t3.storage.dev")
+
+def add_soft_delete(params, **kwargs):
+    params["headers"]["X-Tigris-Soft-Delete"] = "true"
+
+s3.meta.events.register("before-call.s3.ListObjectVersions", add_soft_delete)
+
+versions = s3.list_object_versions(Bucket="my-bucket", Prefix="contracts/")
+for version in versions.get("Versions", []):
+    print(version["Key"], version["VersionId"], version["Size"])
+```
+
+</TabItem>
+<TabItem value="go" label="Go">
+
+```go
+import (
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/smithy-go/transport/http"
+)
+
+// listDeletedVersions returns every deleted version of every key under prefix,
+// each carrying the version id a restore takes.
+func listDeletedVersions(ctx context.Context, client *s3.Client, bucket, prefix string) (*s3.ListObjectVersionsOutput, error) {
+	return client.ListObjectVersions(ctx, &s3.ListObjectVersionsInput{
+		Bucket: aws.String(bucket),
+		Prefix: aws.String(prefix),
+	}, func(options *s3.Options) {
+		options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Soft-Delete", "true"))
+	})
+}
+```
+
+</TabItem>
+<TabItem value="js" label="JavaScript">
+
+```js
+import { S3Client, ListObjectVersionsCommand } from "@aws-sdk/client-s3";
+
+const S3 = new S3Client({ region: "auto", endpoint: "https://t3.storage.dev" });
+
+S3.middlewareStack.add(
+  (next) => async (args) => {
+    args.request.headers["X-Tigris-Soft-Delete"] = "true";
+    return next(args);
+  },
+  { step: "build", name: "softDelete" },
+);
+
+// Deleted entries arrive in versions, never in deleteMarkers.
+const { Versions } = await S3.send(
+  new ListObjectVersionsCommand({ Bucket: "my-bucket", Prefix: "contracts/" }),
+);
+```
+
+</TabItem>
+<TabItem value="tigris-go" label="Tigris Go">
+
+[`storage-go`](https://github.com/tigrisdata/storage-go) wraps both listings, so
+there is no header to attach. It also reports `SoftDeleted`, which the AWS SDK
+has no field for.
+
+```go
+import "github.com/tigrisdata/storage-go"
+
+client, err := storage.New(ctx)
+
+// Every deleted version of every key, newest delete first.
+deleted, err := client.ListSoftDeletedObjects(ctx, &storage.ListSoftDeletedObjectsInput{
+	Bucket: "my-bucket",
+	Prefix: "contracts/",
+})
+for _, obj := range deleted.Objects {
+	// LastModified is the time of the delete. VersionID is what a restore takes.
+	fmt.Println(obj.Key, obj.VersionID, obj.Size, obj.SoftDeleted, obj.LastModified)
+}
+
+// Continue while deleted.IsTruncated is true.
+next := &storage.ListSoftDeletedObjectsInput{
+	Bucket:          "my-bucket",
+	Prefix:          "contracts/",
+	KeyMarker:       deleted.NextKeyMarker,
+	VersionIDMarker: deleted.NextVersionIDMarker,
+}
+_ = next
+```
+
+</TabItem>
+</Tabs>
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<ListVersionsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+  <Name>my-bucket</Name>
+  <Prefix>contracts/</Prefix>
+  <KeyMarker></KeyMarker>
+  <VersionIdMarker></VersionIdMarker>
+  <MaxKeys>1000</MaxKeys>
+  <IsTruncated>false</IsTruncated>
+  <Version>
+    <Key>contracts/2026/q1.pdf</Key>
+    <VersionId>1787441627070249004</VersionId>
+    <IsLatest>false</IsLatest>
+    <ETag>"b0f1d22df090b134b95f625ab3eff207"</ETag>
+    <Size>16</Size>
+    <Owner><ID></ID></Owner>
+    <StorageClass>STANDARD</StorageClass>
+    <SoftDeleted>true</SoftDeleted>
+    <LastModified>2026-08-22T23:33:47Z</LastModified>
+  </Version>
+</ListVersionsResult>
+```
+
+| Field          | Meaning                                                                                       |
+| -------------- | --------------------------------------------------------------------------------------------- |
+| `Key`          | Key of the deleted object.                                                                    |
+| `VersionId`    | ID of this deleted version, in nanoseconds. A restore or a permanent delete takes this value. |
+| `LastModified` | Time of the delete.                                                                           |
+| `Size`, `ETag` | Size and ETag of the deleted object.                                                          |
+| `SoftDeleted`  | Tigris extension. `true` on every entry of this listing.                                      |
+
+Deleted objects come back as `Version` elements, not as `DeleteMarker` elements.
+The AWS `DeleteMarker` type has no field for a size or an ETag. An AWS SDK reads
+these entries as object versions, so a `listVersions()` call finds them in
+`versions` and not in `deleteMarkers`.
+
+Two things to know about this listing:
+
+- `IsLatest` is always `false` on a deleted entry.
+- `GetObject` and `HeadObject` never read a deleted object. Restore the object
+  first.
+
+### Restoring an object
+
+Send `RestoreObject` with `X-Tigris-Restore-Type: soft-delete`:
+
+```http
+POST /my-bucket/contracts/2026/q1.pdf?restore HTTP/1.1
+Host: t3.storage.dev
+X-Tigris-Restore-Type: soft-delete
+X-Tigris-Restore-Version: 1755820800123456789
+```
+
+The response is 200 with an empty body, and the object is immediately live for
+all subsequent reads. The request body is ignored.
+
+`X-Tigris-Restore-Version` takes a `VersionId` from the versions listing.
+Without this header, Tigris restores the most recent deleted version of the key.
+
+<Tabs groupId="languages">
+<TabItem value="python" label="Python">
+
+```python
+def add_restore_headers(params, **kwargs):
+    params["headers"]["X-Tigris-Restore-Type"] = "soft-delete"
+    params["headers"]["X-Tigris-Restore-Version"] = "1755820800123456789"
+
+s3.meta.events.register("before-call.s3.RestoreObject", add_restore_headers)
+
+s3.restore_object(Bucket="my-bucket", Key="contracts/2026/q1.pdf")
+```
+
+</TabItem>
+<TabItem value="go" label="Go">
+
+```go
+func restoreDeleted(ctx context.Context, client *s3.Client, bucket, key, version string) error {
+	_, err := client.RestoreObject(ctx, &s3.RestoreObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+	}, func(options *s3.Options) {
+		options.APIOptions = append(options.APIOptions,
+			http.AddHeaderValue("X-Tigris-Restore-Type", "soft-delete"),
+			http.AddHeaderValue("X-Tigris-Restore-Version", version),
+		)
+	})
+	return err
+}
+```
+
+</TabItem>
+<TabItem value="js" label="JavaScript">
+
+```js
+import { RestoreObjectCommand } from "@aws-sdk/client-s3";
+
+S3.middlewareStack.add(
+  (next) => async (args) => {
+    args.request.headers["X-Tigris-Restore-Type"] = "soft-delete";
+    args.request.headers["X-Tigris-Restore-Version"] = "1755820800123456789";
+    return next(args);
+  },
+  { step: "build", name: "restoreDeleted" },
+);
+
+await S3.send(
+  new RestoreObjectCommand({
+    Bucket: "my-bucket",
+    Key: "contracts/2026/q1.pdf",
+  }),
+);
+```
+
+</TabItem>
+<TabItem value="tigris-go" label="Tigris Go">
+
+```go
+// An empty VersionID restores the most recent deleted version of the key.
+_, err = client.RestoreSoftDeletedObject(ctx, &storage.RestoreSoftDeletedObjectInput{
+	Bucket:    "my-bucket",
+	Key:       "contracts/2026/q1.pdf",
+	VersionID: "1787441627070249004",
+})
+
+// Remove one version for good, ahead of its retention window. The version id
+// is required: without it the call would delete the live object instead.
+_, err = client.PermanentlyDeleteObject(ctx, "my-bucket",
+	"contracts/2026/q1.pdf", "1787441627070249004")
+```
+
+</TabItem>
+</Tabs>
+
+A restore keeps the content, the ETag, the content type, the user metadata, and
+the storage class of the deleted object. It gives the object a new
+`Last-Modified`, which is the time of the restore.
+
+CAUTION: A restore replaces a live object at the same key. The replaced object
+becomes a new deleted version.
+
+The deleted version stays in the deleted listing until its retention window
+ends, also after a restore. A second restore of the same version writes the same
+content again.
+
+These are the errors of a restore:
+
+- 400 `InvalidArgument` / `Soft-delete is not enabled on this bucket` — soft
+  delete is off on the bucket.
+- 400 `InvalidArgument` / `Invalid restore version: must be unix nano timestamp`
+  — the header value is not a number.
+- 404 `NoSuchKey` — the key has no deleted version, the retention window ended,
+  or the version ID is not a version of this key.
+
+### Restoring many objects
+
+Tigris has no single bulk-restore call. Restore one key for each request. Each
+restore is one transaction, so a failure affects one key only. Repeat the run to
+pick up the keys that failed.
+
+This example restores every object under a prefix that was deleted after a given
+time, using [`storage-go`](https://github.com/tigrisdata/storage-go):
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"time"
+
+	"github.com/tigrisdata/storage-go"
+)
+
+const (
+	bucket = "my-bucket"
+	prefix = "contracts/"
+)
+
+func main() {
+	ctx := context.Background()
+	deletedAfter := time.Date(2026, 8, 21, 12, 0, 0, 0, time.UTC)
+
+	client, err := storage.New(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Every deleted version under the prefix that was deleted after the cutoff.
+	var toRestore []storage.SoftDeletedObject
+
+	in := &storage.ListSoftDeletedObjectsInput{Bucket: bucket, Prefix: prefix}
+	for {
+		page, err := client.ListSoftDeletedObjects(ctx, in)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, obj := range page.Objects {
+			// LastModified is the time of the delete.
+			if obj.LastModified.After(deletedAfter) {
+				toRestore = append(toRestore, obj)
+			}
+		}
+
+		if !page.IsTruncated {
+			break
+		}
+
+		in.KeyMarker = page.NextKeyMarker
+		in.VersionIDMarker = page.NextVersionIDMarker
+	}
+
+	fmt.Printf("restoring %d objects\n", len(toRestore))
+
+	for _, obj := range toRestore {
+		_, err := client.RestoreSoftDeletedObject(ctx, &storage.RestoreSoftDeletedObjectInput{
+			Bucket:    bucket,
+			Key:       obj.Key,
+			VersionID: obj.VersionID,
+		})
+		if err != nil {
+			// One failure does not stop the run: each restore is its own
+			// transaction, so the rest are unaffected.
+			log.Printf("restore %s: %v", obj.Key, err)
+			continue
+		}
+
+		fmt.Println("restored", obj.Key)
+	}
+}
+```
+
+`LastModified` is the time of the delete, so the comparison against
+`deletedAfter` selects the objects of one incident window. To restore the most
+recent delete of a key instead of a specific version, send the restore without
+`X-Tigris-Restore-Version`.
+
+### Permanently deleting a version
+
+A permanent delete removes one deleted version before its retention window ends
+and frees its storage:
+
+```http
+DELETE /my-bucket/contracts/2026/q1.pdf?versionId=1755820800123456789 HTTP/1.1
+Host: t3.storage.dev
+X-Tigris-Soft-Delete: true
+```
+
+The response is 204.
+
+CAUTION: A permanent delete cannot be undone. The object is not recoverable
+after this call.
+
+`versionId` names the version to remove, so it is required. A `DELETE` that
+carries the `X-Tigris-Soft-Delete` header without one is refused:
+
+```
+400 InvalidArgument
+VersionId is required for permanent soft-delete removal
+```
+
+- Take the value of `versionId` from `VersionId` in the versions listing.
+- This call is the one `DELETE` with a `versionId` that a bucket without
+  versioning accepts. The `X-Tigris-Soft-Delete` header selects this behavior.
+- A purge of a version that is already gone returns 204.
+- A purge on a bucket without soft delete returns 400
+  `Soft-delete is not enabled on this bucket`.
+
+### Restoring a whole bucket
+
+A soft-deleted bucket is hidden rather than gone: `HeadBucket` answers 404 and
+so do its objects. Send `restore` to bring it back:
+
+```http
+POST /my-bucket?restore HTTP/1.1
+Host: t3.storage.dev
+```
+
+The response is 200 with an empty body. The bucket and every object it held are
+live again, and listings return them as before.
+
+The AWS S3 SDKs have no bucket-restore operation, so over those this is a plain
+signed POST. Both Tigris SDKs wrap it:
+
+```go
+// storage-go
+_, err = client.RestoreBucket(ctx, &storage.RestoreBucketInput{Bucket: "my-bucket"})
+```
+
+```js
+// @tigrisdata/storage
+import { restoreBucket } from "@tigrisdata/storage";
+
+await restoreBucket("my-bucket");
+```
+
+Restoring a bucket that is already active returns 400.
+
+## Things to note
+
+- Retention applies per bucket. Every soft-deleted bucket and object in the
+  bucket uses the same retention window.
+- Disabling soft delete on a bucket does not purge data that is already
+  soft-deleted. It continues to age out on its original retention schedule.
+- Changing the retention value affects new soft deletes from that point forward.
+  Already soft-deleted data keeps the retention it was created with.

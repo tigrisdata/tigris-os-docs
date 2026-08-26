@@ -232,10 +232,7 @@ Tigris header.
 
 Objects that you deleted before you enabled soft delete are not recoverable.
 
-The Go examples use [`storage-go`](https://github.com/tigrisdata/storage-go),
-which wraps each of these calls. The SDK for JavaScript covers soft delete on a
-bucket, not yet on an object, so send the requests below with the AWS SDK for
-JavaScript until it does.
+The Tigris SDKs wrap each of these calls.
 
 ### Listing the deleted objects in a bucket
 
@@ -253,9 +250,11 @@ X-Tigris-Soft-Delete: true
 `LastModified` on each entry is the time of the delete, not the time of the last
 write. A key deleted more than once has one entry for each delete, newest first.
 
+<Tabs groupId="languages">
+<TabItem value="go" label="Go">
+
 [`storage-go`](https://github.com/tigrisdata/storage-go) wraps the listing, so
-there is no header to attach. It also reports `SoftDeleted`, which the AWS SDK
-has no field for.
+there is no header to attach.
 
 ```go
 import "github.com/tigrisdata/storage-go"
@@ -268,7 +267,7 @@ in := &storage.ListSoftDeletedObjectsInput{Bucket: "my-bucket", Prefix: "contrac
 deleted, err := client.ListSoftDeletedObjects(ctx, in)
 for _, obj := range deleted.Objects {
 	// LastModified is the time of the delete. VersionID is what a restore takes.
-	fmt.Println(obj.Key, obj.VersionID, obj.Size, obj.SoftDeleted, obj.LastModified)
+	fmt.Println(obj.Key, obj.VersionID, obj.Size, obj.LastModified)
 }
 
 // Carry the markers forward while deleted.IsTruncated is true.
@@ -276,28 +275,45 @@ in.KeyMarker = deleted.NextKeyMarker
 in.VersionIDMarker = deleted.NextVersionIDMarker
 ```
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<ListVersionsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-  <Name>my-bucket</Name>
-  <Prefix>contracts/</Prefix>
-  <KeyMarker></KeyMarker>
-  <VersionIdMarker></VersionIdMarker>
-  <MaxKeys>1000</MaxKeys>
-  <IsTruncated>false</IsTruncated>
-  <Version>
-    <Key>contracts/2026/q1.pdf</Key>
-    <VersionId>1787441627070249004</VersionId>
-    <IsLatest>false</IsLatest>
-    <ETag>"b0f1d22df090b134b95f625ab3eff207"</ETag>
-    <Size>16</Size>
-    <Owner><ID></ID></Owner>
-    <StorageClass>STANDARD</StorageClass>
-    <SoftDeleted>true</SoftDeleted>
-    <LastModified>2026-08-22T23:33:47Z</LastModified>
-  </Version>
-</ListVersionsResult>
+</TabItem>
+<TabItem value="ts" label="TypeScript">
+
+```ts
+import { listVersions } from "@tigrisdata/storage";
+
+// Every deleted version of every key, newest delete first.
+const { data: deleted, error } = await listVersions({
+  deleted: true,
+  prefix: "contracts/",
+});
+
+if (error) {
+  throw error;
+}
+
+for (const version of deleted.versions) {
+  // lastModified is the time of the delete. versionId is what a restore takes.
+  console.log(
+    version.name,
+    version.versionId,
+    version.size,
+    version.lastModified,
+  );
+}
+
+// Carry the markers forward while deleted.hasMore is true.
+if (deleted.hasMore) {
+  await listVersions({
+    deleted: true,
+    prefix: "contracts/",
+    keyMarker: deleted.nextKeyMarker,
+    versionIdMarker: deleted.nextVersionIdMarker,
+  });
+}
 ```
+
+</TabItem>
+</Tabs>
 
 | Field          | Meaning                                                                                       |
 | -------------- | --------------------------------------------------------------------------------------------- |
@@ -335,6 +351,9 @@ all subsequent reads. The request body is ignored.
 `X-Tigris-Restore-Version` takes a `VersionId` from the versions listing.
 Without this header, Tigris restores the most recent deleted version of the key.
 
+<Tabs groupId="languages">
+<TabItem value="go" label="Go">
+
 ```go
 // An empty VersionID restores the most recent deleted version of the key.
 _, err = client.RestoreSoftDeletedObject(ctx, &storage.RestoreSoftDeletedObjectInput{
@@ -343,6 +362,18 @@ _, err = client.RestoreSoftDeletedObject(ctx, &storage.RestoreSoftDeletedObjectI
 	VersionID: "1787441627070249004",
 })
 ```
+
+</TabItem>
+<TabItem value="ts" label="TypeScript">
+
+```ts
+import { restoreDeletedObject } from "@tigrisdata/storage";
+
+await restoreDeletedObject("contracts/2026/q1.pdf", "1787441627070249004");
+```
+
+</TabItem>
+</Tabs>
 
 A restore keeps the content, the ETag, the content type, the user metadata, and
 the storage class of the deleted object. It gives the object a new
@@ -473,11 +504,26 @@ call.
 
 :::
 
+<Tabs groupId="languages">
+<TabItem value="go" label="Go">
+
 ```go
 // The version id is required: without it the call would delete the live object.
 _, err = client.PermanentlyDeleteObject(ctx, "my-bucket",
 	"contracts/2026/q1.pdf", "1787441627070249004")
 ```
+
+</TabItem>
+<TabItem value="ts" label="TypeScript">
+
+```ts
+import { purgeDeletedObject } from "@tigrisdata/storage";
+
+await purgeDeletedObject("contracts/2026/q1.pdf", "1787441627070249004");
+```
+
+</TabItem>
+</Tabs>
 
 `versionId` names the version to remove, so it is required. A `DELETE` that
 carries the `X-Tigris-Soft-Delete` header without one is refused:

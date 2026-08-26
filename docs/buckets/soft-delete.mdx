@@ -369,7 +369,15 @@ _, err = client.RestoreSoftDeletedObject(ctx, &storage.RestoreSoftDeletedObjectI
 ```ts
 import { restoreDeletedObject } from "@tigrisdata/storage";
 
-await restoreDeletedObject("contracts/2026/q1.pdf", "1787441627070249004");
+const { error } = await restoreDeletedObject(
+  "contracts/2026/q1.pdf",
+  "1787441627070249004",
+);
+
+// These calls return an error rather than throwing one.
+if (error) {
+  throw error;
+}
 ```
 
 </TabItem>
@@ -519,7 +527,14 @@ _, err = client.PermanentlyDeleteObject(ctx, "my-bucket",
 ```ts
 import { purgeDeletedObject } from "@tigrisdata/storage";
 
-await purgeDeletedObject("contracts/2026/q1.pdf", "1787441627070249004");
+const { error } = await purgeDeletedObject(
+  "contracts/2026/q1.pdf",
+  "1787441627070249004",
+);
+
+if (error) {
+  throw error;
+}
 ```
 
 </TabItem>

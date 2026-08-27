@@ -9,7 +9,7 @@ sidebar_label: API Reference
 
 API reference for
 [`@tigrisdata/storage`](https://www.npmjs.com/package/@tigrisdata/storage)
-v3.16.0.
+v3.20.0.
 
 For usage examples and guides, see [Using the SDK](/docs/sdks/tigris/using-sdk).
 
@@ -20,6 +20,7 @@ For usage examples and guides, see [Using the SDK](/docs/sdks/tigris/using-sdk).
 - [Presigned URLs](#presigned-urls)
 - [Bucket Management](#bucket-management)
 - [Bucket Configuration](#bucket-configuration)
+- [Soft Delete](#soft-delete)
 - [Snapshots](#snapshots)
 - [Multipart Upload](#multipart-upload)
 - [Client Upload Handling](#client-upload-handling)
@@ -422,19 +423,45 @@ type ListOptions = {
   paginationToken?: string;
   snapshotVersion?: string;
   source?: "tigris" | "shadow";
+  /**
+   * List the bucket's soft-deleted objects instead of its live ones. This is a
+   * separate view, not an addition: the response contains only recoverable
+   * deleted objects, and live objects are left out entirely.
+   *
+   * Requires soft delete to be enabled on the bucket
+   * (`updateBucket(name, { softDelete })`). Do not rely on it for snapshot
+   * buckets: this view stayed empty on them in testing, and they retain
+   * deleted objects as versions and delete markers that `listVersions()`
+   * reports instead. To act on an entry here, look up its recoverable
+   * versions with `listVersions({ deleted: true })`, then pass a `versionId`
+   * to `restoreDeletedObject` or `purgeDeletedObject`.
+   */
+  deleted?: boolean;
   config?: TigrisStorageConfig;
 };
 ```
 
-| Property          | Type                   | Required | Description |
-| ----------------- | ---------------------- | -------- | ----------- |
-| `delimiter`       | `string`               | No       |             |
-| `prefix`          | `string`               | No       |             |
-| `limit`           | `number`               | No       |             |
-| `paginationToken` | `string`               | No       |             |
-| `snapshotVersion` | `string`               | No       |             |
-| `source`          | `'tigris' \| 'shadow'` | No       |             |
-| `config`          | `TigrisStorageConfig`  | No       |             |
+| Property          | Type                   | Required | Description                                                                |
+| ----------------- | ---------------------- | -------- | -------------------------------------------------------------------------- |
+| `delimiter`       | `string`               | No       |                                                                            |
+| `prefix`          | `string`               | No       |                                                                            |
+| `limit`           | `number`               | No       |                                                                            |
+| `paginationToken` | `string`               | No       |                                                                            |
+| `snapshotVersion` | `string`               | No       |                                                                            |
+| `source`          | `'tigris' \| 'shadow'` | No       |                                                                            |
+| `deleted`         | `boolean`              | No       | List the bucket's soft-deleted objects instead of its live ones. This is a |
+
+separate view, not an addition: the response contains only recoverable deleted
+objects, and live objects are left out entirely.
+
+Requires soft delete to be enabled on the bucket
+(`updateBucket(name, { softDelete })`). Do not rely on it for snapshot buckets:
+this view stayed empty on them in testing, and they retain deleted objects as
+versions and delete markers that `listVersions()` reports instead. To act on an
+entry here, look up its recoverable versions with
+`listVersions({ deleted: true })`, then pass a `versionId` to
+`restoreDeletedObject` or `purgeDeletedObject`. | | `config` |
+`TigrisStorageConfig` | No | |
 
 ### `ListItem`
 
@@ -906,6 +933,7 @@ type BucketOwner = {
 type UpdateBucketOptions = {
   access?: "public" | "private";
   allowObjectAcl?: boolean;
+  defaultTier?: StorageClass;
   disableDirectoryListing?: boolean;
   locations?: BucketLocations;
   cacheControl?: string;
@@ -931,6 +959,7 @@ type UpdateBucketOptions = {
 | ------------------------- | ---------------------------------------------------------------------- | -------- | ----------------------------------------- |
 | `access`                  | `'public' \| 'private'`                                                | No       |                                           |
 | `allowObjectAcl`          | `boolean`                                                              | No       |                                           |
+| `defaultTier`             | `StorageClass`                                                         | No       |                                           |
 | `disableDirectoryListing` | `boolean`                                                              | No       |                                           |
 | `locations`               | `BucketLocations`                                                      | No       |                                           |
 | `cacheControl`            | `string`                                                               | No       |                                           |
@@ -1283,6 +1312,259 @@ type BucketNotificationTokenAuth = BucketNotificationBase & {
 | Property | Type                                                       | Required | Description |
 | -------- | ---------------------------------------------------------- | -------- | ----------- |
 | `auth`   | `\{ token: string; username?: never; password?: never; \}` | Yes      |             |
+
+## Soft Delete {#soft-delete}
+
+Recover objects deleted from a bucket with soft delete enabled. Find the deleted
+keys with `list({ deleted: true })`, pick a version with
+`listVersions({ deleted: true })`, then restore or purge that version.
+
+### `listVersions`
+
+```ts
+function listVersions(
+  options?: ListVersionsOptions,
+): Promise<TigrisStorageResponse<ListVersionsResponse, Error>>;
+```
+
+### `restoreDeletedObject`
+
+Bring a soft-deleted object back as a live object.
+
+This is the undelete counterpart to `restoreBucket`, and is unrelated to
+`restoreObject` — that one thaws an archived (e.g. `GLACIER`) object, while this
+one recovers a deleted one within its retention window.
+
+Soft delete must be enabled on the bucket
+(`updateBucket(name, { softDelete })`). `versionId` comes from
+`listVersions({ deleted: true, prefix })`; find the deleted keys themselves with
+`list({ deleted: true })`.
+
+```ts
+function restoreDeletedObject(
+  path: string,
+  versionId: string,
+  options?: RestoreDeletedObjectOptions,
+): Promise<TigrisStorageResponse<RestoreDeletedObjectResponse, Error>>;
+```
+
+### `purgeDeletedObject`
+
+Permanently destroy one soft-deleted version of an object, before its retention
+window would have expired. This cannot be undone — the version is no longer
+recoverable with `restoreDeletedObject`.
+
+`versionId` comes from `listVersions({ deleted: true, prefix })`; find the
+deleted keys themselves with `list({ deleted: true })`.
+
+Note this is not the same call as `remove(path, { versionId })`. A versioned
+delete aimed at a soft-deleted version is rejected with `400 InvalidArgument`
+unless it targets the soft-delete view, which is what this does. `remove` is
+still the right call for hard-deleting a live object's versions on a versioned
+bucket.
+
+```ts
+function purgeDeletedObject(
+  path: string,
+  versionId: string,
+  options?: PurgeDeletedObjectOptions,
+): Promise<TigrisStorageResponse<PurgeDeletedObjectResponse, Error>>;
+```
+
+### `restoreBucket`
+
+Restore a soft-deleted bucket within its retention window.
+
+Soft delete is configured via `updateBucket(name, { softDelete })`; a bucket
+removed while soft delete is enabled can be recovered with this call until its
+retention period elapses. List recoverable buckets with
+`listBuckets({ deleted: true })`.
+
+```ts
+function restoreBucket(
+  bucketName: string,
+  options?: RestoreBucketOptions,
+): Promise<TigrisStorageResponse<RestoreBucketResponse, Error>>;
+```
+
+#### Types
+
+### `ListVersionsOptions`
+
+```ts
+type ListVersionsOptions = {
+  delimiter?: string;
+  prefix?: string;
+  limit?: number;
+  keyMarker?: string;
+  /**
+   * Pagination position within a key's versions. S3 ignores this when
+   * `keyMarker` is not also set, so passing it alone returns an error.
+   */
+  versionIdMarker?: string;
+  /**
+   * List the recoverable versions of the bucket's soft-deleted objects instead
+   * of its live ones. Use this to pick the `versionId` to hand to
+   * `restoreDeletedObject` or `purgeDeletedObject`; discover which keys are
+   * deleted in the first place with `list({ deleted: true })`.
+   */
+  deleted?: boolean;
+  config?: TigrisStorageConfig;
+};
+```
+
+| Property                                                           | Type      | Required | Description                                                                |
+| ------------------------------------------------------------------ | --------- | -------- | -------------------------------------------------------------------------- |
+| `delimiter`                                                        | `string`  | No       |                                                                            |
+| `prefix`                                                           | `string`  | No       |                                                                            |
+| `limit`                                                            | `number`  | No       |                                                                            |
+| `keyMarker`                                                        | `string`  | No       |                                                                            |
+| `versionIdMarker`                                                  | `string`  | No       | Pagination position within a key's versions. S3 ignores this when          |
+| `keyMarker` is not also set, so passing it alone returns an error. |
+| `deleted`                                                          | `boolean` | No       | List the recoverable versions of the bucket's soft-deleted objects instead |
+
+of its live ones. Use this to pick the `versionId` to hand to
+`restoreDeletedObject` or `purgeDeletedObject`; discover which keys are deleted
+in the first place with `list({ deleted: true })`. | | `config` |
+`TigrisStorageConfig` | No | |
+
+### `ListVersionsResponse`
+
+```ts
+type ListVersionsResponse = {
+  versions: ObjectVersion[];
+  deleteMarkers: DeleteMarker[];
+  commonPrefixes: string[];
+  nextKeyMarker: string | undefined;
+  nextVersionIdMarker: string | undefined;
+  hasMore: boolean;
+};
+```
+
+| Property              | Type                  | Required | Description |
+| --------------------- | --------------------- | -------- | ----------- |
+| `versions`            | `ObjectVersion[]`     | Yes      |             |
+| `deleteMarkers`       | `DeleteMarker[]`      | Yes      |             |
+| `commonPrefixes`      | `string[]`            | Yes      |             |
+| `nextKeyMarker`       | `string \| undefined` | Yes      |             |
+| `nextVersionIdMarker` | `string \| undefined` | Yes      |             |
+| `hasMore`             | `boolean`             | Yes      |             |
+
+### `ObjectVersion`
+
+```ts
+type ObjectVersion = {
+  name: string;
+  versionId: string | undefined;
+  isLatest: boolean;
+  size: number;
+  lastModified: Date;
+};
+```
+
+| Property       | Type                  | Required | Description |
+| -------------- | --------------------- | -------- | ----------- |
+| `name`         | `string`              | Yes      |             |
+| `versionId`    | `string \| undefined` | Yes      |             |
+| `isLatest`     | `boolean`             | Yes      |             |
+| `size`         | `number`              | Yes      |             |
+| `lastModified` | `Date`                | Yes      |             |
+
+### `DeleteMarker`
+
+```ts
+type DeleteMarker = {
+  name: string;
+  versionId: string | undefined;
+  isLatest: boolean;
+  lastModified: Date;
+};
+```
+
+| Property       | Type                  | Required | Description |
+| -------------- | --------------------- | -------- | ----------- |
+| `name`         | `string`              | Yes      |             |
+| `versionId`    | `string \| undefined` | Yes      |             |
+| `isLatest`     | `boolean`             | Yes      |             |
+| `lastModified` | `Date`                | Yes      |             |
+
+### `RestoreDeletedObjectOptions`
+
+```ts
+type RestoreDeletedObjectOptions = {
+  config?: TigrisStorageConfig;
+};
+```
+
+| Property | Type                  | Required | Description |
+| -------- | --------------------- | -------- | ----------- |
+| `config` | `TigrisStorageConfig` | No       |             |
+
+### `RestoreDeletedObjectResponse`
+
+```ts
+type RestoreDeletedObjectResponse = {
+  path: string;
+  versionId: string;
+};
+```
+
+| Property    | Type     | Required | Description |
+| ----------- | -------- | -------- | ----------- |
+| `path`      | `string` | Yes      |             |
+| `versionId` | `string` | Yes      |             |
+
+### `PurgeDeletedObjectOptions`
+
+```ts
+type PurgeDeletedObjectOptions = {
+  config?: TigrisStorageConfig;
+};
+```
+
+| Property | Type                  | Required | Description |
+| -------- | --------------------- | -------- | ----------- |
+| `config` | `TigrisStorageConfig` | No       |             |
+
+### `PurgeDeletedObjectResponse`
+
+```ts
+type PurgeDeletedObjectResponse = {
+  path: string;
+  versionId: string;
+};
+```
+
+| Property    | Type     | Required | Description |
+| ----------- | -------- | -------- | ----------- |
+| `path`      | `string` | Yes      |             |
+| `versionId` | `string` | Yes      |             |
+
+### `RestoreBucketOptions`
+
+```ts
+type RestoreBucketOptions = {
+  config?: Omit<TigrisStorageConfig, "bucket">;
+};
+```
+
+| Property | Type                                        | Required | Description |
+| -------- | ------------------------------------------- | -------- | ----------- |
+| `config` | `Omit&lt;TigrisStorageConfig, 'bucket'&gt;` | No       |             |
+
+### `RestoreBucketResponse`
+
+```ts
+type RestoreBucketResponse = {
+  bucket: string;
+  restored: boolean;
+};
+```
+
+| Property   | Type      | Required | Description |
+| ---------- | --------- | -------- | ----------- |
+| `bucket`   | `string`  | Yes      |             |
+| `restored` | `boolean` | Yes      |             |
 
 ## Snapshots {#snapshots}
 

@@ -345,6 +345,13 @@ After the stream completes, the response includes HTTP trailers:
 | Max request body     | 5 MB   |
 | Request timeout      | 15 min |
 
+## Billing
+
+Each object in a bundle counts as one read request, exactly as if it were
+fetched individually — a 1,000-key bundle bills as 1,000 requests, not one.
+Bandwidth is billed on the bytes returned. Bundles save round-trips and latency,
+not request charges.
+
 ## Authentication
 
 Standard S3 SigV4 authentication. The caller must have `s3:GetObject` permission

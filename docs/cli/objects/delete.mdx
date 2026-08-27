@@ -36,3 +36,16 @@ tigris objects delete my-bucket old-file.txt --version-id abc123 --yes
 # On a versioned bucket: nuke every version and delete marker for a key
 tigris objects delete my-bucket old-file.txt --all-versions --yes
 ```
+
+## Buckets with soft delete enabled
+
+On a bucket with [soft delete](/docs/buckets/soft-delete) enabled, a plain
+`objects delete` does not destroy the object — it keeps a recoverable copy for
+the bucket's retention window. List those with
+[`objects list --deleted`](/docs/cli/objects/list) and bring one back with
+[`objects restore-deleted`](/docs/cli/objects/restore-deleted).
+
+To destroy a soft-deleted version ahead of its retention window, use
+[`objects purge`](/docs/cli/objects/purge) rather than `--version-id`. A
+versioned delete aimed at a soft-deleted version is rejected; `--version-id`
+here is for hard-deleting a version of a _live_ object on a versioned bucket.

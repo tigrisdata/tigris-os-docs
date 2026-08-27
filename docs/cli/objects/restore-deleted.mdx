@@ -1,0 +1,77 @@
+# tigris objects restore-deleted
+
+Restore a soft-deleted object within its retention window, bringing it back as a
+live object.
+
+This is not the same as [`objects restore`](/docs/cli/objects/restore), which
+thaws an archived (`GLACIER`) object. This one recovers an object that was
+deleted from a bucket with [soft delete](/docs/buckets/soft-delete) enabled.
+
+**Alias:** `rd`
+
+## Usage
+
+```bash
+tigris objects restore-deleted <bucket> [key] --version-id <id>
+t3 o rd <bucket> [key] --version-id <id>
+```
+
+If the bucket argument contains the full path (e.g.
+`t3://my-bucket/report.pdf`), the `key` argument can be omitted.
+
+## Arguments
+
+| Name     | Required | Description                                          |
+| -------- | -------- | ---------------------------------------------------- |
+| `bucket` | Yes      | Bucket name, or a full path (`t3://bucket/key`)      |
+| `key`    | No       | Object key. Omit if `bucket` contains the full path. |
+
+## Flags
+
+| Name           | Required | Default | Description                                                                    |
+| -------------- | -------- | ------- | ------------------------------------------------------------------------------ |
+| `--version-id` | Yes      | —       | The soft-deleted version to bring back, from `objects list-versions --deleted` |
+| `--format`     | No       | `table` | Output format. Options: `json`, `table`, `xml`                                 |
+
+## Finding a version to restore
+
+Restoring is always scoped to one specific deleted version, because the same key
+can have several stacked up — one for each time it was written and deleted. Find
+the deleted keys first, then list their versions:
+
+```bash
+# Which keys are deleted?
+tigris objects list my-bucket --deleted
+
+# Which versions of this key can be recovered?
+tigris objects list-versions my-bucket --prefix report.pdf --deleted
+```
+
+## Examples
+
+```bash
+# Restore a specific deleted version
+tigris objects restore-deleted my-bucket report.pdf \
+  --version-id 1787441627070249004
+
+# Same thing with a t3:// path
+tigris objects restore-deleted t3://my-bucket/report.pdf \
+  --version-id 1787441627070249004
+
+# Scripted: restore the most recent deleted version of a key
+VERSION=$(tigris objects list-versions my-bucket --prefix report.pdf --deleted \
+  --format json | jq -r '.versions[0].versionId')
+tigris objects restore-deleted my-bucket report.pdf --version-id "$VERSION"
+```
+
+## Notes
+
+- The restored object is live immediately and visible to all subsequent reads.
+  It keeps its content, ETag, content type, user metadata, and storage class,
+  and gets a new last-modified time — the time of the restore.
+- Restoring over a key that currently holds a live object replaces it. The
+  replaced object becomes a new deleted version.
+- The deleted version stays in the deleted listing until its retention window
+  ends, so the same version can be restored more than once.
+- `--version-id` is required. Without it the command exits 1 and points you at
+  `objects list-versions --deleted`.

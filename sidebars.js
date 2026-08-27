@@ -968,6 +968,8 @@ const sidebars = {
             "cli/objects/info",
             "cli/objects/restore",
             "cli/objects/restore-info",
+            "cli/objects/restore-deleted",
+            "cli/objects/purge",
           ],
         },
         {

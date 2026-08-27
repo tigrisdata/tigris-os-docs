@@ -110,6 +110,23 @@ await updateBucket("my-bucket", {
 ```
 
 </TabItem>
+<TabItem value="cli" label="CLI">
+
+```bash
+tigris buckets set my-bucket --soft-delete enable --retention-days 30
+```
+
+`--retention-days` is required when enabling, and must be between 7 and 90. Turn
+it back off with `--soft-delete disable`:
+
+```bash
+tigris buckets set my-bucket --soft-delete disable
+```
+
+`tigris buckets get my-bucket` shows the current setting as a **Soft Delete**
+row, e.g. `Enabled (30 day retention)`.
+
+</TabItem>
 </Tabs>
 
 ## Viewing soft delete status on the buckets list
@@ -321,6 +338,36 @@ if (deleted.hasMore) {
 ```
 
 </TabItem>
+<TabItem value="cli" label="CLI">
+
+`--deleted` switches the listing over to the deleted objects. Use
+`list-versions` when you need the version IDs that a restore or a permanent
+delete takes:
+
+```bash
+# Every deleted version of every key under the prefix, with version IDs.
+tigris objects list-versions my-bucket --prefix contracts/ --deleted
+```
+
+`objects list --deleted` answers the simpler question — which keys are deleted —
+without the per-version detail:
+
+```bash
+tigris objects list my-bucket --prefix contracts/ --deleted
+```
+
+Both accept the usual `--prefix`, `--delimiter`, and paging flags. For
+scripting, `--format json` emits the same shape as the SDK:
+
+```bash
+tigris objects list-versions my-bucket --prefix contracts/ --deleted --format json \
+  | jq -r '.versions[] | "\(.name)\t\(.versionId)\t\(.lastModified)"'
+```
+
+When the result is paginated, the table output prints the `--key-marker` and
+`--version-id-marker` values for the next page.
+
+</TabItem>
 </Tabs>
 
 | Field          | Meaning                                                                                       |
@@ -387,6 +434,17 @@ if (error) {
   throw error;
 }
 ```
+
+</TabItem>
+<TabItem value="cli" label="CLI">
+
+```bash
+tigris objects restore-deleted my-bucket contracts/2026/q1.pdf \
+  --version-id 1787441627070249004
+```
+
+`--version-id` is required. Take the value from
+`tigris objects list-versions <bucket> --deleted`.
 
 </TabItem>
 </Tabs>
@@ -546,6 +604,21 @@ if (error) {
 ```
 
 </TabItem>
+<TabItem value="cli" label="CLI">
+
+```bash
+tigris objects purge my-bucket contracts/2026/q1.pdf \
+  --version-id 1787441627070249004
+```
+
+This prompts for confirmation because it cannot be undone. Pass `--yes` to skip
+the prompt in a script — the command refuses to run unattended without it.
+
+Note this is `objects purge`, not `objects delete --version-id`: the latter
+hard-deletes a version of a _live_ object on a versioned bucket, and is rejected
+when aimed at a soft-deleted version.
+
+</TabItem>
 </Tabs>
 
 `versionId` names the version to remove, so it is required. A `DELETE` that
@@ -589,6 +662,12 @@ _, err = client.RestoreBucket(ctx, &storage.RestoreBucketInput{Bucket: "my-bucke
 import { restoreBucket } from "@tigrisdata/storage";
 
 await restoreBucket("my-bucket");
+```
+
+```bash
+# Tigris CLI — list the recoverable buckets, then restore one.
+tigris buckets list --deleted
+tigris buckets restore my-bucket
 ```
 
 Restoring a bucket that is already active returns 400.

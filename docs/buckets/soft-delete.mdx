@@ -68,10 +68,17 @@ when soft delete is first enabled.
 
 Set the `X-Tigris-Soft-Delete` header on `CreateBucket` — use `true` for the
 default 7-day retention, or a number between `7` and `90` for a custom window.
-The Tigris SDKs take the retention window as an argument.
+
+```http
+PUT /my-bucket HTTP/1.1
+Host: t3.storage.dev
+X-Tigris-Soft-Delete: 30
+```
+
+The Tigris SDKs take the retention window as an argument instead.
 
 <Tabs groupId="languages">
-<TabItem value="tigris-go" label="Go">
+<TabItem value="go" label="Go">
 
 ```go
 import (
@@ -91,7 +98,8 @@ _, err = client.CreateBucketWithSoftDelete(ctx, &storage.CreateBucketWithSoftDel
 </TabItem>
 <TabItem value="ts" label="TypeScript">
 
-Soft delete goes on an existing bucket through `updateBucket`:
+`createBucket` has no soft-delete option, so turn it on with `updateBucket`
+after the bucket exists:
 
 ```ts
 import { updateBucket } from "@tigrisdata/storage";

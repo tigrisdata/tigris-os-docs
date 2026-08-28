@@ -347,10 +347,13 @@ After the stream completes, the response includes HTTP trailers:
 
 ## Billing
 
+:::note
+
 Each object in a bundle counts as one read request, exactly as if it were
 fetched individually — a 1,000-key bundle bills as 1,000 requests, not one.
-Bandwidth is billed on the bytes returned. Bundles save round-trips and latency,
-not request charges.
+Bundles save round-trips and latency.
+
+:::
 
 ## Authentication
 

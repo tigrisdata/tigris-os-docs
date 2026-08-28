@@ -39,8 +39,8 @@ tigris objects list my-bucket --prefix contracts/ --deleted
 ```
 
 This is a separate view rather than an addition — the output contains only
-deleted objects, and live ones are left out. `--prefix`, `--delimiter`, and the
-paging flags work the same way here.
+deleted objects, and live ones are left out. `--prefix`, `--limit`, and
+`--page-token` work the same way here.
 
 To act on one of these entries you need a version ID, which
 [`objects list-versions --deleted`](/docs/cli/objects/list-versions) provides.

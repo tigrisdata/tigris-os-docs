@@ -1,7 +1,7 @@
-# Soft Delete
-
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
+
+# Soft Delete
 
 Soft delete protects your bucket against accidental deletion. When soft delete
 is enabled, deleting an object does not immediately remove its data. Tigris
@@ -60,11 +60,18 @@ For an existing bucket, open **Bucket Settings → Data Management** and toggle
 
 ![Enable soft delete from bucket settings](/img/soft-delete-settings.png)
 
+A **Soft Delete** column on the buckets list marks which buckets have soft
+delete enabled, showing **Enabled** or **Disabled** for each row.
+
+![Buckets list with the Deleted buckets tab and Soft Delete column](/img/soft-delete-col-segment.png)
+
+### Retention window
+
 The retention window controls how long deleted buckets and objects remain
 recoverable. It must be between **7 and 90 days**, and defaults to **7 days**
 when soft delete is first enabled.
 
-### Enabling soft delete via the S3 API
+### Enabling soft delete programmatically
 
 Set the `X-Tigris-Soft-Delete` header on `CreateBucket` — use `true` for the
 default 7-day retention, or a number between `7` and `90` for a custom window.
@@ -168,13 +175,6 @@ delete and then deletes objects must wait before it relies on recovery.
 
 :::
 
-## Viewing soft delete status on the buckets list
-
-A **Soft Delete** column on the buckets list marks which buckets have soft
-delete enabled, showing **Enabled** or **Disabled** for each row.
-
-![Buckets list with the Deleted buckets tab and Soft Delete column](/img/soft-delete-col-segment.png)
-
 ## Deleting a bucket with soft delete enabled
 
 When you delete a bucket that has soft delete enabled, the delete confirmation
@@ -216,10 +216,57 @@ While a bucket is in the soft-deleted state, its name stays reserved — you
 cannot create a new bucket with the same name until either the bucket is
 restored or permanently removed.
 
-A bucket can also be restored over the API — see
-[Restoring a whole bucket](#restoring-a-whole-bucket).
+### Restoring a bucket programmatically
 
-## Deleting an object in a soft-delete-enabled bucket
+A soft-deleted bucket is hidden rather than gone: `HeadBucket` answers 404 and
+so do its objects. Send `restore` to bring it back:
+
+```http
+POST /my-bucket?restore HTTP/1.1
+Host: t3.storage.dev
+```
+
+The response is 200 with an empty body. The bucket and every object it held are
+live again, and listings return them as before.
+
+The AWS S3 SDKs have no bucket-restore operation, so over those this is a plain
+signed POST. The Tigris SDKs and the CLI wrap it:
+
+<Tabs groupId="languages">
+<TabItem value="go" label="Go">
+
+```go
+_, err := client.RestoreBucket(ctx, &storage.RestoreBucketInput{Bucket: "my-bucket"})
+if err != nil {
+	log.Fatal(err)
+}
+```
+
+</TabItem>
+<TabItem value="ts" label="TypeScript">
+
+```ts
+import { restoreBucket } from "@tigrisdata/storage";
+
+await restoreBucket("my-bucket");
+```
+
+</TabItem>
+<TabItem value="cli" label="CLI">
+
+List the recoverable buckets, then restore one:
+
+```bash
+tigris buckets list --deleted
+tigris buckets restore my-bucket
+```
+
+</TabItem>
+</Tabs>
+
+Restoring a bucket that is already active returns 400.
+
+## Finding soft-deleted objects
 
 Inside a soft-delete-enabled bucket, the files browser splits into an **All
 files** and a **Deleted files** segment above the list. **All files** is the
@@ -227,6 +274,8 @@ regular live view; **Deleted files** is where every soft-deleted object in this
 bucket shows up while it's within its retention window.
 
 ![Files browser with All files and Deleted files segments](/img/soft-delete-files-segment.png)
+
+## Deleting an object in a soft-delete-enabled bucket
 
 Deleting an object from the **All files** view brings up a confirmation dialog
 that mirrors the bucket-level one. It tells you the file will be moved to the
@@ -256,9 +305,10 @@ The selected version becomes live immediately and is visible to all subsequent
 reads.
 
 To restore objects programmatically, or to restore many at once, see
-[Soft delete with S3 APIs](#soft-delete-with-s3-apis) below.
+[Working with soft delete programmatically](#working-with-soft-delete-programmatically)
+below.
 
-### Permanently deleting an object
+## Permanently deleting an object
 
 Permanently deleting a soft-deleted object is always scoped to a specific
 version of that object. There is no single "delete the object" button — because
@@ -278,21 +328,12 @@ retention window entirely — the selected version is purged immediately and is
 not recoverable. To fully remove an object that has multiple soft-deleted
 versions, repeat this for each version you want gone.
 
-### Snapshot buckets
-
-On a snapshot-enabled bucket, deleting a specific version moves that version
-into the soft-deleted state, where it appears in the **Deleted files** tab and
-can be restored from its Version history panel the same way. A plain delete on a
-snapshot-enabled bucket behaves as usual — it records a delete marker and leaves
-earlier versions live and accessible.
-
-## Soft delete with S3 APIs
+## Working with soft delete programmatically
 
 The **Deleted files** view and the actions in the Tigris Dashboard are also
 available through the S3 API: list the deleted objects in a bucket, restore one
-of them, delete one permanently before its retention window ends, or bring back
-a whole bucket. The object operations are standard S3 requests carrying one
-Tigris header.
+of them, or delete one permanently before its retention window ends. The object
+operations are standard S3 requests carrying one Tigris header.
 
 Objects that you deleted before you enabled soft delete are not recoverable.
 
@@ -695,55 +736,13 @@ VersionId is required for permanent soft-delete removal
 - A purge on a bucket without soft delete returns 400
   `Soft-delete is not enabled on this bucket`.
 
-### Restoring a whole bucket
+## Soft delete on snapshot buckets
 
-A soft-deleted bucket is hidden rather than gone: `HeadBucket` answers 404 and
-so do its objects. Send `restore` to bring it back:
-
-```http
-POST /my-bucket?restore HTTP/1.1
-Host: t3.storage.dev
-```
-
-The response is 200 with an empty body. The bucket and every object it held are
-live again, and listings return them as before.
-
-The AWS S3 SDKs have no bucket-restore operation, so over those this is a plain
-signed POST. The Tigris SDKs and the CLI wrap it:
-
-<Tabs groupId="languages">
-<TabItem value="go" label="Go">
-
-```go
-_, err := client.RestoreBucket(ctx, &storage.RestoreBucketInput{Bucket: "my-bucket"})
-if err != nil {
-	log.Fatal(err)
-}
-```
-
-</TabItem>
-<TabItem value="ts" label="TypeScript">
-
-```ts
-import { restoreBucket } from "@tigrisdata/storage";
-
-await restoreBucket("my-bucket");
-```
-
-</TabItem>
-<TabItem value="cli" label="CLI">
-
-List the recoverable buckets, then restore one:
-
-```bash
-tigris buckets list --deleted
-tigris buckets restore my-bucket
-```
-
-</TabItem>
-</Tabs>
-
-Restoring a bucket that is already active returns 400.
+On a snapshot-enabled bucket, deleting a specific version moves that version
+into the soft-deleted state, where it appears in the **Deleted files** tab and
+can be restored from its Version history panel the same way. A plain delete on a
+snapshot-enabled bucket behaves as usual — it records a delete marker and leaves
+earlier versions live and accessible.
 
 ## Things to note
 

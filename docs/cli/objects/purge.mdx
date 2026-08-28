@@ -1,0 +1,85 @@
+# tigris objects purge
+
+Permanently destroy a soft-deleted object version before its retention window
+expires, freeing its storage immediately.
+
+:::warning
+
+A purge cannot be undone. The version is not recoverable afterwards, and
+[`objects restore-deleted`](/docs/cli/objects/restore-deleted) will no longer
+find it.
+
+:::
+
+**Alias:** `pg`
+
+## Usage
+
+```bash
+tigris objects purge <bucket> [key] --version-id <id>
+t3 o pg <bucket> [key] --version-id <id>
+```
+
+If the bucket argument contains the full path (e.g.
+`t3://my-bucket/report.pdf`), the `key` argument can be omitted.
+
+## Arguments
+
+| Name     | Required | Description                                          |
+| -------- | -------- | ---------------------------------------------------- |
+| `bucket` | Yes      | Bucket name, or a full path (`t3://bucket/key`)      |
+| `key`    | No       | Object key. Omit if `bucket` contains the full path. |
+
+## Flags
+
+| Name           | Required | Default | Description                                                                 |
+| -------------- | -------- | ------- | --------------------------------------------------------------------------- |
+| `--version-id` | Yes      | —       | The soft-deleted version to destroy, from `objects list-versions --deleted` |
+| `--yes`, `-y`  | No       | —       | Skip the confirmation prompt                                                |
+| `--force`      | No       | —       | Alias for `--yes`                                                           |
+| `--format`     | No       | `table` | Output format. Options: `json`, `table`, `xml`                              |
+
+## Examples
+
+```bash
+# Purge one deleted version (prompts for confirmation)
+tigris objects purge my-bucket report.pdf --version-id 1787441627070249004
+
+# Skip the prompt in a script
+tigris objects purge my-bucket report.pdf \
+  --version-id 1787441627070249004 --yes
+
+# Purge every deleted version of one key
+tigris objects list-versions my-bucket --prefix report.pdf --deleted \
+  --format json \
+  | jq -r '.versions[].versionId' \
+  | while read -r v; do
+      tigris objects purge my-bucket report.pdf --version-id "$v" --yes
+    done
+```
+
+## Output shape
+
+With `--format json`:
+
+```json
+{
+  "action": "purged",
+  "bucket": "my-bucket",
+  "key": "report.pdf",
+  "versionId": "1787441627070249004"
+}
+```
+
+## Notes
+
+- `--version-id` is required — a purge always targets one specific version, and
+  there is no "purge the latest" fallback because the object is already gone
+  from the live listing.
+- This is not the same as
+  [`objects delete --version-id`](/docs/cli/objects/delete). That hard-deletes a
+  version of a _live_ object on a versioned bucket, and is rejected when aimed
+  at a soft-deleted version.
+- The command refuses to run unattended without `--yes`, so a piped or scripted
+  invocation fails rather than silently prompting.
+- To remove a key that has several deleted versions, purge each one.

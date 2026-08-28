@@ -358,6 +358,30 @@ const CATEGORIES: Category[] = [
     ],
   },
   {
+    title: "Soft Delete",
+    anchor: "soft-delete",
+    description:
+      "Recover objects deleted from a bucket with soft delete enabled. Find the deleted keys with `list({ deleted: true })`, pick a version with `listVersions({ deleted: true })`, then restore or purge that version.",
+    functions: [
+      "listVersions",
+      "restoreDeletedObject",
+      "purgeDeletedObject",
+      "restoreBucket",
+    ],
+    types: [
+      "ListVersionsOptions",
+      "ListVersionsResponse",
+      "ObjectVersion",
+      "DeleteMarker",
+      "RestoreDeletedObjectOptions",
+      "RestoreDeletedObjectResponse",
+      "PurgeDeletedObjectOptions",
+      "PurgeDeletedObjectResponse",
+      "RestoreBucketOptions",
+      "RestoreBucketResponse",
+    ],
+  },
+  {
     title: "Snapshots",
     anchor: "snapshots",
     description: "Create and list bucket snapshots.",
@@ -467,7 +491,7 @@ function renderMembersTable(members: MemberInfo[]): string {
       const depMsg = typeof m.deprecated === "string" ? ` ${m.deprecated}` : "";
       desc = `**Deprecated.**${depMsg} ${desc}`;
     }
-    desc = desc.replace(/\|/g, "\\|").trim();
+    desc = desc.replace(/\s+/g, " ").replace(/\|/g, "\\|").trim();
 
     lines.push(`| \`${m.name}\` | ${escapedType} | ${required} | ${desc} |`);
   }

@@ -75,24 +75,49 @@ Host: t3.storage.dev
 X-Tigris-Soft-Delete: 30
 ```
 
-The Tigris SDKs take the retention window as an argument instead.
+The Go SDK and the CLI take the retention window as an argument instead. The
+TypeScript SDK has no soft-delete option on bucket creation, so it sets the
+window after the bucket exists.
 
 <Tabs groupId="languages">
 <TabItem value="go" label="Go">
 
 ```go
 import (
+	"log"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/tigrisdata/storage-go"
 )
 
 client, err := storage.New(ctx)
+if err != nil {
+	log.Fatal(err)
+}
 
 _, err = client.CreateBucketWithSoftDelete(ctx, &storage.CreateBucketWithSoftDeleteInput{
 	CreateBucketInput: &s3.CreateBucketInput{Bucket: aws.String("my-bucket")},
 	RetentionDays:     30,
 })
+if err != nil {
+	log.Fatal(err)
+}
+```
+
+For a bucket that already exists, `SetBucketSoftDelete` turns soft delete on or
+off. `RetentionDays` is ignored when disabling, and `0` selects the default
+7-day window:
+
+```go
+_, err = client.SetBucketSoftDelete(ctx, &storage.SetBucketSoftDeleteInput{
+	Bucket:        "my-bucket",
+	Enabled:       true,
+	RetentionDays: 30,
+})
+if err != nil {
+	log.Fatal(err)
+}
 ```
 
 </TabItem>
@@ -108,6 +133,9 @@ await updateBucket("my-bucket", {
   softDelete: { enabled: true, retentionDays: 30 },
 });
 ```
+
+`retentionDays` must be between 7 and 90. The API enforces the range, not the
+SDK, so an out-of-range value fails on the request rather than at the call site.
 
 </TabItem>
 <TabItem value="cli" label="CLI">
@@ -128,6 +156,17 @@ row, e.g. `Enabled (30 day retention)`.
 
 </TabItem>
 </Tabs>
+
+:::warning
+
+Enabling soft delete does not take effect immediately — it takes a few seconds
+to reach the data plane. An object deleted inside that window is hard deleted
+and is not recoverable, no matter how you look for it afterwards; in testing, a
+delete issued within the first second of enabling was unrecoverable, while
+deletes a few seconds later were recoverable. Automation that enables soft
+delete and then deletes objects must wait before it relies on recovery.
+
+:::
 
 ## Viewing soft delete status on the buckets list
 
@@ -282,9 +321,17 @@ write. A key deleted more than once has one entry for each delete, newest first.
 there is no header to attach.
 
 ```go
-import "github.com/tigrisdata/storage-go"
+import (
+	"fmt"
+	"log"
+
+	"github.com/tigrisdata/storage-go"
+)
 
 client, err := storage.New(ctx)
+if err != nil {
+	log.Fatal(err)
+}
 
 // Every deleted version of every key, newest delete first.
 in := &storage.ListSoftDeletedObjectsInput{Bucket: "my-bucket", Prefix: "contracts/"}
@@ -356,8 +403,10 @@ without the per-version detail:
 tigris objects list my-bucket --prefix contracts/ --deleted
 ```
 
-Both accept the usual `--prefix`, `--delimiter`, and paging flags. For
-scripting, `--format json` emits the same shape as the SDK:
+`--prefix` works on both. Paging flags do not carry across: `objects list` takes
+`--limit` and `--page-token`, and `objects list-versions` takes `--limit`,
+`--key-marker`, and `--version-id-marker`. For scripting, `--format json` emits
+the same shape as the SDK:
 
 ```bash
 tigris objects list-versions my-bucket --prefix contracts/ --deleted --format json \
@@ -397,7 +446,7 @@ Send `RestoreObject` with `X-Tigris-Restore-Type: soft-delete`:
 POST /my-bucket/contracts/2026/q1.pdf?restore HTTP/1.1
 Host: t3.storage.dev
 X-Tigris-Restore-Type: soft-delete
-X-Tigris-Restore-Version: 1755820800123456789
+X-Tigris-Restore-Version: 1787441627070249004
 ```
 
 The response is 200 with an empty body, and the object is immediately live for
@@ -411,11 +460,14 @@ Without this header, Tigris restores the most recent deleted version of the key.
 
 ```go
 // An empty VersionID restores the most recent deleted version of the key.
-_, err = client.RestoreSoftDeletedObject(ctx, &storage.RestoreSoftDeletedObjectInput{
+_, err := client.RestoreSoftDeletedObject(ctx, &storage.RestoreSoftDeletedObjectInput{
 	Bucket:    "my-bucket",
 	Key:       "contracts/2026/q1.pdf",
 	VersionID: "1787441627070249004",
 })
+if err != nil {
+	log.Fatal(err)
+}
 ```
 
 </TabItem>
@@ -564,7 +616,7 @@ A permanent delete removes one deleted version before its retention window ends
 and frees its storage:
 
 ```http
-DELETE /my-bucket/contracts/2026/q1.pdf?versionId=1755820800123456789 HTTP/1.1
+DELETE /my-bucket/contracts/2026/q1.pdf?versionId=1787441627070249004 HTTP/1.1
 Host: t3.storage.dev
 X-Tigris-Soft-Delete: true
 ```
@@ -582,9 +634,13 @@ call.
 <TabItem value="go" label="Go">
 
 ```go
-// The version id is required: without it the call would delete the live object.
-_, err = client.PermanentlyDeleteObject(ctx, "my-bucket",
+// The version id is required. storage-go returns ErrMissingVersionID for an
+// empty value, and the server refuses the call with 400 InvalidArgument.
+_, err := client.PermanentlyDeleteObject(ctx, "my-bucket",
 	"contracts/2026/q1.pdf", "1787441627070249004")
+if err != nil {
+	log.Fatal(err)
+}
 ```
 
 </TabItem>
@@ -650,25 +706,39 @@ The response is 200 with an empty body. The bucket and every object it held are
 live again, and listings return them as before.
 
 The AWS S3 SDKs have no bucket-restore operation, so over those this is a plain
-signed POST. Both Tigris SDKs wrap it:
+signed POST. The Tigris SDKs and the CLI wrap it:
+
+<Tabs groupId="languages">
+<TabItem value="go" label="Go">
 
 ```go
-// storage-go
-_, err = client.RestoreBucket(ctx, &storage.RestoreBucketInput{Bucket: "my-bucket"})
+_, err := client.RestoreBucket(ctx, &storage.RestoreBucketInput{Bucket: "my-bucket"})
+if err != nil {
+	log.Fatal(err)
+}
 ```
 
-```js
-// @tigrisdata/storage
+</TabItem>
+<TabItem value="ts" label="TypeScript">
+
+```ts
 import { restoreBucket } from "@tigrisdata/storage";
 
 await restoreBucket("my-bucket");
 ```
 
+</TabItem>
+<TabItem value="cli" label="CLI">
+
+List the recoverable buckets, then restore one:
+
 ```bash
-# Tigris CLI — list the recoverable buckets, then restore one.
 tigris buckets list --deleted
 tigris buckets restore my-bucket
 ```
+
+</TabItem>
+</Tabs>
 
 Restoring a bucket that is already active returns 400.
 

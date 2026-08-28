@@ -337,6 +337,10 @@ if err != nil {
 in := &storage.ListSoftDeletedObjectsInput{Bucket: "my-bucket", Prefix: "contracts/"}
 
 deleted, err := client.ListSoftDeletedObjects(ctx, in)
+if err != nil {
+	log.Fatal(err)
+}
+
 for _, obj := range deleted.Objects {
 	// LastModified is the time of the delete. VersionID is what a restore takes.
 	fmt.Println(obj.Key, obj.VersionID, obj.Size, obj.LastModified)
@@ -688,7 +692,6 @@ VersionId is required for permanent soft-delete removal
 - Take the value of `versionId` from `VersionId` in the versions listing.
 - This call is the one `DELETE` with a `versionId` that a bucket without
   versioning accepts. The `X-Tigris-Soft-Delete` header selects this behavior.
-- A purge of a version that is already gone returns 204.
 - A purge on a bucket without soft delete returns 400
   `Soft-delete is not enabled on this bucket`.
 

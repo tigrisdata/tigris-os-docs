@@ -491,7 +491,7 @@ function renderMembersTable(members: MemberInfo[]): string {
       const depMsg = typeof m.deprecated === "string" ? ` ${m.deprecated}` : "";
       desc = `**Deprecated.**${depMsg} ${desc}`;
     }
-    desc = desc.replace(/\|/g, "\\|").trim();
+    desc = desc.replace(/\s+/g, " ").replace(/\|/g, "\\|").trim();
 
     lines.push(`| \`${m.name}\` | ${escapedType} | ${required} | ${desc} |`);
   }

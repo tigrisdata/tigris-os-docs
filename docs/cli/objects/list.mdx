@@ -13,11 +13,13 @@ t3 o l <bucket> [flags]
 
 ## Flags
 
-| Name             | Required | Default | Description                                                                 |
-| ---------------- | -------- | ------- | --------------------------------------------------------------------------- |
-| `--prefix`, `-p` | No       | —       | Filter objects by key prefix (e.g. "images/" to list only images)           |
-| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml`                              |
-| `--deleted`      | No       | —       | List [soft-deleted](/docs/buckets/soft-delete) objects instead of live ones |
+| Name                  | Required | Default | Description                                                                 |
+| --------------------- | -------- | ------- | --------------------------------------------------------------------------- |
+| `--prefix`, `-p`      | No       | —       | Filter objects by key prefix (e.g. "images/" to list only images)           |
+| `--format`, `-f`      | No       | `table` | Output format. Options: `json`, `table`, `xml`                              |
+| `--limit`             | No       | —       | Maximum number of items to return per page                                  |
+| `--page-token`, `-pt` | No       | —       | Pagination token from a previous request to fetch the next page             |
+| `--deleted`           | No       | —       | List [soft-deleted](/docs/buckets/soft-delete) objects instead of live ones |
 
 ## Examples
 

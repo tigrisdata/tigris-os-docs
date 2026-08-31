@@ -60,7 +60,8 @@ full configuration is below.
 
 - Tigris **Access Key ID** and **Secret Access Key** (see the
   [Access Key guide](/docs/iam/manage-access-key/#create-an-access-key)). With
-  single-bucket pipelines, grant the key **Editor** access to just that bucket.
+  single-bucket pipelines, grant the key **ReadWrite** access to just that
+  bucket.
 - A Tigris **bucket** for your pipeline output
 - A Python environment with dlt and its filesystem extra:
 

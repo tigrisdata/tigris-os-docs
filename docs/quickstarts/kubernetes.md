@@ -17,7 +17,7 @@ Deployment as environment variables. This is the most common approach.
 
 1. Create a Tigris bucket at [storage.new](https://storage.new).
 2. Create an access key in the [dashboard](https://console.storage.dev). Give it
-   editor permissions on your bucket and copy the credentials.
+   `ReadWrite` permissions on your bucket and copy the credentials.
 
 ### Create a Secret
 

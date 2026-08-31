@@ -69,7 +69,7 @@ Bucket roles are cumulative:
 | `ReadOnly`  | Read objects and bucket metadata, list objects, and create snapshots and forks.                                                 |
 | `ReadWrite` | Everything in `ReadOnly`, plus object writes, deletes, copies, tagging, and multipart uploads. No bucket configuration changes. |
 | `Editor`    | Everything in `ReadWrite`, plus bucket configuration and deletion.                                                              |
-| `Admin`     | Full organization access. A key with `Admin` must use `*` as its bucket name.                                                   |
+| `Admin`     | Full organization access.                                                                                                       |
 
 An Editor can manage CORS, lifecycle rules, bucket tags, ownership controls,
 inventory, bucket ACLs, custom domains, delete protection, shadow buckets,

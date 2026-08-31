@@ -46,7 +46,7 @@ query — are the officially supported ones.
 - A running ClickHouse server, 23.x or later
 - A Tigris account from [storage.new](https://storage.new)
 - A bucket (this guide uses `ch-cold`) and an
-  [access key](https://storage.new/accesskey) with Editor permissions on it
+  [access key](https://storage.new/accesskey) with ReadWrite permissions on it
 
 Tigris credentials look like this:
 

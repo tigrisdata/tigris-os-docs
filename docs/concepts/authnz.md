@@ -62,75 +62,116 @@ used to determine the access level of the key.
 
 ### Role-Based-Access-Control (RBAC)
 
-The table below shows the operations that can be performed by the access key
-based on the role assigned to it.
+Bucket roles are cumulative:
 
-| Operation                          | Admin | Editor | ReadOnly |
-| ---------------------------------- | ----- | ------ | -------- |
-| AbortMultipartUpload               | ✅    | ✅     | ❌       |
-| CompleteMultipartUpload            | ✅    | ✅     | ❌       |
-| CopyObject                         | ✅    | ✅     | ❌       |
-| DeleteBucket                       | ✅    | ✅     | ❌       |
-| DeleteBucketCors                   | ✅    | ✅     | ❌       |
-| DeleteBucketLifecycleConfiguration | ✅    | ✅     | ❌       |
-| DeleteBucketOwnershipControls      | ✅    | ✅     | ❌       |
-| DeleteBucketPolicy                 | ✅    | ✅     | ❌       |
-| DeleteBucketTagging                | ✅    | ✅     | ❌       |
-| DeleteMultipleObjects              | ✅    | ✅     | ❌       |
-| DeleteObject                       | ✅    | ✅     | ❌       |
-| DeleteObjectTagging                | ✅    | ✅     | ❌       |
-| GetAccessKey                       | ✅    | ✅     | ✅       |
-| GetBucketACL                       | ✅    | ✅     | ❌       |
-| GetBucketAccelerateConfiguration   | ✅    | ✅     | ❌       |
-| GetBucketCors                      | ✅    | ✅     | ❌       |
-| GetBucketLifecycleConfiguration    | ✅    | ✅     | ❌       |
-| GetBucketLocation                  | ✅    | ✅     | ✅       |
-| GetBucketOwnershipControls         | ✅    | ✅     | ❌       |
-| GetBucketPolicy                    | ✅    | ✅     | ❌       |
-| GetBucketPolicyStatus              | ✅    | ✅     | ✅       |
-| GetBucketRequestPayment            | ✅    | ✅     | ❌       |
-| GetBucketTagging                   | ✅    | ✅     | ✅       |
-| GetObject                          | ✅    | ✅     | ✅       |
-| GetObjectACL                       | ✅    | ✅     | ❌       |
-| GetObjectTagging                   | ✅    | ✅     | ✅       |
-| HeadBucket                         | ✅    | ✅     | ✅       |
-| HeadObject                         | ✅    | ✅     | ✅       |
-| ListAccessKeys                     | ✅    | ✅     | ✅       |
-| ListBuckets                        | ✅    | ✅     | ✅       |
-| ListMultipartUploads               | ✅    | ✅     | ✅       |
-| ListObjectParts                    | ✅    | ✅     | ❌       |
-| ListObjectsV1                      | ✅    | ✅     | ✅       |
-| ListObjectsV2                      | ✅    | ✅     | ✅       |
-| ListObjectVersions                 | ✅    | ✅     | ✅       |
-| NewMultipartUpload                 | ✅    | ✅     | ❌       |
-| GetBucketAccelerateConfiguration   | ✅    | ✅     | ✅       |
-| GetBucketOwnershipControls         | ✅    | ✅     | ✅       |
-| PostPolicy                         | ✅    | ✅     | ❌       |
-| PutBucket                          | ✅    | ✅     | ❌       |
-| PutBucketACL                       | ✅    | ❌     | ❌       |
-| PutBucketAccelerateConfiguration   | ✅    | ✅     | ❌       |
-| PutBucketCors                      | ✅    | ✅     | ❌       |
-| PutBucketLifecycleConfiguration    | ✅    | ✅     | ❌       |
-| PutBucketOwnershipControls         | ✅    | ✅     | ❌       |
-| PutBucketPolicy                    | ✅    | ✅     | ❌       |
-| PutBucketTagging                   | ✅    | ✅     | ❌       |
-| PutObject                          | ✅    | ✅     | ❌       |
-| PutObjectACL                       | ✅    | ✅     | ❌       |
-| PutObjectLegalHold                 | ✅    | ✅     | ❌       |
-| PutObjectLockConfiguration         | ✅    | ✅     | ❌       |
-| PutObjectRetention                 | ✅    | ✅     | ❌       |
-| PutObjectTagging                   | ✅    | ✅     | ❌       |
-| RestoreObject                      | ✅    | ✅     | ✅       |
-| UploadPart                         | ✅    | ✅     | ❌       |
-| UploadPartCopy                     | ✅    | ✅     | ❌       |
-| IAM:CreatePolicy                   | ✅    | ❌     | ❌       |
-| IAM:ListPolicies                   | ✅    | ❌     | ❌       |
-| IAM:ListUserPolicies               | ✅    | ❌     | ❌       |
-| IAM:AttachUserPolicy               | ✅    | ❌     | ❌       |
+| Role        | Access                                                                                                                          |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `ReadOnly`  | Read objects and bucket metadata, list objects, and create snapshots and forks.                                                 |
+| `ReadWrite` | Everything in `ReadOnly`, plus object writes, deletes, copies, tagging, and multipart uploads. No bucket configuration changes. |
+| `Editor`    | Everything in `ReadWrite`, plus bucket configuration and deletion.                                                              |
+| `Admin`     | Full organization access.                                                                                                       |
 
-The bucket owner is allowed to perform all the operations on their own bucket.
+An Editor can manage CORS, lifecycle rules, bucket tags, ownership controls,
+inventory, bucket ACLs, custom domains, delete protection, shadow buckets,
+origins, object notifications, storage tiers, snapshots, and forks. An Editor
+can make a bucket public, disable delete protection, and delete the bucket.
+
+An Editor cannot manage bucket shares or create and manage IAM policies. Only
+the bucket owner or an organization admin can manage shares.
+
+:::caution
+
+Bucket metadata returned to an Editor includes the stored shadow-bucket
+credentials and the object notification authentication details. Give the Editor
+role only to users who are permitted to read those secrets. To let a user write
+objects without this access, use `ReadWrite`.
+
+:::
+
+The table below lists the gateway operations granted directly by each bucket
+role. These operation names are not IAM policy action names.
+
+| Operation                          | Admin | Editor | ReadWrite | ReadOnly |
+| ---------------------------------- | ----- | ------ | --------- | -------- |
+| AbortMultipartUpload               | ✅    | ✅     | ✅        | ❌       |
+| BundleObjects                      | ✅    | ✅     | ✅        | ✅       |
+| CompleteMultipartUpload            | ✅    | ✅     | ✅        | ❌       |
+| CopyObject                         | ✅    | ✅     | ✅        | ❌       |
+| CreateBucket                       | ✅    | ✅     | ❌        | ❌       |
+| CreateBucketFork                   | ✅    | ✅     | ✅        | ✅       |
+| CreateBucketSnapshot               | ✅    | ✅     | ✅        | ✅       |
+| DeleteBucket                       | ✅    | ✅     | ❌        | ❌       |
+| DeleteBucketCors                   | ✅    | ✅     | ❌        | ❌       |
+| DeleteBucketInventoryConfiguration | ✅    | ✅     | ❌        | ❌       |
+| DeleteBucketLifecycleConfiguration | ✅    | ✅     | ❌        | ❌       |
+| DeleteBucketOwnershipControls      | ✅    | ✅     | ❌        | ❌       |
+| DeleteBucketPolicy                 | ✅    | ✅     | ❌        | ❌       |
+| DeleteBucketTagging                | ✅    | ✅     | ❌        | ❌       |
+| DeleteMultipleObjects              | ✅    | ✅     | ✅        | ❌       |
+| DeleteObject                       | ✅    | ✅     | ✅        | ❌       |
+| DeleteObjectTagging                | ✅    | ✅     | ✅        | ❌       |
+| DeleteObjectVersion                | ✅    | ✅     | ✅        | ❌       |
+| GetAccessKey                       | ✅    | ✅     | ✅        | ✅       |
+| GetBucketACL                       | ✅    | ✅     | ❌        | ❌       |
+| GetBucketAccelerateConfiguration   | ✅    | ✅     | ✅        | ✅       |
+| GetBucketCors                      | ✅    | ✅     | ❌        | ❌       |
+| GetBucketInventoryConfiguration    | ✅    | ✅     | ❌        | ❌       |
+| GetBucketLifecycleConfiguration    | ✅    | ✅     | ❌        | ❌       |
+| GetBucketLocation                  | ✅    | ✅     | ✅        | ✅       |
+| GetBucketMetadata                  | ✅    | ✅     | ✅        | ✅       |
+| GetBucketOwnershipControls         | ✅    | ✅     | ✅        | ✅       |
+| GetBucketPolicy                    | ✅    | ✅     | ❌        | ❌       |
+| GetBucketPolicyStatus              | ✅    | ✅     | ✅        | ✅       |
+| GetBucketRequestPayment            | ✅    | ✅     | ❌        | ❌       |
+| GetBucketTagging                   | ✅    | ✅     | ✅        | ✅       |
+| GetBucketVersioning                | ✅    | ✅     | ✅        | ✅       |
+| GetObject                          | ✅    | ✅     | ✅        | ✅       |
+| GetObjectACL                       | ✅    | ✅     | ✅        | ❌       |
+| GetObjectTagging                   | ✅    | ✅     | ✅        | ✅       |
+| GetObjectVersion                   | ✅    | ✅     | ✅        | ✅       |
+| HeadBucket                         | ✅    | ✅     | ✅        | ✅       |
+| HeadObject                         | ✅    | ✅     | ✅        | ✅       |
+| ListAccessKeys                     | ✅    | ✅     | ✅        | ✅       |
+| ListBucketForks                    | ✅    | ✅     | ✅        | ✅       |
+| ListBucketInventoryConfigurations  | ✅    | ✅     | ❌        | ❌       |
+| ListBucketSnapshots                | ✅    | ✅     | ✅        | ✅       |
+| ListBuckets                        | ✅    | ✅     | ✅        | ✅       |
+| ListMultipartUploads               | ✅    | ✅     | ✅        | ✅       |
+| ListObjectParts                    | ✅    | ✅     | ✅        | ❌       |
+| ListObjectVersions                 | ✅    | ✅     | ✅        | ✅       |
+| ListObjectsV1                      | ✅    | ✅     | ✅        | ✅       |
+| ListObjectsV2                      | ✅    | ✅     | ✅        | ✅       |
+| NewMultipartUpload                 | ✅    | ✅     | ✅        | ❌       |
+| PostPolicy                         | ✅    | ✅     | ✅        | ❌       |
+| PutBucketACL                       | ✅    | ✅     | ❌        | ❌       |
+| PutBucketAccelerateConfiguration   | ✅    | ✅     | ❌        | ❌       |
+| PutBucketCors                      | ✅    | ✅     | ❌        | ❌       |
+| PutBucketInventoryConfiguration    | ✅    | ✅     | ❌        | ❌       |
+| PutBucketLifecycleConfiguration    | ✅    | ✅     | ❌        | ❌       |
+| PutBucketOwnershipControls         | ✅    | ✅     | ❌        | ❌       |
+| PutBucketPolicy                    | ✅    | ✅     | ❌        | ❌       |
+| PutBucketTagging                   | ✅    | ✅     | ❌        | ❌       |
+| PutObject                          | ✅    | ✅     | ✅        | ❌       |
+| PutObjectACL                       | ✅    | ✅     | ❌        | ❌       |
+| PutObjectLegalHold                 | ✅    | ✅     | ❌        | ❌       |
+| PutObjectLockConfiguration         | ✅    | ✅     | ❌        | ❌       |
+| PutObjectRetention                 | ✅    | ✅     | ❌        | ❌       |
+| PutObjectTagging                   | ✅    | ✅     | ✅        | ❌       |
+| RebaseBucketFork                   | ✅    | ✅     | ❌        | ❌       |
+| RestoreBucketSnapshot              | ✅    | ✅     | ❌        | ❌       |
+| RestoreObject                      | ✅    | ✅     | ✅        | ✅       |
+| TigrisPreSignUrlGenerator          | ✅    | ✅     | ✅        | ✅       |
+| UpdateBucket                       | ✅    | ✅     | ❌        | ❌       |
+| UploadPart                         | ✅    | ✅     | ✅        | ❌       |
+| UploadPartCopy                     | ✅    | ✅     | ✅        | ❌       |
+| IAM:CreatePolicy                   | ✅    | ❌     | ❌        | ❌       |
+| IAM:ListPolicies                   | ✅    | ❌     | ❌        | ❌       |
+| IAM:ListUserPolicies               | ✅    | ❌     | ❌        | ❌       |
+| IAM:AttachUserPolicy               | ✅    | ❌     | ❌        | ❌       |
+
+The bucket owner can perform all bucket operations on their own bucket.
 
 ### IAM Policies
 
-In addition to the role, Admin users can also further customize the access by
-crafting IAM policies. Read more about it [here](/docs/iam/index.md).
+In addition to bucket roles, organization admins can customize access with IAM
+policies. Read more about [IAM policies](/docs/iam/index.md).

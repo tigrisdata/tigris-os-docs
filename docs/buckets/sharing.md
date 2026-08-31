@@ -24,8 +24,12 @@ To share a bucket with another user in your organization:
 
 The roles you can assign to the users are:
 
-- `Read Only`: The user can read the content of the bucket
-- `Editor`: The user can read and write the content of the bucket
+- `Read Only`: The user can read the content of the bucket.
+- `Read Write`: The user can read and write the content of the bucket, but
+  cannot change its configuration.
+- `Editor`: The user can read and write content and manage bucket configuration,
+  including public access and deletion. Editors cannot manage shares or IAM
+  policies.
 
 Once the bucket is shared, the users you shared it with will be able to see it
 in their dashboard and access its content based on the role you assigned. The
@@ -47,7 +51,7 @@ To share a bucket with a Team:
 - Click on the bucket you want to share.
 - Click on the `Share` button.
 - Select the Team you want to share the bucket with and the role you want to
-  assign (`Read Only` or `Editor`).
+  assign (`Read Only`, `Read Write`, or `Editor`).
 - Click on the `Save changes` button.
 
 Once the bucket is shared, all members of the Team — including members added
@@ -69,8 +73,8 @@ To share a bucket with all users in your organization:
 - Go to the [Tigris Dashboard](https://console.storage.dev).
 - Click on the bucket you want to share.
 - Click on the `Share` button.
-- Modify the "Organization Access" settings to your desired permissions (Editor
-  or Read Only).
+- Modify the "Organization Access" settings to your desired permissions
+  (`Read Only`, `Read Write`, or `Editor`).
 - Click on the `Save changes` button.
 
 Once the bucket is shared, all users in the organization will be able to see it
@@ -105,9 +109,11 @@ access the bucket using the access key.
 
 ### External permissions
 
-An external user (internally referred to as an `ExternalCollaborator`) has most
-of the same permissions as a bucket Editor does, but without any administrative
-permissions (e.g. deleting the bucket).
+An external user (internally referred to as an `ExternalCollaborator`) has a
+separate role. It does not inherit Editor bucket-administration permissions. An
+external collaborator can work with objects and selected S3 bucket settings, but
+cannot update bucket metadata, change bucket ACLs, manage inventory or shares,
+or delete the bucket.
 
 <details>
 <summary>Full list of permissions</summary>
@@ -147,7 +153,7 @@ permissions (e.g. deleting the bucket).
 - Put bucket policy (`PutBucketPolicy`)
 - Put bucket tagging (`PutBucketTagging`)
 - Put objects (`PutObject`)
-- Put object ACL (`PutObjectAcl`)
+- Put object ACL (`PutObjectACL`)
 - Put object tagging (`PutObjectTagging`)
 - Upload parts (`UploadPart`)
 - Restore objects (`RestoreObject`)

@@ -53,7 +53,7 @@ as a supported backend, and this guide is the Tigris-side walkthrough.
 
 - Tigris **Access Key ID** and **Secret Access Key** (see the
   [Access Key guide](/docs/iam/manage-access-key/#create-an-access-key)). When
-  creating the key, grant it **Editor** access to just the `ragflow` bucket —
+  creating the key, grant it **ReadWrite** access to just the `ragflow` bucket —
   single-bucket mode (below) means that's all RAGFlow needs in normal operation.
   If you later fork the bucket to roll back or experiment (see
   [Snapshot before re-ingestion](#snapshot-before-re-ingestion)), extend the key
@@ -158,7 +158,7 @@ tigris snapshots list ragflow
 tigris buckets create ragflow-restored --fork-of ragflow --source-snapshot <version>
 ```
 
-The fork is a separate bucket, so grant your access key **Editor** access to
+The fork is a separate bucket, so grant your access key **ReadWrite** access to
 `ragflow-restored` before pointing RAGFlow at it — the single-bucket key from
 the [Prerequisites](#prerequisites) covers only `ragflow`, and RAGFlow's storage
 operations fail on restart if the key can't reach the fork. Then set

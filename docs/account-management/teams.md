@@ -7,7 +7,7 @@ to that Organization. Only Admins in an organization can create and manage
 teams.
 
 A Team does not carry an access level of its own. You choose the role
-(`Read Only` or `Editor`) each time you
+(`Read Only`, `Read Write`, or `Editor`) each time you
 [share a bucket with the Team](../buckets/sharing.md#sharing-with-a-team).
 
 :::note

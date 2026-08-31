@@ -24,9 +24,9 @@ To share a bucket with another user in your organization:
 
 The roles you can assign to the users are:
 
-- `Read Only`: The user can read the content of the bucket
-- `ReadWrite`: The user can read and write the content of the bucket without
-  changing its configuration
+- `Read Only`: The user can read the content of the bucket.
+- `Read Write`: The user can read and write the content of the bucket, but
+  cannot change its configuration.
 - `Editor`: The user can read and write content and manage bucket configuration,
   including public access and deletion. Editors cannot manage shares or IAM
   policies.
@@ -51,7 +51,7 @@ To share a bucket with a Team:
 - Click on the bucket you want to share.
 - Click on the `Share` button.
 - Select the Team you want to share the bucket with and the role you want to
-  assign (`Read Only`, `ReadWrite`, or `Editor`).
+  assign (`Read Only`, `Read Write`, or `Editor`).
 - Click on the `Save changes` button.
 
 Once the bucket is shared, all members of the Team — including members added
@@ -74,7 +74,7 @@ To share a bucket with all users in your organization:
 - Click on the bucket you want to share.
 - Click on the `Share` button.
 - Modify the "Organization Access" settings to your desired permissions
-  (`Read Only`, `ReadWrite`, or `Editor`).
+  (`Read Only`, `Read Write`, or `Editor`).
 - Click on the `Save changes` button.
 
 Once the bucket is shared, all users in the organization will be able to see it
@@ -153,7 +153,7 @@ or delete the bucket.
 - Put bucket policy (`PutBucketPolicy`)
 - Put bucket tagging (`PutBucketTagging`)
 - Put objects (`PutObject`)
-- Put object ACL (`PutObjectAcl`)
+- Put object ACL (`PutObjectACL`)
 - Put object tagging (`PutObjectTagging`)
 - Upload parts (`UploadPart`)
 - Restore objects (`RestoreObject`)

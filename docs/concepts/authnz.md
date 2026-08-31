@@ -64,12 +64,12 @@ used to determine the access level of the key.
 
 Bucket roles are cumulative:
 
-| Role        | Access                                                                                                                                |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `ReadOnly`  | Read objects and bucket metadata, list objects, and create snapshots and forks.                                                       |
-| `ReadWrite` | Everything in `ReadOnly`, plus object writes, deletes, copies, tagging, and multipart uploads. It cannot change bucket configuration. |
-| `Editor`    | Everything in `ReadWrite`, plus bucket configuration and deletion.                                                                    |
-| `Admin`     | Full organization access. A key with `Admin` must use `*` as its bucket name.                                                         |
+| Role        | Access                                                                                                                          |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `ReadOnly`  | Read objects and bucket metadata, list objects, and create snapshots and forks.                                                 |
+| `ReadWrite` | Everything in `ReadOnly`, plus object writes, deletes, copies, tagging, and multipart uploads. No bucket configuration changes. |
+| `Editor`    | Everything in `ReadWrite`, plus bucket configuration and deletion.                                                              |
+| `Admin`     | Full organization access. A key with `Admin` must use `*` as its bucket name.                                                   |
 
 An Editor can manage CORS, lifecycle rules, bucket tags, ownership controls,
 inventory, bucket ACLs, custom domains, delete protection, shadow buckets,
@@ -77,9 +77,16 @@ origins, object notifications, storage tiers, snapshots, and forks. An Editor
 can make a bucket public, disable delete protection, and delete the bucket.
 
 An Editor cannot manage bucket shares or create and manage IAM policies. Only
-the bucket owner or an organization admin can manage shares. Bucket metadata
-returned to an Editor includes stored shadow-bucket credentials and object
-notification authentication details.
+the bucket owner or an organization admin can manage shares.
+
+:::caution
+
+Bucket metadata returned to an Editor includes the stored shadow-bucket
+credentials and the object notification authentication details. Give the Editor
+role only to users who are permitted to read those secrets. To let a user write
+objects without this access, use `ReadWrite`.
+
+:::
 
 The table below lists the gateway operations granted directly by each bucket
 role. These operation names are not IAM policy action names.
@@ -145,7 +152,7 @@ role. These operation names are not IAM policy action names.
 | PutBucketPolicy                    | ✅    | ✅     | ❌        | ❌       |
 | PutBucketTagging                   | ✅    | ✅     | ❌        | ❌       |
 | PutObject                          | ✅    | ✅     | ✅        | ❌       |
-| PutObjectAcl                       | ✅    | ✅     | ❌        | ❌       |
+| PutObjectACL                       | ✅    | ✅     | ❌        | ❌       |
 | PutObjectLegalHold                 | ✅    | ✅     | ❌        | ❌       |
 | PutObjectLockConfiguration         | ✅    | ✅     | ❌        | ❌       |
 | PutObjectRetention                 | ✅    | ✅     | ❌        | ❌       |
@@ -157,6 +164,10 @@ role. These operation names are not IAM policy action names.
 | UpdateBucket                       | ✅    | ✅     | ❌        | ❌       |
 | UploadPart                         | ✅    | ✅     | ✅        | ❌       |
 | UploadPartCopy                     | ✅    | ✅     | ✅        | ❌       |
+| IAM:CreatePolicy                   | ✅    | ❌     | ❌        | ❌       |
+| IAM:ListPolicies                   | ✅    | ❌     | ❌        | ❌       |
+| IAM:ListUserPolicies               | ✅    | ❌     | ❌        | ❌       |
+| IAM:AttachUserPolicy               | ✅    | ❌     | ❌        | ❌       |
 
 The bucket owner can perform all bucket operations on their own bucket.
 

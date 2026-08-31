@@ -2184,11 +2184,17 @@ components:
           description: |
             The role defines the permissions for the associated bucket:
 
-            - `ReadOnly`: Read-only access to the bucket. Permits read
-              operations like GetObject, HeadObject, ListObjects.
-            - `Editor`: Read and write access to the bucket. Includes
-              everything in ReadOnly, plus PutObject, DeleteObject, and bucket
-              configuration operations.
+            - `ReadOnly`: Read operations such as GetObject, HeadObject and
+              ListObjects, plus creating bucket snapshots and forks.
+            - `ReadWrite`: Everything in ReadOnly, plus object writes:
+              PutObject, DeleteObject, CopyObject, object tagging and
+              multipart uploads. Cannot change bucket configuration.
+            - `Editor`: Everything in ReadWrite, plus full bucket
+              administration: CORS, lifecycle, tagging, ownership controls,
+              inventory, bucket ACLs (including making the bucket public),
+              custom domains, delete protection, shadow bucket, origin, object
+              notifications, storage tier, and DeleteBucket. Cannot manage
+              bucket shares or create bucket IAM policies.
             - `Admin`: Full access to all buckets in the org, bypasses all
               permission checks. When used with `bucket_name: "*"`, the access
               key is treated as a full org admin. The value of `bucket_name`
@@ -2201,7 +2207,7 @@ components:
                 "role": "Admin"
               }
               ```
-          enum: [ReadOnly, Editor, Admin]
+          enum: [ReadOnly, ReadWrite, Editor, Admin]
     UpdateAccessKeyRequest:
       type: object
       additionalProperties: false

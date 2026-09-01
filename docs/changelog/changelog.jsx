@@ -199,10 +199,7 @@ tigris objects purge t3://mybucket/report.pdf`}</CodeBlock>
                 </p>
                 <p>
                   See{" "}
-                  <a href="/docs/iam/manage-access-key/">
-                    Manage Access Keys
-                  </a>
-                  .
+                  <a href="/docs/iam/manage-access-key/">Manage Access Keys</a>.
                 </p>
               </>
             ),

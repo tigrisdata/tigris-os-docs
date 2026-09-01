@@ -502,6 +502,82 @@ tigris telemetry disable`}</CodeBlock>
         ],
       },
       {
+        title: "Partner Integrations",
+        items: [
+          {
+            title: "Soft delete on the partner API",
+            description: (
+              <>
+                <p>
+                  A partner can turn{" "}
+                  <a href="/docs/buckets/soft-delete/">soft delete</a> on for a
+                  bucket and read the setting back, through <code>PUT</code>,{" "}
+                  <code>GET</code> and <code>DELETE</code> on{" "}
+                  <code>/buckets/&#123;bucket_name&#125;/soft-delete</code>.
+                  Retention is 7 to 90 days and defaults to 7. The{" "}
+                  <code>PUT</code> replaces the whole configuration, so leaving{" "}
+                  <code>retention_days</code> out while enabling sets the
+                  default rather than keeping the current value. A bucket can
+                  also be provisioned with <code>soft_delete</code> in its
+                  options.
+                </p>
+                <p>
+                  Until now the partner API exposed none of this, so a
+                  partner-provisioned bucket could not get the protection at
+                  all. See the{" "}
+                  <a href="/docs/partner-integrations/">
+                    Partner Integration Program
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "Partner API", color: "orange" },
+          },
+          {
+            title: "Deleted buckets have their own collection",
+            description: (
+              <>
+                <p>
+                  <code>GET /deleted-buckets</code> lists the buckets in the
+                  trash and{" "}
+                  <code>GET /deleted-buckets/&#123;bucket_name&#125;</code>{" "}
+                  reports when each one was deleted.{" "}
+                  <code>
+                    POST /deleted-buckets/&#123;bucket_name&#125;/restore
+                  </code>{" "}
+                  brings a bucket back along with the objects retained with it,
+                  which previously meant escalating to Tigris support.{" "}
+                  <code>DELETE /deleted-buckets/&#123;bucket_name&#125;</code>{" "}
+                  removes it for good.
+                </p>
+                <p>
+                  <code>GET /buckets</code> lists live buckets only, and asking
+                  for a soft-deleted bucket on that path returns 404. Nothing
+                  purges a soft-deleted bucket on its own, so the permanent
+                  delete is what stops one being retained and billed.
+                </p>
+              </>
+            ),
+            tag: { label: "Partner API", color: "orange" },
+          },
+          {
+            title: "Soft delete in the partner portal",
+            description: (
+              <>
+                <p>
+                  A bucket can be deleted with a retention window set in the
+                  portal. The bucket list splits into Active and Restorable
+                  segments, and a restorable bucket can be brought back or
+                  purged through a confirmation modal.
+                </p>
+              </>
+            ),
+            tag: { label: "Partner Portal", color: "orange" },
+          },
+        ],
+      },
+      {
         title: "Acceleration Gateway",
         items: [
           {

@@ -160,15 +160,17 @@ export const changelogData = [
         <p>
           The SDK and the CLI can read the soft-delete view of a bucket and pull
           objects back out of it. <code>list()</code> and{" "}
-          <code>listVersions()</code> accept <code>deleted: true</code>,{" "}
-          <code>restoreDeletedObject()</code> returns a version to the live
-          view, and <code>purgeDeletedObject()</code> destroys one before its
-          retention window ends.
+          <code>listVersions()</code> accept <code>deleted: true</code>. Both{" "}
+          <code>restoreDeletedObject()</code> and{" "}
+          <code>purgeDeletedObject()</code> take the version id of one deleted
+          version, which the listing gives you: a restore returns that version
+          to the live view, and a purge destroys it before its retention window
+          ends.
         </p>
-        <CodeBlock language="bash">{`tigris objects list --deleted t3://mybucket
-tigris objects list-versions --deleted t3://mybucket/report.pdf
-tigris objects restore-deleted t3://mybucket/report.pdf
-tigris objects purge t3://mybucket/report.pdf`}</CodeBlock>
+        <CodeBlock language="bash">{`tigris objects list t3://mybucket --deleted
+tigris objects list-versions t3://mybucket/report.pdf --deleted
+tigris objects restore-deleted t3://mybucket/report.pdf --version-id 1787441627070249004
+tigris objects purge t3://mybucket/report.pdf --version-id 1787441627070249004`}</CodeBlock>
         <p>
           Soft delete is a per-bucket setting. See{" "}
           <a href="/docs/buckets/soft-delete/">Soft Delete</a> for the retention
@@ -218,7 +220,6 @@ tigris objects purge t3://mybucket/report.pdf`}</CodeBlock>
                 </p>
               </>
             ),
-            tag: { label: "API", color: "blue" },
           },
           {
             title: "CreateBucket honors LocationConstraint",
@@ -409,7 +410,6 @@ tigris telemetry disable`}</CodeBlock>
                 </p>
               </>
             ),
-            tag: { label: "API", color: "blue" },
           },
           {
             title:
@@ -425,7 +425,6 @@ tigris telemetry disable`}</CodeBlock>
                 </p>
               </>
             ),
-            tag: { label: "API", color: "blue" },
           },
           {
             title:
@@ -439,7 +438,6 @@ tigris telemetry disable`}</CodeBlock>
                 </p>
               </>
             ),
-            tag: { label: "API", color: "blue" },
           },
           {
             title: "A key named null returned 500",
@@ -879,7 +877,6 @@ tigris telemetry disable`}</CodeBlock>
                 </p>
               </>
             ),
-            tag: { label: "API", color: "blue" },
           },
           {
             title: "Throttling returns 429",
@@ -893,7 +890,6 @@ tigris telemetry disable`}</CodeBlock>
                 </p>
               </>
             ),
-            tag: { label: "API", color: "blue" },
           },
         ],
       },
@@ -937,7 +933,6 @@ tigris telemetry disable`}</CodeBlock>
                 </p>
               </>
             ),
-            tag: { label: "API", color: "blue" },
           },
           {
             title: "304 responses carry their validators",
@@ -976,7 +971,6 @@ tigris telemetry disable`}</CodeBlock>
                 </p>
               </>
             ),
-            tag: { label: "API", color: "blue" },
           },
           {
             title: "Importing the SDK loaded your .env",
@@ -1360,7 +1354,6 @@ with tarfile.open(fileobj=response, mode="r|") as tar:
                 </p>
               </>
             ),
-            tag: { label: "API", color: "blue" },
           },
           {
             title: "Missing-key reads on a deep fork",
@@ -1375,7 +1368,6 @@ with tarfile.open(fileobj=response, mode="r|") as tar:
                 </p>
               </>
             ),
-            tag: { label: "API", color: "blue" },
           },
           {
             title:

@@ -744,6 +744,7 @@ tigris telemetry disable`}</CodeBlock>
                 </p>
               </>
             ),
+            tag: { label: "Security", color: "green" },
           },
         ],
       },
@@ -763,6 +764,7 @@ tigris telemetry disable`}</CodeBlock>
                 </p>
               </>
             ),
+            tag: { label: "Buckets", color: "blue" },
           },
           {
             title: "304 responses carry their validators",
@@ -1043,6 +1045,7 @@ tigris telemetry disable`}</CodeBlock>
                 </p>
               </>
             ),
+            tag: { label: "Buckets", color: "blue" },
           },
           {
             title:

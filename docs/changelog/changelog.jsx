@@ -208,20 +208,6 @@ tigris objects purge t3://mybucket/report.pdf --version-id 1787441627070249004`}
             tag: { label: "IAM", color: "red" },
           },
           {
-            title: "Rate limits apply per namespace",
-            description: (
-              <>
-                <p>
-                  A rate limit can be set for a whole namespace instead of only
-                  per bucket, so creating more buckets no longer raises a
-                  tenant&apos;s ceiling. Alongside the bandwidth limiters there
-                  is now a requests-per-second limiter with a configurable burst
-                  allowance.
-                </p>
-              </>
-            ),
-          },
-          {
             title: "CreateBucket honors LocationConstraint",
             description: (
               <>
@@ -396,49 +382,6 @@ tigris telemetry disable`}</CodeBlock>
       {
         title: "Fixes",
         items: [
-          {
-            title:
-              "Deleting an already soft-deleted object destroyed its versions",
-            description: (
-              <>
-                <p>
-                  A delete against a key that had already been soft-deleted
-                  wiped every retained version of it. The object then vanished
-                  from deleted listings, and a restore returned 404 or a
-                  zero-byte object in the live view. A purge that names no
-                  version is now rejected rather than purging broadly.
-                </p>
-              </>
-            ),
-          },
-          {
-            title:
-              "A region could serve a stale object after a remote overwrite",
-            description: (
-              <>
-                <p>
-                  When a cache eviction arrived before the replication apply, a
-                  read in that window repopulated the edge cache with the
-                  pre-apply row, and no further eviction followed. The region
-                  kept serving the old object indefinitely. Evictions now leave
-                  a version barrier behind them.
-                </p>
-              </>
-            ),
-          },
-          {
-            title:
-              "Objects written right after CreateBucket could be lost in a region",
-            description: (
-              <>
-                <p>
-                  If the replication event beat the bucket-create broadcast, the
-                  worker read the not-found bucket as deleted and dropped the
-                  event, losing the object in that region permanently.
-                </p>
-              </>
-            ),
-          },
           {
             title: "A key named null returned 500",
             description: (

@@ -585,82 +585,6 @@ tigris telemetry disable`}</CodeBlock>
             ),
             tag: { label: "Acceleration Gateway", color: "purple" },
           },
-          {
-            title: "Warm serves read several blocks at once",
-            description: (
-              <>
-                <p>
-                  A multi-block warm serve reads up to 32 blocks through an
-                  ordered prefetch window instead of one block at a time, so a
-                  range spanning several owner nodes aggregates their bandwidth.
-                  Block-mode range misses are served from the bytes already in
-                  memory and the cross-node cache write is detached, which cut a
-                  warm-load p95 that had reached 1.43s against an upstream p95
-                  of 0.28s.
-                </p>
-              </>
-            ),
-            tag: { label: "Acceleration Gateway", color: "purple" },
-          },
-          {
-            title: "Compaction stops evicting the serving working set",
-            description: (
-              <>
-                <p>
-                  Cache compaction drops its input pages and synced output
-                  ranges from the page cache, so a compaction burst no longer
-                  pushes out the warm data TAG is serving from. Source reads can
-                  be throttled per deployment with{" "}
-                  <code>cache.compaction_bytes_per_second</code>, which is
-                  unthrottled when unset.
-                </p>
-              </>
-            ),
-            tag: { label: "Acceleration Gateway", color: "purple" },
-          },
-          {
-            title: "Dead cache bytes are reclaimed",
-            description: (
-              <>
-                <p>
-                  Dead bytes are now reclaimed within a compaction rotation
-                  instead of leaking, which is the fix for the ENOSPC and
-                  full-PVC reports from customers running TAG. The same cache
-                  engine bump carries three data-loss fixes in recompaction.
-                </p>
-              </>
-            ),
-            tag: { label: "Acceleration Gateway", color: "purple" },
-          },
-          {
-            title: "A cache write could corrupt data silently",
-            description: (
-              <>
-                <p>
-                  A silent data-corruption hazard in cache writes, present in
-                  the previous two cache-engine versions, is fixed, along with a
-                  TTL bug that destroyed delete-index records. Upgrade if you
-                  are running either of those versions.
-                </p>
-              </>
-            ),
-            tag: { label: "Acceleration Gateway", color: "purple" },
-          },
-          {
-            title: "A HEAD could be answered from stale metadata",
-            description: (
-              <>
-                <p>
-                  When a full-object GET bailed out on read amplification it
-                  left a metadata-only cache entry behind, so a HEAD could be
-                  answered from that metadata for up to the 24h TTL after the
-                  object was deleted or replaced out of band. The entry is
-                  dropped now.
-                </p>
-              </>
-            ),
-            tag: { label: "Acceleration Gateway", color: "purple" },
-          },
         ],
       },
     ],
@@ -888,53 +812,6 @@ tigris telemetry disable`}</CodeBlock>
         title: "Acceleration Gateway",
         items: [
           {
-            title: "TAG is Apache 2.0",
-            description: (
-              <>
-                <p>
-                  The{" "}
-                  <a href="/docs/acceleration-gateway/">
-                    Tigris Acceleration Gateway
-                  </a>{" "}
-                  is relicensed under Apache 2.0 and ships a <code>NOTICE</code>
-                  , a contributing guide and a CLA. Its <code>ocache</code>{" "}
-                  dependencies are public, so building from source needs no
-                  private-module setup. <code>install.sh</code>,{" "}
-                  <code>run.sh</code> and a matching <code>config.yaml</code>{" "}
-                  are published to the release bucket next to the binaries, so a
-                  native install pulls a version-matched config instead of
-                  reaching for raw.githubusercontent.com.
-                </p>
-              </>
-            ),
-            tag: { label: "Acceleration Gateway", color: "purple" },
-          },
-          {
-            title: "Writes populate the cache",
-            description: (
-              <>
-                <p>
-                  A write used to invalidate the cache and nothing more, so the
-                  first read after a write always went upstream. An
-                  authenticated <code>PutObject</code> in signing mode now tees
-                  its body into the cache on the way upstream, which makes the
-                  object hot the moment the write succeeds and drops the
-                  read-back GET TAG used to pay per write. The opt-in{" "}
-                  <code>cache.warm_on_write</code> fires a background
-                  full-object fetch after <code>PutObject</code>,{" "}
-                  <code>CompleteMultipartUpload</code> and{" "}
-                  <code>CopyObject</code>; it is the only path that warms
-                  multipart objects. Warm-on-write populates get a prioritized,
-                  elastic share of the populate memory budget through{" "}
-                  <code>cache.warm_on_write_reserved_fraction</code>, after a
-                  production case where read-miss warms shed almost all
-                  populates and collapsed the hit ratio.
-                </p>
-              </>
-            ),
-            tag: { label: "Acceleration Gateway", color: "purple" },
-          },
-          {
             title: "FIFO eviction policy",
             description: (
               <>
@@ -961,64 +838,6 @@ tigris telemetry disable`}</CodeBlock>
                   Cache-populate concurrency is bounded by memory rather than by
                   a slot count, so a few large objects can no longer exhaust
                   memory inside the allowed slots.
-                </p>
-              </>
-            ),
-            tag: { label: "Acceleration Gateway", color: "purple" },
-          },
-          {
-            title: "A GET racing a PUT could return a truncated body",
-            description: (
-              <>
-                <p>
-                  Cache bodies are addressed by ETag, so a GET that races a PUT
-                  can no longer pair one version&apos;s metadata with another
-                  version&apos;s body and return a short body or{" "}
-                  <code>cache body unavailable: EOF</code>. Empty and weak ETags
-                  are handled as well.
-                </p>
-              </>
-            ),
-            tag: { label: "Acceleration Gateway", color: "purple" },
-          },
-          {
-            title: "A private object could be served to an anonymous request",
-            description: (
-              <>
-                <p>
-                  A background fetch running with TAG&apos;s own credentials
-                  could mark the cached object public-read, which let a later
-                  anonymous request be served a private object. That fetch can
-                  no longer set the flag.
-                </p>
-              </>
-            ),
-            tag: { label: "Acceleration Gateway", color: "purple" },
-          },
-          {
-            title:
-              "A completed multipart upload was shadowed by the old object",
-            description: (
-              <>
-                <p>
-                  <code>CompleteMultipartUpload</code> invalidates the read
-                  cache now, so a finished multipart upload is no longer hidden
-                  behind the pre-upload object. The write tombstone is also
-                  stamped before the upstream read rather than after, which
-                  tightens read-after-write.
-                </p>
-              </>
-            ),
-            tag: { label: "Acceleration Gateway", color: "purple" },
-          },
-          {
-            title: "Pod memory stopped creeping",
-            description: (
-              <>
-                <p>
-                  Linux builds link jemalloc. RocksDB allocation churn across
-                  glibc arenas had been driving pod RSS from about 2 GiB to
-                  about 4.5 GiB over two days.
                 </p>
               </>
             ),
@@ -1271,57 +1090,6 @@ tigris telemetry disable`}</CodeBlock>
               </>
             ),
             tag: { label: "Web Console", color: "orange" },
-          },
-        ],
-      },
-      {
-        title: "Acceleration Gateway",
-        items: [
-          {
-            title: "A cold node could stay cold",
-            description: (
-              <>
-                <p>
-                  A client that cancelled mid-fetch abandoned the cache
-                  population with it, so a cold{" "}
-                  <a href="/docs/acceleration-gateway/">Acceleration Gateway</a>{" "}
-                  node re-fetched the same large objects on every request and
-                  never warmed. The population now finishes on its own.
-                </p>
-              </>
-            ),
-            tag: { label: "Acceleration Gateway", color: "purple" },
-          },
-          {
-            title: "Cache nodes no longer crash-loop on dangling references",
-            description: (
-              <>
-                <p>
-                  A dangling raw-file reference put a cache node into a
-                  crash-loop. Dangling metadata is also reconciled when the
-                  compactor drops a missing-file index row.
-                </p>
-              </>
-            ),
-            tag: { label: "Acceleration Gateway", color: "purple" },
-          },
-          {
-            title: "Two storage knobs are settable",
-            description: (
-              <>
-                <p>
-                  <code>delete_batch_size</code> (default 1000) and{" "}
-                  <code>recovery_workers</code> (default 16) can be set from the
-                  config file or as <code>TAG_CACHE_DELETE_BATCH_SIZE</code> and{" "}
-                  <code>TAG_CACHE_RECOVERY_WORKERS</code>. See{" "}
-                  <a href="/docs/acceleration-gateway/configuration/">
-                    the configuration reference
-                  </a>
-                  .
-                </p>
-              </>
-            ),
-            tag: { label: "Acceleration Gateway", color: "purple" },
           },
         ],
       },

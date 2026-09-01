@@ -152,6 +152,1260 @@ const may2026 = {
 };
 
 export const changelogData = [
+  {
+    date: "August 31, 2026",
+    title: "Recovering soft-deleted objects",
+    content: (
+      <>
+        <p>
+          The SDK and the CLI can read the soft-delete view of a bucket and pull
+          objects back out of it. <code>list()</code> and{" "}
+          <code>listVersions()</code> accept <code>deleted: true</code>,{" "}
+          <code>restoreDeletedObject()</code> returns a version to the live
+          view, and <code>purgeDeletedObject()</code> destroys one before its
+          retention window ends.
+        </p>
+        <CodeBlock language="bash">{`tigris objects list --deleted t3://mybucket
+tigris objects list-versions --deleted t3://mybucket/report.pdf
+tigris objects restore-deleted t3://mybucket/report.pdf
+tigris objects purge t3://mybucket/report.pdf`}</CodeBlock>
+        <p>
+          Soft delete is a per-bucket setting. See{" "}
+          <a href="/docs/buckets/soft-delete/">Soft Delete</a> for the retention
+          window, and{" "}
+          <a href="https://www.tigrisdata.com/blog/soft-delete-deep-dive/">
+            Extending immutability: deletion without losing data
+          </a>{" "}
+          for how deletes are recorded underneath.
+        </p>
+      </>
+    ),
+    subcategories: [
+      {
+        title: "Features",
+        items: [
+          {
+            title: "ReadWrite bucket role",
+            description: (
+              <>
+                <p>
+                  <code>ReadWrite</code> sits between <code>ReadOnly</code> and{" "}
+                  <code>Editor</code>. It grants object read and write on a
+                  bucket without the bucket management permissions an Editor
+                  carries. Pick it in the console when you set access key
+                  permissions or share a bucket, or pass it to{" "}
+                  <code>tigris access-keys assign --role ReadWrite</code> and{" "}
+                  <code>createAccessKey</code>. Editors can now manage buckets.
+                </p>
+                <p>
+                  See{" "}
+                  <a href="/docs/iam/manage-access-key/">
+                    Manage Access Keys
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "IAM", color: "red" },
+          },
+          {
+            title: "Rate limits apply per namespace",
+            description: (
+              <>
+                <p>
+                  A rate limit can be set for a whole namespace instead of only
+                  per bucket, so creating more buckets no longer raises a
+                  tenant&apos;s ceiling. Alongside the bandwidth limiters there
+                  is now a requests-per-second limiter with a configurable burst
+                  allowance.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "CreateBucket honors LocationConstraint",
+            description: (
+              <>
+                <p>
+                  <code>CreateBucket</code> used to ignore{" "}
+                  <code>CreateBucketConfiguration.LocationConstraint</code>. It
+                  now places the bucket accordingly. <code>global</code>,{" "}
+                  <code>auto</code> and <code>us-east-1</code> mean no
+                  preference; any other value has to name a real Tigris region
+                  or replication group, so an SDK that autofills{" "}
+                  <code>eu-central-1</code> gets an error rather than a global
+                  bucket.
+                </p>
+                <p>
+                  See <a href="/docs/buckets/locations/">Bucket Locations</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "Reorganized bucket page",
+            description: (
+              <>
+                <p>
+                  The bucket page groups its actions under a{" "}
+                  <strong>+ New</strong> menu for folders, uploads and snapshots
+                  and a <strong>More</strong> menu for sharing, settings,
+                  snapshot history and fork history. Snapshot-enabled buckets
+                  carry a badge, files can be filtered between All files and
+                  Deleted files with a prefix search, and selecting a snapshot
+                  shows a read-only banner with a way back to the current view.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+          {
+            title: "Retries and error hooks for bucket and IAM calls",
+            description: (
+              <>
+                <p>
+                  Bucket and IAM requests retry on 408, 429 and 5xx responses:
+                  three attempts by default, exponential backoff with jitter,
+                  and <code>Retry-After</code> honored when the server sends it.
+                  Transport failures are retried only on <code>GET</code> and{" "}
+                  <code>HEAD</code> unless you set{" "}
+                  <code>retryNetworkErrors</code>.
+                </p>
+                <CodeBlock language="typescript">{`import { setTigrisHttpHooks } from "@tigrisdata/storage";
+
+setTigrisHttpHooks({
+  onError: (err) => console.error(err),
+  onRetry: (info) => console.warn("retrying", info),
+});
+
+await getBucketInfo("mybucket", {
+  config: { retry: { attempts: 5 } },
+});`}</CodeBlock>
+                <p>
+                  <code>setTigrisHttpHooks</code> reports failures for every
+                  Tigris SDK package in the process, not only the one you
+                  called.
+                </p>
+              </>
+            ),
+            tag: { label: "SDK", color: "blue" },
+          },
+          {
+            title: "Deleting snapshots from the CLI",
+            description: (
+              <>
+                <p>
+                  <code>
+                    tigris snapshots delete &lt;bucket&gt; &lt;versions...&gt;
+                  </code>{" "}
+                  deletes one or more snapshots, which previously meant calling{" "}
+                  <code>deleteBucketSnapshot</code> from the SDK. It confirms
+                  before deleting, reports each version separately, and exits
+                  non-zero if any deletion failed.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+          {
+            title: "npx tigris",
+            description: (
+              <>
+                <p>
+                  The CLI is published unscoped as <code>tigris</code> as well
+                  as <code>@tigrisdata/cli</code>, so <code>npx tigris</code>{" "}
+                  works without the scope. Commands, flags and exit codes are
+                  identical in both packages.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+          {
+            title: "CLI usage analytics",
+            description: (
+              <>
+                <p>
+                  The CLI now sends one usage event per invocation carrying the
+                  command, scrubbed arguments, flag names, versions, and the
+                  install and auth method. Credentials and paths are stripped
+                  before it leaves your machine, and the CLI prints a disclosure
+                  notice the first time it runs.
+                </p>
+                <CodeBlock language="bash">{`tigris telemetry status
+tigris telemetry disable`}</CodeBlock>
+                <p>
+                  <code>TIGRIS_NO_TELEMETRY</code> and <code>DO_NOT_TRACK</code>{" "}
+                  also turn it off and accept any truthy value.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+        ],
+      },
+      {
+        title: "Improvements",
+        items: [
+          {
+            title: "Console visual refresh",
+            description: (
+              <>
+                <p>
+                  The console has a new type scale and color tokens, restyled
+                  radios and checkboxes, a new button set across roughly 130
+                  call sites, inline icons where images used to be, and
+                  standardized dropdowns, chevrons and segmented controls. The
+                  buckets list and Bucket Settings changed the most.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+          {
+            title: "Screen reader labels",
+            description: (
+              <>
+                <p>
+                  Text inputs, search boxes, pagination controls and usage
+                  displays have accessible labels, so a screen reader announces
+                  what they are instead of reading an unlabelled field.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+          {
+            title: "Bucket migrations keep 50 GB in flight",
+            description: (
+              <>
+                <p>
+                  The default in-flight budget for{" "}
+                  <code>tigris buckets migrate</code> went from 10 GB to 50 GB,
+                  so a run of multi-gigabyte objects no longer serializes files
+                  that individually exceeded the old budget.{" "}
+                  <code>--max-in-flight-gb</code> takes a value from 1 to 100
+                  and is checked before object discovery starts.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+        ],
+      },
+      {
+        title: "Fixes",
+        items: [
+          {
+            title:
+              "Deleting an already soft-deleted object destroyed its versions",
+            description: (
+              <>
+                <p>
+                  A delete against a key that had already been soft-deleted
+                  wiped every retained version of it. The object then vanished
+                  from deleted listings, and a restore returned 404 or a
+                  zero-byte object in the live view. A purge that names no
+                  version is now rejected rather than purging broadly.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title:
+              "A region could serve a stale object after a remote overwrite",
+            description: (
+              <>
+                <p>
+                  When a cache eviction arrived before the replication apply, a
+                  read in that window repopulated the edge cache with the
+                  pre-apply row, and no further eviction followed. The region
+                  kept serving the old object indefinitely. Evictions now leave
+                  a version barrier behind them.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title:
+              "Objects written right after CreateBucket could be lost in a region",
+            description: (
+              <>
+                <p>
+                  If the replication event beat the bucket-create broadcast, the
+                  worker read the not-found bucket as deleted and dropped the
+                  event, losing the object in that region permanently.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "A key named null returned 500",
+            description: (
+              <>
+                <p>
+                  Reading or listing a key named exactly <code>null</code>{" "}
+                  failed with a 500, because the key was being parsed as a JSON
+                  null.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "Cache-Control precedence",
+            description: (
+              <>
+                <p>
+                  The gateway no longer echoes a request&apos;s{" "}
+                  <code>Cache-Control</code> back on <code>GET</code> and{" "}
+                  <code>HEAD</code>. An object-level <code>Cache-Control</code>{" "}
+                  now beats the bucket default, both on the read and in the
+                  write-path decision about whether the object is cacheable. See{" "}
+                  <a href="/docs/objects/caching/">Caching</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "A bucket owner could be denied a write presign",
+            description: (
+              <>
+                <p>
+                  An owner who was also covered by a <code>ReadOnly</code> share
+                  on their own bucket was refused a write presign.
+                </p>
+              </>
+            ),
+            tag: { label: "IAM", color: "red" },
+          },
+          {
+            title: "cp, mv and rm counted folder markers",
+            description: (
+              <>
+                <p>
+                  Zero-byte folder markers were counted as objects, so{" "}
+                  <code>mv -r</code> on a folder of ten files asked to move
+                  eleven and then reported ten. A wildcard such as{" "}
+                  <code>mv &apos;folder/*.zip&apos;</code> with no matches moved
+                  the folder marker itself and removed <code>folder/</code>.
+                  Counts and wildcard scope now match what <code>ls</code> and a
+                  shell do.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+        ],
+      },
+      {
+        title: "Acceleration Gateway",
+        items: [
+          {
+            title: "Block-aligned caching is the default",
+            description: (
+              <>
+                <p>
+                  Large objects are cached as fixed-size blocks, so a small
+                  range read fetches and caches only the blocks that cover it
+                  instead of the whole object. It is on by default at a 1 MiB{" "}
+                  <code>block_size</code>, replacing the previous whole-object
+                  default. On a production analytics workload the measured read
+                  amplification was 21x at a 4 MiB block size against roughly
+                  0.05x at 1 MiB. Set <code>block_caching_enabled: false</code>{" "}
+                  to go back to whole-object caching.
+                </p>
+                <p>
+                  See{" "}
+                  <a href="/docs/acceleration-gateway/configuration/">
+                    the configuration reference
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+          {
+            title: "Object metadata is cached on write",
+            description: (
+              <>
+                <p>
+                  TAG caches object metadata as it writes, including for
+                  multipart uploads whose assembled body it never sees. The
+                  first read used to pay an upstream round trip just to
+                  establish metadata before block mode could engage.
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+          {
+            title: "Parquet metadata prefetch",
+            description: (
+              <>
+                <p>
+                  With <code>cache.parquet_optimization</code> enabled, a read
+                  that reaches a Parquet object&apos;s trailer starts a
+                  background fetch of the metadata blocks ahead of it, sized
+                  from the length the file declares rather than guessed.{" "}
+                  <code>tag_cache_block_prefetched_total</code>,{" "}
+                  <code>tag_cache_block_prefetch_used_total</code> and{" "}
+                  <code>tag_cache_parquet_footer_bytes</code> are emitted
+                  unconditionally.
+                </p>
+                <p>
+                  See{" "}
+                  <a href="/docs/acceleration-gateway/parquet-optimization/">
+                    Parquet optimization
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+          {
+            title: "Warm serves read several blocks at once",
+            description: (
+              <>
+                <p>
+                  A multi-block warm serve reads up to 32 blocks through an
+                  ordered prefetch window instead of one block at a time, so a
+                  range spanning several owner nodes aggregates their bandwidth.
+                  Block-mode range misses are served from the bytes already in
+                  memory and the cross-node cache write is detached, which cut a
+                  warm-load p95 that had reached 1.43s against an upstream p95
+                  of 0.28s.
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+          {
+            title: "Compaction stops evicting the serving working set",
+            description: (
+              <>
+                <p>
+                  Cache compaction drops its input pages and synced output
+                  ranges from the page cache, so a compaction burst no longer
+                  pushes out the warm data TAG is serving from. Source reads can
+                  be throttled per deployment with{" "}
+                  <code>cache.compaction_bytes_per_second</code>, which is
+                  unthrottled when unset.
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+          {
+            title: "Dead cache bytes are reclaimed",
+            description: (
+              <>
+                <p>
+                  Dead bytes are now reclaimed within a compaction rotation
+                  instead of leaking, which is the fix for the ENOSPC and
+                  full-PVC reports from customers running TAG. The same cache
+                  engine bump carries three data-loss fixes in recompaction.
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+          {
+            title: "A cache write could corrupt data silently",
+            description: (
+              <>
+                <p>
+                  A silent data-corruption hazard in cache writes, present in
+                  the previous two cache-engine versions, is fixed, along with a
+                  TTL bug that destroyed delete-index records. Upgrade if you
+                  are running either of those versions.
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+          {
+            title: "A HEAD could be answered from stale metadata",
+            description: (
+              <>
+                <p>
+                  When a full-object GET bailed out on read amplification it
+                  left a metadata-only cache entry behind, so a HEAD could be
+                  answered from that metadata for up to the 24h TTL after the
+                  object was deleted or replaced out of band. The entry is
+                  dropped now.
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    date: "July 31, 2026",
+    title: "Forking a bucket from a point in time",
+    content: (
+      <>
+        <p>
+          Create Fork in the web console can fork from any instant, not only
+          from a snapshot someone already took. The fork API has accepted a
+          timestamp for a while; the console now exposes it as a date and time
+          picker, bounded by the bucket&apos;s creation time at one end and the
+          current time at the other.
+        </p>
+        <p>
+          For the API behind it, see{" "}
+          <a href="/docs/buckets/snapshots-and-forks/">
+            Bucket snapshots and forks
+          </a>
+          .
+        </p>
+      </>
+    ),
+    subcategories: [
+      {
+        title: "Features",
+        items: [
+          {
+            title: "Fork from a date and time",
+            description: (
+              <>
+                <p>
+                  Create Fork takes a date and time instead of an existing
+                  snapshot. The inputs prefill with the current date and time,
+                  validate against the parent bucket&apos;s creation time, and
+                  explain a partial entry rather than silently refusing it.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+          {
+            title: "Restore a snapshot-enabled bucket to one of its snapshots",
+            description: (
+              <>
+                <p>
+                  The new <code>RestoreSnapshotBucket</code> API rolls a
+                  snapshot-enabled bucket back to one of its snapshots. Versions
+                  written after that snapshot are hidden from reads and listings
+                  rather than deleted, and restoring twice to the same snapshot
+                  changes nothing the second time.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "Change a bucket's storage tier after it is created",
+            description: (
+              <>
+                <p>
+                  A bucket&apos;s default storage tier used to be fixed at
+                  creation. Bucket Settings &gt; Storage now lists the tiers as
+                  options, <code>updateBucket()</code> accepts{" "}
+                  <code>defaultTier</code>, and the CLI has{" "}
+                  <code>tigris buckets set --default-tier</code>.
+                  Snapshot-enabled buckets can use Archive as well, which they
+                  could not before.
+                </p>
+                <p>
+                  See <a href="/docs/objects/tiers/">Storage Tiers</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "Buckets", color: "blue" },
+          },
+          {
+            title:
+              "Restore an archived object at a specific version or snapshot",
+            description: (
+              <>
+                <p>
+                  S3 <code>restore-object</code> accepts <code>versionId</code>{" "}
+                  and <code>X-Tigris-Snapshot-Version</code>, so you can bring
+                  back the archived copy of an older version instead of only the
+                  current one. The SDK exposes this as{" "}
+                  <code>
+                    restoreObject(path, &#123; snapshotVersion &#125;)
+                  </code>
+                  , with <code>tigris objects restore --snapshot-version</code>{" "}
+                  on the command line.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "tigris init",
+            description: (
+              <>
+                <p>
+                  <code>tigris init</code> sets up Tigris for AI coding agents.
+                  It detects installed editors, installs or updates the CLI,
+                  writes the remote MCP server configuration for ten editors,
+                  and installs the Tigris agent skills.{" "}
+                  <code>tigris init --agent</code> prints a plain-text recipe an
+                  agent can follow on its own.
+                </p>
+                <p>
+                  See <a href="/docs/ai/agent-plugins/">Agent Plugins</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+        ],
+      },
+      {
+        title: "Improvements",
+        items: [
+          {
+            title: "Bucket migrations report what is in flight",
+            description: (
+              <>
+                <p>
+                  <code>tigris buckets migrate</code> shows a live list of
+                  in-flight objects with name, size and time queued, replacing a
+                  byte-percentage bar that made one large file look like a
+                  stalled run. Smallest objects go first, status polling backs
+                  off from 5s to 30s while nothing completes, and Ctrl-C prints
+                  a summary of what was confirmed so a re-run resumes
+                  server-side.
+                </p>
+                <p>
+                  For a walkthrough, read{" "}
+                  <a href="https://www.tigrisdata.com/blog/t3-migrate-command/">
+                    Migrate your data with the Tigris CLI
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+          {
+            title: "Faster SigV4 path encoding",
+            description: (
+              <>
+                <p>
+                  Canonicalizing a request path is O(n) now, with a
+                  zero-allocation fast path. The old code concatenated per rune
+                  and allocated about 8.9MB for a 4KB key, and that garbage rate
+                  was pushing gateways into GC assist under load. It runs once
+                  per S3 request.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "Throttling returns 429",
+            description: (
+              <>
+                <p>
+                  At the hard concurrency limit and on quota rejections the
+                  gateway used to answer 503. It answers 429 and keeps the S3{" "}
+                  <code>SlowDown</code> code in the body, which is what SDK
+                  retry logic backs off on.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+        ],
+      },
+      {
+        title: "Fixes",
+        items: [
+          {
+            title: "A retried CompleteMultipartUpload returned 404",
+            description: (
+              <>
+                <p>
+                  Retrying <code>CompleteMultipartUpload</code> with the same
+                  upload id returned <code>NoSuchUpload</code> even when the
+                  object had already been committed, so a retry from an SDK or a
+                  load balancer failed an upload that had succeeded. The
+                  pre-read falls back to the finalized object, and the
+                  idempotency window is configurable, defaulting to 15s instead
+                  of a hardcoded 1s.
+                </p>
+                <p>
+                  See{" "}
+                  <a href="/docs/objects/multipart-uploads">
+                    Multipart Uploads
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title:
+              "aws-chunked uploads with Expect: 100-continue closed the connection",
+            description: (
+              <>
+                <p>
+                  boto3 with checksums enabled sends{" "}
+                  <code>Expect: 100-continue</code>, and the trailer was left
+                  unread. The connection closed after every object, so each
+                  upload paid for a fresh TLS handshake.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "304 responses carry their validators",
+            description: (
+              <>
+                <p>
+                  A 304 Not Modified includes <code>ETag</code>,{" "}
+                  <code>Last-Modified</code> and <code>Cache-Control</code>, as
+                  RFC 7232 requires and S3 clients expect.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "X-Tigris-Served-From named the wrong region",
+            description: (
+              <>
+                <p>
+                  The header picked from the candidate set in Go map order, so
+                  about a quarter of the time it named a region that took no
+                  part in the request.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "A transient regional read error surfaced as 404",
+            description: (
+              <>
+                <p>
+                  A read that failed inconclusively in one region was reported
+                  as a missing object, and a 404 from one region could mask an
+                  inconclusive failure in another.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "Importing the SDK loaded your .env",
+            description: (
+              <>
+                <p>
+                  The server entry point ran <code>dotenv.config()</code> as an
+                  import side effect, loading the consuming application&apos;s
+                  entire <code>.env</code> into <code>process.env</code>.
+                  Configuration is resolved per operation now from a private
+                  parse that keeps only <code>TIGRIS_</code>-prefixed keys and
+                  prefers values the application set itself.
+                </p>
+              </>
+            ),
+            tag: { label: "SDK", color: "blue" },
+          },
+        ],
+      },
+      {
+        title: "Acceleration Gateway",
+        items: [
+          {
+            title: "TAG is Apache 2.0",
+            description: (
+              <>
+                <p>
+                  The{" "}
+                  <a href="/docs/acceleration-gateway/">
+                    Tigris Acceleration Gateway
+                  </a>{" "}
+                  is relicensed under Apache 2.0 and ships a <code>NOTICE</code>
+                  , a contributing guide and a CLA. Its <code>ocache</code>{" "}
+                  dependencies are public, so building from source needs no
+                  private-module setup. <code>install.sh</code>,{" "}
+                  <code>run.sh</code> and a matching <code>config.yaml</code>{" "}
+                  are published to the release bucket next to the binaries, so a
+                  native install pulls a version-matched config instead of
+                  reaching for raw.githubusercontent.com.
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+          {
+            title: "Writes populate the cache",
+            description: (
+              <>
+                <p>
+                  A write used to invalidate the cache and nothing more, so the
+                  first read after a write always went upstream. An
+                  authenticated <code>PutObject</code> in signing mode now tees
+                  its body into the cache on the way upstream, which makes the
+                  object hot the moment the write succeeds and drops the
+                  read-back GET TAG used to pay per write. The opt-in{" "}
+                  <code>cache.warm_on_write</code> fires a background
+                  full-object fetch after <code>PutObject</code>,{" "}
+                  <code>CompleteMultipartUpload</code> and{" "}
+                  <code>CopyObject</code>; it is the only path that warms
+                  multipart objects. Warm-on-write populates get a prioritized,
+                  elastic share of the populate memory budget through{" "}
+                  <code>cache.warm_on_write_reserved_fraction</code>, after a
+                  production case where read-miss warms shed almost all
+                  populates and collapsed the hit ratio.
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+          {
+            title: "FIFO eviction policy",
+            description: (
+              <>
+                <p>
+                  <code>cache.eviction_policy</code> takes <code>fifo</code>{" "}
+                  alongside the <code>lru</code> default, evicting
+                  oldest-written first. That suits write-once workloads such as
+                  dated Parquet. A per-node <code>tag_cache_size_bytes</code>{" "}
+                  gauge comes with it.
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+          {
+            title: "Overload sheds with 503 SlowDown",
+            description: (
+              <>
+                <p>
+                  Under overload TAG grew goroutines until Go&apos;s thread cap
+                  aborted the process. An ingress admission limiter answers{" "}
+                  <code>503 SlowDown</code> instead. <code>/health</code>,{" "}
+                  <code>/metrics</code> and <code>/debug</code> stay exempt.
+                  Cache-populate concurrency is bounded by memory rather than by
+                  a slot count, so a few large objects can no longer exhaust
+                  memory inside the allowed slots.
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+          {
+            title: "A GET racing a PUT could return a truncated body",
+            description: (
+              <>
+                <p>
+                  Cache bodies are addressed by ETag, so a GET that races a PUT
+                  can no longer pair one version&apos;s metadata with another
+                  version&apos;s body and return a short body or{" "}
+                  <code>cache body unavailable: EOF</code>. Empty and weak ETags
+                  are handled as well.
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+          {
+            title: "A private object could be served to an anonymous request",
+            description: (
+              <>
+                <p>
+                  A background fetch running with TAG&apos;s own credentials
+                  could mark the cached object public-read, which let a later
+                  anonymous request be served a private object. That fetch can
+                  no longer set the flag.
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+          {
+            title:
+              "A completed multipart upload was shadowed by the old object",
+            description: (
+              <>
+                <p>
+                  <code>CompleteMultipartUpload</code> invalidates the read
+                  cache now, so a finished multipart upload is no longer hidden
+                  behind the pre-upload object. The write tombstone is also
+                  stamped before the upstream read rather than after, which
+                  tightens read-after-write.
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+          {
+            title: "Pod memory stopped creeping",
+            description: (
+              <>
+                <p>
+                  Linux builds link jemalloc. RocksDB allocation churn across
+                  glibc arenas had been driving pod RSS from about 2 GiB to
+                  about 4.5 GiB over two days.
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    date: "June 30, 2026",
+    title: "Bundle API",
+    content: (
+      <>
+        <p>
+          The <a href="/docs/objects/bundle/">Bundle API</a> fetches many
+          objects in one request. POST a list of keys to{" "}
+          <code>{`POST /{bucket}?bundle`}</code> and Tigris streams back a tar
+          archive, writing each object into the stream as it reads it. A
+          dataloader that needs a few thousand small files per batch makes one
+          request instead of a few thousand.
+        </p>
+        <CodeBlock language="python">{`import tarfile
+from tigris_boto3_ext import bundle_objects
+
+response = bundle_objects(s3_client, "my-bucket", [
+    "dataset/train/img_001.jpg",
+    "dataset/train/img_002.jpg",
+])
+
+with tarfile.open(fileobj=response, mode="r|") as tar:
+    for member in tar:
+        if member.name == "__bundle_errors.json":
+            continue
+        f = tar.extractfile(member)
+        if f is not None:
+            image_bytes = f.read()`}</CodeBlock>
+        <p>
+          Bundles shipped in April 2026 and went undocumented until now. The
+          announcement is{" "}
+          <a href="https://www.tigrisdata.com/blog/bundle-api/">
+            Tar saved Unix backups in 1979. Now it saves your dataloader.
+          </a>
+        </p>
+      </>
+    ),
+    subcategories: [
+      {
+        title: "Features",
+        items: [
+          {
+            title: "Snapshots can be turned on or off on an existing bucket",
+            description: (
+              <>
+                <p>
+                  Snapshots used to be a choice you made when you created the
+                  bucket. Bucket Settings &gt; Storage has a toggle for it now,
+                  and the SDK has <code>setBucketType()</code>,{" "}
+                  <code>enableSnapshot()</code> and{" "}
+                  <code>disableSnapshot()</code>. Turning snapshots off is
+                  refused while forks still depend on the bucket. When the
+                  console cannot offer the toggle it says which condition is in
+                  the way: the bucket is itself a fork, it has dependent forks,
+                  or it still has lifecycle rules configured.
+                </p>
+                <p>
+                  See{" "}
+                  <a href="/docs/buckets/snapshots-and-forks/">
+                    Bucket snapshots and forks
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "Buckets", color: "blue" },
+          },
+          {
+            title: "Teams",
+            description: (
+              <>
+                <p>
+                  An organization can group its members into teams under org
+                  settings, with a team editor, member counts and team deletion.
+                  A team is a grantee in the bucket sharing dialog, so a bucket
+                  can be shared with a group rather than with each member by
+                  name. <code>@tigrisdata/iam</code> gained{" "}
+                  <code>createTeam</code>, <code>editTeam</code> and{" "}
+                  <code>listTeams</code>.
+                </p>
+                <p>
+                  See <a href="/docs/account-management/teams/">Teams</a> and{" "}
+                  <a href="/docs/buckets/sharing/#sharing-with-a-team">
+                    Sharing with a team
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "IAM", color: "red" },
+          },
+          {
+            title: "Presigned URLs can be pinned to a snapshot",
+            description: (
+              <>
+                <p>
+                  <code>getPresignedUrl()</code> accepts{" "}
+                  <code>snapshotVersion</code>, which pins the signed URL to the
+                  object version that was current at that snapshot. It is valid
+                  with <code>operation: &apos;get&apos;</code> and errors if the
+                  object did not exist at that time.
+                </p>
+              </>
+            ),
+            tag: { label: "Presigned URLs", color: "green" },
+          },
+          {
+            title: "Archived objects can be restored from the SDK",
+            description: (
+              <>
+                <p>
+                  <code>restoreObject(path, &#123; days &#125;)</code> makes an
+                  object in the Archive tier readable for a number of days, and{" "}
+                  <code>getRestoreInfo(path)</code> reports its state as{" "}
+                  <code>Archived</code>, <code>InProgress</code> or{" "}
+                  <code>Restored</code>. See{" "}
+                  <a href="/docs/objects/tiers/">Storage Tiers</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "SDK", color: "blue" },
+          },
+          {
+            title: "Go SDK: forks, snapshots and renaming",
+            description: (
+              <>
+                <p>
+                  <a href="https://github.com/tigrisdata/storage-go">
+                    storage-go
+                  </a>{" "}
+                  gained first-class methods for bucket forking, snapshots and
+                  object renaming, plus a simpler high-level client for everyday
+                  storage code. The details are in{" "}
+                  <a href="https://www.tigrisdata.com/blog/storage-sdk-go/">
+                    Giving your Go apps Tigris superpowers
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "SDK", color: "blue" },
+          },
+          {
+            title: "Access key bucket permissions editor",
+            description: (
+              <>
+                <p>
+                  The bucket permissions screen for an access key was rebuilt.
+                  Search for buckets, set a permission level per bucket, and
+                  grant or revoke Admin Access and All Buckets Access. It asks
+                  before discarding unsaved changes.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+        ],
+      },
+      {
+        title: "Improvements",
+        items: [
+          {
+            title: "Bucket filters moved into the sidebar",
+            description: (
+              <>
+                <p>
+                  The buckets list filters are a collapsible Buckets section in
+                  the sidebar, with All, Forks, Owned by me and Deleted entries.
+                  Each one is a URL you can share.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+          {
+            title: "One S3 endpoint, one IAM endpoint",
+            description: (
+              <>
+                <p>
+                  The endpoints bar and the access key reveal screen show a
+                  single S3 endpoint and a single IAM endpoint with a copy
+                  button. The dropdown that offered Default, Multi Cloud and Fly
+                  Apps variants is gone.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+          {
+            title: "listForks() resolves in one request",
+            description: (
+              <>
+                <p>
+                  <code>listForks()</code> asks for a fork-scoped listing
+                  instead of paging every bucket in the account and filtering
+                  client-side, and it accepts <code>limit</code> and{" "}
+                  <code>paginationToken</code> for paging.
+                </p>
+              </>
+            ),
+            tag: { label: "SDK", color: "blue" },
+          },
+        ],
+      },
+      {
+        title: "Fixes",
+        items: [
+          {
+            title: "A deleted object could come back",
+            description: (
+              <>
+                <p>
+                  A tombstone was stamped from a raw clock read and could land
+                  at or behind the row it deleted, so every apply site discarded
+                  it as older. <code>DELETE</code> returned 204 and a later{" "}
+                  <code>GET</code> served the object again. Delete markers are
+                  included in monotonic timestamp assignment now.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "Missing-key reads on a deep fork",
+            description: (
+              <>
+                <p>
+                  A <code>GET</code> or <code>HEAD</code> for a key that does
+                  not exist was exponential in fork depth: 55ms at depth 1,
+                  1.46s at depth 7, and past depth 8 it hit the request timeout
+                  and returned 408 instead of 404. It is linear in fork depth
+                  now.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title:
+              "Bucket and fork listings ignored their pagination arguments",
+            description: (
+              <>
+                <p>
+                  Bucket listing sent <code>ContinuationToken</code> and{" "}
+                  <code>MaxBuckets</code> instead of{" "}
+                  <code>continuation-token</code> and <code>max-buckets</code>,
+                  and read a response field that does not exist, so{" "}
+                  <code>listBuckets</code>, <code>listForks</code> and{" "}
+                  <code>getStats</code> could drop the continuation token or
+                  ignore the requested page size. The same change restored the{" "}
+                  <code>forkCreatedAt</code>, <code>snapshot</code> and{" "}
+                  <code>snapshotCreatedAt</code> fields on{" "}
+                  <code>listForks</code> results.
+                </p>
+              </>
+            ),
+            tag: { label: "SDK", color: "blue" },
+          },
+          {
+            title: "File previews use the object's content type",
+            description: (
+              <>
+                <p>
+                  PNG, GIF, WebP, SVG and AVIF objects were handed to the
+                  browser as JPEG. Previews use the object&apos;s real content
+                  type now, and an image format the browser cannot draw no
+                  longer leaves a broken preview behind.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+          {
+            title: "Bucket stats no longer double-count rows",
+            description: (
+              <>
+                <p>
+                  A bucket that had snapshots enabled at some point in the past
+                  reported its row count twice over.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+        ],
+      },
+      {
+        title: "Acceleration Gateway",
+        items: [
+          {
+            title: "A cold node could stay cold",
+            description: (
+              <>
+                <p>
+                  A client that cancelled mid-fetch abandoned the cache
+                  population with it, so a cold{" "}
+                  <a href="/docs/acceleration-gateway/">Acceleration Gateway</a>{" "}
+                  node re-fetched the same large objects on every request and
+                  never warmed. The population now finishes on its own.
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+          {
+            title: "Cache nodes no longer crash-loop on dangling references",
+            description: (
+              <>
+                <p>
+                  A dangling raw-file reference put a cache node into a
+                  crash-loop. Dangling metadata is also reconciled when the
+                  compactor drops a missing-file index row.
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+          {
+            title: "Two storage knobs are settable",
+            description: (
+              <>
+                <p>
+                  <code>delete_batch_size</code> (default 1000) and{" "}
+                  <code>recovery_workers</code> (default 16) can be set from the
+                  config file or as <code>TAG_CACHE_DELETE_BATCH_SIZE</code> and{" "}
+                  <code>TAG_CACHE_RECOVERY_WORKERS</code>. See{" "}
+                  <a href="/docs/acceleration-gateway/configuration/">
+                    the configuration reference
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+        ],
+      },
+    ],
+  },
   may2026,
   {
     date: "April 28, 2026",

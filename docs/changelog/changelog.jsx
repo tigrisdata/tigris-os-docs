@@ -821,48 +821,11 @@ tigris telemetry disable`}</CodeBlock>
               </>
             ),
           },
-          {
-            title: "Throttling returns 429",
-            description: (
-              <>
-                <p>
-                  At the hard concurrency limit and on quota rejections the
-                  gateway used to answer 503. It answers 429 and keeps the S3{" "}
-                  <code>SlowDown</code> code in the body, which is what SDK
-                  retry logic backs off on.
-                </p>
-              </>
-            ),
-          },
         ],
       },
       {
         title: "Fixes",
         items: [
-          {
-            title: "A retried CompleteMultipartUpload returned 404",
-            description: (
-              <>
-                <p>
-                  Retrying <code>CompleteMultipartUpload</code> with the same
-                  upload id returned <code>NoSuchUpload</code> even when the
-                  object had already been committed, so a retry from an SDK or a
-                  load balancer failed an upload that had succeeded. The
-                  pre-read falls back to the finalized object, and the
-                  idempotency window is configurable, defaulting to 15s instead
-                  of a hardcoded 1s.
-                </p>
-                <p>
-                  See{" "}
-                  <a href="/docs/objects/multipart-uploads">
-                    Multipart Uploads
-                  </a>
-                  .
-                </p>
-              </>
-            ),
-            tag: { label: "API", color: "blue" },
-          },
           {
             title:
               "aws-chunked uploads with Expect: 100-continue closed the connection",
@@ -902,18 +865,6 @@ tigris telemetry disable`}</CodeBlock>
               </>
             ),
             tag: { label: "API", color: "blue" },
-          },
-          {
-            title: "A transient regional read error surfaced as 404",
-            description: (
-              <>
-                <p>
-                  A read that failed inconclusively in one region was reported
-                  as a missing object, and a 404 from one region could mask an
-                  inconclusive failure in another.
-                </p>
-              </>
-            ),
           },
           {
             title: "Importing the SDK loaded your .env",
@@ -1260,20 +1211,6 @@ tigris telemetry disable`}</CodeBlock>
       {
         title: "Fixes",
         items: [
-          {
-            title: "A deleted object could come back",
-            description: (
-              <>
-                <p>
-                  A tombstone was stamped from a raw clock read and could land
-                  at or behind the row it deleted, so every apply site discarded
-                  it as older. <code>DELETE</code> returned 204 and a later{" "}
-                  <code>GET</code> served the object again. Delete markers are
-                  included in monotonic timestamp assignment now.
-                </p>
-              </>
-            ),
-          },
           {
             title: "Missing-key reads on a deep fork",
             description: (

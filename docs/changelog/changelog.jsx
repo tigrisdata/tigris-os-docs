@@ -520,7 +520,7 @@ tigris telemetry disable`}</CodeBlock>
                   options.
                 </p>
                 <p>
-                  Until now the partner API exposed none of this, so a
+                  The partner API exposed none of this before, so a
                   partner-provisioned bucket could not get the protection at
                   all. See the{" "}
                   <a href="/docs/partner-integrations/">
@@ -1136,38 +1136,25 @@ tigris telemetry disable`}</CodeBlock>
   },
   {
     date: "June 30, 2026",
-    title: "Bundle API",
+    title: "Enabling snapshots on an existing bucket",
     content: (
       <>
         <p>
-          The <a href="/docs/objects/bundle/">Bundle API</a> fetches many
-          objects in one request. POST a list of keys to{" "}
-          <code>{`POST /{bucket}?bundle`}</code> and Tigris streams back a tar
-          archive, writing each object into the stream as it reads it. A
-          dataloader that needs a few thousand small files per batch makes one
-          request instead of a few thousand.
+          Snapshots used to be a choice you made when you created a bucket. An
+          existing bucket can switch between Regular and Snapshot now, from{" "}
+          <strong>Bucket Settings &gt; Storage Settings</strong> in the web
+          console, or with <code>setBucketType()</code>,{" "}
+          <code>enableSnapshot()</code> and <code>disableSnapshot()</code> in
+          the SDK.
         </p>
-        <CodeBlock language="python">{`import tarfile
-from tigris_boto3_ext import bundle_objects
-
-response = bundle_objects(s3_client, "my-bucket", [
-    "dataset/train/img_001.jpg",
-    "dataset/train/img_002.jpg",
-])
-
-with tarfile.open(fileobj=response, mode="r|") as tar:
-    for member in tar:
-        if member.name == "__bundle_errors.json":
-            continue
-        f = tar.extractfile(member)
-        if f is not None:
-            image_bytes = f.read()`}</CodeBlock>
         <p>
-          Bundles shipped in April 2026 and went undocumented until now. The
-          announcement is{" "}
-          <a href="https://www.tigrisdata.com/blog/bundle-api/">
-            Tar saved Unix backups in 1979. Now it saves your dataloader.
+          A Regular bucket has to clear its lifecycle and object expiration
+          rules before it can convert, because Snapshot buckets do not support
+          them. See{" "}
+          <a href="/docs/buckets/snapshots-and-forks/">
+            Bucket snapshots and forks
           </a>
+          .
         </p>
       </>
     ),
@@ -1180,22 +1167,11 @@ with tarfile.open(fileobj=response, mode="r|") as tar:
             description: (
               <>
                 <p>
-                  Snapshots used to be a choice you made when you created the
-                  bucket. Bucket Settings &gt; Storage has a toggle for it now,
-                  and the SDK has <code>setBucketType()</code>,{" "}
-                  <code>enableSnapshot()</code> and{" "}
-                  <code>disableSnapshot()</code>. Turning snapshots off is
-                  refused while forks still depend on the bucket. When the
-                  console cannot offer the toggle it says which condition is in
-                  the way: the bucket is itself a fork, it has dependent forks,
-                  or it still has lifecycle rules configured.
-                </p>
-                <p>
-                  See{" "}
-                  <a href="/docs/buckets/snapshots-and-forks/">
-                    Bucket snapshots and forks
-                  </a>
-                  .
+                  Turning snapshots off is refused while forks still depend on
+                  the bucket. When the console cannot offer the toggle at all it
+                  says which condition is in the way: the bucket is itself a
+                  fork, it has dependent forks, or it still has lifecycle rules
+                  configured.
                 </p>
               </>
             ),
@@ -1830,6 +1806,44 @@ claude plugin install tigris-storage@claude-community`}</CodeBlock>
               </>
             ),
             tag: { label: "Plugin", color: "purple" },
+          },
+        ],
+      },
+      {
+        title: "Features",
+        items: [
+          {
+            title: "Bundle API",
+            description: (
+              <>
+                <p>
+                  Fetch many objects in one request instead of one request per
+                  object. POST a list of keys to{" "}
+                  <code>{`POST /{bucket}?bundle`}</code> and Tigris streams back
+                  a tar archive, writing each object into the stream as it reads
+                  it, with no server-side buffering. A dataloader that needs a
+                  few thousand small files per batch makes one request.
+                </p>
+                <CodeBlock language="python">{`from tigris_boto3_ext import bundle_objects
+
+response = bundle_objects(s3_client, "my-bucket", [
+    "dataset/train/img_001.jpg",
+    "dataset/train/img_002.jpg",
+])`}</CodeBlock>
+                <p>
+                  Missing keys are skipped and listed in a{" "}
+                  <code>__bundle_errors.json</code> entry at the end of the
+                  archive, or <code>on_error=BUNDLE_ON_ERROR_FAIL</code> rejects
+                  the whole request instead. For more information, see{" "}
+                  <a href="/docs/objects/bundle/">the documentation</a> and{" "}
+                  <a href="https://www.tigrisdata.com/blog/bundle-api/">
+                    Tar saved Unix backups in 1979. Now it saves your
+                    dataloader.
+                  </a>
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
           },
         ],
       },

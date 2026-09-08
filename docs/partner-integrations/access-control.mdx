@@ -22,6 +22,8 @@ purposes.
 
 import PartnerAccessControlDiagram from "@site/src/components/diagrams/PartnerAccessControlDiagram";
 
+{/* Mermaid description for AI agents: graph TD; A[POST /access-keys] -->|user_role| B[Partner API management scope]; A -->|buckets_roles| C[S3 bucket permissions]; A -->|access_key_scope| D[Default S3 and IAM operations] */}
+
 <div className="mermaid-frame">
   <PartnerAccessControlDiagram />
 </div>
@@ -89,16 +91,15 @@ you omit the field on update, the current scope stays unchanged.
 
 ## How the fields interact
 
-`user_role` and `buckets_roles` apply at different times. `access_key_scope` is
-independent of both. Here's how common partner scenarios map to the first two
-fields:
+The three fields are independent and apply at different times. Use
+`no_default_allow` for keys that must have only the listed bucket access.
 
-| Scenario              | `user_role` | `buckets_roles`                                                                                    | Result                                            |
-| --------------------- | ----------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| **Developer uploads** | `Member`    | `[{"bucket_name": "user-uploads", "role": "ReadWrite"}]`                                           | User manages own key, can read/write their bucket |
-| **Platform admin**    | `Admin`     | `[{"bucket_name": "*", "role": "Admin"}]`                                                          | Full management + full S3 access                  |
-| **CI/CD pipeline**    | `Member`    | `[{"bucket_name": "artifacts", "role": "ReadOnly"}]`                                               | Automated reads, no management access             |
-| **Mixed access**      | `Member`    | `[{"bucket_name": "assets", "role": "ReadOnly"}, {"bucket_name": "uploads", "role": "ReadWrite"}]` | Read shared content, write user content           |
+| Scenario              | `user_role` | `buckets_roles`                                                                                    | `access_key_scope` | Result                                            |
+| --------------------- | ----------- | -------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------------------- |
+| **Developer uploads** | `Member`    | `[{"bucket_name": "user-uploads", "role": "ReadWrite"}]`                                           | `no_default_allow` | User manages own key, can read/write their bucket |
+| **Platform admin**    | `Admin`     | `[{"bucket_name": "*", "role": "Admin"}]`                                                          | `standard`         | Full management + full S3 access                  |
+| **CI/CD pipeline**    | `Member`    | `[{"bucket_name": "artifacts", "role": "ReadOnly"}]`                                               | `no_default_allow` | Automated reads, no access-key or IAM management  |
+| **Mixed access**      | `Member`    | `[{"bucket_name": "assets", "role": "ReadOnly"}, {"bucket_name": "uploads", "role": "ReadWrite"}]` | `no_default_allow` | Read shared content, write user content           |
 
 ## Common Access Patterns
 
@@ -111,6 +112,7 @@ Content-Type: application/json
 {
   "user_id": "user-123",
   "user_role": "Member",
+  "access_key_scope": "no_default_allow",
   "buckets_roles": [
     { "bucket_name": "assets", "role": "ReadOnly" }
   ]
@@ -126,6 +128,7 @@ Content-Type: application/json
 {
   "user_id": "user-123",
   "user_role": "Member",
+  "access_key_scope": "no_default_allow",
   "buckets_roles": [
     { "bucket_name": "uploads", "role": "ReadWrite" }
   ]
@@ -141,6 +144,7 @@ Content-Type: application/json
 {
   "user_id": "user-123",
   "user_role": "Member",
+  "access_key_scope": "no_default_allow",
   "buckets_roles": [
     { "bucket_name": "assets", "role": "ReadOnly" },
     { "bucket_name": "uploads", "role": "ReadWrite" }

@@ -77,7 +77,9 @@ A new access key uses the `standard` scope. A standard key can perform these
 operations in the organization even if you assign no bucket role and attach no
 IAM policy.
 
-These operations do not grant access to objects.
+These operations do not grant access to objects in existing buckets. A key that
+creates a bucket becomes its owner and can perform all operations on that
+bucket.
 
 Tigris evaluates a request in this order:
 

@@ -15,7 +15,7 @@
     "x": 330,
     "y": 55,
     "width": 540,
-    "height": 60,
+    "height": 78,
     "backgroundColor": "#62FEB5",
     "fillStyle": "solid",
     "strokeColor": "#62FEB5",
@@ -35,9 +35,9 @@
   {
     "type": "text",
     "id": "create-key-sub",
-    "x": 410,
-    "y": 83,
-    "text": "user_role + buckets_roles + access_key_scope",
+    "x": 455,
+    "y": 88,
+    "text": "user_role + buckets_roles\n+ access_key_scope",
     "fontSize": 14,
     "fontFamily": 1,
     "strokeColor": "#0A171E"
@@ -85,7 +85,7 @@
   {
     "type": "text",
     "id": "arrow-right-label",
-    "x": 625,
+    "x": 505,
     "y": 145,
     "text": "buckets_roles",
     "fontSize": 15,
@@ -428,7 +428,7 @@
     "id": "standard-scope-desc",
     "x": 880,
     "y": 321,
-    "text": "Create/list buckets; manage keys\nand IAM policies",
+    "text": "Create/list buckets; limited\nkey and policy management",
     "fontSize": 13,
     "fontFamily": 1,
     "strokeColor": "#8fa3b0"
@@ -461,7 +461,7 @@
     "id": "restricted-scope-desc",
     "x": 880,
     "y": 426,
-    "text": "Only policies and bucket roles\ngrant access",
+    "text": "Does not receive the\ndefault allowed operations",
     "fontSize": 13,
     "fontFamily": 1,
     "strokeColor": "#8fa3b0"

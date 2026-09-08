@@ -22,8 +22,6 @@ purposes.
 
 import PartnerAccessControlDiagram from "@site/src/components/diagrams/PartnerAccessControlDiagram";
 
-{/* Mermaid description for AI agents: graph TD; A[POST /access-keys] -->|user_role| B[Partner API management scope]; A -->|buckets_roles| C[S3 bucket permissions]; A -->|access_key_scope| D[Default S3 and IAM operations] */}
-
 <div className="mermaid-frame">
   <PartnerAccessControlDiagram />
 </div>
@@ -75,13 +73,13 @@ admin, bypassing all bucket-level permission checks.
 
 This field controls the
 [default allowed operations](/docs/iam/manage-access-key/#default-allowed-operations)
-on the key. A standard key can create buckets, list buckets, and manage access
+on the key. A standard key can create buckets, list buckets, and create access
 keys and IAM policies even with no bucket role.
 
-| Value                | What it means                                                 |
-| -------------------- | ------------------------------------------------------------- |
-| `standard` (default) | The key receives the default allowed operations.              |
-| `no_default_allow`   | The key can do only what its policies and bucket roles grant. |
+| Value                | What it means                                            |
+| -------------------- | -------------------------------------------------------- |
+| `standard` (default) | The key receives the default allowed operations.         |
+| `no_default_allow`   | The key does not receive the default allowed operations. |
 
 If you omit `access_key_scope`, the key uses `standard`. You can set the field
 on [Create Access Key](/docs/partner-integrations/api/tigris-create-access-key)
@@ -91,15 +89,12 @@ you omit the field on update, the current scope stays unchanged.
 
 ## How the fields interact
 
-The three fields are independent and apply at different times. Use
-`no_default_allow` for keys that must have only the listed bucket access.
-
-| Scenario              | `user_role` | `buckets_roles`                                                                                    | `access_key_scope` | Result                                            |
-| --------------------- | ----------- | -------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------------------- |
-| **Developer uploads** | `Member`    | `[{"bucket_name": "user-uploads", "role": "ReadWrite"}]`                                           | `no_default_allow` | User manages own key, can read/write their bucket |
-| **Platform admin**    | `Admin`     | `[{"bucket_name": "*", "role": "Admin"}]`                                                          | `standard`         | Full management + full S3 access                  |
-| **CI/CD pipeline**    | `Member`    | `[{"bucket_name": "artifacts", "role": "ReadOnly"}]`                                               | `no_default_allow` | Automated reads, no access-key or IAM management  |
-| **Mixed access**      | `Member`    | `[{"bucket_name": "assets", "role": "ReadOnly"}, {"bucket_name": "uploads", "role": "ReadWrite"}]` | `no_default_allow` | Read shared content, write user content           |
+| Scenario              | `user_role` | `buckets_roles`                          | `access_key_scope` | Result                                            |
+| --------------------- | ----------- | ---------------------------------------- | ------------------ | ------------------------------------------------- |
+| **Developer uploads** | `Member`    | `user-uploads: ReadWrite`                | `no_default_allow` | User manages own key, can read/write their bucket |
+| **Platform admin**    | `Admin`     | `*: Admin`                               | `standard`         | Full management + full S3 access                  |
+| **CI/CD pipeline**    | `Member`    | `artifacts: ReadOnly`                    | `no_default_allow` | Automated reads, no access-key or IAM management  |
+| **Mixed access**      | `Member`    | `assets: ReadOnly`, `uploads: ReadWrite` | `no_default_allow` | Read shared content, write user content           |
 
 ## Common Access Patterns
 
@@ -135,6 +130,10 @@ Content-Type: application/json
 }
 ```
 
+This key can read and write objects in `uploads`. It cannot list buckets or
+create buckets unless a policy grants those actions. It cannot manage access
+keys or IAM policies.
+
 ### Mixed permissions across buckets
 
 ```http
@@ -151,26 +150,6 @@ Content-Type: application/json
   ]
 }
 ```
-
-### Key with no default allowed operations
-
-```http
-POST /v1/providers/{provider_id}/orgs/{org_id}/access-keys
-Content-Type: application/json
-
-{
-  "user_id": "user-123",
-  "user_role": "Member",
-  "access_key_scope": "no_default_allow",
-  "buckets_roles": [
-    { "bucket_name": "uploads", "role": "ReadWrite" }
-  ]
-}
-```
-
-This key can read and write objects in `uploads`. It cannot list buckets or
-create buckets unless a policy grants those actions. It cannot manage access
-keys or IAM policies.
 
 ### Full admin key for org owner
 

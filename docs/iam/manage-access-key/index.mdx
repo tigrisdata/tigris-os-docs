@@ -1,8 +1,8 @@
 ---
 title: Manage Access Keys
 description:
-  Learn how to create and delete access keys in Tigris for secure programmatic
-  access.
+  Create and delete Tigris access keys, and see the operations that standard
+  keys can perform by default.
 ---
 
 # Manage Access Keys
@@ -30,6 +30,11 @@ the AWS CLI.
      - **ReadWrite** – read/write to selected buckets without bucket
        administration
      - **ReadOnly** – read-only for selected buckets
+
+   Bucket roles do not remove the
+   [default allowed operations](#default-allowed-operations). A key with no
+   bucket role can still list buckets, create buckets, and manage access keys
+   and IAM policies.
 
 4. **Click Create**  
    You’ll receive:
@@ -65,6 +70,114 @@ the AWS CLI.
    ```bash
    aws iam create-access-key --endpoint-url "$AWS_ENDPOINT_URL_IAM"
    ```
+
+## Default allowed operations
+
+A new access key uses the `standard` scope. A standard key can perform these
+operations in the organization even if you assign no bucket role and attach no
+IAM policy.
+
+These operations do not grant access to objects.
+
+Tigris evaluates a request in this order:
+
+1. Organization admin, bucket owner, share, or bucket role.
+2. IAM policies. If evaluation reaches this layer, an explicit Deny blocks the
+   request.
+3. Default allowed operations, unless the key uses `no_default_allow`.
+
+:::caution
+
+If you need a least-privilege key, set `no_default_allow`. A standard key can
+create buckets, list buckets, and manage access keys and IAM policies in the
+organization.
+
+:::
+
+### S3 operations
+
+| Operation    | IAM action            |
+| ------------ | --------------------- |
+| CreateBucket | `s3:CreateBucket`     |
+| ListBuckets  | `s3:ListAllMyBuckets` |
+
+### Access key operations
+
+| Operation       | Description                          |
+| --------------- | ------------------------------------ |
+| CreateAccessKey | Create a new access key              |
+| UpdateAccessKey | Update an access key                 |
+| DeleteAccessKey | Delete an access key                 |
+| ListAccessKeys  | List access keys in the organization |
+
+### IAM policy operations
+
+| Operation               | Description                                   |
+| ----------------------- | --------------------------------------------- |
+| CreatePolicy            | Create an IAM policy                          |
+| UpdatePolicy            | Update an IAM policy                          |
+| DeletePolicy            | Delete an IAM policy                          |
+| ForceDeletePolicy       | Delete an IAM policy that is still attached   |
+| GetPolicy               | Get an IAM policy                             |
+| GetPolicyDetailed       | Get an IAM policy with extra detail           |
+| GetPolicyVersion        | Get a policy version                          |
+| GetUserPolicy           | Get a policy attached to an access key        |
+| ListPolicies            | List IAM policies                             |
+| ListPoliciesDetailed    | List IAM policies with extra detail           |
+| ListUserPolicies        | List policies attached to an access key       |
+| ListAttachedPolicies    | List attached policies                        |
+| ListEntitiesForPolicy   | List access keys that have a policy           |
+| AttachUserPolicy        | Attach a policy to an access key              |
+| DetachUserPolicy        | Detach a policy from an access key            |
+| AttachUserPolicyBatched | Attach policies to an access key in a batch   |
+| DetachUserPolicyBatched | Detach policies from an access key in a batch |
+
+These IAM operations have no IAM policy action names. An IAM Deny cannot block
+them.
+
+### Other operations
+
+| Operation            | Description                                     |
+| -------------------- | ----------------------------------------------- |
+| ListTeams            | List teams in the organization                  |
+| GetTeam              | Get a team                                      |
+| CreateNamespace      | Create an organization                          |
+| ExplainAuthorization | Return the authorization decision for a request |
+
+### Remove default allowed operations
+
+Set the key scope to `no_default_allow`. Then the key can do only what its
+bucket roles and IAM policies grant.
+
+The Dashboard and the Tigris CLI create keys with the `standard` scope. Use the
+[Partner API](/docs/partner-integrations/access-control/#access-key-scope) to
+set `access_key_scope` when you create or update a key:
+
+```json
+{
+  "user_id": "user-123",
+  "access_key_scope": "no_default_allow",
+  "buckets_roles": [{ "bucket_name": "uploads", "role": "ReadWrite" }]
+}
+```
+
+You can also attach an IAM policy that denies the S3 operations:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Deny",
+      "Action": ["s3:ListAllMyBuckets", "s3:CreateBucket"],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+This Deny does not remove access-key, IAM-policy, or other default operations.
+Use `no_default_allow` to remove the full set.
 
 ## Delete an Access Key
 

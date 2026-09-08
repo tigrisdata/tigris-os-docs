@@ -17,8 +17,10 @@ First, create an access key. You can do this using the Tigris Dashboard or the
 AWS CLI. For more information, refer to the
 [Manage an Access Key](/docs/iam/manage-access-key/index.mdx) guide.
 
-Make sure to **not** grant access to any bucket when creating the access key.
-This will create an access key with no permissions.
+Do not grant access to any bucket when you create the access key. The key still
+receives
+[default allowed operations](/docs/iam/manage-access-key/#default-allowed-operations).
+Then attach a policy to grant object access.
 
 ## 2. Create the IAM policy
 

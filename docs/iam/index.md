@@ -17,6 +17,9 @@ attached to access keys, Tigris focuses on what developers really need.
   Users, IAM Groups, or IAM Roles.
 - All users in an Organization can create access keys and attach IAM policies to
   them.
+- Standard access keys also receive
+  [default allowed operations](/docs/iam/manage-access-key/#default-allowed-operations)
+  unless you set `no_default_allow`.
 
 ## Prebuilt Roles for Organization Members
 

@@ -1,20 +1,24 @@
 # Access Control
 
-When you create access keys through the Partner API, two fields control what
+When you create access keys through the Partner API, three fields control what
 those keys can do:
 
 - `user_role` controls what your user can do through the **management API**
   (listing keys, updating org settings).
 - `buckets_roles` controls what **S3 operations** the access key can perform on
   specific buckets.
+- `access_key_scope` controls whether the key also receives
+  [default allowed operations](/docs/iam/manage-access-key/#default-allowed-operations)
+  such as create bucket and list buckets.
 
-These two fields are independent. They apply at different times and serve
-different purposes.
+These fields are independent. They apply at different times and serve different
+purposes.
 
-| Field           | Where it applies   | What it controls                                          |
-| --------------- | ------------------ | --------------------------------------------------------- |
-| `user_role`     | Partner API calls  | Management scope: list all keys vs own keys, org settings |
-| `buckets_roles` | S3 data operations | What the access key can read, write, or manage per bucket |
+| Field              | Where it applies   | What it controls                                          |
+| ------------------ | ------------------ | --------------------------------------------------------- |
+| `user_role`        | Partner API calls  | Management scope: list all keys vs own keys, org settings |
+| `buckets_roles`    | S3 data operations | What the access key can read, write, or manage per bucket |
+| `access_key_scope` | S3 and IAM APIs    | Whether the key receives default allowed operations       |
 
 import PartnerAccessControlDiagram from "@site/src/components/diagrams/PartnerAccessControlDiagram";
 
@@ -65,10 +69,29 @@ Use `"*"` as the bucket name to grant access to all buckets in the org. An
 access key with `{"bucket_name": "*", "role": "Admin"}` is treated as a full org
 admin, bypassing all bucket-level permission checks.
 
-## How the Two Fields Interact
+## Access key scope (`access_key_scope`) {#access-key-scope}
 
-`user_role` and `buckets_roles` apply at different times. Here's how common
-partner scenarios map to these fields:
+This field controls the
+[default allowed operations](/docs/iam/manage-access-key/#default-allowed-operations)
+on the key. A standard key can create buckets, list buckets, and manage access
+keys and IAM policies even with no bucket role.
+
+| Value                | What it means                                                 |
+| -------------------- | ------------------------------------------------------------- |
+| `standard` (default) | The key receives the default allowed operations.              |
+| `no_default_allow`   | The key can do only what its policies and bucket roles grant. |
+
+If you omit `access_key_scope`, the key uses `standard`. You can set the field
+on [Create Access Key](/docs/partner-integrations/api/tigris-create-access-key)
+and
+[Update Access Key](/docs/partner-integrations/api/tigris-update-access-key). If
+you omit the field on update, the current scope stays unchanged.
+
+## How the fields interact
+
+`user_role` and `buckets_roles` apply at different times. `access_key_scope` is
+independent of both. Here's how common partner scenarios map to the first two
+fields:
 
 | Scenario              | `user_role` | `buckets_roles`                                                                                    | Result                                            |
 | --------------------- | ----------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
@@ -124,6 +147,26 @@ Content-Type: application/json
   ]
 }
 ```
+
+### Key with no default allowed operations
+
+```http
+POST /v1/providers/{provider_id}/orgs/{org_id}/access-keys
+Content-Type: application/json
+
+{
+  "user_id": "user-123",
+  "user_role": "Member",
+  "access_key_scope": "no_default_allow",
+  "buckets_roles": [
+    { "bucket_name": "uploads", "role": "ReadWrite" }
+  ]
+}
+```
+
+This key can read and write objects in `uploads`. It cannot list buckets or
+create buckets unless a policy grants those actions. It cannot manage access
+keys or IAM policies.
 
 ### Full admin key for org owner
 

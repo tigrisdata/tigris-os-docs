@@ -77,44 +77,16 @@ A new access key uses the `standard` scope unless you create it with
 `no_default_allow`. A standard key can perform these operations in the
 organization even if you assign no bucket role and attach no IAM policy.
 
-### S3 operations
+It can `CreateBucket` and `ListBuckets` (all buckets in the organization). It
+can `CreateAccessKey`. It can `ListAccessKeys`, `UpdateAccessKey`, and
+`DeleteAccessKey` only for keys it created. Organization admins can manage all
+keys.
 
-| Operation    | Description                          |
-| ------------ | ------------------------------------ |
-| CreateBucket | Create a bucket                      |
-| ListBuckets  | List all buckets in the organization |
-
-### Access key operations
-
-| Operation       | Description                           |
-| --------------- | ------------------------------------- |
-| CreateAccessKey | Create a new access key               |
-| UpdateAccessKey | Update an access key this key created |
-| DeleteAccessKey | Delete an access key this key created |
-| ListAccessKeys  | List access keys this key created     |
-
-A key can create other access keys. It can list, update, and delete only the
-keys that it created. It cannot change anyone else's keys. Organization admins
-can manage all keys.
-
-### IAM policy operations
-
-| Operation             | Description                             |
-| --------------------- | --------------------------------------- |
-| CreatePolicy          | Create an IAM policy                    |
-| DeletePolicy          | Delete an IAM policy this key created   |
-| GetPolicy             | Get an IAM policy this key created      |
-| GetPolicyVersion      | Get a policy version                    |
-| GetUserPolicy         | Get a policy attached to an access key  |
-| AttachUserPolicy      | Attach a policy to an access key        |
-| DetachUserPolicy      | Detach a policy from an access key      |
-| ListEntitiesForPolicy | List access keys that have a policy     |
-| ListPolicies          | List IAM policies this key created      |
-| ListUserPolicies      | List policies attached to an access key |
-
-A key can create IAM policies. It can list, get, delete, and attach only
-policies it created, and only to keys it created. Organization admins can manage
-all policies.
+It can `CreatePolicy`. It can list, get, delete, and attach only policies it
+created, and only to keys it created (`ListPolicies`, `GetPolicy`,
+`GetPolicyVersion`, `DeletePolicy`, `AttachUserPolicy`, `DetachUserPolicy`,
+`ListUserPolicies`, `GetUserPolicy`, `ListEntitiesForPolicy`). Organization
+admins can manage all policies.
 
 The policy document can use any
 [supported S3 action](/docs/iam/policies/supported-actions), including wildcards

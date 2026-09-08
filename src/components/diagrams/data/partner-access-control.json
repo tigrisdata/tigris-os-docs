@@ -465,15 +465,5 @@
     "fontSize": 13,
     "fontFamily": 1,
     "strokeColor": "#8fa3b0"
-  },
-  {
-    "type": "text",
-    "id": "scope-default-note",
-    "x": 880,
-    "y": 500,
-    "text": "Default if omitted: standard",
-    "fontSize": 13,
-    "fontFamily": 1,
-    "strokeColor": "#506874"
   }
 ]

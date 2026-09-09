@@ -75,7 +75,9 @@ the AWS CLI.
 
 A new access key uses the `standard` scope unless you create it with
 `no_default_allow`. A standard key can perform these operations in the
-organization even if you assign no bucket role and attach no IAM policy.
+organization even if you assign no bucket role and attach no IAM policy. You can
+turn this default off for an existing key. See
+[Change the default allowed operations](#change-the-default-allowed-operations).
 
 It can `CreateBucket` and `ListBuckets` (all buckets in the organization). It
 can `CreateAccessKey`. It can `ListAccessKeys`, `UpdateAccessKey`, and
@@ -95,6 +97,26 @@ in the ARN cannot contain `*`. Object prefixes such as
 `arn:aws:s3:::my-bucket/uploads/*` are allowed. The key must own every bucket
 named in the policy. A key cannot create a policy that grants access to a bucket
 it does not own. This limit does not apply to organization admins.
+
+## Change the default allowed operations
+
+A key that you create in the Dashboard always uses the `standard` scope. You can
+turn the default allowed operations off after you create the key.
+
+1. **Open the Dashboard**  
+   Go to the [Tigris Dashboard](https://console.storage.dev) and select **Access
+   Keys** from the sidebar.
+
+2. **Open the Key Details**  
+   In the list, click the access key that you want to change.
+
+3. **Set the Default Allowed Operations**  
+   Turn the **Default allowed operations** toggle off. The key now uses the
+   `no_default_allow` scope. It can do only what its bucket role and its
+   attached IAM policies allow. To go back to the `standard` scope, turn the
+   toggle on.
+
+   ![The Default allowed operations toggle in the access key details](/img/access-key-default-operations-toggle.png)
 
 ## Delete an Access Key
 

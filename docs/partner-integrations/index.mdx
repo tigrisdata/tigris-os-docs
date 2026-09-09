@@ -62,9 +62,9 @@ Organizations provide strong isolation between end users. An organization is
 created for each end user, and an organization may consist of one or more users.
 A user may have `Admin` or `Member` privileges.
 
-Two fields on the Partner API control access: `user_role` scopes what the user
-can do through management endpoints, and `buckets_roles` scopes what their
-access key can do with S3 operations. See
+Three fields on the Partner API control access: `user_role` scopes management
+operations, `buckets_roles` scopes S3 bucket operations, and `access_key_scope`
+controls whether a key receives default S3 and IAM operations. See
 [Access Control](/docs/partner-integrations/access-control) for details.
 
 Endpoints for rotating and revoking access keys are available, as well as a

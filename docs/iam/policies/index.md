@@ -22,6 +22,9 @@ Tigris supports the following IAM operations for managing access policies:
 | `IAM:GetPolicyVersion`      | Retrieve a specific version of a policy         |
 | `IAM:ListEntitiesForPolicy` | List access keys a policy is attached to        |
 
+Who can call these operations is described in
+[default allowed operations](/docs/iam/manage-access-key/#default-allowed-operations).
+
 > **Note:** Tigris does not support IAM users. When these operations refer to
 > "user", they apply to **access keys only**.
 

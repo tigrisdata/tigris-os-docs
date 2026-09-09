@@ -1,20 +1,24 @@
 # Access Control
 
-When you create access keys through the Partner API, two fields control what
+When you create access keys through the Partner API, three fields control what
 those keys can do:
 
 - `user_role` controls what your user can do through the **management API**
   (listing keys, updating org settings).
 - `buckets_roles` controls what **S3 operations** the access key can perform on
   specific buckets.
+- `access_key_scope` controls whether the key also receives
+  [default allowed operations](/docs/iam/manage-access-key/#default-allowed-operations)
+  such as create bucket and list buckets.
 
-These two fields are independent. They apply at different times and serve
-different purposes.
+These fields are independent. They apply at different times and serve different
+purposes.
 
-| Field           | Where it applies   | What it controls                                          |
-| --------------- | ------------------ | --------------------------------------------------------- |
-| `user_role`     | Partner API calls  | Management scope: list all keys vs own keys, org settings |
-| `buckets_roles` | S3 data operations | What the access key can read, write, or manage per bucket |
+| Field              | Where it applies   | What it controls                                          |
+| ------------------ | ------------------ | --------------------------------------------------------- |
+| `user_role`        | Partner API calls  | Management scope: list all keys vs own keys, org settings |
+| `buckets_roles`    | S3 data operations | What the access key can read, write, or manage per bucket |
+| `access_key_scope` | S3 and IAM APIs    | Whether the key receives default allowed operations       |
 
 import PartnerAccessControlDiagram from "@site/src/components/diagrams/PartnerAccessControlDiagram";
 
@@ -65,17 +69,32 @@ Use `"*"` as the bucket name to grant access to all buckets in the org. An
 access key with `{"bucket_name": "*", "role": "Admin"}` is treated as a full org
 admin, bypassing all bucket-level permission checks.
 
-## How the Two Fields Interact
+## Access key scope (`access_key_scope`) {#access-key-scope}
 
-`user_role` and `buckets_roles` apply at different times. Here's how common
-partner scenarios map to these fields:
+This field controls the
+[default allowed operations](/docs/iam/manage-access-key/#default-allowed-operations)
+on the key. A standard key can create buckets, list buckets, and create access
+keys and IAM policies even with no bucket role.
 
-| Scenario              | `user_role` | `buckets_roles`                                                                                    | Result                                            |
-| --------------------- | ----------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| **Developer uploads** | `Member`    | `[{"bucket_name": "user-uploads", "role": "ReadWrite"}]`                                           | User manages own key, can read/write their bucket |
-| **Platform admin**    | `Admin`     | `[{"bucket_name": "*", "role": "Admin"}]`                                                          | Full management + full S3 access                  |
-| **CI/CD pipeline**    | `Member`    | `[{"bucket_name": "artifacts", "role": "ReadOnly"}]`                                               | Automated reads, no management access             |
-| **Mixed access**      | `Member`    | `[{"bucket_name": "assets", "role": "ReadOnly"}, {"bucket_name": "uploads", "role": "ReadWrite"}]` | Read shared content, write user content           |
+| Value                | What it means                                            |
+| -------------------- | -------------------------------------------------------- |
+| `standard` (default) | The key receives the default allowed operations.         |
+| `no_default_allow`   | The key does not receive the default allowed operations. |
+
+If you omit `access_key_scope`, the key uses `standard`. You can set the field
+on [Create Access Key](/docs/partner-integrations/api/tigris-create-access-key)
+and
+[Update Access Key](/docs/partner-integrations/api/tigris-update-access-key). If
+you omit the field on update, the current scope stays unchanged.
+
+## How the fields interact
+
+| Scenario              | `user_role` | `buckets_roles`                          | `access_key_scope` | Result                                            |
+| --------------------- | ----------- | ---------------------------------------- | ------------------ | ------------------------------------------------- |
+| **Developer uploads** | `Member`    | `user-uploads: ReadWrite`                | `no_default_allow` | User manages own key, can read/write their bucket |
+| **Platform admin**    | `Admin`     | `*: Admin`                               | `standard`         | Full management + full S3 access                  |
+| **CI/CD pipeline**    | `Member`    | `artifacts: ReadOnly`                    | `no_default_allow` | Automated reads, no access-key or IAM management  |
+| **Mixed access**      | `Member`    | `assets: ReadOnly`, `uploads: ReadWrite` | `no_default_allow` | Read shared content, write user content           |
 
 ## Common Access Patterns
 
@@ -88,6 +107,7 @@ Content-Type: application/json
 {
   "user_id": "user-123",
   "user_role": "Member",
+  "access_key_scope": "no_default_allow",
   "buckets_roles": [
     { "bucket_name": "assets", "role": "ReadOnly" }
   ]
@@ -103,11 +123,16 @@ Content-Type: application/json
 {
   "user_id": "user-123",
   "user_role": "Member",
+  "access_key_scope": "no_default_allow",
   "buckets_roles": [
     { "bucket_name": "uploads", "role": "ReadWrite" }
   ]
 }
 ```
+
+This key can read and write objects in `uploads`. It cannot list buckets or
+create buckets unless a policy grants those actions. It cannot manage access
+keys or IAM policies.
 
 ### Mixed permissions across buckets
 
@@ -118,6 +143,7 @@ Content-Type: application/json
 {
   "user_id": "user-123",
   "user_role": "Member",
+  "access_key_scope": "no_default_allow",
   "buckets_roles": [
     { "bucket_name": "assets", "role": "ReadOnly" },
     { "bucket_name": "uploads", "role": "ReadWrite" }

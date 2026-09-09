@@ -31,6 +31,9 @@ the AWS CLI.
        administration
      - **ReadOnly** – read-only for selected buckets
 
+   See [default allowed operations](#default-allowed-operations) for what a
+   `standard` key can do without a bucket role.
+
 4. **Click Create**  
    You’ll receive:
    - Access Key ID
@@ -65,6 +68,33 @@ the AWS CLI.
    ```bash
    aws iam create-access-key --endpoint-url "$AWS_ENDPOINT_URL_IAM"
    ```
+
+   The new key uses the `standard` scope.
+
+## Default allowed operations
+
+A new access key uses the `standard` scope unless you create it with
+`no_default_allow`. A standard key can perform these operations in the
+organization even if you assign no bucket role and attach no IAM policy.
+
+It can `CreateBucket` and `ListBuckets` (all buckets in the organization). It
+can `CreateAccessKey`. It can `ListAccessKeys`, `UpdateAccessKey`, and
+`DeleteAccessKey` only for keys it created. Organization admins can manage all
+keys.
+
+It can `CreatePolicy`. It can list, get, delete, and attach only policies it
+created, and only to keys it created (`ListPolicies`, `GetPolicy`,
+`GetPolicyVersion`, `DeletePolicy`, `AttachUserPolicy`, `DetachUserPolicy`,
+`ListUserPolicies`, `GetUserPolicy`, `ListEntitiesForPolicy`). Organization
+admins can manage all policies.
+
+The policy document can use any
+[supported S3 action](/docs/iam/policies/supported-actions), including wildcards
+such as `s3:Get*` or `s3:*`. Each `Resource` must be an S3 ARN. The bucket name
+in the ARN cannot contain `*`. Object prefixes such as
+`arn:aws:s3:::my-bucket/uploads/*` are allowed. The key must own every bucket
+named in the policy. A key cannot create a policy that grants access to a bucket
+it does not own. This limit does not apply to organization admins.
 
 ## Delete an Access Key
 

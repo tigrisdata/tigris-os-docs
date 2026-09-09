@@ -2,9 +2,9 @@
   {
     "type": "text",
     "id": "title",
-    "x": 200,
+    "x": 470,
     "y": 10,
-    "text": "Two Layers of Access Control",
+    "text": "Three Access Controls",
     "fontSize": 22,
     "fontFamily": 1,
     "strokeColor": "#c8d6de"
@@ -12,10 +12,10 @@
   {
     "type": "rectangle",
     "id": "create-key-box",
-    "x": 210,
+    "x": 330,
     "y": 55,
-    "width": 380,
-    "height": 60,
+    "width": 540,
+    "height": 78,
     "backgroundColor": "#62FEB5",
     "fillStyle": "solid",
     "strokeColor": "#62FEB5",
@@ -25,7 +25,7 @@
   {
     "type": "text",
     "id": "create-key-text",
-    "x": 265,
+    "x": 485,
     "y": 60,
     "text": "POST /access-keys",
     "fontSize": 18,
@@ -35,9 +35,9 @@
   {
     "type": "text",
     "id": "create-key-sub",
-    "x": 260,
-    "y": 83,
-    "text": "user_role + buckets_roles",
+    "x": 455,
+    "y": 88,
+    "text": "user_role + buckets_roles\n+ access_key_scope",
     "fontSize": 14,
     "fontFamily": 1,
     "strokeColor": "#0A171E"
@@ -45,13 +45,13 @@
   {
     "type": "arrow",
     "id": "arrow-left",
-    "x": 330,
+    "x": 480,
     "y": 115,
-    "width": -130,
+    "width": -280,
     "height": 100,
     "points": [
       [0, 0],
-      [-130, 100]
+      [-280, 100]
     ],
     "strokeColor": "#4a9eed",
     "strokeWidth": 1.5,
@@ -60,7 +60,7 @@
   {
     "type": "text",
     "id": "arrow-left-label",
-    "x": 160,
+    "x": 280,
     "y": 145,
     "text": "user_role",
     "fontSize": 15,
@@ -70,13 +70,13 @@
   {
     "type": "arrow",
     "id": "arrow-right",
-    "x": 470,
+    "x": 600,
     "y": 115,
-    "width": 130,
+    "width": 0,
     "height": 100,
     "points": [
       [0, 0],
-      [130, 100]
+      [0, 100]
     ],
     "strokeColor": "#22c55e",
     "strokeWidth": 1.5,
@@ -85,12 +85,37 @@
   {
     "type": "text",
     "id": "arrow-right-label",
-    "x": 570,
+    "x": 505,
     "y": 145,
     "text": "buckets_roles",
     "fontSize": 15,
     "fontFamily": 1,
     "strokeColor": "#22c55e"
+  },
+  {
+    "type": "arrow",
+    "id": "arrow-scope",
+    "x": 720,
+    "y": 115,
+    "width": 290,
+    "height": 100,
+    "points": [
+      [0, 0],
+      [290, 100]
+    ],
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 1.5,
+    "endArrowhead": "arrow"
+  },
+  {
+    "type": "text",
+    "id": "arrow-scope-label",
+    "x": 850,
+    "y": 145,
+    "text": "access_key_scope",
+    "fontSize": 15,
+    "fontFamily": 1,
+    "strokeColor": "#CF8E5B"
   },
   {
     "type": "rectangle",
@@ -346,6 +371,97 @@
     "x": 470,
     "y": 521,
     "text": "All ops, bypasses all checks",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "rectangle",
+    "id": "zone-scope",
+    "x": 830,
+    "y": 230,
+    "width": 370,
+    "height": 340,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#1e3340",
+    "strokeWidth": 1.5,
+    "strokeStyle": "dashed",
+    "roundness": { "type": 3 },
+    "opacity": 40
+  },
+  {
+    "type": "text",
+    "id": "zone-scope-label",
+    "x": 845,
+    "y": 245,
+    "text": "Default S3 and IAM Operations",
+    "fontSize": 14,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "rectangle",
+    "id": "standard-scope-box",
+    "x": 855,
+    "y": 290,
+    "width": 320,
+    "height": 75,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#CF8E5B",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 }
+  },
+  {
+    "type": "text",
+    "id": "standard-scope-title",
+    "x": 880,
+    "y": 296,
+    "text": "standard",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#62FEB5"
+  },
+  {
+    "type": "text",
+    "id": "standard-scope-desc",
+    "x": 880,
+    "y": 321,
+    "text": "Create/list buckets; limited\nkey and policy management",
+    "fontSize": 13,
+    "fontFamily": 1,
+    "strokeColor": "#8fa3b0"
+  },
+  {
+    "type": "rectangle",
+    "id": "restricted-scope-box",
+    "x": 855,
+    "y": 395,
+    "width": 320,
+    "height": 75,
+    "backgroundColor": "#142229",
+    "fillStyle": "solid",
+    "strokeColor": "#2a4050",
+    "strokeWidth": 1.2,
+    "roundness": { "type": 3 }
+  },
+  {
+    "type": "text",
+    "id": "restricted-scope-title",
+    "x": 880,
+    "y": 401,
+    "text": "no_default_allow",
+    "fontSize": 16,
+    "fontFamily": 1,
+    "strokeColor": "#c8d6de"
+  },
+  {
+    "type": "text",
+    "id": "restricted-scope-desc",
+    "x": 880,
+    "y": 426,
+    "text": "Does not receive the\ndefault allowed operations",
     "fontSize": 13,
     "fontFamily": 1,
     "strokeColor": "#8fa3b0"

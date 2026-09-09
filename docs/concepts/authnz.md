@@ -171,6 +171,17 @@ role. These operation names are not IAM policy action names.
 
 The bucket owner can perform all bucket operations on their own bucket.
 
+### Default allowed operations
+
+A standard access key can perform some operations in the organization even
+without a bucket role or an IAM policy. That set includes CreateBucket,
+ListBuckets, and limited management of access keys and IAM policies. A key can
+create other keys but can change only the keys that it created. It can manage
+only IAM policies that it created.
+
+These grants are separate from the bucket-role table above. See
+[Default allowed operations](/docs/iam/manage-access-key/#default-allowed-operations).
+
 ### IAM Policies
 
 In addition to bucket roles, organization admins can customize access with IAM

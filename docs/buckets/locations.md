@@ -71,10 +71,10 @@ within that geography where data is stored.
 
 **Supported geographies:**
 
-| Geography | `LocationConstraint` | Candidate Regions                                  |
-| --------- | -------------------- | -------------------------------------------------- |
-| USA       | `usa`                | `sjc` (San Jose), `ord` (Chicago), `iad` (Ashburn) |
-| EUR       | `eur`                | `ams` (Amsterdam), `fra` (Frankfurt)               |
+| Geography | `LocationConstraint` | Candidate Regions                                    |
+| --------- | -------------------- | ---------------------------------------------------- |
+| USA       | `usa`                | `sjc` (San Jose), `ord` (Chicago), `iad` (Ashburn)   |
+| EUR       | `eur`                | `ams` (Amsterdam), `fra` (Frankfurt), `lhr` (London) |
 
 **Best for:** Mission-critical data requiring the highest availability,
 enterprise workloads where regional failures cannot cause downtime, and

@@ -137,7 +137,8 @@ public objects, but you can set an implicit default here.
 
 You can migrate data from another S3-compatible bucket to Tigris using the
 [data migration](/docs/migration/) feature, also known as shadow bucket
-migration. The source bucket you migrate from is called a shadow bucket. Tigris
+migration. The source bucket you migrate from is called a shadow bucket, and it
+has to live outside Tigris — another Tigris bucket is not a valid source. Tigris
 copies data lazily as it's accessed, so there's no upfront transfer. Tigris
 implements the following migration strategy:
 

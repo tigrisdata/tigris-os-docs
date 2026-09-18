@@ -244,8 +244,16 @@ configuration.
 
 ### My provider is not listed. Can I still migrate?
 
-Yes. Tigris can migrate from any storage that supports the S3 API. You need your
-provider's S3-compatible endpoint URL, access credentials, and region.
+Yes. Tigris can migrate from any external storage that supports the S3 API. You
+need your provider's S3-compatible endpoint URL, access credentials, and region.
+
+### Can I use another Tigris bucket as the source?
+
+No. Shadow buckets exist to migrate data in from another provider, so a Tigris
+endpoint is rejected as a source with
+`Migration source cannot be Tigris endpoint`. To copy data between Tigris
+buckets, [fork the bucket](/docs/buckets/snapshots-and-forks/) or run
+`aws s3 sync` between the two.
 
 ### What happens to objects I have not accessed yet?
 

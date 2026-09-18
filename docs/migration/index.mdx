@@ -26,6 +26,11 @@ removes the need for a large upfront data transfer. When you enable
 write-through mode, Tigris syncs new writes back to your old bucket. You can
 take as long as you need to complete the migration.
 
+Shadow buckets move data into Tigris from an external provider. A Tigris bucket
+cannot be a shadow bucket source: Tigris rejects the configuration with
+`Migration source cannot be Tigris endpoint`. To copy between Tigris buckets,
+use a [fork](/docs/buckets/snapshots-and-forks/) or `aws s3 sync`.
+
 <!-- prettier-ignore -->
 :::note
 The shadow bucket source must be S3-compatible. Azure Blob Storage is not

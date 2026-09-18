@@ -3,6 +3,10 @@
 Configure data migration from an external S3-compatible source bucket. Tigris
 will pull objects on demand from the source.
 
+`--endpoint` has to name a provider outside Tigris. A Tigris endpoint is
+rejected with `Migration source cannot be Tigris endpoint`; to copy between
+Tigris buckets, [fork the bucket](/docs/buckets/snapshots-and-forks/) instead.
+
 ## Usage
 
 ```bash

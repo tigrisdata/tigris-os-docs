@@ -249,11 +249,10 @@ need your provider's S3-compatible endpoint URL, access credentials, and region.
 
 ### Can I use another Tigris bucket as the source?
 
-No. Shadow buckets exist to migrate data in from another provider, so a Tigris
-endpoint is rejected as a source with
-`Migration source cannot be Tigris endpoint`. To copy data between Tigris
-buckets, [fork the bucket](/docs/buckets/snapshots-and-forks/) or run
-`aws s3 sync` between the two.
+No. The source has to sit outside Tigris, and a Tigris endpoint is rejected with
+`Migration source cannot be Tigris endpoint`.
+[Fork the bucket](/docs/buckets/snapshots-and-forks/) or run `aws s3 sync` to
+copy between Tigris buckets.
 
 ### What happens to objects I have not accessed yet?
 

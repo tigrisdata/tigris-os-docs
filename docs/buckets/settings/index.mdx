@@ -137,8 +137,7 @@ public objects, but you can set an implicit default here.
 
 You can migrate data from another S3-compatible bucket to Tigris using the
 [data migration](/docs/migration/) feature, also known as shadow bucket
-migration. The source bucket you migrate from is called a shadow bucket, and it
-has to live outside Tigris — another Tigris bucket is not a valid source. Tigris
+migration. The source bucket you migrate from is called a shadow bucket. Tigris
 copies data lazily as it's accessed, so there's no upfront transfer. Tigris
 implements the following migration strategy:
 
@@ -151,6 +150,15 @@ implements the following migration strategy:
 If you enable the write-through option, Tigris will write the object to your
 source bucket and Tigris bucket at the same time. This is useful for keeping
 your source bucket in sync with Tigris.
+
+:::note
+
+The shadow bucket must be outside Tigris. A Tigris endpoint is rejected with
+`Migration source cannot be Tigris endpoint`. Use a
+[bucket fork](/docs/buckets/snapshots-and-forks/) or `aws s3 sync` to copy
+between Tigris buckets.
+
+:::
 
 ## TTL Configuration
 

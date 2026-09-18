@@ -151,6 +151,15 @@ If you enable the write-through option, Tigris will write the object to your
 source bucket and Tigris bucket at the same time. This is useful for keeping
 your source bucket in sync with Tigris.
 
+:::note
+
+The shadow bucket must be outside Tigris. A Tigris endpoint is rejected with
+`Migration source cannot be Tigris endpoint`. Use a
+[bucket fork](/docs/buckets/snapshots-and-forks/) or `aws s3 sync` to copy
+between Tigris buckets.
+
+:::
+
 ## TTL Configuration
 
 ![TTL Configuration](./ttl-configuration.webp)

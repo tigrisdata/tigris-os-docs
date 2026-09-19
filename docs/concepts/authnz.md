@@ -31,6 +31,30 @@ Tigris server in an encrypted form with `AES` `256-bit` encryption.
 
 ![Double encryption of access key](/img/auth/double-encryption-of-key.png)
 
+#### Sign every `x-amz-*` header you send {#sign-x-amz-headers}
+
+Every `x-amz-*` header in a request has to be listed in the signature's
+`SignedHeaders`, for header-signed requests and presigned URLs alike. Headers
+shape the object being written — `x-amz-storage-class` picks the tier,
+`x-amz-acl` sets access, `x-amz-meta-*` attaches metadata — so one that sits
+outside the signature is one the signer never agreed to. Anything that can alter
+a request in flight can add it.
+
+The AWS SDKs handle this: a header set through the SDK is signed with the rest
+of the request. It goes wrong when a header is attached after signing — injected
+by a proxy or CDN, added to a presigned URL when it was generated without one,
+or set by hand in a script that builds its own `Authorization` header.
+
+Tigris is rolling out rejection of requests that carry an `x-amz-*` header the
+signature does not cover, so send them signed. Auth and transport headers that
+carry the signature itself, such as `x-amz-signature`, `x-amz-signedheaders` and
+`x-amz-expires`, are exempt.
+
+For a presigned URL, decide what the request looks like before you sign it: a
+header a caller adds afterwards is not covered by that URL's signature. Pass
+`x-amz-meta-*` and the rest to the SDK call that generates the URL, so they are
+signed into it.
+
 ### Session Token
 
 This mechanism is based on the idea of temporary credentials. Within Tigris,

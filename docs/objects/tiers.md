@@ -49,9 +49,9 @@ bucket's default tier. To set the object tier:
 
 - use the `--storage-class` flag with the `put-object` AWS CLI or corresponding
   field of PutObject, CreateMultipartUpload SDK APIs input, or
-- set the `x-amz-storage-class` header when using the REST API. Sign it with the
-  request, as
-  [every `x-amz-*` header has to be](/docs/concepts/authnz/#sign-x-amz-headers).
+- set the `x-amz-storage-class` header when using the REST API,
+  [signed with the request](/docs/concepts/authnz/#sign-x-amz-headers) like
+  every `x-amz-*` header.
 
 **Tigris accepts S3-compatible storage classes:**
 

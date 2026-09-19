@@ -44,12 +44,15 @@ opens when a header arrives after signing, whether a proxy added it or a script
 built its own `Authorization` header without it.
 
 Tigris is rolling out rejection of requests whose signature does not cover their
-`x-amz-*` headers. Headers carrying the signature itself stay exempt:
-`x-amz-signature`, `x-amz-signedheaders`, `x-amz-expires`.
+`x-amz-*` headers. SigV4 carries its own parameters — `X-Amz-Signature`,
+`X-Amz-SignedHeaders`, `X-Amz-Expires` and the rest — in the query string of a
+presigned URL rather than as headers, and the rule does not apply to those.
 
-Presigned URLs need that decision made up front. Nobody can add a header to a
-URL you signed without one, so pass `x-amz-meta-*` and anything else to the call
-that generates it.
+Presigned URLs need that decision made up front, and signing a header does not
+put its value into the URL. The URL records which header names were signed;
+whoever uses it still has to send each one, with the same value used at signing,
+or the signature will not match. So pass `x-amz-meta-*` and anything else to the
+call that generates the URL, and send those headers with the request too.
 
 ### Session Token
 

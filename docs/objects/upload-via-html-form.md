@@ -71,6 +71,14 @@ For illustrative purposes, let's utilize the following credentials:
 - Full
   [detailed grammar of policy is documented here](https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html).
 
+A POST policy does not sign headers the way
+[a SigV4 request does](/docs/concepts/authnz/#sign-x-amz-headers). The signature
+covers the policy document, and each form field is checked against the
+conditions in it. So every field the form submits needs a condition:
+`x-amz-meta-uuid` is accepted here because the policy names it, and an
+`x-amz-meta-*` field the policy does not name is rejected. Give any other
+`x-amz-*` field you submit the same treatment, `x-amz-storage-class` included.
+
 ### Truncate space characters
 
 Removing spaces and newlines will make it easier to verify the results locally,

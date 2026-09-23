@@ -173,6 +173,19 @@ nav.navbar {
   border-bottom: 1px solid var(--ifm-toc-border-color);
 }
 
+/* Height of the top nav (src/theme/Navbar), the website's bar: 16px padding,
+   44px Sign in / Get started buttons, 16px padding and a 1px border; 32px
+   rows below 800px. Used for anchor offsets and the sticky docs sidebar. */
+:root {
+  --ifm-navbar-height: 77px;
+}
+
+@media (max-width: 799.98px) {
+  :root {
+    --ifm-navbar-height: 65px;
+  }
+}
+
 .navbar__logo {
   height: 26px;
 }
@@ -485,7 +498,7 @@ aside.theme-doc-sidebar-container {
 .theme-doc-sidebar-container button[title="Collapse sidebar"],
 .theme-doc-sidebar-container div[title="Expand sidebar"] {
   position: absolute;
-  top: 96px;
+  top: calc(var(--ifm-navbar-height) + 36px);
   right: -14px;
   width: 28px;
   height: 28px;

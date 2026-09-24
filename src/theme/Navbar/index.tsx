@@ -101,6 +101,7 @@ function LogoContextMenu({
           onClick={async () => {
             try {
               const res = await window.fetch(BRAND_LOGO);
+              if (!res.ok) throw new Error(`HTTP ${res.status}`);
               const svg = await res.text();
               await navigator.clipboard.writeText(svg);
             } catch {

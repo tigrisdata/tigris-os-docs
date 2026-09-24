@@ -498,6 +498,11 @@ const sidebars = {
                 },
                 {
                   type: "doc",
+                  label: "Firebolt Core",
+                  id: "guides/firebolt-core",
+                },
+                {
+                  type: "doc",
                   label: "Databricks",
                   id: "libraries/databricks/index",
                 },

@@ -1,28 +1,36 @@
-/* The terminal is dark in both colour modes, like the one on the homepage. */
+/* The terminal is dark in both colour modes, like the one on the homepage.
+   The chrome uses the site's shared tokens (--hairline, --r-panel) where
+   they exist, and falls back to the older docs values where they don't.
+   --shell-bg stays #0e1920: it is the package's fixed xterm background, so
+   the frame must match it. */
 .frame {
   --shell-bg: #0e1920;
+  --shell-muted: #8ba3a0;
 
   margin: 1rem 0 1.5rem;
-  border: 1px solid var(--docs-color-border);
-  border-radius: 8px;
+  border: 1px solid var(--hairline, var(--docs-color-border));
+  border-radius: var(--r-panel, 8px);
   overflow: hidden;
   background: var(--shell-bg);
 }
 
+/* A mono uppercase label, like the site's table headers and footer
+   eyebrows. */
 .titleBar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.4rem 0.75rem;
-  border-bottom: 1px solid rgb(255 255 255 / 8%);
-  font-family: var(--ifm-font-family-monospace);
-  font-size: 12px;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--hairline, rgb(255 255 255 / 8%));
+  font: 500 10.5px/1.4 var(--ifm-font-family-monospace);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: #d6e2e8;
 }
 
 .hint {
-  color: #7b8c94;
+  color: var(--shell-muted);
 }
 
 .host {
@@ -43,7 +51,7 @@
   justify-content: center;
   font-family: var(--ifm-font-family-monospace);
   font-size: 13px;
-  color: #7b8c94;
+  color: var(--shell-muted);
 }
 
 @media (max-width: 600px) {

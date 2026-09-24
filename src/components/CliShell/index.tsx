@@ -12,7 +12,9 @@ import styles from "./styles.module.css";
 import "@xterm/xterm/css/xterm.css";
 import "@tigrisdata/cli-shell/styles.css";
 
-const ACCENT = "\x1b[32m";
+// --terminal (#62feb5), the site's colour for terminal output, as 24-bit
+// colour. Plain ANSI green is the xterm default, a different green.
+const ACCENT = "\x1b[38;2;98;254;181m";
 const RESET = "\x1b[0m";
 
 /**

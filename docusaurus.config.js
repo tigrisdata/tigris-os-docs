@@ -143,6 +143,7 @@ const config = {
   ],
 
   plugins: [
+    require.resolve("./plugins/cli-shell"),
     [
       "posthog-docusaurus",
       {

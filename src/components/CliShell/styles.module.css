@@ -1,0 +1,53 @@
+/* The terminal is dark in both colour modes, like the one on the homepage. */
+.frame {
+  --shell-bg: #0e1920;
+
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--docs-color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--shell-bg);
+}
+
+.titleBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 12px;
+  color: #d6e2e8;
+}
+
+.hint {
+  color: #7b8c94;
+}
+
+.host {
+  height: 420px;
+}
+
+/* Overrides the package's own rounded, 240px-minimum box, which is in a
+   cascade layer, so these unlayered rules win without !important. */
+.shell {
+  min-height: 0;
+  border-radius: 0;
+}
+
+.placeholder {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 13px;
+  color: #7b8c94;
+}
+
+@media (max-width: 600px) {
+  .host {
+    height: 360px;
+  }
+}

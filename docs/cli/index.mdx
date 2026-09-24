@@ -1,153 +1,69 @@
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
 import PlatformToggle from "@site/src/components/PlatformToggle";
+import CliShell from "@site/src/components/CliShell";
 
 # Tigris CLI
 
 Tigris CLI provides a simple and powerful command line interface to manage your
 Tigris resources such as buckets, objects, access keys, and IAM policies.
 
-## Setup
+## Try it in your browser
+
+This is the real CLI in a virtual shell. Run `tigris help` to list the commands,
+or `tigris login` to use them on your own buckets.
+
+<CliShell />
+
+## Install
+
+Install the standalone binary. It does not need Node.js.
 
 {/* prettier-ignore */}
-<Tabs groupId="install-method">
-  <TabItem value="native" label="Native" default>
-    <div className="cli-setup-steps">
-      <div className="step">
-        <div className="step-header">
-          <span className="step-number">1</span>
-          <span className="step-title">Install</span>
-        </div>
-        <p>Download the standalone binary (no Node.js required):</p>
+<PlatformToggle options={["macOS / Linux", "Windows"]}>
+  <div>
 
-        <PlatformToggle options={["macOS / Linux", "Windows"]}>
-          <div>
+    ```bash
+    curl -fsSL https://get.t3.storage.dev/install.sh | sh
+    ```
 
-            ```bash
-            curl -fsSL https://get.t3.storage.dev/install.sh | sh
-            ```
+  </div>
+  <div>
 
-          </div>
-          <div>
+    ```powershell
+    irm https://get.t3.storage.dev/install.ps1 | iex
+    ```
 
-            ```powershell
-            irm https://get.t3.storage.dev/install.ps1 | iex
-            ```
+  </div>
+</PlatformToggle>
 
-          </div>
-        </PlatformToggle>
+Check the install, then log in:
 
-      </div>
-      <div className="step">
-        <div className="step-header">
-          <span className="step-number">2</span>
-          <span className="step-title">Run</span>
-        </div>
-        <p>Get started by logging in:</p>
+```bash
+tigris --version
+tigris login
+```
 
-        ```bash
-        tigris login
-        ```
+To update the CLI later, run `tigris update`.
 
-      </div>
-      <div className="step">
-        <div className="step-header">
-          <span className="step-number">3</span>
-          <span className="step-title">Update</span>
-        </div>
-        <p>Get the latest updates using:</p>
+<details>
+<summary>Other install methods: Homebrew and npm</summary>
 
-        ```bash
-        tigris update
-        ```
+With [Homebrew](https://brew.sh/):
 
-      </div>
-    </div>
+```bash
+brew install tigrisdata/tap/tigris
+```
 
-  </TabItem>
-  <TabItem value="homebrew" label="Homebrew">
-    <div className="cli-setup-steps">
-      <div className="step">
-        <div className="step-header">
-          <span className="step-number">1</span>
-          <span className="step-title">Install</span>
-        </div>
-        <p>Install the Tigris CLI with Homebrew:</p>
+To update, run `brew upgrade tigrisdata/tap/tigris`.
 
-        ```bash
-        brew install tigrisdata/tap/tigris
-        ```
+With npm (needs Node.js):
 
-      </div>
-      <div className="step">
-        <div className="step-header">
-          <span className="step-number">2</span>
-          <span className="step-title">Run</span>
-        </div>
-        <p>Get started by logging in:</p>
+```bash
+npm install -g @tigrisdata/cli
+```
 
-        ```bash
-        tigris login
-        ```
+To update, run `tigris update`.
 
-      </div>
-      <div className="step">
-        <div className="step-header">
-          <span className="step-number">3</span>
-          <span className="step-title">Update</span>
-        </div>
-        <p>Get the latest updates using:</p>
-
-        ```bash
-        brew upgrade tigrisdata/tap/tigris
-        ```
-
-      </div>
-    </div>
-
-  </TabItem>
-  <TabItem value="npm" label="NPM">
-    <div className="cli-setup-steps">
-      <div className="step">
-        <div className="step-header">
-          <span className="step-number">1</span>
-          <span className="step-title">Install</span>
-        </div>
-        <p>Install the Tigris CLI with npm:</p>
-
-        ```bash
-        npm install -g @tigrisdata/cli
-        ```
-
-      </div>
-      <div className="step">
-        <div className="step-header">
-          <span className="step-number">2</span>
-          <span className="step-title">Run</span>
-        </div>
-        <p>Get started by logging in:</p>
-
-        ```bash
-        tigris login
-        ```
-
-      </div>
-      <div className="step">
-        <div className="step-header">
-          <span className="step-number">3</span>
-          <span className="step-title">Update</span>
-        </div>
-        <p>Get the latest updates using:</p>
-
-        ```bash
-        tigris update
-        ```
-
-      </div>
-    </div>
-
-  </TabItem>
-</Tabs>
+</details>
 
 ## Authentication
 

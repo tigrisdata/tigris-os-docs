@@ -28,16 +28,16 @@ Refer to the following examples to generate a presigned URL:
 
 ## Headers on a presigned URL
 
-Decide the `x-amz-*` headers before you generate the URL. Pass them to the
-generating call so they are
-[covered by the signature](/docs/concepts/authnz/#sign-x-amz-headers). Tigris
-enforces this on buckets created after noon UTC on Monday, 28 September 2026.
+Choose the `x-amz-*` headers before you generate the URL, and pass them to the
+generating call. That puts them in the signature, which
+[Tigris requires](/docs/concepts/authnz/#sign-x-amz-headers) on buckets created
+after noon UTC on Monday, 28 September 2026.
 
-Signing a header does not put its value in the URL. The URL records which header
-names were signed, and whoever uses it has to send each one with the value used
-at signing. Presign an upload with `x-amz-meta-owner: alice` and the client has
-to send that header too, or the signature will not match. A header the client
-adds on its own is not signed, so it is rejected rather than applied.
+Signing a header does not put its value in the URL. The URL only records which
+header names were signed. The client using the URL must send each of those
+headers with the same value, or the signature will not match. For example, if
+you presign an upload with `x-amz-meta-owner: alice`, the client must send that
+header too. A header the client adds on its own is not signed and is rejected.
 
 ## Presigned URL with custom domain
 

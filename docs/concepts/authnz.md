@@ -33,28 +33,29 @@ Tigris server in an encrypted form with `AES` `256-bit` encryption.
 
 #### Sign every `x-amz-*` header you send {#sign-x-amz-headers}
 
-Every `x-amz-*` header has to appear in the signature's `SignedHeaders`, on
-header-signed requests and presigned URLs alike. These headers decide what gets
-written: `x-amz-storage-class` picks the tier, `x-amz-acl` sets access,
-`x-amz-meta-*` attaches metadata. An unsigned one is a change nobody authorised,
-and anything sitting between your client and Tigris can add it.
+Every `x-amz-*` header on a request must be listed in the signature's
+`SignedHeaders`. This applies to header-signed requests and to presigned URLs.
 
-An SDK takes care of this, signing whatever headers you set on the call. The gap
-opens when a header arrives after signing, whether a proxy added it or a script
-built its own `Authorization` header without it.
+These headers change what Tigris stores. `x-amz-storage-class` picks the tier,
+`x-amz-acl` sets access, and `x-amz-meta-*` adds metadata. A header that is not
+signed could have been added by anything between your client and Tigris.
 
-Tigris rejects requests whose signature does not cover their `x-amz-*` headers
-on buckets created after noon UTC on Monday, 28 September 2026. Buckets created
-before then are not affected. SigV4 carries its own parameters —
-`X-Amz-Signature`, `X-Amz-SignedHeaders`, `X-Amz-Expires` and the rest — in the
-query string of a presigned URL rather than as headers, and the rule does not
-apply to those.
+SDKs sign every header you set on the call, so this is normally automatic. It
+breaks when a header is added after signing. A proxy can do that, and so can a
+script that builds its own `Authorization` header.
 
-Presigned URLs need that decision made up front, and signing a header does not
-put its value into the URL. The URL records which header names were signed;
-whoever uses it still has to send each one, with the same value used at signing,
-or the signature will not match. So pass `x-amz-meta-*` and anything else to the
-call that generates the URL, and send those headers with the request too.
+Buckets created after noon UTC on Monday, 28 September 2026 reject requests
+with an unsigned `x-amz-*` header. Older buckets are not affected.
+
+The signing parameters in a presigned URL, such as `X-Amz-Signature`,
+`X-Amz-SignedHeaders` and `X-Amz-Expires`, are query parameters, not headers.
+This rule does not apply to them.
+
+For a presigned URL, signing a header does not put its value in the URL. The
+URL only records which header names were signed. Whoever uses the URL must send
+each of those headers with the same value used when signing, or the signature
+will not match. So pass `x-amz-meta-*` and any other `x-amz-*` headers to the
+call that generates the URL, and send them with the upload.
 
 ### Session Token
 

@@ -26,7 +26,7 @@
 }
 
 .host {
-  height: 420px;
+  height: 300px;
 }
 
 /* Overrides the package's own rounded, 240px-minimum box, which is in a
@@ -48,6 +48,6 @@
 
 @media (max-width: 600px) {
   .host {
-    height: 360px;
+    height: 260px;
   }
 }

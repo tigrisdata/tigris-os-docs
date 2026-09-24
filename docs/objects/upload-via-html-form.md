@@ -73,11 +73,13 @@ For illustrative purposes, let's utilize the following credentials:
 
 A POST policy does not sign headers the way
 [a SigV4 request does](/docs/concepts/authnz/#sign-x-amz-headers). The signature
-covers the policy document, and each form field is checked against the
-conditions in it. So every field the form submits needs a condition:
-`x-amz-meta-uuid` is accepted here because the policy names it, and an
-`x-amz-meta-*` field the policy does not name is rejected. Give any other
-`x-amz-*` field you submit the same treatment, `x-amz-storage-class` included.
+covers the policy document, and each condition in it is checked against the
+submitted form fields. `x-amz-meta-*` fields are the strict case: every one the
+form submits has to be named by a condition, so `x-amz-meta-uuid` is accepted
+here because the policy lists it, and an unlisted `x-amz-meta-*` field is
+rejected. Other `x-amz-*` fields, `x-amz-storage-class` among them, are only
+checked when the policy carries a condition for them. Add one for any field you
+want to constrain; an unlisted value is accepted as sent.
 
 ### Truncate space characters
 

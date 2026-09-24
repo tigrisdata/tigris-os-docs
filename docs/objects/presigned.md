@@ -30,8 +30,8 @@ Refer to the following examples to generate a presigned URL:
 
 Decide the `x-amz-*` headers before you generate the URL. Pass them to the
 generating call so they are
-[covered by the signature](/docs/concepts/authnz/#sign-x-amz-headers), which
-Tigris is rolling out a requirement for.
+[covered by the signature](/docs/concepts/authnz/#sign-x-amz-headers). Tigris
+enforces this on buckets created after noon UTC on Monday, 28 September 2026.
 
 Signing a header does not put its value in the URL. The URL records which header
 names were signed, and whoever uses it has to send each one with the value used

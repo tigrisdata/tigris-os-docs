@@ -43,10 +43,12 @@ An SDK takes care of this, signing whatever headers you set on the call. The gap
 opens when a header arrives after signing, whether a proxy added it or a script
 built its own `Authorization` header without it.
 
-Tigris is rolling out rejection of requests whose signature does not cover their
-`x-amz-*` headers. SigV4 carries its own parameters — `X-Amz-Signature`,
-`X-Amz-SignedHeaders`, `X-Amz-Expires` and the rest — in the query string of a
-presigned URL rather than as headers, and the rule does not apply to those.
+Tigris rejects requests whose signature does not cover their `x-amz-*` headers
+on buckets created after noon UTC on Monday, 28 September 2026. Buckets created
+before then are not affected. SigV4 carries its own parameters —
+`X-Amz-Signature`, `X-Amz-SignedHeaders`, `X-Amz-Expires` and the rest — in the
+query string of a presigned URL rather than as headers, and the rule does not
+apply to those.
 
 Presigned URLs need that decision made up front, and signing a header does not
 put its value into the URL. The URL records which header names were signed;

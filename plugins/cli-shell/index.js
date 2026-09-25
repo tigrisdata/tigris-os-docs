@@ -11,12 +11,12 @@ module.exports = function cliShellPlugin() {
       }
       // just-bash's browser build imports `node:zlib` for gzip/gunzip/zcat.
       // Webpack cannot read `node:` URIs and an alias does not catch them, so
-      // swap the import for a stub before resolution.
+      // swap the import for a browser version before resolution.
       return {
         plugins: [
           new currentBundler.instance.NormalModuleReplacementPlugin(
             /^node:zlib$/,
-            require.resolve("./zlib-stub.js"),
+            require.resolve("./zlib-shim.mjs"),
           ),
         ],
       };

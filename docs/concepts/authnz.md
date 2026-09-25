@@ -44,20 +44,20 @@ SDKs sign every header you set on the call, so this is normally automatic. It
 breaks when a header is added after signing. A proxy can do that, and so can a
 script that builds its own `Authorization` header.
 
-From noon Pacific time (19:00 UTC) on Monday, 28 September 2026, Tigris
-rejects header-signed requests that carry an unsigned `x-amz-*` header, on
-every bucket. For presigned URLs the rule applies only to buckets created after
-that time; older buckets are not affected.
+From noon Pacific time (19:00 UTC) on Monday, 28 September 2026, Tigris rejects
+header-signed requests that carry an unsigned `x-amz-*` header, on every bucket.
+For presigned URLs the rule applies only to buckets created after that time;
+older buckets are not affected.
 
 The signing parameters in a presigned URL, such as `X-Amz-Signature`,
 `X-Amz-SignedHeaders` and `X-Amz-Expires`, are query parameters, not headers.
 This rule does not apply to them.
 
-For a presigned URL, signing a header does not put its value in the URL. The
-URL only records which header names were signed. Whoever uses the URL must send
-each of those headers with the same value used when signing, or the signature
-will not match. So pass `x-amz-meta-*` and any other `x-amz-*` headers to the
-call that generates the URL, and send them with the upload.
+For a presigned URL, signing a header does not put its value in the URL. The URL
+only records which header names were signed. Whoever uses the URL must send each
+of those headers with the same value used when signing, or the signature will
+not match. So pass `x-amz-meta-*` and any other `x-amz-*` headers to the call
+that generates the URL, and send them with the upload.
 
 ### Session Token
 

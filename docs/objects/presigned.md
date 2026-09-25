@@ -26,6 +26,19 @@ Refer to the following examples to generate a presigned URL:
 - [AWS PHP SDK](/docs/sdks/s3/aws-php-sdk/#using-presigned-urls)
 - [AWS Python SDK](/docs/sdks/s3/aws-python-sdk/#using-presigned-urls)
 
+## Headers on a presigned URL
+
+Choose the `x-amz-*` headers before you generate the URL, and pass them to the
+generating call. That puts them in the signature, which
+[Tigris requires](/docs/concepts/authnz/#sign-x-amz-headers) on buckets created
+after noon Pacific time (19:00 UTC) on Monday, 28 September 2026.
+
+Signing a header does not put its value in the URL. The URL only records which
+header names were signed. The client using the URL must send each of those
+headers with the same value, or the signature will not match. For example, if
+you presign an upload with `x-amz-meta-owner: alice`, the client must send that
+header too. A header the client adds on its own is not signed and is rejected.
+
 ## Presigned URL with custom domain
 
 If you use a [custom domain with Tigris](../buckets/custom-domain.md), you can

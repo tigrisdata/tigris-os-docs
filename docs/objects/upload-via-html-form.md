@@ -71,6 +71,21 @@ For illustrative purposes, let's utilize the following credentials:
 - Full
   [detailed grammar of policy is documented here](https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html).
 
+A POST policy does not sign headers the way
+[a SigV4 request does](/docs/concepts/authnz/#sign-x-amz-headers). The signature
+covers the policy document. Tigris then checks each condition in the policy
+against the submitted form fields.
+
+`x-amz-meta-*` fields are checked strictly. Every `x-amz-meta-*` field the form
+sends must appear in a condition. `x-amz-meta-uuid` is accepted above because
+the policy lists it. An `x-amz-meta-*` field the policy does not list is
+rejected.
+
+Other `x-amz-*` fields, such as `x-amz-storage-class`, are checked only if the
+policy has a condition for them. If there is no condition, the field is accepted
+with whatever value the form sends. Add a condition for any such field you want
+to control.
+
 ### Truncate space characters
 
 Removing spaces and newlines will make it easier to verify the results locally,

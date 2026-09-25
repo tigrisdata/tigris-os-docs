@@ -18,6 +18,12 @@
  * the window that already exists with that name instead of trying to create
  * one, and nothing is blocked. If Auth0 never takes the window over (the
  * visitor picked the access-key option, say) it is closed again.
+ *
+ * Only that timeout closes the window. Auth0 claims it with
+ * `window.open('')` and points it at the authorize URL some async hops later,
+ * and the window reads as `about:blank` until that page loads, so a blank
+ * window is not proof that Auth0 has let it go. Closing it early, when the
+ * visitor moves to another docs page, say, would cancel a login in progress.
  */
 
 // the name auth0-spa-js gives its popup; it has to match exactly
@@ -50,19 +56,25 @@ function isLoginSubmit(line: string): boolean {
   return LOGIN_COMMAND.test(line) || LOGIN_MENU_CHOICE.test(line);
 }
 
-function closePending() {
+function clearAdoptTimer() {
   if (adoptTimer !== null) {
     window.clearTimeout(adoptTimer);
     adoptTimer = null;
   }
-  if (pending && !pending.closed) {
+}
+
+/** Close the window if it is still blank, i.e. Auth0 never took it over. */
+function closeIfUnclaimed() {
+  clearAdoptTimer();
+  const win = pending;
+  pending = null;
+  if (win && !win.closed && !adopted(win)) {
     try {
-      pending.close();
+      win.close();
     } catch {
       /* already gone */
     }
   }
-  pending = null;
 }
 
 /** True once Auth0 has pointed the window at the authorize URL. */
@@ -77,7 +89,10 @@ function adopted(win: Window): boolean {
 }
 
 function openPending() {
-  closePending();
+  // A second login while a window is open reuses it: `window.open` with the
+  // same name returns the existing window, blank or already on Auth0, so
+  // nothing is closed here.
+  clearAdoptTimer();
   const left = window.screenX + Math.max(0, (window.innerWidth - POPUP_W) / 2);
   const top = window.screenY + Math.max(0, (window.innerHeight - POPUP_H) / 2);
   const features = `left=${Math.round(left)},top=${Math.round(top)},width=${POPUP_W},height=${POPUP_H},resizable,scrollbars=yes,status=1`;
@@ -87,13 +102,7 @@ function openPending() {
     pending = null;
   }
   if (!pending) return;
-  adoptTimer = window.setTimeout(() => {
-    if (pending && !pending.closed && !adopted(pending)) closePending();
-    else {
-      adoptTimer = null;
-      pending = null;
-    }
-  }, ADOPT_TIMEOUT_MS);
+  adoptTimer = window.setTimeout(closeIfUnclaimed, ADOPT_TIMEOUT_MS);
 }
 
 /**
@@ -106,8 +115,7 @@ export function primeLoginPopup(root: HTMLElement): () => void {
     if (isLoginSubmit(currentLine(root))) openPending();
   };
   root.addEventListener("keydown", onKeyDown, true);
-  return () => {
-    root.removeEventListener("keydown", onKeyDown, true);
-    closePending();
-  };
+  // Stop listening, but leave any window to the timeout: Auth0 may already
+  // own it, and closing it would cancel the login.
+  return () => root.removeEventListener("keydown", onKeyDown, true);
 }

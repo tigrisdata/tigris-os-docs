@@ -40,6 +40,18 @@ const config = {
     ...rb2bHeadTag,
     {
       tagName: "link",
+      attributes: { rel: "preconnect", href: "https://fonts.googleapis.com" },
+    },
+    {
+      tagName: "link",
+      attributes: {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossorigin: "anonymous",
+      },
+    },
+    {
+      tagName: "link",
       attributes: {
         rel: "alternate",
         type: "text/plain",
@@ -96,6 +108,15 @@ const config = {
           url: "https://www.tigrisdata.com",
         },
       }),
+    },
+  ],
+
+  // Geist / Geist Mono for the top nav, which is shared with the marketing
+  // site and the blog (src/theme/Navbar).
+  stylesheets: [
+    {
+      href: "https://fonts.googleapis.com/css2?family=Geist:wght@300..900&family=Geist+Mono:wght@300..700&display=swap",
+      rel: "stylesheet",
     },
   ],
 

@@ -65,16 +65,35 @@ code {
 :root {
   --ifm-spacing-horizontal: 1.5rem;
 
+  /* Shared design tokens, the same values as the marketing site
+     (tigrisdata/website src/app/globals.css) and the blog. --accent is the
+     only interface accent; --terminal (#62feb5) is for terminal / code output
+     only, never for interface chrome. */
+  --accent: #57d3a4;
+  --accent-hover: #74e0b8;
+  --accent-ink: #04231b;
+  --terminal: #62feb5;
+  --ground: #0a171e;
+  --panel: #0b181e;
+  --raised: #142229;
+  --hairline: #1b2b32;
+  --r-button: 3px;
+  --r-panel: 4px;
+
+  /* Two faces, like the website: Geist for UI, body and headings, Geist Mono
+     for labels and code. */
   --ifm-font-family-base:
-    "Hanken Grotesk", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
-    Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, "Segoe UI", Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    Geist, system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell,
+    "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
+  --ifm-heading-font-family: var(--ifm-font-family-base);
 
   --ifm-font-family-monospace:
-    "Fira Code VF", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
+    "Geist Mono", "Fira Code VF", SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
 
-  --ifm-font-weight-bold: 900;
+  --ifm-font-weight-bold: 600;
+  --ifm-heading-font-weight: 500;
 
   --ifm-color-primary: #38ac8c;
   --ifm-color-primary-dark: #329b7e;
@@ -89,7 +108,10 @@ code {
 
   --ifm-color-emphasis-200: var(--ifm-color-gray-200);
 
-  --ifm-global-radius: 0.4rem;
+  /* 3px buttons, 4px panels: no rounded cards */
+  --ifm-global-radius: var(--r-panel);
+  --ifm-button-border-radius: var(--r-button);
+  --ifm-code-border-radius: var(--r-panel);
   --ifm-global-shadow-lw: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
   --ifm-leading-desktop: 1.25;
   --ifm-leading: calc(var(--ifm-leading-desktop) * 1rem);
@@ -129,34 +151,40 @@ code {
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 html[data-theme="dark"] {
-  --ifm-color-primary: #4ed9b2;
-  --ifm-color-primary-dark: #36d4a7;
-  --ifm-color-primary-darker: #2ccea1;
-  --ifm-color-primary-darkest: #24aa85;
-  --ifm-color-primary-light: #66debd;
-  --ifm-color-primary-lighter: #72e1c2;
-  --ifm-color-primary-lightest: #97e9d2;
-  --ifm-background-color: #0b181e;
+  /* the website's accent and grounds */
+  --ifm-color-primary: #57d3a4;
+  --ifm-color-primary-dark: #42cd98;
+  --ifm-color-primary-darker: #37c690;
+  --ifm-color-primary-darkest: #2ba477;
+  --ifm-color-primary-light: #6cd9b0;
+  --ifm-color-primary-lighter: #74e0b8;
+  --ifm-color-primary-lightest: #96e7c9;
+  --ifm-background-color: var(--ground);
 
-  --docs-color-border: #2a3731;
+  --docs-color-primary: var(--accent);
+  --docs-color-primary-100: var(--accent);
+
+  --docs-color-border: var(--hairline);
 
   --docs-color-text: #ffffff;
-  --docs-color-text-100: #bac1be;
+  --docs-color-text-100: #8fa3b0;
 
   --docs-color-background: #161616;
   --docs-color-background-100: #1b2930;
   --docs-color-background-200: #2a2a2a;
   --docs-color-background-300: #2e2e2e;
 
-  --docs-color-code-background: #1e1e1e;
+  --docs-color-code-background: var(--panel);
+  --ifm-code-background: var(--raised);
 
-  --ifm-link-color: #62feb5;
-  --ifm-tabs-color-active-border: #66debd;
-  --ifm-tabs-color-active: #66debd;
+  --ifm-link-color: var(--accent);
+  --ifm-link-hover-color: var(--accent-hover);
+  --ifm-tabs-color-active-border: var(--accent);
+  --ifm-tabs-color-active: var(--accent);
 
-  --ifm-footer-background-color: #0b181e;
-  --ifm-background-surface-color: #0b181e;
-  --ifm-toc-border-color: #2a3731;
+  --ifm-footer-background-color: var(--ground);
+  --ifm-background-surface-color: var(--panel);
+  --ifm-toc-border-color: var(--hairline);
 
   --ifm-color-content: #e7e7e7;
 
@@ -171,6 +199,19 @@ pre.prism-code {
 
 nav.navbar {
   border-bottom: 1px solid var(--ifm-toc-border-color);
+}
+
+/* Height of the top nav (src/theme/Navbar), the website's bar: 16px padding,
+   44px Sign in / Get started buttons, 16px padding and a 1px border; 32px
+   rows below 800px. Used for anchor offsets and the sticky docs sidebar. */
+:root {
+  --ifm-navbar-height: 77px;
+}
+
+@media (max-width: 799.98px) {
+  :root {
+    --ifm-navbar-height: 65px;
+  }
 }
 
 .navbar__logo {
@@ -485,7 +526,7 @@ aside.theme-doc-sidebar-container {
 .theme-doc-sidebar-container button[title="Collapse sidebar"],
 .theme-doc-sidebar-container div[title="Expand sidebar"] {
   position: absolute;
-  top: 96px;
+  top: calc(var(--ifm-navbar-height) + 36px);
   right: -14px;
   width: 28px;
   height: 28px;
@@ -1169,4 +1210,181 @@ table td {
 
 [data-theme="dark"] .dashboard-screenshot img {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+/* ==========================================================================
+   Website styling refresh (tigrisdata/website#326)
+   The marketing site's visual language carried into the docs: one accent,
+   Geist / Geist Mono, 3px buttons and 4px hairline panels with no glows or
+   gradients, mono uppercase labels, and statement-weight headings. Colours
+   below that only exist in dark mode follow the website; light mode keeps
+   its palette and picks up the type, radii and shapes.
+   ========================================================================== */
+
+/* Headings: one weight, tight tracking, like the website's .statement */
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4 {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.markdown h1 {
+  letter-spacing: -0.022em;
+}
+
+.markdown strong {
+  font-weight: 600;
+}
+
+/* Buttons: the website's .btn, 3px, Geist 500 */
+.button {
+  border-radius: var(--r-button);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+
+html[data-theme="dark"] .button--primary {
+  --ifm-button-background-color: var(--accent);
+  --ifm-button-border-color: var(--accent);
+  --ifm-button-color: var(--accent-ink);
+}
+
+html[data-theme="dark"] .button--primary:hover {
+  --ifm-button-background-color: var(--accent-hover);
+  --ifm-button-border-color: var(--accent-hover);
+}
+
+.homepage-button,
+.footer__cta a {
+  border-radius: var(--r-button);
+  font-weight: 500;
+}
+
+html[data-theme="dark"] .homepage-button,
+html[data-theme="dark"] .footer__cta a {
+  background-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+html[data-theme="dark"] .homepage-button:hover,
+html[data-theme="dark"] .footer__cta a:hover {
+  background-color: var(--accent-hover);
+  color: var(--accent-ink);
+}
+
+/* Code: blocks sit on the panel with a hairline, like the website's code
+   and terminal plates; syntax colours stay with the prism theme */
+/* prism writes the theme background inline on the container and the pre */
+html[data-theme="dark"] .theme-code-block,
+html[data-theme="dark"] .theme-code-block pre.prism-code {
+  --prism-background-color: var(--panel) !important;
+  background-color: var(--panel) !important;
+}
+
+html[data-theme="dark"] pre.prism-code {
+  border-color: var(--hairline);
+}
+
+html[data-theme="dark"] :not(pre) > code {
+  border-color: var(--hairline);
+}
+
+/* Sidebar: 3px links, accent for the current page */
+.menu__link {
+  border-radius: var(--r-button);
+}
+
+html[data-theme="dark"]
+  ul.menu__list
+  > li
+  > a.menu__link--active:not(.menu__link--sublist),
+html[data-theme="dark"]
+  .menu__list
+  .menu__list
+  .menu__link--active:not(.menu__link--sublist) {
+  background-color: color-mix(in oklab, var(--accent) 10%, transparent);
+  color: var(--accent);
+}
+
+/* Tables: header row as the website's mono uppercase label */
+table th {
+  font: 500 10.5px/1.4 var(--ifm-font-family-monospace);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+table th code {
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+html[data-theme="dark"] table th {
+  color: #8ba3a0;
+}
+
+/* Admonitions and tabs: 4px panels, hairline edges */
+.theme-admonition {
+  border-radius: var(--r-panel);
+}
+
+html[data-theme="dark"] .theme-admonition {
+  border-top: 1px solid var(--hairline);
+  border-right: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+}
+
+/* Cards on the docs home and elsewhere: flat 4px hairline panels, no glow */
+.homepage-card,
+.picture-card,
+.cli-setup-steps .step,
+.dashboard-screenshot img {
+  border-radius: var(--r-panel);
+}
+
+.homepage-card {
+  background-image: none;
+}
+
+html[data-theme="dark"] .homepage-card {
+  border-color: var(--hairline);
+  background-color: var(--panel);
+}
+
+html[data-theme="dark"] .homepage-card:hover,
+html[data-theme="dark"] .homepage-card.selected {
+  border-color: color-mix(in oklab, var(--accent) 35%, var(--hairline));
+  background-color: var(--raised);
+}
+
+.new-badge::after {
+  border-radius: var(--r-button);
+  font-family: var(--ifm-font-family-monospace);
+  letter-spacing: 0.14em;
+}
+
+/* Footer: the website's mono uppercase eyebrows and small print */
+.footer__title {
+  font: 500 10px/1.4 var(--ifm-font-family-monospace);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.footer__bottom,
+.footer__copyright {
+  font: 500 10px/1.4 var(--ifm-font-family-monospace);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+html[data-theme="dark"] .footer__title,
+html[data-theme="dark"] .footer__bottom,
+html[data-theme="dark"] .footer__copyright {
+  color: #8ba3a0;
+}
+
+html[data-theme="dark"] .footer {
+  border-top: 1px solid var(--hairline);
 }

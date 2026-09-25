@@ -50,5 +50,12 @@ export default [
       "@typescript-eslint/no-require-imports": "off",
     },
   },
+  {
+    // TypeScript checks undefined names itself, including DOM types such as
+    // HTMLElement, which the globals list above does not carry.
+    // https://typescript-eslint.io/troubleshooting/faqs/eslint/#i-get-errors-from-the-no-undef-rule-about-global-variables-not-being-defined-even-though-there-are-no-typescript-errors
+    files: ["**/*.{ts,tsx}"],
+    rules: { "no-undef": "off" },
+  },
   prettierConfig,
 ];

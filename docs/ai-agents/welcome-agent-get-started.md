@@ -40,7 +40,7 @@ see [Choosing the Right Storage](/docs/ai-agents/choosing-the-right-storage/).
 
 - Run commands automatically when you have terminal access.
 - Only pause for human action when authentication requires a browser.
-- After the initial login, everything else is automated — you create buckets,
+- After the initial sign-in, everything else is automated — you create buckets,
   generate access keys, set environment variables, and integrate the SDK.
 - Do NOT hallucinate URLs. Only show URLs from actual CLI output.
 - If something fails, read the error, fix it, and move on.
@@ -68,10 +68,10 @@ This is the one step that needs your human. Run:
 tigris login
 ```
 
-This opens a browser for OAuth signup or login. Tell your human:
+This opens a browser for OAuth signup or sign-in. Tell your human:
 
-> "I need you to complete the Tigris login in the browser window that just
-> opened. Sign up or log in, then come back here."
+> "I need you to complete the Tigris sign-in in the browser window that just
+> opened. Sign up or sign in, then come back here."
 
 After they complete it, verify:
 

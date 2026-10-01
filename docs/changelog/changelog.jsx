@@ -1397,7 +1397,7 @@ claude plugin install tigris-storage@claude-community`}</CodeBlock>
             description: (
               <>
                 <p>
-                  CLI installation, OAuth and credential login, configuration
+                  CLI installation, OAuth and credential sign-in, configuration
                   management.
                 </p>
               </>

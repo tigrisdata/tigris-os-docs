@@ -46,7 +46,7 @@ SDKs sign every header you set on the call, so this is normally automatic. It
 breaks when a header is added after signing. A proxy can do that, and so can a
 script that builds its own `Authorization` header.
 
-From noon Pacific time (19:00 UTC) on Monday, 28 September 2026, Tigris rejects
+From noon Pacific time (19:00 UTC) on Monday, 12 October 2026, Tigris rejects
 header-signed requests that carry an unsigned `x-amz-*` or `x-tigris-*` header,
 on every bucket. For presigned URLs the rule applies only to buckets created
 after that time; older buckets are not affected.

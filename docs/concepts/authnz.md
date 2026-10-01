@@ -51,9 +51,15 @@ header-signed requests that carry an unsigned `x-amz-*` or `x-tigris-*` header,
 on every bucket. For presigned URLs the rule applies only to buckets created
 after that time; older buckets are not affected.
 
+A rejected request gets `403 AccessDenied` with the message "There were headers
+present in the request which were not signed", and the error body lists the
+offending headers in `HeadersNotSigned`.
+
 The signing parameters in a presigned URL, such as `X-Amz-Signature`,
 `X-Amz-SignedHeaders` and `X-Amz-Expires`, are query parameters, not headers.
-This rule does not apply to them.
+This rule does not apply to them. Nor does it apply to the headers SigV4 itself
+uses, `x-amz-date`, `x-amz-content-sha256` and `x-amz-security-token`, or to
+`x-amz-cf-id`, which CloudFront adds to every request it forwards to an origin.
 
 For a presigned URL, signing a header does not put its value in the URL. The URL
 only records which header names were signed. Whoever uses the URL must send each

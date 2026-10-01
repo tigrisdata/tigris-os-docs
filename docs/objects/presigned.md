@@ -39,10 +39,10 @@ headers with the same value, or the signature will not match. For example, if
 you presign an upload with `x-amz-meta-owner: alice`, the client must send that
 header too. A header the client adds on its own is not signed and is rejected.
 
-The Tigris Go SDK's `simplestorage.PresignURL` only signs the content type and
-content disposition. To presign an upload that needs other `x-amz-*` or
-`x-tigris-*` headers, generate the URL with the AWS SDK presigner and add the
-headers to that call.
+With the Tigris Go SDK, headers passed to `simplestorage.PresignURL` through
+`WithS3Options` are signed, so `tigrisheaders.WithStaticReplicationRegions` and
+the other `tigrisheaders` helpers work on presigned URLs the same way they do on
+direct calls.
 
 ## Presigned URL with custom domain
 

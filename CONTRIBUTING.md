@@ -49,6 +49,3 @@ Read the file for your task. Do not read all of the files.
 2. Run `npm run lint` before you commit.
 3. If you are an AI agent, put your tool and your model in an `Assisted-by:`
    commit footer. Read `.agents/references/commits.md` for more information.
-4. Write "sign in" and "sign out", not "log in", "login", or "logout".
-   `npm run lint` checks this. To keep a line, put a
-   `terminology-ignore-next-line` comment before it.

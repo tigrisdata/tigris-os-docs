@@ -897,6 +897,7 @@ const sidebars = {
         "cli/configure",
         {
           type: "category",
+          // terminology-ignore-next-line
           label: "tigris login",
           link: { type: "doc", id: "cli/login" },
           items: [

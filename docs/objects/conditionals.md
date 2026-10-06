@@ -32,8 +32,10 @@ Multiple condition headers can be specified in a single request. The request
 proceeds only if **all** conditions are met. If any condition fails, the request
 is rejected with the appropriate error status code.
 
-The exception, as in S3, is `If-None-Match` together with `If-Modified-Since` on
-GET and HEAD: the ETag decides and the date is ignored.
+The exception, as in S3, is an ETag condition paired with its date condition on
+GET and HEAD: `If-Match` overrides `If-Unmodified-Since`, and `If-None-Match`
+overrides `If-Modified-Since`, so the date is ignored. The same applies to the
+`X-Amz-Copy-Source-*` headers on CopyObject.
 
 ## Consistency and Conditional Operations
 
@@ -69,11 +71,6 @@ Tigris supports an extra set of conditional headers for the source object in the
 | `X-Amz-Copy-Source-If-None-Match`       | Request proceeds only if the source object's ETag does **not** match the provided value. Returns `412 Precondition Failed` otherwise.           |
 | `X-Amz-Copy-Source-If-Modified-Since`   | Request proceeds only if the source object was modified after the provided date (RFC 1123 format). Returns `412 Precondition Failed` otherwise. |
 | `X-Amz-Copy-Source-If-Unmodified-Since` | Request proceeds only if the source object was **not** modified after the provided date. Returns `412 Precondition Failed` otherwise.           |
-
-As in S3, a source ETag condition decides over its paired date:
-`X-Amz-Copy-Source-If-Match` makes Tigris ignore
-`X-Amz-Copy-Source-If-Unmodified-Since`, and `X-Amz-Copy-Source-If-None-Match`
-makes it ignore `X-Amz-Copy-Source-If-Modified-Since`.
 
 ## Use Cases
 

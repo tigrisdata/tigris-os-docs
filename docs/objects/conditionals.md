@@ -33,8 +33,7 @@ proceeds only if **all** conditions are met. If any condition fails, the request
 is rejected with the appropriate error status code.
 
 The exception, as in S3, is `If-None-Match` together with `If-Modified-Since` on
-GET and HEAD: the ETag decides and the date is ignored, since a date has only
-one-second resolution.
+GET and HEAD: the ETag decides and the date is ignored.
 
 ## Consistency and Conditional Operations
 

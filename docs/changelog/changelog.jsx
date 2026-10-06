@@ -154,37 +154,124 @@ const may2026 = {
 export const changelogData = [
   {
     date: "September 30, 2026",
-    title: "Sharing buckets from the SDK and CLI",
+    title: "objgit: git hosting on Tigris",
     content: (
       <>
         <p>
-          Share a bucket with your whole organization, specific teams or
-          specific users, each with a role, from the SDK or the CLI. Call{" "}
-          <code>shareBucket()</code> in <code>@tigrisdata/storage</code>, or run{" "}
-          <code>tigris buckets share</code> with <code>--organization</code>,{" "}
-          <code>--team</code> or <code>--user</code>:
-        </p>
-        <CodeBlock language="bash">{`tigris buckets share my-bucket --organization --role ReadOnly
-tigris buckets share my-bucket --team tmid_A,tmid_B --role Editor,ReadOnly
-tigris buckets share my-bucket --user uid_MQQUhV --role ReadWrite`}</CodeBlock>
-        <p>
-          <code>tigris buckets get</code> shows who has access in a Shared With
-          row, and <code>getBucketInfo()</code> returns the same list as{" "}
-          <code>settings.shares</code>.
-        </p>
-        <p>
-          In the console, the bucket Members dialog has a searchable user and
-          team picker next to a role select. People who can&apos;t update a
-          bucket see its settings as view-only, and a bucket you can&apos;t list
-          shows an access-denied page. See{" "}
-          <a href="/docs/buckets/sharing/">Sharing Buckets</a>.
+          <a href="https://github.com/tigrisdata/objgit">objgit</a> is a
+          self-hosted git server that stores repositories and Git LFS objects in
+          a Tigris bucket. It is MIT licensed and experimental, and it has no
+          authentication yet.
         </p>
       </>
     ),
     subcategories: [
       {
+        title: "objgit",
+        items: [
+          {
+            title: "Git LFS with direct-to-Tigris transfers",
+            description: (
+              <>
+                <p>
+                  Start objgit with <code>-allow-lfs</code> and it serves the
+                  Git LFS API and file locking. Clients upload and download
+                  large files directly to and from your Tigris bucket through
+                  presigned URLs, so file contents never pass through the
+                  server. Each LFS object is stored once per bucket and shared
+                  across repositories.
+                </p>
+              </>
+            ),
+            tag: { label: "objgit", color: "cyan" },
+          },
+          {
+            title: "Signed push webhooks per repository",
+            description: (
+              <>
+                <p>
+                  After a push, objgit sends the repository&apos;s webhook URL a
+                  push event listing each new commit and its changed files,
+                  signed with HMAC-SHA256 in <code>X-Objgit-Signature-256</code>
+                  . Set the URL and rotate the secret over SSH with{" "}
+                  <code>objgit-webhook-set</code>.
+                </p>
+                <p>
+                  objgit has no authentication yet, so anyone who can reach the
+                  server can read and change webhook settings. Don&apos;t rely
+                  on webhooks in production.
+                </p>
+              </>
+            ),
+            tag: { label: "objgit", color: "cyan" },
+          },
+          {
+            title: "Kubernetes manifest, health check and multi-arch images",
+            description: (
+              <>
+                <p>
+                  Deploy objgit to Kubernetes with the Kustomize manifest in{" "}
+                  <code>manifest/</code>, which probes a new{" "}
+                  <code>/healthz</code> endpoint. Multi-arch images are
+                  published to <code>ghcr.io/tigrisdata/objgit</code>.
+                </p>
+              </>
+            ),
+            tag: { label: "objgit", color: "cyan" },
+          },
+          {
+            title: "Lower memory use when pushing large repositories",
+            description: (
+              <>
+                <p>
+                  objgit indexes a pushed pack in a single streaming pass and
+                  holds each object only while a delta needs it. Its per-object
+                  index uses compact sorted tables, which also lowers memory for
+                  clones and fetches. Repositories whose stored delta chains are
+                  exactly 50 links long, git&apos;s default depth, can be read
+                  back. More memory work for very large repositories is planned.
+                </p>
+              </>
+            ),
+            tag: { label: "objgit", color: "cyan" },
+          },
+        ],
+      },
+      {
         title: "Features",
         items: [
+          {
+            title: "Share a bucket from the SDK, CLI or console",
+            description: (
+              <>
+                <p>
+                  Share a bucket with your whole organization, specific teams or
+                  specific users, each with a role, from the SDK or the CLI.
+                  Call <code>shareBucket()</code> in{" "}
+                  <code>@tigrisdata/storage</code>, or run{" "}
+                  <code>tigris buckets share</code> with{" "}
+                  <code>--organization</code>, <code>--team</code> or{" "}
+                  <code>--user</code>:
+                </p>
+                <CodeBlock language="bash">{`tigris buckets share my-bucket --organization --role ReadOnly
+tigris buckets share my-bucket --team tmid_A,tmid_B --role Editor,ReadOnly
+tigris buckets share my-bucket --user uid_MQQUhV --role ReadWrite`}</CodeBlock>
+                <p>
+                  <code>tigris buckets get</code> shows who has access in a
+                  Shared With row, and <code>getBucketInfo()</code> returns the
+                  same list as <code>settings.shares</code>.
+                </p>
+                <p>
+                  In the console, the bucket Members dialog has a searchable
+                  user and team picker next to a role select. People who
+                  can&apos;t update a bucket see its settings as view-only, and
+                  a bucket you can&apos;t list shows an access-denied page. See{" "}
+                  <a href="/docs/buckets/sharing/">Sharing Buckets</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "IAM", color: "red" },
+          },
           {
             title: "Set Cache-Control per object on upload",
             description: (
@@ -290,18 +377,6 @@ eval "$(tigris access-keys create dev --bucket my-app-bucket --role Editor --exp
             tag: { label: "CLI", color: "green" },
           },
           {
-            title: "geesefs listings return file metadata",
-            description: (
-              <>
-                <p>
-                  geesefs mounts get file mode, owner, group, mtime and symlink
-                  targets from directory listings (<code>list-type=ext-v1</code>
-                  ), and can page through large directories.
-                </p>
-              </>
-            ),
-          },
-          {
             title: "TAG is open source",
             description: (
               <>
@@ -361,6 +436,20 @@ eval "$(tigris access-keys create dev --bucket my-app-bucket --role Editor --exp
                 </p>
               </>
             ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "geesefs listings return file metadata",
+            description: (
+              <>
+                <p>
+                  geesefs mounts get file mode, owner, group, mtime and symlink
+                  targets from directory listings (<code>list-type=ext-v1</code>
+                  ), and can page through large directories.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
           },
           {
             title: "IAM policy conditions and statement IDs are preserved",
@@ -377,83 +466,6 @@ eval "$(tigris access-keys create dev --bucket my-app-bucket --role Editor --exp
               </>
             ),
             tag: { label: "IAM", color: "red" },
-          },
-        ],
-      },
-      {
-        title: "objgit",
-        items: [
-          {
-            title: "Git LFS with direct-to-Tigris transfers",
-            description: (
-              <>
-                <p>
-                  <a href="https://github.com/tigrisdata/objgit">objgit</a> is a
-                  self-hosted git server that stores repositories and Git LFS
-                  objects in a Tigris bucket. It is MIT licensed and
-                  experimental, and it has no authentication yet.
-                </p>
-                <p>
-                  Start objgit with <code>-allow-lfs</code> and it serves the
-                  Git LFS API and file locking. Clients upload and download
-                  large files directly to and from your Tigris bucket through
-                  presigned URLs, so file contents never pass through the
-                  server. Each LFS object is stored once per bucket and shared
-                  across repositories.
-                </p>
-              </>
-            ),
-            tag: { label: "objgit", color: "cyan" },
-          },
-          {
-            title: "Signed push webhooks per repository",
-            description: (
-              <>
-                <p>
-                  After a push, objgit sends the repository&apos;s webhook URL a
-                  push event listing each new commit and its changed files,
-                  signed with HMAC-SHA256 in <code>X-Objgit-Signature-256</code>
-                  . Set the URL and rotate the secret over SSH with{" "}
-                  <code>objgit-webhook-set</code>.
-                </p>
-                <p>
-                  objgit has no authentication yet, so anyone who can reach the
-                  server can read and change webhook settings. Don&apos;t rely
-                  on webhooks in production.
-                </p>
-              </>
-            ),
-            tag: { label: "objgit", color: "cyan" },
-          },
-          {
-            title: "Kubernetes manifest, health check and multi-arch images",
-            description: (
-              <>
-                <p>
-                  Deploy objgit to Kubernetes with the Kustomize manifest in{" "}
-                  <code>manifest/</code>, which probes a new{" "}
-                  <code>/healthz</code> endpoint. Multi-arch images are
-                  published to <code>ghcr.io/tigrisdata/objgit</code>.
-                </p>
-              </>
-            ),
-            tag: { label: "objgit", color: "cyan" },
-          },
-          {
-            title: "Lower memory use when pushing large repositories",
-            description: (
-              <>
-                <p>
-                  objgit indexes a pushed pack in a single streaming pass and
-                  holds each object only while a delta needs it. Its per-object
-                  index uses compact sorted tables, which also lowers memory for
-                  clones and fetches. Repositories whose stored delta chains are
-                  exactly 50 links long, git&apos;s default depth, can be read
-                  back. More memory work for very large repositories is planned.
-                </p>
-              </>
-            ),
-            tag: { label: "objgit", color: "cyan" },
           },
         ],
       },

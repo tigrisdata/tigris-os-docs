@@ -153,6 +153,313 @@ const may2026 = {
 
 export const changelogData = [
   {
+    date: "September 30, 2026",
+    title: "Sharing buckets from the SDK and CLI",
+    content: (
+      <>
+        <p>
+          Share a bucket with your whole organization, specific teams or
+          specific users, each with a role, from the SDK or the CLI. Call{" "}
+          <code>shareBucket()</code> in <code>@tigrisdata/storage</code>, or run{" "}
+          <code>tigris buckets share</code> with <code>--organization</code>,{" "}
+          <code>--team</code> or <code>--user</code>:
+        </p>
+        <CodeBlock language="bash">{`tigris buckets share my-bucket --organization --role ReadOnly
+tigris buckets share my-bucket --team tmid_A,tmid_B --role Editor,ReadOnly
+tigris buckets share my-bucket --user uid_MQQUhV --role ReadWrite`}</CodeBlock>
+        <p>
+          <code>tigris buckets get</code> shows who has access in a Shared With
+          row, and <code>getBucketInfo()</code> returns the same list as{" "}
+          <code>settings.shares</code>.
+        </p>
+        <p>
+          In the console, the bucket Members dialog has a searchable user and
+          team picker next to a role select. People who can&apos;t update a
+          bucket see its settings as view-only, and a bucket you can&apos;t list
+          shows an access-denied page. See{" "}
+          <a href="/docs/buckets/sharing/">Sharing Buckets</a>.
+        </p>
+      </>
+    ),
+    subcategories: [
+      {
+        title: "Features",
+        items: [
+          {
+            title: "Set Cache-Control per object on upload",
+            description: (
+              <>
+                <p>
+                  <code>put()</code> and <code>getSignedUploadUrl()</code> take
+                  a <code>cacheControl</code> option. Tigris stores the value
+                  with the object and returns it on every read, and{" "}
+                  <code>head()</code> returns it as <code>cacheControl</code>.
+                  On presigned URLs, send <code>X-Tigris-Cache-Control</code> as
+                  a signed header.
+                </p>
+                <CodeBlock language="bash">{`tigris objects put t3://my-bucket/app.js ./app.js --cache-control 'public, max-age=31536000, immutable'`}</CodeBlock>
+                <p>
+                  In the CLI, <code>tigris objects put</code> and{" "}
+                  <code>tigris cp</code> take <code>--cache-control</code>{" "}
+                  (local-to-remote uploads on <code>cp</code>), and{" "}
+                  <code>tigris stat</code> shows the stored value. On public
+                  buckets, objects without their own value fall back to{" "}
+                  <code>public, max-age=3600</code> for recognized static asset
+                  types. See <a href="/docs/objects/caching/">Object Caching</a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "SDK", color: "blue" },
+          },
+          {
+            title:
+              "Create a scoped access key and export its credentials in one step",
+            description: (
+              <>
+                <p>
+                  <code>tigris access-keys create</code> takes{" "}
+                  <code>--bucket</code>, <code>--role</code> or{" "}
+                  <code>--admin</code> to scope the key when you create it.{" "}
+                  <code>--env [path]</code> writes the credentials to a dotenv
+                  file with owner-only permissions, <code>--export</code> prints{" "}
+                  <code>export</code> lines for <code>eval</code>, and{" "}
+                  <code>--for tigris|aws</code> names the variables for Tigris
+                  SDKs or the AWS SDK.
+                </p>
+                <CodeBlock language="bash">{`tigris access-keys create my-app --bucket my-app-bucket --role Editor --env
+eval "$(tigris access-keys create dev --bucket my-app-bucket --role Editor --export)"`}</CodeBlock>
+                <p>
+                  In the console and the partner portal, an access key&apos;s
+                  page has a Default permissions switch. Turn it off and the key
+                  can do only what its bucket roles and IAM policies grant. See{" "}
+                  <a href="/docs/cli/access-keys/create/">
+                    tigris access-keys create
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "IAM", color: "red" },
+          },
+          {
+            title: "New CLI installers at get.t3.storage.dev",
+            description: (
+              <>
+                <p>Install the CLI on macOS or Linux:</p>
+                <CodeBlock language="bash">{`curl -fsSL https://get.t3.storage.dev/install.sh | sh`}</CodeBlock>
+                <p>Or on Windows:</p>
+                <CodeBlock language="powershell">{`irm https://get.t3.storage.dev/install.ps1 | iex`}</CodeBlock>
+                <p>
+                  The installers download from Tigris instead of the GitHub API,
+                  so installs from CI or shared IPs don&apos;t hit GitHub&apos;s
+                  anonymous rate limit. They check each download against a
+                  published <code>SHA256SUMS</code>.
+                </p>
+                <p>
+                  The classic install scripts still work for now, but they will
+                  be deprecated and later removed. Switch to the
+                  get.t3.storage.dev URLs. See{" "}
+                  <a href="/docs/cli/">Tigris CLI</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+          {
+            title: "Run Tigris CLI in a browser",
+            description: (
+              <>
+                <p>
+                  <code>&lt;TigrisShell /&gt;</code> from{" "}
+                  <code>@tigrisdata/cli-shell</code> embeds Tigris CLI as a
+                  terminal in a web page, with pipes, shell builtins and{" "}
+                  <code>tigris login</code> through an OAuth popup. It runs on
+                  the <a href="/docs/cli/">Tigris CLI</a> page, and you can
+                  embed it in your own.
+                </p>
+                <p>
+                  <code>createBrowserCli()</code> from{" "}
+                  <code>@tigrisdata/cli/browser</code> runs CLI commands from
+                  your own code. Most commands are available;{" "}
+                  <code>update</code>, <code>init</code> and <code>bundle</code>{" "}
+                  are not.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+          {
+            title: "geesefs listings return file metadata",
+            description: (
+              <>
+                <p>
+                  geesefs mounts get file mode, owner, group, mtime and symlink
+                  targets from directory listings (<code>list-type=ext-v1</code>
+                  ), and can page through large directories.
+                </p>
+              </>
+            ),
+          },
+          {
+            title: "TAG is open source",
+            description: (
+              <>
+                <p>
+                  The source for TAG is public at{" "}
+                  <a href="https://github.com/tigrisdata/tag">
+                    github.com/tigrisdata/tag
+                  </a>{" "}
+                  under the Apache 2.0 license, and contributions are accepted
+                  under a CLA. Install it with the install script, the{" "}
+                  <code>tigrisdata/tag</code> Docker image or the Kustomize
+                  manifests. See{" "}
+                  <a href="/docs/acceleration-gateway/">
+                    Tigris Acceleration Gateway
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+        ],
+      },
+      {
+        title: "Fixes",
+        items: [
+          {
+            title: "Prefix-scoped credentials can use multi-object delete",
+            description: (
+              <>
+                <p>
+                  A key with <code>s3:DeleteObject</code> on{" "}
+                  <code>bucket/prefix/*</code> can call{" "}
+                  <code>DeleteObjects</code>. Tigris authorizes each object key
+                  in the request, as S3 does, so the AWS CLI, boto3, s3fs and
+                  Rust <code>object_store</code> can delete with prefix-scoped
+                  keys.
+                </p>
+              </>
+            ),
+            tag: { label: "IAM", color: "red" },
+          },
+          {
+            title: "Multipart upload listing, abort and complete match S3",
+            description: (
+              <>
+                <p>
+                  <code>ListParts</code>, <code>ListMultipartUploads</code>,{" "}
+                  <code>AbortMultipartUpload</code> and{" "}
+                  <code>CompleteMultipartUpload</code> behave as they do on S3,
+                  including paging, key markers and retries after a partial
+                  failure. See{" "}
+                  <a href="/docs/objects/multipart-uploads/">
+                    Multipart Uploads
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+          },
+          {
+            title: "IAM policy conditions and statement IDs are preserved",
+            description: (
+              <>
+                <p>
+                  Creating, updating or reading an IAM policy with{" "}
+                  <code>@tigrisdata/iam</code> or{" "}
+                  <code>tigris iam policies</code> keeps each statement&apos;s{" "}
+                  <code>Sid</code> and <code>Condition</code>. Earlier versions
+                  dropped these fields. Update to <code>@tigrisdata/iam</code>{" "}
+                  2.6.0 or <code>@tigrisdata/cli</code> 3.12.2 to get the fix.
+                </p>
+              </>
+            ),
+            tag: { label: "IAM", color: "red" },
+          },
+        ],
+      },
+      {
+        title: "objgit",
+        items: [
+          {
+            title: "Git LFS with direct-to-Tigris transfers",
+            description: (
+              <>
+                <p>
+                  <a href="https://github.com/tigrisdata/objgit">objgit</a> is a
+                  self-hosted git server that stores repositories and Git LFS
+                  objects in a Tigris bucket. It is MIT licensed and
+                  experimental, and it has no authentication yet.
+                </p>
+                <p>
+                  Start objgit with <code>-allow-lfs</code> and it serves the
+                  Git LFS API and file locking. Clients upload and download
+                  large files directly to and from your Tigris bucket through
+                  presigned URLs, so file contents never pass through the
+                  server. Each LFS object is stored once per bucket and shared
+                  across repositories.
+                </p>
+              </>
+            ),
+            tag: { label: "objgit", color: "cyan" },
+          },
+          {
+            title: "Signed push webhooks per repository",
+            description: (
+              <>
+                <p>
+                  After a push, objgit sends the repository&apos;s webhook URL a
+                  push event listing each new commit and its changed files,
+                  signed with HMAC-SHA256 in <code>X-Objgit-Signature-256</code>
+                  . Set the URL and rotate the secret over SSH with{" "}
+                  <code>objgit-webhook-set</code>.
+                </p>
+                <p>
+                  objgit has no authentication yet, so anyone who can reach the
+                  server can read and change webhook settings. Don&apos;t rely
+                  on webhooks in production.
+                </p>
+              </>
+            ),
+            tag: { label: "objgit", color: "cyan" },
+          },
+          {
+            title: "Kubernetes manifest, health check and multi-arch images",
+            description: (
+              <>
+                <p>
+                  Deploy objgit to Kubernetes with the Kustomize manifest in{" "}
+                  <code>manifest/</code>, which probes a new{" "}
+                  <code>/healthz</code> endpoint. Multi-arch images are
+                  published to <code>ghcr.io/tigrisdata/objgit</code>.
+                </p>
+              </>
+            ),
+            tag: { label: "objgit", color: "cyan" },
+          },
+          {
+            title: "Lower memory use when pushing large repositories",
+            description: (
+              <>
+                <p>
+                  objgit indexes a pushed pack in a single streaming pass and
+                  holds each object only while a delta needs it. Its per-object
+                  index uses compact sorted tables, which also lowers memory for
+                  clones and fetches. Repositories whose stored delta chains are
+                  exactly 50 links long, git&apos;s default depth, can be read
+                  back. More memory work for very large repositories is planned.
+                </p>
+              </>
+            ),
+            tag: { label: "objgit", color: "cyan" },
+          },
+        ],
+      },
+    ],
+  },
+  {
     date: "August 31, 2026",
     title: "Recovering soft-deleted objects",
     content: (

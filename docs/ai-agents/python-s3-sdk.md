@@ -20,6 +20,7 @@ keywords:
     tigris snapshots python,
     tigris forks python,
   ]
+last_reviewed: 2026-03-09
 ---
 
 # How Do I Use Python boto3 with S3-Compatible Storage?

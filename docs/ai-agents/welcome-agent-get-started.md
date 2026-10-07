@@ -14,6 +14,7 @@ keywords:
     tigris first bucket,
     s3 compatible setup,
   ]
+last_reviewed: 2026-06-16
 ---
 
 # Welcome, Agent. Let's Get Your Human on Tigris.

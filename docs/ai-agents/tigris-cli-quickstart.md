@@ -13,6 +13,7 @@ keywords:
     tigris presign,
     tigris cp,
   ]
+last_reviewed: 2026-06-16
 ---
 
 # How Do I Use the Tigris CLI?

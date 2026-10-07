@@ -17,6 +17,7 @@ keywords:
     multi-cloud object storage,
     r2 alternative with global distribution,
   ]
+last_reviewed: 2026-03-09
 ---
 
 # Tigris vs Cloudflare R2: Which Should I Use?

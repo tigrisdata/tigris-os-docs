@@ -17,6 +17,7 @@ keywords:
     model weights storage,
     ai data pipeline,
   ]
+last_reviewed: 2026-03-09
 ---
 
 # Why Do AI Applications Need Object Storage?

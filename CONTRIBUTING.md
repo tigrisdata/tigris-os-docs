@@ -49,3 +49,5 @@ Read the file for your task. Do not read all of the files.
 2. Run `npm run lint` before you commit.
 3. If you are an AI agent, put your tool and your model in an `Assisted-by:`
    commit footer. Read `.agents/references/commits.md` for more information.
+4. When you review or update an agent docs page (see `.github/CODEOWNERS`), set
+   its `last_reviewed` front matter to today's date.

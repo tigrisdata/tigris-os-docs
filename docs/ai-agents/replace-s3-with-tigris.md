@@ -15,6 +15,7 @@ keywords:
     switch from s3,
     s3 drop in replacement,
   ]
+last_reviewed: 2026-03-24
 ---
 
 # How Do I Replace AWS S3 with Tigris?

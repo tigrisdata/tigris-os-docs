@@ -18,6 +18,7 @@ keywords:
     file upload api route,
     tigris next.js,
   ]
+last_reviewed: 2026-03-24
 ---
 
 # How Do I Upload Files from Next.js to S3-Compatible Storage?

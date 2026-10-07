@@ -19,6 +19,11 @@ jobs:
           node-version: "22"
           cache: npm
 
+      # Warns (never fails) when an agent docs page is missing last_reviewed
+      # or was last reviewed more than 90 days ago.
+      - name: Check agent docs review dates
+        run: node scripts/check-last-reviewed.js
+
       - name: Check types + linting + build
         run: |
           npm install

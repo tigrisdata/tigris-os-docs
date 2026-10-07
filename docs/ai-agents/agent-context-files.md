@@ -12,6 +12,7 @@ keywords:
     coding agent storage,
     agent context file,
   ]
+last_reviewed: 2026-05-15
 ---
 
 # Agent Context Files

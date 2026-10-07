@@ -13,6 +13,7 @@ keywords:
     model context protocol,
     ai coding agent storage,
   ]
+last_reviewed: 2026-03-09
 ---
 
 # How Do I Use Tigris with AI Coding Agents via MCP?

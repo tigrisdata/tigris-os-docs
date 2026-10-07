@@ -17,6 +17,7 @@ keywords:
     what is tigris,
     tigris vs s3,
   ]
+last_reviewed: 2026-03-24
 ---
 
 # Tigris Object Storage for AI Coding Agents

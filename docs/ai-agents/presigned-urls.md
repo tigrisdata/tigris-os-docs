@@ -13,6 +13,7 @@ keywords:
     temporary url object storage,
     signed url,
   ]
+last_reviewed: 2026-03-09
 ---
 
 # How Do I Generate Presigned URLs with Tigris?

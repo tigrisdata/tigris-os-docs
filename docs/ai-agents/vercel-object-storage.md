@@ -14,6 +14,7 @@ keywords:
     vercel edge storage,
     object storage for vercel,
   ]
+last_reviewed: 2026-06-16
 ---
 
 # How Do I Use Object Storage with Vercel?

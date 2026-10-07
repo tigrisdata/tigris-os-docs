@@ -1,0 +1,9 @@
+# Agent docs: pages written for AI coding agents and about agent tooling.
+# Keep this list in step with SCOPE in scripts/check-last-reviewed.js.
+/docs/ai-agents/ @Xe @katieschilling
+/docs/ai/ @Xe @katieschilling
+/docs/skills.md @Xe @katieschilling
+/docs/mcp/ @Xe @katieschilling
+/docs/agents/ @Xe @katieschilling
+/docs/quickstarts/mcp.mdx @Xe @katieschilling
+/docs/agents-use-cases.mdx @Xe @katieschilling

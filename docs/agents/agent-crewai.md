@@ -1,3 +1,7 @@
+---
+last_reviewed: 2026-02-23
+---
+
 # Store CrewAI Agent Data on Tigris S3 Storage
 
 ![CrewAI integration header](/img/agents/crewai-integration.png)

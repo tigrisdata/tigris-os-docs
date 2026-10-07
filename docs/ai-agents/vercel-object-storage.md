@@ -52,10 +52,13 @@ Sign up at [console.storage.dev](https://console.storage.dev) and create an
 access key. Or use the CLI:
 
 ```bash
-npm install -g @tigrisdata/cli
+curl -fsSL https://get.t3.storage.dev/install.sh | sh
 tigris login
 tigris access-keys create vercel-app-key
 ```
+
+On Windows, install the CLI with
+`irm https://get.t3.storage.dev/install.ps1 | iex` instead.
 
 ### Step 2: Add Environment Variables in Vercel
 

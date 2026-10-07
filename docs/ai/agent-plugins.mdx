@@ -3,6 +3,8 @@ id: agent-plugins
 title: "Agent Plugins for Claude Code & Cursor"
 ---
 
+import PlatformToggle from "@site/src/components/PlatformToggle";
+
 # Agent Plugins for Claude Code & Cursor
 
 The [Tigris agent plugins](https://github.com/tigrisdata/tigris-agents-plugins)
@@ -87,10 +89,46 @@ workflows like:
 The plugins use the [Tigris CLI](/docs/cli/) under the hood. Make sure you have
 it installed and authenticated:
 
+{/* prettier-ignore */}
+<PlatformToggle options={["macOS / Linux", "Windows"]}>
+  <div>
+
+    ```bash
+    curl -fsSL https://get.t3.storage.dev/install.sh | sh
+    ```
+
+  </div>
+  <div>
+
+    ```powershell
+    irm https://get.t3.storage.dev/install.ps1 | iex
+    ```
+
+  </div>
+</PlatformToggle>
+
+Then log in:
+
 ```bash
-npm install -g @tigrisdata/cli
 tigris login
 ```
+
+<details>
+<summary>Other install methods: Homebrew and npm</summary>
+
+With [Homebrew](https://brew.sh/):
+
+```bash
+brew install tigrisdata/tap/tigris
+```
+
+With npm:
+
+```bash
+npm install -g @tigrisdata/cli
+```
+
+</details>
 
 ## See also
 

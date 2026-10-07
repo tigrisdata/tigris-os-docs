@@ -23,9 +23,12 @@ and more from the terminal. It provides Unix-like commands (`ls`, `cp`, `mv`,
 
 ## Frequently Asked Questions
 
-**How do I install the Tigris CLI?** Install via npm:
-`npm install -g @tigrisdata/cli`. The command is available as both `tigris` and
-`t3`.
+**How do I install the Tigris CLI?** On macOS or Linux, run
+`curl -fsSL https://get.t3.storage.dev/install.sh | sh`. On Windows, run
+`irm https://get.t3.storage.dev/install.ps1 | iex` in PowerShell. You can also
+install with Homebrew (`brew install tigrisdata/tap/tigris`) or npm
+(`npm install -g @tigrisdata/cli`). The command is available as both `tigris`
+and `t3`.
 
 **How do I authenticate?** Run `tigris login` for browser-based OAuth, or
 `tigris login credentials` to enter an access key directly. Run

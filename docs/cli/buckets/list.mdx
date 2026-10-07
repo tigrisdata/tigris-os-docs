@@ -13,13 +13,21 @@ t3 b l [flags]
 
 ## Flags
 
-| Name             | Required | Default | Description                                    |
-| ---------------- | -------- | ------- | ---------------------------------------------- |
-| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+| Name             | Required | Default | Description                                                          |
+| ---------------- | -------- | ------- | -------------------------------------------------------------------- |
+| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml`                       |
+| `--forks-only`   | No       | —       | Only list buckets that are forks of another bucket                   |
+| `--owner`        | No       | —       | Only list buckets owned by this user, by username (an email address) |
 
 ## Examples
 
 ```bash
 tigris buckets list
 tigris buckets list --format json
+
+# Only buckets that are forks of another bucket
+tigris buckets list --forks-only
+
+# Only buckets owned by one user
+tigris buckets list --owner alice@example.com
 ```

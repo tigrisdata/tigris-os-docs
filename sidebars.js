@@ -906,6 +906,7 @@ const sidebars = {
           ],
         },
         "cli/whoami",
+        "cli/usage",
         "cli/logout",
         {
           type: "category",
@@ -930,6 +931,7 @@ const sidebars = {
             "cli/organizations/list",
             "cli/organizations/create",
             "cli/organizations/select",
+            "cli/organizations/delete",
           ],
         },
         {

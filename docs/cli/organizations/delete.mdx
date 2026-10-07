@@ -1,0 +1,40 @@
+# tigris organizations delete
+
+Delete an organization you own, picked from a list or given by ID. Requires
+OAuth login (`tigris login oauth`).
+
+**Alias:** `d`
+
+## Usage
+
+```bash
+tigris organizations delete [id] [flags]
+t3 orgs d [id] [flags]
+```
+
+## Flags
+
+| Name          | Required | Default | Description               |
+| ------------- | -------- | ------- | ------------------------- |
+| `--yes`, `-y` | No       | —       | Skip confirmation prompts |
+
+With no ID, the command lists your organizations and lets you pick one.
+Organization names are not unique, so pass an ID rather than a name. The command
+asks for confirmation before deleting; `--yes` skips it.
+
+The organization must be empty first: no buckets, access keys, policies, teams,
+or other members. Its shares and invitations are removed with it. You cannot
+delete your last organization, and Fly.io organizations are not available here.
+
+If you delete your active organization, the first remaining organization becomes
+active, and the command prints its name.
+
+## Examples
+
+```bash
+# Pick the organization to delete from a list
+tigris orgs delete
+
+# Delete by ID without the confirmation prompt
+tigris orgs delete <org-id> --yes
+```

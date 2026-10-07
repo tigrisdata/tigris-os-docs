@@ -1,0 +1,38 @@
+# tigris usage
+
+Show the active organization's usage and charges for a billing month, as on the
+console's Usage page. Requires OAuth login (`tigris login oauth`).
+
+## Usage
+
+```bash
+tigris usage [flags]
+t3 usage [flags]
+```
+
+## Flags
+
+| Name       | Required | Default       | Description                                      |
+| ---------- | -------- | ------------- | ------------------------------------------------ |
+| `--month`  | No       | Current month | Billing month as `YYYY-MM`                       |
+| `--all`    | No       | —             | Show every line item, even those with zero usage |
+| `--format` | No       | `table`       | Output format. Options: `json`, `table`, `xml`   |
+
+Line items with zero usage are hidden unless you pass `--all`. `--format json`
+returns the full invoice.
+
+## Examples
+
+```bash
+# This month's usage and charges
+tigris usage
+
+# A previous month
+tigris usage --month 2026-09
+
+# Include line items with zero usage
+tigris usage --all
+
+# Full invoice as JSON
+tigris usage --format json
+```

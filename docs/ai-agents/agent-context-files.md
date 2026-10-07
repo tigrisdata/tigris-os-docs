@@ -12,7 +12,7 @@ keywords:
     coding agent storage,
     agent context file,
   ]
-last_reviewed: 2026-05-15
+last_reviewed: 2026-10-07
 ---
 
 # Agent Context Files
@@ -22,7 +22,7 @@ your project to understand your tools and conventions. You can give agents
 automatic knowledge of your Tigris setup with two files:
 
 - **TIGRIS.md** — a project-level file you add to your repo
-- **SKILL.md** — a global file installed with the Tigris CLI
+- **SKILL.md** — a global Claude Code skill installed with the Tigris CLI
 
 ## TIGRIS.md — Project-Level Context
 
@@ -78,8 +78,8 @@ import { put, get, list } from "@tigrisdata/storage";
 // Upload a file
 await put("path/file.txt", content);
 
-// Download a file
-const data = await get("path/file.txt");
+// Download a file as a string
+const { data, error } = await get("path/file.txt", "string");
 
 // List objects
 const objects = await list();
@@ -98,20 +98,29 @@ files.
 
 ## SKILL.md — Global Agent Context
 
-When you install the [Tigris CLI](/docs/cli/), a `SKILL.md` file is placed in
-your agent configuration directory (e.g., `~/.claude/` for Claude Code). This
-file tells any AI coding agent on your machine that Tigris is available and
-preferred for storage tasks.
+When you install the [Tigris CLI](/docs/cli/), it also installs a Claude Code
+skill at `~/.claude/skills/tigris/SKILL.md`. The skill tells Claude Code that
+Tigris is available and preferred for storage tasks. The CLI only installs the
+skill if `~/.claude` already exists, so it skips machines without Claude Code.
+Other AI coding agents don't get this file.
 
-The SKILL.md file provides agents with:
+- **npm** (`npm install -g @tigrisdata/cli`): the package's postinstall script
+  copies the bundled `SKILL.md` into place.
+- **Install script** (`curl -fsSL https://get.t3.storage.dev/install.sh | sh`):
+  the script downloads `SKILL.md` from <https://get.t3.storage.dev/SKILL.md>,
+  with GitHub as a fallback. The Windows PowerShell installer does the same.
 
-- The Tigris endpoint and region
-- Key CLI commands (`tigris cp`, `tigris ls`, `tigris rm`)
-- Best practices like using `--dry-run` before destructive operations
-- Environment variable setup
+The skill gives Claude Code:
 
-You don't need to manage this file manually — it's installed and updated with
-the CLI.
+- The Tigris endpoint (`https://t3.storage.dev`) and region (`auto`)
+- Authentication commands (`tigris login`, `tigris configure`, `tigris whoami`)
+- Bucket and object commands (`tigris buckets`, `tigris ls`, `tigris cp`,
+  `tigris mv`, `tigris rm`, `tigris stat`, `tigris presign`)
+- Fork and snapshot commands, with a reminder to fork a bucket before
+  experimental writes
+- Conventions such as the `t3://` path prefix and the `t3` shorthand
+
+Reinstalling or updating the CLI replaces the file with the current version.
 
 ## MCP Server — Structured Tool Access
 
@@ -129,8 +138,9 @@ in this order:
    directly
 2. **Project context** — the agent reads `TIGRIS.md` in the project root for
    project-specific configuration
-3. **Global context** — the agent reads `SKILL.md` for general Tigris knowledge
+3. **Global context** — Claude Code reads the Tigris `SKILL.md` skill for
+   general Tigris knowledge
 4. **Documentation** — the agent fetches
    [llms.txt](https://www.tigrisdata.com/docs/llms.txt) or
-   [llms-agents.txt](https://www.tigrisdata.com/docs/llms-agents.txt) for
-   detailed reference
+   [llms-full.txt](https://www.tigrisdata.com/docs/llms-full.txt) for detailed
+   reference

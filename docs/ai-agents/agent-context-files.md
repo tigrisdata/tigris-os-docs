@@ -107,8 +107,9 @@ Other AI coding agents don't get this file.
 - **npm** (`npm install -g @tigrisdata/cli`): the package's postinstall script
   copies the bundled `SKILL.md` into place.
 - **Install script** (`curl -fsSL https://get.t3.storage.dev/install.sh | sh`):
-  the script downloads `SKILL.md` from <https://get.t3.storage.dev/SKILL.md>,
-  with GitHub as a fallback. The Windows PowerShell installer does the same.
+  the script downloads `SKILL.md` from
+  [`get.t3.storage.dev/SKILL.md`](https://get.t3.storage.dev/SKILL.md), with
+  GitHub as a fallback. The Windows PowerShell installer does the same.
 
 The skill gives Claude Code:
 

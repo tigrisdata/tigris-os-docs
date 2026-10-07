@@ -39,8 +39,19 @@ jobs:
             exit 1
           fi
 
-          names="$(printf '%s' "$PACKAGES" | jq -r '[.[] | "\(.name)@\(.version)"] | join(", ")')"
+          names="$(printf '%s' "$PACKAGES" | jq -r '[.[] | "\(.name)@\(.version)"] | sort | join(", ")')"
           title="Check agent docs for ${names}"
+          # A stable key for this set of releases, so that a rerun or a resent
+          # dispatch does not open a second issue.
+          key="release-key: ${names}"
+
+          existing="$(gh issue list --state open --limit 200 --json number,title,body \
+            | jq -r --arg title "$title" --arg key "$key" \
+              '[.[] | select(.title == $title or (.body | contains("<!-- " + $key + " -->")))][0].number // empty')"
+          if [ -n "$existing" ]; then
+            echo "::notice::Issue #$existing already covers ${names} — not opening another."
+            exit 0
+          fi
 
           # One line for each package, with links to its changelog and its
           # GitHub release in tigrisdata/storage.
@@ -60,6 +71,8 @@ jobs:
             fi
             echo
             echo "cc @Xe @katieschilling"
+            echo
+            echo "<!-- $key -->"
           } > body.md
 
           gh issue create --title "$title" --body-file body.md

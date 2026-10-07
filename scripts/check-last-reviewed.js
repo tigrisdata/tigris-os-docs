@@ -78,8 +78,16 @@ for (const file of pages) {
   } else {
     const reviewed = new Date(`${value}T00:00:00Z`);
     const ageDays = Math.floor((today - reviewed) / DAY_MS);
-    if (Number.isNaN(ageDays)) {
+    // A date such as 2026-09-31 can roll over to the next month instead of
+    // failing to parse, so require the parsed date to round-trip.
+    if (
+      Number.isNaN(ageDays) ||
+      reviewed.toISOString().slice(0, 10) !== value
+    ) {
       reason = `has last_reviewed "${value}", which is not a valid date`;
+    } else if (ageDays < -1) {
+      // Allow one day ahead of UTC for reviewers in time zones east of it.
+      reason = `has last_reviewed "${value}", which is in the future`;
     } else if (ageDays > MAX_AGE_DAYS) {
       reason = `was last reviewed on ${value} (${ageDays} days ago)`;
     }

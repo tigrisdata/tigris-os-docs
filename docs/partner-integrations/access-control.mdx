@@ -3,22 +3,24 @@
 When you create access keys through the Partner API, three fields control what
 those keys can do:
 
-- `user_role` controls what your user can do through the **management API**
-  (listing keys, updating org settings).
+- `user_role` tells Tigris what the user in `user_id` can do in **this Partner
+  API call**: which access keys the call can manage, and which bucket roles it
+  can grant.
 - `buckets_roles` controls what **S3 operations** the access key can perform on
   specific buckets.
 - `access_key_scope` controls whether the key also receives
   [default allowed operations](/docs/iam/manage-access-key/#default-allowed-operations)
   such as create bucket and list buckets.
 
-These fields are independent. They apply at different times and serve different
-purposes.
+`buckets_roles` and `access_key_scope` are stored on the access key and apply to
+every request the key makes. `user_role` applies only to the call that you pass
+it on. Tigris does not store it on the key.
 
-| Field              | Where it applies   | What it controls                                          |
-| ------------------ | ------------------ | --------------------------------------------------------- |
-| `user_role`        | Partner API calls  | Management scope: list all keys vs own keys, org settings |
-| `buckets_roles`    | S3 data operations | What the access key can read, write, or manage per bucket |
-| `access_key_scope` | S3 and IAM APIs    | Whether the key receives default allowed operations       |
+| Field              | Where it applies     | What it controls                                                 |
+| ------------------ | -------------------- | ---------------------------------------------------------------- |
+| `user_role`        | One Partner API call | Which keys the call can manage and which bucket roles it can set |
+| `buckets_roles`    | S3 requests          | What the access key can read, write, or manage per bucket        |
+| `access_key_scope` | S3 and IAM requests  | Whether the key receives default allowed operations              |
 
 import PartnerAccessControlDiagram from "@site/src/components/diagrams/PartnerAccessControlDiagram";
 
@@ -29,12 +31,12 @@ import PartnerAccessControlDiagram from "@site/src/components/diagrams/PartnerAc
 ## Organization Role (`user_role`)
 
 The `user_role` field tells Tigris what privileges this user has in your system.
-You pass it on provisioning, access key, and org management endpoints.
+You pass it on provisioning and access key calls.
 
-| Value    | What it means                                                                             |
-| -------- | ----------------------------------------------------------------------------------------- |
-| `Admin`  | Full org access. Can manage all access keys, update org settings, and view all resources. |
-| `Member` | Standard access. Can only manage their own access keys and resources.                     |
+| Value    | What the call can do                                                                                                               |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `Admin`  | View, update, rotate, and delete any access key in the org. Grant any bucket role on any bucket in the org, including `"*"`.       |
+| `Member` | View, update, rotate, and delete only the access keys of `user_id`. Grant bucket roles only on buckets that `user_id` provisioned. |
 
 The behavioral difference shows up immediately. When you call
 [List Access Keys](/docs/partner-integrations/api/tigris-list-access-keys) with
@@ -42,39 +44,42 @@ The behavioral difference shows up immediately. When you call
 `user_role: "Member"` (or omitted), you get back **only keys owned by that
 user**.
 
-This same scoping applies to other management operations. Admin-only operations
-include:
+If you omit `user_role`, the call is treated as `Member`. A `Member` call that
+grants a role on a bucket that `user_id` did not provision fails with a
+permission error. If your backend manages access for all of your users, pass
+`user_role: "Admin"`.
 
-- **Manage all access keys** -- view, rotate, or delete any key in the org, not
-  just the user's own
-- **Update org settings** -- change org name, quotas, active status
-- **Invite and manage users** -- send invitations, update roles, remove members
-
-If you omit `user_role`, the user is treated as a `Member`. For most
-integrations, `Member` is the right default.
+The access key that the call creates does not become an admin. Its access comes
+only from its `buckets_roles`, its `access_key_scope`, and its IAM policies.
 
 ## Bucket Roles (`buckets_roles`)
 
 The `buckets_roles` field is an array of `{bucket_name, role}` pairs stored on
-the access key. Four roles are available: `ReadOnly`, `ReadWrite`, `Editor`, and
-`Admin`. See the
+the access key. See the
 [RBAC permissions table](/docs/concepts/authnz#role-based-access-control-rbac)
 for exactly which S3 operations each role permits.
 
-Use `ReadWrite` for object reads and writes without bucket administration. Use
-`Editor` when the key must also manage bucket configuration, public access, or
-bucket deletion. Editors cannot manage bucket shares or IAM policies.
+| Role        | What the key can do on the bucket                                                                                                    |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `ReadOnly`  | Read and list objects. Create snapshots and forks.                                                                                   |
+| `ReadWrite` | Everything in `ReadOnly`, plus write and delete objects. It cannot change bucket settings or delete the bucket.                      |
+| `Editor`    | Everything in `ReadWrite`, plus bucket settings, public access, and bucket deletion. It cannot manage bucket shares or IAM policies. |
+| `Admin`     | Every operation on every bucket in the org. Use it only with `"bucket_name": "*"`.                                                   |
 
-Use `"*"` as the bucket name to grant access to all buckets in the org. An
-access key with `{"bucket_name": "*", "role": "Admin"}` is treated as a full org
-admin, bypassing all bucket-level permission checks.
+Use `"*"` as the bucket name to give a role on all buckets in the org, including
+buckets created later. A key can have only one `"*"` entry, and only a
+`user_role: "Admin"` call can grant it.
 
-## Access key scope (`access_key_scope`) {#access-key-scope}
+`{"bucket_name": "*", "role": "Admin"}` must be the only entry on the key. That
+key is a full org admin. It can do every operation on every bucket, except the
+deletes that [delete protection](#how-tigris-evaluates-a-request) blocks.
+
+## Access Key Scope (`access_key_scope`) {#access-key-scope}
 
 This field controls the
 [default allowed operations](/docs/iam/manage-access-key/#default-allowed-operations)
-on the key. A standard key can create buckets, list buckets, and create access
-keys and IAM policies even with no bucket role.
+on the key. A standard key can create buckets, list buckets, and manage its own
+access keys and IAM policies, even with no bucket role.
 
 | Value                | What it means                                            |
 | -------------------- | -------------------------------------------------------- |
@@ -82,31 +87,97 @@ keys and IAM policies even with no bucket role.
 | `no_default_allow`   | The key does not receive the default allowed operations. |
 
 If you omit `access_key_scope`, the key uses `standard`. You can set the field
-on [Create Access Key](/docs/partner-integrations/api/tigris-create-access-key)
+on [Provision](/docs/partner-integrations/api/tigris-provisioning),
+[Create Access Key](/docs/partner-integrations/api/tigris-create-access-key),
 and
 [Update Access Key](/docs/partner-integrations/api/tigris-update-access-key). If
 you omit the field on update, the current scope stays unchanged.
 
-## How the fields interact
+A key that creates a bucket becomes the owner of that bucket, and an owner can
+do every operation on it. Use `no_default_allow` for keys that you give to your
+users, so that they cannot create buckets that they own.
 
-| Scenario              | `user_role` | `buckets_roles`                          | `access_key_scope` | Result                                            |
-| --------------------- | ----------- | ---------------------------------------- | ------------------ | ------------------------------------------------- |
-| **Developer uploads** | `Member`    | `user-uploads: ReadWrite`                | `no_default_allow` | User manages own key, can read/write their bucket |
-| **Platform admin**    | `Admin`     | `*: Admin`                               | `standard`         | Full management + full S3 access                  |
-| **CI/CD pipeline**    | `Member`    | `artifacts: ReadOnly`                    | `no_default_allow` | Automated reads, no access-key or IAM management  |
-| **Mixed access**      | `Member`    | `assets: ReadOnly`, `uploads: ReadWrite` | `no_default_allow` | Read shared content, write user content           |
+## The Provisioned Access Key
 
-## Common Access Patterns
+[Provision](/docs/partner-integrations/api/tigris-provisioning) returns an
+access key, and that key is the **owner** of the bucket it provisions. The owner
+can do every operation on the bucket. It can delete the bucket, change its
+settings, and turn off soft delete. Bucket roles, IAM policies, and
+`access_key_scope` cannot limit what an owner can do on its bucket.
 
-### Read-only access to a bucket
+Keep the provisioned key in your backend. Give your users a separate key that
+has only the access they need. See
+[Give Users Data Access Without Bucket Admin](#give-users-data-access-without-bucket-admin).
+
+## How Tigris Evaluates a Request
+
+Tigris checks each S3 request in this order. It stops at the first step that
+gives a result.
+
+| Step | Check                                                                     | Result        |
+| ---- | ------------------------------------------------------------------------- | ------------- |
+| 1    | The bucket has delete protection and the request deletes a bucket or data | Deny          |
+| 2    | The key has `{"bucket_name": "*", "role": "Admin"}`                       | Allow         |
+| 3    | The key owns the bucket                                                   | Allow         |
+| 4    | A bucket role on the key permits the operation                            | Allow         |
+| 5    | An IAM policy on the key matches. A `Deny` statement wins over an `Allow` | Deny or allow |
+| 6    | The key uses `standard` and the operation is a default allowed operation  | Allow         |
+| 7    | No step gave a result                                                     | Deny          |
+
+A policy cannot take away an operation that steps 2 to 4 allow. For example, a
+`Deny` on `s3:DeleteBucket` has no effect on a key with the `Editor` role,
+because the role allows the delete at step 4. To limit a key, give it a smaller
+role, or give it no role and grant access with a policy.
+
+## Permission Recipes
+
+Each recipe shows one request. Replace the IDs and bucket names with your own.
+
+The recipes that grant a bucket role use `user_role: "Admin"`, so that your
+backend can grant a role on any bucket in the org. You can use `Member` instead
+when `user_id` is the user that provisioned the bucket.
+
+### Give Users Data Access Without Bucket Admin
+
+Use this recipe when your users read and write their own data and your backend
+manages the buckets.
 
 ```http
-POST /v1/providers/{provider_id}/orgs/{org_id}/access-keys
+POST /v1/providers/{provider_id}/orgs/{org_id}/key
 Content-Type: application/json
 
 {
   "user_id": "user-123",
-  "user_role": "Member",
+  "user_role": "Admin",
+  "name": "user-123-data",
+  "access_key_scope": "no_default_allow",
+  "buckets_roles": [
+    { "bucket_name": "user-data", "role": "ReadWrite" }
+  ]
+}
+```
+
+The key can read, write, and delete objects in `user-data`. It cannot delete the
+bucket, change bucket settings, turn off soft delete, create buckets, or create
+access keys.
+
+:::note
+
+With `user_role: "Member"`, this call works only when `user_id` is the user that
+provisioned `user-data`. If each of your users has a different `user_id`, use
+`Admin`.
+
+:::
+
+### Read-Only Access to One Bucket
+
+```http
+POST /v1/providers/{provider_id}/orgs/{org_id}/key
+Content-Type: application/json
+
+{
+  "user_id": "user-123",
+  "user_role": "Admin",
   "access_key_scope": "no_default_allow",
   "buckets_roles": [
     { "bucket_name": "assets", "role": "ReadOnly" }
@@ -114,35 +185,37 @@ Content-Type: application/json
 }
 ```
 
-### Read/write access to a bucket
+The key can read and list objects in `assets`. It cannot write or delete
+objects, and it cannot list or create buckets.
+
+### Read-Only Access to All Buckets
 
 ```http
-POST /v1/providers/{provider_id}/orgs/{org_id}/access-keys
+POST /v1/providers/{provider_id}/orgs/{org_id}/key
 Content-Type: application/json
 
 {
-  "user_id": "user-123",
-  "user_role": "Member",
+  "user_id": "reporting",
+  "user_role": "Admin",
   "access_key_scope": "no_default_allow",
   "buckets_roles": [
-    { "bucket_name": "uploads", "role": "ReadWrite" }
+    { "bucket_name": "*", "role": "ReadOnly" }
   ]
 }
 ```
 
-This key can read and write objects in `uploads`. It cannot list buckets or
-create buckets unless a policy grants those actions. It cannot manage access
-keys or IAM policies.
+The key can read every bucket in the org, including buckets created later. Only
+a `user_role: "Admin"` call can grant a role on `"*"`.
 
-### Mixed permissions across buckets
+### Different Access per Bucket
 
 ```http
-POST /v1/providers/{provider_id}/orgs/{org_id}/access-keys
+POST /v1/providers/{provider_id}/orgs/{org_id}/key
 Content-Type: application/json
 
 {
   "user_id": "user-123",
-  "user_role": "Member",
+  "user_role": "Admin",
   "access_key_scope": "no_default_allow",
   "buckets_roles": [
     { "bucket_name": "assets", "role": "ReadOnly" },
@@ -151,14 +224,61 @@ Content-Type: application/json
 }
 ```
 
-### Full admin key for org owner
+The key can read `assets`, and it can read and write `uploads`.
+
+### Upload-Only Key
+
+Use a policy for this recipe, because no bucket role allows uploads without
+reads. The key gets no bucket role, so Tigris evaluates the policy.
 
 ```http
-POST /v1/providers/{provider_id}/orgs/{org_id}/access-keys
+POST /v1/providers/{provider_id}/orgs/{org_id}/key
 Content-Type: application/json
 
 {
-  "user_id": "admin-user",
+  "user_id": "user-123",
+  "name": "uploader",
+  "access_key_scope": "no_default_allow",
+  "create_policies": [
+    {
+      "name": "uploads-put-only",
+      "document": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": ["s3:PutObject", "s3:AbortMultipartUpload"],
+            "Resource": ["arn:aws:s3:::uploads/*"]
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+The key can upload objects to `uploads`, with multipart uploads too. It cannot
+read, list, or delete objects. It can overwrite an object that has the same
+name.
+
+`s3:PutObject` covers the create, upload part, and complete steps of a multipart
+upload. Tigris rejects `s3:CreateMultipartUpload` and `s3:UploadPart` in a
+policy.
+
+Policy names are unique in the org. To give the same policy to more keys, create
+it one time, then pass its name in `attach_policies`.
+
+### Backend Admin Key
+
+Your backend can use the provisioned key for its bucket. To manage all buckets
+in the org from one key, create an org admin key:
+
+```http
+POST /v1/providers/{provider_id}/orgs/{org_id}/key
+Content-Type: application/json
+
+{
+  "user_id": "platform-backend",
   "user_role": "Admin",
   "buckets_roles": [
     { "bucket_name": "*", "role": "Admin" }
@@ -166,18 +286,92 @@ Content-Type: application/json
 }
 ```
 
-For most integrations, `user_role: "Member"` with per-bucket `ReadOnly` or
-`ReadWrite` roles covers what you need. Use `Editor` only when the integration
-must manage bucket configuration. Reserve `Admin` for org owners who need to
-manage other users' keys or org-level settings.
+Keep this key in your backend. Do not give it to your users.
+
+### Protect Buckets From Accidental Deletion
+
+Turn on [soft delete](/docs/buckets/soft-delete/) when you provision the bucket:
+
+```http
+POST /v1/providers/{provider_id}/orgs/{org_id}/provision
+Content-Type: application/json
+
+{
+  "bucket_name": "user-data",
+  "org_name": "Acme Corp",
+  "user_id": "user-123",
+  "bucket_options": {
+    "soft_delete": { "enabled": true, "retention_days": 30 }
+  }
+}
+```
+
+For an existing bucket, use
+[Set Soft Delete](/docs/partner-integrations/api/tigris-set-soft-delete).
+
+When a user deletes the bucket, it moves to the deleted buckets list. Use
+[List Deleted Buckets](/docs/partner-integrations/api/tigris-list-deleted-buckets)
+to find it, and
+[Restore Bucket](/docs/partner-integrations/api/tigris-restore-bucket) to bring
+it back.
+
+A soft-deleted bucket stays until you restore it or
+[delete it permanently](/docs/partner-integrations/api/tigris-purge-bucket). It
+counts toward storage usage until then.
+
+A `ReadWrite` key cannot turn off soft delete. The bucket owner, `Editor` keys,
+and org admin keys can turn it off.
+
+### Change Bucket Settings for Your Users
+
+No bucket role allows bucket settings without bucket deletion. `Editor` includes
+`DeleteBucket`, and a policy cannot take it away (see
+[How Tigris Evaluates a Request](#how-tigris-evaluates-a-request)).
+
+Keep your users on `ReadWrite`, and change bucket settings from your backend
+with the Partner API:
+
+- [Update Bucket](/docs/partner-integrations/api/tigris-update-bucket) for
+  public access, storage class, regions, and object notifications
+- [Set Lifecycle Rules](/docs/partner-integrations/api/tigris-set-lifecycle-rules)
+- [Attach a Custom Domain](/docs/partner-integrations/api/tigris-set-custom-domain)
+- [Set Soft Delete](/docs/partner-integrations/api/tigris-set-soft-delete)
+
+### Rotate or Revoke a Key
+
+To replace a leaked secret, call
+[Rotate Access Key](/docs/partner-integrations/api/tigris-rotate-access-key). It
+returns a new secret and keeps the key ID, so the key keeps its roles, policies,
+and bucket ownership.
+
+To revoke a key, call
+[Delete Access Key](/docs/partner-integrations/api/tigris-delete-access-key).
+Deleting a key does not delete the buckets that it owns.
+
+:::note
+
+After you rotate or delete a key, the old secret can continue to work for up to
+15 minutes.
+
+:::
+
+A `Member` call can rotate or delete only the keys of its `user_id`. A
+`user_role: "Admin"` call can rotate or delete any key in the org.
 
 ## Fine-Grained Access with IAM Policies
 
-For access control more granular than per-bucket roles, like restricting to
-object prefixes, IP ranges, or time windows, use
-[IAM policies](/docs/iam/policies/). Policies are evaluated after role checks,
-so they can further restrict what a role allows.
+For access that bucket roles cannot give, use
+[IAM policies](/docs/iam/policies/). You can create a policy with
+[Create Policy](/docs/partner-integrations/api/tigris-create-policy) and attach
+it with `attach_policies` on Create Access Key or `add_policies` on Update
+Access Key. You can also create and attach a policy in one call with
+`create_policies`.
 
-**Important:** `Admin` role bypasses policy evaluation entirely. If you need
-policies to apply, use `Member` with `Editor`, `ReadWrite`, or `ReadOnly` roles
-instead.
+Policies only add access. Tigris reads them only when the key's bucket roles and
+bucket ownership do not already allow the operation (see
+[How Tigris Evaluates a Request](#how-tigris-evaluates-a-request)):
+
+- To grant access with a policy, give the key no bucket role on that bucket.
+- A `Deny` statement blocks only access that a policy or a default allowed
+  operation gives. It does not block access that a bucket role, bucket
+  ownership, or the `"*"` `Admin` role gives.

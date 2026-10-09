@@ -1,0 +1,35 @@
+# tigris buckets restore
+
+Restore a [soft-deleted](/docs/buckets/soft-delete) bucket within its retention
+window.
+
+## Usage
+
+```bash
+tigris buckets restore <name>
+t3 b restore <name>
+```
+
+A bucket deleted while soft delete is enabled is kept, with its objects and
+settings, until its retention period elapses. Until then this command brings it
+back as it was. List the buckets that can still be restored with
+[`tigris buckets list --deleted`](/docs/cli/buckets/list).
+
+## Arguments
+
+| Name   | Required | Description                                |
+| ------ | -------- | ------------------------------------------ |
+| `name` | Yes      | Name of the soft-deleted bucket to restore |
+
+## Examples
+
+```bash
+# See what can be restored
+tigris buckets list --deleted
+
+# Bring a bucket back
+tigris buckets restore my-bucket
+```
+
+To destroy a soft-deleted bucket before its retention period expires instead,
+use [`tigris buckets purge`](/docs/cli/buckets/purge).

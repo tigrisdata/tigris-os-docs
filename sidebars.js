@@ -894,6 +894,7 @@ const sidebars = {
         id: "cli/index",
       },
       items: [
+        "cli/init",
         "cli/configure",
         {
           type: "category",
@@ -945,7 +946,11 @@ const sidebars = {
             "cli/buckets/merge",
             "cli/buckets/get",
             "cli/buckets/delete",
+            "cli/buckets/restore",
+            "cli/buckets/purge",
             "cli/buckets/set",
+            "cli/buckets/enable-snapshots",
+            "cli/buckets/disable-snapshots",
             {
               type: "category",
               label: "tigris buckets lifecycle",
@@ -961,13 +966,18 @@ const sidebars = {
             "cli/buckets/set-locations",
             "cli/buckets/set-notifications",
             "cli/buckets/set-cors",
+            "cli/buckets/share",
           ],
         },
         {
           type: "category",
           label: "tigris snapshots",
           link: { type: "doc", id: "cli/snapshots" },
-          items: ["cli/snapshots/list", "cli/snapshots/take"],
+          items: [
+            "cli/snapshots/list",
+            "cli/snapshots/take",
+            "cli/snapshots/delete",
+          ],
         },
         {
           type: "category",
@@ -1048,6 +1058,16 @@ const sidebars = {
           ],
         },
         "cli/update",
+        {
+          type: "category",
+          label: "tigris telemetry",
+          link: { type: "doc", id: "cli/telemetry" },
+          items: [
+            "cli/telemetry/status",
+            "cli/telemetry/disable",
+            "cli/telemetry/enable",
+          ],
+        },
       ],
     },
     {

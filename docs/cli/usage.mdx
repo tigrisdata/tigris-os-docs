@@ -1,7 +1,7 @@
 # tigris usage
 
-Show the active organization's usage and charges for a billing month, as on the
-console's Usage page. Requires OAuth login (`tigris login oauth`).
+Show the active organization's usage and charges for a billing month — the same
+breakdown as the Usage page in the console. Requires OAuth login.
 
 ## Usage
 
@@ -10,16 +10,18 @@ tigris usage [flags]
 t3 usage [flags]
 ```
 
+The table lists every line item that has usage this month, with the quantity you
+used, the quantity billed (they differ only when a plan minimum applies), and
+the amount, followed by the subtotal, any credits, and the total. Line items
+with zero usage are hidden unless you pass `--all`.
+
 ## Flags
 
-| Name       | Required | Default       | Description                                      |
-| ---------- | -------- | ------------- | ------------------------------------------------ |
-| `--month`  | No       | Current month | Billing month as `YYYY-MM`                       |
-| `--all`    | No       | —             | Show every line item, even those with zero usage |
-| `--format` | No       | `table`       | Output format. Options: `json`, `table`, `xml`   |
-
-Line items with zero usage are hidden unless you pass `--all`. `--format json`
-returns the full invoice.
+| Name       | Required | Default       | Description                                                                                                                     |
+| ---------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `--month`  | No       | current month | Billing month as `YYYY-MM`                                                                                                      |
+| `--all`    | No       | —             | Show every line item, even those with zero usage                                                                                |
+| `--format` | No       | `table`       | Output format. Options: `json`, `table`, `xml`. `json` returns the full invoice, including per-item tiers and the invoice state |
 
 ## Examples
 
@@ -30,9 +32,33 @@ tigris usage
 # A previous month
 tigris usage --month 2026-09
 
-# Include line items with zero usage
+# Include the line items you have not used
 tigris usage --all
 
-# Full invoice as JSON
+# The full invoice as JSON
 tigris usage --format json
 ```
+
+Example output:
+
+```
+October 2026 · Free trial plan · as of 2026-10-06
+
+┌───────────────────────────────────────────┬────────────────┬────────────────┬────────┐
+│ Type                                      │ Used           │ Billed         │ Amount │
+├───────────────────────────────────────────┼────────────────┼────────────────┼────────┤
+│ PUT, COPY, POST, LIST Requests            │   826 Requests │   826 Requests │  $0.00 │
+│ GET, SELECT, and all other Requests       │   126 Requests │   126 Requests │  $0.00 │
+│ Storage used - Standard                   │ 43.7 GiB-Month │ 43.7 GiB-Month │  $0.00 │
+│ Storage used - Standard Infrequent Access │ 0.02 GiB-Month │ 0.02 GiB-Month │  $0.00 │
+│ Object Notifications                      │   5,738 Events │   5,738 Events │  $0.00 │
+├───────────────────────────────────────────┼────────────────┼────────────────┼────────┤
+│ Subtotal                                  │                │                │  $0.00 │
+│ Total                                     │                │                │  $0.00 │
+└───────────────────────────────────────────┴────────────────┴────────────────┴────────┘
+```
+
+When your plan has a minimum commitment it is listed above the subtotal, and a
+note under the table explains that the total is the greater of the two, less
+credits. When the invoice can be paid or has a receipt, the link is printed
+after the table.

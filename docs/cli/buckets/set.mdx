@@ -1,7 +1,7 @@
 # tigris buckets set
 
-Update settings on an existing bucket such as access level, location, caching,
-or custom domain.
+Update settings on an existing bucket such as access level, default tier,
+location, caching, soft delete, or custom domain.
 
 **Alias:** `s`
 
@@ -24,6 +24,10 @@ t3 b s <name> [flags]
 | `--cache-control`             | No       | —       | Default cache-control header value                                                                                                                                                                                                               |
 | `--custom-domain`             | No       | —       | Custom domain for the bucket                                                                                                                                                                                                                     |
 | `--enable-delete-protection`  | No       | —       | Enable delete protection                                                                                                                                                                                                                         |
+| `--default-tier`              | No       | —       | Change the default storage tier for objects uploaded to the bucket. Options: `STANDARD`, `STANDARD_IA`, `GLACIER`, `GLACIER_IR`                                                                                                                  |
+| `--soft-delete`               | No       | —       | Enable or disable [soft delete](/docs/buckets/soft-delete) (recoverable deletes). Options: `enable`, `disable`. Enabling requires `--retention-days`                                                                                             |
+| `--retention-days`            | No       | —       | Number of days to retain soft-deleted objects (required when enabling `--soft-delete`)                                                                                                                                                           |
+| `--enable-additional-headers` | No       | —       | Enable additional HTTP headers (`X-Content-Type-Options: nosniff`). Options: `true`, `false`                                                                                                                                                     |
 
 ## Examples
 
@@ -36,4 +40,13 @@ tigris buckets set my-bucket --locations iad,fra --cache-control 'max-age=3600'
 
 # Set a custom domain
 tigris buckets set my-bucket --custom-domain assets.example.com
+
+# Default new objects to the infrequent-access tier
+tigris buckets set my-bucket --default-tier STANDARD_IA
+
+# Keep deleted objects recoverable for a week
+tigris buckets set my-bucket --soft-delete enable --retention-days 7
+
+# Turn soft delete off again
+tigris buckets set my-bucket --soft-delete disable
 ```

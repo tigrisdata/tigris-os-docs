@@ -747,6 +747,7 @@ earlier versions live and accessible.
 - Retention applies per bucket. Every soft-deleted object in the bucket uses the
   bucket's current retention window.
 - Disabling soft delete on a bucket also ends the protection for objects that
-  are already soft-deleted. Tigris removes them in the next cleanup.
+  are already soft-deleted. Tigris can remove them in a later cleanup, so do not
+  expect to restore them.
 - Changing the retention value also applies to objects that are already
   soft-deleted. A shorter window can remove them sooner.

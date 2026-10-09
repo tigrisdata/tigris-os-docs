@@ -33,10 +33,10 @@ import PartnerAccessControlDiagram from "@site/src/components/diagrams/PartnerAc
 The `user_role` field tells Tigris what privileges this user has in your system.
 You pass it on provisioning and access key calls.
 
-| Value    | What the call can do                                                                                                               |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `Admin`  | View, update, rotate, and delete any access key in the org. Grant any bucket role on any bucket in the org, including `"*"`.       |
-| `Member` | View, update, rotate, and delete only the access keys of `user_id`. Grant bucket roles only on buckets that `user_id` provisioned. |
+| Value    | What the call can do                                                                                                                                                                 |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Admin`  | View, update, rotate, and delete any access key in the org. Grant any bucket role on any bucket in the org, including `"*"`.                                                         |
+| `Member` | View, rotate, and delete only the access keys of `user_id`. Change the bucket roles and the scope of only those keys. Grant bucket roles only on buckets that `user_id` provisioned. |
 
 The behavioral difference shows up immediately. When you call
 [List Access Keys](/docs/partner-integrations/api/tigris-list-access-keys) with
@@ -48,6 +48,10 @@ If you omit `user_role`, the call is treated as `Member`. A `Member` call that
 grants a role on a bucket that `user_id` did not provision fails with a
 permission error. If your backend manages access for all of your users, pass
 `user_role: "Admin"`.
+
+`user_role` does not limit IAM policies. A `Member` call can create a policy for
+any bucket in the org. It can also attach a policy to, or detach a policy from,
+any access key in the org.
 
 The access key that the call creates does not become an admin. Its access comes
 only from its `buckets_roles`, its `access_key_scope`, and its IAM policies.
@@ -105,9 +109,18 @@ can do every operation on the bucket. It can delete the bucket, change its
 settings, and turn off soft delete. Bucket roles, IAM policies, and
 `access_key_scope` cannot limit what an owner can do on its bucket.
 
-Keep the provisioned key in your backend. Give your users a separate key that
-has only the access they need. See
+Keep the provisioned key in your backend, or delete it. Give your users a
+separate key that has only the access they need. See
 [Give Users Data Access Without Bucket Admin](#give-users-data-access-without-bucket-admin).
+
+Each Provision call creates a new owner key. If your backend manages the bucket
+with the Partner API, it does not need this key. You can delete the key with
+[Delete Access Key](/docs/partner-integrations/api/tigris-delete-access-key)
+after Provision. The Partner API calls for the bucket continue to work, and no
+access key owns the bucket.
+
+If your users already have the provisioned key, see
+[Move Users Off the Provisioned Key](#move-users-off-the-provisioned-key).
 
 ## How Tigris Evaluates a Request
 
@@ -168,6 +181,42 @@ provisioned `user-data`. If each of your users has a different `user_id`, use
 `Admin`.
 
 :::
+
+### Move Users Off the Provisioned Key
+
+Use this recipe when your users already have the provisioned key. You cannot
+move the ownership of a bucket to a different key. You must replace the secret
+of the provisioned key instead.
+
+With the provisioned key, a user can create more access keys. These keys
+continue to work after you rotate the provisioned key. You must also delete
+them.
+
+1. Create a key for the user with the
+   [Give Users Data Access Without Bucket Admin](#give-users-data-access-without-bucket-admin)
+   recipe. Give the new key to the user.
+2. Rotate the provisioned key with
+   [Rotate Access Key](/docs/partner-integrations/api/tigris-rotate-access-key):
+
+   ```http
+   POST /v1/providers/{provider_id}/orgs/{org_id}/key/rotate
+   Content-Type: application/json
+
+   {
+     "user_id": "user-123",
+     "user_role": "Admin",
+     "id": "tid_provisioned_key_id"
+   }
+   ```
+
+3. Keep the new secret from the response in your backend.
+4. Get all of the access keys in the org with
+   [List Access Keys](/docs/partner-integrations/api/tigris-list-access-keys)
+   and `user_role: "Admin"`.
+5. If a key is not in the records of your backend, delete it with
+   [Delete Access Key](/docs/partner-integrations/api/tigris-delete-access-key).
+
+The old secret and the deleted keys can continue to work for up to 15 minutes.
 
 ### Read-Only Access to One Bucket
 
@@ -319,8 +368,12 @@ A soft-deleted bucket stays until you restore it or
 [delete it permanently](/docs/partner-integrations/api/tigris-purge-bucket). It
 counts toward storage usage until then.
 
-A `ReadWrite` key cannot turn off soft delete. The bucket owner, `Editor` keys,
-and org admin keys can turn it off.
+Soft delete protects the bucket from a usual delete request. It does not stop a
+key that can change bucket settings:
+
+- The bucket owner, `Editor` keys, and org admin keys can turn off soft delete.
+- These keys can also permanently delete a soft-deleted bucket over S3.
+- A `ReadWrite` key cannot do these operations.
 
 ### Change Bucket Settings for Your Users
 
@@ -351,7 +404,8 @@ Deleting a key does not delete the buckets that it owns.
 :::note
 
 After you rotate or delete a key, the old secret can continue to work for up to
-15 minutes.
+15 minutes. After you change the bucket roles or the scope of a key, the old
+access can also continue for up to 15 minutes.
 
 :::
 

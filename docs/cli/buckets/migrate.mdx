@@ -7,19 +7,28 @@ server-side migration for unmigrated objects. Pairs with
 ## Usage
 
 ```bash
-tigris buckets migrate <path>
-t3 b migrate <path>
+tigris buckets migrate <path> [flags]
+t3 b migrate <path> [flags]
 ```
 
 `<path>` is a bucket name, optionally with a key prefix. When a prefix is given,
 only objects under that prefix are migrated. Paths accept the optional `t3://`
 (or `tigris://`) scheme.
 
+## Flags
+
+| Name                 | Required | Default | Description                                                                                      |
+| -------------------- | -------- | ------- | ------------------------------------------------------------------------------------------------ |
+| `--max-in-flight-gb` | No       | `50`    | Maximum total gigabytes of scheduled-but-unconfirmed migrations to keep in flight. Accepts 1–100 |
+
 ## Examples
 
 ```bash
 # Migrate every unmigrated object in the bucket
 tigris buckets migrate my-bucket
+
+# Keep less data in flight on a slow source
+tigris buckets migrate my-bucket --max-in-flight-gb 10
 
 # Migrate only objects under a prefix
 tigris buckets migrate my-bucket/images/

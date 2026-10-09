@@ -8,8 +8,8 @@ bare names or `t3://` URIs.
 ## Usage
 
 ```bash
-tigris ls [path]
-t3 list [path]
+tigris ls [path] [flags]
+t3 list [path] [flags]
 ```
 
 Paths support the optional `t3://` (or `tigris://`) prefix (e.g.
@@ -17,9 +17,12 @@ Paths support the optional `t3://` (or `tigris://`) prefix (e.g.
 
 ## Flags
 
-| Name       | Required | Default | Description                                                                                                                                                                                |
-| ---------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `--source` | No       | —       | List objects from a specific storage source on buckets with shadow migration enabled. Accepted values: `tigris` (objects already in Tigris), `shadow` (objects still on the shadow source) |
+| Name                              | Required | Default | Description                                                                                                                                                                                |
+| --------------------------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--source`                        | No       | —       | List objects from a specific storage source on buckets with shadow migration enabled. Accepted values: `tigris` (objects already in Tigris), `shadow` (objects still on the shadow source) |
+| `--snapshot-version`, `-snapshot` | No       | —       | Read from a specific bucket snapshot. Accepts a snapshot version string or any UNIX nanosecond-precision timestamp (e.g. `1765889000501544464`)                                            |
+| `--limit`                         | No       | —       | Maximum number of items to return per page                                                                                                                                                 |
+| `--page-token`, `-pt`             | No       | —       | Pagination token from a previous request to fetch the next page                                                                                                                            |
 
 ## Examples
 
@@ -41,4 +44,11 @@ tigris ls my-bucket --source shadow
 
 # Or only objects already migrated into Tigris
 tigris ls my-bucket --source tigris
+
+# List a bucket as it was in a snapshot
+tigris ls my-bucket --snapshot-version 1765889000501544464
+
+# Page through a large listing
+tigris ls my-bucket --limit 100
+tigris ls my-bucket --limit 100 --page-token <token-from-previous-page>
 ```

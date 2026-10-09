@@ -18,13 +18,14 @@ interactively (or can pass `--access-key` explicitly).
 
 ## Flags
 
-| Name                 | Required | Default | Description                                                                                            |
-| -------------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------ |
-| `--method`, `-m`     | No       | `get`   | HTTP method for the presigned URL. Options: `get`, `put`                                               |
-| `--expires-in`, `-e` | No       | `3600`  | URL expiry time in seconds                                                                             |
-| `--access-key`       | No       |         | Access key ID to use for signing. If not provided, resolved from credentials or prompted interactively |
-| `--select`           | No       |         | Interactively select an access key (OAuth only)                                                        |
-| `--format`, `-f`     | No       | `url`   | Output format. Options: `url`, `json`                                                                  |
+| Name                              | Required | Default | Description                                                                                                                                                                      |
+| --------------------------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--method`, `-m`                  | No       | `get`   | HTTP method for the presigned URL. Options: `get`, `put`                                                                                                                         |
+| `--expires-in`, `-e`              | No       | `3600`  | URL expiry time in seconds                                                                                                                                                       |
+| `--access-key`                    | No       |         | Access key ID to use for signing. If not provided, resolved from credentials or prompted interactively                                                                           |
+| `--select`                        | No       |         | Interactively select an access key (OAuth only)                                                                                                                                  |
+| `--format`, `-f`                  | No       | `url`   | Output format. Options: `url`, `json`                                                                                                                                            |
+| `--snapshot-version`, `-snapshot` | No       | —       | Read from a specific bucket snapshot. Accepts a snapshot version string or any UNIX nanosecond-precision timestamp (e.g. `1765889000501544464`). Only supported for GET requests |
 
 ## Examples
 
@@ -43,4 +44,7 @@ tigris presign my-bucket/data.csv --access-key tid_AaBb
 
 # Pipe the URL to clipboard
 tigris presign my-bucket/file.txt | pbcopy
+
+# Link to the object as it was in a snapshot
+tigris presign my-bucket/file.txt --snapshot-version 1765889000501544464
 ```

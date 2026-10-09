@@ -13,13 +13,16 @@ t3 iam p l [flags]
 
 ## Flags
 
-| Name             | Required | Default | Description                                    |
-| ---------------- | -------- | ------- | ---------------------------------------------- |
-| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+| Name                  | Required | Default | Description                                                     |
+| --------------------- | -------- | ------- | --------------------------------------------------------------- |
+| `--format`, `-f`      | No       | `table` | Output format. Options: `json`, `table`, `xml`                  |
+| `--limit`             | No       | —       | Maximum number of items to return per page                      |
+| `--page-token`, `-pt` | No       | —       | Pagination token from a previous request to fetch the next page |
 
 ## Examples
 
 ```bash
 tigris iam policies list
 tigris iam policies list --format json
+tigris iam policies list --limit 50
 ```

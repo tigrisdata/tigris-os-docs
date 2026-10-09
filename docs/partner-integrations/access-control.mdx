@@ -174,14 +174,6 @@ The key can read, write, and delete objects in `user-data`. It cannot delete the
 bucket, change bucket settings, turn off soft delete, create buckets, or create
 access keys.
 
-:::note
-
-With `user_role: "Member"`, this call works only when `user_id` is the user that
-provisioned `user-data`. If each of your users has a different `user_id`, use
-`Admin`.
-
-:::
-
 ### Move Users Off the Provisioned Key
 
 Use this recipe when your users already have the provisioned key. You cannot
@@ -335,7 +327,12 @@ Content-Type: application/json
 }
 ```
 
-Keep this key in your backend. Do not give it to your users.
+:::warning
+
+Keep this key in your backend. Do not give it to your users. The key can delete
+every bucket in the org.
+
+:::
 
 ### Protect Buckets From Accidental Deletion
 

@@ -36,10 +36,15 @@ When soft delete is enabled on a bucket:
 At a glance, the lifecycle looks like this:
 
 ```
-     DELETE        ──►   soft-deleted state   ──┬──►   permanently removed
-bucket or object         (recoverable)          │      (async, after retention)
-                                                │
-                              ◄─── restore ─────┘
+ DELETE object  ──►  soft-deleted state  ──┬──►  permanently removed
+                     (recoverable)         │     (async, after retention)
+                                           │
+                         ◄─── restore ─────┘
+
+ DELETE bucket  ──►  soft-deleted state  ──┬──►  permanently removed
+                     (recoverable)         │     (only when you delete
+                                           │     it permanently)
+                         ◄─── restore ─────┘
 ```
 
 Cleanup runs asynchronously, so objects are removed shortly after the retention
@@ -67,9 +72,9 @@ delete enabled, showing **Enabled** or **Disabled** for each row.
 
 ### Retention window
 
-The retention window controls how long deleted buckets and objects remain
-recoverable. It must be between **7 and 90 days**, and defaults to **7 days**
-when soft delete is first enabled.
+The retention window controls how long deleted objects remain recoverable. It
+does not apply to deleted buckets. It must be between **7 and 90 days**, and
+defaults to **7 days** when soft delete is first enabled.
 
 ### Enabling soft delete programmatically
 
@@ -179,8 +184,7 @@ delete and then deletes objects must wait before it relies on recovery.
 
 When you delete a bucket that has soft delete enabled, the delete confirmation
 dialog reflects that the action is recoverable instead of permanent. It tells
-you the bucket can be restored within its retention period — and that after that
-window passes, the deletion is permanent. The action button is labeled **Soft
+you that you can restore the bucket. The action button is labeled **Soft
 Delete** rather than **Delete**, and you still confirm by typing the bucket
 name.
 
@@ -746,8 +750,13 @@ earlier versions live and accessible.
 
 - Retention applies per bucket. Every soft-deleted object in the bucket uses the
   bucket's current retention window.
-- Disabling soft delete on a bucket also ends the protection for objects that
-  are already soft-deleted. Tigris can remove them in a later cleanup, so do not
-  expect to restore them.
 - Changing the retention value also applies to objects that are already
   soft-deleted. A shorter window can remove them sooner.
+
+:::warning
+
+Do not turn off soft delete while you still need to restore deleted objects.
+When soft delete is off, Tigris can remove the objects that are already
+soft-deleted. You cannot restore them after that.
+
+:::

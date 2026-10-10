@@ -18,7 +18,7 @@ keywords:
     switch cloud storage,
     s3 compatible migration,
   ]
-last_reviewed: 2026-03-24
+last_reviewed: 2026-10-07
 ---
 
 # How Do I Migrate from AWS S3 to Another Provider?
@@ -89,10 +89,11 @@ Or with the CLI:
 
 ```bash
 tigris buckets set-migration my-bucket \
-  --source-bucket my-s3-bucket \
-  --source-region us-east-1 \
-  --source-access-key AKIA... \
-  --source-secret-key ...
+  --bucket my-s3-bucket \
+  --endpoint https://s3.amazonaws.com \
+  --region us-east-1 \
+  --access-key AKIA... \
+  --secret-key ...
 ```
 
 ## How Do I Migrate from Google Cloud Storage?

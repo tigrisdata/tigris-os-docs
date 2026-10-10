@@ -17,7 +17,7 @@ keywords:
     multi-cloud object storage,
     r2 alternative with global distribution,
   ]
-last_reviewed: 2026-03-09
+last_reviewed: 2026-10-07
 ---
 
 # Tigris vs Cloudflare R2: Which Should I Use?
@@ -112,13 +112,17 @@ Use a shadow bucket for zero-downtime migration. Tigris fetches objects from R2
 on demand and caches them:
 
 ```bash
-# Create a Tigris bucket with R2 as the shadow source
-tigris mk my-bucket \
-  --shadow-source-bucket my-r2-bucket \
-  --shadow-source-endpoint https://ACCOUNT_ID.r2.cloudflarestorage.com \
-  --shadow-source-access-key R2_ACCESS_KEY \
-  --shadow-source-secret-key R2_SECRET_KEY \
-  --shadow-write-through
+# Create a Tigris bucket
+tigris mk my-bucket
+
+# Set R2 as the shadow source
+tigris buckets set-migration my-bucket \
+  --bucket my-r2-bucket \
+  --endpoint https://ACCOUNT_ID.r2.cloudflarestorage.com \
+  --region auto \
+  --access-key R2_ACCESS_KEY \
+  --secret-key R2_SECRET_KEY \
+  --write-through
 ```
 
 Or switch by changing the endpoint in code:

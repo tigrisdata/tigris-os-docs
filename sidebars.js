@@ -595,6 +595,7 @@ const sidebars = {
             "objects/acl",
             "objects/object-rename",
             "objects/bundle",
+            "objects/batch-write",
           ],
         },
         {

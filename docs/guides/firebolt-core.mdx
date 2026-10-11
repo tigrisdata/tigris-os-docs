@@ -1,0 +1,267 @@
+---
+description:
+  "Point Firebolt Core at Tigris with one config block: query Parquet and
+  Iceberg directly from globally distributed, zero-egress-fee object storage,
+  and write query results back with COPY TO. Full config.yaml and a verified
+  round trip."
+keywords:
+  [
+    firebolt,
+    firebolt core,
+    self-hosted data warehouse,
+    query engine,
+    read_parquet,
+    iceberg,
+    data lake,
+    s3 compatible,
+    object storage,
+    STORAGE,
+  ]
+---
+
+# Firebolt Core on Tigris
+
+[Firebolt Core](https://github.com/firebolt-db/firebolt-core) is the free,
+self-hosted edition of Firebolt's distributed query engine. It ships as a single
+Docker image, speaks a Postgres-compatible SQL dialect, and reads Parquet and
+Iceberg straight out of object storage. You run it wherever you want — a laptop,
+a Hetzner box, your own datacenter.
+
+That last part is the whole reason people pick it. And it is exactly where the
+storage bill gets awkward: the engine is designed to scan data in place, so
+every query reaches into the bucket. If that bucket lives in a hyperscaler and
+your compute does not, you pay egress on each scan of data you already own.
+
+Tigris is S3-compatible object storage with
+[zero egress fees](https://www.tigrisdata.com/docs/overview/) and a single
+global endpoint that routes to the region nearest the caller. Firebolt Core
+talks to it through the same S3 code path it uses for AWS — you set an endpoint
+and provide credentials. Nothing else about the engine changes.
+
+## Why this pairing works
+
+- **Scans are the workload, not the exception.** `read_parquet` and
+  `read_iceberg` re-read the same files across every query, backfill, and
+  dashboard refresh. Egress-free reads mean the cost of a scan doesn't depend on
+  which cloud the engine happens to run in.
+- **Compute goes where it's cheap.** Firebolt Core exists so you can run
+  analytics on commodity hardware. Pinning the data to a bucket in another
+  provider undoes that saving through the bandwidth line item.
+- **One bucket, many readers.** The same Parquet that Firebolt Core queries can
+  feed a Spark job, a DuckDB session on a laptop, and a colleague in another
+  region — without paying to move it or keeping three copies in sync.
+
+## What this guide is not
+
+Two honest limits before the config.
+
+This sets the S3 endpoint **engine-wide**. Every `s3://` URL the engine resolves
+goes to Tigris after you apply this configuration, including the public demo
+buckets in Firebolt's own examples. That is the correct setup when Tigris is
+your storage layer, but it is not a per-query override. If you need to reach
+several S3 providers from one engine, use
+[`CREATE LOCATION`](https://docs.firebolt.io/reference-sql/commands/data-definition/create-location)
+with per-location credentials instead of the engine-level endpoint below.
+
+This guide covers single-node Firebolt Core, which is what the project's own
+quickstart deploys. The storage configuration is the same for multi-node
+clusters, but node topology and the inter-node ports are out of scope here — see
+the
+[Firebolt Core deployment guide](https://docs.firebolt.io/firebolt-core/firebolt-core-operation).
+
+## Prerequisites
+
+- Docker, with at least 8 GB of memory available to the engine
+- A Tigris account from [storage.new](https://storage.new)
+- A bucket and an [access key](https://storage.new/accesskey) with Editor
+  permissions on it
+
+Tigris credentials look like this:
+
+```sh
+AWS_ACCESS_KEY_ID=tid_your_access_key
+AWS_SECRET_ACCESS_KEY=tsec_your_secret_key
+AWS_ENDPOINT_URL_S3=https://t3.storage.dev
+```
+
+Everything below uses the global endpoint `https://t3.storage.dev`. Tigris
+routes each request to the region closest to the caller, so this is the right
+endpoint whether the engine runs in Frankfurt or Virginia.
+
+## Configure the engine
+
+Firebolt Core reads two different files, and the storage settings go in the one
+that is easy to miss:
+
+- `config.json`, mounted at `/opt/firebolt/config.json`, describes the **cluster
+  topology** — node names and IDs. Storage settings do not go here.
+- `config.yaml`, read from the **data directory** (`/var/lib/firebolt`), holds
+  the **engine configuration**, including S3.
+
+Create the data directory and write `config.yaml` into it:
+
+```sh
+mkdir -p firebolt-core-data
+
+cat > firebolt-core-data/config.yaml <<'EOF'
+schema_version: "1.0"
+endpoints:
+  http:
+    listeners:
+      - type: tcp
+        port: 3473
+      - type: unix
+        path: /run/firebolt/query_endpoint
+storage:
+  aws:
+    endpoint: "https://t3.storage.dev"
+    region: "auto"
+EOF
+```
+
+`storage.aws.endpoint` is the whole integration. It redirects the engine's S3
+client at Tigris, and `s3://bucket/key` URLs resolve there from then on.
+`region` is only used for request signing; Tigris accepts `auto`.
+
+Credentials are **not** part of this file. Firebolt Core resolves them through
+the AWS SDK default credential chain, so pass them to the container as
+environment variables:
+
+```sh
+cat > tigris.env <<'EOF'
+AWS_ACCESS_KEY_ID=tid_your_access_key
+AWS_SECRET_ACCESS_KEY=tsec_your_secret_key
+AWS_REGION=auto
+EOF
+chmod 600 tigris.env
+```
+
+## Start Firebolt Core
+
+```sh
+docker run -d --name firebolt-core \
+  --env-file tigris.env \
+  --ulimit memlock=8589934592:8589934592 \
+  --security-opt seccomp=unconfined \
+  -p 127.0.0.1:3473:3473 \
+  -v ./firebolt-core-data:/var/lib/firebolt \
+  ghcr.io/firebolt-db/engine:dev
+```
+
+On macOS, add `--user root` and
+`--tmpfs /run/firebolt:rw,mode=2770,uid=3473,gid=0`. The Docker Desktop
+file-sharing backend cannot stat the engine's Unix socket on a bind mount, so
+the socket has to live on an in-memory filesystem. The `config.yaml` above
+already points the socket at `/run/firebolt`.
+
+Queries go over HTTP on port 3473:
+
+```sh
+curl -s "http://127.0.0.1:3473/?output_format=JSON_Compact" \
+  --data-binary "SELECT 42;"
+```
+
+## Verify the connection
+
+List the bucket. This confirms both the endpoint and the credentials:
+
+```sh
+curl -s "http://127.0.0.1:3473/?output_format=JSON_Compact" \
+  --data-binary "SELECT * FROM list_objects('s3://your-bucket/');"
+```
+
+An empty bucket returns zero rows and no error, which is a pass. If the
+credentials or the endpoint are wrong you get an explicit failure instead:
+
+```text
+ListObjectsV2 failed: Access denied to 'your-bucket/'. Verify that the
+credentials provided have the required S3 permissions. Access Denied.
+```
+
+## Write query results to Tigris
+
+`COPY TO` writes a result set to the bucket as Parquet:
+
+```sql
+COPY (
+  SELECT 1 AS id, 'tigris' AS src
+  UNION ALL
+  SELECT 2, 'firebolt'
+)
+TO 's3://your-bucket/demo/'
+TYPE = PARQUET;
+```
+
+The engine names the file after the query ID:
+
+```text
+demo/f611cb52-c029-4a48-b134-dadf149aeaf1_1_0_0.gz.parquet
+```
+
+## Query it back
+
+```sql
+SELECT * FROM read_parquet('s3://your-bucket/demo/*.parquet') ORDER BY id;
+```
+
+```text
+┌────┬──────────┐
+│ id │ src      │
+├────┼──────────┤
+│  1 │ tigris   │
+│  2 │ firebolt │
+└────┴──────────┘
+```
+
+That is the full round trip: Firebolt Core wrote Parquet to Tigris and read it
+back through the same endpoint. `read_iceberg` and `list_objects` resolve
+`s3://` URLs the same way.
+
+For real datasets the pattern is the same — point `read_parquet` at a prefix and
+let the engine scan it:
+
+```sql
+SELECT service, count(*) AS events
+FROM read_parquet('s3://your-bucket/events/*.parquet')
+GROUP BY service
+ORDER BY events DESC
+LIMIT 10;
+```
+
+## Operational notes
+
+- **Addressing style does not matter.** `storage.aws.path_style_addressing`
+  accepts `true` or `false`, and Tigris serves both. The setting exists for
+  S3-compatible stores that require one or the other; you can leave it unset.
+- **The endpoint is global, so check your examples.** Once
+  `storage.aws.endpoint` is set, Firebolt's sample queries against its own
+  public buckets (`s3://firebolt-core-us-east-1/...`) resolve against Tigris and
+  fail with `Access Denied`. That is expected, not a misconfiguration. Firebolt
+  also publishes the same sample data on `gs://`, which is unaffected.
+- **Use the HTTP endpoint, not `fb`.** Firebolt's examples call a `fb` CLI
+  inside the container. That binary is not present in the `engine:dev` image —
+  only `/usr/local/bin/firebolt` is — so `docker exec ... fb` fails. Every query
+  in this guide uses the HTTP endpoint, which works.
+- **Keep credentials out of SQL.** The environment-variable chain above applies
+  engine-wide and keeps keys out of query text and query history. Scope the
+  access key to the single bucket the engine needs.
+- **Bucket configuration.** A Standard-tier bucket is the right default for data
+  a query engine scans on demand. Use
+  [lifecycle rules and storage tiers](https://www.tigrisdata.com/docs/objects/tiers/)
+  for datasets you keep for compliance but rarely read.
+- **Rehearse on a fork.** Tigris
+  [bucket forks](https://www.tigrisdata.com/docs/buckets/snapshots-and-forks/)
+  create a zero-copy branch of a bucket. Fork your data prefix and test a schema
+  change or an engine upgrade against real data without copying it or touching
+  production.
+
+## Further reading
+
+- [Firebolt Core on GitHub](https://github.com/firebolt-db/firebolt-core)
+- [Firebolt Core: get started](https://docs.firebolt.io/firebolt-core/firebolt-core-get-started)
+- [Firebolt: engine configuration reference](https://docs.firebolt.io/self-managed/engine-configuration)
+- [Firebolt: `CREATE LOCATION`](https://docs.firebolt.io/reference-sql/commands/data-definition/create-location)
+- [Tigris: migrating from S3 with shadow buckets](https://www.tigrisdata.com/docs/migration/)
+
+Firebolt® is a registered trademark of Firebolt Analytics, Inc. Tigris Data is
+not affiliated with Firebolt Analytics, Inc.

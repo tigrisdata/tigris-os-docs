@@ -455,6 +455,11 @@ const sidebars = {
                 },
                 {
                   type: "doc",
+                  label: "PydanticAI",
+                  id: "agents/agent-pydantic-ai",
+                },
+                {
+                  type: "doc",
                   label: "Daytona",
                   id: "agents/agent-daytona",
                 },

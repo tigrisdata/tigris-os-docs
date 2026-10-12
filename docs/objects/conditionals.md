@@ -32,6 +32,10 @@ Multiple condition headers can be specified in a single request. The request
 proceeds only if **all** conditions are met. If any condition fails, the request
 is rejected with the appropriate error status code.
 
+The exception, as in S3, is an ETag condition paired with its date condition on
+GET and HEAD: `If-Match` overrides `If-Unmodified-Since`, and `If-None-Match`
+overrides `If-Modified-Since`, so the date is ignored.
+
 ## Consistency and Conditional Operations
 
 Conditional operations always evaluate against the latest state of the object

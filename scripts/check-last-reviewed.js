@@ -20,7 +20,6 @@ const SCOPE = [
   "docs/skills.md",
   "docs/mcp/",
   "docs/agents/",
-  "docs/quickstarts/mcp.mdx",
   "docs/agents-use-cases.mdx",
 ];
 

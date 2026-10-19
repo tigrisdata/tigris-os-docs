@@ -1009,8 +1009,8 @@ tigris telemetry disable`}</CodeBlock>
                 <p>
                   <code>tigris init</code> sets up Tigris for AI coding agents.
                   It detects installed editors, installs or updates the CLI,
-                  writes the remote MCP server configuration for ten editors,
-                  and installs the Tigris agent skills.{" "}
+                  writes the MCP server configuration for ten editors, and
+                  installs the Tigris agent skills.{" "}
                   <code>tigris init --agent</code> prints a plain-text recipe an
                   agent can follow on its own.
                 </p>

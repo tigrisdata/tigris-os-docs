@@ -60,8 +60,8 @@ const sidebars = {
           items: [
             {
               type: "doc",
-              label: "MCP Quickstart",
-              id: "quickstarts/mcp",
+              label: "MCP Server",
+              id: "mcp/index",
             },
             {
               type: "doc",
@@ -1077,22 +1077,9 @@ const sidebars = {
       collapsed: true,
       items: [
         {
-          type: "category",
-          label: "MCP",
-          collapsible: true,
-          collapsed: true,
-          items: [
-            {
-              type: "doc",
-              label: "Local MCP Server",
-              id: "mcp/local",
-            },
-            {
-              type: "doc",
-              label: "Remote MCP Server",
-              id: "mcp/remote",
-            },
-          ],
+          type: "doc",
+          label: "MCP Server",
+          id: "mcp/index",
         },
         {
           type: "doc",

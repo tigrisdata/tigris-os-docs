@@ -1,0 +1,244 @@
+---
+last_reviewed: 2026-10-19
+---
+
+# MCP Server
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import styles from "!!raw-loader!./styles.css";
+
+<style>{styles}</style>
+
+The Tigris MCP server lets you use Tigris in your agentic workflows without
+having to install additional software on your machine. It implements the
+[Model Context Protocol](https://modelcontextprotocol.io/) over streaming HTTP
+at `https://mcp.storage.dev/mcp` and authenticates with OAuth, so it works with
+desktop tools and with web agents such as ChatGPT.
+
+## Features
+
+The MCP server exposes Tigris to your agent as a set of tools:
+
+- **Organizations**: list the organizations you belong to and pick the one to
+  work in.
+- **Buckets**: create, list, inspect, and delete buckets.
+- **Objects**: list, read, write, and delete objects, and look up their
+  metadata.
+- **Sharing**: create presigned URLs so a browser, a person, or another system
+  can download or upload an object without credentials.
+- **Access keys**: list access keys and create keys scoped to a single bucket.
+- **Agent workspaces**: give an agent a dedicated bucket with an optional expiry
+  and scoped credentials, then tear it down when the work is done.
+- **Checkpoints and forks**: snapshot a bucket, restore a snapshot into an
+  independent bucket, and create copy-on-write forks so several agents can work
+  on the same data in parallel.
+
+## Example Prompts
+
+Here are some prompts you can try once the server is connected:
+
+- List my Tigris buckets
+- Create a bucket called `my-bucket` with snapshots enabled
+- Save this summary as `summary.md` in `my-bucket`
+- Give me a link to share `summary.md`
+- Create a workspace bucket for this task that expires in 7 days
+- Checkpoint `my-bucket` before we start
+- Create three forks of `dataset` so the agents can work in parallel
+- Delete `old-file.txt` from `my-bucket`
+
+## Installation
+
+The quickest way to set up the server is to run
+[`tigris init`](/docs/cli/init/). It detects your coding agent and writes the
+MCP server configuration for it. To set up a client by hand, pick it below.
+
+<Tabs queryString="client">
+<TabItem value="claude-code" label="Claude Code" default>
+
+Run this command:
+
+```bash
+claude mcp add --scope user --transport http tigris https://mcp.storage.dev/mcp
+```
+
+Then run `claude` and use the `/mcp` command to authenticate.
+
+</TabItem>
+<TabItem value="claude-desktop" label="Claude Desktop">
+
+1. Go to Settings \> Connectors.
+2. Click the **Add custom connector** button.
+3. In the **Name** field, enter "Tigris".
+4. In the **Remote MCP server URL** field, enter `https://mcp.storage.dev/mcp`.
+5. Click the **Add** button.
+6. Once the connector is added, click the **Connect** button and complete the
+   authentication flow.
+
+</TabItem>
+<TabItem value="cursor" label="Cursor">
+
+Click this button:
+
+<p>
+  <a
+    href="cursor://anysphere.cursor-deeplink/mcp/install?name=tigris&config=eyJ1cmwiOiJodHRwczovL21jcC5zdG9yYWdlLmRldi9tY3AifQ%3D%3D"
+    className="install-btn"
+  >
+    <span>Add to Cursor</span>
+  </a>
+</p>
+
+Or run this command:
+
+```bash
+npx @tigrisdata/tigris-mcp-server setup cursor
+```
+
+</TabItem>
+<TabItem value="vscode" label="VS Code">
+
+Click this button:
+
+<p>
+  <a
+    href="vscode:mcp/install?%7B%22name%22%3A%22tigris%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.storage.dev%2Fmcp%22%7D"
+    className="install-btn"
+  >
+    <span>Add to VS Code</span>
+  </a>
+</p>
+
+Or do the following:
+
+1. Press Control+Shift+P or Command+Shift+P to open the command palette.
+2. Search for "MCP: Add Server".
+3. Create an HTTP MCP server.
+4. Enter the URL [`https://mcp.storage.dev/mcp`](https://mcp.storage.dev/mcp).
+5. Name the MCP server `tigris`.
+6. Authenticate with Tigris and get off to work!
+
+</TabItem>
+<TabItem value="chatgpt" label="ChatGPT">
+
+1. Open [ChatGPT Settings](https://chatgpt.com/#settings/Connectors) and click
+   **Create** in the top right corner of the Settings modal.
+2. In the **Name** field, enter "Tigris".
+3. In the **MCP Server URL** field, enter `https://mcp.storage.dev/mcp`.
+4. In the **Authentication** field, select "OAuth".
+5. Click **Create**.
+
+</TabItem>
+<TabItem value="codex" label="OpenAI Codex">
+
+Enable the `rmcp_client` feature in `~/.codex/config.toml`:
+
+```toml
+[features]
+rmcp_client = true
+```
+
+Then run this command:
+
+```bash
+codex mcp add --url https://mcp.storage.dev/mcp tigris
+```
+
+Then run `codex` and use the `/mcp` command to authenticate.
+
+</TabItem>
+<TabItem value="goose" label="Goose">
+
+Run `goose configure`:
+
+```sh
+goose configure
+```
+
+Choose "Add Extension":
+
+```text
+┌   goose-configure
+│
+◆  What would you like to configure?
+│  ○ Configure Providers
+│  ○ Custom Providers
+│  ● Add Extension (Connect to a new extension)
+│  ○ Toggle Extensions
+│  ○ Remove Extension
+│  ○ goose settings
+└
+```
+
+Choose "Remote Extension (Streamable HTTP)":
+
+```text
+┌   goose-configure
+...
+◆  What type of extension would you like to add?
+│  ○ Built-in Extension
+│  ○ Command-line Extension
+│  ● Remote Extension (Streamable HTTP) (Connect to a remote extension via MCP Streamable HTTP)
+└
+```
+
+Enter the name "tigris":
+
+```text
+┌   goose-configure
+...
+◆  What would you like to call this extension?
+│  tigris
+└
+```
+
+Enter the endpoint URI `https://mcp.storage.dev/mcp`:
+
+```text
+┌   goose-configure
+...
+◆  What is the Streaming HTTP endpoint URI?
+│  https://mcp.storage.dev/mcp
+└
+```
+
+Set a timeout of `300` seconds:
+
+```text
+┌   goose-configure
+...
+◆  Please set the timeout for this tool (in secs):
+│  300
+└
+```
+
+Enter a description:
+
+```text
+┌   goose-configure
+...
+◆  Enter a description for this extension:
+│  Tigris MCP server
+└
+```
+
+Choose "No" when asked if you need to add custom headers:
+
+```text
+┌   goose-configure
+...
+◆  Would you like to add custom headers?
+│  ○ Yes  / ● No
+└
+```
+
+Then run `goose` and authenticate with Tigris in your browser.
+
+</TabItem>
+</Tabs>
+
+## Learn More
+
+- [How Do I Use Tigris with AI Coding Agents via MCP?](/docs/ai-agents/mcp-server/)
+- [Agent Skills](/docs/skills/)
+- [Agent Plugins](/docs/ai/agent-plugins/)

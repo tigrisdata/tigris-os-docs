@@ -144,6 +144,25 @@ files until background compaction rewrites those files. To see whether that
 space is being reclaimed, compare the filesystem usage against this gauge, and
 watch the compaction metrics below.
 
+### tag_cache_populate_disk_shed_total
+
+**Type:** Counter — cache writes skipped because the store was at or above
+`populate_shed_disk_ratio` (default 1.05) of `max_disk_usage_bytes`, labelled by
+`source`. Sources without a suffix (`read_miss`, `warm_on_write`, `tiered_put`,
+`retier`) were refused by the node serving the request; `*_owner` sources were
+refused by the node that owns the body in a cluster. The object is still served
+from upstream; only caching it is skipped.
+
+```promql
+# Shed rate by source
+sum by (source) (rate(tag_cache_populate_disk_shed_total[5m]))
+```
+
+The embedded cache's `ocache_disk_usage_ratio` gauge is the value this compares
+against the ratio. On a correctly sized node the counter stays at zero and the
+gauge hovers at or below 1.0. A node that sheds continuously is taking in more
+than it can evict: raise `max_disk_usage_bytes` or add nodes.
+
 ### ocache_segment_walks_total
 
 **Type:** Counter — storage files examined to determine how much of each one is

@@ -55,6 +55,15 @@ If `max_disk_usage_bytes` is `0` (the default), disk-cap eviction is disabled
 (and `eviction_policy` has no effect); objects are only removed by TTL expiry or
 explicit invalidation.
 
+Eviction can fall behind a sustained burst of writes. When tracked usage reaches
+`populate_shed_disk_ratio` (default 1.05) of the cap, TAG stops writing new
+cache bodies and serves those objects from upstream instead, until eviction
+brings usage back under the ratio. Metadata is never affected, and in a cluster
+the node that owns a body applies the same check, so one overloaded node cannot
+be filled by its peers. Sheds are counted in
+`tag_cache_populate_disk_shed_total`; a node that sheds continuously needs more
+disk or more nodes.
+
 ## Cache warming on write
 
 By default TAG populates the cache on reads (an object is cached the first time

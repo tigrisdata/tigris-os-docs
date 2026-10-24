@@ -161,7 +161,10 @@ sum by (source) (rate(tag_cache_populate_disk_shed_total[5m]))
 The embedded cache's `ocache_disk_usage_ratio` gauge is the value this compares
 against the ratio. On a correctly sized node the counter stays at zero and the
 gauge hovers at or below 1.0. A node that sheds continuously is taking in more
-than it can evict: raise `max_disk_usage_bytes` or add nodes.
+than it can evict. Before raising `max_disk_usage_bytes`, confirm the volume has
+physical free space to back a larger cap (on-disk usage runs ahead of the
+tracked size until compaction reclaims it); otherwise grow the volume or add
+nodes.
 
 ### ocache_segment_walks_total
 

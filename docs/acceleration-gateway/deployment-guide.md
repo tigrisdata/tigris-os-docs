@@ -165,7 +165,10 @@ sum by (source) (rate(tag_cache_populate_disk_shed_total[5m]))
 Non-zero means the cache is over `populate_shed_disk_ratio` (default 1.05) of
 its disk cap and is skipping new cache writes until eviction catches up. Objects
 are still served, but nothing new is cached. A sustained rate means the node is
-undersized for its write rate: raise `max_disk_usage_bytes` or add nodes. See
+undersized for its write rate. Check the volume's physical free space first (see
+the unreclaimed-disk alert above: on-disk usage can exceed the tracked size); if
+there is headroom, raise `max_disk_usage_bytes`, otherwise grow the volume or
+add nodes. See
 [tag_cache_populate_disk_shed_total](metrics.md#tag_cache_populate_disk_shed_total).
 
 ## Upgrading
@@ -183,9 +186,10 @@ written and the object is served from upstream instead; metadata is never
 affected. In a cluster the check runs both on the node serving the request and
 on the node that owns the body, so an overloaded node cannot be filled by its
 peers. Watch `tag_cache_populate_disk_shed_total` after upgrading: a node that
-sheds continuously was already evicting faster than it could serve, and needs
-more disk or more nodes. Set `TAG_CACHE_POPULATE_SHED_DISK_RATIO` to a negative
-value to disable it.
+sheds continuously was already evicting faster than it could serve. Confirm the
+volume has physical free space before raising `max_disk_usage_bytes`; if it does
+not, grow the volume or add nodes. Set `TAG_CACHE_POPULATE_SHED_DISK_RATIO` to a
+negative value to disable shedding.
 
 ## Troubleshooting
 
@@ -296,7 +300,9 @@ process last restarted. Upgrade first if you see this on an older version.
 If `tag_cache_populate_disk_shed_total` is rising at the same time, the cache is
 over `populate_shed_disk_ratio` of its cap and has stopped caching new objects
 until eviction catches up (v1.23.0 and later). That protects the node, but it
-means the cache is undersized for the write rate it receives.
+means the cache is undersized for the write rate it receives. Raising the cap
+only helps if the volume has physical free space to back it; otherwise grow the
+volume or add nodes.
 
 ### Debug mode
 

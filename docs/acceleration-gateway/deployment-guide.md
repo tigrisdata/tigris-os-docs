@@ -204,6 +204,14 @@ roll, `memberlist_client_cluster_members_count` on each node should return to
 the node count and `ring_members{name="ocache",state="Unhealthy"}` to zero
 shortly after the last node is ready. No configuration change is needed.
 
+### v1.24.0
+
+v1.24.0 adds `cache.populate_shed_reject` (`TAG_CACHE_POPULATE_SHED_REJECT`,
+default `false`). No configuration change is needed to upgrade. Set it where the
+upstream tier is slow to read back: a shed small PUT then answers `503 SlowDown`
+with the body unread instead of being placed upstream with a marker, so the
+object is a miss rather than a slow upstream-tier read.
+
 ## Troubleshooting
 
 ### TAG won't start

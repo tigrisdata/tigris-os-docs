@@ -487,6 +487,12 @@ Two things to know about this listing:
 
 ### Restoring an object
 
+Restoring a soft-deleted object requires both `RestoreObject` and `PutObject`
+permission on the key because it can replace a live object. The `ReadWrite` and
+`Editor` bucket roles grant both permissions; `ReadOnly` does not. If you grant
+access through an IAM policy, allow both `s3:RestoreObject` and `s3:PutObject`
+on the object resource.
+
 Send `RestoreObject` with `X-Tigris-Restore-Type: soft-delete`:
 
 ```http

@@ -627,8 +627,15 @@ buckets depend on it.
 
 ## Authorization
 
-You can create and list snapshots, create a fork, and read objects in a snapshot
-if you own the bucket, you are an organization admin, or you have `ReadOnly` or
-a higher role on the bucket.
+You can create and list snapshots, list forks, and read objects in a snapshot if
+you own the bucket, you are an organization admin, or you have `ReadOnly` or a
+higher role on the bucket. Creating a fork requires read access on the source
+and permission to create the destination bucket.
+
+Merging buckets requires `ReadWrite` or higher on the target and `ReadOnly` or
+higher on the source. Bucket owners and keys with `Editor` or `Admin` access can
+rebase a fork or restore a bucket snapshot. Rebase makes newer data from the
+parent bucket visible through the fork, so the caller also needs `ReadOnly` or
+higher access to the parent bucket.
 
 Enabling snapshots on a new or existing bucket requires `Editor` or `Admin`.

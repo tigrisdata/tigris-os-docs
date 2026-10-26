@@ -169,6 +169,7 @@ role. These operation names are not IAM policy action names.
 | ListObjectVersions                 | ✅    | ✅     | ✅        | ✅       |
 | ListObjectsV1                      | ✅    | ✅     | ✅        | ✅       |
 | ListObjectsV2                      | ✅    | ✅     | ✅        | ✅       |
+| MergeBucket                        | ✅    | ✅     | ✅        | ❌       |
 | NewMultipartUpload                 | ✅    | ✅     | ✅        | ❌       |
 | PostPolicy                         | ✅    | ✅     | ✅        | ❌       |
 | PutBucketACL                       | ✅    | ✅     | ❌        | ❌       |
@@ -196,6 +197,14 @@ role. These operation names are not IAM policy action names.
 | IAM:ListPolicies                   | ✅    | ❌     | ❌        | ❌       |
 | IAM:ListUserPolicies               | ✅    | ❌     | ❌        | ❌       |
 | IAM:AttachUserPolicy               | ✅    | ❌     | ❌        | ❌       |
+
+`MergeBucket` requires write access on the target (`ReadWrite` or higher) and
+read access on the source (`ReadOnly` or higher).
+
+`RestoreObject` is available to `ReadOnly` for restoring archived objects.
+[Restoring a soft-deleted object](/docs/buckets/soft-delete/#restoring-an-object)
+also requires `PutObject` permission on the key, so it requires `ReadWrite` or
+higher when access is granted through a bucket role.
 
 The bucket owner can perform all bucket operations on their own bucket.
 

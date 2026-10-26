@@ -30,6 +30,7 @@ variables. Environment variables take precedence over file configuration.
 | `TAG_CACHE_WARM_ON_WRITE`                   | Warm the cache after a successful write via a background fetch (`true`/`false`)                                                                                   | `false`                  |
 | `TAG_CACHE_MAX_CONCURRENT_WRITES`           | Max concurrent cache-populate operations                                                                                                                          | `256`                    |
 | `TAG_CACHE_POPULATE_SHED_DISK_RATIO`        | Stop writing new cache bodies while tracked disk usage is at or above this fraction of `TAG_CACHE_MAX_DISK_USAGE` (0 = default, negative = disabled)              | `1.05`                   |
+| `TAG_CACHE_POPULATE_SHED_REJECT`            | Tiered mode: answer a shed small PUT with `503 SlowDown` instead of placing it upstream with a marker (set where the upstream tier is slow to read back)          | `false`                  |
 | `TAG_CACHE_MAX_POPULATE_MEMORY`             | Aggregate memory budget (bytes) for all cache buffering — populate + block-serve staging (one honest total)                                                       | `2147483648` (2 GiB)     |
 | `TAG_CACHE_BLOCK_CACHING_ENABLED`           | Cache large objects as fixed-size blocks (RFC 0001) so a range read fetches only the covering blocks (`true`/`false`)                                             | `true`                   |
 | `TAG_CACHE_BLOCK_SIZE`                      | Block granularity and the whole-vs-block boundary (bytes); size to your workload's read granularity                                                               | `1048576` (1 MiB)        |
@@ -179,6 +180,12 @@ cache:
   # that owns the body. Only applies when max_disk_usage_bytes > 0.
   # Default: 1.05 (0 or unset = default; negative = disabled)
   populate_shed_disk_ratio: 1.05
+
+  # Tiered mode: answer a shed small PUT with 503 SlowDown instead of placing it
+  # upstream with a marker. Set where the upstream tier is slow to read back, so
+  # a shed write becomes a miss rather than a slow upstream-tier object.
+  # Conditional writes are never shed. Default: false
+  populate_shed_reject: false
 
   # Aggregate memory budget for concurrent cache-populate buffering. Each populate
   # reserves its object size, capped at the per-populate buffer ceiling, so many

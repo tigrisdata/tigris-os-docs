@@ -1140,6 +1140,7 @@ const sidebars = {
         "legal/service-terms",
         "legal/data-processing",
         "legal/sla",
+        "legal/security-report",
       ],
     },
   ],

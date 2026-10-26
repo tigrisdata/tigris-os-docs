@@ -191,6 +191,19 @@ volume has physical free space before raising `max_disk_usage_bytes`; if it does
 not, grow the volume or add nodes. Set `TAG_CACHE_POPULATE_SHED_DISK_RATIO` to a
 negative value to disable shedding.
 
+### v1.23.1
+
+v1.23.1 makes rolling restarts converge quickly. A node that comes back on a new
+address is accepted by its peers within seconds; before, peers kept dialing the
+old address until the kernel connect timeout and refused the new one as a
+conflict, which could leave the cluster split for minutes after a roll, with the
+keys owned by a node marked unhealthy answering errors. The HTTP drain on
+shutdown is now 20 seconds instead of 30, leaving 10 seconds of the default
+30-second termination grace for the node to leave the cluster cleanly. During a
+roll, `memberlist_client_cluster_members_count` on each node should return to
+the node count and `ring_members{name="ocache",state="Unhealthy"}` to zero
+shortly after the last node is ready. No configuration change is needed.
+
 ## Troubleshooting
 
 ### TAG won't start

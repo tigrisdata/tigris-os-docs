@@ -1,9 +1,9 @@
 # Deleting Objects
 
-The Tigris Dashboard can delete one object, a selection of objects and folders,
-or a whole folder. A folder delete applies to every object under the folder, at
-every depth. The delete runs in your browser tab, and a card at the top right of
-the page shows the progress.
+Tigris Dashboard can delete one object, a selection of objects and folders, or a
+whole folder. A folder delete applies to every object under the folder, at every
+depth. The delete runs in your browser tab, and a card at the top right of the
+page shows the progress.
 
 For deletes from a script, use the CLI or the S3 API. See
 [Deleting objects programmatically](#deleting-objects-programmatically).
@@ -26,8 +26,8 @@ are in progress. The lock ends when the delete or the uploads complete.
 
 ## Deleting a folder
 
-1. Open the [Tigris Dashboard](https://console.storage.dev/) and go to
-   **Buckets**. Open the bucket.
+1. Open [Tigris Dashboard](https://console.storage.dev/) and go to **Buckets**.
+   Open the bucket.
 2. Open the action menu next to the folder and click **Delete folder**. To
    delete the folder that you are in, open the menu above the list and click
    **Delete folder**. If a search is active, clear it first.
@@ -68,10 +68,14 @@ objects.
 
 ![The progress card for a folder delete](/img/delete-folder-progress.png)
 
+:::warning
+
 Keep the browser tab open until the card shows the result. The delete runs in
 your browser. If you close the tab, the delete stops. The objects already
 deleted stay deleted, and the other objects stay in the bucket. The browser asks
 for confirmation before it closes a tab with a running delete.
+
+:::
 
 You can continue to work in other folders and buckets while the delete runs. In
 the folder with the running delete, the rows are disabled, and uploads into the
@@ -89,9 +93,14 @@ successfully deleted from "qa-bucket"**. The card closes after a few seconds.
 ### Stopping a delete
 
 To stop a delete, click **Cancel** on the card. The card shows **Stopping…**
-while the batches already sent complete. Up to 500 objects can still be deleted
-after you click **Cancel**. Then the card shows the number of deleted objects.
-The other objects stay in the bucket.
+while the batches already sent complete. Then the card shows the number of
+deleted objects. The other objects stay in the bucket.
+
+:::warning
+
+Up to 500 objects can still be deleted after you click **Cancel**.
+
+:::
 
 You can stop a folder delete, or a selection delete that contains a folder. A
 delete of files only runs to completion.

@@ -13,7 +13,7 @@ keywords:
     skill library,
     tigris object storage skills,
   ]
-last_reviewed: 2026-03-31
+last_reviewed: 2026-10-19
 ---
 
 # Agent Skills
@@ -120,8 +120,8 @@ context files tell agents your specific setup.
 
 ## Learn More
 
-- [MCP Server](/docs/mcp/remote/) — structured tool access for agents that
-  support the Model Context Protocol
+- [MCP Server](/docs/mcp/) — structured tool access for agents that support the
+  Model Context Protocol
 - [Tigris CLI](/docs/cli/) — install the CLI to get a global `SKILL.md` context
   file for your agents
 - [skills.sh/tigrisdata/skills](https://skills.sh/tigrisdata/skills) — browse

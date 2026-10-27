@@ -298,7 +298,7 @@ t3 touch my-bucket/key`}
           }
           title="AI"
           description="Empower your AI assistants. Expose your Tigris buckets and objects to LLMs via the Model Context Protocol for seamless context integration."
-          to="/quickstarts/mcp"
+          to="/mcp/"
         >
           <div className="tool-card-mcp-buttons">
             <a
@@ -340,7 +340,7 @@ t3 touch my-bucket/key`}
               Add to VS Code
             </a>
             <a
-              href="/docs/mcp/remote/#claude-desktop"
+              href="/docs/mcp/?client=claude-desktop"
               className="tool-card-mcp-btn"
               onClick={(e) => e.stopPropagation()}
             >
@@ -369,7 +369,7 @@ t3 touch my-bucket/key`}
               Add to Claude
             </a>
             <a
-              href="/docs/mcp/remote/"
+              href="/docs/mcp/"
               className="tool-card-mcp-link"
               onClick={(e) => e.stopPropagation()}
             >

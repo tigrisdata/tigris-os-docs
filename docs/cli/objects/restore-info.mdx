@@ -25,10 +25,11 @@ are not archived report no restore information.
 
 ## Flags
 
-| Name           | Required | Default | Description                                                                                      |
-| -------------- | -------- | ------- | ------------------------------------------------------------------------------------------------ |
-| `--version-id` | No       | —       | Inspect a specific object version (requires bucket versioning). Omit to read the current version |
-| `--format`     | No       | `table` | Output format. Options: `json`, `table`, `xml`                                                   |
+| Name                              | Required | Default | Description                                                                                                                                                    |
+| --------------------------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--version-id`                    | No       | —       | Inspect a specific object version (requires bucket versioning). Omit to read the current version                                                               |
+| `--snapshot-version`, `-snapshot` | No       | —       | Inspect the object as of a specific bucket snapshot. Accepts a snapshot version string or any UNIX nanosecond-precision timestamp (e.g. `1765889000501544464`) |
+| `--format`                        | No       | `table` | Output format. Options: `json`, `table`, `xml`                                                                                                                 |
 
 ## Examples
 

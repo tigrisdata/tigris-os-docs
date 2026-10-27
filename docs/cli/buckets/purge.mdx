@@ -1,0 +1,46 @@
+# tigris buckets purge
+
+Permanently destroy one or more [soft-deleted](/docs/buckets/soft-delete)
+buckets before their retention period expires.
+
+**Alias:** `pg`
+
+## Usage
+
+```bash
+tigris buckets purge <name> [flags]
+t3 b pg <name> [flags]
+```
+
+This cannot be undone: a purged bucket can no longer be restored with
+[`tigris buckets restore`](/docs/cli/buckets/restore). Only buckets that are
+already soft-deleted can be purged — for a live bucket the command fails rather
+than deleting it. List the candidates with
+[`tigris buckets list --deleted`](/docs/cli/buckets/list).
+
+The command asks for confirmation, naming every bucket, unless you pass `--yes`.
+With several buckets each is purged in turn; a failure is reported for that
+bucket and the rest still proceed, and the exit code is non-zero if any failed.
+
+## Arguments
+
+| Name   | Required | Description                                                                |
+| ------ | -------- | -------------------------------------------------------------------------- |
+| `name` | Yes      | Name of the soft-deleted bucket, or a comma-separated list of bucket names |
+
+## Flags
+
+| Name          | Required | Default | Description                                   |
+| ------------- | -------- | ------- | --------------------------------------------- |
+| `--yes`, `-y` | No       | —       | Skip confirmation prompts                     |
+| `--force`     | No       | —       | Skip confirmation prompts (alias for `--yes`) |
+
+## Examples
+
+```bash
+# Purge a single bucket
+tigris buckets purge my-bucket --yes
+
+# Purge several buckets
+tigris buckets purge bucket-a,bucket-b --yes
+```

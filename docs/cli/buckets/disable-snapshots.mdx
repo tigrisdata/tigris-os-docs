@@ -1,0 +1,29 @@
+# tigris buckets disable-snapshots
+
+Disable snapshots on an existing bucket, converting it back to a regular bucket.
+
+## Usage
+
+```bash
+tigris buckets disable-snapshots <name>
+t3 b disable-snapshots <name>
+```
+
+The command is rejected while the bucket still has dependent forks. Merge or
+delete the forks first —
+[`tigris buckets list --forks-of`](/docs/cli/buckets/list) shows them.
+
+## Arguments
+
+| Name   | Required | Description        |
+| ------ | -------- | ------------------ |
+| `name` | Yes      | Name of the bucket |
+
+## Examples
+
+```bash
+tigris buckets disable-snapshots my-bucket
+```
+
+Turn snapshots on with
+[`tigris buckets enable-snapshots`](/docs/cli/buckets/enable-snapshots).

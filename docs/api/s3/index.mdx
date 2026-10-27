@@ -51,34 +51,34 @@ The complete list of S3 APIs is in the
 
 ## Object operations
 
-| Operation                       | Tigris | R2  | GCS                                                                                                           |
-| ------------------------------- | ------ | --- | ------------------------------------------------------------------------------------------------------------- |
-| CopyObject                      | ✅     | ✅  | ✅                                                                                                            |
-| DeleteObject                    | ✅     | ✅  | ✅                                                                                                            |
-| DeleteObjects                   | ✅     | ✅  | ✅                                                                                                            |
-| DeleteObjects (quiet mode)      | ✅     | ✅  | ✅                                                                                                            |
-| DeleteObjectTagging             | ✅     | ✅  | ✅                                                                                                            |
-| GetObject                       | ✅     | ✅  | ✅                                                                                                            |
-| GetObject (If-Match)            | ✅     | ✅  | ✅                                                                                                            |
-| GetObject (If-Modified-Since)   | ✅     | ✅  | ✅                                                                                                            |
-| GetObject (If-None-Match)       | ✅     | ✅  | ✅                                                                                                            |
-| GetObject (If-Unmodified-Since) | ✅     | ✅  | ✅                                                                                                            |
-| GetObject (range request)       | ✅     | ✅  | ✅                                                                                                            |
-| GetObjectAcl                    | ✅     | ❌  | <abbr title="GCS uses a concentric ACL model (WRITE implies READ) that differs from S3">⚠️</abbr> [4](#notes) |
-| GetObjectTagging                | ✅     | ❌  | ❌                                                                                                            |
-| HeadObject                      | ✅     | ✅  | ✅                                                                                                            |
-| ListObjects                     | ✅     | ✅  | ✅                                                                                                            |
-| ListObjectsV2                   | ✅     | ✅  | ✅                                                                                                            |
-| ListObjectsV2 (delimiter)       | ✅     | ✅  | ✅                                                                                                            |
-| ListObjectsV2 (pagination)      | ✅     | ✅  | ✅                                                                                                            |
-| PutObject                       | ✅     | ✅  | ✅                                                                                                            |
-| PutObject (custom metadata)     | ✅     | ✅  | ✅                                                                                                            |
-| PutObject (SHA256 checksum)     | ✅     | ✅  | ✅                                                                                                            |
-| PutObject (SSE-S3)              | ✅     | ✅  | ✅                                                                                                            |
-| PutObject (storage class)       | ✅     | ✅  | ✅                                                                                                            |
-| PutObjectAcl                    | ✅     | ❌  | <abbr title="GCS uses a concentric ACL model (WRITE implies READ) that differs from S3">⚠️</abbr> [4](#notes) |
-| PutObjectTagging                | ✅     | ❌  | ❌                                                                                                            |
-| RestoreObject                   | ✅     | ✅  | ❌                                                                                                            |
+| Operation                       | Tigris                                                                                                                                | R2  | GCS                                                                                                           |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --- | ------------------------------------------------------------------------------------------------------------- |
+| CopyObject                      | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| DeleteObject                    | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| DeleteObjects                   | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| DeleteObjects (quiet mode)      | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| DeleteObjectTagging             | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| GetObject                       | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| GetObject (If-Match)            | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| GetObject (If-Modified-Since)   | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| GetObject (If-None-Match)       | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| GetObject (If-Unmodified-Since) | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| GetObject (range request)       | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| GetObjectAcl                    | ✅                                                                                                                                    | ❌  | <abbr title="GCS uses a concentric ACL model (WRITE implies READ) that differs from S3">⚠️</abbr> [4](#notes) |
+| GetObjectTagging                | ✅                                                                                                                                    | ❌  | ❌                                                                                                            |
+| HeadObject                      | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| ListObjects                     | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| ListObjectsV2                   | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| ListObjectsV2 (delimiter)       | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| ListObjectsV2 (pagination)      | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| PutObject                       | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| PutObject (custom metadata)     | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| PutObject (SHA256 checksum)     | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| PutObject (SSE-S3)              | <abbr title="SSE request headers are accepted but not applied — Tigris encrypts all data at rest automatically">⚠️</abbr> [1](#notes) | ✅  | ✅                                                                                                            |
+| PutObject (storage class)       | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
+| PutObjectAcl                    | ✅                                                                                                                                    | ❌  | <abbr title="GCS uses a concentric ACL model (WRITE implies READ) that differs from S3">⚠️</abbr> [4](#notes) |
+| PutObjectTagging                | ✅                                                                                                                                    | ❌  | ❌                                                                                                            |
+| RestoreObject                   | ✅                                                                                                                                    | ✅  | ❌                                                                                                            |
 
 ## Bucket operations
 
@@ -132,7 +132,10 @@ The complete list of S3 APIs is in the
 
 1. <span id="note-1"></span> **Encryption**: Tigris encrypts all data at rest
    automatically. The bucket encryption configuration APIs accept requests but
-   server-side encryption with managed keys is always on.
+   server-side encryption with managed keys is always on. SSE request headers
+   (`x-amz-server-side-encryption` for SSE-S3/SSE-KMS and
+   `x-amz-server-side-encryption-customer-*` for SSE-C) are accepted but not
+   applied, so customer-provided keys are not used.
 2. <span id="note-2"></span> **Canned ACLs**: Only canned ACLs (`public-read`
    and `private`) are supported.
 3. <span id="note-3"></span> **Conditional copy**: R2 supports UploadPartCopy

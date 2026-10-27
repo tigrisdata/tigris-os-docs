@@ -1,0 +1,30 @@
+# tigris buckets enable-snapshots
+
+Enable snapshots on an existing bucket, converting it to a snapshot bucket.
+
+## Usage
+
+```bash
+tigris buckets enable-snapshots <name>
+t3 b enable-snapshots <name>
+```
+
+A snapshot bucket can be captured at a point in time with
+[`tigris snapshots take`](/docs/cli/snapshots/take) and used as the source of
+forks. To create a bucket with snapshots enabled from the start, pass
+`--enable-snapshots` to [`tigris buckets create`](/docs/cli/buckets/create).
+
+## Arguments
+
+| Name   | Required | Description        |
+| ------ | -------- | ------------------ |
+| `name` | Yes      | Name of the bucket |
+
+## Examples
+
+```bash
+tigris buckets enable-snapshots my-bucket
+```
+
+Turn snapshots off again with
+[`tigris buckets disable-snapshots`](/docs/cli/buckets/disable-snapshots).

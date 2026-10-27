@@ -24,11 +24,12 @@ If the bucket argument contains the full path (e.g.
 
 ## Flags
 
-| Name           | Required | Default | Description                                                                                         |
-| -------------- | -------- | ------- | --------------------------------------------------------------------------------------------------- |
-| `--days`, `-d` | No       | `1`     | How many days the restored copy stays available before reverting to its archived tier               |
-| `--version-id` | No       | —       | Restore a specific object version (requires bucket versioning). Omit to restore the current version |
-| `--format`     | No       | `table` | Output format. Options: `json`, `table`, `xml`                                                      |
+| Name                              | Required | Default | Description                                                                                                                                                    |
+| --------------------------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--days`, `-d`                    | No       | `1`     | How many days the restored copy stays available before reverting to its archived tier                                                                          |
+| `--version-id`                    | No       | —       | Restore a specific object version (requires bucket versioning). Omit to restore the current version                                                            |
+| `--snapshot-version`, `-snapshot` | No       | —       | Restore the object as of a specific bucket snapshot. Accepts a snapshot version string or any UNIX nanosecond-precision timestamp (e.g. `1765889000501544464`) |
+| `--format`                        | No       | `table` | Output format. Options: `json`, `table`, `xml`                                                                                                                 |
 
 ## Examples
 

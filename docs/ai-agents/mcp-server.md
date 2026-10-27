@@ -13,14 +13,14 @@ keywords:
     model context protocol,
     ai coding agent storage,
   ]
-last_reviewed: 2026-03-09
+last_reviewed: 2026-10-19
 ---
 
 # How Do I Use Tigris with AI Coding Agents via MCP?
 
-Tigris provides MCP (Model Context Protocol) servers that let AI coding agents
-manage buckets and objects directly. Use the remote server for zero-install
-setup, or the local server for offline access.
+Tigris provides an MCP (Model Context Protocol) server that lets AI coding
+agents manage buckets and objects directly. Add the server URL to your AI tool
+and authenticate with OAuth.
 
 ## Frequently Asked Questions
 
@@ -31,16 +31,15 @@ your buckets and objects.
 **Which AI tools support the Tigris MCP server?** Claude Desktop, Claude Code,
 Cursor, VS Code, ChatGPT (web), OpenAI Codex, and Goose CLI.
 
-**Should I use the remote or local MCP server?** Prefer the remote server
-(`https://mcp.storage.dev/mcp`). It requires no installation and works with
-web-based agents like ChatGPT. Use the local server only if you need offline
-access.
+**Do I need to install anything?** No. The Tigris MCP server is hosted at
+`https://mcp.storage.dev/mcp`. It works with desktop tools and with web-based
+agents like ChatGPT.
 
 **What can agents do with the MCP server?** Create, list, and delete buckets.
 Upload, list, download, move, and delete objects. Generate presigned URLs for
 sharing.
 
-## How Do I Set Up the Remote MCP Server?
+## How Do I Set Up the MCP Server?
 
 ### Claude Code
 
@@ -86,20 +85,6 @@ npx @tigrisdata/tigris-mcp-server setup cursor
 codex mcp add --url https://mcp.storage.dev/mcp tigris
 ```
 
-## How Do I Set Up the Local MCP Server?
-
-```bash
-npx -y @tigrisdata/tigris-mcp-server init
-```
-
-This works for Claude Desktop, Cursor, and VS Code.
-
-For OpenAI Codex:
-
-```bash
-codex mcp add tigris --env AWS_PROFILE=tigris -- npx -y @tigrisdata/tigris-mcp-server run
-```
-
 ## What Can I Ask the Agent to Do?
 
 Example prompts:
@@ -117,5 +102,4 @@ Example prompts:
 
 - [Tigris Object Storage for AI Coding Agents](/docs/ai-agents/)
 - [Tigris CLI Quickstart](/docs/ai-agents/tigris-cli-quickstart/)
-- [Local MCP Server Documentation](/docs/mcp/local/)
-- [Remote MCP Server Documentation](/docs/mcp/remote/)
+- [MCP Server Documentation](/docs/mcp/)

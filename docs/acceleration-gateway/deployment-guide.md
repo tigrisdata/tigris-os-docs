@@ -156,11 +156,61 @@ fill even though the cache is under its configured size limit.
 Compaction reclaims space in files that are at least two hours old, so expect no
 reclamation in the first two hours after a restart.
 
+**Disk-budget shedding:**
+
+```promql
+sum by (source) (rate(tag_cache_populate_disk_shed_total[5m]))
+```
+
+Non-zero means the cache is over `populate_shed_disk_ratio` (default 1.05) of
+its disk cap and is skipping new cache writes until eviction catches up. Objects
+are still served, but nothing new is cached. A sustained rate means the node is
+undersized for its write rate. Check the volume's physical free space first (see
+the unreclaimed-disk alert above: on-disk usage can exceed the tracked size); if
+there is headroom, raise `max_disk_usage_bytes`, otherwise grow the volume or
+add nodes. See
+[tag_cache_populate_disk_shed_total](metrics.md#tag_cache_populate_disk_shed_total).
+
 ## Upgrading
 
 TAG's on-disk cache is persistent and compatible across versions. Upgrading TAG
 does not require clearing or rebuilding the cache — the new version picks up
 where the old one left off.
+
+### v1.23.0
+
+v1.23.0 adds disk-budget populate shedding, on by default wherever
+`max_disk_usage_bytes` is set. While a node's tracked usage is at or above
+`populate_shed_disk_ratio` (default 1.05) of the cap, new cache bodies are not
+written and the object is served from upstream instead; metadata is never
+affected. In a cluster the check runs both on the node serving the request and
+on the node that owns the body, so an overloaded node cannot be filled by its
+peers. Watch `tag_cache_populate_disk_shed_total` after upgrading: a node that
+sheds continuously was already evicting faster than it could serve. Confirm the
+volume has physical free space before raising `max_disk_usage_bytes`; if it does
+not, grow the volume or add nodes. Set `TAG_CACHE_POPULATE_SHED_DISK_RATIO` to a
+negative value to disable shedding.
+
+### v1.23.1
+
+v1.23.1 makes rolling restarts converge quickly. A node that comes back on a new
+address is accepted by its peers within seconds; before, peers kept dialing the
+old address until the kernel connect timeout and refused the new one as a
+conflict, which could leave the cluster split for minutes after a roll, with the
+keys owned by a node marked unhealthy answering errors. The HTTP drain on
+shutdown is now 20 seconds instead of 30, leaving 10 seconds of the default
+30-second termination grace for the node to leave the cluster cleanly. During a
+roll, `memberlist_client_cluster_members_count` on each node should return to
+the node count and `ring_members{name="ocache",state="Unhealthy"}` to zero
+shortly after the last node is ready. No configuration change is needed.
+
+### v1.24.0
+
+v1.24.0 adds `cache.populate_shed_reject` (`TAG_CACHE_POPULATE_SHED_REJECT`,
+default `false`). No configuration change is needed to upgrade. Set it where the
+upstream tier is slow to read back: a shed small PUT then answers `503 SlowDown`
+with the body unread instead of being placed upstream with a marker, so the
+object is a miss rather than a slow upstream-tier read.
 
 ## Troubleshooting
 
@@ -267,6 +317,13 @@ per day.
 
 TAG versions before v1.17.7 could not reclaim space in files written before the
 process last restarted. Upgrade first if you see this on an older version.
+
+If `tag_cache_populate_disk_shed_total` is rising at the same time, the cache is
+over `populate_shed_disk_ratio` of its cap and has stopped caching new objects
+until eviction catches up (v1.23.0 and later). That protects the node, but it
+means the cache is undersized for the write rate it receives. Raising the cap
+only helps if the volume has physical free space to back it; otherwise grow the
+volume or add nodes.
 
 ### Debug mode
 

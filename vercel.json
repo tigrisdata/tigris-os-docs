@@ -127,6 +127,21 @@
       "permanent": true
     },
     {
+      "source": "/docs/mcp/local/",
+      "destination": "/docs/mcp/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/mcp/remote/",
+      "destination": "/docs/mcp/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/quickstarts/mcp/",
+      "destination": "/docs/mcp/",
+      "permanent": true
+    },
+    {
       "source": "/docs/",
       "has": [
         {

@@ -13,13 +13,15 @@ t3 o l <bucket> [flags]
 
 ## Flags
 
-| Name                  | Required | Default | Description                                                                 |
-| --------------------- | -------- | ------- | --------------------------------------------------------------------------- |
-| `--prefix`, `-p`      | No       | —       | Filter objects by key prefix (e.g. "images/" to list only images)           |
-| `--format`, `-f`      | No       | `table` | Output format. Options: `json`, `table`, `xml`                              |
-| `--limit`             | No       | —       | Maximum number of items to return per page                                  |
-| `--page-token`, `-pt` | No       | —       | Pagination token from a previous request to fetch the next page             |
-| `--deleted`           | No       | —       | List [soft-deleted](/docs/buckets/soft-delete) objects instead of live ones |
+| Name                              | Required | Default | Description                                                                                                                                                                        |
+| --------------------------------- | -------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--prefix`, `-p`                  | No       | —       | Filter objects by key prefix (e.g. "images/" to list only images)                                                                                                                  |
+| `--format`, `-f`                  | No       | `table` | Output format. Options: `json`, `table`, `xml`                                                                                                                                     |
+| `--limit`                         | No       | —       | Maximum number of items to return per page                                                                                                                                         |
+| `--page-token`, `-pt`             | No       | —       | Pagination token from a previous request to fetch the next page                                                                                                                    |
+| `--deleted`                       | No       | —       | List [soft-deleted](/docs/buckets/soft-delete) objects instead of live ones                                                                                                        |
+| `--snapshot-version`, `-snapshot` | No       | —       | Read from a specific bucket snapshot. Accepts a snapshot version string or any UNIX nanosecond-precision timestamp (e.g. `1765889000501544464`)                                    |
+| `--source`                        | No       | —       | List objects from a specific storage source on buckets with shadow migration enabled. Options: `tigris` (objects already in Tigris), `shadow` (objects still on the shadow source) |
 
 ## Examples
 
@@ -27,6 +29,12 @@ t3 o l <bucket> [flags]
 tigris objects list my-bucket
 tigris objects list my-bucket --prefix images/
 tigris objects list my-bucket --format json
+
+# As of a snapshot
+tigris objects list my-bucket --snapshot-version 1765889000501544464
+
+# On a shadow-migrated bucket, only objects still on the source
+tigris objects list my-bucket --source shadow
 ```
 
 ## Listing soft-deleted objects

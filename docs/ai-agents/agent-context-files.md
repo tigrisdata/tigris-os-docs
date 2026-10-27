@@ -12,7 +12,7 @@ keywords:
     coding agent storage,
     agent context file,
   ]
-last_reviewed: 2026-10-07
+last_reviewed: 2026-10-19
 ---
 
 # Agent Context Files
@@ -128,7 +128,7 @@ Reinstalling or updating the CLI replaces the file with the current version.
 For agents that support the
 [Model Context Protocol](https://modelcontextprotocol.io/), the Tigris MCP
 server provides structured tool access beyond what context files offer. See the
-[MCP Server documentation](/docs/mcp/remote/) for setup instructions.
+[MCP Server documentation](/docs/mcp/) for setup instructions.
 
 ## How Agents Discover Tigris
 

@@ -1,0 +1,131 @@
+# Deleting Objects
+
+The Tigris Dashboard can delete one object, a selection of objects and folders,
+or a whole folder. A folder delete applies to every object under the folder, at
+every depth. The delete runs in your browser tab, and a card at the top right of
+the page shows the progress.
+
+For deletes from a script, use the CLI or the S3 API. See
+[Deleting objects programmatically](#deleting-objects-programmatically).
+
+## Requirements
+
+The Dashboard shows the delete actions only when all of these conditions are
+true:
+
+- You are in the live view of the bucket. A snapshot view and the **Deleted
+  files** tab have no delete actions.
+- Your access key has the `s3:DeleteObject` permission on the bucket. See
+  [Supported actions](/docs/iam/policies/supported-actions/).
+- **Deletion Protection** is off for the bucket. See
+  [Bucket Settings](/docs/buckets/settings/).
+
+The Dashboard also locks a folder while a delete runs on it, on a folder inside
+it, or on a folder above it. It locks the folder while uploads into the folder
+are in progress. The lock ends when the delete or the uploads complete.
+
+## Deleting a folder
+
+1. Open the [Tigris Dashboard](https://console.storage.dev/) and go to
+   **Buckets**. Open the bucket.
+2. Open the action menu next to the folder and click **Delete folder**. To
+   delete the folder that you are in, open the menu above the list and click
+   **Delete folder**. If a search is active, clear it first.
+3. Wait for the count. The dialog counts the objects in the folder and shows
+   their total size. For a folder with more than 1,000 objects, the dialog shows
+   **1,000+ objects** and the size of the first 1,000.
+4. If soft delete is off for the bucket, type the folder name in the field. To
+   copy the name, click it.
+5. Click **Delete folder**.
+
+![The Delete folder dialog with the object count and the typed folder name](/img/delete-folder-dialog.png)
+
+The dialog closes, and a card at the top right of the page shows the progress.
+See [Following a delete](#following-a-delete).
+
+## Deleting a selection
+
+1. Select the checkbox next to each file and folder that you want to delete.
+2. Click **Delete selected** above the list.
+3. Read the summary in the dialog. The dialog shows the number of files and
+   folders and counts the objects in the selected folders. To see the full list,
+   click **View selected items**.
+4. If soft delete is off for the bucket, type the bucket name in the field. To
+   copy the name, click it.
+5. Click **Delete selection**.
+
+![The Delete selection dialog for two folders and three files](/img/delete-selection-dialog.png)
+
+The Dashboard deletes the selected files and the content of the selected folders
+as one job. While a folder is selected, **Download** is not available.
+
+## Following a delete
+
+The card at the top right shows **Deleted N of about M** and a progress bar. The
+total is approximate because the folder can change while the delete runs. For a
+folder with more than 1,000 objects, the card shows only the number of deleted
+objects.
+
+![The progress card for a folder delete](/img/delete-folder-progress.png)
+
+Keep the browser tab open until the card shows the result. The delete runs in
+your browser. If you close the tab, the delete stops. The objects already
+deleted stay deleted, and the other objects stay in the bucket. The browser asks
+for confirmation before it closes a tab with a running delete.
+
+You can continue to work in other folders and buckets while the delete runs. In
+the folder with the running delete, the rows are disabled, and uploads into the
+folder are blocked. If you are in the folder when the delete completes without
+errors, the Dashboard opens the parent folder.
+
+Objects that other clients upload into the folder while the delete runs can
+remain afterwards. Run the delete again to remove them.
+
+When the delete completes, the card shows the result, for example **312 objects
+successfully deleted from "qa-bucket"**. The card closes after a few seconds.
+
+![The result card for a completed folder delete](/img/delete-folder-success.png)
+
+### Stopping a delete
+
+To stop a delete, click **Cancel** on the card. The card shows **Stopping…**
+while the batches already sent complete. Up to 500 objects can still be deleted
+after you click **Cancel**. Then the card shows the number of deleted objects.
+The other objects stay in the bucket.
+
+You can stop a folder delete, or a selection delete that contains a folder. A
+delete of files only runs to completion.
+
+## Result on each bucket type
+
+| Bucket              | Result of a folder or selection delete                                                                                                                                                                                                                                           |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Regular             | The objects are permanently deleted. You must type the folder name or the bucket name to confirm.                                                                                                                                                                                |
+| Soft delete enabled | The objects move to the **Deleted files** tab, and you can restore them during the retention window. The typed confirmation is not required. See [Soft Delete](/docs/buckets/soft-delete/).                                                                                      |
+| Snapshot enabled    | The objects are deleted from the live view. Earlier versions stay in your snapshots. A folder delete never deletes a specific object version. See [Soft delete on snapshot buckets](/docs/buckets/soft-delete/#soft-delete-on-snapshot-buckets) for a bucket with both settings. |
+
+## Very large folders
+
+A folder delete runs in your browser and lists the folder 1,000 objects at a
+time. For a folder with hundreds of thousands of objects, use one of these
+options instead:
+
+- Add an expiration rule with the folder as the prefix. Tigris then deletes the
+  objects on the server. See
+  [Object Expiration](/docs/buckets/objects-expiration/).
+- Run `tigris rm` with the `-r` flag. See
+  [Deleting objects programmatically](#deleting-objects-programmatically).
+
+## Deleting objects programmatically
+
+To delete a folder with the CLI:
+
+```bash
+tigris rm t3://my-bucket/folder/ -rf
+```
+
+See [tigris rm](/docs/cli/rm/) for the flags.
+
+With the S3 API, `DeleteObjects` deletes up to 1,000 keys per request. List the
+keys with `ListObjectsV2` and send them in batches. See the
+[S3 API reference](/docs/api/s3/).

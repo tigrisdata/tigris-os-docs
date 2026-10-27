@@ -286,6 +286,14 @@ and that after that window passes, the file is permanently removed.
 
 ![Soft delete confirmation dialog for an object](/img/soft-delete-object-delete-modal.png)
 
+Folders and selections work the same way. When you delete a folder, or a
+selection that contains folders, from the **All files** view, every object under
+those folders moves to the **Deleted files** tab. The dialog shows the object
+count and the total size, and the delete runs as a job that you can follow and
+stop. See [Deleting Objects](/docs/objects/delete-objects/).
+
+![Soft delete confirmation dialog for a folder](/img/soft-delete-folder-delete-modal.png)
+
 ## Restoring a deleted object
 
 Every delete on a key produces its own soft-deleted version, stamped with the
@@ -328,7 +336,9 @@ version will be permanently deleted and cannot be restored.
 Unlike the regular delete from the **All files** view, this action bypasses the
 retention window entirely — the selected version is purged immediately and is
 not recoverable. To fully remove an object that has multiple soft-deleted
-versions, repeat this for each version you want gone.
+versions, repeat this for each version you want gone. There is no folder-level
+purge in the Dashboard. To purge many versions, use the CLI or the SDK as
+described in [Permanently deleting a version](#permanently-deleting-a-version).
 
 ## Working with soft delete programmatically
 

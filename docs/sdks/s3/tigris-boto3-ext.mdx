@@ -119,9 +119,13 @@ retention window outside 7–90 days or a non-`https://` webhook URL raise
 
 ## Thread safety
 
+:::warning
+
 A context manager, a decorator or a helper registers its header on the client
 for the duration of the call or block. A request of the same operation issued
 from another thread on the same client in that window carries the header too.
 Use one client per thread when threads share Tigris features; the package
 refuses to run two conflicting header injections on the same client at the same
 time rather than mix them up.
+
+:::

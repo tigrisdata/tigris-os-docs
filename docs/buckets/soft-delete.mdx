@@ -150,6 +150,30 @@ await updateBucket("my-bucket", {
 SDK, so an out-of-range value fails on the request rather than at the call site.
 
 </TabItem>
+<TabItem value="python" label="Python">
+
+With [`tigris-boto3-ext`](/docs/sdks/s3/tigris-boto3-ext),
+`create_soft_delete_bucket` sets the header on `CreateBucket`:
+
+```python
+import boto3
+from tigris_boto3_ext import create_soft_delete_bucket, set_bucket_soft_delete
+
+s3 = boto3.client("s3", endpoint_url="https://t3.storage.dev")
+
+create_soft_delete_bucket(s3, "my-bucket", retention_days=30)
+```
+
+For a bucket that already exists, `set_bucket_soft_delete` turns soft delete on
+or off. `retention_days` is checked as 7 to 90 before the request is sent, and
+the default 7-day window applies when you leave it out:
+
+```python
+set_bucket_soft_delete(s3, "my-bucket", True, retention_days=30)
+set_bucket_soft_delete(s3, "my-bucket", False)
+```
+
+</TabItem>
 <TabItem value="cli" label="CLI">
 
 ```bash
@@ -251,6 +275,18 @@ if err != nil {
 import { restoreBucket } from "@tigrisdata/storage";
 
 await restoreBucket("my-bucket");
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from tigris_boto3_ext import list_deleted_buckets, restore_bucket
+
+for bucket in list_deleted_buckets(s3)["buckets"]:
+    print(bucket["name"])
+
+restore_bucket(s3, "my-bucket")
 ```
 
 </TabItem>
@@ -432,6 +468,34 @@ if (deleted.hasMore) {
 ```
 
 </TabItem>
+<TabItem value="python" label="Python">
+
+`list_deleted_object_versions` is `list_object_versions` with the soft-delete
+header, so it takes the same arguments and returns the same response:
+
+```python
+from tigris_boto3_ext import list_deleted_object_versions
+
+deleted = list_deleted_object_versions(s3, "my-bucket", Prefix="contracts/")
+
+for version in deleted.get("Versions", []):
+    # LastModified is the time of the delete. VersionId is what a restore takes.
+    print(version["Key"], version["VersionId"], version["Size"], version["LastModified"])
+
+# Carry the markers forward while IsTruncated is true.
+if deleted.get("IsTruncated"):
+    list_deleted_object_versions(
+        s3,
+        "my-bucket",
+        Prefix="contracts/",
+        KeyMarker=deleted["NextKeyMarker"],
+        VersionIdMarker=deleted["NextVersionIdMarker"],
+    )
+```
+
+`list_deleted_objects` does the same for `list_objects_v2`, without version IDs.
+
+</TabItem>
 <TabItem value="cli" label="CLI">
 
 `--deleted` switches the listing over to the deleted objects. Use
@@ -539,6 +603,19 @@ if (error) {
   throw error;
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from tigris_boto3_ext import restore_deleted_object
+
+# Without a version ID, the most recent deleted version of the key is restored.
+restore_deleted_object(s3, "my-bucket", "contracts/2026/q1.pdf", "1787441627070249004")
+```
+
+`purge_deleted_object(s3, bucket, key, version_id)` removes a deleted version
+for good before its retention window ends.
 
 </TabItem>
 <TabItem value="cli" label="CLI">

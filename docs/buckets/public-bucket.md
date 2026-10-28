@@ -167,6 +167,14 @@ To enable anonymous directory listing on a bucket:
   tigris buckets set foo-public-bucket --disable-directory-listing=false
   ```
 
+- **Python:**
+
+  ```python
+  from tigris_boto3_ext import update_bucket
+
+  update_bucket(s3, "foo-public-bucket", public_list_objects=True)
+  ```
+
 - **Tigris Console:** Bucket Settings → **Access and Sharing** → toggle **off**
   the "Disable Directory Listing" switch. The toggle is intentionally inverted —
   turning it **off** is what **enables** public listing.

@@ -19,8 +19,10 @@ keywords:
     tigris-boto3-ext,
     tigris snapshots python,
     tigris forks python,
+    tigris soft delete python,
+    boto3 bucket settings,
   ]
-last_reviewed: 2026-03-09
+last_reviewed: 2026-10-26
 ---
 
 # How Do I Use Python boto3 with S3-Compatible Storage?
@@ -39,9 +41,11 @@ No other code changes required.
 standard S3 SDK for Python and works with Tigris by changing the endpoint.
 
 **Do I need to install a Tigris-specific Python package?** For basic S3
-operations, standard `boto3` is all you need. For Tigris-specific features like
-snapshots and forks, install `tigris-boto3-ext`. It extends your existing boto3
-client with helper functions, context managers, and decorators.
+operations, standard `boto3` is all you need. For Tigris-specific features —
+snapshots and forks, soft delete, bucket settings, object notifications, data
+migration, archive restore and the Tigris presign endpoint — install
+`tigris-boto3-ext`. It extends your existing boto3 client with helper functions,
+context managers, and decorators.
 
 **What addressing style should I use?** Virtual hosted-style addressing. Set
 `s3.addressing_style` to `virtual` in the boto3 config.
@@ -250,9 +254,9 @@ List snapshots:
 ```python
 from tigris_boto3_ext import list_snapshots
 
-snapshots = list_snapshots(client, "ml-datasets")
-for snap in snapshots:
-    print(f"Version: {snap['version']}, Created: {snap['creationDate']}")
+# Each entry's Name is "<version>; name=<snapshot name>" for a named snapshot
+for snap in list_snapshots(client, "ml-datasets")["Buckets"]:
+    print(snap["Name"], snap["CreationDate"])
 ```
 
 You can also use context managers for cleaner code:
@@ -274,6 +278,50 @@ with TigrisFork(client, "ml-datasets", "experiment-c"):
     client.put_object(Bucket="experiment-c", Key="results.json", Body=b"{}")
 ```
 
+## How Do I Use Other Tigris Features from Python?
+
+The same package covers the rest of the Tigris-only features, each as a call on
+your boto3 client:
+
+```python
+from tigris_boto3_ext import (
+    get_bucket_metadata,
+    get_restore_info,
+    list_deleted_object_versions,
+    presign,
+    restore_deleted_object,
+    set_bucket_migration,
+    set_bucket_notifications,
+    set_bucket_soft_delete,
+    update_bucket,
+)
+
+# Soft delete: keep deleted objects recoverable for 30 days, list and restore them
+set_bucket_soft_delete(client, "my-bucket", True, retention_days=30)
+deleted = list_deleted_object_versions(client, "my-bucket", Prefix="reports/")
+restore_deleted_object(client, "my-bucket", "reports/q1.pdf")
+
+# Bucket settings after creation
+update_bucket(client, "my-bucket", access="public", default_storage_class="STANDARD_IA", regions="iad")
+get_bucket_metadata(client, "my-bucket")["storage_class"]
+
+# Object notifications to a webhook
+set_bucket_notifications(client, "my-bucket", "https://api.example.com/hooks/tigris", token="secret")
+
+# Migrate from an external S3 bucket, lazily
+set_bucket_migration(client, "my-bucket", "legacy", endpoint="https://s3.amazonaws.com",
+                     region="us-east-1", access_key="...", secret_key="...")
+
+# Archive tier: restore and check
+get_restore_info(client, "my-bucket", "cold.parquet")
+
+# Presigned URL from the Tigris presign endpoint, served from the public domain
+presign(client, "my-bucket", "report.pdf", expires_in=600)["url"]
+```
+
+See [Tigris extensions for boto3](/docs/sdks/s3/tigris-boto3-ext/) for the full
+list.
+
 ## Learn More
 
 - [Tigris Object Storage for AI Coding Agents](/docs/ai-agents/)
@@ -282,4 +330,5 @@ with TigrisFork(client, "ml-datasets", "experiment-c"):
 - [Object Storage for AI Applications](/docs/ai-agents/object-storage-for-ai-applications/)
 - [Bucket Forks and Snapshots](/docs/ai-agents/bucket-forks-and-snapshots/)
 - [AWS Python SDK Documentation](/docs/sdks/s3/aws-python-sdk/)
+- [Tigris extensions for boto3](/docs/sdks/s3/tigris-boto3-ext/)
 - [tigris-boto3-ext on GitHub](https://github.com/tigrisdata/tigris-boto3-ext)

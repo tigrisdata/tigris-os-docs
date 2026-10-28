@@ -875,7 +875,15 @@ const sidebars = {
             "sdks/s3/aws-js-sdk",
             "sdks/s3/aws-go-sdk",
             "sdks/s3/aws-java-sdk",
-            "sdks/s3/aws-python-sdk",
+            {
+              type: "category",
+              label: "AWS Python SDK",
+              link: {
+                type: "doc",
+                id: "sdks/s3/aws-python-sdk",
+              },
+              items: ["sdks/s3/tigris-boto3-ext"],
+            },
             "sdks/s3/aws-php-sdk",
             "sdks/s3/aws-elixir-sdk",
             "sdks/s3/aws-ruby-sdk",

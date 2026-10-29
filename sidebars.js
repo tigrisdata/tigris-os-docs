@@ -594,6 +594,7 @@ const sidebars = {
             "objects/access-objects-via-cookies",
             "objects/acl",
             "objects/object-rename",
+            "objects/delete-objects",
             "objects/bundle",
           ],
         },

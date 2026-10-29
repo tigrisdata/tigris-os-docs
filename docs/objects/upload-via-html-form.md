@@ -76,15 +76,20 @@ A POST policy does not sign headers the way
 covers the policy document. Tigris then checks each condition in the policy
 against the submitted form fields.
 
-`x-amz-meta-*` fields are checked strictly. Every `x-amz-meta-*` field the form
-sends must appear in a condition. `x-amz-meta-uuid` is accepted above because
-the policy lists it. An `x-amz-meta-*` field the policy does not list is
-rejected.
+Every field the form sends must appear in a condition, as on S3. The only
+exceptions are `file`, `policy`, `x-amz-signature`, a submit button named
+`submit`, and fields whose name starts with `x-ignore-`. `x-amz-meta-uuid` is
+accepted above because the policy lists it. A field the policy does not list,
+such as a `Content-Type` or `acl` the form adds on its own, is rejected with
+`403 AccessDenied` and the message "Invalid according to Policy: Extra input
+fields: content-type".
 
-Other `x-amz-*` fields, such as `x-amz-storage-class`, are checked only if the
-policy has a condition for them. If there is no condition, the field is accepted
-with whatever value the form sends. Add a condition for any such field you want
-to control.
+Today Tigris applies this strictly to `x-amz-meta-*` fields and accepts other
+unlisted fields with whatever value the form sends. From noon Pacific time
+(19:00 UTC) on Monday, 12 October 2026, it applies to every field on buckets
+created after that time. To allow a field without pinning its value, use a
+`starts-with` condition with an empty prefix:
+`["starts-with", "$Content-Type", ""]`.
 
 ### Truncate space characters
 

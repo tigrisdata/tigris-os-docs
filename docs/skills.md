@@ -37,7 +37,7 @@ npx skills add tigrisdata/skills
 Or install a single skill:
 
 ```bash
-npx skills add tigrisdata/skills --skill installing-tigris-storage
+npx skills add tigrisdata/skills --skill file-storage
 ```
 
 Browse the full list at
@@ -45,51 +45,62 @@ Browse the full list at
 
 ## Available Skills
 
+Each skill links to its pattern page. The pattern pages are generated from the
+[tigrisdata/skills](https://github.com/tigrisdata/skills) repository. For the
+full list, see [Tigris Agent Skill Patterns](/docs/ai-agents/skills/).
+
 ### Storage Setup
 
-| Skill                         | Description                                                  |
-| ----------------------------- | ------------------------------------------------------------ |
-| **installing-tigris-storage** | SDK setup, endpoint configuration, and credential management |
-| **tigris-sdk-guide**          | Detailed SDK implementation patterns and usage               |
+| Skill                                                              | Description                                                                |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| [**file-storage**](/docs/ai-agents/skills/file-storage/)           | CLI setup, access keys, and the `@tigrisdata/storage` SDK for file uploads |
+| [**tigris-sdk-guide**](/docs/ai-agents/skills/tigris-sdk-guide/)   | Which SDK to use per language, and when to use an AWS SDK                  |
+| [**tigris-python-sdk**](/docs/ai-agents/skills/tigris-python-sdk/) | Python with boto3 and `tigris-boto3-ext`, including Django uploads         |
 
 ### Object Operations
 
-| Skill                         | Description                                                         |
-| ----------------------------- | ------------------------------------------------------------------- |
-| **tigris-object-operations**  | Upload, download, delete, list objects, and generate presigned URLs |
-| **file-storage**              | File storage patterns and operations                                |
-| **tigris-image-optimization** | Image processing and optimization with Tigris                       |
-| **tigris-static-assets**      | Serving and managing static assets                                  |
+| Skill                                                                              | Description                                                         |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| [**tigris-object-operations**](/docs/ai-agents/skills/tigris-object-operations/)   | Upload, download, delete, list objects, and generate presigned URLs |
+| [**tigris-image-optimization**](/docs/ai-agents/skills/tigris-image-optimization/) | Image processing and optimization with Tigris                       |
+| [**tigris-static-assets**](/docs/ai-agents/skills/tigris-static-assets/)           | Serving and managing static assets                                  |
 
 ### Bucket Management
 
-| Skill                              | Description                                         |
-| ---------------------------------- | --------------------------------------------------- |
-| **tigris-bucket-management**       | Create, list, inspect, and remove buckets           |
-| **tigris-lifecycle-management**    | Object lifecycle policies and expiration rules      |
-| **tigris-security-access-control** | Bucket permissions and access control configuration |
+| Skill                                                                                        | Description                                         |
+| -------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| [**tigris-bucket-management**](/docs/ai-agents/skills/tigris-bucket-management/)             | Create, list, inspect, and remove buckets           |
+| [**tigris-lifecycle-management**](/docs/ai-agents/skills/tigris-lifecycle-management/)       | Object lifecycle policies and expiration rules      |
+| [**tigris-security-access-control**](/docs/ai-agents/skills/tigris-security-access-control/) | Bucket permissions and access control configuration |
 
 ### Snapshots, Forks & Migration
 
-| Skill                         | Description                                            |
-| ----------------------------- | ------------------------------------------------------ |
-| **tigris-snapshots-forking**  | Point-in-time bucket snapshots and copy-on-write forks |
-| **tigris-snapshots-recovery** | Restore data from snapshots                            |
-| **tigris-s3-migration**       | Migrate from AWS S3 or other S3-compatible providers   |
-| **tigris-backup-export**      | Backup and export procedures                           |
+| Skill                                                                              | Description                                            |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| [**tigris-snapshots-forking**](/docs/ai-agents/skills/tigris-snapshots-forking/)   | Point-in-time bucket snapshots and copy-on-write forks |
+| [**tigris-snapshots-recovery**](/docs/ai-agents/skills/tigris-snapshots-recovery/) | Restore data from snapshots                            |
+| [**tigris-s3-migration**](/docs/ai-agents/skills/tigris-s3-migration/)             | Migrate from AWS S3 or other S3-compatible providers   |
+| [**tigris-backup-export**](/docs/ai-agents/skills/tigris-backup-export/)           | Backup and export procedures                           |
 
 ### Optimization
 
-| Skill                       | Description                                    |
-| --------------------------- | ---------------------------------------------- |
-| **tigris-egress-optimizer** | Reduce data transfer costs and optimize egress |
+| Skill                                                                          | Description                                    |
+| ------------------------------------------------------------------------------ | ---------------------------------------------- |
+| [**tigris-egress-optimizer**](/docs/ai-agents/skills/tigris-egress-optimizer/) | Reduce data transfer costs and optimize egress |
+
+### Agent Workflows
+
+| Skill                                                            | Description                                                        |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------ |
+| [**tigris-agent-kit**](/docs/ai-agents/skills/tigris-agent-kit/) | Forks, workspaces, checkpoints, and coordination for agent storage |
+| [**openclaw-backup**](/docs/ai-agents/skills/openclaw-backup/)   | Back up and restore OpenClaw assistant state to a bucket           |
 
 ### Development Practices
 
-| Skill                     | Description                          |
-| ------------------------- | ------------------------------------ |
-| **conventional-commits**  | Consistent commit message formatting |
-| **go-table-driven-tests** | Idiomatic Go test patterns           |
+| Skill                                                                      | Description                          |
+| -------------------------------------------------------------------------- | ------------------------------------ |
+| [**conventional-commits**](/docs/ai-agents/skills/conventional-commits/)   | Consistent commit message formatting |
+| [**go-table-driven-tests**](/docs/ai-agents/skills/go-table-driven-tests/) | Idiomatic Go test patterns           |
 
 ## How Skills Work
 
@@ -126,3 +137,5 @@ context files tell agents your specific setup.
   file for your agents
 - [skills.sh/tigrisdata/skills](https://skills.sh/tigrisdata/skills) — browse
   and install individual skills
+- [Tigris Agent Skill Patterns](/docs/ai-agents/skills/) — read each skill as a
+  pattern page

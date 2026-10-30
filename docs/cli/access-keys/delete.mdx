@@ -1,18 +1,34 @@
 # tigris access-keys delete
 
-Permanently delete an access key by its ID. This revokes all access immediately.
+Permanently delete one or more access keys by ID. This revokes all access
+immediately.
 
 **Alias:** `d`
 
 ## Usage
 
 ```bash
-tigris access-keys delete <id>
-t3 keys d <id>
+tigris access-keys delete <id> [flags]
+t3 keys d <id> [flags]
 ```
+
+## Flags
+
+| Name          | Required | Default | Description                                 |
+| ------------- | -------- | ------- | ------------------------------------------- |
+| `--yes`, `-y` | No       | —       | Skip confirmation prompts                   |
+| `--force`     | No       | —       | Skip confirmation prompts (alias for --yes) |
+
+To delete several keys, pass a comma-separated list of IDs. One confirmation
+covers the whole list. Each key is deleted in turn; if one fails, the rest are
+still deleted, and the command exits with a non-zero status.
 
 ## Examples
 
 ```bash
+# Delete a single access key
 tigris access-keys delete tid_AaBbCcDdEeFf
+
+# Delete several access keys without the confirmation prompt
+tigris access-keys delete tid_AaBb,tid_CcDd --yes
 ```

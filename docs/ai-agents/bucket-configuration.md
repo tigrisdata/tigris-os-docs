@@ -13,7 +13,7 @@ keywords:
     public bucket,
     object expiration,
   ]
-last_reviewed: 2026-10-07
+last_reviewed: 2026-10-30
 ---
 
 # How Do I Configure Tigris Buckets?
@@ -61,9 +61,9 @@ await createBucket("my-bucket");
 
 ```bash
 tigris buckets set-cors my-bucket \
-  --origins https://example.com \
-  --methods GET,PUT,POST \
-  --headers Content-Type,Authorization \
+  --origins "https://example.com" \
+  --methods "GET,PUT,POST" \
+  --headers "Content-Type,Authorization" \
   --max-age 3600
 ```
 
@@ -89,7 +89,7 @@ Automatically delete objects after a certain number of days:
 tigris buckets lifecycle create my-bucket --expire-days 30
 
 # Expire objects on a specific date
-tigris buckets lifecycle create my-bucket --expire-date 2027-12-31
+tigris buckets lifecycle create my-bucket --expire-date 2026-12-31
 
 # Expire objects under a prefix after 7 days
 tigris buckets lifecycle create my-bucket --prefix tmp/ --expire-days 7
@@ -105,9 +105,8 @@ tigris buckets lifecycle create my-bucket \
   --storage-class STANDARD_IA \
   --days 30
 
-# Move objects under logs/ to Glacier after 90 days
+# Move to Glacier after 90 days
 tigris buckets lifecycle create my-bucket \
-  --prefix logs/ \
   --storage-class GLACIER \
   --days 90
 

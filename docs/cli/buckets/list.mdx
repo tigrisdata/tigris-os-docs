@@ -13,13 +13,36 @@ t3 b l [flags]
 
 ## Flags
 
-| Name             | Required | Default | Description                                    |
-| ---------------- | -------- | ------- | ---------------------------------------------- |
-| `--format`, `-f` | No       | `table` | Output format. Options: `json`, `table`, `xml` |
+| Name                  | Required | Default | Description                                                                                        |
+| --------------------- | -------- | ------- | -------------------------------------------------------------------------------------------------- |
+| `--format`, `-f`      | No       | `table` | Output format. Options: `json`, `table`, `xml`                                                     |
+| `--deleted`           | No       | —       | Only list [soft-deleted](/docs/buckets/soft-delete) buckets, which can still be restored or purged |
+| `--forks-of`          | No       | —       | Only list buckets that are forks of the named source bucket                                        |
+| `--forks-only`        | No       | —       | Only list buckets that are forks of another bucket                                                 |
+| `--owner`             | No       | —       | Only list buckets owned by this user, by username (an email address)                               |
+| `--limit`             | No       | —       | Maximum number of items to return per page                                                         |
+| `--page-token`, `-pt` | No       | —       | Pagination token from a previous request to fetch the next page                                    |
+
+`--deleted`, `--forks-only`, and `--owner` are ignored when `--forks-of` is
+given.
 
 ## Examples
 
 ```bash
 tigris buckets list
 tigris buckets list --format json
+
+# Buckets that can still be restored
+tigris buckets list --deleted
+
+# The forks of a bucket, or every fork in the organization
+tigris buckets list --forks-of my-bucket
+tigris buckets list --forks-only
+
+# Buckets owned by one user
+tigris buckets list --owner me@example.com
+
+# Page through a large organization
+tigris buckets list --limit 50
+tigris buckets list --limit 50 --page-token <token-from-previous-page>
 ```

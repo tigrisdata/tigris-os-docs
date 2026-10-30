@@ -1,0 +1,59 @@
+# tigris buckets share
+
+Share a bucket with your whole organization, specific teams, or specific users.
+Existing shares are kept unless `--override` or `--reset` is used.
+
+## Usage
+
+```bash
+tigris buckets share <name> [flags]
+t3 b share <name> [flags]
+```
+
+Each share pairs a target — the organization, a team, or a user — with a role.
+Pass `--organization` with exactly one `--role` to share with everyone, or
+`--team` / `--user` with one or more IDs. When several targets are given, a
+single `--role` applies to all of them; otherwise list one role per target, in
+the same order.
+
+## Arguments
+
+| Name   | Required | Description                 |
+| ------ | -------- | --------------------------- |
+| `name` | Yes      | Name of the bucket to share |
+
+## Flags
+
+| Name                     | Required | Default | Description                                                                                                                                               |
+| ------------------------ | -------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--organization`, `-org` | No       | —       | Give access to everyone in your organization. Takes exactly one `--role` and cannot be combined with `--team` or `--user`                                 |
+| `--team`, `-t`           | No       | —       | Team ID to share with (comma-separated for several). Each team is paired positionally with a `--role` value                                               |
+| `--user`, `-u`           | No       | —       | User ID to share with (comma-separated for several). Each user is paired positionally with a `--role` value                                               |
+| `--role`, `-r`           | No       | —       | Role to grant (comma-separated for several). A single role applies to every target; otherwise each role pairs with the corresponding `--team` or `--user` |
+| `--override`             | No       | —       | Replace all existing shares instead of merging with them                                                                                                  |
+| `--reset`                | No       | —       | Remove all shares from the bucket                                                                                                                         |
+
+## Examples
+
+```bash
+# Read-only access for everyone in the organization
+tigris buckets share my-bucket --organization --role ReadOnly
+
+# Share with a team
+tigris buckets share my-bucket --team tmid_MQQUhV --role Editor
+
+# Share with a user
+tigris buckets share my-bucket --user uid_MQQUhV --role ReadOnly
+
+# Different roles for different teams, paired in order
+tigris buckets share my-bucket --team tmid_A,tmid_B --role Editor,ReadOnly
+
+# Replace every existing share with this one
+tigris buckets share my-bucket --team tmid_MQQUhV --role Editor --override
+
+# Remove all shares
+tigris buckets share my-bucket --reset
+```
+
+Team and user IDs come from [`tigris iam teams list`](/docs/cli/iam/teams/list)
+and [`tigris iam users list`](/docs/cli/iam/users/list).

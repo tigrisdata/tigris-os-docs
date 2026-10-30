@@ -7,12 +7,22 @@ List all access keys in the current organization.
 ## Usage
 
 ```bash
-tigris access-keys list
-t3 keys l
+tigris access-keys list [flags]
+t3 keys l [flags]
 ```
+
+## Flags
+
+| Name                  | Required | Default | Description                                                     |
+| --------------------- | -------- | ------- | --------------------------------------------------------------- |
+| `--format`, `-f`      | No       | `table` | Output format. Options: `json`, `table`, `xml`                  |
+| `--limit`             | No       | —       | Maximum number of items to return per page                      |
+| `--page-token`, `-pt` | No       | —       | Pagination token from a previous request to fetch the next page |
 
 ## Examples
 
 ```bash
 tigris access-keys list
+tigris access-keys list --format json
+tigris access-keys list --limit 50
 ```

@@ -170,6 +170,49 @@ tigris buckets migrate my-bucket/images/
 The command runs in the foreground and reports progress as it goes.
 
 </TabItem>
+<TabItem value="python" label="Python">
+
+**1. Configure the shadow bucket** with `set_bucket_migration` from
+[`tigris-boto3-ext`](/docs/sdks/s3/tigris-boto3-ext). Tigris tries the source
+with the credentials before it stores anything, so a wrong key fails here rather
+than at the first read:
+
+```python
+import os
+
+import boto3
+from tigris_boto3_ext import set_bucket_migration
+
+s3 = boto3.client("s3", endpoint_url="https://t3.storage.dev")
+
+set_bucket_migration(
+    s3,
+    "my-bucket",
+    "source-bucket",
+    endpoint="https://<source-endpoint>",
+    region="<source-region>",
+    access_key=os.environ["SOURCE_ACCESS_KEY"],
+    secret_key=os.environ["SOURCE_SECRET_KEY"],
+    write_through=True,
+)
+```
+
+Pass `source_bucket=None` to clear the migration configuration.
+
+**2. Actively migrate (optional).** `list_objects_from_source` lists the objects
+that are still only at the source, `migrate_object` asks Tigris to copy one now,
+and `is_object_migrated` reports whether a copy has landed:
+
+```python
+from tigris_boto3_ext import is_object_migrated, list_objects_from_source, migrate_object
+
+remaining = list_objects_from_source(s3, "my-bucket", "shadow", Prefix="images/")
+for obj in remaining.get("Contents", []):
+    if not is_object_migrated(s3, "my-bucket", obj["Key"]):
+        migrate_object(s3, "my-bucket", obj["Key"])
+```
+
+</TabItem>
 </Tabs>
 
 ## Copying object ACLs

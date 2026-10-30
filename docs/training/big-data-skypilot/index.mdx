@@ -175,10 +175,10 @@ Note that the model weights are saved to Tigris using the `{home_dir}/tigris`
 folder. Tigris isn't normally a Linux filesystem, but this example uses
 [geesefs](https://github.com/yandex-cloud/geesefs) to
 [mount Tigris](/docs/training/tigrisfs/) as a
-[FUSE](https://www.kernel.org/doc/html/latest/filesystems/fuse.html) (Filesystem
-in Userspace) filesystem. This allows you to use normal filesystem calls to
-interact with Tigris, which is useful for AI workloads that assume data is
-accessible via a filesystem.
+[FUSE](https://www.kernel.org/doc/html/latest/filesystems/fuse/index.html)
+(Filesystem in Userspace) filesystem. This allows you to use normal filesystem
+calls to interact with Tigris, which is useful for AI workloads that assume data
+is accessible via a filesystem.
 
 The model has two main components that we care about:
 
@@ -428,9 +428,9 @@ sky serve down mymodel
 ## What you just built
 
 In this guide, you took
-[a dataset](https://huggingface.co/mlabonne/FineTome-100k), finetuned a LoRA
-adapter on top of [a model](https://huggingface.co/Qwen/Qwen2.5-0.5B), and then
-deployed the finetuned model with SkyPilot. You didn't have to install the
+[a dataset](https://huggingface.co/datasets/mlabonne/FineTome-100k), finetuned a
+LoRA adapter on top of [a model](https://huggingface.co/Qwen/Qwen2.5-0.5B), and
+then deployed the finetuned model with SkyPilot. You didn't have to install the
 nVidia drivers on the instances, you didn't need to worry about the Python
 setup, and you didn't even need to compare prices between cloud providers. You
 just ran a command and it worked.

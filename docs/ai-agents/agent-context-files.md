@@ -12,7 +12,7 @@ keywords:
     coding agent storage,
     agent context file,
   ]
-last_reviewed: 2026-05-15
+last_reviewed: 2026-10-30
 ---
 
 # Agent Context Files
@@ -79,10 +79,10 @@ import { put, get, list } from "@tigrisdata/storage";
 await put("path/file.txt", content);
 
 // Download a file
-const data = await get("path/file.txt");
+const { data } = await get("path/file.txt", "string");
 
 // List objects
-const objects = await list();
+const { data: objects } = await list();
 ```
 
 ## Conventions
@@ -118,7 +118,7 @@ the CLI.
 For agents that support the
 [Model Context Protocol](https://modelcontextprotocol.io/), the Tigris MCP
 server provides structured tool access beyond what context files offer. See the
-[MCP Server documentation](/docs/mcp/remote/) for setup instructions.
+[MCP Server documentation](/docs/mcp/) for setup instructions.
 
 ## How Agents Discover Tigris
 
@@ -132,5 +132,5 @@ in this order:
 3. **Global context** — the agent reads `SKILL.md` for general Tigris knowledge
 4. **Documentation** — the agent fetches
    [llms.txt](https://www.tigrisdata.com/docs/llms.txt) or
-   [llms-agents.txt](https://www.tigrisdata.com/docs/llms-agents.txt) for
-   detailed reference
+   [llms-full.txt](https://www.tigrisdata.com/docs/llms-full.txt) for detailed
+   reference

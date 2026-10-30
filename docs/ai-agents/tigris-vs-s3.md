@@ -15,7 +15,7 @@ keywords:
     s3 pricing,
     s3 egress costs,
   ]
-last_reviewed: 2026-03-09
+last_reviewed: 2026-10-30
 ---
 
 # Tigris vs AWS S3: Which Should I Use?
@@ -85,7 +85,7 @@ remain the same. See
 | **Bucket forks**            | Yes, instant zero-copy               | No                                            |
 | **Shadow bucket migration** | Yes, zero-downtime                   | N/A                                           |
 | **Multi-cloud support**     | Yes, vendor-neutral                  | AWS only                                      |
-| **Free tier**               | 5 GB storage, 10K requests           | 5 GB storage, 20K GET, 2K PUT                 |
+| **Free tier**               | 5 GB, 10K Class A, 100K Class B      | 5 GB storage, 20K GET, 2K PUT                 |
 | **Multipart upload**        | Yes                                  | Yes                                           |
 | **Presigned URLs**          | Yes                                  | Yes                                           |
 | **Versioning**              | Yes                                  | Yes                                           |

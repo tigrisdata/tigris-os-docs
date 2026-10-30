@@ -18,7 +18,7 @@ keywords:
     switch cloud storage,
     s3 compatible migration,
   ]
-last_reviewed: 2026-10-07
+last_reviewed: 2026-10-30
 ---
 
 # How Do I Migrate from AWS S3 to Another Provider?

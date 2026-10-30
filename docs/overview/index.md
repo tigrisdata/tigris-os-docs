@@ -18,8 +18,8 @@ Tigris also offers [native Storage SDKs](/docs/sdks/tigris/) that provide direct
 access to Tigris-specific features like
 [client uploads](/docs/sdks/tigris/client-uploads/) and
 [bucket forks and snapshots](/docs/buckets/snapshots-and-forks/). For
-AI-assisted development, the [Tigris MCP server](/docs/mcp/local/) lets AI
-coding agents interact with your Tigris buckets directly.
+AI-assisted development, the [Tigris MCP server](/docs/mcp/) lets AI coding
+agents interact with your Tigris buckets directly.
 
 ## What Tigris stores
 

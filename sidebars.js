@@ -60,8 +60,8 @@ const sidebars = {
           items: [
             {
               type: "doc",
-              label: "MCP Quickstart",
-              id: "quickstarts/mcp",
+              label: "MCP Server",
+              id: "mcp/index",
             },
             {
               type: "doc",
@@ -594,6 +594,7 @@ const sidebars = {
             "objects/access-objects-via-cookies",
             "objects/acl",
             "objects/object-rename",
+            "objects/delete-objects",
             "objects/bundle",
           ],
         },
@@ -875,7 +876,15 @@ const sidebars = {
             "sdks/s3/aws-js-sdk",
             "sdks/s3/aws-go-sdk",
             "sdks/s3/aws-java-sdk",
-            "sdks/s3/aws-python-sdk",
+            {
+              type: "category",
+              label: "AWS Python SDK",
+              link: {
+                type: "doc",
+                id: "sdks/s3/aws-python-sdk",
+              },
+              items: ["sdks/s3/tigris-boto3-ext"],
+            },
             "sdks/s3/aws-php-sdk",
             "sdks/s3/aws-elixir-sdk",
             "sdks/s3/aws-ruby-sdk",
@@ -894,6 +903,7 @@ const sidebars = {
         id: "cli/index",
       },
       items: [
+        "cli/init",
         "cli/configure",
         {
           type: "category",
@@ -906,6 +916,7 @@ const sidebars = {
           ],
         },
         "cli/whoami",
+        "cli/usage",
         "cli/logout",
         {
           type: "category",
@@ -930,6 +941,7 @@ const sidebars = {
             "cli/organizations/list",
             "cli/organizations/create",
             "cli/organizations/select",
+            "cli/organizations/delete",
           ],
         },
         {
@@ -943,7 +955,11 @@ const sidebars = {
             "cli/buckets/merge",
             "cli/buckets/get",
             "cli/buckets/delete",
+            "cli/buckets/restore",
+            "cli/buckets/purge",
             "cli/buckets/set",
+            "cli/buckets/enable-snapshots",
+            "cli/buckets/disable-snapshots",
             {
               type: "category",
               label: "tigris buckets lifecycle",
@@ -959,13 +975,18 @@ const sidebars = {
             "cli/buckets/set-locations",
             "cli/buckets/set-notifications",
             "cli/buckets/set-cors",
+            "cli/buckets/share",
           ],
         },
         {
           type: "category",
           label: "tigris snapshots",
           link: { type: "doc", id: "cli/snapshots" },
-          items: ["cli/snapshots/list", "cli/snapshots/take"],
+          items: [
+            "cli/snapshots/list",
+            "cli/snapshots/take",
+            "cli/snapshots/delete",
+          ],
         },
         {
           type: "category",
@@ -1046,6 +1067,16 @@ const sidebars = {
           ],
         },
         "cli/update",
+        {
+          type: "category",
+          label: "tigris telemetry",
+          link: { type: "doc", id: "cli/telemetry" },
+          items: [
+            "cli/telemetry/status",
+            "cli/telemetry/disable",
+            "cli/telemetry/enable",
+          ],
+        },
       ],
     },
     {
@@ -1055,22 +1086,9 @@ const sidebars = {
       collapsed: true,
       items: [
         {
-          type: "category",
-          label: "MCP",
-          collapsible: true,
-          collapsed: true,
-          items: [
-            {
-              type: "doc",
-              label: "Local MCP Server",
-              id: "mcp/local",
-            },
-            {
-              type: "doc",
-              label: "Remote MCP Server",
-              id: "mcp/remote",
-            },
-          ],
+          type: "doc",
+          label: "MCP Server",
+          id: "mcp/index",
         },
         {
           type: "doc",
@@ -1118,6 +1136,7 @@ const sidebars = {
         "legal/service-terms",
         "legal/data-processing",
         "legal/sla",
+        "legal/security-report",
       ],
     },
   ],

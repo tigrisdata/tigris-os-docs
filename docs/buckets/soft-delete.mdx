@@ -9,11 +9,10 @@ keeps the deleted object for a configurable retention window during which you
 can list it, restore it, or permanently remove it. Once the retention window
 expires, Tigris cleans the data up automatically.
 
-The same retention policy also protects the bucket itself: deleting a bucket
-with soft delete enabled moves the bucket into a soft-deleted state instead of
-hard deleting it. A soft-deleted bucket can be restored back into an active
-bucket within the retention window, and is permanently removed once the
-retention window expires.
+Soft delete also protects the bucket itself: deleting a bucket with soft delete
+enabled moves the bucket into a soft-deleted state instead of hard deleting it.
+A soft-deleted bucket stays until you restore it or permanently delete it.
+Tigris does not remove it when the retention window expires.
 
 ## How soft delete works
 
@@ -27,24 +26,30 @@ When soft delete is enabled on a bucket:
   them, restore them to a live state, or permanently delete them ahead of the
   schedule.
 - Deleting a bucket with soft delete enabled moves the bucket itself into a
-  soft-deleted state. The bucket and its data stay recoverable for the retention
-  window.
-- After the retention window passes, Tigris permanently removes the soft-deleted
-  data and reclaims its storage.
+  soft-deleted state. The bucket and its data stay recoverable until you restore
+  the bucket or permanently delete it.
+- After the retention window passes, Tigris permanently removes soft-deleted
+  objects from active buckets and reclaims their storage.
 - Soft-deleted data continues to consume storage and is billed at the same rate
   as live data until it is removed.
 
 At a glance, the lifecycle looks like this:
 
 ```
-     DELETE        ──►   soft-deleted state   ──┬──►   permanently removed
-bucket or object         (recoverable)          │      (async, after retention)
-                                                │
-                              ◄─── restore ─────┘
+ DELETE object  ──►  soft-deleted state  ──┬──►  permanently removed
+                     (recoverable)         │     (async, after retention)
+                                           │
+                         ◄─── restore ─────┘
+
+ DELETE bucket  ──►  soft-deleted state  ──┬──►  permanently removed
+                     (recoverable)         │     (only when you delete
+                                           │     it permanently)
+                         ◄─── restore ─────┘
 ```
 
-Cleanup runs asynchronously, so data is removed shortly after the retention
-window passes.
+Cleanup runs asynchronously, so objects are removed shortly after the retention
+window passes. A soft-deleted bucket is not cleaned up automatically. It is
+removed only when you permanently delete it.
 
 ## Enabling soft delete on a bucket
 
@@ -67,9 +72,9 @@ delete enabled, showing **Enabled** or **Disabled** for each row.
 
 ### Retention window
 
-The retention window controls how long deleted buckets and objects remain
-recoverable. It must be between **7 and 90 days**, and defaults to **7 days**
-when soft delete is first enabled.
+The retention window controls how long deleted objects remain recoverable. It
+does not apply to deleted buckets. It must be between **7 and 90 days**, and
+defaults to **7 days** when soft delete is first enabled.
 
 ### Enabling soft delete programmatically
 
@@ -145,6 +150,30 @@ await updateBucket("my-bucket", {
 SDK, so an out-of-range value fails on the request rather than at the call site.
 
 </TabItem>
+<TabItem value="python" label="Python">
+
+With [`tigris-boto3-ext`](/docs/sdks/s3/tigris-boto3-ext),
+`create_soft_delete_bucket` sets the header on `CreateBucket`:
+
+```python
+import boto3
+from tigris_boto3_ext import create_soft_delete_bucket, set_bucket_soft_delete
+
+s3 = boto3.client("s3", endpoint_url="https://t3.storage.dev")
+
+create_soft_delete_bucket(s3, "my-bucket", retention_days=30)
+```
+
+For a bucket that already exists, `set_bucket_soft_delete` turns soft delete on
+or off. `retention_days` is checked as 7 to 90 before the request is sent, and
+the default 7-day window applies when you leave it out:
+
+```python
+set_bucket_soft_delete(s3, "my-bucket", True, retention_days=30)
+set_bucket_soft_delete(s3, "my-bucket", False)
+```
+
+</TabItem>
 <TabItem value="cli" label="CLI">
 
 ```bash
@@ -179,8 +208,7 @@ delete and then deletes objects must wait before it relies on recovery.
 
 When you delete a bucket that has soft delete enabled, the delete confirmation
 dialog reflects that the action is recoverable instead of permanent. It tells
-you the bucket can be restored within its retention period — and that after that
-window passes, the deletion is permanent. The action button is labeled **Soft
+you that you can restore the bucket. The action button is labeled **Soft
 Delete** rather than **Delete**, and you still confirm by typing the bucket
 name.
 
@@ -193,12 +221,12 @@ below rather than being permanently removed.
 
 A bucket deleted while soft delete was enabled is not removed immediately. It
 moves to a soft-deleted state where it is hidden from your normal bucket list
-but stays recoverable until the retention window expires.
+but stays recoverable until you restore it or permanently delete it.
 
 In the Tigris Dashboard sidebar, **Buckets** expands into **All**, **Forks**,
 **Owned by me**, and **Deleted**. Every bucket that was deleted while soft
 delete was enabled appears under **Deleted**. Each row in this view is a
-soft-deleted bucket that is still within its retention window.
+soft-deleted bucket.
 
 To restore a bucket, open **Buckets → Deleted** in the sidebar. Then open the
 row's overflow menu (`...`) and choose **Restore**:
@@ -207,9 +235,8 @@ row's overflow menu (`...`) and choose **Restore**:
 
 After a successful restore, the bucket is fully active again — it moves back to
 the regular bucket list and every object it held at the time of deletion is live
-and readable, exactly as it was before the bucket was deleted. If you want to
-remove a soft-deleted bucket immediately instead of waiting for the retention
-window to expire, choose **Delete** from the same menu.
+and readable, exactly as it was before the bucket was deleted. To remove a
+soft-deleted bucket permanently, choose **Delete** from the same menu.
 
 While a bucket is in the soft-deleted state, its name stays reserved — you
 cannot create a new bucket with the same name until either the bucket is
@@ -251,6 +278,18 @@ await restoreBucket("my-bucket");
 ```
 
 </TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from tigris_boto3_ext import list_deleted_buckets, restore_bucket
+
+for bucket in list_deleted_buckets(s3)["buckets"]:
+    print(bucket["name"])
+
+restore_bucket(s3, "my-bucket")
+```
+
+</TabItem>
 <TabItem value="cli" label="CLI">
 
 List the recoverable buckets, then restore one:
@@ -282,6 +321,20 @@ that mirrors the bucket-level one. It tells you the file will be moved to the
 and that after that window passes, the file is permanently removed.
 
 ![Soft delete confirmation dialog for an object](/img/soft-delete-object-delete-modal.png)
+
+Folders and selections work the same way on a bucket without snapshots. When you
+delete a folder, or a selection that contains folders, from the **All files**
+view, every object under those folders moves to the **Deleted files** tab. The
+dialog shows the object count, and for a folder the total size. The delete runs
+as a job that you can follow and stop. See
+[Deleting Objects](/docs/objects/delete-objects/).
+
+On a snapshot-enabled bucket, a folder delete is a plain delete of each object.
+It records a delete marker and leaves the earlier versions in your snapshots.
+The objects do not move to the **Deleted files** tab. See
+[Soft delete on snapshot buckets](#soft-delete-on-snapshot-buckets).
+
+![Soft delete confirmation dialog for a folder](/img/soft-delete-folder-delete-modal.png)
 
 ## Restoring a deleted object
 
@@ -325,7 +378,9 @@ version will be permanently deleted and cannot be restored.
 Unlike the regular delete from the **All files** view, this action bypasses the
 retention window entirely — the selected version is purged immediately and is
 not recoverable. To fully remove an object that has multiple soft-deleted
-versions, repeat this for each version you want gone.
+versions, repeat this for each version you want gone. There is no folder-level
+purge in the Dashboard. To purge many versions, use the CLI or the SDK as
+described in [Permanently deleting a version](#permanently-deleting-a-version).
 
 ## Working with soft delete programmatically
 
@@ -429,6 +484,34 @@ if (deleted.hasMore) {
 ```
 
 </TabItem>
+<TabItem value="python" label="Python">
+
+`list_deleted_object_versions` is `list_object_versions` with the soft-delete
+header, so it takes the same arguments and returns the same response:
+
+```python
+from tigris_boto3_ext import list_deleted_object_versions
+
+deleted = list_deleted_object_versions(s3, "my-bucket", Prefix="contracts/")
+
+for version in deleted.get("Versions", []):
+    # LastModified is the time of the delete. VersionId is what a restore takes.
+    print(version["Key"], version["VersionId"], version["Size"], version["LastModified"])
+
+# Carry the markers forward while IsTruncated is true.
+if deleted.get("IsTruncated"):
+    list_deleted_object_versions(
+        s3,
+        "my-bucket",
+        Prefix="contracts/",
+        KeyMarker=deleted["NextKeyMarker"],
+        VersionIdMarker=deleted["NextVersionIdMarker"],
+    )
+```
+
+`list_deleted_objects` does the same for `list_objects_v2`, without version IDs.
+
+</TabItem>
 <TabItem value="cli" label="CLI">
 
 `--deleted` switches the listing over to the deleted objects. Use
@@ -484,6 +567,12 @@ Two things to know about this listing:
 
 ### Restoring an object
 
+Restoring a soft-deleted object requires both `RestoreObject` and `PutObject`
+permission on the key because it can replace a live object. The `ReadWrite` and
+`Editor` bucket roles grant both permissions; `ReadOnly` does not. If you grant
+access through an IAM policy, allow both `s3:RestoreObject` and `s3:PutObject`
+on the object resource.
+
 Send `RestoreObject` with `X-Tigris-Restore-Type: soft-delete`:
 
 ```http
@@ -530,6 +619,19 @@ if (error) {
   throw error;
 }
 ```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from tigris_boto3_ext import restore_deleted_object
+
+# Without a version ID, the most recent deleted version of the key is restored.
+restore_deleted_object(s3, "my-bucket", "contracts/2026/q1.pdf", "1787441627070249004")
+```
+
+`purge_deleted_object(s3, bucket, key, version_id)` removes a deleted version
+for good before its retention window ends.
 
 </TabItem>
 <TabItem value="cli" label="CLI">
@@ -745,9 +847,15 @@ earlier versions live and accessible.
 
 ## Things to note
 
-- Retention applies per bucket. Every soft-deleted bucket and object in the
-  bucket uses the same retention window.
-- Disabling soft delete on a bucket does not purge data that is already
-  soft-deleted. It continues to age out on its original retention schedule.
-- Changing the retention value affects new soft deletes from that point forward.
-  Already soft-deleted data keeps the retention it was created with.
+- Retention applies per bucket. Every soft-deleted object in the bucket uses the
+  bucket's current retention window.
+- Changing the retention value also applies to objects that are already
+  soft-deleted. A shorter window can remove them sooner.
+
+:::warning
+
+Do not turn off soft delete while you still need to restore deleted objects.
+When soft delete is off, Tigris can remove the objects that are already
+soft-deleted. You cannot restore them after that.
+
+:::

@@ -4,6 +4,8 @@ info:
   description: |
     This API provides additional functionality for managing buckets, access keys, and organizations.
 
+    All endpoints are served from `https://mgmt.storage.dev`.
+
     ## OpenAPI specification
     This API follows the OpenAPI 3.0 specification, and the spec can be downloaded by clicking on the `Export` button in the top right corner.
 
@@ -41,13 +43,13 @@ info:
     :::tip
     The `CanonicalURI` is the full request URL including the scheme, host, path, and query parameters.
 
-    For example, for a `POST` request to `/provider/laravel/orgs/my-org/provision`, the `CanonicalURI` would be:
+    For example, for a `POST` request to `/v1/providers/your-provider-id/orgs/user-org-id/provision`, the `CanonicalURI` would be:
     ```
-    https://mgmt.storage.dev/provider/your-provider-id/orgs/user-org-id/provision
+    https://mgmt.storage.dev/v1/providers/your-provider-id/orgs/user-org-id/provision
     ```
     And for a `GET` request with query parameters:
     ```
-    https://mgmt.storage.dev/provider/your-provider-id/orgs/?include_inactive=true
+    https://mgmt.storage.dev/v1/providers/your-provider-id/orgs?include_inactive=true
     ```
     :::
 
@@ -2685,7 +2687,7 @@ components:
         Create the `canonical_request` as:
         ```
         POST
-        https://mgmt.storage.dev/provider/your-provider-id/orgs/user-org-id/provision
+        https://mgmt.storage.dev/v1/providers/your-provider-id/orgs/user-org-id/provision
         1731703213870
         f8d133cb-5a42-47b1-9ef2-874bb55bab72
         ```

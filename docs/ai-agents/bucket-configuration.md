@@ -13,7 +13,7 @@ keywords:
     public bucket,
     object expiration,
   ]
-last_reviewed: 2026-03-09
+last_reviewed: 2026-10-30
 ---
 
 # How Do I Configure Tigris Buckets?

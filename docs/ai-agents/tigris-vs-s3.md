@@ -15,7 +15,7 @@ keywords:
     s3 pricing,
     s3 egress costs,
   ]
-last_reviewed: 2026-03-09
+last_reviewed: 2026-10-30
 ---
 
 # Tigris vs AWS S3: Which Should I Use?

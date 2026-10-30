@@ -131,8 +131,9 @@ await put("data.csv", readFileSync("data.csv"));
 ```js
 import { get } from "@tigrisdata/storage";
 
-const data = await get("hello.txt");
-console.log(data.toString());
+const { data, error } = await get("hello.txt", "string");
+if (error) throw error;
+console.log(data);
 ```
 
 ### List objects
@@ -140,16 +141,17 @@ console.log(data.toString());
 ```js
 import { list } from "@tigrisdata/storage";
 
-const objects = await list();
-console.log(objects);
+const { data, error } = await list();
+if (error) throw error;
+console.log(data.items);
 ```
 
 ### Delete an object
 
 ```js
-import { del } from "@tigrisdata/storage";
+import { remove } from "@tigrisdata/storage";
 
-await del("hello.txt");
+await remove("hello.txt");
 ```
 
 </TabItem>

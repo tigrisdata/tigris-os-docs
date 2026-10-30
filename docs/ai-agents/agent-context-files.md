@@ -12,7 +12,7 @@ keywords:
     coding agent storage,
     agent context file,
   ]
-last_reviewed: 2026-10-19
+last_reviewed: 2026-10-30
 ---
 
 # Agent Context Files
@@ -79,10 +79,10 @@ import { put, get, list } from "@tigrisdata/storage";
 await put("path/file.txt", content);
 
 // Download a file as a string
-const { data, error } = await get("path/file.txt", "string");
+const { data } = await get("path/file.txt", "string");
 
 // List objects
-const objects = await list();
+const { data: objects } = await list();
 ```
 
 ## Conventions

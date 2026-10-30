@@ -79,7 +79,7 @@ for bucket in response['Buckets']:
 Create a `bucket_name` alias to make it easier to interact with Tigris:
 
 ```python
-bucket_name = bucket_name = os.getenv('TIGRIS_BUCKET', 'xe-tigris-test2') # Replace your bucket name here
+bucket_name = os.getenv('BUCKET_NAME', 'my-bucket') # Replace your bucket name here
 ```
 
 Or make a new bucket if you don't have one:

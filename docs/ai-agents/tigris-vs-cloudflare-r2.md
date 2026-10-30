@@ -87,7 +87,7 @@ R2 does not have this feature.
 | Edge compute            | No                              | Yes (Workers)                  |
 | WAF / DDoS              | No                              | Yes (Cloudflare network)       |
 | Custom domains          | Yes                             | Yes                            |
-| Max object size         | 5 TB                            | 5 TB (multipart), 300 MB (PUT) |
+| Max object size         | 5 TB                            | 5 TiB (multipart), 5 GiB (PUT) |
 
 ## How Do Costs Compare?
 
@@ -112,13 +112,15 @@ Use a shadow bucket for zero-downtime migration. Tigris fetches objects from R2
 on demand and caches them:
 
 ```bash
-# Create a Tigris bucket with R2 as the shadow source
-tigris mk my-bucket \
-  --shadow-source-bucket my-r2-bucket \
-  --shadow-source-endpoint https://ACCOUNT_ID.r2.cloudflarestorage.com \
-  --shadow-source-access-key R2_ACCESS_KEY \
-  --shadow-source-secret-key R2_SECRET_KEY \
-  --shadow-write-through
+# Create a Tigris bucket and set R2 as the shadow source
+tigris mk my-bucket
+tigris buckets set-migration my-bucket \
+  --bucket my-r2-bucket \
+  --endpoint https://ACCOUNT_ID.r2.cloudflarestorage.com \
+  --region auto \
+  --access-key R2_ACCESS_KEY \
+  --secret-key R2_SECRET_KEY \
+  --write-through
 ```
 
 Or switch by changing the endpoint in code:

@@ -89,10 +89,11 @@ Or with the CLI:
 
 ```bash
 tigris buckets set-migration my-bucket \
-  --source-bucket my-s3-bucket \
-  --source-region us-east-1 \
-  --source-access-key AKIA... \
-  --source-secret-key ...
+  --bucket my-s3-bucket \
+  --endpoint https://s3.amazonaws.com \
+  --region us-east-1 \
+  --access-key AKIA... \
+  --secret-key ...
 ```
 
 ## How Do I Migrate from Google Cloud Storage?

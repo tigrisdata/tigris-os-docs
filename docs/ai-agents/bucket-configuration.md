@@ -61,9 +61,9 @@ await createBucket("my-bucket");
 
 ```bash
 tigris buckets set-cors my-bucket \
-  --origin "https://example.com" \
-  --method "GET,PUT,POST" \
-  --header "Content-Type,Authorization" \
+  --origins "https://example.com" \
+  --methods "GET,PUT,POST" \
+  --headers "Content-Type,Authorization" \
   --max-age 3600
 ```
 
@@ -86,10 +86,10 @@ Automatically delete objects after a certain number of days:
 
 ```bash
 # Expire objects after 30 days
-tigris buckets set-ttl my-bucket --days 30
+tigris buckets lifecycle create my-bucket --expire-days 30
 
-# Expire objects after a specific date
-tigris buckets set-ttl my-bucket --date 2025-12-31
+# Expire objects on a specific date
+tigris buckets lifecycle create my-bucket --expire-date 2026-12-31
 ```
 
 ## How Do I Configure Lifecycle Rules?
@@ -98,14 +98,14 @@ Transition objects to cheaper storage tiers:
 
 ```bash
 # Move to Infrequent Access after 30 days
-tigris buckets set-transition my-bucket \
-  --days 30 \
-  --storage-class STANDARD_IA
+tigris buckets lifecycle create my-bucket \
+  --storage-class STANDARD_IA \
+  --days 30
 
 # Move to Glacier after 90 days
-tigris buckets set-transition my-bucket \
-  --days 90 \
-  --storage-class GLACIER
+tigris buckets lifecycle create my-bucket \
+  --storage-class GLACIER \
+  --days 90
 ```
 
 ## What Storage Tiers Are Available?
@@ -142,14 +142,19 @@ Pull data on demand from an existing S3-compatible bucket:
 
 ```bash
 tigris buckets set-migration my-bucket \
-  --source-bucket source-bucket-name \
-  --source-region us-east-1 \
-  --source-access-key AKIA... \
-  --source-secret-key ...
+  --bucket source-bucket-name \
+  --endpoint https://s3.amazonaws.com \
+  --region us-east-1 \
+  --access-key AKIA... \
+  --secret-key ...
 
 # Enable write-through (sync writes back to source)
 tigris buckets set-migration my-bucket \
-  --source-bucket source-bucket-name \
+  --bucket source-bucket-name \
+  --endpoint https://s3.amazonaws.com \
+  --region us-east-1 \
+  --access-key AKIA... \
+  --secret-key ... \
   --write-through
 ```
 

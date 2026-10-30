@@ -338,7 +338,7 @@ const config = {
             position: "right",
           },
           {
-            label: "Login",
+            label: "Sign in",
             href: tigrisConfig.loginUrl,
             position: "right",
             className: "wc-portal-login wc-portal-link",

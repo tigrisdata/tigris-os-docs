@@ -36,8 +36,8 @@ Cursor, VS Code, ChatGPT (web), OpenAI Codex, and Goose CLI.
 agents like ChatGPT.
 
 **What can agents do with the MCP server?** Create, list, and delete buckets.
-Upload, list, download, move, and delete objects. Generate presigned URLs for
-sharing.
+Upload, list, download, and delete objects, and look up their metadata. Generate
+presigned URLs for sharing.
 
 ## How Do I Set Up the MCP Server?
 
@@ -96,7 +96,7 @@ Example prompts:
 - "Give me a shareable link for `screenshot.png`"
 - "Create a folder named `docs` in `project-assets`"
 - "Delete `old-file.txt` from `project-assets`"
-- "Move `draft.md` to the `published` folder"
+- "Show the size and content type of `draft.md`"
 
 ## Learn More
 

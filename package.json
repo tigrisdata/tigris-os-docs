@@ -55,7 +55,27 @@
     "webpack-dev-middleware": ">=7.4.5"
   },
   "overrides": {
-    "webpackbar": "7.0.0"
+    "webpackbar": "7.0.0",
+    "tinypool": "^2.1.2",
+    "serialize-javascript": "^7.1.3",
+    "cssnano": "^7.1.9",
+    "cssnano-preset-advanced": "^7.0.16",
+    "sockjs": {
+      "uuid": "^14.0.0"
+    },
+    "postman-collection": {
+      "uuid": "^14.0.0"
+    },
+    "webpack-bundle-analyzer": {
+      "ws": "^8.22.0"
+    },
+    "openapi-to-postmanv2": {
+      "yaml": "^1.10.3"
+    },
+    "js-yaml": "^4.3.2",
+    "guarded-fetch": {
+      "undici": "^7.30.1"
+    }
   },
   "browserslist": {
     "production": [
@@ -86,7 +106,7 @@
     "globals": "^17.3.0",
     "playwright": "^1.58.2",
     "prettier": "3.8.1",
-    "sharp": "^0.34.5",
+    "sharp": "^0.35.5",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.56.0",
     "webpack-dev-middleware": ">=7.4.5"

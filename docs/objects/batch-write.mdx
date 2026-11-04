@@ -1,0 +1,266 @@
+# Batch Write API
+
+The Batch Write API lets you apply many object writes — puts, deletes, and
+renames — to a bucket in a **single, atomic request**. All operations in a batch
+commit together in one transaction: either every operation is applied, or none
+is. Instead of one HTTP request per object, you send one framed request and get
+back a single commit.
+
+This is the write-side counterpart to the [Bundle API](./bundle.mdx). Where
+Bundle fetches many objects in one streaming request, Batch Write commits many
+mutations in one request — useful for **manifest-style commits** (publish a set
+of files as a unit), bulk imports, and any workload that needs several objects
+to appear (or a rename to happen) all at once, with no half-applied state.
+
+## How it works
+
+Batch Write is a Tigris extension to the S3 API. You send a `POST` to the bucket
+with the `?batch` query parameter. The framing metadata rides in headers, and
+the body is simply the manifest followed by the object payloads:
+
+```
+POST /{bucket}?batch HTTP/1.1
+X-Tigris-Batch-Format: manifest
+X-Tigris-Batch-Manifest-Length: 139
+Content-Type: application/octet-stream
+
+<JSONL manifest><data section>
+```
+
+The server applies the operations **in order, in one transaction**, and returns
+a JSON summary with the shared commit version.
+
+### Request headers
+
+| Header                           | Required | Value                                                         |
+| -------------------------------- | -------- | ------------------------------------------------------------- |
+| `X-Tigris-Batch-Format`          | Yes      | `manifest`                                                    |
+| `X-Tigris-Batch-Manifest-Length` | Yes      | Byte length of the JSONL manifest (delimits it from the data) |
+| `X-Tigris-Batch-Version`         | No       | `1` (default)                                                 |
+
+### Request body format
+
+The body is two parts, concatenated — no in-body framing:
+
+1. **Manifest (JSONL):** one JSON object per line, one per operation, in the
+   order they should be applied. Its byte length is given by
+   `X-Tigris-Batch-Manifest-Length`.
+
+2. **Data section:** the payloads of every `put` op, concatenated in manifest
+   order, each exactly the op's declared `size`. `delete` and `rename` ops
+   contribute no data.
+
+So the body is just `manifest` + `data` — assemble it with `cat`, and set the
+manifest-length header to the manifest's byte size.
+
+### Operations
+
+Each manifest line has an `op` field. Three operation types are supported:
+
+| `op`     | Fields                                   | Meaning                                            |
+| -------- | ---------------------------------------- | -------------------------------------------------- |
+| `put`    | `key`, `size`, and optional fields below | Write an object; its bytes are in the data section |
+| `delete` | `key`                                    | Delete an object (no error if it doesn't exist)    |
+| `rename` | `from`, `to`                             | Rename an object within the bucket                 |
+
+**`put` optional fields:**
+
+| Field                 | Type   | Meaning                                                          |
+| --------------------- | ------ | ---------------------------------------------------------------- |
+| `meta`                | object | User metadata (`x-amz-meta-*` equivalents)                       |
+| `inline`              | bool   | Force inline (`true`) or block (`false`) storage for this object |
+| `if_match`            | string | Conditional: apply only if the current ETag matches              |
+| `if_none_match`       | string | Conditional: ETag, or `*` to require the object not exist        |
+| `if_modified_since`   | string | Conditional: HTTP-date                                           |
+| `if_unmodified_since` | string | Conditional: HTTP-date                                           |
+
+:::note
+
+`size` is required on every `put` (including zero-length objects). Omitting it
+is an error — the server uses it to split the data section, so it must be exact.
+
+:::
+
+### Ordering and atomicity
+
+- Operations are applied **sequentially, in manifest order**, inside a single
+  transaction.
+- The batch is **all-or-nothing**. If any operation fails — a failed
+  precondition, an authorization denial, a validation error — nothing is
+  committed.
+- **Last-op-wins** for a repeated key: if the same key is written twice, or
+  written and then deleted, the final state is whatever the last op in order
+  produced.
+
+## Building and sending a request
+
+The body is just the manifest followed by the payloads. This
+pure-standard-library helper builds it and returns the manifest length for the
+header:
+
+```python
+import json
+
+
+def build_batch_body(ops):
+    """Build a batch-write body; returns (body, manifest_len).
+
+    ops is a list of dicts:
+      {"op": "put", "key": "a.txt", "body": b"...", "meta": {...}, "inline": True,
+       "if_none_match": "*"}
+      {"op": "delete", "key": "old.txt"}
+      {"op": "rename", "from": "tmp/a", "to": "final/a"}
+    """
+    lines = []
+    data = bytearray()
+
+    for op in ops:
+        if op["op"] == "put":
+            body = op["body"]
+            line = {"op": "put", "key": op["key"], "size": len(body)}
+            for f in ("meta", "inline", "if_match", "if_none_match",
+                      "if_modified_since", "if_unmodified_since"):
+                if op.get(f) is not None:
+                    line[f] = op[f]
+            lines.append(json.dumps(line))
+            data += body
+        elif op["op"] == "delete":
+            lines.append(json.dumps({"op": "delete", "key": op["key"]}))
+        elif op["op"] == "rename":
+            lines.append(json.dumps({"op": "rename", "from": op["from"], "to": op["to"]}))
+        else:
+            raise ValueError(f"unknown op: {op['op']}")
+
+    manifest = ("\n".join(lines) + "\n").encode()
+    return manifest + bytes(data), len(manifest)
+```
+
+Send it as a SigV4-signed `POST /{bucket}?batch`, with the format and
+manifest-length headers. Using `botocore` to sign with your existing Tigris
+credentials:
+
+```python
+import boto3
+import requests
+from botocore.auth import SigV4Auth
+from botocore.awsrequest import AWSRequest
+
+BUCKET = "my-bucket"
+
+body, manifest_len = build_batch_body([
+    {"op": "put", "key": "dataset/shard-0000.bin", "body": open("shard-0000.bin", "rb").read()},
+    {"op": "put", "key": "dataset/shard-0001.bin", "body": open("shard-0001.bin", "rb").read()},
+    {"op": "rename", "from": "dataset/_manifest.tmp", "to": "dataset/manifest.json"},
+    {"op": "delete", "key": "dataset/old-shard.bin"},
+])
+
+creds = boto3.Session().get_credentials()
+req = AWSRequest(
+    method="POST",
+    url=f"https://{BUCKET}.t3.storage.dev/?batch",
+    data=body,
+    headers={
+        "X-Tigris-Batch-Format": "manifest",
+        "X-Tigris-Batch-Manifest-Length": str(manifest_len),
+    },
+)
+SigV4Auth(creds, "s3", "auto").add_auth(req)
+
+resp = requests.post(req.url, headers=dict(req.headers), data=body)
+resp.raise_for_status()
+print(resp.json())
+```
+
+## Response
+
+On success the server returns `200 OK` with a JSON summary:
+
+```json
+{
+  "committed": true,
+  "commit_version": 175823391045000000,
+  "objects": [
+    {
+      "key": "dataset/shard-0000.bin",
+      "etag": "\"5d41...\"",
+      "status": "written"
+    },
+    {
+      "key": "dataset/shard-0001.bin",
+      "etag": "\"7a3f...\"",
+      "status": "written"
+    },
+    { "key": "dataset/manifest.json", "status": "renamed" },
+    { "key": "dataset/old-shard.bin", "status": "deleted" }
+  ]
+}
+```
+
+- `commit_version` is the single transaction version shared by every operation
+  in the batch.
+- `objects` reports one result per operation in request order. `status` is
+  `written` (put), `deleted` (delete), or `renamed` (rename); `etag` is set for
+  puts. For a rename, `key` is the destination.
+
+The response also carries an `X-Tigris-Batch-Count` header with the number of
+committed operations.
+
+## Conditional writes
+
+A `put` op may carry the same preconditions as the S3
+[conditional headers](./conditionals.md) — `if_match`, `if_none_match`,
+`if_modified_since`, `if_unmodified_since`. Because the batch is atomic, a
+failed precondition on **any** op aborts the whole batch with
+`412 Precondition Failed` and commits nothing. This makes a batch a natural
+compare-and-swap over a set of objects — e.g. `"if_none_match": "*"` on each put
+to publish a set only if none already exist.
+
+## Error handling
+
+Batch-specific errors are returned as JSON and, because the batch is atomic,
+never leave a partial commit. Authentication failures (a missing or invalid
+signature) are rejected earlier by the standard S3 auth layer and return the
+usual S3 XML error (`AccessDenied`, `InvalidAccessKeyId`). Common cases:
+
+| Condition                                        | Status | Notes                                       |
+| ------------------------------------------------ | ------ | ------------------------------------------- |
+| Missing/invalid `X-Tigris-Batch-Format`          | 400    | Only `manifest` is supported                |
+| Missing/invalid `X-Tigris-Batch-Manifest-Length` | 400    | Must be a positive length ≤ 64 MiB          |
+| Unsupported `X-Tigris-Batch-Version`             | 400    | Only `1` is supported                       |
+| Truncated manifest or data section               | 400    | Bytes on the wire are shorter than declared |
+| `put` op missing `size`, or negative `size`      | 400    |                                             |
+| Empty batch / too many ops / batch too large     | 400    | See [Limits](#limits)                       |
+| Metadata + inline weight exceeds the limit       | 400    | Split the batch into smaller commits        |
+| Any op fails authorization                       | 403    | Checked per op before any upload            |
+| A `put` precondition fails                       | 412    | Whole batch aborts                          |
+
+## Limits
+
+| Parameter                    | Limit           |
+| ---------------------------- | --------------- |
+| Max operations per batch     | 2,048           |
+| Max manifest size            | 64 MiB          |
+| Max total data-section bytes | 1 GiB (default) |
+| Max metadata + inline weight | 4 MiB           |
+
+:::note
+
+The **metadata + inline weight** is the serialized size a batch carries into the
+single transaction: every op's key and metadata, plus the content of any `put`
+that would be stored inline (small objects). Large `put` payloads that offload
+to block storage do not count against it. If a batch exceeds this limit, split
+it into smaller commits.
+
+:::
+
+## Authentication
+
+Standard S3 SigV4 authentication. Each operation is authorized individually, up
+front, before any data is uploaded — so a single denied key fails the whole
+batch:
+
+| Operation | Required permission(s)                                               |
+| --------- | -------------------------------------------------------------------- |
+| `put`     | `s3:PutObject` on the key                                            |
+| `delete`  | `s3:DeleteObject` on the key                                         |
+| `rename`  | `s3:GetObject` + `s3:DeleteObject` on `from`, `s3:PutObject` on `to` |

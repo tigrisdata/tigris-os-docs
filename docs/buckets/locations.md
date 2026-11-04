@@ -253,8 +253,8 @@ location has two trade-offs.
 
 ### Compliance and Data Residency
 
-- **Single-region** gives you the strictest data residency — data never leaves
-  the chosen region.
+- **Single-region** gives you the strictest data residency: object data never
+  leaves the chosen region.
 - **Dual-region** lets you maintain data residency across more than one region,
   useful for regulations that allow data within a defined set of jurisdictions
   (e.g., two EU regions for GDPR compliance).
@@ -262,6 +262,11 @@ location has two trade-offs.
   selects the specific regions within it.
 - **Global** distributes data based on access patterns — not suitable for strict
   data residency requirements.
+
+For every location type, object metadata (keys, sizes, ETags, content types and
+last-modified times) and bucket settings are replicated to all Tigris regions so
+that any region can route requests. The residency described above applies to
+object data.
 
 ### Cost
 

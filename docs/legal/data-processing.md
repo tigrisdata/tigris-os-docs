@@ -2,11 +2,11 @@
 
 _Last updated: November 18, 2025_
 
-Pursuant to the Tigris Subscription Agreement (“**the Agreement**”), Customer,
-on behalf of itself and its affiliates, and Tigris Data Inc. (referred to herein
-as “**Vendor**”) (each a “**Party**”; collectively the “**Parties**”), the
-Parties hereby adopt this Data Processing Addendum (“**DPA**”) for so long as
-Vendor processes Personal Data on behalf of Customer. This DPA prevails over any
+Pursuant to the Tigris Service Agreement (“**the Agreement**”), Customer, on
+behalf of itself and its affiliates, and Tigris Data Inc. (referred to herein as
+“**Vendor**”) (each a “**Party**”; collectively the “**Parties**”), the Parties
+hereby adopt this Data Processing Addendum (“**DPA**”) for so long as Vendor
+processes Personal Data on behalf of Customer. This DPA prevails over any
 conflicting terms of the Agreement.
 
 ## DPA
@@ -114,7 +114,9 @@ conflicting terms of the Agreement.
    DPA, Customer is the Party responsible for determining the purposes and means
    of Processing Customer Personal Data as the Controller and appoints Vendor as
    a Processor to Process Customer Personal Data on behalf of Customer for the
-   limited and specific purposes set forth in Appendix A.
+   limited and specific purposes set forth in Appendix A. Where Customer is
+   instead a Processor on behalf of a third-party Controller, Customer appoints
+   Vendor as a sub-processor on the same terms.
 
    2.3 **Obligations at Termination** - Upon termination of the Agreement,
    except as set forth therein or herein, Vendor will discontinue Processing and
@@ -236,27 +238,29 @@ conflicting terms of the Agreement.
    accordance with Privacy Laws; or pursuant to the SCCs referred to in Sections
    6.2 and 6.3.
 
-   6.2 By signing this DPA, Vendor and Customer conclude Module 2
-   (controller-to-processor) of the SCCs and, to the extent Customer is a
-   Processor on behalf of a third-party Controller, Module 3
-   (Processor-to-Subprocessor) of the SCCs, which are hereby incorporated and
+   6.2 By entering into the Agreement, which incorporates this DPA, Vendor and
+   Customer conclude Module 2 (controller-to-processor) of the SCCs and, to the
+   extent Customer is a Processor on behalf of a third-party Controller, Module
+   3 (Processor-to-Subprocessor) of the SCCs, which are hereby incorporated and
    completed as follows: the “data exporter” is Customer; the “data importer” is
    Vendor; the optional docking clause in Clause 7 is implemented; Option 2 of
    Clause 9(a) is implemented and the time period therein is 30 calendar days;
    the optional redress clause in Clause 11(a) is struck; Option 1 in Clause 17
    is implemented and the governing law is the law of Ireland; the courts in
-   Clause 18(b) are the Courts of Dublin, Ireland; Annex I, II and III to module
-   2 of the EEA SCCs are Appendix A, B and C to this DPA respectively.
+   Clause 18(b) are the Courts of Dublin, Ireland; Annex I, II and III to
+   Modules 2 and 3 of the EEA SCCs are Appendix A, B and C to this DPA
+   respectively.
 
-   6.3 By signing this DPA, Vendor and Customer conclude the UK Addendum, which
-   is hereby incorporated and applies to international data transfers outside
-   the UK. Part 1 of the UK Addendum is completed as follows: (i) in Table 1,
-   the “Exporter” is Customer and the “Importer” is Vendor, their details are
-   set forth in this DPA, and the Agreement; (ii) in Table 2, the first option
-   is selected and the “Approved EU SCCs” are the SCCs referred to in Section
-   6.2 of this DPA; (iii) in Table 3, Annexes 1 (A and B) to the “Approved EU
-   SCCs” are Appendix A, B, C to this DPA respectively; and (iv) in Table 4,
-   both the “Importer” and the “Exporter” can terminate the UK Addendum.
+   6.3 By entering into the Agreement, which incorporates this DPA, Vendor and
+   Customer conclude the UK Addendum, which is hereby incorporated and applies
+   to international data transfers outside the UK. Part 1 of the UK Addendum is
+   completed as follows: (i) in Table 1, the “Exporter” is Customer and the
+   “Importer” is Vendor, their details are set forth in this DPA, and the
+   Agreement; (ii) in Table 2, the first option is selected and the “Approved EU
+   SCCs” are the SCCs referred to in Section 6.2 of this DPA; (iii) in Table 3,
+   Annexes 1 (A and B) to the “Approved EU SCCs” are Appendix A, B, C to this
+   DPA respectively; and (iv) in Table 4, both the “Importer” and the “Exporter”
+   can terminate the UK Addendum.
 
    6.4 If Vendor’s compliance with Privacy Laws applicable to international data
    transfers is affected by circumstances outside of Vendor’s control, including
@@ -267,8 +271,8 @@ conflicting terms of the Agreement.
    standard contractual clauses are approved by supervisory authorities, Vendor
    reserves the right to amend the Agreement and this DPA by adding to or
    replacing, the standard contractual clauses or UK standard contractual
-   clauses that form part of it at the date of signature in order to ensure
-   continued compliance with Privacy Laws.
+   clauses that form part of it on the date Customer accepts the Agreement in
+   order to ensure continued compliance with Privacy Laws.
 
 7. **Deletion of Customer Personal Data.**
 
@@ -330,7 +334,7 @@ conflicting terms of the Agreement.
 | Address                                                         | The address for Customer as set forth in the Agreement.                                                                                     |
 | Contact person’s name, position and contact details             | The contact details for Customer as set forth in the Agreement.                                                                             |
 | Activities relevant to the data transferred under these Clauses | Customer receives Vendor’s services as described in the Agreement and Vendor Processes Personal Data on behalf of Customer in that context. |
-| Signature and date                                              | Customer’s signature and date on the Agreement.                                                                                             |
+| Signature and date                                              | Deemed signed on Customer’s acceptance of the Agreement.                                                                                    |
 | Role (controller/processor)                                     | Controller, or Processor on behalf of Third-Party Controller.                                                                               |
 
 #### Data importer
@@ -341,8 +345,8 @@ conflicting terms of the Agreement.
 | Address                                                         | The address for Tigris Data as set forth in the Agreement.                                                                                |
 | Contact person’s name, position and contact details             | The contact details for Tigris Data as set forth in the Agreement                                                                         |
 | Activities relevant to the data transferred under these Clauses | Vendor provides its services to Customer as described in the Agreement and Processes Personal Data on behalf of Customer in that context. |
-| Signature and date                                              | Tigris Data signature and date on the Agreement.                                                                                          |
-| Role (controller/processor)                                     | Processor on behalf of Vendor, or Subprocessor on behalf of Third-Party Controller.                                                       |
+| Signature and date                                              | Deemed signed on Customer’s acceptance of the Agreement.                                                                                  |
+| Role (controller/processor)                                     | Processor on behalf of Customer, or Subprocessor on behalf of Third-Party Controller.                                                     |
 
 ### DESCRIPTION OF THE TRANSFER
 

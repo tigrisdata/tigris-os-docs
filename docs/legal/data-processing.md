@@ -1,6 +1,6 @@
 # Data Processing Addendum
 
-_Last updated: November 18, 2025_
+_Last updated: November 4, 2026_
 
 Pursuant to the Tigris Service Agreement (“**the Agreement**”), Customer, on
 behalf of itself and its affiliates, and Tigris Data Inc. (referred to herein as

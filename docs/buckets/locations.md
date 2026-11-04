@@ -263,10 +263,12 @@ location has two trade-offs.
 - **Global** distributes data based on access patterns — not suitable for strict
   data residency requirements.
 
-For every location type, object metadata (keys, sizes, ETags, content types and
-last-modified times) and bucket settings are replicated to all Tigris regions so
-that any region can route requests. The residency described above applies to
-object data.
+For every location type, object keys, sizes, ETags, content types, last-modified
+times and bucket settings are replicated to all Tigris regions so that any
+region can route requests. Full object metadata, including custom metadata, is
+also kept in disaster-recovery regions in the same geography. For example,
+metadata for objects in Frankfurt is also stored in London and Amsterdam. The
+residency described above applies to object data.
 
 ### Cost
 

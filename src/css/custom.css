@@ -1182,11 +1182,12 @@ table td {
   font-weight: 600;
 }
 
-/* Buttons: the website's .btn, 3px, Geist 500 */
+/* Buttons: the website's .btn, 3px, subhead.sm. One size: the token
+   replaces infima's --sm / --lg size multiplier. */
 .button {
   border-radius: var(--r-button);
-  font-weight: 500;
-  letter-spacing: -0.005em;
+  font: var(--type-subhead-sm);
+  letter-spacing: 0;
 }
 
 html[data-theme="dark"] .button--primary {
@@ -1203,7 +1204,7 @@ html[data-theme="dark"] .button--primary:hover {
 .homepage-button,
 .footer__cta a {
   border-radius: var(--r-button);
-  font-weight: 500;
+  font: var(--type-subhead-sm);
 }
 
 html[data-theme="dark"] .homepage-button,
@@ -1252,10 +1253,10 @@ html[data-theme="dark"]
   color: var(--accent);
 }
 
-/* Tables: header row as the website's mono uppercase label */
+/* Tables: header row as the label token */
 table th {
-  font: 500 10.5px/1.4 var(--ifm-font-family-monospace);
-  letter-spacing: 0.14em;
+  font: var(--type-label);
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
 }
 
@@ -1271,6 +1272,23 @@ html[data-theme="dark"] table th {
 /* Admonitions and tabs: 4px panels, hairline edges */
 .theme-admonition {
   border-radius: var(--r-panel);
+}
+
+/* Admonition labels (NOTE, TIP, ...) as the label token. The icon is sized
+   in em, so it keeps the size it had at the old 14px heading. */
+.theme-admonition [class*="admonitionHeading"] {
+  font: var(--type-label);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+.theme-admonition [class*="admonitionHeading"] code {
+  letter-spacing: normal;
+}
+
+.theme-admonition [class*="admonitionIcon"] svg {
+  height: calc(1.6 * var(--ifm-h5-font-size));
+  width: calc(1.6 * var(--ifm-h5-font-size));
 }
 
 html[data-theme="dark"] .theme-admonition {
@@ -1304,23 +1322,31 @@ html[data-theme="dark"] .homepage-card.selected {
 
 .new-badge::after {
   border-radius: var(--r-button);
-  font-family: var(--ifm-font-family-monospace);
-  letter-spacing: 0.14em;
+  font: var(--type-label);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
 }
 
-/* Footer: the website's mono uppercase eyebrows and small print */
+/* Footer: headings and the copyright line as the label token, links as
+   body */
 .footer__title {
-  font: 500 10px/1.4 var(--ifm-font-family-monospace);
-  letter-spacing: 0.16em;
+  font: var(--type-label);
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   margin-bottom: 0.75rem;
 }
 
 .footer__bottom,
 .footer__copyright {
-  font: 500 10px/1.4 var(--ifm-font-family-monospace);
-  letter-spacing: 0.16em;
+  font: var(--type-label);
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
+}
+
+/* the link sets infima's line-height: 2, so set it on the link too */
+.footer__item,
+.footer__link-item {
+  font: var(--type-body);
 }
 
 html[data-theme="dark"] .footer__title,

@@ -83,8 +83,8 @@
   padding: 0 17px;
   border-radius: 3px;
   border: 1px solid transparent;
-  font: 500 14.5px/1 var(--nav-font);
-  letter-spacing: -0.005em;
+  font: var(--type-subhead-sm);
+  letter-spacing: 0;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
@@ -186,9 +186,7 @@
   border: 0;
   background: transparent;
   padding: 10px 16px;
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 20px;
+  font: var(--type-body);
   color: #8fa3b0;
   text-decoration: none;
   cursor: pointer;
@@ -234,10 +232,7 @@
 
 .docsLabel,
 .docsLabel:hover {
-  font-family: var(--nav-font);
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 20px;
+  font: var(--type-subhead-sm);
   color: #fff;
   text-decoration: none;
 }
@@ -259,11 +254,8 @@
   display: block;
   border-radius: 3px;
   padding: 6px 12px;
-  font-family: var(--nav-font);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 20px;
-  letter-spacing: normal;
+  font: var(--type-subhead-sm);
+  letter-spacing: 0;
   color: var(--nav-muted);
   text-decoration: none;
   transition: color 150ms var(--nav-ease);
@@ -332,8 +324,7 @@
 .search :global(.DocSearch-Button-Placeholder) {
   display: block;
   padding: 0;
-  font-size: 14px;
-  font-weight: 400;
+  font: var(--type-body);
   color: var(--nav-muted);
 }
 
@@ -396,8 +387,7 @@
 .sheetLink:hover {
   display: block;
   padding: 8px 0;
-  font-size: 16px;
-  font-weight: 600;
+  font: var(--type-subhead-sm);
   color: var(--ifm-font-color-base);
   text-decoration: none;
 }

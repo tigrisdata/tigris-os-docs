@@ -23,8 +23,8 @@
   gap: 1rem;
   padding: 0.5rem 0.75rem;
   border-bottom: 1px solid var(--hairline, rgb(255 255 255 / 8%));
-  font: 500 10.5px/1.4 var(--ifm-font-family-monospace);
-  letter-spacing: 0.14em;
+  font: var(--type-label);
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: #d6e2e8;
 }

@@ -159,6 +159,17 @@ html[data-theme="dark"] .description {
   text-decoration: none;
 }
 
+/* Dark mode takes the shared colour token; light mode keeps the values
+   above for now. */
+html[data-theme="dark"] .button {
+  background-color: var(--code-output);
+}
+
+html[data-theme="dark"] .button:hover,
+html[data-theme="dark"] .button:focus {
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--code-output) 30%, transparent);
+}
+
 .buttonIcon {
   transition: transform 0.2s ease;
   color: currentColor;

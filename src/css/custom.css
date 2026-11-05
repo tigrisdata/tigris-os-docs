@@ -65,17 +65,10 @@ code {
 :root {
   --ifm-spacing-horizontal: 1.5rem;
 
-  /* Shared design tokens, the same values as the marketing site
-     (tigrisdata/website src/app/globals.css) and the blog. --accent is the
-     only interface accent; --terminal (#62feb5) is for terminal / code output
-     only, never for interface chrome. */
-  --accent: #57d3a4;
-  --accent-hover: #74e0b8;
-  --accent-ink: #04231b;
-  --terminal: #62feb5;
-  --ground: #0a171e;
-  --panel: #0b181e;
-  --raised: #142229;
+  /* Colours come from the shared tokens in tokens.css. Dark mode uses the
+     Grey surface (data-surface="blog", set in src/theme/Root.js). Light
+     mode keeps its own palette for now. --hairline is the old hairline,
+     kept only for the CLI shell frame in light mode. */
   --hairline: #1b2b32;
   --r-button: 3px;
   --r-panel: 4px;
@@ -151,20 +144,20 @@ code {
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 html[data-theme="dark"] {
-  /* the website's accent and grounds */
-  --ifm-color-primary: #57d3a4;
+  /* the shared accent and the Grey surface */
+  --ifm-color-primary: var(--accent);
   --ifm-color-primary-dark: #42cd98;
   --ifm-color-primary-darker: #37c690;
   --ifm-color-primary-darkest: #2ba477;
   --ifm-color-primary-light: #6cd9b0;
   --ifm-color-primary-lighter: #74e0b8;
   --ifm-color-primary-lightest: #96e7c9;
-  --ifm-background-color: var(--ground);
+  --ifm-background-color: var(--surface-ground);
 
   --docs-color-primary: var(--accent);
   --docs-color-primary-100: var(--accent);
 
-  --docs-color-border: var(--hairline);
+  --docs-color-border: var(--line-subtle);
 
   --docs-color-text: #ffffff;
   --docs-color-text-100: #8fa3b0;
@@ -174,17 +167,18 @@ html[data-theme="dark"] {
   --docs-color-background-200: #2a2a2a;
   --docs-color-background-300: #2e2e2e;
 
-  --docs-color-code-background: var(--panel);
-  --ifm-code-background: var(--raised);
+  --docs-color-code-background: var(--surface-panel);
+  --docs-color-primary-tint: var(--surface-raised);
+  --ifm-code-background: var(--surface-raised);
 
   --ifm-link-color: var(--accent);
   --ifm-link-hover-color: var(--accent-hover);
   --ifm-tabs-color-active-border: var(--accent);
   --ifm-tabs-color-active: var(--accent);
 
-  --ifm-footer-background-color: var(--ground);
-  --ifm-background-surface-color: var(--panel);
-  --ifm-toc-border-color: var(--hairline);
+  --ifm-footer-background-color: var(--surface-ground);
+  --ifm-background-surface-color: var(--surface-panel);
+  --ifm-toc-border-color: var(--line-subtle);
 
   --ifm-color-content: #e7e7e7;
 
@@ -247,7 +241,7 @@ html[data-theme="dark"]
   .menu__list
   .menu__list
   .menu__link--active:not(.menu__link--sublist) {
-  background-color: rgba(98, 254, 181, 0.1);
+  background-color: color-mix(in srgb, var(--code-output) 10%, transparent);
   color: var(--docs-color-primary);
 }
 
@@ -768,6 +762,11 @@ table td {
   text-shadow: 0 0 6px rgba(98, 254, 181, 0.25);
 }
 
+html[data-theme="dark"] .mermaid-caption {
+  color: color-mix(in srgb, var(--code-output) 90%, transparent);
+  text-shadow: 0 0 6px color-mix(in srgb, var(--code-output) 25%, transparent);
+}
+
 /* Use-case hero: text left, diagram right */
 .use-case-hero {
   display: flex;
@@ -835,6 +834,11 @@ table td {
 .diagram-lightbox-btn:hover {
   color: #62feb5;
   border-color: #62feb5;
+}
+
+html[data-theme="dark"] .diagram-lightbox-btn:hover {
+  color: var(--code-output);
+  border-color: var(--code-output);
 }
 
 .diagram-lightbox-overlay {
@@ -1224,16 +1228,16 @@ html[data-theme="dark"] .footer__cta a:hover {
 /* prism writes the theme background inline on the container and the pre */
 html[data-theme="dark"] .theme-code-block,
 html[data-theme="dark"] .theme-code-block pre.prism-code {
-  --prism-background-color: var(--panel) !important;
-  background-color: var(--panel) !important;
+  --prism-background-color: var(--surface-panel) !important;
+  background-color: var(--surface-panel) !important;
 }
 
 html[data-theme="dark"] pre.prism-code {
-  border-color: var(--hairline);
+  border-color: var(--line-subtle);
 }
 
 html[data-theme="dark"] :not(pre) > code {
-  border-color: var(--hairline);
+  border-color: var(--line-subtle);
 }
 
 /* Sidebar: 3px links, accent for the current page */
@@ -1266,7 +1270,7 @@ table th code {
 }
 
 html[data-theme="dark"] table th {
-  color: #8ba3a0;
+  color: var(--text-label);
 }
 
 /* Admonitions and tabs: 4px panels, hairline edges */
@@ -1292,9 +1296,57 @@ html[data-theme="dark"] table th {
 }
 
 html[data-theme="dark"] .theme-admonition {
-  border-top: 1px solid var(--hairline);
-  border-right: 1px solid var(--hairline);
-  border-bottom: 1px solid var(--hairline);
+  border-top: 1px solid var(--line-subtle);
+  border-right: 1px solid var(--line-subtle);
+  border-bottom: 1px solid var(--line-subtle);
+}
+
+/* Admonition chips: the status colour at 13% over the panel, with the
+   status colour on the left edge. Docusaurus maps note to secondary, tip to
+   success, and warning and caution to warning. */
+html[data-theme="dark"] .alert--secondary {
+  --ifm-alert-background-color: color-mix(
+    in srgb,
+    var(--status-note) 13%,
+    var(--surface-panel)
+  );
+  --ifm-alert-border-color: var(--status-note);
+}
+
+html[data-theme="dark"] .alert--success {
+  --ifm-alert-background-color: color-mix(
+    in srgb,
+    var(--status-tip) 13%,
+    var(--surface-panel)
+  );
+  --ifm-alert-border-color: var(--status-tip);
+}
+
+html[data-theme="dark"] .alert--info {
+  --ifm-alert-background-color: color-mix(
+    in srgb,
+    var(--status-info) 13%,
+    var(--surface-panel)
+  );
+  --ifm-alert-border-color: var(--status-info);
+}
+
+html[data-theme="dark"] .alert--warning {
+  --ifm-alert-background-color: color-mix(
+    in srgb,
+    var(--status-warning) 13%,
+    var(--surface-panel)
+  );
+  --ifm-alert-border-color: var(--status-warning);
+}
+
+html[data-theme="dark"] .alert--danger {
+  --ifm-alert-background-color: color-mix(
+    in srgb,
+    var(--status-danger) 13%,
+    var(--surface-panel)
+  );
+  --ifm-alert-border-color: var(--status-danger);
 }
 
 /* Cards on the docs home and elsewhere: flat 4px hairline panels, no glow */
@@ -1310,14 +1362,14 @@ html[data-theme="dark"] .theme-admonition {
 }
 
 html[data-theme="dark"] .homepage-card {
-  border-color: var(--hairline);
-  background-color: var(--panel);
+  border-color: var(--line-subtle);
+  background-color: var(--surface-panel);
 }
 
 html[data-theme="dark"] .homepage-card:hover,
 html[data-theme="dark"] .homepage-card.selected {
-  border-color: color-mix(in oklab, var(--accent) 35%, var(--hairline));
-  background-color: var(--raised);
+  border-color: color-mix(in oklab, var(--accent) 35%, var(--line-subtle));
+  background-color: var(--surface-raised);
 }
 
 .new-badge::after {
@@ -1352,9 +1404,36 @@ html[data-theme="dark"] .homepage-card.selected {
 html[data-theme="dark"] .footer__title,
 html[data-theme="dark"] .footer__bottom,
 html[data-theme="dark"] .footer__copyright {
-  color: #8ba3a0;
+  color: var(--text-label);
 }
 
 html[data-theme="dark"] .footer {
-  border-top: 1px solid var(--hairline);
+  border-top: 1px solid var(--line-subtle);
+}
+
+/* Excalidraw diagrams (src/components/diagrams/ExcalidrawDiagram.tsx) keep
+   the colours of their exports in the JSON. In dark mode, the colours that
+   have a token are drawn with the token instead. */
+html[data-theme="dark"] .excalidraw-diagram [fill="#0a171e" i] {
+  fill: var(--surface-ground);
+}
+
+html[data-theme="dark"] .excalidraw-diagram [stroke="#0a171e" i] {
+  stroke: var(--surface-ground);
+}
+
+html[data-theme="dark"] .excalidraw-diagram [fill="#142229" i] {
+  fill: var(--surface-raised);
+}
+
+html[data-theme="dark"] .excalidraw-diagram [stroke="#142229" i] {
+  stroke: var(--surface-raised);
+}
+
+html[data-theme="dark"] .excalidraw-diagram [fill="#62feb5" i] {
+  fill: var(--code-output);
+}
+
+html[data-theme="dark"] .excalidraw-diagram [stroke="#62feb5" i] {
+  stroke: var(--code-output);
 }

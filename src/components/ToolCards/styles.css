@@ -209,8 +209,8 @@
 }
 
 .tool-card-mcp-btn:hover {
-  background: rgba(98, 254, 181, 0.15);
-  border-color: rgba(98, 254, 181, 0.3);
+  background: color-mix(in srgb, var(--code-output) 15%, transparent);
+  border-color: color-mix(in srgb, var(--code-output) 30%, transparent);
   color: #fff;
   text-decoration: none;
 }

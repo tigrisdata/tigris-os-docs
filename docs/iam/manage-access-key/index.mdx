@@ -69,7 +69,9 @@ the AWS CLI.
    aws iam create-access-key --endpoint-url "$AWS_ENDPOINT_URL_IAM"
    ```
 
-   The new key uses the `standard` scope.
+   The new key uses the `standard` scope, unless the key that creates it uses
+   `no_default_allow`. See
+   [Create scoped keys with AWS tooling](#create-scoped-keys-with-aws-tooling).
 
 ## Default allowed operations
 
@@ -117,6 +119,41 @@ turn the default allowed operations off after you create the key.
    toggle on.
 
    ![The Default allowed operations toggle in the access key details](/img/access-key-default-operations-toggle.png)
+
+## Create scoped keys with AWS tooling
+
+The Tigris CLI and SDK set the scope on each key they create. See
+[Change the default allowed operations](#change-the-default-allowed-operations).
+The AWS `CreateAccessKey` call has no scope parameter. Instead, every key that a
+`no_default_allow` key creates with it also uses `no_default_allow`. To create
+scoped keys with the AWS CLI or an AWS SDK, use an Admin key with the
+`no_default_allow` scope.
+
+1. **Create the Admin Key**  
+   In the Dashboard, create an access key with the **Admin** permission. Then
+   turn its **Default allowed operations** toggle off. See
+   [Change the default allowed operations](#change-the-default-allowed-operations).
+
+   The scope does not limit the Admin key itself. It can still do everything in
+   the organization, including creating buckets and other Admin keys. Store it
+   as you would any admin credential.
+
+2. **Create a Key**  
+   Set the Admin key in your environment, then run:
+
+   ```bash
+   aws iam create-access-key --endpoint-url "$AWS_ENDPOINT_URL_IAM" --user-name app-key
+   ```
+
+   The new key uses the `no_default_allow` scope, so it does not get the
+   [default allowed operations](#default-allowed-operations). Until you
+   [attach a policy](/docs/iam/policies/attach-iam-policy.md), it can do
+   nothing.
+
+Keys that the Tigris CLI and SDK create do not inherit the scope. When they run
+with a `no_default_allow` key, they must create keys with
+`--default-permissions disable` or `scope: "no_default_allow"`, or the request
+fails with 403.
 
 ## Delete an Access Key
 

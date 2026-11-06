@@ -103,6 +103,12 @@ it does not own. This limit does not apply to organization admins.
 A key that you create in the Dashboard always uses the `standard` scope. You can
 turn the default allowed operations off after you create the key.
 
+With the CLI, pass `--default-permissions disable` to
+[`tigris access-keys create`](/docs/cli/access-keys/create/) or
+[`tigris access-keys set`](/docs/cli/access-keys/set/). With the
+[`@tigrisdata/iam`](https://www.npmjs.com/package/@tigrisdata/iam) SDK, pass
+`scope: "no_default_allow"` to `createAccessKey` or call `setAccessKeyScope`.
+
 1. **Open the Dashboard**  
    Go to the [Tigris Dashboard](https://console.storage.dev) and select **Access
    Keys** from the sidebar.

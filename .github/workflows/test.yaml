@@ -30,3 +30,4 @@ jobs:
           npm run lint
           npm run build:apidocs # ensure the api docs generate without errors
           npm run build
+          node scripts/check-llms-links.js # llms.txt and .md links resolve

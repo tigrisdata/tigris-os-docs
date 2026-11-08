@@ -161,6 +161,30 @@ _, err := client.CreateAccessKey(ctx, &iam.CreateAccessKeyInput{
 ```
 
 </TabItem>
+<TabItem value="js" label="JavaScript">
+Example using the AWS SDK for JavaScript `@aws-sdk/client-iam`:
+
+```js
+import { IAMClient, CreateAccessKeyCommand } from "@aws-sdk/client-iam";
+
+const iam = new IAMClient({
+  endpoint: "https://iam.storage.dev",
+  region: "auto",
+});
+
+const command = new CreateAccessKeyCommand({ UserName: "app-key" });
+command.middlewareStack.add(
+  (next) => async (args) => {
+    args.request.headers["X-Tigris-Access-Key-Scope"] = "no_default_allow";
+    return next(args);
+  },
+  { step: "build", name: "accessKeyScope" },
+);
+
+await iam.send(command);
+```
+
+</TabItem>
 <TabItem value="python" label="Python">
 Example using the Python SDK boto3:
 

@@ -7,6 +7,9 @@ description:
 
 # Manage Access Keys
 
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
 Tigris access keys authenticate programmatic access to your object storage
 buckets. You can manage them via the Tigris Dashboard or programmatically using
 the AWS CLI.
@@ -145,28 +148,36 @@ The response returns the same header with the scope of the new key. Any value
 other than `standard` or `no_default_allow` fails with 400. A `no_default_allow`
 key that asks for `standard` gets 403.
 
-Go (AWS SDK v2):
+<Tabs groupId="languages">
+<TabItem value="go" label="Go">
+Example using the Go SDK `github.com/aws/aws-sdk-go-v2/service/iam`:
 
 ```go
-import smithyhttp "github.com/aws/smithy-go/transport/http"
-
 _, err := client.CreateAccessKey(ctx, &iam.CreateAccessKeyInput{
 	UserName: aws.String("app-key"),
-}, func(o *iam.Options) {
-	o.APIOptions = append(o.APIOptions,
-		smithyhttp.AddHeaderValue("X-Tigris-Access-Key-Scope", "no_default_allow"))
+}, func(options *iam.Options) {
+	options.APIOptions = append(options.APIOptions, http.AddHeaderValue("X-Tigris-Access-Key-Scope", "no_default_allow"))
 })
 ```
 
-Python (boto3):
+</TabItem>
+<TabItem value="python" label="Python">
+Example using the Python SDK boto3:
 
 ```python
+import boto3
+
+iam = boto3.client("iam", endpoint_url="https://iam.storage.dev")
+
 def add_scope(request, **kwargs):
     request.headers["X-Tigris-Access-Key-Scope"] = "no_default_allow"
 
 iam.meta.events.register("before-sign.iam.CreateAccessKey", add_scope)
 iam.create_access_key(UserName="app-key")
 ```
+
+</TabItem>
+</Tabs>
 
 ### With a scoped Admin key
 

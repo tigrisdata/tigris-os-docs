@@ -5,10 +5,10 @@ description:
   access.
 ---
 
-# Manage Access Keys
-
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
+
+# Manage Access Keys
 
 Tigris access keys authenticate programmatic access to your object storage
 buckets. You can manage them via the Tigris Dashboard or programmatically using
@@ -140,16 +140,20 @@ use a scoped Admin key.
 
 Add this header to an IAM `CreateAccessKey` request:
 
-```
+```text
 X-Tigris-Access-Key-Scope: no_default_allow
 ```
+
+:::note
 
 The response returns the same header with the scope of the new key. Any value
 other than `standard` or `no_default_allow` fails with 400. A `no_default_allow`
 key that asks for `standard` gets 403.
 
+:::
+
 <Tabs groupId="languages">
-<TabItem value="go" label="Go">
+<TabItem value="go" label="Go" default>
 Example using the Go SDK `github.com/aws/aws-sdk-go-v2/service/iam`:
 
 ```go

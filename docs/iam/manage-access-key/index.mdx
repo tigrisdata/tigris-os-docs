@@ -134,9 +134,12 @@ scoped keys with the AWS CLI or an AWS SDK, use an Admin key with the
    turn its **Default allowed operations** toggle off. See
    [Change the default allowed operations](#change-the-default-allowed-operations).
 
+   :::warning
+
    The scope does not limit the Admin key itself. It can still do everything in
-   the organization, including creating buckets and other Admin keys. Store it
-   as you would any admin credential.
+   the organization, including creating buckets and other Admin keys.
+
+   :::
 
 2. **Create a Key**  
    Set the Admin key in your environment, then run:

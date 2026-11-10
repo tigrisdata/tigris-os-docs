@@ -13,7 +13,7 @@ keywords:
     public bucket,
     object expiration,
   ]
-last_reviewed: 2026-10-30
+last_reviewed: 2026-11-10
 ---
 
 # How Do I Configure Tigris Buckets?
@@ -34,7 +34,7 @@ dashboard to allow browser requests to your bucket.
 branded URLs like `assets.example.com/image.png`.
 
 **What storage tiers are available?** Standard, Standard IA (Infrequent Access),
-Glacier IR (Instant Retrieval), and Glacier.
+Archive Instant Retrieval, and Archive.
 
 ## How Do I Create Public and Private Buckets?
 
@@ -105,12 +105,13 @@ tigris buckets lifecycle create my-bucket \
   --storage-class STANDARD_IA \
   --days 30
 
-# Move to Glacier after 90 days
+# Move to Archive after 90 days
+# The Archive tier is still called GLACIER in the API for S3 compatibility
 tigris buckets lifecycle create my-bucket \
   --storage-class GLACIER \
   --days 90
 
-# Move to Glacier after 30 days, then delete after 365 days
+# Move to Archive after 30 days, then delete after 365 days
 tigris buckets lifecycle create my-bucket \
   --storage-class GLACIER \
   --days 30 \

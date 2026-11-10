@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-04-23
+last_reviewed: 2026-10-07
 ---
 
 # Agent Shell
@@ -242,19 +242,14 @@ snapshot my-bucket --list                    # List all snapshots
 
 ### fork
 
-Branch your storage. Create a copy-on-write fork for safe experimentation:
+Branch your storage. Create a copy-on-write fork for safe experimentation, or
+list the forks of a bucket:
 
 ```bash
-fork source-bucket my-fork                   # Fork a bucket
-fork source-bucket my-fork --snapshot 1713200000   # Fork from a specific snapshot
-```
-
-### forks
-
-List forks of a bucket:
-
-```bash
-forks my-bucket
+fork source-bucket --name my-fork            # Fork a bucket
+fork source-bucket --name my-fork --snapshot 1713200000   # Fork from a specific snapshot
+fork --name my-fork                          # Fork the bucket mounted at the current directory
+fork source-bucket --list                    # List forks of a bucket
 ```
 
 ## Multi-Bucket
@@ -350,5 +345,5 @@ console.log(getUrl.stdout.trim());
 await shell.exec("snapshot my-bucket --name before-migration");
 
 // Branch storage for safe experimentation
-await shell.exec("fork my-bucket my-bucket-experiment");
+await shell.exec("fork my-bucket --name my-bucket-experiment");
 ```

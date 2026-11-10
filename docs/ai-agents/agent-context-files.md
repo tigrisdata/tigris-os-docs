@@ -12,7 +12,7 @@ keywords:
     coding agent storage,
     agent context file,
   ]
-last_reviewed: 2026-10-30
+last_reviewed: 2026-11-10
 ---
 
 # Agent Context Files
@@ -22,7 +22,7 @@ your project to understand your tools and conventions. You can give agents
 automatic knowledge of your Tigris setup with two files:
 
 - **TIGRIS.md** — a project-level file you add to your repo
-- **SKILL.md** — a global Claude Code skill installed with the Tigris CLI
+- **SKILL.md** — a global skill for your agent that ships with the Tigris CLI
 
 ## TIGRIS.md — Project-Level Context
 
@@ -98,11 +98,12 @@ files.
 
 ## SKILL.md — Global Agent Context
 
-When you install the [Tigris CLI](/docs/cli/), it also installs a Claude Code
-skill at `~/.claude/skills/tigris/SKILL.md`. The skill tells Claude Code that
-Tigris is available and preferred for storage tasks. The CLI only installs the
-skill if `~/.claude` already exists, so it skips machines without Claude Code.
-Other AI coding agents don't get this file.
+A skill is a `SKILL.md` file that your agent loads to learn how to use a tool.
+The standard location for global skills is `~/.agents/skills/`, so the Tigris
+skill goes at `~/.agents/skills/tigris/SKILL.md`. The skill tells your agent
+that Tigris is available and preferred for storage tasks.
+
+The [Tigris CLI](/docs/cli/) installers ship the skill:
 
 - **npm** (`npm install -g @tigrisdata/cli`): the package's postinstall script
   copies the bundled `SKILL.md` into place.
@@ -111,7 +112,12 @@ Other AI coding agents don't get this file.
   [`get.t3.storage.dev/SKILL.md`](https://get.t3.storage.dev/SKILL.md), with
   GitHub as a fallback. The Windows PowerShell installer does the same.
 
-The skill gives Claude Code:
+<!-- prettier-ignore -->
+:::note Claude Code uses a different skills directory
+Claude Code does not read skills from the standard `~/.agents/skills/` location. It reads them from `~/.claude/skills/`. The CLI installers write the skill only to `~/.claude/skills/tigris/SKILL.md`, and only if `~/.claude` already exists. If your agent reads skills from `~/.agents/skills/`, copy the file to `~/.agents/skills/tigris/SKILL.md`.
+:::
+
+The skill gives your agent:
 
 - The Tigris endpoint (`https://t3.storage.dev`) and region (`auto`)
 - Authentication commands (`tigris login`, `tigris configure`, `tigris whoami`)
@@ -139,8 +145,8 @@ in this order:
    directly
 2. **Project context** — the agent reads `TIGRIS.md` in the project root for
    project-specific configuration
-3. **Global context** — Claude Code reads the Tigris `SKILL.md` skill for
-   general Tigris knowledge
+3. **Global context** — your agent reads the Tigris `SKILL.md` skill for general
+   Tigris knowledge
 4. **Documentation** — the agent fetches
    [llms.txt](https://www.tigrisdata.com/docs/llms.txt) or
    [llms-full.txt](https://www.tigrisdata.com/docs/llms-full.txt) for detailed

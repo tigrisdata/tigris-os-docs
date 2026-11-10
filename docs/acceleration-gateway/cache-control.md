@@ -111,8 +111,8 @@ s3 = boto3.client(
 )
 
 # Add Cache-Control header to HEAD requests
-def add_no_cache(params, **kwargs):
-    params["headers"]["Cache-Control"] = "no-cache"
+def add_no_cache(request, **kwargs):
+    request.headers["Cache-Control"] = "no-cache"
 
 s3.meta.events.register("before-sign.s3.HeadObject", add_no_cache)
 
@@ -130,8 +130,8 @@ Send `Cache-Control: no-store` to skip the cache entirely. TAG forwards the
 request directly to upstream and does not cache the response.
 
 ```python
-def add_no_store(params, **kwargs):
-    params["headers"]["Cache-Control"] = "no-store"
+def add_no_store(request, **kwargs):
+    request.headers["Cache-Control"] = "no-store"
 
 s3.meta.events.register("before-sign.s3.HeadObject", add_no_store)
 

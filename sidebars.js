@@ -1015,6 +1015,7 @@ const sidebars = {
             "cli/access-keys/create",
             "cli/access-keys/delete",
             "cli/access-keys/get",
+            "cli/access-keys/set",
             "cli/access-keys/assign",
             "cli/access-keys/rotate",
             "cli/access-keys/attach-policy",

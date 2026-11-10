@@ -1,0 +1,27 @@
+# tigris access-keys set
+
+Turn the
+[default allowed operations](/docs/iam/manage-access-key/#default-allowed-operations)
+on or off for an existing access key. Bucket roles stay as they are.
+
+**Alias:** `s`
+
+## Usage
+
+```bash
+tigris access-keys set <id> --default-permissions <enable|disable>
+t3 keys s <id> --default-permissions <enable|disable>
+```
+
+## Flags
+
+| Name                    | Required | Default | Description                                                                                         |
+| ----------------------- | -------- | ------- | --------------------------------------------------------------------------------------------------- |
+| `--default-permissions` | Yes      | —       | `disable` sets the `no_default_allow` scope, `enable` sets `standard`. Options: `enable`, `disable` |
+
+## Examples
+
+```bash
+tigris access-keys set tid_AaBbCcDdEeFf --default-permissions disable
+tigris access-keys set tid_AaBbCcDdEeFf --default-permissions enable
+```

@@ -270,8 +270,9 @@ Amsterdam for Frankfurt.
 
 ### Cost
 
-Billable Class A and Class B requests are billed once, at the same respective
-rates, for every location type. The location type changes how storage is billed:
+For current request rates by bucket location type, see the
+[pricing table](https://www.tigrisdata.com/pricing/). Storage costs vary as
+follows:
 
 - **Single-region** has the lowest storage cost — one region, no cross-region
   replication.

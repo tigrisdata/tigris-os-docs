@@ -270,8 +270,8 @@ Amsterdam for Frankfurt.
 
 ### Cost
 
-Requests are billed once, at the same Class A and Class B rates, for every
-location type. The location type changes how storage is billed:
+Billable Class A and Class B requests are billed once, at the same respective
+rates, for every location type. The location type changes how storage is billed:
 
 - **Single-region** has the lowest storage cost — one region, no cross-region
   replication.

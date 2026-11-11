@@ -270,12 +270,16 @@ Amsterdam for Frankfurt.
 
 ### Cost
 
+For current request rates by bucket location type, see the
+[pricing table](https://www.tigrisdata.com/pricing/). Storage costs vary as
+follows:
+
 - **Single-region** has the lowest storage cost — one region, no cross-region
   replication.
-- **Dual-region** is billed at the single-region price for **each** underlying
-  region. For example, a dual-region bucket spanning `iad` and `ord` is billed
-  for `iad` and for `ord` — effectively doubling your storage cost compared to a
-  single-region bucket.
+- **Dual-region** storage is billed at the single-region price for **each**
+  underlying region. For example, a dual-region bucket spanning `iad` and `ord`
+  is billed for `iad` and for `ord` — effectively doubling your storage cost
+  compared to a single-region bucket.
 - **Multi-region** has a higher per-GB storage price than single-region, but you
   are billed once — not per underlying region. For most workloads requiring
   geographic redundancy, multi-region is **more cost-effective** than

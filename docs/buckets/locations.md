@@ -270,6 +270,9 @@ Amsterdam for Frankfurt.
 
 ### Cost
 
+Requests are billed once, at the same Class A and Class B rates, for every
+location type. The location type changes how storage is billed:
+
 - **Single-region** has the lowest storage cost — one region, no cross-region
   replication.
 - **Dual-region** storage is billed at the single-region price for **each**
@@ -283,6 +286,3 @@ Amsterdam for Frankfurt.
   consistency.
 - **Global** is cost-effective for globally accessed data because replication
   happens on demand rather than eagerly.
-- **Requests** are billed once per request at the standard Class A and Class B
-  rates, whatever the location type. Replicating data between regions is not
-  billed as requests or data transfer.

@@ -153,6 +153,177 @@ const may2026 = {
 
 export const changelogData = [
   {
+    date: "November 13, 2026",
+    title: "CreateBucket policies scoped by name and a new MCP sign-in",
+    content: (
+      <>
+        <p>
+          IAM policies can limit the bucket names an access key can create, and
+          the hosted MCP server now gets its tokens from Auth0. This release
+          also fixes signature errors on small uploads and several S3
+          compatibility gaps.
+        </p>
+      </>
+    ),
+    subcategories: [
+      {
+        title: "Features",
+        items: [
+          {
+            title: "Hosted MCP server sign-in moved to Auth0",
+            description: (
+              <>
+                <p>
+                  The hosted MCP server at{" "}
+                  <a href="https://mcp.storage.dev">mcp.storage.dev</a> no
+                  longer runs its own OIDC provider. It relays sign-in to Auth0,
+                  and Auth0 issues every token. Before you approve a sign-in, a
+                  consent page names the MCP client and its redirect URI.
+                </p>
+                <p>
+                  Tokens from the previous version no longer work, so sign in
+                  once more from each MCP client. If a client shows an
+                  authorization error, run its re-authenticate command for the
+                  Tigris server. Client registrations from the previous version,
+                  including ChatGPT connections, carry over, and registrations
+                  no longer expire. See <a href="/docs/mcp/">MCP Server</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "MCP", color: "blue" },
+          },
+          {
+            title: "Limit CreateBucket to a bucket name or prefix",
+            description: (
+              <>
+                <p>
+                  IAM policy statements for <code>s3:CreateBucket</code> match
+                  the bucket name in the request. Allow and Deny statements can
+                  name one bucket or a prefix that ends in <code>*</code>. This
+                  policy lets an access key create buckets that match{" "}
+                  <code>contoso-team-a-*</code> but not production buckets that
+                  match <code>contoso-team-a-prod-*</code>:
+                </p>
+                <CodeBlock language="json">{`{
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:CreateBucket",
+      "Resource": "arn:aws:s3:::contoso-team-a-*"
+    },
+    {
+      "Effect": "Deny",
+      "Action": "s3:CreateBucket",
+      "Resource": "arn:aws:s3:::contoso-team-a-prod-*"
+    }
+  ]
+}`}</CodeBlock>
+                <p>
+                  The Deny applies to every key. A key with Default permissions
+                  on can create buckets with any other name, so turn Default
+                  permissions off on the key to make the Allow statement the
+                  limit. See{" "}
+                  <a href="/docs/iam/policies/">IAM Policy Support</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "IAM", color: "red" },
+          },
+        ],
+      },
+      {
+        title: "Fixes",
+        items: [
+          {
+            title:
+              "Small AWS CLI and SDK uploads no longer fail signature checks",
+            description: (
+              <>
+                <p>
+                  Current versions of the AWS CLI and SDKs upload with streaming
+                  checksums and sign the <code>transfer-encoding</code> header.
+                  When Tigris received the whole body of a small upload at once,
+                  it checked the signature without that header, and some uploads
+                  failed with <code>SignatureDoesNotMatch</code>. Tigris now
+                  checks the signature with the header the client signed.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title:
+              "CopyObject and CompleteMultipartUpload return the version ID",
+            description: (
+              <>
+                <p>
+                  On versioned and snapshot-enabled buckets,{" "}
+                  <code>CopyObject</code> and{" "}
+                  <code>CompleteMultipartUpload</code> return{" "}
+                  <code>x-amz-version-id</code>, as <code>PutObject</code> does.
+                  SDK uploads that switch to multipart for large files get a
+                  version ID back. A retried{" "}
+                  <code>CompleteMultipartUpload</code> returns the version that
+                  the first completion created.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "Changing object tags keeps Last-Modified",
+            description: (
+              <>
+                <p>
+                  Tigris updates an object&apos;s tags in place, so the
+                  object&apos;s <code>Last-Modified</code> date stays the same,
+                  as on S3. On snapshot-enabled buckets, a tag change keeps the
+                  object&apos;s version.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title:
+              "Shadow bucket migration from Cloudflare R2 with object ACLs",
+            description: (
+              <>
+                <p>
+                  On a bucket with <a href="/docs/objects/acl/">object ACLs</a>{" "}
+                  turned on and a Cloudflare R2 shadow bucket, reads of objects
+                  that were only in R2 failed, and those objects did not
+                  migrate. R2 has no object ACLs, so Tigris now applies the
+                  bucket&apos;s ACL to those objects and migrates them.
+                </p>
+              </>
+            ),
+            tag: { label: "Buckets", color: "blue" },
+          },
+          {
+            title: "Conditional writes on write-through migration buckets",
+            description: (
+              <>
+                <p>
+                  On buckets with{" "}
+                  <a href="/docs/migration/#write-through-mode-migrate-at-your-own-pace">
+                    write-through migration
+                  </a>
+                  , Tigris forwards <code>If-Match</code> and{" "}
+                  <code>If-None-Match</code> on <code>PutObject</code> and{" "}
+                  <code>CompleteMultipartUpload</code> to the source bucket. A
+                  write whose condition fails returns <code>412</code> and does
+                  not overwrite the object.
+                </p>
+              </>
+            ),
+            tag: { label: "Buckets", color: "blue" },
+          },
+        ],
+      },
+    ],
+  },
+  {
     date: "September 30, 2026",
     title: "objgit: git hosting on Tigris",
     content: (

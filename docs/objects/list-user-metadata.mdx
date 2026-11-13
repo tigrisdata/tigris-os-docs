@@ -1,0 +1,167 @@
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Listing Objects with User Metadata
+
+A standard S3 listing returns the key, size, ETag and last-modified time of each
+object. Tigris can also return the user metadata, the `x-amz-meta-*` values set
+at upload, in the same listing. One request then replaces a `HeadObject` call
+per key. File system clients such as [TigrisFS](/docs/training/tigrisfs/) use
+this to read file mode, owner and group for a whole directory at once.
+
+## Requesting user metadata in a listing
+
+Send the `X-Tigris-List-Metadata: true` header with a `ListObjectsV2` or
+`ListObjects` request. `list-type=ext-v1`, the listing extension TigrisFS and
+geesefs use, has the same effect.
+
+```bash
+curl "https://t3.storage.dev/my-bucket?list-type=2&prefix=photos/" \
+  --aws-sigv4 "aws:amz:auto:s3" \
+  --user "$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY" \
+  -H "X-Tigris-List-Metadata: true"
+```
+
+Each `Contents` entry carries one `Metadata` element per user metadata value.
+The names are returned without the `x-amz-meta-` prefix:
+
+```xml
+<Contents>
+  <Key>photos/cat.jpg</Key>
+  <LastModified>2026-11-13T18:55:17.000Z</LastModified>
+  <ETag>"e496e4bb9905a7f84495ddea8e9368d7"</ETag>
+  <Size>51234</Size>
+  <StorageClass>STANDARD</StorageClass>
+  <Metadata>
+    <Name>owner</Name>
+    <Value>alice</Value>
+  </Metadata>
+  <Metadata>
+    <Name>mode</Name>
+    <Value>33188</Value>
+  </Metadata>
+</Contents>
+```
+
+## Where the metadata comes from
+
+Tigris keeps the full metadata of an object in the regions that hold the
+bucket's data. It also keeps a smaller global index of every object in every
+region, with the key, size, ETag, content type and last-modified time, so that
+any region can serve a listing without a round trip.
+
+A listing served in a region inside the bucket's
+[location](/docs/buckets/locations/) reads the full metadata and returns the
+user metadata. A listing served in a region outside the bucket's location reads
+the global index. Its entries have no `Metadata` elements, although the keys,
+sizes and ETags are complete.
+
+## Returning user metadata from every region
+
+To make the global index carry user metadata too, create the bucket with the
+`X-Tigris-Global-User-Metadata: true` header. From then on every object written
+to the bucket has its user metadata copied into the global index, and a listing
+with `X-Tigris-List-Metadata` returns it from any region.
+
+The option is set when the bucket is created and cannot be changed afterwards.
+It does not apply to [forks](/docs/buckets/snapshots-and-forks/), which always
+list from the full metadata of their own region.
+
+<Tabs groupId="languages">
+<TabItem value="curl" label="curl">
+
+```bash
+curl -X PUT "https://t3.storage.dev/my-bucket" \
+  --aws-sigv4 "aws:amz:auto:s3" \
+  --user "$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY" \
+  -H "X-Tigris-Global-User-Metadata: true"
+```
+
+</TabItem>
+<TabItem value="go" label="Go">
+
+```go
+func WithGlobalUserMetadata() func(*s3.Options) {
+	return func(options *s3.Options) {
+		options.APIOptions = append(options.APIOptions,
+			http.AddHeaderValue("X-Tigris-Global-User-Metadata", "true"))
+	}
+}
+
+_, err = client.CreateBucket(ctx, &s3.CreateBucketInput{
+	Bucket: aws.String(bucketName),
+}, WithGlobalUserMetadata())
+if err != nil {
+	log.Fatalf("Unable to create bucket. Here's why: %v", err)
+}
+```
+
+</TabItem>
+<TabItem value="js" label="JavaScript">
+
+```js
+S3.middlewareStack.add(
+  (next) => async (args) => {
+    // eslint-disable-next-line no-param-reassign
+    args.request.headers["X-Tigris-Global-User-Metadata"] = "true";
+    return next(args);
+  },
+  {
+    step: "build",
+    name: "globalUserMetadata",
+  },
+);
+
+await S3.send(new CreateBucketCommand({ Bucket: bucket }));
+
+S3.middlewareStack.remove("globalUserMetadata");
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import boto3
+
+s3 = boto3.client(
+    "s3",
+    endpoint_url="https://t3.storage.dev",
+    aws_access_key_id="your-access-key",
+    aws_secret_access_key="your-secret-key",
+)
+
+
+def add_global_user_metadata(request, **kwargs):
+    request.headers.add_header("X-Tigris-Global-User-Metadata", "true")
+
+
+s3.meta.events.register("before-sign.s3.CreateBucket", add_global_user_metadata)
+s3.create_bucket(Bucket="my-bucket")
+```
+
+</TabItem>
+</Tabs>
+
+Partners that provision buckets through the
+[Partner API](/docs/partner-integrations/architecture/) set
+`global_user_metadata` in `bucket_options` instead.
+
+## What to expect
+
+- The user metadata of an object becomes visible in a remote region when the
+  object itself does, as replication delivers the index entry. A listing in the
+  region that took the upload returns it immediately.
+- The user metadata is stored once per region. Keep it small. The global index
+  is read for every listing in every region, so large values slow listings down
+  for all callers of the bucket.
+- Objects written before the bucket had the option are not affected, because the
+  option is set at creation.
+- `ListObjectVersions` and `HeadObject` are unchanged. They always read the full
+  metadata.
+
+## Next Steps
+
+- Filter a listing by last-modified time, content type or size with
+  [Object Metadata Querying](/docs/objects/query-metadata/).
+- Read about the location types and how they place metadata in
+  [Bucket Locations](/docs/buckets/locations/).

@@ -153,6 +153,301 @@ const may2026 = {
 
 export const changelogData = [
   {
+    date: "November 16, 2026",
+    title: "Tigris features in boto3",
+    content: (
+      <>
+        <p>
+          Releases 0.4.0 to 0.8.0 of{" "}
+          <a href="/docs/sdks/s3/tigris-boto3-ext/">tigris-boto3-ext</a> add
+          soft delete, data migration, object notifications and bucket settings
+          to the boto3 client you already use.
+        </p>
+      </>
+    ),
+    subcategories: [
+      {
+        title: "tigris-boto3-ext",
+        items: [
+          {
+            title: "Soft delete and force delete from Python",
+            description: (
+              <>
+                <p>
+                  Create a bucket with soft delete with{" "}
+                  <code>create_soft_delete_bucket</code>, or use{" "}
+                  <code>set_bucket_soft_delete</code> to turn it on or off on an
+                  existing bucket or change its retention window to anywhere
+                  from 7 to 90 days. <code>list_deleted_objects</code> and{" "}
+                  <code>list_deleted_object_versions</code> show what you can
+                  recover. <code>restore_deleted_object</code> brings a version
+                  back and <code>purge_deleted_object</code> removes it for
+                  good. For whole buckets, use <code>list_deleted_buckets</code>{" "}
+                  and <code>restore_bucket</code>.
+                </p>
+                <CodeBlock language="python">{`from tigris_boto3_ext import (
+    list_deleted_object_versions,
+    restore_deleted_object,
+    set_bucket_soft_delete,
+)
+
+set_bucket_soft_delete(s3, "my-bucket", True, retention_days=30)
+versions = list_deleted_object_versions(s3, "my-bucket")
+restore_deleted_object(s3, "my-bucket", "report.pdf")`}</CodeBlock>
+                <p>
+                  <code>force_delete_bucket(s3, name)</code> deletes a bucket
+                  that still holds objects in one call. If the bucket has soft
+                  delete on, you can restore it and its objects during the
+                  retention window. Without soft delete, the bucket and its
+                  objects are gone for good. See{" "}
+                  <a href="/docs/buckets/soft-delete/">Soft Delete</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "Python", color: "cyan" },
+          },
+          {
+            title: "Migrate a bucket from another S3 provider",
+            description: (
+              <>
+                <p>
+                  <code>set_bucket_migration</code> points a Tigris bucket at a
+                  bucket on another S3-compatible provider. Tigris copies each
+                  object over the first time it is read, and with{" "}
+                  <code>write_through=True</code> new writes go to the source as
+                  well. <code>migrate_object</code> schedules the copy without
+                  waiting for a read, <code>is_object_migrated</code> checks one
+                  object, and <code>list_objects_from_source</code> lists what
+                  is still only at the source. See{" "}
+                  <a href="/docs/migration/">Migrate to Tigris</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "Python", color: "cyan" },
+          },
+          {
+            title: "Object notifications to a webhook",
+            description: (
+              <>
+                <p>
+                  <code>set_bucket_notifications</code> has Tigris POST an event
+                  to your HTTPS webhook when objects in the bucket are created,
+                  deleted, renamed or moved to another storage class. You can
+                  filter events with a query, authenticate with a bearer token
+                  or basic credentials, pause delivery with{" "}
+                  <code>enabled=False</code>, or pass <code>None</code> as the
+                  URL to remove the configuration. See{" "}
+                  <a href="/docs/buckets/object-notifications/">
+                    Object Notifications
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "Python", color: "cyan" },
+          },
+          {
+            title: "Bucket settings, details and snapshots",
+            description: (
+              <>
+                <p>
+                  <code>create_bucket</code> sets access, default storage class,
+                  regions and public listing when you create a bucket.{" "}
+                  <code>update_bucket</code> changes those later, along with
+                  Cache-Control, the custom domain and{" "}
+                  <code>snapshot_enabled</code>, which turns snapshots on for an
+                  existing bucket. <code>get_bucket_metadata</code> returns a
+                  bucket&apos;s placement, storage class, soft delete setting,
+                  fork lineage and, if you ask, its size.
+                </p>
+                <p>
+                  <code>list_buckets</code> can add each bucket&apos;s type,
+                  regions, visibility and fork details, and filter to forks or
+                  to one owner. <code>list_forks</code> lists a bucket&apos;s
+                  forks, <code>get_stats</code> returns totals for the account,
+                  and <code>delete_snapshot</code> deletes one snapshot.
+                </p>
+                <p>
+                  <code>restore_object</code> and <code>get_restore_info</code>{" "}
+                  restore objects from the archive tier and report their status.{" "}
+                  <code>presign</code> returns a presigned URL that also works
+                  on the bucket&apos;s custom domain, and can pin a download to
+                  the object as it was at a snapshot. See{" "}
+                  <a href="/docs/buckets/settings/">Bucket Settings</a> and{" "}
+                  <a href="/docs/buckets/snapshots-and-forks/">
+                    Snapshots and Forks
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "Python", color: "cyan" },
+          },
+          {
+            title: "Import from the package root",
+            description: (
+              <>
+                <p>
+                  0.5.0 removed the <code>helpers</code>,{" "}
+                  <code>context_managers</code>, <code>decorators</code>,{" "}
+                  <code>soft_delete</code> and <code>bundle</code> submodules.
+                  Every public name is exported from{" "}
+                  <code>tigris_boto3_ext</code>, so change imports such as{" "}
+                  <code>
+                    from tigris_boto3_ext.helpers import create_snapshot
+                  </code>{" "}
+                  to <code>from tigris_boto3_ext import create_snapshot</code>.
+                </p>
+              </>
+            ),
+            tag: { label: "Python", color: "cyan" },
+          },
+        ],
+      },
+      {
+        title: "Features",
+        items: [
+          {
+            title: "Self-service MFA reset",
+            description: (
+              <>
+                <p>
+                  Organization settings in the console have a Security tab.
+                  Organization admins can require MFA for every member there,
+                  and you can turn on MFA for your own account. If you already
+                  use MFA and need to move it to a new device, choose Reset MFA.
+                  You sign in again and pass an MFA challenge, and the next time
+                  you sign in you enroll the new device. The Security tab
+                  isn&apos;t available to organizations managed through Fly.io.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+          {
+            title: "Access keys without default permissions",
+            description: (
+              <>
+                <p>
+                  Create a key that can do only what its bucket roles and IAM
+                  policies allow, or change an existing key, from the CLI:
+                </p>
+                <CodeBlock language="bash">{`tigris access-keys create ci-deploy --default-permissions disable
+tigris access-keys set tid_AaBbCcDdEeFf --default-permissions enable`}</CodeBlock>
+                <p>
+                  <code>access-keys set</code> leaves the key&apos;s bucket
+                  roles as they are, and <code>access-keys get</code> and{" "}
+                  <code>access-keys list</code> show the setting. In{" "}
+                  <code>@tigrisdata/iam</code>, pass{" "}
+                  <code>{`{ scope: "no_default_allow" }`}</code> to{" "}
+                  <code>createAccessKey</code> or call{" "}
+                  <code>setAccessKeyScope</code>. Update to{" "}
+                  <code>@tigrisdata/cli</code> 3.17.0 or{" "}
+                  <code>@tigrisdata/iam</code> 2.8.0. See{" "}
+                  <a href="/docs/iam/manage-access-key/#change-the-default-allowed-operations">
+                    Change the default allowed operations
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "IAM", color: "red" },
+          },
+          {
+            title: "Purge soft-deleted buckets",
+            description: (
+              <>
+                <p>
+                  <code>tigris buckets purge</code> permanently deletes one or
+                  more soft-deleted buckets before their retention window ends,
+                  and <code>purgeBucket(name)</code> in{" "}
+                  <code>@tigrisdata/storage</code> does the same from code. A
+                  purged bucket can&apos;t be restored. Live buckets are
+                  refused.
+                </p>
+                <CodeBlock language="bash">{`tigris buckets purge bucket-a,bucket-b`}</CodeBlock>
+                <p>
+                  Update to <code>@tigrisdata/cli</code> 3.16.0 or{" "}
+                  <code>@tigrisdata/storage</code> 3.23.0. See{" "}
+                  <a href="/docs/cli/buckets/purge/">tigris buckets purge</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+        ],
+      },
+      {
+        title: "Improvements",
+        items: [
+          {
+            title: "CLI retries transient failures",
+            description: (
+              <>
+                <p>
+                  Bucket listing and stats, copy and move, and bucket settings
+                  commands retry with backoff on 408, 429 and 5xx responses and
+                  on network errors. Commands that go through the AWS SDK keep
+                  its own retry policy. Update to <code>@tigrisdata/cli</code>{" "}
+                  3.15.0 or later.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+        ],
+      },
+      {
+        title: "Fixes",
+        items: [
+          {
+            title: "Snapshot buckets work with version-aware S3 tools",
+            description: (
+              <>
+                <p>
+                  <code>GetBucketVersioning</code> reports <code>Enabled</code>{" "}
+                  on snapshot buckets, and <code>PutBucketVersioning</code> with{" "}
+                  <code>Enabled</code> succeeds on them, so rclone, restic,
+                  Velero and Terraform see that versioning is on. On other
+                  buckets, <code>PutBucketVersioning</code> returns{" "}
+                  <code>NotImplemented</code>. <code>DeleteObjects</code> honors
+                  a <code>VersionId</code> on each key and deletes that version,
+                  as <code>DeleteObject</code> with <code>versionId</code> does.
+                </p>
+                <p>
+                  The console&apos;s IAM policy editor accepts{" "}
+                  <code>s3:GetObjectVersion</code>,{" "}
+                  <code>s3:DeleteObjectVersion</code>,{" "}
+                  <code>s3:ListBucketVersions</code> and{" "}
+                  <code>s3:GetBucketVersioning</code>. See{" "}
+                  <a href="/docs/buckets/snapshots-and-forks/#using-object-versioning-apis">
+                    Using object versioning APIs
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "Restore a soft-deleted object from any region",
+            description: (
+              <>
+                <p>
+                  Restoring a soft-deleted object works when the request reaches
+                  a region outside the replication group that holds the deleted
+                  copy. Tigris forwards the restore to the cluster that owns it.
+                  Before, such a request could return 404.
+                </p>
+              </>
+            ),
+            tag: { label: "Buckets", color: "blue" },
+          },
+        ],
+      },
+    ],
+  },
+  {
     date: "September 30, 2026",
     title: "objgit: git hosting on Tigris",
     content: (

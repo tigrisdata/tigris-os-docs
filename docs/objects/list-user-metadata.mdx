@@ -63,12 +63,16 @@ To make the global index carry user metadata too, create the bucket with the
 to the bucket has its user metadata copied into the global index, and a listing
 with `X-Tigris-List-Metadata` returns it from any region.
 
+:::note
+
 The option is set when the bucket is created and cannot be changed afterwards.
 It does not apply to [forks](/docs/buckets/snapshots-and-forks/), which always
 list from the full metadata of their own region.
 
+:::
+
 <Tabs groupId="languages">
-<TabItem value="curl" label="curl">
+<TabItem value="curl" label="curl" default>
 
 ```bash
 curl -X PUT "https://t3.storage.dev/my-bucket" \
@@ -154,8 +158,6 @@ Partners that provision buckets through the
 - The user metadata is stored once per region. Keep it small. The global index
   is read for every listing in every region, so large values slow listings down
   for all callers of the bucket.
-- Objects written before the bucket had the option are not affected, because the
-  option is set at creation.
 - `ListObjectVersions` and `HeadObject` are unchanged. They always read the full
   metadata.
 

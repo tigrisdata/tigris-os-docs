@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import BlogPostPreview from "@site/src/components/BlogPostPreview";
 import styles from "./styles.module.css";
 
 // --- Helper function to truncate month names ---
@@ -19,6 +20,31 @@ const formatDate = (dateString) => {
   }
   return dateString;
 };
+
+// --- Helpers for the entry heading ---
+// Entries are releases, so the heading names the release rather than its
+// headline feature: "September 30, 2026" becomes "September 2026 release".
+// When a month has more than one entry, the full date keeps them distinct.
+const monthOf = (dateString) => {
+  const parts = (dateString || "").split(" ");
+  return parts.length === 3 ? `${parts[0]} ${parts[2]}` : dateString;
+};
+
+const releaseHeading = (dateString, monthCounts) => {
+  const month = monthOf(dateString);
+  return `${monthCounts[month] > 1 ? dateString : month} release`;
+};
+
+// Older entries embed a BlogPostPreview tile in their content. That tile
+// already sets the headline feature apart, so those entries skip the card
+// border instead of nesting one card inside another.
+const hasBlogPostPreview = (content) =>
+  React.Children.toArray(content?.props?.children).some(
+    (child) => child.type === BlogPostPreview,
+  );
+
+const countChanges = (subcategories) =>
+  (subcategories || []).reduce((n, s) => n + (s.items || []).length, 0);
 
 // --- Helper function for tag colors ---
 // This is used by subcategory items only.
@@ -144,8 +170,12 @@ export const ChangelogItem = ({
   subcategories,
   image,
   footerLink,
+  heading,
   isLast,
 }) => {
+  const changeCount = countChanges(subcategories);
+  const hasSubcategories = subcategories && subcategories.length > 0;
+
   return (
     <div className={styles.timelineItem}>
       {/* The vertical line connecting the timeline dots */}
@@ -165,15 +195,37 @@ export const ChangelogItem = ({
       <div className={styles.content}>
         <div className={styles.dateMobile}>{formatDate(date)}</div>
 
-        {/* Header area */}
+        {/* Header area: the release, not its headline feature */}
         <div className={styles.itemHeader}>
-          <h2 className={styles.entryTitle}>{title}</h2>
+          <h2 className={styles.entryTitle}>{heading || date}</h2>
         </div>
+        {changeCount > 0 && (
+          <div className={styles.changeCount}>
+            {changeCount} {changeCount === 1 ? "change" : "changes"}
+          </div>
+        )}
+
+        {/* Featured card: the headline feature of this release */}
+        <div
+          className={
+            hasBlogPostPreview(content) ? styles.featured : styles.featuredCard
+          }
+        >
+          <span className={styles.featuredLabel}>Featured</span>
+          <h3 className={styles.featuredTitle}>{title}</h3>
+          {content && (
+            <div className={`${styles.entryContent} ${styles.featuredBody}`}>
+              {content}
+            </div>
+          )}
+        </div>
+
+        {hasSubcategories && (
+          <div className={styles.sectionLabel}>Also in this release</div>
+        )}
 
         {/* Content */}
         <div className={styles.contentArea}>
-          {content && <div className={styles.entryContent}>{content}</div>}
-
           {image && (
             <div className={styles.imageContainer}>
               {image.href !== undefined ? (
@@ -218,7 +270,7 @@ export const ChangelogItem = ({
           )}
 
           {/* Subcategories */}
-          {subcategories && subcategories.length > 0 && (
+          {hasSubcategories && (
             <div className={styles.subcategoriesContainer}>
               {subcategories.map((subcategory, index) => (
                 <Subcategory key={index} {...subcategory} />
@@ -267,18 +319,26 @@ ChangelogItem.propTypes = {
     href: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
   }),
+  heading: PropTypes.string,
   isLast: PropTypes.bool.isRequired,
 };
 
 // --- Main App Component ---
 // This is the main component that renders the entire page and timeline.
 export default function Timeline({ changelogData }) {
+  const monthCounts = changelogData.reduce((counts, item) => {
+    const month = monthOf(item.date);
+    counts[month] = (counts[month] || 0) + 1;
+    return counts;
+  }, {});
+
   return (
     <div className={styles.timeline}>
       {changelogData.map((item, index) => (
         <ChangelogItem
           key={index}
           {...item}
+          heading={releaseHeading(item.date, monthCounts)}
           isLast={index === changelogData.length - 1}
         />
       ))}

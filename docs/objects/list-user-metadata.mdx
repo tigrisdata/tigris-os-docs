@@ -50,11 +50,12 @@ bucket's data. It also keeps a smaller global index of every object in every
 region, with the key, size, ETag, content type and last-modified time, so that
 any region can serve a listing without a round trip.
 
-A listing served in a region inside the bucket's
-[location](/docs/buckets/locations/) reads the full metadata and returns the
-user metadata. A listing served in a region outside the bucket's location reads
-the global index. Its entries have no `Metadata` elements, although the keys,
-sizes and ETags are complete.
+A plain listing reads the global index, so it is complete from any region. A
+listing that asks for user metadata reads the full metadata instead. Served in a
+region inside the bucket's [location](/docs/buckets/locations/), it returns
+every object with its user metadata. Served in a region outside the bucket's
+location, where no full metadata exists for the bucket, it returns no objects at
+all.
 
 ## Returning user metadata from every region
 
@@ -66,8 +67,9 @@ with `X-Tigris-List-Metadata` returns it from any region.
 :::note
 
 The option is set when the bucket is created and cannot be changed afterwards.
-It does not apply to [forks](/docs/buckets/snapshots-and-forks/), which always
-list from the full metadata of their own region.
+It does not apply to [forks](/docs/buckets/snapshots-and-forks/) or to buckets
+that are the target of a merge, which always list from the full metadata of
+their own region.
 
 :::
 
@@ -158,8 +160,8 @@ Partners that provision buckets through the
 - The user metadata is stored once per region. Keep it small. The global index
   is read for every listing in every region, so large values slow listings down
   for all callers of the bucket.
-- `ListObjectVersions` and `HeadObject` are unchanged. They always read the full
-  metadata.
+- `ListObjectVersions` and `HeadObject` are unchanged. Version listings are
+  served by the bucket's own location, and `HeadObject` reads the full metadata.
 
 ## Next Steps
 

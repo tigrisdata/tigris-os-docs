@@ -42,8 +42,8 @@ to new objects. For more information, see the
 ## User metadata in listings from every region
 
 Object listings can return the `x-amz-meta-*` values of each object. By default
-a region outside the bucket's location returns listings without them. To return
-user metadata from every region, create the bucket with the
+such a listing is empty when served by a region outside the bucket's location.
+To return user metadata from every region, create the bucket with the
 `X-Tigris-Global-User-Metadata: true` header. The option cannot be changed after
 creation. For more information, see
 [Listing Objects with User Metadata](/docs/objects/list-user-metadata/).

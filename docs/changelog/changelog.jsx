@@ -153,7 +153,7 @@ const may2026 = {
 
 export const changelogData = [
   {
-    date: "November 13, 2026",
+    date: "December 1, 2026",
     title: "CreateBucket policies scoped by name and a new MCP sign-in",
     content: (
       <>

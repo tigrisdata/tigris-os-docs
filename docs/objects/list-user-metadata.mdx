@@ -3,17 +3,17 @@ import TabItem from "@theme/TabItem";
 
 # Listing Objects with User Metadata
 
-A standard S3 listing returns the key, size, ETag and last-modified time of each
-object. Tigris can also return the user metadata, the `x-amz-meta-*` values set
-at upload, in the same listing. One request then replaces a `HeadObject` call
-per key. File system clients such as [TigrisFS](/docs/training/tigrisfs/) use
-this to read file mode, owner and group for a whole directory at once.
+An S3 listing returns the key, size, ETag and last-modified time of each object.
+Tigris can include the user metadata, the `x-amz-meta-*` values set at upload,
+in the same response. File system clients such as
+[TigrisFS](/docs/training/tigrisfs/) read file mode, owner and group for a whole
+directory this way instead of calling `HeadObject` per key.
 
 ## Requesting user metadata in a listing
 
-Send the `X-Tigris-List-Metadata: true` header with a `ListObjectsV2` or
-`ListObjects` request. `list-type=ext-v1`, the listing extension TigrisFS and
-geesefs use, has the same effect.
+Send `X-Tigris-List-Metadata: true` with a `ListObjectsV2` or `ListObjects`
+request. `list-type=ext-v1`, the listing extension TigrisFS and geesefs use, has
+the same effect.
 
 ```bash
 curl "https://t3.storage.dev/my-bucket?list-type=2&prefix=photos/" \
@@ -22,8 +22,8 @@ curl "https://t3.storage.dev/my-bucket?list-type=2&prefix=photos/" \
   -H "X-Tigris-List-Metadata: true"
 ```
 
-Each `Contents` entry carries one `Metadata` element per user metadata value.
-The names are returned without the `x-amz-meta-` prefix:
+Each `Contents` entry carries one `Metadata` element per value, named without
+the `x-amz-meta-` prefix:
 
 ```xml
 <Contents>
@@ -45,31 +45,27 @@ The names are returned without the `x-amz-meta-` prefix:
 
 ## Where the metadata comes from
 
-Tigris keeps the full metadata of an object in the regions that hold the
-bucket's data. It also keeps a smaller global index of every object in every
-region, with the key, size, ETag, content type and last-modified time, so that
-any region can serve a listing without a round trip.
+The full metadata of an object lives in the regions that hold the bucket's data.
+Every region also holds a global index of every object with the key, size, ETag,
+content type and last-modified time.
 
-A plain listing reads the global index, so it is complete from any region. A
-listing that asks for user metadata reads the full metadata instead. Served in a
-region inside the bucket's [location](/docs/buckets/locations/), it returns
-every object with its user metadata. Served in a region outside the bucket's
-location, where no full metadata exists for the bucket, it returns no objects at
-all.
+A plain listing reads the global index and is complete from any region. A
+listing that asks for user metadata reads the full metadata. Inside the bucket's
+[location](/docs/buckets/locations/) that returns every object with its
+metadata. Outside it there is no full metadata for the bucket, and the listing
+returns no objects.
 
 ## Returning user metadata from every region
 
-To make the global index carry user metadata too, create the bucket with the
-`X-Tigris-Global-User-Metadata: true` header. From then on every object written
-to the bucket has its user metadata copied into the global index, and a listing
-with `X-Tigris-List-Metadata` returns it from any region.
+Create the bucket with the `X-Tigris-Global-User-Metadata: true` header. Every
+object written to it then has its user metadata copied into the global index,
+and a listing with `X-Tigris-List-Metadata` returns it from any region.
 
 :::note
 
-The option is set when the bucket is created and cannot be changed afterwards.
-It does not apply to [forks](/docs/buckets/snapshots-and-forks/) or to buckets
-that are the target of a merge, which always list from the full metadata of
-their own region.
+The option is set at creation and cannot be changed afterwards. It does not
+apply to [forks](/docs/buckets/snapshots-and-forks/) or to buckets that are the
+target of a merge, which list from the full metadata of their own region.
 
 :::
 
@@ -98,7 +94,7 @@ _, err = client.CreateBucket(ctx, &s3.CreateBucketInput{
 	Bucket: aws.String(bucketName),
 }, WithGlobalUserMetadata())
 if err != nil {
-	log.Fatalf("Unable to create bucket. Here's why: %v", err)
+	log.Fatalf("Unable to create bucket: %v", err)
 }
 ```
 
@@ -150,16 +146,14 @@ s3.create_bucket(Bucket="my-bucket")
 
 Partners that provision buckets through the
 [Partner API](/docs/partner-integrations/architecture/) set
-`global_user_metadata` in `bucket_options` instead.
+`global_user_metadata` in `bucket_options`.
 
-## What to expect
+## Behavior
 
-- The user metadata of an object becomes visible in a remote region when the
-  object itself does, as replication delivers the index entry. A listing in the
-  region that took the upload returns it immediately.
-- The user metadata is stored once per region. Keep it small. The global index
-  is read for every listing in every region, so large values slow listings down
-  for all callers of the bucket.
+- User metadata reaches a remote region together with the object's index entry,
+  so it appears there when replication delivers the object.
+- The metadata is stored in every region. Large values slow down every listing
+  of the bucket.
 - `ListObjectVersions` and `HeadObject` are unchanged. Version listings are
   served by the bucket's own location, and `HeadObject` reads the full metadata.
 
@@ -167,5 +161,5 @@ Partners that provision buckets through the
 
 - Filter a listing by last-modified time, content type or size with
   [Object Metadata Querying](/docs/objects/query-metadata/).
-- Read about the location types and how they place metadata in
+- Read how each location type places metadata in
   [Bucket Locations](/docs/buckets/locations/).

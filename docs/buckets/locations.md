@@ -253,8 +253,8 @@ location has two trade-offs.
 
 ### Compliance and Data Residency
 
-- **Single-region** gives you the strictest data residency — data never leaves
-  the chosen region.
+- **Single-region** gives you the strictest data residency: object data never
+  leaves the chosen region.
 - **Dual-region** lets you maintain data residency across more than one region,
   useful for regulations that allow data within a defined set of jurisdictions
   (e.g., two EU regions for GDPR compliance).
@@ -263,14 +263,23 @@ location has two trade-offs.
 - **Global** distributes data based on access patterns — not suitable for strict
   data residency requirements.
 
+Residency applies to object data. Object keys, sizes and other system metadata,
+along with bucket settings, are replicated to all regions. Custom metadata also
+goes to disaster-recovery regions in the same geography, such as London and
+Amsterdam for Frankfurt.
+
 ### Cost
+
+For current request rates by bucket location type, see the
+[pricing table](https://www.tigrisdata.com/pricing/). Storage costs vary as
+follows:
 
 - **Single-region** has the lowest storage cost — one region, no cross-region
   replication.
-- **Dual-region** is billed at the single-region price for **each** underlying
-  region. For example, a dual-region bucket spanning `iad` and `ord` is billed
-  for `iad` and for `ord` — effectively doubling your storage cost compared to a
-  single-region bucket.
+- **Dual-region** storage is billed at the single-region price for **each**
+  underlying region. For example, a dual-region bucket spanning `iad` and `ord`
+  is billed for `iad` and for `ord` — effectively doubling your storage cost
+  compared to a single-region bucket.
 - **Multi-region** has a higher per-GB storage price than single-region, but you
   are billed once — not per underlying region. For most workloads requiring
   geographic redundancy, multi-region is **more cost-effective** than

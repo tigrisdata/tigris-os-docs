@@ -201,6 +201,8 @@ const config = {
           "Tigris is a globally distributed, S3-compatible object storage service with zero egress fees. Single endpoint: https://t3.storage.dev",
         content: {
           enableMarkdownFiles: true,
+          relativePaths: false,
+          remarkPlugins: [require("./plugins/llms-txt-links")],
           enableLlmsFullTxt: true,
           includeDocs: true,
           includeBlog: false,

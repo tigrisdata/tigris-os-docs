@@ -218,3 +218,21 @@ Note:
   [here](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-cloudfront-signer/).
 - Read more about cookies
   [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie).
+
+## List and delete public keys
+
+To find the ID of each public key, list the public keys:
+
+```shell
+aws cloudfront list-public-keys
+```
+
+The output shows the `Id`, `Name`, and `CreatedTime` of each public key.
+
+To delete a public key, give its ID:
+
+```shell
+aws cloudfront delete-public-key --id t_pk_id_example
+```
+
+Note: Your access key must have admin privileges to list or delete public keys.

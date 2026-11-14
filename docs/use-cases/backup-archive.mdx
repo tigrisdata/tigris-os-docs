@@ -46,11 +46,14 @@ to restore, data is available immediately — no rehydration wait.
 
 Define age-based rules to move objects between storage tiers automatically. A
 backup written today starts in Standard, transitions to Infrequent Access after
-30 days, and moves to Archive after 90 — all without application changes.
+30 days, and moves to Archive Instant Retrieval after 90 — all without
+application changes.
 
 ```bash
-tigris buckets lifecycle set my-backups \
-  --rule '{"prefix":"backups/","transitions":[{"days":30,"storage_class":"INFREQUENT_ACCESS"},{"days":90,"storage_class":"ARCHIVE"}]}'
+tigris buckets lifecycle create my-backups \
+  --prefix backups/ --storage-class STANDARD_IA --days 30
+tigris buckets lifecycle create my-backups \
+  --prefix backups/ --storage-class GLACIER_IR --days 90
 ```
 
 </details>
@@ -124,7 +127,7 @@ data is duplicated until it changes.
 
 ```bash
 # Take a point-in-time snapshot
-tigris snapshots take my-app-data --name pre-migration-2024-03
+tigris snapshots take my-app-data pre-migration-2024-03
 ```
 
 #### Compliance and audit logs

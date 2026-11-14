@@ -28,8 +28,8 @@ and libraries, as well as via the TigrisFS filesystem.
 :::note
 
 TigrisFS uses
-[FUSE](https://www.kernel.org/doc/html/latest/filesystems/fuse.html) to mount
-buckets into the filesystem. FUSE has limitations involving multiple users
+[FUSE](https://www.kernel.org/doc/html/latest/filesystems/fuse/index.html) to
+mount buckets into the filesystem. FUSE has limitations involving multiple users
 accessing the same mountpoint. If you need multiple users (human or service) to
 access the same bucket, consider creating multiple systemd services mounting the
 bucket in each user's home directory.

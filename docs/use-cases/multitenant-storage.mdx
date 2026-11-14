@@ -51,14 +51,21 @@ templating. When a user signs up in your platform, their storage is ready before
 the welcome email sends.
 
 ```bash
-curl -X POST https://api.tigris.dev/v1/providers/{provider_id}/orgs/{org_id}/provision \
+curl -X POST https://mgmt.storage.dev/v1/providers/{provider_id}/orgs/{org_id}/provision \
   -H "Content-Type: application/json" \
+  -H "X-Tigris-Time: ${TIMESTAMP_MS}" \
+  -H "X-Tigris-Nonce: ${NONCE}" \
+  -H "X-Tigris-Signature: ${SIGNATURE}" \
   -d '{
     "bucket_name": "user-data",
     "org_name": "Acme Corp",
     "user_id": "user-123"
   }'
 ```
+
+Requests are signed with your provider signing key. See
+[Authentication](/docs/partner-integrations/api/tigris-partner-integrations-api-reference/#authentication)
+and [Provisioning](/docs/partner-integrations/api/tigris-provisioning/).
 
 </details>
 

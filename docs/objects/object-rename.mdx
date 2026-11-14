@@ -3,49 +3,156 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-Tigris allows you to rename objects without rewriting the data so renames are
-fast and cost-effective. Because Tigris utilizes an object metadata service,
-renaming an object updates its metadata in place. You can rename objects in the
-Tigris Dashboard and via passing an additional header on the CopyObject command
-using your existing S3 tools.
+Tigris renames an object without a rewrite of the data. Tigris keeps object
+metadata in a metadata service, so a rename updates the metadata in place. The
+rename is fast, and it costs one request.
 
-## Renaming Objects using the Dashboard
+You can rename an object in three ways:
 
-To rename files or objects using the Tigris Dashboard, follow these steps.
+- With the S3 `RenameObject` API. This is the standard API, and the AWS CLI and
+  the AWS SDKs support it.
+- With the `X-Tigris-Rename: true` header on a `CopyObject` request. This is a
+  Tigris-specific form. Use it with an SDK that does not have `RenameObject`.
+- In Tigris Dashboard.
 
-Here is a step-by-step visual guide:
+## Renaming objects with the S3 RenameObject API
 
-1. **Open the Tigris Dashboard**: Go to
-   [Tigris Dashboard](https://console.storage.dev/) and sign in.
-2. **Go to the Buckets Section**: In the side navigation, click on "Buckets".
-   Select the desired bucket and locate the file you want to rename. Click the
-   "Rename" option from the action menu next to the file.
+`RenameObject` is `PUT /bucket/key?renameObject` with the source object in the
+`x-amz-rename-source` header. Tigris serves it for every bucket. On AWS, the API
+is limited to directory buckets.
 
-![Tigris File Browser](/img/rename-obj-step-1.png)
+The request renames `source-key` to `new-key` in the same bucket:
 
-3. **Enter the New Name**: Type the new name in the provided input field.
-   ![Tigris Rename Object Popup](/img/rename-obj-step-2.png)
+<Tabs groupId="languages">
+<TabItem value="cli" label="AWS CLI" default>
 
-4. **Confirm the Rename**: Click "Save" to apply the new name.
-5. **Verify the Change**: Check the list to ensure the object/file has been
-   updated.
+```bash
+aws s3api rename-object \
+  --endpoint-url https://t3.storage.dev \
+  --bucket my-bucket \
+  --key new-key \
+  --rename-source /my-bucket/source-key
+```
 
-![Tigris Rename Object Success modal ](/img/rename-obj-step-3.png)
+</TabItem>
+<TabItem value="go" label="Go">
 
-## Renaming Objects using AWS SDKs
+```go
+_, err := client.RenameObject(ctx, &s3.RenameObjectInput{
+	Bucket:       aws.String("my-bucket"),
+	Key:          aws.String("new-key"),
+	RenameSource: aws.String("/my-bucket/source-key"),
+})
+if err != nil {
+	log.Fatalf("unable to rename object: %v", err)
+}
+```
 
-To rename an object using AWS SDK, attach the `X-Tigris-Rename: true` header to
-a CopyObject request.
+</TabItem>
+<TabItem value="js" label="JavaScript">
+
+```js
+import { RenameObjectCommand, S3Client } from "@aws-sdk/client-s3";
+
+const S3 = new S3Client({
+  region: "auto",
+  endpoint: "https://t3.storage.dev",
+});
+
+await S3.send(
+  new RenameObjectCommand({
+    Bucket: "my-bucket",
+    Key: "new-key",
+    RenameSource: "/my-bucket/source-key",
+  }),
+);
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import boto3
+
+s3 = boto3.client("s3", endpoint_url="https://t3.storage.dev")
+
+s3.rename_object(
+    Bucket="my-bucket",
+    Key="new-key",
+    RenameSource="/my-bucket/source-key",
+)
+```
+
+</TabItem>
+</Tabs>
+
+A successful rename returns `200 OK` with an empty body. After the rename, the
+source key does not exist, and the new key has the same content, ETag, and
+metadata.
+
+### Rules
+
+- The source and the destination must be in the same bucket. The
+  `x-amz-rename-source` value is `/bucket/key`, URL-encoded.
+- The source cannot name a version. A `versionId` in the source is rejected with
+  `400 InvalidArgument`.
+- A rename to a key that exists replaces that key, as `CopyObject` does. To
+  refuse the replacement, send `If-None-Match: *`. See
+  [Conditional rename](#conditional-rename).
+- The AWS CLI and the AWS SDKs send an `x-amz-client-token` header with each
+  request. Tigris accepts the header and does not use it.
+
+:::note
+
+Tigris does not de-duplicate a retry of a rename. A retry after a successful
+rename finds no source and returns `404 NoSuchKey`.
+
+:::
+
+### Conditional rename
+
+`RenameObject` accepts conditions on the destination and on the source. Tigris
+checks all of them in the rename transaction, so the objects the conditions
+describe are the objects the rename moves and replaces.
+
+| Header                                    | Applies to  | Behavior                                                                   |
+| ----------------------------------------- | ----------- | -------------------------------------------------------------------------- |
+| `If-Match`                                | destination | The rename proceeds only if the destination ETag matches.                  |
+| `If-None-Match`                           | destination | Use `*` to rename only if the destination does not exist.                  |
+| `If-Modified-Since`                       | destination | The rename proceeds only if the destination changed after the date.        |
+| `If-Unmodified-Since`                     | destination | The rename proceeds only if the destination did not change after the date. |
+| `x-amz-rename-source-if-match`            | source      | The rename proceeds only if the source ETag matches.                       |
+| `x-amz-rename-source-if-none-match`       | source      | The rename proceeds only if the source ETag does not match.                |
+| `x-amz-rename-source-if-modified-since`   | source      | The rename proceeds only if the source changed after the date.             |
+| `x-amz-rename-source-if-unmodified-since` | source      | The rename proceeds only if the source did not change after the date.      |
+
+A failed condition returns `412 Precondition Failed`, and nothing moves. An
+`If-Match` on a destination that does not exist returns `404 NoSuchKey`, as a
+conditional `PutObject` does.
+
+### Permissions
+
+A rename needs the same permissions as a copy plus a delete:
+
+- `s3:PutObject` on the destination key. AWS defines no `s3:RenameObject`
+  action.
+- `s3:GetObject` and `s3:DeleteObject` on the source key.
+
+A bucket role of `Editor` or higher grants all three. A key with `ReadOnly` on
+the source bucket cannot rename objects out of it.
+
+## Renaming objects with the X-Tigris-Rename header
+
+Before `RenameObject` existed, Tigris used a `CopyObject` request with the
+`X-Tigris-Rename: true` header. This form still works, and it returns a
+`CopyObjectResult` body. Use it with an SDK that does not have `RenameObject`.
 
 ```
 X-Tigris-Rename: true
 ```
 
-This is not supported in every AWS SDK. For the languages that are not listed
-below, you must use the Tigris Dashboard to rename objects.
-
 <Tabs groupId="languages">
-<TabItem value="go" label="Go">
+<TabItem value="go" label="Go" default>
 
 ```go
 func WithRename() func(*s3.Options) {
@@ -154,3 +261,25 @@ with TigrisRename(s3):
 
 </TabItem>
 </Tabs>
+
+The permissions are the same as for `RenameObject`: `s3:PutObject` on the
+destination, and `s3:GetObject` and `s3:DeleteObject` on the source.
+
+## Renaming objects in the Dashboard
+
+To rename an object in Tigris Dashboard:
+
+1. Open the [Tigris Dashboard](https://console.storage.dev/) and log in.
+2. In the side navigation, click "Buckets". Select the bucket, and find the
+   object.
+3. In the action menu next to the object, click "Rename".
+
+![Tigris File Browser](/img/rename-obj-step-1.png)
+
+4. Type the new name in the input field.
+   ![Tigris Rename Object Popup](/img/rename-obj-step-2.png)
+
+5. Click "Save".
+6. Make sure that the list shows the new name.
+
+![Tigris Rename Object Success modal ](/img/rename-obj-step-3.png)

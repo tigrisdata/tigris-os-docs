@@ -1,0 +1,78 @@
+name: agent docs release check
+
+# tigrisdata/storage sends this event from its release workflow when it
+# publishes an agent-facing package. This workflow opens an issue so that
+# someone checks the agent docs against the new release.
+on:
+  repository_dispatch:
+    types: [agent-packages-released]
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: >-
+          JSON array of the published packages, in the form
+          [{"name":"@tigrisdata/cli","version":"1.2.3"}]
+        required: true
+        default: '[{"name":"@tigrisdata/cli","version":"0.0.0-test"}]'
+        type: string
+
+permissions:
+  issues: write
+
+jobs:
+  open-issue:
+    runs-on: namespace-profile-ubuntu-2404
+    steps:
+      - name: Open a review issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          # Pass the payload through the environment, not into the script, so
+          # that a crafted package name cannot inject shell commands.
+          PACKAGES:
+            ${{ github.event_name == 'repository_dispatch' &&
+            toJSON(github.event.client_payload.packages) || inputs.packages }}
+          SOURCE_RUN: ${{ github.event.client_payload.run_url }}
+        run: |
+          if ! printf '%s' "$PACKAGES" | jq -e 'type == "array" and length > 0 and all(.[]; (.name | type == "string") and (.version | type == "string"))' > /dev/null; then
+            echo "::error::Expected a non-empty JSON array of {name, version}, got: $PACKAGES"
+            exit 1
+          fi
+
+          names="$(printf '%s' "$PACKAGES" | jq -r '[.[] | "\(.name)@\(.version)"] | sort | join(", ")')"
+          title="Check agent docs for ${names}"
+          # A stable key for this set of releases, so that a rerun or a resent
+          # dispatch does not open a second issue.
+          key="release-key: ${names}"
+
+          existing="$(gh issue list --state open --limit 200 --json number,title,body \
+            | jq -r --arg title "$title" --arg key "$key" \
+              '[.[] | select(.title == $title or (.body | contains("<!-- " + $key + " -->")))][0].number // empty')"
+          if [ -n "$existing" ]; then
+            echo "::notice::Issue #$existing already covers ${names} — not opening another."
+            exit 0
+          fi
+
+          # One line for each package, with links to its changelog and its
+          # GitHub release in tigrisdata/storage.
+          list="$(printf '%s' "$PACKAGES" | jq -r '.[] |
+            (.name | sub("^@tigrisdata/"; "")) as $dir |
+            "- `\(.name)@\(.version)`: [CHANGELOG](https://github.com/tigrisdata/storage/blob/main/packages/\($dir)/CHANGELOG.md) · [release](https://github.com/tigrisdata/storage/releases/tag/\(.name)@\(.version))"')"
+
+          {
+            echo "tigrisdata/storage published these packages:"
+            echo
+            echo "$list"
+            echo
+            echo "Read the changelogs and check the agent docs (the paths in \`.github/CODEOWNERS\`) for commands, options, and examples that no longer match. Update each page that you check and set its \`last_reviewed\` front matter to today's date."
+            if [ -n "$SOURCE_RUN" ]; then
+              echo
+              echo "Release run: $SOURCE_RUN"
+            fi
+            echo
+            echo "cc @Xe @katieschilling"
+            echo
+            echo "<!-- $key -->"
+          } > body.md
+
+          gh issue create --title "$title" --body-file body.md

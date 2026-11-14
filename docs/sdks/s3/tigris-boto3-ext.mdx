@@ -1,0 +1,131 @@
+---
+title: "Tigris extensions for boto3"
+description:
+  "Use Tigris features that S3 does not have from Python: snapshots, forks, soft
+  delete, bucket settings, object notifications, data migration, archive restore
+  and presigned URLs, with your existing boto3 client."
+keywords:
+  [
+    tigris-boto3-ext,
+    boto3 tigris,
+    python tigris snapshots,
+    python tigris forks,
+    boto3 soft delete,
+    boto3 bucket settings,
+    tigris python sdk,
+  ]
+---
+
+# Tigris extensions for boto3
+
+[`tigris-boto3-ext`](https://github.com/tigrisdata/tigris-boto3-ext) adds the
+Tigris features that S3 does not have to the
+[AWS Python SDK](/docs/sdks/s3/aws-python-sdk). You keep your
+`boto3.client("s3")`; the package adds the Tigris headers to the right requests,
+and calls the Tigris endpoints that are not S3 operations, with the client's own
+credentials and endpoint.
+
+```bash
+pip install tigris-boto3-ext
+```
+
+Everything is imported from `tigris_boto3_ext`, and every helper takes the boto3
+client as its first argument:
+
+```python
+import boto3
+from tigris_boto3_ext import create_snapshot_bucket, create_snapshot, get_snapshot_version
+
+s3 = boto3.client("s3", endpoint_url="https://t3.storage.dev")
+
+create_snapshot_bucket(s3, "ml-datasets")
+s3.put_object(Bucket="ml-datasets", Key="v1/data.parquet", Body=data)
+version = get_snapshot_version(create_snapshot(s3, "ml-datasets", snapshot_name="pre-training"))
+```
+
+## Three shapes
+
+Features that work by adding a header to a standard S3 request come in three
+shapes. They do the same thing; pick by how much code the Tigris behaviour
+should cover.
+
+```python
+from tigris_boto3_ext import TigrisSoftDeleteView, list_deleted_objects, with_soft_delete_view
+
+# Helper: one call, with the header on and off again
+deleted = list_deleted_objects(s3, "my-bucket", Prefix="contracts/")
+
+# Context manager: every matching call on this client inside the block
+with TigrisSoftDeleteView(s3):
+    deleted = s3.list_object_versions(Bucket="my-bucket", Prefix="contracts/")
+
+# Decorator: the same, for a function that takes the client first
+@with_soft_delete_view
+def deleted_contracts(s3_client, bucket):
+    return s3_client.list_object_versions(Bucket=bucket, Prefix="contracts/")
+```
+
+Features that are Tigris endpoints rather than S3 operations, such as bucket
+settings and the metadata endpoint, are helpers only. They return plain dicts
+with snake_case keys and the full response under `raw`.
+
+## Features
+
+| Feature              | Start with                                                                                                                                                          | Tigris docs                                                                                    |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Create bucket        | `create_bucket(s3, name, access=, default_storage_class=, regions=, public_list_objects=)`                                                                          | [Creating a bucket](/docs/buckets/create-bucket), [Public bucket](/docs/buckets/public-bucket) |
+| Bucket settings      | `update_bucket(s3, name, access=, default_storage_class=, regions=, cache_control=, custom_domain=, nosniff=, snapshot_enabled=)`                                   | [Bucket settings](/docs/buckets/settings)                                                      |
+| Bucket info          | `get_bucket_info(s3, name)`, `get_bucket_metadata(s3, name)`                                                                                                        | [Bucket settings](/docs/buckets/settings)                                                      |
+| Bucket listing       | `list_buckets(s3, include_type=, include_visibility=, include_regions=, include_fork_info=)`, `get_stats(s3)`                                                       | [Snapshots and forks](/docs/buckets/snapshots-and-forks)                                       |
+| Snapshots            | `create_snapshot_bucket`, `create_snapshot`, `list_snapshots`, `get_object_from_snapshot`, `delete_snapshot`                                                        | [Snapshots and forks](/docs/buckets/snapshots-and-forks)                                       |
+| Forks                | `create_fork`, `list_forks`                                                                                                                                         | [Snapshots and forks](/docs/buckets/snapshots-and-forks)                                       |
+| Soft delete          | `create_soft_delete_bucket`, `set_bucket_soft_delete`, `list_deleted_objects`, `restore_deleted_object`, `restore_bucket`                                           | [Soft delete](/docs/buckets/soft-delete)                                                       |
+| Force delete         | `force_delete_bucket(s3, name)`                                                                                                                                     | [Soft delete](/docs/buckets/soft-delete)                                                       |
+| Object rename        | `rename_object(s3, bucket, old_key, new_key)`                                                                                                                       | [Object rename](/docs/objects/object-rename)                                                   |
+| Bundle API           | `bundle_objects(s3, bucket, keys)`                                                                                                                                  | [Bundle API](/docs/objects/bundle)                                                             |
+| Object notifications | `set_bucket_notifications(s3, bucket, url, event_filter=, token=)`                                                                                                  | [Object notifications](/docs/buckets/object-notifications)                                     |
+| Data migration       | `set_bucket_migration(s3, bucket, source_bucket, endpoint=, region=, access_key=, secret_key=)`, `migrate_object`, `is_object_migrated`, `list_objects_from_source` | [Migrate to Tigris](/docs/migration)                                                           |
+| Archive restore      | `restore_object(s3, bucket, key, days=)`, `get_restore_info(s3, bucket, key)`                                                                                       | [Storage tiers](/docs/objects/tiers)                                                           |
+| Presigned URLs       | `presign(s3, bucket, key, operation, expires_in=, snapshot_version=)`                                                                                               | [Presigned URLs](/docs/objects/presigned)                                                      |
+
+Each feature has a page with every helper, context manager and decorator, the
+headers it sends and its caveats in the
+[package's docs directory](https://github.com/tigrisdata/tigris-boto3-ext/tree/main/docs),
+and a runnable script under
+[`examples/`](https://github.com/tigrisdata/tigris-boto3-ext/tree/main/examples).
+CORS and lifecycle rules need nothing from the package: boto3's
+`put_bucket_cors` and `put_bucket_lifecycle_configuration` work on Tigris as
+they do on S3.
+
+## Errors
+
+Standard S3 operations raise boto3's `ClientError` as usual. Calls to Tigris
+endpoints raise `TigrisAPIError`, with the HTTP status, the error code, the
+message and the request ID:
+
+```python
+from tigris_boto3_ext import TigrisAPIError, get_bucket_metadata
+
+try:
+    get_bucket_metadata(s3, "no-such-bucket")
+except TigrisAPIError as e:
+    print(e.status_code, e.code, e.message, e.request_id)
+    # 404 NoSuchBucket The specified bucket does not exist 1792...
+```
+
+Arguments are checked before any request is sent: an unknown storage class, a
+retention window outside 7–90 days or a non-`https://` webhook URL raise
+`ValueError` or `TypeError` locally.
+
+## Thread safety
+
+:::warning
+
+A context manager, a decorator or a helper registers its header on the client
+for the duration of the call or block. A request of the same operation issued
+from another thread on the same client in that window carries the header too.
+Use one client per thread when threads share Tigris features; the package
+refuses to run two conflicting header injections on the same client at the same
+time rather than mix them up.
+
+:::

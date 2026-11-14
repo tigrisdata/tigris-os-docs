@@ -14,7 +14,7 @@ will walk you through setting up a single-node AutoMQ cluster backed by Tigris
 storage.
 
 :::tip This guide is based on the
-[official AutoMQ Docker Compose setup](https://github.com/AutoMQ/automq-labs/blob/main/opensource-setup/docker-compose/docker-compose.yaml).
+[official AutoMQ Docker Compose setup](https://github.com/AutoMQ/automq-labs/blob/main/opensource-examples/setup/docker-compose/docker-compose.yaml).
 For more deployment options, see the
 [AutoMQ Deployment Overview](https://www.automq.com/docs/automq/deployment/overview).
 :::
@@ -201,5 +201,5 @@ zero egress fees.
 - [AutoMQ Documentation](https://www.automq.com/docs/automq/)
 - [AutoMQ Deployment Overview](https://www.automq.com/docs/automq/deployment/overview)
 - [AutoMQ Broker and Controller Configuration](https://www.automq.com/docs/automq/configuration/broker-and-controller-configuration)
-- [AutoMQ Docker Compose Setup (GitHub)](https://github.com/AutoMQ/automq-labs/blob/main/opensource-setup/docker-compose/docker-compose.yaml)
+- [AutoMQ Docker Compose Setup (GitHub)](https://github.com/AutoMQ/automq-labs/blob/main/opensource-examples/setup/docker-compose/docker-compose.yaml)
 - [AutoMQ GitHub Repository](https://github.com/AutoMQ/automq)

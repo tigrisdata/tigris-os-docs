@@ -1,7 +1,7 @@
 # tigris snapshots
 
-List and take snapshots. A snapshot is a point-in-time, read-only copy of a
-bucket's state.
+List, take, and delete snapshots. A snapshot is a point-in-time, read-only copy
+of a bucket's state.
 
 **Alias:** `s`
 
@@ -12,9 +12,18 @@ tigris snapshots <operation> [flags]
 t3 s <operation> [flags]
 ```
 
+## Commands
+
+| Command            | Description                              |
+| ------------------ | ---------------------------------------- |
+| [`list`](list)     | List all snapshots for a bucket          |
+| [`take`](take)     | Take a new snapshot of a bucket          |
+| [`delete`](delete) | Delete one or more snapshots of a bucket |
+
 ## Examples
 
 ```bash
 tigris snapshots list my-bucket
 tigris snapshots take my-bucket
+tigris snapshots delete my-bucket 1765889000501544464 --yes
 ```

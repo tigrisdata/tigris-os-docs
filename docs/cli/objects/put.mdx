@@ -18,11 +18,12 @@ you need a specific type.
 
 ## Flags
 
-| Name                   | Required | Default   | Description                                            |
-| ---------------------- | -------- | --------- | ------------------------------------------------------ |
-| `--access`, `-a`       | No       | `private` | Access level. Options: `public`, `private`             |
-| `--content-type`, `-t` | No       | —         | Content type (auto-detected from extension if omitted) |
-| `--format`, `-f`       | No       | `table`   | Output format. Options: `json`, `table`, `xml`         |
+| Name                   | Required | Default   | Description                                                                                                           |
+| ---------------------- | -------- | --------- | --------------------------------------------------------------------------------------------------------------------- |
+| `--access`, `-a`       | No       | `private` | Access level. Options: `public`, `private`                                                                            |
+| `--content-type`, `-t` | No       | —         | Content type (auto-detected from extension if omitted)                                                                |
+| `--cache-control`      | No       | —         | `Cache-Control` header stored with the object and returned on every read (e.g. `public, max-age=31536000, immutable`) |
+| `--format`, `-f`       | No       | `table`   | Output format. Options: `json`, `table`, `xml`                                                                        |
 
 ## Examples
 
@@ -32,6 +33,9 @@ tigris objects put my-bucket report.pdf ./report.pdf
 
 # Upload with public access and explicit content type
 tigris objects put my-bucket logo.png ./logo.png --access public --content-type image/png
+
+# Upload with a cache lifetime
+tigris objects put my-bucket logo.png ./logo.png --cache-control 'public, max-age=86400'
 
 # Upload piped data from stdin (omit the file argument)
 echo 'hello' | tigris objects put my-bucket hello.txt

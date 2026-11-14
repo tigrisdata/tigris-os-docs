@@ -1,0 +1,41 @@
+# tigris snapshots delete
+
+Delete one or more snapshots of a bucket by version. Deletion is permanent;
+forks already created from a snapshot are unaffected.
+
+**Alias:** `d`
+
+## Usage
+
+```bash
+tigris snapshots delete <name> <version> [flags]
+t3 s d <name> <version> [flags]
+```
+
+The command asks for confirmation unless you pass `--yes`.
+
+## Arguments
+
+| Name      | Required | Description                                                                                            |
+| --------- | -------- | ------------------------------------------------------------------------------------------------------ |
+| `name`    | Yes      | Name of the bucket                                                                                     |
+| `version` | Yes      | Snapshot version to delete, or a comma-separated list of versions, from `tigris snapshots list <name>` |
+
+## Flags
+
+| Name          | Required | Default | Description                                   |
+| ------------- | -------- | ------- | --------------------------------------------- |
+| `--yes`, `-y` | No       | —       | Skip confirmation prompts                     |
+| `--force`     | No       | —       | Skip confirmation prompts (alias for `--yes`) |
+
+## Examples
+
+```bash
+# Delete a single snapshot
+tigris snapshots delete my-bucket 1765889000501544464 --yes
+
+# Delete several snapshots
+tigris snapshots delete my-bucket 1765889000501544464,1765889000501544465 --yes
+```
+
+Find snapshot versions with [`tigris snapshots list`](/docs/cli/snapshots/list).

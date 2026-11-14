@@ -13,6 +13,7 @@ keywords:
     client upload sdk,
     tigris react component,
   ]
+last_reviewed: 2026-03-09
 ---
 
 # How Do I Upload Files Directly from the Browser to Tigris?

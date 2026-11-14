@@ -1,0 +1,29 @@
+# tigris telemetry
+
+Show or change whether the CLI sends usage analytics and error reports.
+
+## Usage
+
+```bash
+tigris telemetry <operation>
+t3 telemetry <operation>
+```
+
+Telemetry is on by default. It is a per-machine setting: turning it off here
+does not affect other machines you use the CLI on.
+
+## Commands
+
+| Command              | Description                                                                          |
+| -------------------- | ------------------------------------------------------------------------------------ |
+| [`status`](status)   | Show whether telemetry is enabled, what is collected, and which setting is in effect |
+| [`disable`](disable) | Turn off usage analytics and error reports on this machine                           |
+| [`enable`](enable)   | Turn usage analytics and error reports back on for this machine                      |
+
+## Examples
+
+```bash
+tigris telemetry status
+tigris telemetry disable
+tigris telemetry enable
+```

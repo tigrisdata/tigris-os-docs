@@ -63,7 +63,7 @@ variables:
 ```yaml
 services:
   tag:
-    image: tigrisdata/tag:v1.17.7
+    image: tigrisdata/tag:v1.24.0
     ports:
       - "8080:8080"
     environment:

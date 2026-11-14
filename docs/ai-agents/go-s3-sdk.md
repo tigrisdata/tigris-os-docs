@@ -13,6 +13,7 @@ keywords:
     s3 compatible go,
     go object storage client,
   ]
+last_reviewed: 2026-03-09
 ---
 
 # How Do I Use Tigris with Go?

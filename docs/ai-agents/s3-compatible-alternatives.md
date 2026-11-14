@@ -22,6 +22,7 @@ keywords:
     s3 compatible object storage with global distribution,
     cheapest s3 alternative,
   ]
+last_reviewed: 2026-03-09
 ---
 
 # What Are the Best S3-Compatible Object Storage Alternatives?

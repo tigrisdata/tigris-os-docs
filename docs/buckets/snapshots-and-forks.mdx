@@ -599,6 +599,16 @@ and standard SDKs and tools work as-is.
 - `HeadObject` with the `versionId` parameter
 - `GetObject` with the `versionId` parameter
 - `DeleteObject` with the `versionId` parameter
+- `GetObjectTagging`, `PutObjectTagging`, and `DeleteObjectTagging` with the
+  `versionId` parameter. Without `versionId`, these operations act on the
+  current version. The response carries `x-amz-version-id`.
+- `GetBucketVersioning`. For a snapshot-enabled bucket, the response reports
+  `<Status>Enabled</Status>`.
+- `PutBucketVersioning` with `<Status>Enabled</Status>` on a snapshot-enabled
+  bucket. The request succeeds and changes nothing. A request to enable
+  versioning on another bucket, or to suspend it, returns `501 NotImplemented`.
+  Versioning is a property of the bucket that you set at creation with the
+  `X-Tigris-Enable-Snapshot` header.
 
 :::note
 
@@ -607,11 +617,17 @@ that version. It is also deleted from all snapshots.
 
 :::
 
-No additional authorization permissions are required to use the `HeadObject` or
-`GetObject` APIs with the `versionId` parameter. The `ListObjectVersions`
-operation is available to users with read-only (or higher) access to the bucket.
-However, note that this is a separate operation, and some IAM policies may need
-to be updated to allow it.
+Tagging a version does not create a new version and does not change the
+`Last-Modified` time of the object. The IAM actions for the version forms are
+`s3:GetObjectVersionTagging`, `s3:PutObjectVersionTagging`, and
+`s3:DeleteObjectVersionTagging`, as in S3.
+
+Users with read-only (or higher) access to the bucket can use the `HeadObject`
+and `GetObject` APIs with the `versionId` parameter. IAM policies must grant
+`s3:GetObjectVersion` for these requests, as in S3; `s3:GetObject` alone does
+not cover them. The `ListObjectVersions` operation is also available to users
+with read-only (or higher) access. However, note that this is a separate
+operation, and some IAM policies may need to be updated to allow it.
 
 Versioned object operations support the same authentication mechanisms as
 non-versioned operations. Presigned URLs can target a specific object version by
@@ -627,8 +643,15 @@ buckets depend on it.
 
 ## Authorization
 
-You can create and list snapshots, create a fork, and read objects in a snapshot
-if you own the bucket, you are an organization admin, or you have `ReadOnly` or
-a higher role on the bucket.
+You can create and list snapshots, list forks, and read objects in a snapshot if
+you own the bucket, you are an organization admin, or you have `ReadOnly` or a
+higher role on the bucket. Creating a fork requires read access on the source
+and permission to create the destination bucket.
+
+Merging buckets requires `ReadWrite` or higher on the target and `ReadOnly` or
+higher on the source. Bucket owners and keys with `Editor` or `Admin` access can
+rebase a fork or restore a bucket snapshot. Rebase makes newer data from the
+parent bucket visible through the fork, so the caller also needs `ReadOnly` or
+higher access to the parent bucket.
 
 Enabling snapshots on a new or existing bucket requires `Editor` or `Admin`.

@@ -14,6 +14,7 @@ keywords:
     tigrisdata storage,
     file upload sdk,
   ]
+last_reviewed: 2026-03-24
 ---
 
 # How Do I Use the Tigris JavaScript SDK?

@@ -15,6 +15,7 @@ keywords:
     tigris snapshots,
     object storage versioning,
   ]
+last_reviewed: 2026-05-15
 ---
 
 # How Do I Use Bucket Forks and Snapshots in Tigris?

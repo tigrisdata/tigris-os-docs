@@ -21,6 +21,11 @@ svc = boto3.client(
 )
 ```
 
+For the Tigris features that S3 does not have, such as snapshots, forks, soft
+delete and bucket settings, add
+[`tigris-boto3-ext`](/docs/sdks/s3/tigris-boto3-ext). It works with this client
+as is.
+
 ## Getting started
 
 This example uses the

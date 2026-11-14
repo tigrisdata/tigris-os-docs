@@ -17,10 +17,11 @@ treated as local files. At least one side must be remote.
 
 ## Flags
 
-| Name                | Required | Default | Description                                                                                              |
-| ------------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------- |
-| `--recursive`, `-r` | No       | —       | Copy directories recursively                                                                             |
-| `--access`, `-a`    | No       | —       | Access level for uploaded objects. Only applies to local-to-remote uploads. Options: `public`, `private` |
+| Name                | Required | Default | Description                                                                                                             |
+| ------------------- | -------- | ------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `--recursive`, `-r` | No       | —       | Copy directories recursively                                                                                            |
+| `--access`, `-a`    | No       | —       | Access level for uploaded objects. Only applies to local-to-remote uploads. Options: `public`, `private`                |
+| `--cache-control`   | No       | —       | `Cache-Control` header stored with uploaded objects and returned on every read. Only applies to local-to-remote uploads |
 
 ## Examples
 
@@ -39,6 +40,9 @@ tigris cp t3://my-bucket/src/ t3://my-bucket/dest/ -r
 
 # Upload a local folder to remote
 tigris cp ./images/ t3://my-bucket/images/ -r
+
+# Upload immutable assets with a long cache lifetime
+tigris cp ./dist/ t3://my-bucket/assets/ -r --cache-control 'public, max-age=31536000, immutable'
 
 # Copy with wildcard
 tigris cp "t3://my-bucket/my-path/*.json" t3://my-bucket/new-path/

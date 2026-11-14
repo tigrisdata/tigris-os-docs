@@ -27,7 +27,7 @@ graph TD
 | **Provider**     | Your partner account. This identifies your platform and holds your signing key for API authentication. You manage all customer organizations through this provider. |
 | **Organization** | An isolated container for a single tenant/customer. Each organization contains its own buckets, users, access keys, and has separate usage tracking and billing.    |
 | **Bucket**       | S3-compatible storage container within an organization. Organizations can have multiple buckets.                                                                    |
-| **User**         | An identity within an organization with either `Admin` or `Member` role. Users can create access keys and manage resources within their organization.               |
+| **User**         | A user ID from your system, passed as `user_id`. Each Partner API call says whether the user is an `Admin` or a `Member` with `user_role`.                          |
 | **Access Key**   | S3-compatible credentials (access key ID + secret) scoped to an organization. Can optionally be restricted to specific buckets within that org.                     |
 
 ## Organizations Explained
@@ -76,17 +76,20 @@ Content-Type: application/json
 The `org_id` should be a unique identifier for that tenant in your system (e.g.,
 `tenant-abc123` or `customer-{uuid}`).
 
-**2. Store the returned credentials** - The response includes an access key and
-secret scoped to that organization:
+**2. Store the returned credentials** - The response includes an access key that
+owns the new bucket:
 
 ```json
 {
+  "bucket_name": "user-data",
   "access_key_id": "tid_...",
-  "secret_access_key": "tsec_...",
-  "bucket": "user-data",
-  "org_id": "tenant-abc123"
+  "secret_access_key": "tsec_..."
 }
 ```
+
+This key has full control of the bucket, including deleting it. Keep it in your
+backend or delete it, and give your users a key with less access. See
+[The Provisioned Access Key](/docs/partner-integrations/access-control#the-provisioned-access-key).
 
 **3. Create additional buckets** as needed using the Partner API or standard S3
 CreateBucket API. All buckets remain isolated within the tenant's organization.
@@ -126,9 +129,9 @@ Content-Type: application/json
 }
 ```
 
-The `user_role` field controls what this user can do through management
-endpoints. See [Access Control](/docs/partner-integrations/access-control) for
-details on how roles and permissions work.
+The `user_role` field applies to this call only. See
+[Access Control](/docs/partner-integrations/access-control) for details on how
+roles and permissions work.
 
 ### Offboarding Tenants
 
@@ -160,11 +163,40 @@ Content-Type: application/json
 3. Delete all buckets using the bucket deletion API
 4. The organization remains for historical billing records
 
+## Common Questions
+
+### Which `user_id` Should I Use?
+
+Each access key and each provisioned bucket belongs to a `user_id`. Two models
+work:
+
+- **One backend user per organization**, such as your service account. All keys
+  and buckets belong to that user, so `Member` calls can manage all of them.
+- **One user per person in your system.** Each person's keys stay separate, and
+  List Access Keys with `Member` returns only that person's keys. To grant a
+  role on a bucket that a different user provisioned, pass `user_role: "Admin"`.
+
+### Is `org_id` Unique Across Tigris?
+
+No. An `org_id` is unique only within your provider. Use your own account or
+tenant ID.
+
+### Are Bucket Names Unique per Organization?
+
+No. Bucket names are global across all Tigris users, as in AWS S3. To prevent a
+name conflict, add a prefix such as your `org_id`, or generate the names.
+
+### Which Units Do Usage and Invoices Use?
+
+Invoices show storage in GiB-month and data transfer in GiB. One GiB is 1024³
+bytes. Each metric from the usage API includes its own `unit`. The quota field
+`org_quota.limit_bytes` is a number of bytes.
+
 ## Next Steps
 
 - **[Access Control](/docs/partner-integrations/access-control)** -- Learn how
-  to use `user_role`, `buckets_roles`, and `access_key_scope` to control what
-  your tenants' access keys can do
+  to use `user_role`, `buckets_roles`, and `access_key_scope`, with permission
+  recipes for common setups
 - **[Partner Integrations API Reference](/docs/partner-integrations/api/)** --
   Complete API documentation for all partner endpoints
 

@@ -44,10 +44,10 @@ immediately as part of its own workflow.
 
 ```bash
 # Create a bucket for this agent's outputs
-tigris mb my-agent-outputs
+tigris mk my-agent-outputs
 
 # Upload results
-tigris cp ./results.json s3://my-agent-outputs/results.json
+tigris cp ./results.json t3://my-agent-outputs/results.json
 ```
 
 </details>
@@ -120,22 +120,22 @@ when done.
 ```bash
 # Agent startup: create a workspace bucket
 AGENT_ID="agent-$(date +%s)"
-tigris mb "${AGENT_ID}-workspace"
+tigris mk "${AGENT_ID}-workspace"
 
 # Store intermediate results between pipeline steps
-tigris cp ./step1-output.json "s3://${AGENT_ID}-workspace/step1/output.json"
-tigris cp ./step2-output.json "s3://${AGENT_ID}-workspace/step2/output.json"
+tigris cp ./step1-output.json "t3://${AGENT_ID}-workspace/step1/output.json"
+tigris cp ./step2-output.json "t3://${AGENT_ID}-workspace/step2/output.json"
 
 # List what's accumulated
-tigris ls "s3://${AGENT_ID}-workspace/"
+tigris ls "t3://${AGENT_ID}-workspace/"
 
 # On completion, archive outputs to a shared bucket
 tigris cp \
-  "s3://${AGENT_ID}-workspace/step2/output.json" \
-  "s3://shared-pipeline-outputs/${AGENT_ID}/result.json"
+  "t3://${AGENT_ID}-workspace/step2/output.json" \
+  "t3://shared-pipeline-outputs/${AGENT_ID}/result.json"
 
 # Clean up scratch space
-tigris rb --force "${AGENT_ID}-workspace"
+tigris rm "t3://${AGENT_ID}-workspace" -f
 ```
 
 #### Coordinator provisions isolated storage for worker agents
@@ -148,7 +148,7 @@ collects results when all workers are done.
 # Coordinator: provision storage for 5 worker agents
 for i in $(seq 1 5); do
   BUCKET="worker-${i}-data"
-  tigris mb "${BUCKET}"
+  tigris mk "${BUCKET}"
 
   # Create a scoped access key for this worker only
   tigris access-keys create \
@@ -160,7 +160,7 @@ done
 
 # Coordinator collects results
 for i in $(seq 1 5); do
-  tigris cp "s3://worker-${i}-data/output.json" "./results/worker-${i}.json"
+  tigris cp "t3://worker-${i}-data/output.json" "./results/worker-${i}.json"
 done
 ```
 
@@ -190,7 +190,7 @@ tear them down when the workload is complete.
 
 ```bash
 # Create a bucket with a short-lived object lifecycle for scratch data
-tigris mb scratch-data
+tigris mk scratch-data
 
 # Apply a lifecycle rule to expire objects after 7 days
 aws s3api put-bucket-lifecycle-configuration \
@@ -206,5 +206,5 @@ aws s3api put-bucket-lifecycle-configuration \
   }'
 
 # Upload scratch files — they will expire automatically
-tigris cp ./intermediate.bin s3://scratch-data/tmp/intermediate.bin
+tigris cp ./intermediate.bin t3://scratch-data/tmp/intermediate.bin
 ```

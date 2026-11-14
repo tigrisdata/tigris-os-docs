@@ -27,7 +27,7 @@
     "id": "create-key-text",
     "x": 485,
     "y": 60,
-    "text": "POST /access-keys",
+    "text": "POST /key",
     "fontSize": 18,
     "fontFamily": 1,
     "strokeColor": "#0A171E"
@@ -170,7 +170,7 @@
     "id": "admin-mgmt-desc",
     "x": 60,
     "y": 317,
-    "text": "All keys, org settings, users",
+    "text": "Any key; any bucket role",
     "fontSize": 14,
     "fontFamily": 1,
     "strokeColor": "#8fa3b0"
@@ -203,7 +203,7 @@
     "id": "member-mgmt-desc",
     "x": 60,
     "y": 402,
-    "text": "Own keys only",
+    "text": "Own keys; own buckets only",
     "fontSize": 14,
     "fontFamily": 1,
     "strokeColor": "#8fa3b0"
@@ -370,7 +370,7 @@
     "id": "admin-s3-desc",
     "x": 470,
     "y": 521,
-    "text": "All ops, bypasses all checks",
+    "text": "All ops, all buckets (\"*\")",
     "fontSize": 13,
     "fontFamily": 1,
     "strokeColor": "#8fa3b0"
@@ -428,7 +428,7 @@
     "id": "standard-scope-desc",
     "x": 880,
     "y": 321,
-    "text": "Create/list buckets; limited\nkey and policy management",
+    "text": "Create/list buckets; manage\nown keys and policies",
     "fontSize": 13,
     "fontFamily": 1,
     "strokeColor": "#8fa3b0"

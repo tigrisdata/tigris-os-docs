@@ -55,6 +55,15 @@ If `max_disk_usage_bytes` is `0` (the default), disk-cap eviction is disabled
 (and `eviction_policy` has no effect); objects are only removed by TTL expiry or
 explicit invalidation.
 
+Eviction can fall behind a sustained burst of writes. When tracked usage reaches
+`populate_shed_disk_ratio` (default 1.05) of the cap, TAG stops writing new
+cache bodies and serves those objects from upstream instead, until eviction
+brings usage back under the ratio. Metadata is never affected, and in a cluster
+the node that owns a body applies the same check, so one overloaded node cannot
+be filled by its peers. Sheds are counted in
+`tag_cache_populate_disk_shed_total`; a node that sheds continuously needs more
+disk or more nodes.
+
 ## Cache warming on write
 
 By default TAG populates the cache on reads (an object is cached the first time
@@ -102,8 +111,8 @@ s3 = boto3.client(
 )
 
 # Add Cache-Control header to HEAD requests
-def add_no_cache(params, **kwargs):
-    params["headers"]["Cache-Control"] = "no-cache"
+def add_no_cache(request, **kwargs):
+    request.headers["Cache-Control"] = "no-cache"
 
 s3.meta.events.register("before-sign.s3.HeadObject", add_no_cache)
 
@@ -121,8 +130,8 @@ Send `Cache-Control: no-store` to skip the cache entirely. TAG forwards the
 request directly to upstream and does not cache the response.
 
 ```python
-def add_no_store(params, **kwargs):
-    params["headers"]["Cache-Control"] = "no-store"
+def add_no_store(request, **kwargs):
+    request.headers["Cache-Control"] = "no-store"
 
 s3.meta.events.register("before-sign.s3.HeadObject", add_no_store)
 

@@ -1,0 +1,39 @@
+# tigris init
+
+Connect Tigris to your AI coding agent: write the MCP server configuration and
+install the agent skills.
+
+**Alias:** `start`
+
+## Usage
+
+```bash
+tigris init [flags]
+t3 start [flags]
+```
+
+Run without flags for an interactive wizard that detects your coding agent and
+sets it up. With `--agent` the command prints a setup recipe for the agent to
+follow itself instead.
+
+## Flags
+
+| Name      | Required | Default | Description                                                                                     |
+| --------- | -------- | ------- | ----------------------------------------------------------------------------------------------- |
+| `--agent` | No       | —       | Print a setup recipe for an AI coding agent to follow instead of running the interactive wizard |
+
+## Examples
+
+```bash
+# Interactive setup
+tigris init
+
+# Without installing the CLI first
+npx tigris init
+
+# Let the agent run the setup
+tigris init --agent
+```
+
+See the [CLI quickstart for AI agents](/docs/ai-agents/tigris-cli-quickstart)
+for what the setup configures.

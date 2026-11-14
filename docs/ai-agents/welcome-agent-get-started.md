@@ -14,6 +14,7 @@ keywords:
     tigris first bucket,
     s3 compatible setup,
   ]
+last_reviewed: 2026-06-16
 ---
 
 # Welcome, Agent. Let's Get Your Human on Tigris.
@@ -47,8 +48,16 @@ see [Choosing the Right Storage](/docs/ai-agents/choosing-the-right-storage/).
 
 ## Step 1: Install the Tigris CLI
 
+On macOS or Linux:
+
 ```bash
-npm install -g @tigrisdata/cli
+curl -fsSL https://get.t3.storage.dev/install.sh | sh
+```
+
+On Windows (PowerShell):
+
+```powershell
+irm https://get.t3.storage.dev/install.ps1 | iex
 ```
 
 Verify the installation:
@@ -57,8 +66,11 @@ Verify the installation:
 tigris --version
 ```
 
-If `npm` is not available, check if `npx` works as an alternative:
-`npx @tigrisdata/cli --version`.
+If the install script can't run, install with npm instead:
+
+```bash
+npm install -g @tigrisdata/cli
+```
 
 ## Step 2: Authenticate (Requires Human)
 
@@ -304,8 +316,8 @@ go get github.com/aws/aws-sdk-go-v2/service/s3
 
 ## Troubleshooting
 
-**`tigris: command not found`** — The CLI is not in PATH. Try
-`npx @tigrisdata/cli` or reinstall with `npm install -g @tigrisdata/cli`.
+**`tigris: command not found`** — The CLI is not in PATH. Rerun the install
+command from Step 1, or try `npx @tigrisdata/cli`.
 
 **`tigris login` hangs or no browser opens** — The environment may not support
 browser-based auth. Have the human create access keys at

@@ -29,7 +29,9 @@ The compatibility data on this page comes from the
 and reports a pass or a fail for each one. The Tigris result is from a run
 against `https://t3.storage.dev` on 2026-11-14 with the suite at commit
 `6176906`. The Cloudflare R2 and Google Cloud Storage results are from an
-earlier run of the suite, which then had 68 operations.
+earlier run with a TypeScript runner that covered 68 operations. That runner
+also scored `DeleteObject` and `GetBucketAccelerateConfiguration`, which the Go
+suite uses but does not score. Both operations work on Tigris.
 
 | Provider                 | Passed | Failed | Total | Score |
 | ------------------------ | ------ | ------ | ----- | ----- |

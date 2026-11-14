@@ -9,13 +9,13 @@ hold the bucket's data. Every region also holds a global index of every object,
 but that index carries only the key, size, ETag, content type and last-modified
 time.
 
-Global user metadata replicates the `x-amz-meta-*` values into the global index
-too, so every region has them. File system clients such as
+Enabling global replication of user metadata adds the `x-amz-meta-*` values to
+the global index too, so every region has them. File system clients such as
 [TigrisFS](/docs/training/tigrisfs/) depend on this: they read file mode, owner
 and group from directory listings, and need those values wherever the mount
 runs.
 
-## Enabling global user metadata
+## Enabling global replication of user metadata
 
 Create the bucket with the `X-Tigris-Global-User-Metadata: true` header. Every
 object written to it then has its user metadata copied into the global index as

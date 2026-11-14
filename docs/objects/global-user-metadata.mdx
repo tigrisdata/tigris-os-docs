@@ -1,6 +1,3 @@
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
-
 # Global User Metadata
 
 User metadata is the set of `x-amz-meta-*` values stored with an object at
@@ -29,9 +26,6 @@ target of a merge.
 
 :::
 
-<Tabs groupId="languages">
-<TabItem value="curl" label="curl" default>
-
 ```bash
 curl -X PUT "https://t3.storage.dev/my-bucket" \
   --aws-sigv4 "aws:amz:auto:s3" \
@@ -39,73 +33,8 @@ curl -X PUT "https://t3.storage.dev/my-bucket" \
   -H "X-Tigris-Global-User-Metadata: true"
 ```
 
-</TabItem>
-<TabItem value="go" label="Go">
-
-```go
-func WithGlobalUserMetadata() func(*s3.Options) {
-	return func(options *s3.Options) {
-		options.APIOptions = append(options.APIOptions,
-			http.AddHeaderValue("X-Tigris-Global-User-Metadata", "true"))
-	}
-}
-
-_, err = client.CreateBucket(ctx, &s3.CreateBucketInput{
-	Bucket: aws.String(bucketName),
-}, WithGlobalUserMetadata())
-if err != nil {
-	log.Fatalf("Unable to create bucket: %v", err)
-}
-```
-
-</TabItem>
-<TabItem value="js" label="JavaScript">
-
-```js
-S3.middlewareStack.add(
-  (next) => async (args) => {
-    // eslint-disable-next-line no-param-reassign
-    args.request.headers["X-Tigris-Global-User-Metadata"] = "true";
-    return next(args);
-  },
-  {
-    step: "build",
-    name: "globalUserMetadata",
-  },
-);
-
-await S3.send(new CreateBucketCommand({ Bucket: bucket }));
-
-S3.middlewareStack.remove("globalUserMetadata");
-```
-
-</TabItem>
-<TabItem value="python" label="Python">
-
-```python
-import boto3
-
-s3 = boto3.client(
-    "s3",
-    endpoint_url="https://t3.storage.dev",
-    aws_access_key_id="your-access-key",
-    aws_secret_access_key="your-secret-key",
-)
-
-
-def add_global_user_metadata(request, **kwargs):
-    request.headers.add_header("X-Tigris-Global-User-Metadata", "true")
-
-
-s3.meta.events.register("before-sign.s3.CreateBucket", add_global_user_metadata)
-s3.create_bucket(Bucket="my-bucket")
-```
-
-</TabItem>
-</Tabs>
-
 Partners that provision buckets through the
-[Partner API](/docs/partner-integrations/architecture/) set
+[provisioning API](/docs/partner-integrations/api/tigris-provisioning/) set
 `global_user_metadata` in `bucket_options`.
 
 ## Behavior

@@ -48,6 +48,11 @@ reports pass/fail results.
 The complete list of S3 APIs is in the
 [AWS S3 documentation](https://docs.aws.amazon.com/AmazonS3/latest/API/API_Operations_Amazon_Simple_Storage_Service.html).
 
+An operation that Tigris does not implement returns `501 NotImplemented` with
+the standard S3 error body. It does not fall through to another operation, and
+it does not change the bucket or the object. See
+[Operations that return NotImplemented](#operations-that-return-notimplemented).
+
 ## Object operations
 
 | Operation                       | Tigris                                                                                                                                | R2  | GCS                                                                                                           |
@@ -77,43 +82,44 @@ The complete list of S3 APIs is in the
 | PutObject (storage class)       | ✅                                                                                                                                    | ✅  | ✅                                                                                                            |
 | PutObjectAcl                    | ✅                                                                                                                                    | ❌  | <abbr title="GCS uses a concentric ACL model (WRITE implies READ) that differs from S3">⚠️</abbr> [4](#notes) |
 | PutObjectTagging                | ✅                                                                                                                                    | ❌  | ❌                                                                                                            |
+| RenameObject                    | ✅ [7](#notes)                                                                                                                        | ❌  | ❌                                                                                                            |
 | RestoreObject                   | ✅                                                                                                                                    | ✅  | ❌                                                                                                            |
 
 ## Bucket operations
 
-| Operation                          | Tigris                                                                                                                   | R2  | GCS                                                                                                                            |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | --- | ------------------------------------------------------------------------------------------------------------------------------ |
-| CreateBucket                       | ✅ [6](#notes)                                                                                                           | ✅  | ✅                                                                                                                             |
-| DeleteBucket                       | ✅                                                                                                                       | ✅  | ✅                                                                                                                             |
-| DeleteBucketCors                   | ✅                                                                                                                       | ✅  | ❌                                                                                                                             |
-| DeleteBucketEncryption             | <abbr title="Tigris encrypts all data at rest automatically — managed-key encryption is always on">⚠️</abbr> [1](#notes) | ✅  | ❌                                                                                                                             |
-| DeleteBucketLifecycle              | ✅                                                                                                                       | ✅  | ❌                                                                                                                             |
-| DeleteBucketOwnershipControls      | ✅                                                                                                                       | ❌  | ❌                                                                                                                             |
-| DeleteBucketTagging                | ✅                                                                                                                       | ❌  | ❌                                                                                                                             |
-| GetBucketAccelerateConfiguration   | ✅                                                                                                                       | ❌  | ✅                                                                                                                             |
-| GetBucketAcl                       | ✅                                                                                                                       | ✅  | <abbr title="GCS uses a concentric ACL model (WRITE implies READ) that differs from S3">⚠️</abbr> [4](#notes)                  |
-| GetBucketCors                      | ✅                                                                                                                       | ✅  | ❌                                                                                                                             |
-| GetBucketEncryption                | <abbr title="Tigris encrypts all data at rest automatically — managed-key encryption is always on">⚠️</abbr> [1](#notes) | ✅  | ❌                                                                                                                             |
-| GetBucketLifecycleConfiguration    | ✅                                                                                                                       | ✅  | ❌                                                                                                                             |
-| GetBucketLocation                  | ✅                                                                                                                       | ✅  | ✅                                                                                                                             |
-| GetBucketNotificationConfiguration | ✅                                                                                                                       | ❌  | ✅                                                                                                                             |
-| GetBucketOwnershipControls         | ✅                                                                                                                       | ❌  | ❌                                                                                                                             |
-| GetBucketPolicy                    | ❌                                                                                                                       | ❌  | ❌                                                                                                                             |
-| GetBucketPolicyStatus              | ✅                                                                                                                       | ❌  | ✅                                                                                                                             |
-| GetBucketTagging                   | ✅                                                                                                                       | ❌  | ❌                                                                                                                             |
-| GetBucketVersioning                | ✅                                                                                                                       | ✅  | <abbr title="GCS maps versioning to its own generation number system, which differs from S3 version IDs">⚠️</abbr> [5](#notes) |
-| HeadBucket                         | ✅                                                                                                                       | ✅  | ✅                                                                                                                             |
-| ListBuckets                        | ✅                                                                                                                       | ✅  | ❌                                                                                                                             |
-| ListObjectVersions                 | ✅                                                                                                                       | ❌  | <abbr title="GCS maps versioning to its own generation number system, which differs from S3 version IDs">⚠️</abbr> [5](#notes) |
-| PutBucketAcl                       | <abbr title="Only canned ACLs (public-read and private) are supported">⚠️</abbr> [2](#notes)                             | ❌  | <abbr title="GCS uses a concentric ACL model (WRITE implies READ) that differs from S3">⚠️</abbr> [4](#notes)                  |
-| PutBucketCors                      | ✅                                                                                                                       | ✅  | ❌                                                                                                                             |
-| PutBucketEncryption                | <abbr title="Tigris encrypts all data at rest automatically — managed-key encryption is always on">⚠️</abbr> [1](#notes) | ✅  | ❌                                                                                                                             |
-| PutBucketLifecycleConfiguration    | ✅                                                                                                                       | ❌  | ❌                                                                                                                             |
-| PutBucketNotificationConfiguration | ❌                                                                                                                       | ❌  | ❌                                                                                                                             |
-| PutBucketOwnershipControls         | ✅                                                                                                                       | ❌  | ❌                                                                                                                             |
-| PutBucketPolicy                    | ❌                                                                                                                       | ❌  | ❌                                                                                                                             |
-| PutBucketTagging                   | ✅                                                                                                                       | ❌  | ❌                                                                                                                             |
-| PutBucketVersioning                | ❌                                                                                                                       | ❌  | <abbr title="GCS maps versioning to its own generation number system, which differs from S3 version IDs">⚠️</abbr> [5](#notes) |
+| Operation                          | Tigris                                                                                                                                               | R2  | GCS                                                                                                                            |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | --- | ------------------------------------------------------------------------------------------------------------------------------ |
+| CreateBucket                       | ✅ [6](#notes)                                                                                                                                       | ✅  | ✅                                                                                                                             |
+| DeleteBucket                       | ✅                                                                                                                                                   | ✅  | ✅                                                                                                                             |
+| DeleteBucketCors                   | ✅                                                                                                                                                   | ✅  | ❌                                                                                                                             |
+| DeleteBucketEncryption             | ❌ [1](#notes)                                                                                                                                       | ✅  | ❌                                                                                                                             |
+| DeleteBucketLifecycle              | ✅                                                                                                                                                   | ✅  | ❌                                                                                                                             |
+| DeleteBucketOwnershipControls      | ✅                                                                                                                                                   | ❌  | ❌                                                                                                                             |
+| DeleteBucketTagging                | ✅                                                                                                                                                   | ❌  | ❌                                                                                                                             |
+| GetBucketAccelerateConfiguration   | ✅                                                                                                                                                   | ❌  | ✅                                                                                                                             |
+| GetBucketAcl                       | ✅                                                                                                                                                   | ✅  | <abbr title="GCS uses a concentric ACL model (WRITE implies READ) that differs from S3">⚠️</abbr> [4](#notes)                  |
+| GetBucketCors                      | ✅                                                                                                                                                   | ✅  | ❌                                                                                                                             |
+| GetBucketEncryption                | ❌ [1](#notes)                                                                                                                                       | ✅  | ❌                                                                                                                             |
+| GetBucketLifecycleConfiguration    | ✅                                                                                                                                                   | ✅  | ❌                                                                                                                             |
+| GetBucketLocation                  | ✅                                                                                                                                                   | ✅  | ✅                                                                                                                             |
+| GetBucketNotificationConfiguration | ❌ [8](#notes)                                                                                                                                       | ❌  | ✅                                                                                                                             |
+| GetBucketOwnershipControls         | ✅                                                                                                                                                   | ❌  | ❌                                                                                                                             |
+| GetBucketPolicy                    | ❌                                                                                                                                                   | ❌  | ❌                                                                                                                             |
+| GetBucketPolicyStatus              | ✅                                                                                                                                                   | ❌  | ✅                                                                                                                             |
+| GetBucketTagging                   | ✅                                                                                                                                                   | ❌  | ❌                                                                                                                             |
+| GetBucketVersioning                | ✅                                                                                                                                                   | ✅  | <abbr title="GCS maps versioning to its own generation number system, which differs from S3 version IDs">⚠️</abbr> [5](#notes) |
+| HeadBucket                         | ✅                                                                                                                                                   | ✅  | ✅                                                                                                                             |
+| ListBuckets                        | ✅                                                                                                                                                   | ✅  | ❌                                                                                                                             |
+| ListObjectVersions                 | ✅                                                                                                                                                   | ❌  | <abbr title="GCS maps versioning to its own generation number system, which differs from S3 version IDs">⚠️</abbr> [5](#notes) |
+| PutBucketAcl                       | <abbr title="Only canned ACLs (public-read and private) are supported">⚠️</abbr> [2](#notes)                                                         | ❌  | <abbr title="GCS uses a concentric ACL model (WRITE implies READ) that differs from S3">⚠️</abbr> [4](#notes)                  |
+| PutBucketCors                      | ✅                                                                                                                                                   | ✅  | ❌                                                                                                                             |
+| PutBucketEncryption                | ❌ [1](#notes)                                                                                                                                       | ✅  | ❌                                                                                                                             |
+| PutBucketLifecycleConfiguration    | ✅                                                                                                                                                   | ❌  | ❌                                                                                                                             |
+| PutBucketNotificationConfiguration | ❌ [8](#notes)                                                                                                                                       | ❌  | ❌                                                                                                                             |
+| PutBucketOwnershipControls         | ✅                                                                                                                                                   | ❌  | ❌                                                                                                                             |
+| PutBucketPolicy                    | ❌                                                                                                                                                   | ❌  | ❌                                                                                                                             |
+| PutBucketTagging                   | ✅                                                                                                                                                   | ❌  | ❌                                                                                                                             |
+| PutBucketVersioning                | <abbr title="Enabled is accepted on a snapshot-enabled bucket; enabling on other buckets or suspending returns NotImplemented">⚠️</abbr> [9](#notes) | ❌  | <abbr title="GCS maps versioning to its own generation number system, which differs from S3 version IDs">⚠️</abbr> [5](#notes) |
 
 ## Multipart uploads
 
@@ -130,10 +136,10 @@ The complete list of S3 APIs is in the
 ### Notes
 
 1. <span id="note-1"></span> **Encryption**: Tigris encrypts all data at rest
-   automatically. The bucket encryption configuration APIs accept requests but
-   server-side encryption with managed keys is always on. SSE request headers
-   (`x-amz-server-side-encryption` for SSE-S3/SSE-KMS and
-   `x-amz-server-side-encryption-customer-*` for SSE-C) are accepted but not
+   automatically, and server-side encryption with managed keys is always on. The
+   bucket encryption configuration APIs return `501 NotImplemented`. SSE request
+   headers on object writes (`x-amz-server-side-encryption` for SSE-S3/SSE-KMS
+   and `x-amz-server-side-encryption-customer-*` for SSE-C) are accepted but not
    applied, so customer-provided keys are not used.
 2. <span id="note-2"></span> **Canned ACLs**: Only canned ACLs (`public-read`
    and `private`) are supported.
@@ -150,6 +156,41 @@ The complete list of S3 APIs is in the
    separated by a comma (`iad,sjc`), or one geography (`usa`, `eur`). Omit the
    value or use `auto` for a global bucket. See [Creating a bucket in a specific
    location](/docs/buckets/create-bucket/#creating-a-bucket-in-a-specific-location).
+7. <span id="note-7"></span> **RenameObject**: Tigris serves `RenameObject`
+   (`PUT /bucket/key?renameObject` with `x-amz-rename-source`) for every bucket,
+   with the destination and source conditions. On AWS the operation is limited
+   to directory buckets. `RenameObject` is not part of the shared test suite.
+   See [Renaming objects](/docs/objects/object-rename/).
+8. <span id="note-8"></span> **Notifications**: Object notifications are
+   configured in Tigris Dashboard, not with the S3 notification configuration
+   APIs. See [Object notifications](/docs/buckets/object-notifications/).
+9. <span id="note-9"></span> **Versioning**: Versioning is a property of the
+   bucket that you set at creation with the `X-Tigris-Enable-Snapshot` header.
+   `GetBucketVersioning` reports `Enabled` for such a bucket.
+   `PutBucketVersioning` with `Status=Enabled` on such a bucket succeeds and
+   changes nothing. A request to enable versioning on another bucket, to suspend
+   it, or to turn on MFA delete returns `501 NotImplemented`. See [object
+   versioning
+   APIs](/docs/buckets/snapshots-and-forks/#using-object-versioning-apis).
+
+## Operations that return NotImplemented
+
+These S3 operations return `501 NotImplemented`. The IAM actions that control
+them are accepted in policies, so policies written for AWS S3 remain valid. See
+[the IAM action list](/docs/iam/policies/supported-actions/#actions-for-operations-that-tigris-does-not-implement).
+
+| Area                  | Operations                                                                                                                                                                                                                                                                          |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bucket configuration  | GetBucketPolicy, PutBucketPolicy, DeleteBucketPolicy, GetBucketWebsite, PutBucketWebsite, DeleteBucketWebsite, GetBucketLogging, PutBucketLogging, PutBucketRequestPayment, GetPublicAccessBlock, PutPublicAccessBlock, DeletePublicAccessBlock                                     |
+| Encryption            | GetBucketEncryption, PutBucketEncryption, DeleteBucketEncryption                                                                                                                                                                                                                    |
+| Notifications         | GetBucketNotificationConfiguration, PutBucketNotificationConfiguration                                                                                                                                                                                                              |
+| Replication           | GetBucketReplication, PutBucketReplication, DeleteBucketReplication                                                                                                                                                                                                                 |
+| Analytics and metrics | GetBucketAnalyticsConfiguration, PutBucketAnalyticsConfiguration, DeleteBucketAnalyticsConfiguration, ListBucketAnalyticsConfigurations, GetBucketMetricsConfiguration, PutBucketMetricsConfiguration, DeleteBucketMetricsConfiguration, ListBucketMetricsConfigurations            |
+| Intelligent tiering   | GetBucketIntelligentTieringConfiguration, PutBucketIntelligentTieringConfiguration, DeleteBucketIntelligentTieringConfiguration, ListBucketIntelligentTieringConfigurations                                                                                                         |
+| Object lock           | GetObjectLockConfiguration, PutObjectLockConfiguration, GetObjectRetention, PutObjectRetention, GetObjectLegalHold, PutObjectLegalHold                                                                                                                                              |
+| Object annotations    | GetObjectAnnotation, PutObjectAnnotation, DeleteObjectAnnotation, ListObjectAnnotations                                                                                                                                                                                             |
+| Metadata tables       | CreateBucketMetadataConfiguration, GetBucketMetadataConfiguration, DeleteBucketMetadataConfiguration, UpdateBucketMetadataInventoryTableConfiguration, UpdateBucketMetadataJournalTableConfiguration, UpdateBucketMetadataAnnotationTableConfiguration, and the MetadataTable forms |
+| Other                 | GetObjectAttributes, GetObjectTorrent, UpdateObjectEncryption, CreateSession, GetBucketAbac, PutBucketAbac                                                                                                                                                                          |
 
 ## Presigned URLs
 

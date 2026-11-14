@@ -159,10 +159,11 @@ Where the listing is served from depends on the bucket:
 | With user metadata, option not set | all objects with metadata    | empty                     |
 | With user metadata, option set     | all objects with metadata    | all objects with metadata |
 
-A plain listing reads the global index and is complete from any region. A
-listing that asks for user metadata reads the full metadata unless the bucket
-has global user metadata, and a region outside the bucket's
-[location](/docs/buckets/locations/) has no full metadata to read.
+A plain listing reads the global index. Every region has that index, so the
+listing is complete everywhere. A listing that asks for user metadata needs the
+metadata values. Without the option those values exist only inside the bucket's
+[location](/docs/buckets/locations/), so a region outside it returns no objects.
+With the option they are in the global index, so every region returns them.
 
 ## Next Steps
 

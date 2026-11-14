@@ -141,7 +141,12 @@ const config = {
         },
         blog: false,
         theme: {
-          customCss: require.resolve("./src/css/custom.css"),
+          // tokens.css first: the shared type and colour tokens, which
+          // custom.css builds on.
+          customCss: [
+            require.resolve("./src/css/tokens.css"),
+            require.resolve("./src/css/custom.css"),
+          ],
         },
         gtag: {
           trackingID: "G-GW2DNH9EW4",

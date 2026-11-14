@@ -26,29 +26,10 @@
   src: url(/fonts/Poppins-Italic.ttf);
 }
 
-@font-face {
-  font-family: Hanken Grotesk;
-  font-weight: 100;
-  font-display: block;
-  font-style: normal;
-  font-named-instance: "Regular";
-  src: url(/fonts/HankenGrotesk-Regular.ttf);
-}
-
-@font-face {
-  font-family: Hanken Grotesk;
-  font-weight: 100 900;
-  font-display: block;
-  font-style: italic;
-  font-named-instance: "Italic";
-  src: url(/fonts/HankenGrotesk-Italic.ttf);
-}
-
-@font-face {
-  font-family: Fira Code VF;
-  font-weight: 300 700;
-  font-style: normal;
-  src: url(/fonts/FiraCode-VariableFont_wght.ttf);
+/* Buttons take the font of the text around them, not the browser's
+   13.33px system face; components that need a token set their own. */
+button {
+  font: inherit;
 }
 
 @media (min-width: 997px) {
@@ -89,8 +70,8 @@ code {
   --ifm-heading-font-family: var(--ifm-font-family-base);
 
   --ifm-font-family-monospace:
-    "Geist Mono", "Fira Code VF", SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
+    "Geist Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
 
   --ifm-font-weight-bold: 600;
   --ifm-heading-font-weight: 500;

@@ -153,6 +153,421 @@ const may2026 = {
 
 export const changelogData = [
   {
+    date: "December 13, 2026",
+    title: "CreateBucket limits and dark mode in the console",
+    content: (
+      <>
+        <p>
+          IAM policies can limit which bucket names an access key may create,
+          and the console and partner portal have a dark theme.
+        </p>
+      </>
+    ),
+    subcategories: [
+      {
+        title: "Features",
+        items: [
+          {
+            title: "Limit which buckets an access key can create",
+            description: (
+              <>
+                <p>
+                  An IAM policy statement for <code>s3:CreateBucket</code>{" "}
+                  matches against the name of the bucket being created. A
+                  resource can name one bucket, such as{" "}
+                  <code>arn:aws:s3:::reports</code>, or a prefix ending in{" "}
+                  <code>*</code>, such as <code>arn:aws:s3:::team-a-*</code>.
+                  This policy lets a key create buckets that start with{" "}
+                  <code>team-a-</code>, except names that start with{" "}
+                  <code>team-a-prod-</code>:
+                </p>
+                <CodeBlock language="json">{`{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:CreateBucket",
+      "Resource": "arn:aws:s3:::team-a-*"
+    },
+    {
+      "Effect": "Deny",
+      "Action": "s3:CreateBucket",
+      "Resource": "arn:aws:s3:::team-a-prod-*"
+    }
+  ]
+}`}</CodeBlock>
+                <p>
+                  A denied create returns <code>AccessDenied</code>. An Allow
+                  statement lets a key with Default permissions turned off
+                  create the buckets it matches. See{" "}
+                  <a href="/docs/iam/policies/">IAM policies</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "IAM", color: "red" },
+          },
+          {
+            title: "Dark mode in the console",
+            description: (
+              <>
+                <p>
+                  The console and the partner portal have a dark theme. Pick
+                  Light, Dark or System from the profile menu. System follows
+                  your operating system&apos;s setting. Billing and payment
+                  forms switch with the theme.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+          {
+            title: "Delete folders and mixed selections in the console",
+            description: (
+              <>
+                <p>
+                  Delete a folder and every object under it from its row menu or
+                  the folder header menu, or select files and folders together
+                  and click Delete selected. A card at the top right shows
+                  progress and lets you cancel, see which keys failed, and retry
+                  only the failures.
+                </p>
+                <p>
+                  A permanent delete asks you to type the folder name, or the
+                  bucket name for a mixed selection. On a bucket with soft
+                  delete, the dialog explains the retention window instead. The
+                  delete runs in your browser tab, and closing the tab stops it.
+                  See{" "}
+                  <a href="/docs/objects/delete-objects/">Deleting Objects</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+          {
+            title: "Restore a previous object version with CopyObject",
+            description: (
+              <>
+                <p>
+                  <code>CopyObject</code> and <code>UploadPartCopy</code> copy
+                  the version named by <code>?versionId=</code> in{" "}
+                  <code>x-amz-copy-source</code>, and the response includes{" "}
+                  <code>x-amz-copy-source-version-id</code>. Copy an earlier
+                  version onto its own key to make it the current version:
+                </p>
+                <CodeBlock language="bash">{`aws s3api copy-object \\
+  --bucket my-bucket --key report.csv \\
+  --copy-source "my-bucket/report.csv?versionId=VERSION_ID" \\
+  --endpoint-url https://t3.storage.dev`}</CodeBlock>
+                <p>
+                  Copying a specific version needs{" "}
+                  <code>s3:GetObjectVersion</code> on the source. On snapshot
+                  buckets, <code>CopyObject</code> and{" "}
+                  <code>CompleteMultipartUpload</code> also return{" "}
+                  <code>x-amz-version-id</code>, as <code>PutObject</code> does.
+                  See{" "}
+                  <a href="/docs/buckets/snapshots-and-forks/">
+                    Snapshots and Forks
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "Conditional deletes with If-Match",
+            description: (
+              <>
+                <p>
+                  <code>DeleteObject</code> honors <code>If-Match</code> with an
+                  ETag or <code>*</code>. A stale ETag returns{" "}
+                  <code>412 Precondition Failed</code> and keeps the object. A
+                  conditional write or delete to a key with no current object
+                  returns <code>404 NoSuchKey</code>, as on S3.
+                </p>
+                <p>
+                  Shadow buckets ignore <code>If-Match</code> on deletes, and{" "}
+                  <code>DeleteObjects</code> does not check per-key ETags. See{" "}
+                  <a href="/docs/objects/conditionals/">
+                    Conditional Operations
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "See usage and charges from the CLI and SDK",
+            description: (
+              <>
+                <p>
+                  <code>tigris usage</code> shows the active organization&apos;s
+                  usage and charges for a billing month, the same breakdown as
+                  the console&apos;s Usage page. Pick a month with{" "}
+                  <code>--month</code> and get the full invoice with{" "}
+                  <code>--format json</code>:
+                </p>
+                <CodeBlock language="bash">{`tigris usage --month 2026-11
+tigris usage --month 2026-11 --format json`}</CodeBlock>
+                <p>
+                  In <code>@tigrisdata/iam</code>,{" "}
+                  <code>getUsage(&#123; month &#125;)</code> returns the same
+                  data. Both need an OAuth login. See{" "}
+                  <a href="/docs/cli/usage/">tigris usage</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+          {
+            title: "Delete an organization from the CLI and SDK",
+            description: (
+              <>
+                <p>
+                  <code>tigris orgs delete [id]</code> deletes an organization
+                  you own once it has no buckets, access keys, policies, teams
+                  or other members. Without an ID it shows a picker. You
+                  can&apos;t delete your last organization or a Fly.io
+                  organization. In <code>@tigrisdata/iam</code>, call{" "}
+                  <code>deleteOrganization(id)</code>.
+                </p>
+                <p>
+                  <code>tigris access-keys delete</code> takes a comma-separated
+                  list of key IDs and asks for one confirmation. See{" "}
+                  <a href="/docs/cli/organizations/delete/">
+                    tigris organizations delete
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "CLI", color: "green" },
+          },
+        ],
+      },
+      {
+        title: "Improvements",
+        items: [
+          {
+            title: "Upload integrity checks match S3",
+            description: (
+              <>
+                <p>
+                  <code>PutObject</code>, <code>UploadPart</code> and POST
+                  policy uploads with a malformed checksum, more than one
+                  checksum header, or an{" "}
+                  <code>x-amz-sdk-checksum-algorithm</code> that doesn&apos;t
+                  match the checksum sent are refused with{" "}
+                  <code>400 InvalidRequest</code> and S3&apos;s error message.
+                  Objects already stored are not affected.
+                </p>
+                <p>
+                  <code>UploadPart</code> checks <code>Content-MD5</code>: a
+                  malformed value returns <code>InvalidDigest</code> and a
+                  mismatch returns <code>BadDigest</code> before the part is
+                  stored. CRC64NVME checksums are stored with the object and
+                  carried through multipart uploads.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "Scoped access keys can create and list snapshots",
+            description: (
+              <>
+                <p>
+                  An access key whose bucket role allows snapshots can create
+                  and list them without account-wide create-bucket or
+                  list-bucket permission, including keys with Default
+                  permissions turned off. See{" "}
+                  <a href="/docs/buckets/snapshots-and-forks/">
+                    Snapshots and Forks
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "IAM", color: "red" },
+          },
+          {
+            title: "Fewer failed uploads during Tigris deployments",
+            description: (
+              <>
+                <p>
+                  Gateways and servers finish in-flight requests and close
+                  connections cleanly when they shut down for a deployment. When
+                  a gateway stops sending requests to an overloaded server, it
+                  returns <code>503 SlowDown</code> instead of{" "}
+                  <code>500 InternalError</code>, so AWS SDKs retry the request.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+        ],
+      },
+      {
+        title: "Fixes",
+        items: [
+          {
+            title: "Small uploads from the aws CLI pass signature checks",
+            description: (
+              <>
+                <p>
+                  The aws CLI and current AWS SDKs sign uploads with streaming
+                  checksums. Small uploads of this kind could fail with{" "}
+                  <code>SignatureDoesNotMatch</code>, and now succeed.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title: "Object tagging updates tags in place",
+            description: (
+              <>
+                <p>
+                  <code>PutObjectTagging</code> and{" "}
+                  <code>DeleteObjectTagging</code> change only the tags, so the
+                  object keeps its data, ETag and version. All three tagging
+                  calls honor <code>?versionId=</code> and return{" "}
+                  <code>x-amz-version-id</code>. This applies to regular,
+                  versioned and snapshot buckets.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+          {
+            title:
+              "Shadow-bucket migration from Cloudflare R2 with object ACLs",
+            description: (
+              <>
+                <p>
+                  On a Tigris bucket with per-object ACLs, objects that exist
+                  only in an R2 shadow bucket can be read and migrated. R2 has
+                  no object ACLs, so Tigris applies the bucket&apos;s own ACL to
+                  those objects. See{" "}
+                  <a href="/docs/migration/cloudflare-r2/">
+                    Migrate from Cloudflare R2
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "Buckets", color: "blue" },
+          },
+          {
+            title: "Console renames keys with special characters",
+            description: (
+              <>
+                <p>
+                  Renaming an object in the console works for keys that contain{" "}
+                  <code>%</code>, non-ASCII characters or the text{" "}
+                  <code>?versionId=</code>. See{" "}
+                  <a href="/docs/objects/object-rename/">Object Rename</a>.
+                </p>
+              </>
+            ),
+            tag: { label: "Web Console", color: "orange" },
+          },
+          {
+            title: "CopyObject ETags and preconditions",
+            description: (
+              <>
+                <p>
+                  The <code>CopyObjectResult</code> body quotes the ETag once,
+                  so it matches the <code>ETag</code> header and{" "}
+                  <code>HeadObject</code>.{" "}
+                  <code>x-amz-copy-source-if-match</code> and the other copy
+                  preconditions compare against the source object&apos;s ETag,
+                  including for sources uploaded in parts.
+                </p>
+              </>
+            ),
+            tag: { label: "API", color: "blue" },
+          },
+        ],
+      },
+      {
+        title: "Acceleration Gateway",
+        items: [
+          {
+            title: "Upgrade to TAG v1.22.3 or later",
+            description: (
+              <>
+                <p>
+                  TAG v1.22.3 checks the chunk signatures of streaming uploads
+                  in signing mode, serves a cached multipart-completion response
+                  only to the access key that completed the upload, and checks
+                  presigned URL expiry by AWS rules. In transparent mode it also
+                  accepts presigned GET URLs that don&apos;t send{" "}
+                  <code>X-Amz-Content-Sha256</code>. Upgrade to v1.22.3 or a
+                  later release. See{" "}
+                  <a href="/docs/acceleration-gateway/">
+                    Tigris Acceleration Gateway
+                  </a>
+                  .
+                </p>
+              </>
+            ),
+            tag: { label: "Acceleration Gateway", color: "purple" },
+          },
+        ],
+      },
+      {
+        title: "Partner Integrations",
+        items: [
+          {
+            title: "Move a Railway organization to your own Tigris account",
+            description: (
+              <>
+                <p>
+                  Tigris can move an organization created through Railway to a
+                  Tigris account you control. Buckets, objects and access keys
+                  stay in place and keep working, and billing moves to your
+                  Tigris account. Tigris runs the move; contact support to
+                  request it.
+                </p>
+              </>
+            ),
+            tag: { label: "Partner API", color: "orange" },
+          },
+          {
+            title: "Choose bucket locations in the partner portal",
+            description: (
+              <>
+                <p>
+                  The partner portal&apos;s create-bucket form has an Advanced
+                  settings section for bucket locations and storage tier, and a
+                  bucket&apos;s storage settings let you change its locations.
+                  The location picker is the same one the console uses.
+                </p>
+              </>
+            ),
+            tag: { label: "Partner Portal", color: "orange" },
+          },
+          {
+            title: "Partner-level usage page",
+            description: (
+              <>
+                <p>
+                  Partner-wide usage is at{" "}
+                  <code>/&#123;provider-id&#125;/usage</code> in the partner
+                  portal, linked from Usage in the sidebar. The provider root
+                  opens the organizations list.
+                </p>
+              </>
+            ),
+            tag: { label: "Partner Portal", color: "orange" },
+          },
+        ],
+      },
+    ],
+  },
+  {
     date: "September 30, 2026",
     title: "objgit: git hosting on Tigris",
     content: (

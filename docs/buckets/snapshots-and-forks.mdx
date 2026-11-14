@@ -607,11 +607,12 @@ that version. It is also deleted from all snapshots.
 
 :::
 
-No additional authorization permissions are required to use the `HeadObject` or
-`GetObject` APIs with the `versionId` parameter. The `ListObjectVersions`
-operation is available to users with read-only (or higher) access to the bucket.
-However, note that this is a separate operation, and some IAM policies may need
-to be updated to allow it.
+Users with read-only (or higher) access to the bucket can use the `HeadObject`
+and `GetObject` APIs with the `versionId` parameter. IAM policies must grant
+`s3:GetObjectVersion` for these requests, as in S3; `s3:GetObject` alone does
+not cover them. The `ListObjectVersions` operation is also available to users
+with read-only (or higher) access. However, note that this is a separate
+operation, and some IAM policies may need to be updated to allow it.
 
 Versioned object operations support the same authentication mechanisms as
 non-versioned operations. Presigned URLs can target a specific object version by

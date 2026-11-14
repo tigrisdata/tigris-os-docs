@@ -39,14 +39,13 @@ bucket's default tier after creation from
 to new objects. For more information, see the
 [Storage Tiers](/docs/objects/tiers/) guide.
 
-## User metadata in listings from every region
+## Global user metadata
 
-A listing can include the `x-amz-meta-*` values of each object. Served by a
-region outside the bucket's location, such a listing is empty. To return user
-metadata from every region, create the bucket with the
-`X-Tigris-Global-User-Metadata: true` header. The option cannot be changed after
-creation. See
-[Listing Objects with User Metadata](/docs/objects/list-user-metadata/).
+User metadata, the `x-amz-meta-*` values of an object, is stored in the regions
+that hold the bucket's data. To replicate it to every region, create the bucket
+with the `X-Tigris-Global-User-Metadata: true` header. The option cannot be
+changed after creation. See
+[Global User Metadata](/docs/objects/global-user-metadata/).
 
 ## Creating a bucket using the Dashboard
 

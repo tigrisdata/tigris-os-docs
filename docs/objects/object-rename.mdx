@@ -11,9 +11,9 @@ You can rename an object in three ways:
 
 - With the S3 `RenameObject` API. This is the standard API, and the AWS CLI and
   the AWS SDKs support it.
-- With the `X-Tigris-Rename: true` header on a `CopyObject` request. This is the
-  Tigris form. Use it with an SDK that does not have `RenameObject`.
-- In the Tigris Dashboard.
+- With the `X-Tigris-Rename: true` header on a `CopyObject` request. This is a
+  Tigris-specific form. Use it with an SDK that does not have `RenameObject`.
+- In Tigris Dashboard.
 
 ## Renaming objects with the S3 RenameObject API
 
@@ -24,7 +24,7 @@ is limited to directory buckets.
 The request renames `source-key` to `new-key` in the same bucket:
 
 <Tabs groupId="languages">
-<TabItem value="cli" label="AWS CLI">
+<TabItem value="cli" label="AWS CLI" default>
 
 ```bash
 aws s3api rename-object \
@@ -100,9 +100,14 @@ metadata.
   refuse the replacement, send `If-None-Match: *`. See
   [Conditional rename](#conditional-rename).
 - The AWS CLI and the AWS SDKs send an `x-amz-client-token` header with each
-  request. Tigris accepts the header and does not use it. Tigris does not
-  de-duplicate a retry: a retry after a successful rename finds no source and
-  returns `404 NoSuchKey`.
+  request. Tigris accepts the header and does not use it.
+
+:::note
+
+Tigris does not de-duplicate a retry of a rename. A retry after a successful
+rename finds no source and returns `404 NoSuchKey`.
+
+:::
 
 ### Conditional rename
 
@@ -147,7 +152,7 @@ X-Tigris-Rename: true
 ```
 
 <Tabs groupId="languages">
-<TabItem value="go" label="Go">
+<TabItem value="go" label="Go" default>
 
 ```go
 func WithRename() func(*s3.Options) {
@@ -262,7 +267,7 @@ destination, and `s3:GetObject` and `s3:DeleteObject` on the source.
 
 ## Renaming objects in the Dashboard
 
-To rename an object in the Tigris Dashboard:
+To rename an object in Tigris Dashboard:
 
 1. Open the [Tigris Dashboard](https://console.storage.dev/) and log in.
 2. In the side navigation, click "Buckets". Select the bucket, and find the

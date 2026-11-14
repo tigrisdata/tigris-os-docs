@@ -108,6 +108,6 @@ not change the bucket or the object.
 | s3:PutObjectRetention                 | PutObjectRetention                                                                    |
 | s3:PutReplicationConfiguration        | PutBucketReplication, DeleteBucketReplication                                         |
 
-Object notifications are configured in the Tigris Dashboard. See
+Object notifications are configured in Tigris Dashboard. See
 [Object notifications](/docs/buckets/object-notifications/). Tigris encrypts all
 data at rest, so the encryption configuration APIs have no function.

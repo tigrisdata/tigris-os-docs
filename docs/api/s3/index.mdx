@@ -37,13 +37,9 @@ earlier run of the suite, which then had 68 operations.
 | **Cloudflare R2**        | 48     | 20     | 68    | 71%   |
 | **Google Cloud Storage** | 45     | 23     | 68    | 66%   |
 
-The ten Tigris failures are the operations that return `NotImplemented` (the
-bucket policy, encryption, and notification configuration APIs), the
-`PutBucketVersioning` test, which enables versioning on a bucket that was not
-created with snapshots, the `GetBucketVersioning` test, which calls
-`PutBucketVersioning` first, and the SSE-S3 test, which expects the
-`x-amz-server-side-encryption` header in the response. See the notes under each
-table.
+The ten Tigris failures are the bucket policy, encryption, and notification
+configuration operations, which return `NotImplemented`, the two versioning
+tests (see [note 9](#note-9)), and the SSE-S3 test (see [note 1](#note-1)).
 
 ✅ = supported |
 

@@ -71,6 +71,15 @@ Tigris supports an extra set of conditional headers for the source object in the
 | `X-Amz-Copy-Source-If-Modified-Since`   | Request proceeds only if the source object was modified after the provided date (RFC 1123 format). Returns `412 Precondition Failed` otherwise. |
 | `X-Amz-Copy-Source-If-Unmodified-Since` | Request proceeds only if the source object was **not** modified after the provided date. Returns `412 Precondition Failed` otherwise.           |
 
+## Conditional rename
+
+The `RenameObject` operation accepts the standard condition headers for the
+destination and a set of `X-Amz-Rename-Source-If-*` headers for the source.
+Tigris checks all of them in the rename transaction. A failed condition returns
+`412 Precondition Failed`, and the rename does not run. See
+[Renaming objects](/docs/objects/object-rename/#conditional-rename) for the
+header table.
+
 ## Use Cases
 
 ### Create-if-not-exists
@@ -122,10 +131,10 @@ X-Amz-Copy-Source-If-Modified-Since: Mon, 01 Jan 2024 00:00:00 GMT
 
 ## Error Responses
 
-| Status Code               | Meaning                                                             |
-| ------------------------- | ------------------------------------------------------------------- |
-| `304 Not Modified`        | The condition indicates the object hasn't changed (GET requests).   |
-| `412 Precondition Failed` | One or more conditions were not met (PUT, DELETE, or GET requests). |
+| Status Code               | Meaning                                                                                                                 |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `304 Not Modified`        | The condition indicates the object hasn't changed (GET and HEAD requests).                                              |
+| `412 Precondition Failed` | One or more conditions were not met. A write (PUT, COPY, rename, or DELETE) with a failed condition always returns 412. |
 
 ## Next steps
 

@@ -599,6 +599,16 @@ and standard SDKs and tools work as-is.
 - `HeadObject` with the `versionId` parameter
 - `GetObject` with the `versionId` parameter
 - `DeleteObject` with the `versionId` parameter
+- `GetObjectTagging`, `PutObjectTagging`, and `DeleteObjectTagging` with the
+  `versionId` parameter. Without `versionId`, these operations act on the
+  current version. The response carries `x-amz-version-id`.
+- `GetBucketVersioning`. For a snapshot-enabled bucket, the response reports
+  `<Status>Enabled</Status>`.
+- `PutBucketVersioning` with `<Status>Enabled</Status>` on a snapshot-enabled
+  bucket. The request succeeds and changes nothing. A request to enable
+  versioning on another bucket, or to suspend it, returns `501 NotImplemented`.
+  Versioning is a property of the bucket that you set at creation with the
+  `X-Tigris-Enable-Snapshot` header.
 
 :::note
 
@@ -606,6 +616,11 @@ As in S3, deleting an object with a specified version ID permanently removes
 that version. It is also deleted from all snapshots.
 
 :::
+
+Tagging a version does not create a new version and does not change the
+`Last-Modified` time of the object. The IAM actions for the version forms are
+`s3:GetObjectVersionTagging`, `s3:PutObjectVersionTagging`, and
+`s3:DeleteObjectVersionTagging`, as in S3.
 
 Users with read-only (or higher) access to the bucket can use the `HeadObject`
 and `GetObject` APIs with the `versionId` parameter. IAM policies must grant

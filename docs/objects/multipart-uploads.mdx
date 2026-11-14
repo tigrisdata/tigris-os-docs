@@ -132,3 +132,11 @@ The following tools can be used for multipart uploads.
 - Standard S3 multipart semantics apply (e.g., large objects up to 5 TB).
 - Tigris implements the S3 MPU API surface (create/upload
   parts/complete/list/abort).
+- The parts in a `CompleteMultipartUpload` request must be in ascending order by
+  part number, as in S3. Otherwise the request fails with `InvalidPartOrder`.
+- Tigris verifies SHA-256 checksums (`x-amz-checksum-sha256`) on upload. The
+  CRC32, CRC32C, CRC64NVME, and SHA-1 checksum algorithms are accepted but not
+  verified.
+- A completed multipart object has a composite ETag of the form `<md5>-<parts>`.
+  A conditional `CopyObject` with `x-amz-copy-source-if-match` against that ETag
+  succeeds, as in S3.

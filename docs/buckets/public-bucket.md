@@ -181,13 +181,6 @@ To enable anonymous directory listing on a bucket:
 
   ![Disable Directory Listing toggle in Tigris Console](./settings/switch-dir-enable.png)
 
-## Object versions
-
-Anonymous reads of a specific object version (`GetObject` or `HeadObject` with
-`versionId`) return `403 AccessDenied`. Sign these requests with a key that has
-`s3:GetObjectVersion`. The one exception is `HeadObject` on a public-read object
-in a bucket with [object ACLs](../objects/acl.md) enabled.
-
 ## Custom domain
 
 For production use, we recommend configuring a

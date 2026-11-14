@@ -146,20 +146,20 @@ While `flyctl` provides command-line management for your buckets, you can also
 use the Tigris web console for a visual interface to manage your buckets, access
 keys, upload objects, view usage, and more.
 
-### Logging in to the Console
+### Signing in to the Console {#logging-in-to-the-console}
 
 To access the Tigris console with your Fly-provisioned buckets:
 
 1. Go to [console.storage.dev/signin](https://console.storage.dev/signin)
-2. Click the **Fly.io** button to log in
+2. Click the **Fly.io** button to sign in
 3. This will connect to your Fly organization and show all your buckets
 
-:::info Important: Use the Fly.io Login
+:::info Important: Use the Fly.io Sign-In
 
-You **must** click the **Fly.io** button on the login page to access your
+You **must** click the **Fly.io** button on the sign-in page to access your
 Fly-provisioned buckets.
 
-Do not use Google, GitHub, or email login, as those will create a separate
+Do not use Google, GitHub, or email sign-in, as those will create a separate
 native Tigris account that won't have access to your Fly buckets.
 
 :::
@@ -198,15 +198,15 @@ If you want to migrate your Fly account to a native Tigris account:
 
 ### I can't see my buckets in the Tigris console
 
-**Problem:** You log into the Tigris console but see an empty dashboard with no
-buckets, even though you created them using `fly storage create`.
+**Problem:** You sign in to the Tigris console but see an empty dashboard with
+no buckets, even though you created them using `fly storage create`.
 
-**Cause:** You're logged into a native Tigris account instead of your Fly.io
+**Cause:** You're signed in to a native Tigris account instead of your Fly.io
 account. These are completely separate systems.
 
 **Solution:**
 
-1. **Log out** of the Tigris console completely
+1. **Sign out** of the Tigris console completely
 2. **Go to** [console.storage.dev/signin](https://console.storage.dev/signin)
 3. **Click the Fly.io button** (not Google, GitHub, or email)
 4. Your Fly-provisioned buckets should now appear
@@ -216,7 +216,7 @@ account. These are completely separate systems.
 If you can see your buckets but they appear empty or you're missing some
 buckets:
 
-- **Check your Fly organization:** Ensure you're logged in with the correct Fly
+- **Check your Fly organization:** Ensure you're signed in with the correct Fly
   account that owns the buckets
 - **Verify buckets exist:** Run `fly storage list` from your terminal to confirm
 - **Browser issues:** Try clearing your browser cache or using an

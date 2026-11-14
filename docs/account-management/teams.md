@@ -12,7 +12,7 @@ A Team does not carry an access level of its own. You choose the role
 
 :::note
 
-Teams are available for Tigris native accounts only. If you log in with a Fly
+Teams are available for Tigris native accounts only. If you sign in with a Fly
 account, manage access through Fly Organizations instead — see
 [Manage Organizations in Fly](./organizations.md#manage-organizations-in-fly).
 

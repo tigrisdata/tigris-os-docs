@@ -597,6 +597,7 @@ const sidebars = {
             "objects/object-rename",
             "objects/delete-objects",
             "objects/bundle",
+            "objects/batch-write",
           ],
         },
         {

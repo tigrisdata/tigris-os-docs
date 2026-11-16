@@ -39,6 +39,14 @@ bucket's default tier after creation from
 to new objects. For more information, see the
 [Storage Tiers](/docs/objects/tiers/) guide.
 
+## Enabling global replication of user metadata
+
+User metadata, the `x-amz-meta-*` values of an object, is replicated only to the
+regions that hold the bucket's data. To replicate it to every region, create the
+bucket with the `X-Tigris-Global-User-Metadata: true` header. The option cannot
+be changed after creation. See
+[Global User Metadata](/docs/objects/global-user-metadata/).
+
 ## Creating a bucket using the Dashboard
 
 To create a bucket using the Tigris Dashboard, follow these steps:

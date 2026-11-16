@@ -31,7 +31,7 @@ aws s3api rename-object \
   --endpoint-url https://t3.storage.dev \
   --bucket my-bucket \
   --key new-key \
-  --rename-source /my-bucket/source-key
+  --rename-source source-key
 ```
 
 </TabItem>
@@ -41,7 +41,7 @@ aws s3api rename-object \
 _, err := client.RenameObject(ctx, &s3.RenameObjectInput{
 	Bucket:       aws.String("my-bucket"),
 	Key:          aws.String("new-key"),
-	RenameSource: aws.String("/my-bucket/source-key"),
+	RenameSource: aws.String("source-key"),
 })
 if err != nil {
 	log.Fatalf("unable to rename object: %v", err)
@@ -63,7 +63,7 @@ await S3.send(
   new RenameObjectCommand({
     Bucket: "my-bucket",
     Key: "new-key",
-    RenameSource: "/my-bucket/source-key",
+    RenameSource: "source-key",
   }),
 );
 ```
@@ -79,7 +79,7 @@ s3 = boto3.client("s3", endpoint_url="https://t3.storage.dev")
 s3.rename_object(
     Bucket="my-bucket",
     Key="new-key",
-    RenameSource="/my-bucket/source-key",
+    RenameSource="source-key",
 )
 ```
 
@@ -93,14 +93,22 @@ metadata.
 ### Rules
 
 - The source and the destination must be in the same bucket. The
-  `x-amz-rename-source` value is `/bucket/key`, URL-encoded.
-- The source cannot name a version. A `versionId` in the source is rejected with
-  `400 InvalidArgument`.
+  `x-amz-rename-source` value is the source key, URL-encoded, and nothing else.
+- The source cannot name a version.
 - A rename to a key that exists replaces that key, as `CopyObject` does. To
   refuse the replacement, send `If-None-Match: *`. See
   [Conditional rename](#conditional-rename).
 - The AWS CLI and the AWS SDKs send an `x-amz-client-token` header with each
   request. Tigris accepts the header and does not use it.
+
+:::note
+
+Do not prefix the rename source with a slash or the bucket name. As on AWS, the
+whole decoded value is read as the key, so `/my-bucket/source-key` names a
+different object and the request fails with `404 NoSuchKey`. A `?versionId=`
+suffix is read as part of the key in the same way.
+
+:::
 
 :::note
 

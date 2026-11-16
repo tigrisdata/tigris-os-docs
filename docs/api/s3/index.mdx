@@ -113,7 +113,7 @@ The complete list of S3 APIs is in the
 | PutBucketOwnershipControls         | ✅                                                                                                                       | ❌  | ❌                                                                                                                             |
 | PutBucketPolicy                    | ❌                                                                                                                       | ❌  | ❌                                                                                                                             |
 | PutBucketTagging                   | ✅                                                                                                                       | ❌  | ❌                                                                                                                             |
-| PutBucketVersioning                | ❌                                                                                                                       | ❌  | <abbr title="GCS maps versioning to its own generation number system, which differs from S3 version IDs">⚠️</abbr> [5](#notes) |
+| PutBucketVersioning                | <abbr title="Only Status=Enabled on a snapshot bucket is supported">⚠️</abbr> [7](#notes)                                | ❌  | <abbr title="GCS maps versioning to its own generation number system, which differs from S3 version IDs">⚠️</abbr> [5](#notes) |
 
 ## Multipart uploads
 
@@ -150,6 +150,11 @@ The complete list of S3 APIs is in the
    separated by a comma (`iad,sjc`), or one geography (`usa`, `eur`). Omit the
    value or use `auto` for a global bucket. See [Creating a bucket in a specific
    location](/docs/buckets/create-bucket/#creating-a-bucket-in-a-specific-location).
+7. <span id="note-7"></span> **Bucket versioning**: Versioning is set when you
+   create the bucket. On a [snapshot
+   bucket](/docs/buckets/snapshots-and-forks/), `PutBucketVersioning` with
+   `Status` set to `Enabled` succeeds and changes nothing. All other requests
+   return `NotImplemented`.
 
 ## Presigned URLs
 

@@ -195,6 +195,90 @@ html[data-theme="dark"] .entryTitle {
   color: rgb(241 245 249); /* slate-100 */
 }
 
+/* Release summary under the entry heading */
+.changeCount {
+  margin-top: 0.25rem;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgb(100 116 139); /* slate-500 */
+}
+
+/* Featured card: the headline feature of a release */
+.featured {
+  margin-top: 1.25rem;
+}
+
+.featuredCard {
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  border: 1px solid rgb(203 213 225); /* slate-300 */
+  border-radius: 0.75rem;
+  background-color: rgb(248 250 252); /* slate-50 */
+}
+
+html[data-theme="dark"] .featuredCard {
+  border-color: rgb(51 65 85); /* slate-700 */
+  background: linear-gradient(
+    135deg,
+    rgba(30, 41, 59, 0.55) 0%,
+    rgba(30, 41, 59, 0.25) 100%
+  );
+}
+
+.featuredLabel {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border: 1px solid rgba(56, 172, 140, 0.35);
+  border-radius: 0.25rem;
+  background-color: rgba(56, 172, 140, 0.12);
+  color: var(--ifm-color-primary-darkest);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-theme="dark"] .featuredLabel {
+  border-color: rgba(87, 211, 164, 0.35);
+  background-color: rgba(87, 211, 164, 0.1);
+  color: var(--ifm-color-primary);
+}
+
+.featuredTitle {
+  margin: 0.75rem 0 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+html[data-theme="dark"] .featuredTitle {
+  color: rgb(241 245 249); /* slate-100 */
+}
+
+.featured .featuredBody,
+.featuredCard .featuredBody {
+  margin-top: 0.5rem;
+}
+
+.featuredBody > :last-child {
+  margin-bottom: 0;
+}
+
+.sectionLabel {
+  margin-top: 1.75rem;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(100 116 139); /* slate-500 */
+}
+
+.sectionLabel + .contentArea .subcategoriesContainer {
+  margin-top: 0.25rem;
+}
+
 /* Tag styles */
 .tag {
   display: inline-flex;

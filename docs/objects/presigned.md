@@ -26,6 +26,27 @@ Refer to the following examples to generate a presigned URL:
 - [AWS PHP SDK](/docs/sdks/s3/aws-php-sdk/#using-presigned-urls)
 - [AWS Python SDK](/docs/sdks/s3/aws-python-sdk/#using-presigned-urls)
 
+## Signature version
+
+Generate presigned URLs with AWS Signature Version 4. A Version 4 URL carries
+`X-Amz-Algorithm=AWS4-HMAC-SHA256` in its query string.
+
+:::warning
+
+Signature Version 2 presigned URLs, which carry `AWSAccessKeyId`, `Expires` and
+`Signature` in the query string, are deprecated. Tigris still accepts them for
+backward compatibility, but that support will be removed. Switch to Version 4
+before then.
+
+:::
+
+The AWS CLI and every current AWS SDK except .NET produce Version 4 URLs by
+default. The .NET SDK needs `AWSConfigsS3.UseSignatureVersion4 = true`, as shown
+in the [.NET guide](/docs/sdks/s3/aws-net-sdk/#pre-signed-urls). If your URLs
+are Version 2 with another SDK, update the SDK, or remove the
+`signature_version` setting that selects Version 2. URLs that were already
+issued keep working until they expire.
+
 ## Headers on a presigned URL
 
 Choose the `x-amz-*` headers before you generate the URL, and pass them to the

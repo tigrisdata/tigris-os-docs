@@ -241,8 +241,8 @@ html[data-theme="dark"] .featuredCard {
 }
 
 html[data-theme="dark"] .featuredLabel {
-  border-color: rgba(87, 211, 164, 0.35);
-  background-color: rgba(87, 211, 164, 0.1);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  background-color: color-mix(in srgb, var(--accent) 10%, transparent);
   color: var(--ifm-color-primary);
 }
 

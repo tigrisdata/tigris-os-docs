@@ -45,6 +45,15 @@ it is outdated.
 
 :::
 
+:::info Tigris Data is part of Dropbox
+
+Dropbox, Inc. acquired Tigris Data in November 2026. Tigris Data, LLC is now
+part of Dropbox. The Tigris object storage service continues to operate under
+the Tigris name, with the same S3-compatible API and endpoint
+(`https://t3.storage.dev`).
+
+:::
+
 ## Frequently Asked Questions
 
 **Is Tigris a database?** No. Tigris is object storage. It stores files and

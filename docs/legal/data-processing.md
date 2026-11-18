@@ -1,9 +1,9 @@
 # Data Processing Addendum
 
-_Last updated: November 18, 2025_
+_Last updated: November 17, 2026_
 
 Pursuant to the Tigris Subscription Agreement (“**the Agreement**”), Customer,
-on behalf of itself and its affiliates, and Tigris Data Inc. (referred to herein
+on behalf of itself and its affiliates, and Tigris Data, LLC (referred to herein
 as “**Vendor**”) (each a “**Party**”; collectively the “**Parties**”), the
 Parties hereby adopt this Data Processing Addendum (“**DPA**”) for so long as
 Vendor processes Personal Data on behalf of Customer. This DPA prevails over any

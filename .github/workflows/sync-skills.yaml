@@ -1,0 +1,57 @@
+name: Sync skill pattern pages
+on:
+  schedule:
+    # Every Monday at 15:00 UTC.
+    - cron: "0 15 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-skills
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: namespace-profile-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        with:
+          repository: tigrisdata/skills
+          ref: main
+          path: .skills-source
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Generate the skill pages
+        id: sync
+        run: |
+          node scripts/sync-skills.js --source .skills-source --report "$RUNNER_TEMP/warnings.md"
+          {
+            echo "Regenerates \`docs/ai-agents/skills/\` from [tigrisdata/skills@$(git -C .skills-source rev-parse --short HEAD)](https://github.com/tigrisdata/skills/commit/$(git -C .skills-source rev-parse HEAD)) with \`node scripts/sync-skills.js\`."
+            echo
+            echo "### Warnings"
+            echo
+            cat "$RUNNER_TEMP/warnings.md"
+          } > "$RUNNER_TEMP/pr-body.md"
+          rm -rf .skills-source
+
+      - uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          branch: automation/sync-skills
+          delete-branch: true
+          add-paths: docs/ai-agents/skills
+          commit-message:
+            "docs(ai-agents): sync skill pattern pages from tigrisdata/skills"
+          title:
+            "docs(ai-agents): sync skill pattern pages from tigrisdata/skills"
+          body-path: ${{ runner.temp }}/pr-body.md

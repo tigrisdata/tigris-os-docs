@@ -1423,6 +1423,12 @@ components:
             Default is false for new buckets. Only applicable to public buckets.
         storage_class:
           $ref: "#/components/schemas/StorageClass"
+        global_user_metadata:
+          type: boolean
+          description:
+            If set to true, object listings that ask for user metadata return it
+            from every region, not only from the regions that hold the bucket's
+            data. Set at creation only. Default is false.
         regions:
           $ref: "#/components/schemas/Regions"
         enable_object_acl:

@@ -270,7 +270,12 @@ sweep. There is no backfill flag — rules apply on the next scan, oldest-first.
   the definition.
 - Use `Filter.Prefix` on a rule to scope it to a subset of objects. Omit
   `Filter` (or pass an empty object `{}`) to apply the rule to every object in
-  the bucket.
+  the bucket. The deprecated rule-level `Prefix` is accepted and treated as
+  `Filter.Prefix`. A `Prefix` that contains only white space is rejected.
+- `Filter.ObjectSizeGreaterThan`, `Filter.ObjectSizeLessThan`, and `Filter.And`
+  are not supported. A configuration that contains them is rejected with
+  `400 InvalidArgument`, so a rule is never stored with a wider scope than you
+  wrote.
 - Each rule can include **at most one transition and at most one expiration**.
   Chain multiple transitions by writing one rule per transition.
 - Transitions are one-way to a colder tier. Once an object lands in `GLACIER`,

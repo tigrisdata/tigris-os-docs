@@ -165,8 +165,11 @@ html[data-theme="dark"] .button {
   background-color: var(--code-output);
 }
 
+/* The dark base rule above outranks .button:hover, so hover and focus need
+   their own background here: one step darker, as in light mode. */
 html[data-theme="dark"] .button:hover,
 html[data-theme="dark"] .button:focus {
+  background-color: var(--accent);
   box-shadow: 0 2px 8px color-mix(in srgb, var(--code-output) 30%, transparent);
 }
 

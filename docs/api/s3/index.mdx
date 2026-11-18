@@ -25,7 +25,7 @@ tools, and libraries with Tigris.
 
 The compatibility data on this page comes from the
 [S3 API compatibility test suite](https://github.com/tigrisdata-community/s3-api-compat-tests)
-(AWS Go SDK v2), run against every provider on 2026-11-14. Each run creates a
+(AWS Go SDK v2), run against every provider on 2026-11-18. Each run creates a
 temporary bucket and a second bucket with versioning enabled, runs every test,
 and deletes both. A test checks the effect of its operation: a write is read
 back, a condition that must fail is sent and must fail with the S3 status or
@@ -36,17 +36,17 @@ bucket with versioning enabled.
 
 | Provider                 | Passed | Failed | Skipped | Total | Score |
 | ------------------------ | ------ | ------ | ------- | ----- | ----- |
-| **Tigris**               | 77     | 16     | 0       | 93    | 83%   |
-| **Cloudflare R2**        | 53     | 30     | 10      | 93    | 57%   |
-| **Google Cloud Storage** | 48     | 45     | 0       | 93    | 52%   |
+| **Tigris**               | 83     | 11     | 0       | 94    | 88%   |
+| **Cloudflare R2**        | 53     | 31     | 10      | 94    | 56%   |
+| **Google Cloud Storage** | 48     | 46     | 0       | 94    | 51%   |
 
-Of the Tigris failures, most are the bucket policy, encryption, and notification
-configuration operations, which return `NotImplemented` (see
-[Operations that return NotImplemented](#operations-that-return-notimplemented)),
-`RenameObject`, which was added after this run (see [note 7](#notes)),
-`PutBucketVersioning` on a bucket created without versioning (see
-[note 9](#notes)), and the SSE-S3 test (see [note 1](#notes)). The remaining
-checks are under review.
+Of the 11 Tigris failures, eight are the bucket policy, encryption, and
+notification configuration operations, which return `NotImplemented` (see
+[Operations that return NotImplemented](#operations-that-return-notimplemented)).
+The other three are `PutBucketVersioning` on a bucket created without versioning
+(see [note 9](#notes)), the SSE-S3 test (see [note 1](#notes)), and a
+`PutObject` with a wrong `x-amz-checksum-sha256`, which Tigris accepts where S3
+rejects it. That last check is under review.
 
 ✅ = supported |
 
@@ -76,8 +76,9 @@ it does not change the bucket or the object. See
 | CopyObject (MetadataDirective)             | ✅             | ✅  | ✅             |
 | CopyObject (x-amz-copy-source-if-match)    | ✅             | ✅  | ✅             |
 | CopyObject (multipart source, conditional) | ✅             | ✅  | ❌ [3](#notes) |
-| RenameObject                               | ❌ [7](#notes) | ❌  | ❌             |
-| RenameObject (If-None-Match: \*)           | ❌ [7](#notes) | ✅  | ❌             |
+| RenameObject                               | ✅ [7](#notes) | ❌  | ❌             |
+| RenameObject (If-None-Match: \*)           | ✅             | ✅  | ❌             |
+| RenameObject (source is the literal key)   | ✅             | ❌  | ❌             |
 | GetObject (range request)                  | ✅             | ✅  | ✅             |
 | GetObject (If-Match)                       | ✅             | ✅  | ✅             |
 | GetObject (If-None-Match)                  | ✅             | ✅  | ✅             |
@@ -119,10 +120,10 @@ it does not change the bucket or the object. See
 | DeleteBucketTagging                | ✅             | ❌  | ❌             |
 | PutBucketCors                      | ✅             | ✅  | ❌             |
 | GetBucketCors                      | ✅             | ✅  | ❌             |
-| DeleteBucketCors                   | ❌             | ✅  | ❌             |
+| DeleteBucketCors                   | ✅             | ✅  | ❌             |
 | PutBucketLifecycleConfiguration    | ✅             | ✅  | ❌             |
 | GetBucketLifecycleConfiguration    | ✅             | ✅  | ❌             |
-| DeleteBucketLifecycle              | ❌             | ❌  | ❌             |
+| DeleteBucketLifecycle              | ✅             | ❌  | ❌             |
 | PutBucketAcl                       | ✅ [2](#notes) | ❌  | ❌ [4](#notes) |
 | GetBucketAcl                       | ✅             | ✅  | ❌ [4](#notes) |
 | PutBucketPolicy                    | ❌             | ❌  | ❌             |
@@ -155,7 +156,7 @@ provider supports it. A provider that cannot create one skips them.
 | GetObject (versionId)                 | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ✅             |
 | HeadObject (versionId)                | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ✅             |
 | ListObjectVersions                    | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ❌ [5](#notes) |
-| DeleteObject (versionId)              | ❌             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ✅             |
+| DeleteObject (versionId)              | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ✅             |
 | PutObjectTagging (versionId)          | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ❌             |
 | GetObjectTagging (versionId)          | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ❌             |
 | DeleteObjectTagging (versionId)       | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ❌             |
@@ -209,8 +210,10 @@ GCS does not accept it in `x-amz-copy-source-if-match`.
    location](/docs/buckets/create-bucket/#creating-a-bucket-in-a-specific-location).
 7. <span id="note-7"></span> **RenameObject**: Tigris serves `RenameObject`
    (`PUT /bucket/key?renameObject` with `x-amz-rename-source`) for every bucket,
-   with the destination and source conditions. Support was added after the run
-   on this page; the next run will reflect it.
+   with the destination and source conditions. As on AWS S3, the URL-decoded
+   `x-amz-rename-source` value is the literal source key in the request bucket,
+   so a leading slash or a bucket name is part of the key. See [Rename
+   objects](/docs/objects/object-rename/).
 8. <span id="note-8"></span> **Notifications**: Object notifications are
    configured in Tigris Dashboard, not with the S3 notification configuration
    APIs. See [Object notifications](/docs/buckets/object-notifications/).

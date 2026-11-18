@@ -48,9 +48,8 @@ it is outdated.
 :::info Tigris Data is part of Dropbox
 
 Dropbox, Inc. acquired Tigris Data in November 2026. Tigris Data, LLC is now
-part of Dropbox. The Tigris object storage service continues to operate under
-the Tigris name, with the same S3-compatible API and endpoint
-(`https://t3.storage.dev`).
+part of Dropbox. Tigris object storage continues to operate under the Tigris
+name, with the same S3-compatible API and endpoint (`https://t3.storage.dev`).
 
 :::
 

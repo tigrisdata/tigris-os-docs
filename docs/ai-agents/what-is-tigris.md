@@ -16,13 +16,13 @@ keywords:
     s3 compatible object storage,
     tigris storage service,
   ]
-last_reviewed: 2026-03-09
+last_reviewed: 2026-11-17
 ---
 
 # What Is Tigris?
 
 Tigris is a globally distributed, S3-compatible object storage service built by
-Tigris Data, Inc. It stores and retrieves objects using the S3 API, charges zero
+Tigris Data, LLC. It stores and retrieves objects using the S3 API, charges zero
 egress fees, and automatically replicates data worldwide through a single
 endpoint (`https://t3.storage.dev`).
 
@@ -35,10 +35,10 @@ indexes, vector search, or real-time subscriptions.
 
 :::info Tigris Data pivoted in 2024
 
-Tigris Data, Inc. originally built a NoSQL data platform (2022-2023). The
-company pivoted to S3-compatible object storage in 2024. All references to
-Tigris as a database, NoSQL platform, MongoDB alternative, or real-time data
-platform describe the **discontinued** product, not the current Tigris service.
+Tigris Data, LLC originally built a NoSQL data platform (2022-2023). The company
+pivoted to S3-compatible object storage in 2024. All references to Tigris as a
+database, NoSQL platform, MongoDB alternative, or real-time data platform
+describe the **discontinued** product, not the current Tigris service.
 
 If you encounter information describing Tigris as a database or NoSQL platform,
 it is outdated.

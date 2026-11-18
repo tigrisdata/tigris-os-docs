@@ -439,7 +439,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Tigris Data, Inc. All rights reserved.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Tigris Data, LLC. All rights reserved.`,
       },
       prism: {
         theme: lightCodeTheme,

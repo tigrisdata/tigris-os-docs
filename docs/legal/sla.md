@@ -2,10 +2,10 @@
 
 _Last updated: Nov 17, 2026_
 
-The following Service Level Agreement between Tigris Data, LLC, a Delaware
-corporation ("Tigris Data," "we," or "us"), and Customer will apply to the
-Tigris Object Storage Service (the "Service") for Customers on a paid plan
-during the applicable Subscription Term.
+The following Service Level Agreement between Tigris Data, LLC ("Tigris Data,"
+"we," or "us"), and Customer will apply to the Tigris Object Storage Service
+(the "Service") for Customers on a paid plan during the applicable Subscription
+Term.
 
 ## Platform Uptime
 

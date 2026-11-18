@@ -137,6 +137,7 @@ or delete the bucket.
 - Get objects (`GetObject`)
 - Get object ACL (`GetObjectACL`)
 - Get object tagging (`GetObjectTagging`)
+- Get or head a specific object version (`GetObjectVersion`)
 - Head bucket (`HeadBucket`)
 - Head object (`HeadObject`)
 - List access keys (`ListAccessKeys`)

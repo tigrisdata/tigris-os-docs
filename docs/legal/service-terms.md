@@ -1,11 +1,11 @@
 # Tigris Service Agreement
 
-_Last updated: December 26, 2024_
+_Last updated: November 17, 2026_
 
 This Agreement (the "**Agreement**") contains the terms and conditions that
 govern access to and use of the Tigris Object Storage Service (as defined below)
-and creates a binding contract between User (as defined below) and Tigris Data
-Inc. ("**Tigris Data**," "**we**," or "**us**"). Please see Section 23 for
+and creates a binding contract between User (as defined below) and Tigris Data,
+LLC ("**Tigris Data**," "**we**," or "**us**"). Please see Section 23 for
 definitions of certain capitalized terms used in this Agreement.
 
 ## Terms
@@ -337,7 +337,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     complaint about any material on the Tigris Object Storage Service, you may
     contact our Designated Agent at the following address:
 
-        Tigris Data Inc.<br/>
+        Tigris Data, LLC<br/>
         Attn: Legal Department (IP Notification)<br/>
         1250 Borregas Ave,<br/>
         #87, Sunnyvale, CA 94089<br/>
@@ -688,7 +688,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     20.3 **Opt-Out.** If you do not wish to resolve disputes by binding
     arbitration, you may opt out of the provisions of this Section 20 within 30
     days after the date that you agree to this Agreement by sending a letter to
-    Tigris Data Inc., Attention: Legal Department – Arbitration Opt-Out, 1250
+    Tigris Data, LLC, Attention: Legal Department – Arbitration Opt-Out, 1250
     Borregas Ave, #87, Sunnyvale, CA 94089 that specifies: your full legal name,
     the email address associated with your account on the Tigris Object Storage
     Service, and a statement that you wish to opt out of arbitration ("Opt-Out
@@ -708,8 +708,8 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     first send a written notice of the dispute to the other party by certified
     U.S. Mail or by Federal Express (signature required) or, only if that other
     party has not provided a current physical address, then by electronic mail
-    ("Notice of Arbitration"). Tigris Data's address for Notice is: Tigris Data
-    Inc., 1250 Borregas Ave, #87, Sunnyvale, CA 94089. The Notice of Arbitration
+    ("Notice of Arbitration"). Tigris Data's address for Notice is: Tigris Data,
+    LLC, 1250 Borregas Ave, #87, Sunnyvale, CA 94089. The Notice of Arbitration
     must: (a) identify the name or account number of the party making the claim;
     (b) describe the nature and basis of the claim or dispute; and (c) set forth
     the specific relief sought ("Demand"). The parties will make good faith
@@ -890,7 +890,7 @@ PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
     requirements, including that those communications be in writing.
 
     22.10 **Contact Information.** The Tigris Object Storage Service is offered
-    by Tigris Data Inc., located at 1250 Borregas Ave, #87, Sunnyvale, CA 94089.
+    by Tigris Data, LLC, located at 1250 Borregas Ave, #87, Sunnyvale, CA 94089.
     You may contact us by sending correspondence to that address or by emailing
     us at help@tigrisdata.com.
 

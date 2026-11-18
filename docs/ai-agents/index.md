@@ -235,6 +235,7 @@ Get your access keys at [console.storage.dev](https://console.storage.dev).
 - [Python and boto3](/docs/ai-agents/python-s3-sdk/)
 - [Go SDK](/docs/ai-agents/go-s3-sdk/)
 - [MCP Server for AI Agents](/docs/ai-agents/mcp-server/)
+- [Agent Skill Patterns](/docs/ai-agents/skills/)
 - [Migrate from Any S3 Provider](/docs/ai-agents/migrate-from-any-s3-provider/)
 - [Bucket Configuration](/docs/ai-agents/bucket-configuration/)
 - [Choosing the Right Storage](/docs/ai-agents/choosing-the-right-storage/)

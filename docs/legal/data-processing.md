@@ -1,9 +1,9 @@
 # Data Processing Addendum
 
-_Last updated: November 18, 2025_
+_Last updated: November 17, 2026_
 
 Pursuant to the Tigris Subscription Agreement (“**the Agreement**”), Customer,
-on behalf of itself and its affiliates, and Tigris Data Inc. (referred to herein
+on behalf of itself and its affiliates, and Tigris Data, LLC (referred to herein
 as “**Vendor**”) (each a “**Party**”; collectively the “**Parties**”), the
 Parties hereby adopt this Data Processing Addendum (“**DPA**”) for so long as
 Vendor processes Personal Data on behalf of Customer. This DPA prevails over any
@@ -441,8 +441,8 @@ the date of this DPA.
 | Sub-Processor Name                            | Location      | Sub-Processing Activities                               |
 | --------------------------------------------- | ------------- | ------------------------------------------------------- |
 | [Equinix](https://www.equinix.com/)           | United States | Hosting provider                                        |
-| [Oracle Cloud](https://www.oracle.com/cloud/) | United States | Hosting provider                                        |
-| [Fly.io](https://fly.io/)                     | United States | Hosting provider                                        |
+| [Oracle Cloud](https://www.oracle.com/cloud/) | Global        | Hosting provider                                        |
+| [Fly.io](https://fly.io/)                     | Global        | Hosting provider                                        |
 | [AWS](https://aws.amazon.com/)                | United States | Account management, backup storage, engineering support |
 | [Slack](https://slack.com/)                   | United States | Internal communication                                  |
 | [Plain](https://www.plain.com/)               | United States | Customer support communication                          |

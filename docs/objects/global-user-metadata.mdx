@@ -1,0 +1,102 @@
+# Global User Metadata
+
+User metadata is the set of `x-amz-meta-*` values stored with an object at
+upload. By default it lives with the full object metadata in the regions that
+hold the bucket's data. Every region also holds a global index of every object,
+but that index carries only the key, size, ETag, content type and last-modified
+time.
+
+Enabling global replication of user metadata adds the `x-amz-meta-*` values to
+the global index too, so every region has them. File system clients such as
+[TigrisFS](/docs/training/tigrisfs/) depend on this: they read file mode, owner
+and group from directory listings, and need those values wherever the mount
+runs.
+
+## Enabling global replication of user metadata
+
+Create the bucket with the `X-Tigris-Global-User-Metadata: true` header. Every
+object written to it then has its user metadata copied into the global index as
+part of normal replication.
+
+:::note
+
+The option is set at creation and cannot be changed afterwards. It does not
+apply to [forks](/docs/buckets/snapshots-and-forks/) or to buckets that are the
+target of a merge.
+
+:::
+
+```bash
+curl -X PUT "https://t3.storage.dev/my-bucket" \
+  --aws-sigv4 "aws:amz:auto:s3" \
+  --user "$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY" \
+  -H "X-Tigris-Global-User-Metadata: true"
+```
+
+Partners that provision buckets through the
+[provisioning API](/docs/partner-integrations/api/tigris-provisioning/) set
+`global_user_metadata` in `bucket_options`.
+
+## Behavior
+
+- User metadata reaches a remote region together with the object's index entry,
+  so it appears there when replication delivers the object.
+- The metadata is stored in every region. Large values slow down every listing
+  of the bucket.
+- `HeadObject` and `GetObject` are unchanged. They read the full metadata in
+  every case.
+
+## Listing objects with user metadata
+
+A listing can include user metadata. Send `X-Tigris-List-Metadata: true` with a
+`ListObjectsV2` or `ListObjects` request. `list-type=ext-v1`, the listing
+extension TigrisFS and geesefs use, has the same effect.
+
+```bash
+curl "https://t3.storage.dev/my-bucket?list-type=2&prefix=photos/" \
+  --aws-sigv4 "aws:amz:auto:s3" \
+  --user "$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY" \
+  -H "X-Tigris-List-Metadata: true"
+```
+
+Each `Contents` entry carries one `Metadata` element per value, named without
+the `x-amz-meta-` prefix:
+
+```xml
+<Contents>
+  <Key>photos/cat.jpg</Key>
+  <LastModified>2026-11-13T18:55:17.000Z</LastModified>
+  <ETag>"e496e4bb9905a7f84495ddea8e9368d7"</ETag>
+  <Size>51234</Size>
+  <StorageClass>STANDARD</StorageClass>
+  <Metadata>
+    <Name>owner</Name>
+    <Value>alice</Value>
+  </Metadata>
+  <Metadata>
+    <Name>mode</Name>
+    <Value>33188</Value>
+  </Metadata>
+</Contents>
+```
+
+Where the listing is served from depends on the bucket:
+
+| Listing                            | Inside the bucket's location | Outside it                |
+| ---------------------------------- | ---------------------------- | ------------------------- |
+| Plain                              | all objects                  | all objects               |
+| With user metadata, option not set | all objects with metadata    | empty                     |
+| With user metadata, option set     | all objects with metadata    | all objects with metadata |
+
+A plain listing reads the global index. Every region has that index, so the
+listing is complete everywhere. A listing that asks for user metadata needs the
+metadata values. Without the option those values exist only inside the bucket's
+[location](/docs/buckets/locations/), so a region outside it returns no objects.
+With the option they are in the global index, so every region returns them.
+
+## Next Steps
+
+- Filter a listing by last-modified time, content type or size with
+  [Object Metadata Querying](/docs/objects/query-metadata/).
+- Read how each location type places metadata in
+  [Bucket Locations](/docs/buckets/locations/).

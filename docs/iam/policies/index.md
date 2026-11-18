@@ -44,6 +44,22 @@ blocks are supported:
 | `Statement.Resource`  | ✅         | Specific ARNs or wildcard patterns       |
 | `Statement.Condition` | 🔶 Partial | Limited to the condition keys below      |
 
+## Resource Wildcards
+
+In the object portion of a resource ARN, `*` matches any sequence of characters,
+including `/`. It can appear anywhere in the pattern, any number of times, as in
+AWS:
+
+```
+arn:aws:s3:::my-bucket/schools/*/documents/*
+```
+
+Because `*` spans `/`, that pattern matches `schools/42/documents/report.pdf`
+and also `schools/42/archive/2024/documents/report.pdf`. Each wildcard is not
+limited to a single path segment.
+
+`?` is treated as a literal character rather than a single-character wildcard.
+
 ## Supported Condition Keys
 
 Tigris supports the following condition operators in IAM policies:

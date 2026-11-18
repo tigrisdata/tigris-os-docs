@@ -1,6 +1,6 @@
 # Privacy Policy
 
-Tigris Data Inc. and its affiliates ("Tigris," "we," "our," and/or "us") value
+Tigris Data, LLC and its affiliates ("Tigris," "we," "our," and/or "us") value
 the privacy of individuals who use our website (the "Site") and our platforms,
 applications, and related services (the "Platform," and together with "Site,"
 our "Services"). This privacy policy (the "Privacy Policy") explains how we
@@ -120,6 +120,12 @@ We use the information we collect:
   provisions of this Privacy Policy in effect at the time the applicable
   information was collected.
 - **Consent.** We may also disclose your information with your permission.
+- **Other Dropbox Companies.** We share infrastructure, systems, and technology
+  with other services and companies owned or operated by Dropbox, Inc. ("Dropbox
+  Companies") to provide, improve, protect, and promote services provided by
+  Dropbox Companies. We process your information across the Dropbox Companies
+  for these purposes, as permitted by applicable law and in accordance with
+  their terms and policies.
 
 ## 4. Your Choices
 
@@ -147,7 +153,7 @@ make no guarantees as to the security or privacy of your information.
 ## 7. Children's Privacy
 
 We do not knowingly collect, maintain, or use personal information from children
-under 13 years of age, and no part of our Services is directed to children. If
+under 18 years of age, and no part of our Services is directed to children. If
 you learn that a child has provided us with personal information in violation of
 this Privacy Policy, then you may alert us at
 [privacy@tigrisdata.com](mailto:privacy@tigrisdata.com).

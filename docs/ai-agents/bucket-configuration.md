@@ -13,7 +13,7 @@ keywords:
     public bucket,
     object expiration,
   ]
-last_reviewed: 2026-10-30
+last_reviewed: 2026-11-10
 ---
 
 # How Do I Configure Tigris Buckets?
@@ -34,7 +34,7 @@ dashboard to allow browser requests to your bucket.
 branded URLs like `assets.example.com/image.png`.
 
 **What storage tiers are available?** Standard, Standard IA (Infrequent Access),
-Glacier IR (Instant Retrieval), and Glacier.
+Archive Instant Retrieval, and Archive.
 
 ## How Do I Create Public and Private Buckets?
 
@@ -90,6 +90,9 @@ tigris buckets lifecycle create my-bucket --expire-days 30
 
 # Expire objects on a specific date
 tigris buckets lifecycle create my-bucket --expire-date 2026-12-31
+
+# Expire objects under a prefix after 7 days
+tigris buckets lifecycle create my-bucket --prefix tmp/ --expire-days 7
 ```
 
 ## How Do I Configure Lifecycle Rules?
@@ -102,10 +105,23 @@ tigris buckets lifecycle create my-bucket \
   --storage-class STANDARD_IA \
   --days 30
 
-# Move to Glacier after 90 days
+# Move to Archive after 90 days
+# The Archive tier is still called GLACIER in the API for S3 compatibility
 tigris buckets lifecycle create my-bucket \
   --storage-class GLACIER \
   --days 90
+
+# Move to Archive after 30 days, then delete after 365 days
+tigris buckets lifecycle create my-bucket \
+  --storage-class GLACIER \
+  --days 30 \
+  --expire-days 365
+
+# List rules and their ids
+tigris buckets lifecycle list my-bucket
+
+# Edit a rule by id
+tigris buckets lifecycle edit my-bucket <id> --days 60
 ```
 
 ## What Storage Tiers Are Available?
@@ -148,7 +164,7 @@ tigris buckets set-migration my-bucket \
   --access-key AKIA... \
   --secret-key ...
 
-# Enable write-through (sync writes back to source)
+# Enable write-through (writes go to both source and Tigris)
 tigris buckets set-migration my-bucket \
   --bucket source-bucket-name \
   --endpoint https://s3.amazonaws.com \
@@ -156,6 +172,9 @@ tigris buckets set-migration my-bucket \
   --access-key AKIA... \
   --secret-key ... \
   --write-through
+
+# Disable migration
+tigris buckets set-migration my-bucket --disable
 ```
 
 See [Migrate from Any Provider](/docs/ai-agents/migrate-from-any-s3-provider/)

@@ -79,6 +79,11 @@ issuer, audience, and expiration.
 
 ![Session token based authentication](/img/auth/session-token-auth.png)
 
+Tigris also issues session tokens for programmatic access through STS
+`GetFederationToken`. These are sealed by Tigris, not JWTs, and limit the
+credential to one bucket. See
+[temporary credentials](/docs/iam/temporary-credentials/).
+
 ## Authorization
 
 Tigris supports Role-Based-Access-Control (RBAC) and AWS's IAM policies

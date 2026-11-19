@@ -2,8 +2,9 @@
 
 Tigris IAM simplifies access management by removing IAM Users and Roles. All
 users are either Members or Admins within an organization. Access is managed
-through access keys with attached policies. Roles, temporary credentials, and
-instance profiles are not used.
+through access keys with attached policies. Roles and instance profiles are not
+used. For short-lived credentials limited to one bucket, use
+[temporary credentials](/docs/iam/temporary-credentials/).
 
 Instead of delegating permissions to IAM users or groups, you delegate them to
 members of your organization or access keys. By only focusing on policies

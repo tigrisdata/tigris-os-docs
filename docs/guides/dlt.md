@@ -144,9 +144,9 @@ become queryable tables. See the [DuckLake](/docs/quickstarts/ducklake/) and
 
 ## Notes
 
-- **Credentials**: Tigris authenticates with access key pairs only (no STS or
-  session tokens). Use a [scoped access key](/docs/iam/manage-access-key/) per
-  pipeline.
+- **Credentials**: use a [scoped access key](/docs/iam/manage-access-key/) per
+  pipeline, or [temporary credentials](/docs/iam/temporary-credentials/) for a
+  run that needs only one bucket.
 - **Snapshots**: for a pipeline whose output feeds a production warehouse,
   [snapshot the bucket](/docs/snapshots/) before a destructive full-refresh load
   so a bad run is a rollback rather than a reload.

@@ -605,6 +605,7 @@ const sidebars = {
           items: [
             "iam/index",
             "iam/manage-access-key/index",
+            "iam/temporary-credentials",
             "iam/policies/index",
             "iam/policies/supported-actions",
             "iam/policies/attach-iam-policy",

@@ -58,9 +58,9 @@ To invite a new member to an Organization:
 <!-- prettier-ignore-start -->
 :::note
 
-Tigris supports logging in natively and logging in with a Fly account. Only
+Tigris supports signing in natively and signing in with a Fly account. Only
 users with a Tigris native account may join a Tigris Organization. If you’re
-using your Fly account to log in to Tigris, you must use Fly Organizations to
+using your Fly account to sign in to Tigris, you must use Fly Organizations to
 manage your team.  
 \
 If you would like to manage your team in a native Tigris Organization, you can
@@ -89,10 +89,10 @@ bill.
 
 - To remove a Member from the Organization, click `Remove`.
 
-If you use Fly to log in to Tigris, Tigris will use the Fly Organization to
+If you use Fly to sign in to Tigris, Tigris will use the Fly Organization to
 manage access. All changes to Fly Organizations are reflected in Tigris access
 controls, but creating a Fly Organization does not create a Tigris Organization.
-Users who log in with Fly must use Fly Organizations.
+Users who sign in with Fly must use Fly Organizations.
 
 ## Manage permissions
 

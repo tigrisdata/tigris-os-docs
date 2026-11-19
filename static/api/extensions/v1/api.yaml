@@ -907,6 +907,41 @@ paths:
               schema:
                 $ref: "#/components/schemas/GenericError"
 
+  /v1/providers/{provider_id}/orgs/{org_id}/temporary-credentials:
+    post:
+      tags:
+        - iam
+      summary: Create temporary credentials for one bucket
+      description: |
+        Returns S3 credentials for one bucket of the org, with read-only or
+        read-write object access, that expire on their own. A credential
+        cannot be revoked on its own. It ends early, within 15 minutes, when
+        the org is deactivated. Configure the S3 client with all three
+        returned values: access key id, secret access key and session token.
+      operationId: Tigris_CreateTemporaryCredentials
+      parameters:
+        - $ref: "#/components/parameters/provider_id"
+        - $ref: "#/components/parameters/org_id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTemporaryCredentialsRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateTemporaryCredentialsResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+
   /v1/providers/{provider_id}/orgs/{org_id}/policies:
     post:
       tags:
@@ -1423,12 +1458,6 @@ components:
             Default is false for new buckets. Only applicable to public buckets.
         storage_class:
           $ref: "#/components/schemas/StorageClass"
-        global_user_metadata:
-          type: boolean
-          description:
-            If set to true, object listings that ask for user metadata return it
-            from every region, not only from the regions that hold the bucket's
-            data. Set at creation only. Default is false.
         regions:
           $ref: "#/components/schemas/Regions"
         enable_object_acl:
@@ -1447,36 +1476,61 @@ components:
           $ref: "#/components/schemas/LifecycleRules"
         soft_delete:
           $ref: "#/components/schemas/SoftDelete"
+        global_user_metadata:
+          type: boolean
+          description: |
+            Keep x-amz-meta-* user metadata in the bucket's global table rows so
+            metadata listings (list-type=ext-v1) are complete from every region.
+            Only applies at creation. Default is false.
     ObjectNotifications:
       type: object
+      additionalProperties: false
       description: |
         Configuration for object event notifications via webhook. Receive HTTP callbacks when objects are created, updated, or deleted in your bucket.
 
+        **`enabled` is required on every request.** Omitting it returns 400 — it does not default to false.
+
         **Update behavior (partial updates supported):**
-        - **Omit field entirely**: Keeps existing settings unchanged
-        - **Include only `enabled`**: Toggles notifications on/off while preserving all other config
-        - **Include any field**: Updates specified fields, preserves others (auth not re-required)
-        - **Remove completely**: Send `{"enabled": false}` with no other fields
+        - **Omit `object_notifications` entirely**: Keeps existing settings unchanged
+        - **Send `{"enabled": false}` and nothing else**: Deletes the whole configuration — webhook, filter and auth are all lost
+        - **Send `enabled` plus any other field**: Updates the fields you send, preserves the ones you omit (auth not re-required)
+        - **Clear auth only**: Send `"auth": {}` to drop credentials while keeping the webhook
 
         **Common operations:**
         ```json
-        // Enable notifications (preserves webhook, filter, auth)
+        // Turn notifications on, keeping the stored webhook, filter and auth
         {"enabled": true}
 
-        // Disable temporarily (keeps all config for later)
-        {"enabled": false, "webhook": "https://..."}
+        // Pause without losing the config — you MUST re-send the webhook,
+        // otherwise this deletes everything
+        {"enabled": false, "webhook": "https://webhook.example.com/events"}
 
-        // Update webhook only (preserves auth, filter)
-        {"webhook": "https://new-endpoint.com"}
+        // Update the webhook only (preserves filter and auth)
+        {"enabled": true, "webhook": "https://new-endpoint.com"}
 
-        // Change auth type (replaces entire auth object)
-        {"auth": {"token": "new-token"}}
+        // Rotate the token (replaces the entire auth object)
+        {"enabled": true, "auth": {"token": "new-token"}}
 
-        // Remove all notifications
+        // Switch from token to basic auth
+        {"enabled": true, "auth": {"basic_user": "user", "basic_pass": "pass"}}
+
+        // Change the filter, keeping the credential you read back as ****
+        {"enabled": true, "filter": "`Content-Length` > 2000", "auth": {"token": "****"}}
+
+        // Drop the credential, keep the webhook
+        {"enabled": true, "auth": {}}
+
+        // Delete the whole notification config
         {"enabled": false}
         ```
 
-        **Note:** Auth credentials are masked in responses. You don't need to re-send them when updating other fields.
+        **Credentials in responses:** `basic_pass` and `token` are returned as `****`.
+        There are three ways to write them back:
+        - Send `****` — keeps the stored credential. Safe for read-modify-write clients
+        - Send a real value — replaces it
+        - Send `"auth": {}` — clears it
+
+        Omitting `auth` also keeps the stored credential.
       required:
         - enabled
       properties:
@@ -1493,24 +1547,44 @@ components:
           type: string
           description:
             SQL WHERE clause to filter which objects trigger notifications
-            (e.g., size comparisons)
-          example: "size > 1000000"
+            (e.g., `Content-Length` comparisons)
+          example: "`Content-Length` > 1000000"
         auth:
           $ref: "#/components/schemas/ObjectNotificationAuth"
     ObjectNotificationAuth:
       type: object
-      description: Authentication credentials for webhook endpoint
+      additionalProperties: false
+      description: |
+        Authentication credentials for the webhook endpoint. Set exactly one
+        method: basic auth (both `basic_user` and `basic_pass`) or `token`.
+
+        ```json
+        // Basic auth
+        {"basic_user": "user", "basic_pass": "pass"}
+
+        // Bearer token
+        {"token": "secret-token"}
+
+        // Keep whatever is stored — echo the masked value back
+        {"token": "****"}
+
+        // Clear the credential, keep the webhook
+        {}
+        ```
+
+        Rejected with 400: both methods at once, or `basic_user` without
+        `basic_pass` (and vice versa).
       properties:
         basic_user:
           type: string
           description: Basic auth username
         basic_pass:
           type: string
-          description: Basic auth password
+          description: Basic auth password. Returned as "****".
           format: password
         token:
           type: string
-          description: Bearer token for authorization
+          description: Bearer token for authorization. Returned as "****".
           format: password
     SoftDelete:
       type: object
@@ -2372,6 +2446,62 @@ components:
           $ref: "#/components/schemas/OrgMembership"
     DeleteAccessKeyResponse:
       type: object
+    CreateTemporaryCredentialsRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - bucket
+        - permission
+        - name
+      properties:
+        bucket:
+          type: string
+          description:
+            Bucket the credentials work on. It must belong to the org.
+        permission:
+          $ref: "#/components/schemas/TemporaryCredentialsPermission"
+        name:
+          type: string
+          description:
+            Label recorded with every request the credentials make. 2-32
+            characters; only alphanumeric and +=,.@_- characters are allowed.
+        duration_seconds:
+          type: integer
+          description:
+            Lifetime of the credentials, from 900 seconds (15 minutes) to 129600
+            seconds (36 hours). Defaults to 43200 seconds (12 hours).
+    TemporaryCredentialsPermission:
+      type: string
+      enum: [object-read-only, object-read-write]
+      description: |
+        Object access the credentials carry on the bucket:
+
+        - `object-read-only`: GetObject and HeadObject (including versions,
+          tags and attributes), ListObjects, ListObjectVersions,
+          ListMultipartUploads, GetBucketLocation and GetBucketVersioning.
+        - `object-read-write`: Everything in object-read-only, plus PutObject,
+          DeleteObject, object tagging, multipart uploads and ListParts.
+    CreateTemporaryCredentialsResponse:
+      type: object
+      required:
+        - access_key_id
+        - secret_access_key
+        - session_token
+        - expiration
+      properties:
+        access_key_id:
+          type: string
+          description: Access key ID, starting with `tsid_`
+        secret_access_key:
+          type: string
+          description: Secret access key
+        session_token:
+          type: string
+          description: Session token to send with every request
+        expiration:
+          type: string
+          format: date-time
+          description: When the credentials stop working
     CreateOrganizationRequest:
       type: object
       additionalProperties: false

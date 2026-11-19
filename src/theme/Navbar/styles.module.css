@@ -18,6 +18,13 @@
   --nav-ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Dark mode takes the shared colour tokens (src/css/tokens.css). Light
+   mode keeps the values in the rules below for now. */
+:global(html[data-theme="dark"]) .nav {
+  --nav-accent: var(--accent);
+  --nav-ground: var(--surface-ground);
+}
+
 .nav:global(.navbar) {
   position: sticky;
   top: 0;
@@ -116,6 +123,15 @@
   outline-color: #fff;
 }
 
+:global(html[data-theme="dark"]) .btnPrimary {
+  color: var(--accent-ink);
+}
+
+:global(html[data-theme="dark"]) .btnPrimary:hover {
+  background: var(--accent-hover);
+  color: var(--accent-ink);
+}
+
 .btnSecondary {
   border-color: #2a4a44;
   background: color-mix(in oklab, var(--nav-accent) 7%, transparent);
@@ -126,6 +142,12 @@
   border-color: var(--nav-accent);
   background: color-mix(in oklab, var(--nav-accent) 15%, transparent);
   color: #fff;
+}
+
+/* not on hover, so the hover rule above still applies */
+:global(html[data-theme="dark"]) .btnSecondary:not(:hover) {
+  border-color: var(--accent-line);
+  color: var(--accent-soft);
 }
 
 .menuBtn {
@@ -154,6 +176,10 @@
   -webkit-backdrop-filter: blur(24px);
   font-family: Geist, "Geist Fallback", sans-serif;
   line-height: 1.5;
+}
+
+:global(html[data-theme="dark"]) .ctx {
+  background: var(--surface-raised);
 }
 
 .ctxPreview {

@@ -307,6 +307,7 @@ export default function ExcalidrawDiagram({ elements }: Props) {
 
   return (
     <svg
+      className="excalidraw-diagram"
       viewBox={`${vx} ${vy} ${vw} ${vh}`}
       width="100%"
       fill="none"

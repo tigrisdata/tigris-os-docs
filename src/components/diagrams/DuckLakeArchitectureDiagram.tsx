@@ -16,6 +16,14 @@ const STYLES = `
   .dl .zone-catalog { fill: #142229; stroke: #2a4050; stroke-width: 1.5; }
   .dl .zone-tigris { fill: #142229; stroke: #62FEB5; stroke-width: 1.5; stroke-opacity: 0.7; }
   .dl .parquet { fill: rgba(98, 254, 181, 0.08); stroke: rgba(98, 254, 181, 0.55); stroke-width: 1.25; }
+  /* Dark mode: the shared colour tokens. Light mode keeps the values above. */
+  html[data-theme="dark"] .dl .zone-title { fill: var(--code-output); }
+  html[data-theme="dark"] .dl .node,
+  html[data-theme="dark"] .dl .zone-catalog { fill: var(--surface-raised); }
+  html[data-theme="dark"] .dl .zone-tigris { fill: var(--surface-raised); stroke: var(--code-output); }
+  html[data-theme="dark"] .dl .parquet { fill: color-mix(in srgb, var(--code-output) 8%, transparent); stroke: color-mix(in srgb, var(--code-output) 55%, transparent); }
+  html[data-theme="dark"] .dl [fill="#62FEB5" i] { fill: var(--code-output); }
+  html[data-theme="dark"] .dl [stroke="#62FEB5" i] { stroke: var(--code-output); }
 `;
 
 export default function DuckLakeArchitectureDiagram() {

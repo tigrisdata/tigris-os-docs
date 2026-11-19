@@ -14,6 +14,13 @@
   background: var(--shell-bg);
 }
 
+/* Dark mode takes the shared colour tokens; light mode keeps the values
+   above for now. */
+:global(html[data-theme="dark"]) .frame {
+  --shell-muted: var(--text-label);
+  border-color: var(--line-subtle);
+}
+
 /* A mono uppercase label, like the site's table headers and footer
    eyebrows. */
 .titleBar {
@@ -27,6 +34,10 @@
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: #d6e2e8;
+}
+
+:global(html[data-theme="dark"]) .titleBar {
+  border-bottom-color: var(--line-subtle);
 }
 
 .hint {

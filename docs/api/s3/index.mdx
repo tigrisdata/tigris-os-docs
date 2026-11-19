@@ -270,6 +270,21 @@ the automated test suite.
 | [DeletePolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeletePolicy.html)         | Yes                 |
 | [DetachUserPolicy](https://docs.aws.amazon.com/IAM/latest/APIReference/API_DetachUserPolicy.html) | Yes                 |
 
+## STS APIs
+
+These STS APIs are served at `https://sts.storage.dev`. See
+[temporary credentials](/docs/iam/temporary-credentials/) for the supported
+policy subset.
+
+| STS API                                                                                                             | Supported in Tigris |
+| ------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| [GetFederationToken](https://docs.aws.amazon.com/STS/latest/APIReference/API_GetFederationToken.html)               | Yes                 |
+| [GetCallerIdentity](https://docs.aws.amazon.com/STS/latest/APIReference/API_GetCallerIdentity.html)                 | Yes                 |
+| [AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html)                               | No                  |
+| [AssumeRoleWithWebIdentity](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRoleWithWebIdentity.html) | No                  |
+| [AssumeRoleWithSAML](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRoleWithSAML.html)               | No                  |
+| [GetSessionToken](https://docs.aws.amazon.com/STS/latest/APIReference/API_GetSessionToken.html)                     | No                  |
+
 ## CloudFront APIs
 
 | CloudFront API                                                                                         | Supported in Tigris |

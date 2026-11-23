@@ -68,18 +68,20 @@
   display: block;
 }
 
-/* min-width is the old 59:24 wordmark at 32px tall, so the divider and
-   "Docs" stay where they were; the narrower logo sits at the left */
+/* The link keeps the old logo's 32px height so the bar's rows (44px, 32px
+   below 800px) and the bar height don't change. The 56px logo overflows it
+   equally above and below, into the bar's 16px padding, so "a Dropbox
+   company" stays legible. */
 .logo {
   display: flex;
   align-items: center;
-  min-width: calc(32px * 59 / 24);
+  height: 32px;
   color: inherit;
 }
 
 .logo img {
   color: transparent;
-  height: 32px;
+  height: 56px;
   width: auto;
   max-width: none;
 }

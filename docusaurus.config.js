@@ -365,12 +365,12 @@ const config = {
         ],
       },
       footer: {
+        // no href: Docusaurus mutes a linked footer logo to 50% opacity
         logo: {
-          href: tigrisConfig.websiteUrl,
           src: "/logo/wordmark-on-light.svg",
           srcDark: "/logo/wordmark-on-dark.svg",
           alt: "Tigris Docs",
-          height: "26px",
+          height: "48px",
         },
         links: [
           {

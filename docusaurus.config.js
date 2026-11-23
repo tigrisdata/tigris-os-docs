@@ -76,7 +76,7 @@ const config = {
         "@type": "Organization",
         name: "Tigris Data",
         url: "https://www.tigrisdata.com",
-        logo: "https://www.tigrisdata.com/docs/logo/dark.png",
+        logo: "https://www.tigrisdata.com/docs/logo/wordmark-on-light.svg",
         description:
           "Tigris is a globally distributed, S3-compatible object storage service with zero egress fees. Store, access, and distribute data worldwide with automatic global replication and caching.",
         sameAs: [
@@ -280,8 +280,8 @@ const config = {
         hideOnScroll: false,
         logo: {
           href: tigrisConfig.websiteUrl,
-          src: "/logo/light.png",
-          srcDark: "/logo/dark.png",
+          src: "/logo/wordmark-on-light.svg",
+          srcDark: "/logo/wordmark-on-dark.svg",
           alt: "Tigris Docs",
           height: "26px",
           target: "_self",
@@ -367,8 +367,8 @@ const config = {
       footer: {
         logo: {
           href: tigrisConfig.websiteUrl,
-          src: "/logo/light.png",
-          srcDark: "/logo/dark.png",
+          src: "/logo/wordmark-on-light.svg",
+          srcDark: "/logo/wordmark-on-dark.svg",
           alt: "Tigris Docs",
           height: "26px",
         },

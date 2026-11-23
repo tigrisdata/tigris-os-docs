@@ -225,7 +225,8 @@ export default function Navbar(): ReactNode {
   const { pathname } = useLocation();
   const mobileSidebar = useNavbarMobileSidebar();
   const docsTree = useNavbarSecondaryMenu().content;
-  const logoSrc = useBaseUrl("/img/tigris-logo.svg");
+  // the bar is dark in both colour modes, so it always takes the on-dark mark
+  const logoSrc = useBaseUrl("/logo/wordmark-on-dark.svg");
   const menuOpen = mobileSidebar.shown;
   useLockBodyScroll(menuOpen);
 
@@ -268,7 +269,7 @@ export default function Navbar(): ReactNode {
                 setContextMenu({ x: e.clientX, y: e.clientY });
               }}
             >
-              <img src={logoSrc} alt="Tigris" width={79} height={32} />
+              <img src={logoSrc} alt="Tigris" width={59} height={36} />
             </a>
             <span className={styles.divider} aria-hidden />
             <Link to="/" className={styles.docsLabel}>

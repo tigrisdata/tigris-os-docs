@@ -69,9 +69,9 @@
 }
 
 /* The link keeps the old logo's 32px height so the bar's rows (44px, 32px
-   below 800px) and the bar height don't change. The 56px logo overflows it
-   equally above and below, into the bar's 16px padding, so "a Dropbox
-   company" stays legible. */
+   below 800px) and the bar height don't change. The 60px logo (the x60
+   brand variant) overflows it equally above and below, into the bar's 16px
+   padding, so "a Dropbox company" stays legible. */
 .logo {
   display: flex;
   align-items: center;
@@ -81,7 +81,7 @@
 
 .logo img {
   color: transparent;
-  height: 56px;
+  height: 60px;
   width: auto;
   max-width: none;
 }
@@ -200,7 +200,7 @@
 
 .ctxPreview img {
   display: block;
-  height: 56px;
+  height: 60px;
   width: auto;
 }
 

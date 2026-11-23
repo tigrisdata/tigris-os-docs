@@ -370,7 +370,7 @@ const config = {
           src: "/logo/wordmark-on-light.svg",
           srcDark: "/logo/wordmark-on-dark.svg",
           alt: "Tigris Docs",
-          height: "48px",
+          height: "44px",
         },
         links: [
           {

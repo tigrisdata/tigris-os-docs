@@ -92,7 +92,7 @@ function LogoContextMenu({
       style={{ top: pos.top, left: pos.left }}
     >
       <div className={styles.ctxPreview}>
-        <img src={BRAND_LOGO} alt="Tigris logo" width={118} height={48} />
+        <img src={BRAND_LOGO} alt="Tigris logo" width={59} height={36} />
       </div>
       <div className={styles.ctxList}>
         <button

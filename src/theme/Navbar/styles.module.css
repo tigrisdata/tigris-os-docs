@@ -68,9 +68,12 @@
   display: block;
 }
 
+/* min-width is the old 59:24 wordmark at 32px tall, so the divider and
+   "Docs" stay where they were; the narrower logo sits at the left */
 .logo {
   display: flex;
   align-items: center;
+  min-width: calc(32px * 59 / 24);
   color: inherit;
 }
 

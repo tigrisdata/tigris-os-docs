@@ -99,7 +99,7 @@ paths:
         Provisions a new bucket in the organization account and also creates the organization account if it doesn't exist. This is an
         idempotent operation, and calling it multiple times with the same parameters will not create duplicate buckets.
 
-        Provisioning API responds with an access key and secret to access the newly provisioned bucket.
+        Provisioning API responds with an access key and secret to access the newly provisioned bucket, unless `skip_access_key` is set.
       operationId: Tigris_Provisioning
       parameters:
         - $ref: "#/components/parameters/provider_id"
@@ -1418,6 +1418,14 @@ components:
             https://www.tigrisdata.com/docs/forks/.
         access_key_scope:
           $ref: "#/components/schemas/AccessKeyScope"
+        skip_access_key:
+          type: boolean
+          default: false
+          description: |
+            If set to true, the bucket is created without an access key and the
+            response has no `access_key_id` or `secret_access_key`. Use
+            temporary credentials or create an access key separately to access
+            the bucket. Cannot be combined with `access_key_scope`.
     OrgMembership:
       type: string
       description: |

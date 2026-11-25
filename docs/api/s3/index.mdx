@@ -1,8 +1,8 @@
 ---
 title: S3 API Compatibility
 description:
-  Tigris S3 API compatibility matrix compared against Cloudflare R2 and Google
-  Cloud Storage, generated from a shared test suite.
+  Tigris S3 API compatibility matrix compared against Cloudflare R2, Google
+  Cloud Storage, and Neon Object Storage, generated from a shared test suite.
 ---
 
 <style>{`
@@ -11,7 +11,9 @@ description:
   .markdown table th:nth-child(3),
   .markdown table td:nth-child(3),
   .markdown table th:nth-child(4),
-  .markdown table td:nth-child(4) {
+  .markdown table td:nth-child(4),
+  .markdown table th:nth-child(5),
+  .markdown table td:nth-child(5) {
     width: 12%;
     min-width: 80px;
     text-align: center;
@@ -25,20 +27,21 @@ tools, and libraries with Tigris.
 
 The compatibility data on this page comes from the
 [S3 API compatibility test suite](https://github.com/tigrisdata-community/s3-api-compat-tests)
-(AWS Go SDK v2), run against every provider on 2026-11-18. Each run creates a
-temporary bucket and a second bucket with versioning enabled, runs every test,
-and deletes both. A test checks the effect of its operation: a write is read
-back, a condition that must fail is sent and must fail with the S3 status or
-error code, and a delete is followed by a read that must be 404. A provider that
-accepts a request and ignores it does not pass. Skipped tests are tests that did
-not apply, for example the versioning tests on a provider that cannot create a
-bucket with versioning enabled.
+(AWS Go SDK v2), run against Tigris, R2, and GCS on 2026-11-18 and against Neon
+Object Storage on 2026-11-25. Each run creates a temporary bucket and a second
+bucket with versioning enabled, runs every test, and deletes both. A test checks
+the effect of its operation: a write is read back, a condition that must fail is
+sent and must fail with the S3 status or error code, and a delete is followed by
+a read that must be 404. A provider that accepts a request and ignores it does
+not pass. Skipped tests are tests that did not apply, for example the versioning
+tests on a provider that cannot create a bucket with versioning enabled.
 
 | Provider                 | Passed | Failed | Skipped | Total | Score |
 | ------------------------ | ------ | ------ | ------- | ----- | ----- |
 | **Tigris**               | 83     | 11     | 0       | 94    | 88%   |
 | **Cloudflare R2**        | 53     | 31     | 10      | 94    | 56%   |
 | **Google Cloud Storage** | 48     | 46     | 0       | 94    | 51%   |
+| **Neon Object Storage**  | 63     | 31     | 0       | 94    | 67%   |
 
 Of the 11 Tigris failures, eight are the bucket policy, encryption, and
 notification configuration operations, which return `NotImplemented` (see
@@ -65,125 +68,125 @@ it does not change the bucket or the object. See
 
 ## Object operations
 
-| Operation                                  | Tigris         | R2  | GCS            |
-| ------------------------------------------ | -------------- | --- | -------------- |
-| PutObject                                  | ✅             | ✅  | ✅             |
-| GetObject                                  | ✅             | ✅  | ✅             |
-| GetObject (missing key is 404)             | ✅             | ✅  | ✅             |
-| HeadObject                                 | ✅             | ✅  | ✅             |
-| DeleteObject                               | ✅             | ✅  | ❌             |
-| CopyObject                                 | ✅             | ✅  | ✅             |
-| CopyObject (MetadataDirective)             | ✅             | ✅  | ✅             |
-| CopyObject (x-amz-copy-source-if-match)    | ✅             | ✅  | ✅             |
-| CopyObject (multipart source, conditional) | ✅             | ✅  | ❌ [3](#notes) |
-| RenameObject                               | ✅ [7](#notes) | ❌  | ❌             |
-| RenameObject (If-None-Match: \*)           | ✅             | ✅  | ❌             |
-| RenameObject (source is the literal key)   | ✅             | ❌  | ❌             |
-| GetObject (range request)                  | ✅             | ✅  | ✅             |
-| GetObject (If-Match)                       | ✅             | ✅  | ✅             |
-| GetObject (If-None-Match)                  | ✅             | ✅  | ✅             |
-| GetObject (If-Modified-Since)              | ✅             | ✅  | ✅             |
-| GetObject (If-Unmodified-Since)            | ✅             | ✅  | ✅             |
-| PutObject (If-None-Match: \*)              | ✅             | ✅  | ❌             |
-| PutObject (If-Match)                       | ✅             | ✅  | ❌             |
-| PutObject (custom metadata)                | ✅             | ✅  | ✅             |
-| PutObject (SHA256 checksum)                | ✅             | ✅  | ❌             |
-| PutObject (wrong SHA256 checksum rejected) | ❌             | ✅  | ❌             |
-| PutObject (SSE-S3)                         | ❌ [1](#notes) | ❌  | ❌             |
-| PutObject (storage class)                  | ✅             | ✅  | ❌             |
-| PutObjectTagging                           | ✅             | ❌  | ❌             |
-| GetObjectTagging                           | ✅             | ❌  | ❌             |
-| DeleteObjectTagging                        | ✅             | ❌  | ❌             |
-| PutObjectAcl                               | ✅             | ❌  | ✅ [4](#notes) |
-| GetObjectAcl                               | ✅             | ❌  | ✅ [4](#notes) |
-| ListObjects                                | ✅             | ✅  | ✅             |
-| ListObjectsV2                              | ✅             | ✅  | ✅             |
-| ListObjectsV2 (pagination)                 | ✅             | ✅  | ✅             |
-| ListObjectsV2 (delimiter)                  | ✅             | ✅  | ✅             |
-| ListObjectsV2 (start-after)                | ✅             | ✅  | ✅             |
-| DeleteObjects                              | ✅             | ✅  | ✅             |
-| DeleteObjects (quiet mode)                 | ✅             | ✅  | ✅             |
-| RestoreObject                              | ✅             | ✅  | ❌             |
+| Operation                                  | Tigris         | R2  | GCS            | Neon |
+| ------------------------------------------ | -------------- | --- | -------------- | ---- |
+| PutObject                                  | ✅             | ✅  | ✅             | ✅   |
+| GetObject                                  | ✅             | ✅  | ✅             | ✅   |
+| GetObject (missing key is 404)             | ✅             | ✅  | ✅             | ✅   |
+| HeadObject                                 | ✅             | ✅  | ✅             | ✅   |
+| DeleteObject                               | ✅             | ✅  | ❌             | ✅   |
+| CopyObject                                 | ✅             | ✅  | ✅             | ✅   |
+| CopyObject (MetadataDirective)             | ✅             | ✅  | ✅             | ✅   |
+| CopyObject (x-amz-copy-source-if-match)    | ✅             | ✅  | ✅             | ❌   |
+| CopyObject (multipart source, conditional) | ✅             | ✅  | ❌ [3](#notes) | ✅   |
+| RenameObject                               | ✅ [7](#notes) | ❌  | ❌             | ❌   |
+| RenameObject (If-None-Match: \*)           | ✅             | ✅  | ❌             | ✅   |
+| RenameObject (source is the literal key)   | ✅             | ❌  | ❌             | ❌   |
+| GetObject (range request)                  | ✅             | ✅  | ✅             | ✅   |
+| GetObject (If-Match)                       | ✅             | ✅  | ✅             | ✅   |
+| GetObject (If-None-Match)                  | ✅             | ✅  | ✅             | ✅   |
+| GetObject (If-Modified-Since)              | ✅             | ✅  | ✅             | ✅   |
+| GetObject (If-Unmodified-Since)            | ✅             | ✅  | ✅             | ✅   |
+| PutObject (If-None-Match: \*)              | ✅             | ✅  | ❌             | ✅   |
+| PutObject (If-Match)                       | ✅             | ✅  | ❌             | ✅   |
+| PutObject (custom metadata)                | ✅             | ✅  | ✅             | ✅   |
+| PutObject (SHA256 checksum)                | ✅             | ✅  | ❌             | ✅   |
+| PutObject (wrong SHA256 checksum rejected) | ❌             | ✅  | ❌             | ✅   |
+| PutObject (SSE-S3)                         | ❌ [1](#notes) | ❌  | ❌             | ❌   |
+| PutObject (storage class)                  | ✅             | ✅  | ❌             | ❌   |
+| PutObjectTagging                           | ✅             | ❌  | ❌             | ✅   |
+| GetObjectTagging                           | ✅             | ❌  | ❌             | ✅   |
+| DeleteObjectTagging                        | ✅             | ❌  | ❌             | ✅   |
+| PutObjectAcl                               | ✅             | ❌  | ✅ [4](#notes) | ❌   |
+| GetObjectAcl                               | ✅             | ❌  | ✅ [4](#notes) | ✅   |
+| ListObjects                                | ✅             | ✅  | ✅             | ✅   |
+| ListObjectsV2                              | ✅             | ✅  | ✅             | ✅   |
+| ListObjectsV2 (pagination)                 | ✅             | ✅  | ✅             | ✅   |
+| ListObjectsV2 (delimiter)                  | ✅             | ✅  | ✅             | ✅   |
+| ListObjectsV2 (start-after)                | ✅             | ✅  | ✅             | ✅   |
+| DeleteObjects                              | ✅             | ✅  | ✅             | ✅   |
+| DeleteObjects (quiet mode)                 | ✅             | ✅  | ✅             | ✅   |
+| RestoreObject                              | ✅             | ✅  | ❌             | ❌   |
 
 ## Bucket operations
 
-| Operation                          | Tigris         | R2  | GCS            |
-| ---------------------------------- | -------------- | --- | -------------- |
-| HeadBucket                         | ✅             | ✅  | ✅             |
-| HeadBucket (missing bucket is 404) | ✅             | ✅  | ✅             |
-| ListBuckets                        | ✅             | ✅  | ❌             |
-| GetBucketLocation                  | ✅             | ✅  | ✅             |
-| CreateBucket                       | ✅ [6](#notes) | ✅  | ✅             |
-| DeleteBucket                       | ✅             | ✅  | ✅             |
-| PutBucketTagging                   | ✅             | ❌  | ❌             |
-| GetBucketTagging                   | ✅             | ❌  | ❌             |
-| DeleteBucketTagging                | ✅             | ❌  | ❌             |
-| PutBucketCors                      | ✅             | ✅  | ❌             |
-| GetBucketCors                      | ✅             | ✅  | ❌             |
-| DeleteBucketCors                   | ✅             | ✅  | ❌             |
-| PutBucketLifecycleConfiguration    | ✅             | ✅  | ❌             |
-| GetBucketLifecycleConfiguration    | ✅             | ✅  | ❌             |
-| DeleteBucketLifecycle              | ✅             | ❌  | ❌             |
-| PutBucketAcl                       | ✅ [2](#notes) | ❌  | ❌ [4](#notes) |
-| GetBucketAcl                       | ✅             | ✅  | ❌ [4](#notes) |
-| PutBucketPolicy                    | ❌             | ❌  | ❌             |
-| GetBucketPolicy                    | ❌             | ❌  | ❌             |
-| DeleteBucketPolicy                 | ❌             | ❌  | ❌             |
-| GetBucketPolicyStatus              | ✅             | ❌  | ✅             |
-| PutBucketVersioning                | ❌ [9](#notes) | ❌  | ✅ [5](#notes) |
-| PutBucketAccelerateConfiguration   | ✅             | ❌  | ❌             |
-| GetBucketAccelerateConfiguration   | ✅             | ❌  | ❌             |
-| GetBucketRequestPayment            | ✅             | ❌  | ❌             |
-| PutBucketEncryption                | ❌             | ✅  | ❌             |
-| GetBucketEncryption                | ❌             | ✅  | ❌             |
-| DeleteBucketEncryption             | ❌             | ❌  | ❌             |
-| PutBucketOwnershipControls         | ✅             | ❌  | ❌             |
-| GetBucketOwnershipControls         | ✅             | ❌  | ❌             |
-| DeleteBucketOwnershipControls      | ✅             | ❌  | ❌             |
-| PutBucketNotificationConfiguration | ❌ [8](#notes) | ❌  | ❌             |
-| GetBucketNotificationConfiguration | ❌ [8](#notes) | ❌  | ✅             |
+| Operation                          | Tigris         | R2  | GCS            | Neon            |
+| ---------------------------------- | -------------- | --- | -------------- | --------------- |
+| HeadBucket                         | ✅             | ✅  | ✅             | ✅              |
+| HeadBucket (missing bucket is 404) | ✅             | ✅  | ✅             | ✅              |
+| ListBuckets                        | ✅             | ✅  | ❌             | ✅              |
+| GetBucketLocation                  | ✅             | ✅  | ✅             | ✅              |
+| CreateBucket                       | ✅ [6](#notes) | ✅  | ✅             | ✅              |
+| DeleteBucket                       | ✅             | ✅  | ✅             | ✅              |
+| PutBucketTagging                   | ✅             | ❌  | ❌             | ✅              |
+| GetBucketTagging                   | ✅             | ❌  | ❌             | ✅              |
+| DeleteBucketTagging                | ✅             | ❌  | ❌             | ✅              |
+| PutBucketCors                      | ✅             | ✅  | ❌             | ✅              |
+| GetBucketCors                      | ✅             | ✅  | ❌             | ✅              |
+| DeleteBucketCors                   | ✅             | ✅  | ❌             | ✅              |
+| PutBucketLifecycleConfiguration    | ✅             | ✅  | ❌             | ✅              |
+| GetBucketLifecycleConfiguration    | ✅             | ✅  | ❌             | ✅              |
+| DeleteBucketLifecycle              | ✅             | ❌  | ❌             | ✅              |
+| PutBucketAcl                       | ✅ [2](#notes) | ❌  | ❌ [4](#notes) | ❌              |
+| GetBucketAcl                       | ✅             | ✅  | ❌ [4](#notes) | ✅              |
+| PutBucketPolicy                    | ❌             | ❌  | ❌             | ❌              |
+| GetBucketPolicy                    | ❌             | ❌  | ❌             | ❌              |
+| DeleteBucketPolicy                 | ❌             | ❌  | ❌             | ❌              |
+| GetBucketPolicyStatus              | ✅             | ❌  | ✅             | ✅              |
+| PutBucketVersioning                | ❌ [9](#notes) | ❌  | ✅ [5](#notes) | ✅ [10](#notes) |
+| PutBucketAccelerateConfiguration   | ✅             | ❌  | ❌             | ❌              |
+| GetBucketAccelerateConfiguration   | ✅             | ❌  | ❌             | ❌              |
+| GetBucketRequestPayment            | ✅             | ❌  | ❌             | ❌              |
+| PutBucketEncryption                | ❌             | ✅  | ❌             | ❌              |
+| GetBucketEncryption                | ❌             | ✅  | ❌             | ❌              |
+| DeleteBucketEncryption             | ❌             | ❌  | ❌             | ❌              |
+| PutBucketOwnershipControls         | ✅             | ❌  | ❌             | ❌              |
+| GetBucketOwnershipControls         | ✅             | ❌  | ❌             | ❌              |
+| DeleteBucketOwnershipControls      | ✅             | ❌  | ❌             | ❌              |
+| PutBucketNotificationConfiguration | ❌ [8](#notes) | ❌  | ❌             | ❌              |
+| GetBucketNotificationConfiguration | ❌ [8](#notes) | ❌  | ✅             | ❌              |
 
 ## Versioning
 
 These run on a second bucket created with versioning enabled, the way each
 provider supports it. A provider that cannot create one skips them.
 
-| Operation                             | Tigris         | R2                                                                                          | GCS            |
-| ------------------------------------- | -------------- | ------------------------------------------------------------------------------------------- | -------------- |
-| GetBucketVersioning                   | ✅ [9](#notes) | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ✅ [5](#notes) |
-| PutBucketVersioning (already enabled) | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ✅             |
-| PutObject (returns version ids)       | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ❌             |
-| GetObject (versionId)                 | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ✅             |
-| HeadObject (versionId)                | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ✅             |
-| ListObjectVersions                    | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ❌ [5](#notes) |
-| DeleteObject (versionId)              | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ✅             |
-| PutObjectTagging (versionId)          | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ❌             |
-| GetObjectTagging (versionId)          | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ❌             |
-| DeleteObjectTagging (versionId)       | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ❌             |
+| Operation                             | Tigris         | R2                                                                                          | GCS            | Neon            |
+| ------------------------------------- | -------------- | ------------------------------------------------------------------------------------------- | -------------- | --------------- |
+| GetBucketVersioning                   | ✅ [9](#notes) | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ✅ [5](#notes) | ✅ [10](#notes) |
+| PutBucketVersioning (already enabled) | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ✅             | ✅              |
+| PutObject (returns version ids)       | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ❌             | ❌ [10](#notes) |
+| GetObject (versionId)                 | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ✅             | ❌              |
+| HeadObject (versionId)                | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ✅             | ❌              |
+| ListObjectVersions                    | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ❌ [5](#notes) | ❌              |
+| DeleteObject (versionId)              | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ✅             | ❌              |
+| PutObjectTagging (versionId)          | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ❌             | ❌              |
+| GetObjectTagging (versionId)          | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ❌             | ❌              |
+| DeleteObjectTagging (versionId)       | ✅             | <abbr title="Not run: the provider cannot create a bucket with versioning enabled">⊘</abbr> | ❌             | ❌              |
 
 ## Multipart uploads
 
-| Operation                                             | Tigris | R2  | GCS |
-| ----------------------------------------------------- | ------ | --- | --- |
-| CreateMultipartUpload                                 | ✅     | ❌  | ✅  |
-| UploadPart                                            | ✅     | ✅  | ✅  |
-| ListParts                                             | ✅     | ✅  | ✅  |
-| CompleteMultipartUpload                               | ✅     | ✅  | ✅  |
-| CompleteMultipartUpload (out-of-order parts rejected) | ✅     | ❌  | ✅  |
-| AbortMultipartUpload                                  | ✅     | ✅  | ✅  |
-| ListMultipartUploads                                  | ✅     | ❌  | ✅  |
-| UploadPartCopy                                        | ✅     | ✅  | ❌  |
+| Operation                                             | Tigris | R2  | GCS | Neon |
+| ----------------------------------------------------- | ------ | --- | --- | ---- |
+| CreateMultipartUpload                                 | ✅     | ❌  | ✅  | ✅   |
+| UploadPart                                            | ✅     | ✅  | ✅  | ✅   |
+| ListParts                                             | ✅     | ✅  | ✅  | ✅   |
+| CompleteMultipartUpload                               | ✅     | ✅  | ✅  | ✅   |
+| CompleteMultipartUpload (out-of-order parts rejected) | ✅     | ❌  | ✅  | ❌   |
+| AbortMultipartUpload                                  | ✅     | ✅  | ✅  | ✅   |
+| ListMultipartUploads                                  | ✅     | ❌  | ✅  | ✅   |
+| UploadPartCopy                                        | ✅     | ✅  | ❌  | ✅   |
 
 ## Presigned URLs
 
-| Operation           | Tigris | R2  | GCS |
-| ------------------- | ------ | --- | --- |
-| PresignPutObject    | ✅     | ✅  | ✅  |
-| PresignGetObject    | ✅     | ✅  | ✅  |
-| PresignHeadObject   | ✅     | ✅  | ✅  |
-| PresignDeleteObject | ✅     | ✅  | ✅  |
-| PresignUploadPart   | ✅     | ✅  | ✅  |
-| PresignPostObject   | ✅     | ❌  | ✅  |
+| Operation           | Tigris | R2  | GCS | Neon |
+| ------------------- | ------ | --- | --- | ---- |
+| PresignPutObject    | ✅     | ✅  | ✅  | ✅   |
+| PresignGetObject    | ✅     | ✅  | ✅  | ✅   |
+| PresignHeadObject   | ✅     | ✅  | ✅  | ✅   |
+| PresignDeleteObject | ✅     | ✅  | ✅  | ✅   |
+| PresignUploadPart   | ✅     | ✅  | ✅  | ✅   |
+| PresignPostObject   | ✅     | ❌  | ✅  | ✅   |
 
 ### Notes
 
@@ -231,6 +234,12 @@ GCS does not accept it in `x-amz-copy-source-if-match`.
    `PutBucketVersioning` test in the bucket table enables versioning on a plain
    bucket and fails. See [object versioning
    APIs](/docs/buckets/snapshots-and-forks/#using-object-versioning-apis).
+10. <span id="note-10"></span> **Neon versioning**: Neon Object Storage stores
+    the versioning configuration and reports it, so `PutBucketVersioning` and
+    `GetBucketVersioning` pass. It does not keep versions: every write returns
+    version id `null`, so the tests that read, tag, or delete by `versionId` are
+    not judged. See [Neon's S3
+    compatibility](https://neon.com/docs/storage/s3-compatibility#known-limitations).
 
 ## Operations that return NotImplemented
 

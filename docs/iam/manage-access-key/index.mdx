@@ -113,6 +113,9 @@ With the CLI, pass `--default-permissions disable` to
 [`tigris access-keys set`](/docs/cli/access-keys/set/). With the
 [`@tigrisdata/iam`](https://www.npmjs.com/package/@tigrisdata/iam) SDK, pass
 `scope: "no_default_allow"` to `createAccessKey` or call `setAccessKeyScope`.
+With [`tigris-boto3-ext`](/docs/sdks/s3/tigris-boto3-ext/),
+`create_access_key(iam, "app-key")` creates a `no_default_allow` key. Pass
+`scope="standard"` for a key with the default allowed operations.
 
 1. **Open the Dashboard**  
    Go to the [Tigris Dashboard](https://console.storage.dev) and select **Access
@@ -195,7 +198,7 @@ Example using the Python SDK boto3:
 ```python
 import boto3
 
-iam = boto3.client("iam", endpoint_url="https://iam.storage.dev")
+iam = boto3.client("iam", endpoint_url="https://iam.storage.dev", region_name="auto")
 
 def add_scope(request, **kwargs):
     request.headers["X-Tigris-Access-Key-Scope"] = "no_default_allow"

@@ -22,7 +22,7 @@ keywords:
     tigris soft delete python,
     boto3 bucket settings,
   ]
-last_reviewed: 2026-10-26
+last_reviewed: 2026-11-25
 ---
 
 # How Do I Use Python boto3 with S3-Compatible Storage?
@@ -285,6 +285,7 @@ your boto3 client:
 
 ```python
 from tigris_boto3_ext import (
+    create_access_key,
     get_bucket_metadata,
     get_restore_info,
     list_deleted_object_versions,
@@ -317,6 +318,10 @@ get_restore_info(client, "my-bucket", "cold.parquet")
 
 # Presigned URL from the Tigris presign endpoint, served from the public domain
 presign(client, "my-bucket", "report.pdf", expires_in=600)["url"]
+
+# Access key without the default allowed operations, on an IAM client
+iam = boto3.client("iam", endpoint_url="https://iam.storage.dev", region_name="auto")
+create_access_key(iam, "ci-uploader")["AccessKey"]["AccessKeyId"]
 ```
 
 See [Tigris extensions for boto3](/docs/sdks/s3/tigris-boto3-ext/) for the full

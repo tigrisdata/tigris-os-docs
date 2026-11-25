@@ -2,8 +2,8 @@
 title: "Tigris extensions for boto3"
 description:
   "Use Tigris features that S3 does not have from Python: snapshots, forks, soft
-  delete, bucket settings, object notifications, data migration, archive restore
-  and presigned URLs, with your existing boto3 client."
+  delete, bucket settings, object notifications, data migration, archive
+  restore, presigned URLs and access key scope, with your existing boto3 client."
 keywords:
   [
     tigris-boto3-ext,
@@ -28,6 +28,8 @@ credentials and endpoint.
 ```bash
 pip install tigris-boto3-ext
 ```
+
+The package requires Python 3.10 or later.
 
 Everything is imported from `tigris_boto3_ext`, and every helper takes the boto3
 client as its first argument:
@@ -87,12 +89,15 @@ with snake_case keys and the full response under `raw`.
 | Data migration       | `set_bucket_migration(s3, bucket, source_bucket, endpoint=, region=, access_key=, secret_key=)`, `migrate_object`, `is_object_migrated`, `list_objects_from_source` | [Migrate to Tigris](/docs/migration)                                                           |
 | Archive restore      | `restore_object(s3, bucket, key, days=)`, `get_restore_info(s3, bucket, key)`                                                                                       | [Storage tiers](/docs/objects/tiers)                                                           |
 | Presigned URLs       | `presign(s3, bucket, key, operation, expires_in=, snapshot_version=)`                                                                                               | [Presigned URLs](/docs/objects/presigned)                                                      |
+| Access key scope     | `create_access_key(iam, user_name, scope=)`                                                                                                                         | [Manage access keys](/docs/iam/manage-access-key/#change-the-default-allowed-operations)       |
 
 Each feature has a page with every helper, context manager and decorator, the
 headers it sends and its caveats in the
 [package's docs directory](https://github.com/tigrisdata/tigris-boto3-ext/tree/main/docs),
 and a runnable script under
 [`examples/`](https://github.com/tigrisdata/tigris-boto3-ext/tree/main/examples).
+`create_access_key` takes an IAM client instead of the S3 one:
+`boto3.client("iam", endpoint_url="https://iam.storage.dev", region_name="auto")`.
 CORS and lifecycle rules need nothing from the package: boto3's
 `put_bucket_cors` and `put_bucket_lifecycle_configuration` work on Tigris as
 they do on S3.

@@ -22,6 +22,7 @@ type TigrisStorageConfig = {
   bucket?: string;
   accessKeyId?: string;
   secretAccessKey?: string;
+  sessionToken?: string;
   endpoint?: string;
 };
 ```
@@ -54,6 +55,69 @@ const result = await get("object.txt", "string", {
     bucket: "different-bucket",
   },
 });
+```
+
+### Use temporary credentials
+
+[Temporary credentials](/docs/iam/temporary-credentials/) are an access key ID,
+a secret, and a session token, limited to one bucket. Issue them with an access
+key with `createTemporaryCredentials` from
+[`@tigrisdata/iam`](https://www.npmjs.com/package/@tigrisdata/iam):
+
+```ts
+import { createTemporaryCredentials } from "@tigrisdata/iam";
+
+const { data: creds, error } = await createTemporaryCredentials("ci-upload", {
+  bucket: "my-bucket-name",
+  access: "readwrite", // "read", "write", or "readwrite"; or pass exact `actions`
+  durationSeconds: 3600,
+});
+```
+
+Pass the three values together:
+
+```ts
+const result = await list({
+  config: {
+    bucket: "my-bucket-name",
+    accessKeyId: creds.accessKeyId,
+    secretAccessKey: creds.secretAccessKey,
+    sessionToken: creds.sessionToken,
+  },
+});
+```
+
+Or set them in the environment:
+
+```bash
+TIGRIS_STORAGE_ACCESS_KEY_ID=tsid_...
+TIGRIS_STORAGE_SECRET_ACCESS_KEY=tssec_...
+TIGRIS_STORAGE_SESSION_TOKEN=tsts1...
+TIGRIS_STORAGE_BUCKET=bucket_name
+```
+
+The SDK uses `TIGRIS_STORAGE_SESSION_TOKEN` only when both access key variables
+are set too. Temporary credentials allow only what their policy lists, on one
+bucket. Bucket management calls such as `listBuckets` and `createBucket` fail.
+
+To renew the credentials before they expire, pass a `credentialProvider`. It
+returns `{ accessKeyId, secretAccessKey, sessionToken, expiration }`, which is
+what `createTemporaryCredentials` returns. The SDK calls it again shortly before
+`expiration`. The provider applies to the object calls that use the S3 client;
+`copy`, `move`, and `updateObject` use the static fields.
+
+```ts
+const config = {
+  bucket: "my-bucket-name",
+  credentialProvider: async () => {
+    const { data, error } = await createTemporaryCredentials("worker", {
+      bucket: "my-bucket-name",
+      access: "read",
+    });
+    if (error) throw error;
+    return data;
+  },
+};
 ```
 
 ## Responses

@@ -924,7 +924,7 @@ const sidebars = {
           type: "category",
           label: "tigris credentials",
           link: { type: "doc", id: "cli/credentials" },
-          items: ["cli/credentials/test"],
+          items: ["cli/credentials/test", "cli/credentials/temporary"],
         },
         "cli/ls",
         "cli/mk",

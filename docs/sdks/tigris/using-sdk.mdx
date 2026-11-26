@@ -72,6 +72,7 @@ const { data: creds, error } = await createTemporaryCredentials("ci-upload", {
   access: "readwrite", // "read", "write", or "readwrite"; or pass exact `actions`
   durationSeconds: 3600,
 });
+if (error) throw error;
 ```
 
 Pass the three values together:
@@ -103,8 +104,15 @@ bucket. Bucket management calls such as `listBuckets` and `createBucket` fail.
 To renew the credentials before they expire, pass a `credentialProvider`. It
 returns `{ accessKeyId, secretAccessKey, sessionToken, expiration }`, which is
 what `createTemporaryCredentials` returns. The SDK calls it again shortly before
-`expiration`. The provider applies to the object calls that use the S3 client;
-`copy`, `move`, and `updateObject` use the static fields.
+`expiration`.
+
+:::note
+
+The provider applies to the object calls that use the S3 client. `copy`, `move`,
+and `updateObject` use the static `accessKeyId`, `secretAccessKey`, and
+`sessionToken` fields instead.
+
+:::
 
 ```ts
 const config = {

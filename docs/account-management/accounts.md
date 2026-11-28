@@ -2,7 +2,7 @@
 
 When you first sign up with Tigris, whether you're signing up on your own or
 you're invited to join, you start with a native Tigris Account. Tigris also
-supports logging in with a Fly.io account through Single Sign-On (SSO), see the
+supports signing in with a Fly.io account through Single Sign-On (SSO), see the
 [Fly.io integration guide](/sdks/fly/) for details.
 
 ## Create an account
@@ -48,9 +48,9 @@ access before leaving, you can recover access to the account by emailing
 
 ### I can't see my buckets in the Tigris console
 
-**Check your login method:** Tigris supports multiple login methods (Google,
-GitHub, email, and Fly.io SSO). Make sure you're using the same login method you
-used when you created your account and buckets.
+**Check your sign-in method:** Tigris supports multiple sign-in methods (Google,
+GitHub, email, and Fly.io SSO). Make sure you're using the same sign-in method
+you used when you created your account and buckets.
 
 - **Using Fly.io?** See the
   [Fly.io troubleshooting section](/sdks/fly/#troubleshooting)
@@ -63,6 +63,6 @@ in the Tigris console (top-right dropdown).
 **Still having issues?** Contact
 [help@tigrisdata.com](mailto:help@tigrisdata.com) with:
 
-- Your login email
+- Your sign-in email
 - The bucket names you're trying to access
-- Which login method you are using
+- Which sign-in method you are using

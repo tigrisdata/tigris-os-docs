@@ -25,20 +25,23 @@ tools, and libraries with Tigris.
 
 The compatibility data on this page comes from the
 [S3 API compatibility test suite](https://github.com/tigrisdata-community/s3-api-compat-tests)
-(AWS Go SDK v2), run against every provider on 2026-11-18. Each run creates a
+(AWS Go SDK v2), run against every provider on 2026-11-27. Each run creates a
 temporary bucket and a second bucket with versioning enabled, runs every test,
 and deletes both. A test checks the effect of its operation: a write is read
 back, a condition that must fail is sent and must fail with the S3 status or
 error code, and a delete is followed by a read that must be 404. A provider that
 accepts a request and ignores it does not pass. Skipped tests are tests that did
 not apply, for example the versioning tests on a provider that cannot create a
-bucket with versioning enabled.
+bucket with versioning enabled. The suite includes 17 tests of
+[temporary credentials](/docs/iam/temporary-credentials/) from the AWS STS
+`GetFederationToken` API. These tests are skipped on Cloudflare R2 and Google
+Cloud Storage, which have no AWS STS endpoint.
 
 | Provider                 | Passed | Failed | Skipped | Total | Score |
 | ------------------------ | ------ | ------ | ------- | ----- | ----- |
-| **Tigris**               | 83     | 11     | 0       | 94    | 88%   |
-| **Cloudflare R2**        | 53     | 31     | 10      | 94    | 56%   |
-| **Google Cloud Storage** | 48     | 46     | 0       | 94    | 51%   |
+| **Tigris**               | 100    | 11     | 0       | 111   | 90%   |
+| **Cloudflare R2**        | 53     | 31     | 27      | 111   | 48%   |
+| **Google Cloud Storage** | 48     | 46     | 17      | 111   | 43%   |
 
 Of the 11 Tigris failures, eight are the bucket policy, encryption, and
 notification configuration operations, which return `NotImplemented` (see
@@ -274,7 +277,8 @@ the automated test suite.
 
 These STS APIs are served at `https://sts.storage.dev`. See
 [temporary credentials](/docs/iam/temporary-credentials/) for the supported
-policy subset.
+policy subset. The compatibility test suite checks `GetFederationToken`,
+`GetCallerIdentity`, and S3 requests made with the credentials they return.
 
 | STS API                                                                                                             | Supported in Tigris |
 | ------------------------------------------------------------------------------------------------------------------- | ------------------- |
